@@ -1,0 +1,176 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+</head>
+
+<body>
+
+<h1 align="center">Sales tax concept for The Exchange Project</h1>
+<h3 align="center">Author: Mike Bradley<br>
+Date: 16 July 2001</h3>
+<h2>1. Introduction</h2>
+<p>The method of calculating sales tax is designed to enable a wide range of tax scenarios.  It is based around 'tax zones' - assigned regions within which certain tax rules apply.</p>
+<p>Each geographical tax region contains a group of country regions ('zones' in
+TEP), countries, states, counties or other defined zones.</p>
+<p>&nbsp;</p>
+<h2>2. Tax zones, Tax classes and Tax Rates</h2>
+<ul>
+  <li>Tax zone - a geographical region consisting of one or more countries or
+    regions to which a particular set of tax rules apply.</li>
+  <li>Tax class - a class of goods to which certain tax rules apply</li>
+  <li>Tax rate - a percentage rate of tax that applies to a particular class of
+    goods within a particular tax zone</li>
+</ul>
+<p>&nbsp;</p>
+<h2>3. Compound taxation and tax zone priority</h2>
+<p>Certain tax rules require several rates of tax to be compounded depending on the location of the buyer.  For example residents of a country may pay a national rate of sales tax, but residents of a particular state might pay local tax in addition to the national tax rate.</p>
+<p>This can be achieved by creating multiple tax zones, one for the whole country and a second zone for the local region.  Each of these zones can be assigned a separate rate of taxation for each class of goods.</p>
+<p>By default, the tax rates are simply added together to form the final tax rate for the sale.  However in certain circumstances, the tax rates need to be multiplied - in these instances, the tax zone priority is used to determine which rate to apply first.</p>
+<p>&nbsp;</p>
+<h2>4. Example tax scenarios</h2>
+<h3>4.1 US State tax</h3>
+<p>A company based in Florida charges sales tax only to residents of
+Florida.&nbsp; To do this, we must create a tax zone for Florida</p>
+<p><b>SQL</b></p>
+<p><font face="Courier New" size="1">DELETE FROM geo_zones;<br>
+DELETE FROM zones_to_geo_zones ;<br>
+DELETE FROM tax_rates;<br>
+<br>
+INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1,&quot;Florida&quot;,&quot;Florida
+local sales tax zone&quot;,now());<br>
+<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1,223,18,1,now()); # USA/Florida<br>
+<br>
+INSERT INTO tax_rates ( tax_rates_id, tax_zone_id, tax_class_id, tax_rate, tax_description, last_modified, date_added)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1, 1, 1, 7.0, 'FL TAX 7.0%', now(), now());<br>
+</font></p>
+<h3>4.2 European Union VAT</h3>
+<p>Consider a company that is VAT registered within the UK.&nbsp; The company is
+required to charge a rate of 17.5% VAT to all customers who are resident within
+the European Union and zero for non-EU residents.&nbsp; We create a single tax
+zone for the European Union, to which we add the list of all the countries in
+the EU.</p>
+<p>Then we create a tax rate for taxable goods and associate it with the
+European Union tax zone.</p>
+<p><b>SQL</b></p>
+<p><font face="Courier New" size="1">DELETE FROM geo_zones;<br>
+DELETE FROM zones_to_geo_zones;<br>
+DELETE FROM tax_rates;<br>
+<br>
+INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added) VALUES (1,"European Union","EU VAT Zone",now());<br>
+<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (1,222,NULL,1,now()); #UK<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (2,81,NULL,1,now()); #Germany<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (3,73,NULL,1,now()); #France<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (4,105,NULL,1,now()); #Italy<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (5,21,NULL,1,now()); #Belgium<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (6,150,NULL,1,now()); #Holland<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (7,195,NULL,1,now()); #Spain<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (8,203,NULL,1,now()); #Sweden<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (9,72,NULL,1,now()); #Finland<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (10,57,NULL,1,now()); #Denmark<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (11,84,NULL,1,now()); #Greece<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (12,171,NULL,1,now()); #Portugal<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (13,103,NULL,1,now()); #Ireland<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (14,124,NULL,1,now()); #Luxembourg<br>
+INSERT INTO zones_to_geo_zones (association_id,zone_country_id,zone_id,geo_zone_id,date_added) VALUES (15,14,NULL,1,now()); #Austria<br>
+<br>
+INSERT INTO tax_rates ( tax_rates_id, tax_zone_id, tax_class_id, tax_rate, tax_description, last_modified, date_added)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1, 1, 1, 17.5, 'EU TAX 17.5%', now(), now());</font><br>
+</p>
+<h3>4.3 Compound tax (multiplicative)</h3>
+<p>A retailer is based in Canada and charges 7% sales tax to its Canadian
+customers, however because the company is based in Quebec, it also charges an
+additional 7.5% for customers who are also based in Quebec.&nbsp; This local tax
+is compounded on the federal tax by first calculating the federal tax, then
+applying the local tax, giving a total tax rate of 15.025% for Quebec customers.</p>
+<p>This arrangement is achieved by creating two tax zones, one for Canada and
+one for Quebec.&nbsp; Within the 'Canada' tax zone is simply the whole country
+of Canada (represented by Canada/* in the admin page) and within the Quebec tax
+zone is the Canada/Quebec geographical zone.&nbsp; Because the Federal tax is
+applied first, and the Quebec tax applied to the result, we need to set the
+Canada tax rate with a priority of 1 and Quebec with a separate priority of 2.</p>
+<p>Two tax rates are created, one for Canada (7%) and one for Quebec (7.5%).</p>
+<p><b>Note</b>:<b> </b>in a country where the tax rules are such that both tax
+rates are calculated on the original goods value instead of one tax compounding
+on the other, then this could be achieved by setting both tax zones to the same
+priority.&nbsp; In this instance, the compounding is additive, and the final tax
+rate would be 14.5%.</p>
+<p><b>SQL</b></p>
+<p><font face="Courier New" size="1">DELETE FROM geo_zones;<br>
+DELETE FROM zones_to_geo_zones;<br>
+DELETE FROM tax_rates;<br>
+<br>
+INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1,"Canada","Canadian Federal Tax
+Zone&quot;,now());<br>
+INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,date_added)&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (2,"Quebec","Quebec Local Tax
+Zone&quot;,now());<br>
+<br>
+INSERT INTO zones_to_geo_zones VALUES (1,38,0,1,now(),now());<br>
+INSERT INTO zones_to_geo_zones VALUES (2,38,76,2,now(),now());<br>
+<br>
+INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority,
+tax_rate, tax_description, last_modified, date_added)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (1, 1, 1, 1, 7.0, 'Canada 7%', now(), now());<br>
+INSERT INTO tax_rates ( tax_rates_id, tax_zone_id, tax_class_id, tax_priority,tax_rate, tax_description, last_modified, date_added)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; VALUES (2, 2, 1, 2, 7.5, 'Quebec 7.5%', now(), now());<br>
+</font></p>
+<h2>5. New table definitions</h2>
+<p>Two new tables are needed for the sales tax scheme.&nbsp; The <b>geo_zones</b>
+table contains the names of the geographical zones and their calculation
+priorities.&nbsp; The <b>zones_to_geo_zones</b> table contains the list of
+countries and/or country regions ('zones' in TEP) assigned to each geographical zone.&nbsp;
+No specialisation towards tax schemes is made in these tables - this is with the
+intention of allowing geo zones to be used for other purposes, for example
+shipping zones.</p>
+<p>Note that the meaning of <b>tax_z</b><b>one_id</b> in table <b>tax_rates</b> has now
+changed.&nbsp; Instead of pointing to a single country zone (region) in the
+<b>zones</b> table, it now points to the more generalised geographical zone in the <b>zones_to_geo_zones</b>
+and <b>geo_z</b><b>ones</b> tables.</p>
+<p><font face="Courier New" size="1">CREATE TABLE zones_to_geo_zones (<br>
+   association_id int(5) NOT NULL auto_increment,<br>
+   zone_country_id int(5) NOT NULL,<br>
+   zone_id int(5) NULL,<br>
+geo_zone_id int(5) NULL,<br>
+   last_modified datetime NULL,<br>
+   date_added datetime NOT NULL,<br>
+   PRIMARY KEY (association_id)<br>
+);<br>
+<br>
+CREATE TABLE geo_zones (<br>
+geo_zone_id int(5) NOT NULL auto_increment,<br>
+geo_zone_name varchar(32) NOT NULL,<br>
+geo_zone_description varchar(255) NOT NULL,<br>
+  last_modified datetime NULL,<br>
+  date_added datetime NOT NULL,<br>
+  PRIMARY KEY (geo_zone_id)<br>
+);</font></p>
+
+<p><font face="Courier New" size="1">
+ALTER TABLE tax_rates ADD COLUMN tax_priority int(5) NOT NULL DEFAULT 1 after
+tax_class_id;</font></p>
+
+<h2>5. Migrating from previous versions</h2>
+<p>It is usually easy enough to set up the tax zones from scratch, however the
+following script may be useful if upgrading the database to the new scheme:</p>
+<p><font face="Courier New" size="1">INSERT INTO geo_zones (geo_zone_id,geo_zone_name,geo_zone_description,last_modified,date_added)&nbsp;<br>
+	SELECT tr.tax_zone_id,zone_name,zone_name,NULL,now() from tax_rates tr,zones z,countries c&nbsp;<br>
+	WHERE tr.tax_zone_id=z.zone_id AND c.countries_id=z.zone_country_id&nbsp;<br>
+	GROUP BY tr.tax_zone_id;<br>
+<br>
+INSERT INTO zones_to_geo_zones (zone_country_id,zone_id,geo_zone_id,date_added)&nbsp;<br>
+	SELECT z.zone_country_id, z.zone_id,tr.tax_zone_id,now() FROM tax_rates tr, zones z WHERE z.zone_id=tr.tax_zone_id<br>
+	GROUP BY tr.tax_zone_id;<br>
+</font></p>
+
+</body>
+
+</html>

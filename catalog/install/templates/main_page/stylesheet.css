@@ -1,0 +1,36 @@
+/*
+  $Id: stylesheet.css,v 1.4 2003/07/09 01:11:06 hpdl Exp $
+
+  osCommerce, Open Source E-Commerce Solutions
+  http://www.oscommerce.com
+
+  Copyright (c) 2003 osCommerce
+
+  Released under the GNU General Public License
+*/
+
+A:link, A:visited { color: #0029A3; text-decoration: none; }
+A:hover { color: #5D59ac; text-decoration: underline; }
+
+TD, UL, P, BODY { font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 1.5; }
+
+.boxMe { font-family: Verdana, Arial, sans-serif; font-size: 12px; color: #ff0000; background-color: #e5e5e5; }
+.noteBox { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; line-height: 1.5; background-color: #fef3da; border: thin dashed; padding: 6px; }
+.navigationBar { font-family: Verdana, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #ffffff; }
+.footerBar { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; }
+.mainText { font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 1.5; }
+.smallText { font-family: Verdana, Arial, sans-serif; font-size: 10px; line-height: 1.5; }
+.smallDesc { font-family: Verdana, Arial, sans-serif; font-size: 9px; line-height: 1.5; color: #4D68A1; }
+.infoBoxHeading { font-family: Verdana, Arial, sans-serif; font-size: 10px; font-weight: bold; color: #ffffff; }
+.infoBoxText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.pageHeading { font-family: Verdana, Arial, sans-serif; font-size: 20px; color: #9a9a9a; font-weight: bold; }
+.pageTitle { font-family: Verdana, Arial, sans-serif; font-size: 11px; line-height: 1.5; font-weight: bold; text-decoration: underline; }
+.longDescription { visibility: hidden; display: none; }
+
+input { border-right: #eeeeee 1px solid; border-top: #eeeeee 1px solid; font: 8pt verdana, arial, helvetica; border-left: #cccccc 1px solid; color: #000000; border-bottom: #cccccc 1px solid; background-color: #ffffff }
+select { border-right: #000000 1px solid; border-top: #000000 1px solid; background: #f7f7f7; font: 8pt verdana, arial, helvetica; border-left: #000000 1px solid; color: #000000; border-bottom: #000000 1px solid }
+submit { border-right: #000000 1px solid; border-top: #000000 1px solid; background: #f7f7f7; font: 8pt verdana, arial, helvetica; border-left: #000000 1px solid; color: #ffeeff; border-bottom: #000000 1px solid }
+
+TABLE.formPage { border-right: #eeeeee 1px solid; border-top: #eeeeee 1px solid; border-left: #eeeeee 1px solid; border-bottom: #eeeeee 1px solid; background-color: #ffffee; }
+TD.rightColumn { background-color: #CFF5FF; }
+TD.leftColumn { background-color: #DEFFCF; }

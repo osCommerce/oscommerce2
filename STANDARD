@@ -1,0 +1,501 @@
+$Id: STANDARD,v 1.13 2003/06/09 21:13:13 hpdl Exp $
+
+osCommerce Coding Standards
+
+Coding standards are defined to keep the codebase in a maintainable state.
+
+The more developers working within the codebase means the more ways php
+logic can be written.
+
+If every developer follows the standards then everyone is able to review
+the codebase and not waste time thinking about why a certain style was
+used in a particular area compared to another area.
+
+File Format
+-----------
+
+The source code should be saved in Unix format - meaning with Unix
+linefeeds.
+
+Most editors are able to set the preferred format method of Windows,
+Unix, or Macintosh.
+
+Some editors add a line to the bottom of the file. This is safe to have
+as long as a further character (including the space character) does not
+exist. Characters that exist at the end of the file may interfer when
+redirections occur as text has been sent to the client already.
+
+The filename of the files must be all lowercass characters and contain
+no more than 31 characters to be Apple/Mac compatible.
+
+Indentation
+-----------
+
+Indentation of logic should be 2 whitespace characters.
+
+TABs should not be used.
+
+Starting and Ending PHP Logic
+-----------------------------
+
+When starting PHP logic, the tag should be written as "<?php", not in the
+short form of "<?" or in ASP compatible tags such as "<%".
+
+The end tag to mark the end of the PHP logic should be written as "?>".
+
+A valid example:
+
+<?php
+  echo "Hello World!";
+?>
+
+Defining Constants
+------------------
+
+Constants must be defined before they are being used - which also includes
+constants called from include()'d/require()'d files.
+
+Variable Scope*
+--------------
+
+All variables must be accessed and set within their scope as:
+
+$HTTP_GET_VARS['variable']
+$HTTP_POST_VARS['variable']
+$HTTP_COOKIE_VARS['variable']
+$variable (either local, or session)
+
+* This needs to be updated when the codebase has been made compatible with
+the register_global parameter. Session variables are then accessed and set
+within its scope as:
+
+$HTTP_SESSION_VARS['variable']
+
+When PHP3 support is dropped, the following scope will be used:
+
+$_GET['variable']
+$_POST['variable']
+$_COOKIE['variable']
+$_SESSION['variable']
+
+PHP 4.0.x does not support the above scope which was introduced in PHP 4.1.x.
+The following can be used which is not compatible with PHP 3.x:
+
+$_GET =& $HTTP_GET_VARS;
+$_POST =& $HTTP_POST_VARS;
+$_COOKIE =& $HTTP_COOKIE_VARS;
+$_SESSION =& $HTTP_SESSION_VARS;
+
+include() vs require()
+----------------------
+
+The use of include() will include the specified file when needed, whereas
+the use of require() will always include the specified file regardless if it
+is needed or not.
+
+Example:
+
+<?php
+  require('file.php');
+
+  if (condition == true) {
+    include('file_true.php');
+  } else {
+    ...
+  }
+?>
+
+Instantiating Classes
+---------------------
+
+When instantiating classes into objects, the following style must be used:
+
+<?php
+// without class parameters*
+  $object = new className;
+  
+// with class parameters
+  $object = new className($parameter1);
+?>
+
+* PHP3 does not support the following style which includes an empty bracket
+set:
+
+<?php
+  $object = new className();
+?>
+
+Displaying Strings
+------------------
+
+Strings or values should be displayed as:
+
+<?php
+  echo 'Hello Mr Mister!';
+?>
+
+The following styles should be avoided:
+
+<?php
+  print $variable;
+?>
+
+<?=$variable;?>
+
+Singe-Quotes vs Double-Quotes
+-----------------------------
+
+When displaying strings single quote characters should be used.
+
+Double quote characters should be used only when control characters are
+needed.
+
+For example:
+
+<?php
+  echo 'Hello Mr Mister!' . "\n";
+?>
+
+
+Custom Functions
+----------------
+
+All custom functions should start with tep_ so that the developer knows
+a native PHP function is not being called.*
+
+An example custom function style:
+
+<?php
+  function tep_my_function($parameter, $optional = '') {
+    global $HTTP_GET_VARS, $another_variable;
+
+    ....
+
+    return true;
+  }
+?>
+
+* When 2.2 is finalized the custom functions should be renamed to osc_*
+as "tep" refers to the previous name of the project.
+
+Class Names
+-----------
+
+There are two types of styles to use when classes are used.
+
+The first type of class set are the static classes that can be found in
+the includes/classes directory.
+
+If the class name contains more than one word, the words in the filename
+are separated with an underscore character. The actual class name is one
+whole word where words from the second onwards being capitalized.
+
+For example, a class name of myOwnClass has a filename of
+my_own_class.php.
+
+The second type of class set are the dynamic modules that can be found
+in the includes/modules/* directories.
+
+The class names must match the filename as most of them are include()'d
+dynamicly.
+
+For example, a class filename of my_own_module.php has a class name of
+my_own_module.
+
+Class Structure
+---------------
+
+The class should be written in the following structure:
+
+<?php
+  class myclass {
+    var $variable;
+
+// class constuctor
+    function myclass() {
+
+      ....
+
+      return true;
+    }
+
+// class methods
+    function do_something() {
+
+      $this->variable = 'set';
+
+      return true;
+    }
+  }
+
+  $class = new myclass;
+  $class->do_something();
+?>
+
+Database Queries
+----------------
+
+Database queries are wrapped around custom functions and should be
+structured as:
+
+<?php
+// multi-result set
+  $action_query = tep_db_query("select column1, ...");
+  while ($action = tep_db_fetch_array($action_query)) {
+    echo $action['column1'];
+  }
+
+// single result set
+  $action_query = tep_db_query("select column1, ...");
+  $action = tep_db_fetch_array($action_query);
+
+  echo $action['column1'];
+
+// return number of rows
+  $action_query = tep_db_query("select count(*) as total from ...");
+  $action = tep_db_fetch_array($action_query);
+
+  echo $action['total'];
+
+// query with parameters
+  $action_query = tep_db_query("select column1 from table where field = '" . tep_db_input($some_id) . "'");
+  while ($action = tep_db_fetch_array($action_query)) {
+    ....
+  }
+?>
+
+Unlike displaying strings, double quote characters are wrapped around the sql query.
+
+The following is currently for the Administration Tool but will also be implemented
+in the Catalog module.
+
+Before data can be entered in the database, it must be protected against possible
+attacks residing in the user input. The data is first prepared and then protected
+when inserting it into the table. The following structure is used:
+
+<?php
+  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
+
+  tep_db_query("update table set column = '" . tep_db_input($value1) . "' where id = '" . (int)$id . "'");
+?>
+
+Variable type casting should be performed directly for integer based values, such
+as column IDs: (int)$variable
+
+Multiple values can be parsed, protected and inserted into the table in an easier
+fashion:
+
+<?php
+  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
+  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
+  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+
+  $sql_data_array = array('column1' => $value1,
+                          'column2' => $value2,
+                          'column3' => $value3);
+
+  tep_db_perform('table', $sql_data_array);
+?>
+
+A similar structure can be used for updating values in a table:
+
+<?php
+  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
+  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
+  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+
+  $sql_data_array = array('column1' => $value1,
+                          'column2' => $value2,
+                          'column3' => $value3);
+
+  tep_db_perform('table', $sql_data_array, 'update', "id = '" . (int)$id . "'");
+?>
+
+Table names should not directly be entered in the query, but the constant
+parameter assigned to that table. A list of defined constant table names
+can currently be found in includes/database_tables.php.
+
+Function Output
+---------------
+
+All custom functions should return strings; not directly via echo().
+
+For example:
+
+<?php
+  function tep_my_function($string) {
+    return $string;
+  }
+?>
+
+and not:
+
+<?php
+  function tep_my_function($string) {
+    echo $string;
+  }
+?>
+
+Condition Statements
+--------------------
+
+If statements should be written as:
+
+<?php
+  if (condition == true) {
+    ....
+  } else {
+    ....
+  }
+?>
+
+If the condition is to check for a boolean value, this should be added
+to the condition (as above) for clarity.
+
+The following should not be used:
+
+<?php
+  if (!$condition) {
+    ....
+  }
+?>
+
+instead use the following:
+
+<?php
+  if ($condition == false) {
+    ....
+  }
+?>
+
+Multiple conditions should reside in their own parenthesis, as:
+
+<?php
+  if ( (condition == true) && (condition == true) ) {
+    ....
+  }
+?>
+
+Simple boolean expressions can be written as:
+
+<?php
+  $value = (($condition == true) ? 'true' : 'false');
+?>
+
+Simple statements can be written as:
+
+<?php
+  if ($condition == true) ....
+?>
+
+Functions do not need to be checked with a true/false
+statement. For the following valid example:
+
+<?php
+  if (empty($string)) {
+    ...
+  }
+
+  if ( (isset($variable)) && (tep_not_null($string)) ) {
+    ...
+  }
+?>
+
+Switch-Case statements should be written as:
+
+<?php
+  switch ($value) {
+    case '1':
+      ....
+      break;
+    case '2':
+      ....
+      break;
+    default:
+      ....
+      break;
+  }
+?>
+
+Condition Checking
+------------------
+
+To see if a variable exists, use the following structure:
+
+<?php
+  if (isset($variable)) {
+    ...
+  }
+?>
+
+and not:
+
+<?php
+  if ($variable) {
+    ...
+  }
+?>
+
+Repetitive Statements
+---------------------
+
+while loops should be written as:
+
+<?php
+  while (condition == true) {
+    ....
+  }
+?>
+
+Walking through an array should be written as:
+
+<?php
+// for php3 compatibility
+  reset($array);
+  while (list($key, $value) = each($array)) {
+    ....
+  }
+
+// the php4 way
+  foreach ($array as $key => $value) {
+    ....
+  }
+?>
+
+for loops should be written as:
+
+<?php
+  for ($i=0, $n=sizeof($array); $i<$n; $i++) {
+    ....
+  }
+?>
+
+Mixing HTML and PHP
+-------------------
+
+Common HTML tags started in HTML must end in HTML, and
+tags started in PHP must end in PHP.
+
+Wrong:
+
+<td><?php echo "Hello</td>"; ?>
+
+Correct:
+
+<td><?php echo "Hello"; ?></td>
+
+Correct:
+
+<?php
+  echo '<td>Hello</td>';
+?>
+
+Exceptions to this standard include the tep_draw_form()
+function:
+
+<?php
+  echo tep_draw_form();
+?>
+[form input fields are placed here]
+</form>
+?>

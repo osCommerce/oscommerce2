@@ -1,0 +1,7 @@
+This is an example of how to update the configuration parameters
+for a win32 (Microsoft Windows) environment.
+
+You can either edit catalog/includes/application_top.php directly
+with these changes, or you can add configure.php to
+catalog/includes/local/ which will overwrite the settings in
+application_top.php.

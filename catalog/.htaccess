@@ -1,0 +1,40 @@
+# $Id: .htaccess,v 1.3 2003/06/12 10:53:20 hpdl Exp $
+#
+# This is used with Apache WebServers
+#
+# For this to work, you must include the parameter 'Options' to
+# the AllowOverride configuration
+#
+# Example:
+#
+# <Directory "/usr/local/apache/htdocs">
+#   AllowOverride Options
+# </Directory>
+#
+# 'All' with also work. (This configuration is in the
+# apache/conf/httpd.conf file)
+
+# The following makes adjustments to the SSL protocol for Internet
+# Explorer browsers
+
+<IfModule mod_setenvif.c>
+  <IfDefine SSL>
+    SetEnvIf User-Agent ".*MSIE.*" \
+             nokeepalive ssl-unclean-shutdown \
+             downgrade-1.0 force-response-1.0
+  </IfDefine>
+</IfModule>
+
+# If Search Engine Friendly URLs do not work, try enabling the
+# following Apache configuration parameter
+#
+# AcceptPathInfo On
+
+# Fix certain PHP values
+# (commented out by default to prevent errors occuring on certain
+# servers)
+#
+#<IfModule mod_php4.c>
+#  php_value session.use_trans_sid 0
+#  php_value register_globals 1
+#</IfModule>

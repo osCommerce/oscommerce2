@@ -1,0 +1,86 @@
+/*
+  $Id: stylesheet.css,v 1.26 2003/06/30 20:03:50 hpdl Exp $
+
+  osCommerce, Open Source E-Commerce Solutions
+  http://www.oscommerce.com
+
+  Copyright (c) 2002 osCommerce
+
+  Released under the GNU General Public License
+*/
+
+/* links */
+a:link { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; font-weight: normal; text-decoration: none; }
+a:visited { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; font-weight: normal; text-decoration: none; }
+a:active { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; font-weight: normal; text-decoration: none; }
+a:hover { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; font-weight: normal; text-decoration: underline; }
+
+a.headerLink:link { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; text-decoration: none; }
+a.headerLink:visited { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; text-decoration: none; }
+a.headerLink:active { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; text-decoration: none; }
+a.headerLink:hover { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; text-decoration: underline; }
+
+a.menuBoxHeadingLink:link { font-size: 10px; color: #616060; font-weight: bold; text-decoration: none; }
+a.menuBoxHeadingLink:visited { font-size: 10px; color: #616060; font-weight: bold; text-decoration: none; }
+a.menuBoxHeadingLink:active { font-size: 10px; color: #616060; font-weight: bold; text-decoration: none; }
+a.menuBoxHeadingLink:hover { font-size: 10px; color: #616060; font-weight: bold; text-decoration: none; }
+
+a.menuBoxContentLink:link { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; font-weight: normal; text-decoration: none; }
+a.menuBoxContentLink:visited { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; font-weight: normal; text-decoration: none; }
+a.menuBoxContentLink:active { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; font-weight: normal; text-decoration: none; }
+a.menuBoxContentLink:hover { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; font-weight: normal; text-decoration: underline; }
+
+a.splitPageLink:link { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #0000FF; font-weight: normal; text-decoration: none; }
+a.splitPageLink:visited { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #0000FF; font-weight: normal; text-decoration: none; }
+a.splitPageLink:active { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #0000FF; font-weight: normal; text-decoration: none; }
+a.splitPageLink:hover { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #0000FF; font-weight: normal; text-decoration: underline; background-color: #FFFF33; }
+
+/* menu box */
+.menuBoxHeading { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; background-color: #ffffff; }
+.menuBoxContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; }
+
+/* page */
+body { background-color: #ffffff; color: #000000; margin: 0px; }
+.headerBar { background-color: #B3BAC5; }
+.headerBarContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; padding: 2px; }
+.columnLeft { background-color: #F0F1F1; border-color: #999999; border-width: 1px; border-style: solid; padding: 2px; }
+.pageHeading { font-family: Verdana, Arial, sans-serif; font-size: 18px; color: #727272; font-weight: bold; }
+
+/* data table */
+.dataTableHeadingRow { background-color: #C9C9C9; }
+.dataTableHeadingContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; font-weight: bold; }
+.dataTableRow { background-color: #F0F1F1; }
+.dataTableRowSelected { background-color: #DEE4E8; }
+.dataTableRowOver { background-color: #FFFFFF; cursor: pointer; cursor: hand; }
+.dataTableContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; }
+
+/* info box */
+.infoBoxHeading { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ffffff; background-color: #B3BAC5; }
+.infoBoxContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; background-color: #DEE4E8; }
+
+/* message box */
+
+.messageBox { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-size: 10px; background-color: #ffb3b5; }
+.messageStackSuccess { font-family: Verdana, Arial, sans-serif; font-size: 10px; background-color: #99ff00; }
+
+/* forms */
+CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, Arial, sans-serif; font-size: 11px; }
+FORM { display: inline; }
+
+/* account */
+.formArea { background-color: #f1f9fe; border-color: #7b9ebd; border-style: solid; border-width: 1px; }
+.formAreaTitle { font-family: Tahoma, Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; }
+
+/* attributes */
+.attributes-odd { background-color: #f4f7fd; }
+.attributes-even { background-color: #ffffff; }
+
+/* miscellaneous */
+.specialPrice { color: #ff0000; }
+.oldPrice { text-decoration: line-through; }
+.fieldRequired { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
+.smallText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.main { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
+.errorText { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
+

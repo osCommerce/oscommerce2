@@ -1,0 +1,32 @@
+$Id: README,v 1.1 2002/04/08 01:15:19 hpdl Exp $
+
+osCommerce, Open Source E-Commerce Solutions
+http://www.oscommerce.com
+
+Copyright (c) 2002 osCommerce
+
+Released under the GNU General Public License
+---------------------------------------------------------
+
+osCommerce 2.2 Orders Update Script
+
+This script is used to insert the order total values into
+a new orders_total table used by the new order class and
+order_total modules.
+
+Before running the update on a live server, it is
+recommended to "test-run" the process on a test or backup
+database dump.
+
+If you are not happy with the results the first time you
+run the update script, you may delete the orders_total
+table contents and run the process again using different
+parameter values.
+
+Once you are happy with the results, you should remove
+two columns from the orders table, which are
+shipping_method and shipping_cost, with the following
+sql queries:
+
+alter table orders drop shipping_method;
+alter table orders drop shipping_cost;

@@ -1,0 +1,2322 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 11 (filtered)">
+<title>osCommerce 2.2 Milestone 2 Update 051113</title>
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+h1
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:16.0pt;
+	font-family:Arial;}
+h2
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	page-break-after:avoid;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoToc1, li.MsoToc1, div.MsoToc1
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+p.MsoToc3, li.MsoToc3, div.MsoToc3
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:24.0pt;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+p.MsoHeader, li.MsoHeader, div.MsoHeader
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+p.MsoFooter, li.MsoFooter, div.MsoFooter
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;}
+pre
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:10.0pt;
+	font-family:"Courier New";}
+span.Heading1Char
+	{font-family:Arial;
+	font-weight:bold;}
+p.NormalCourierNew, li.NormalCourierNew, div.NormalCourierNew
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Times New Roman";}
+span.Heading3Char
+	{font-family:Arial;
+	font-weight:bold;}
+ /* Page Definitions */
+ @page Section1
+	{size:612.0pt 792.0pt;
+	margin:72.0pt 90.0pt 72.0pt 90.0pt;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+
+</head>
+
+<body lang=EN-US link=blue vlink=purple>
+
+<div class=Section1>
+
+<h1 align=center style='text-align:center'><a name="_Toc119693700"></a><a
+name="_Toc119693027"></a><a name="_Toc119692912"></a><a name="_Toc119692858"></a><a
+name="_Toc119473688"></a><a name="_Toc119399320"></a><a name="_Toc116415078"></a><a
+name="_Toc116413327"></a><a name="_Toc115810646"></a><a name="_Toc114779446"></a><a
+name="_Toc114755867"></a><a name="_Toc114755833"></a><a name="_Toc114753969"></a><a
+name="_Toc114748813">osCommerce 2.2 Milestone 2</a> Update 051113</h1>
+
+<p class=MsoNormal align=center style='text-align:center'>Update Package 13<sup>th</sup>
+November 2005</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><b>&nbsp;</b></p>
+
+<p class=MsoNormal><b>&nbsp;</b></p>
+
+<p class=MsoNormal><b>&nbsp;</b></p>
+
+<p class=MsoNormal><b>Table of Contents</b></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><u>Update 051113</u></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693028"><span
+lang=EN>customer_country_id in addressbook</span><span style='color:windowtext;
+display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>2</span></a></span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><u><span lang=EN>Update 051112</span></u></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693703">Cannot
+re-assign $this<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>3</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693704"><span
+lang=EN>limit -20, 20</span><span style='color:windowtext;display:none;
+text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>4</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693705">Database
+Input Enhancement<span style='color:windowtext;display:none;text-decoration:
+none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>5</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693706">Adding
+Non-Existing Products To Cart<span style='color:windowtext;display:none;
+text-decoration:none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>7</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693707">Session ID
+XSS Issue<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>12</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693708">Validate
+Session ID<span style='color:windowtext;display:none;text-decoration:none'>.. </span><span
+style='color:windowtext;display:none;text-decoration:none'>13</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693709">File Manager
+Problem<span style='color:windowtext;display:none;text-decoration:none'>.. </span><span
+style='color:windowtext;display:none;text-decoration:none'>15</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693710">HTTP Header
+Injection<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>16</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693711">E-Mail
+Header Injection<span style='color:windowtext;display:none;text-decoration:
+none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>18</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693712">Contact Us
+Form XSS Issue<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>21</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693713">Open
+Redirector<span style='color:windowtext;display:none;text-decoration:none'> </span><span
+style='color:windowtext;display:none;text-decoration:none'>22</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693714">Extra
+Slashes In New Products<span style='color:windowtext;display:none;text-decoration:
+none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>23</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693715">Order Status
+Filtering<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>25</span></a></span></p>
+
+<p class=MsoToc1><span class=MsoHyperlink><a href="#_Toc119693716">MySQL 5.0
+Compatibility<span style='color:windowtext;display:none;text-decoration:none'>. </span><span
+style='color:windowtext;display:none;text-decoration:none'>26</span></a></span></p>
+
+<h1><span lang=EN><br clear=all style='page-break-before:always'>
+<a name="_Toc119693702"></a><a name="_Toc119693701"></a><a name="_Toc119693028">customer_country_id
+in addressbook</a></span></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1662">http://www.oscommerce.com/community/bugs,1662</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal><span class=Heading3Char><span style='font-size:13.0pt'>&nbsp;</span></span></p>
+
+<p class=MsoNormal><span lang=EN>When the customer updates their address in the
+My Account page, their country value is being stored in an incorrect variable
+that can cause an incorrect tax rate value being used in product prices.</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<h3><span lang=EN>Solution:</span></h3>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>The following lines must be replaced in
+catalog/address_book_process.php:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>Line 150, from:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$customer_country_id = <span style='background:yellow'>$country_id</span>;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$customer_country_id = <span style='background:yellow'>$country</span>;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>Line 171, from:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$customer_country_id = <span style='background:yellow'>$country_id</span>;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$customer_country_id = <span style='background:yellow'>$country</span>;</span></p>
+
+<span lang=EN style='font-size:12.0pt;font-family:"Times New Roman"'><br
+clear=all style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal><a name="_Toc119693703"></a><a name="_Toc119693029"><span
+class=Heading1Char><span style='font-size:16.0pt'>Cannot re-assign $this</span></span></a></p>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1650">http://www.oscommerce.com/community/bugs,1650</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Fatal error: Cannot re-assign $this in /path/to/catalog/admin/includes/classes/upload.php
+on line 31</p>
+
+<p class=MsoNormal><b>&nbsp;</b></p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 27-34 in catalog/admin/includes/classes/upload.php
+must be changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( ($this-&gt;parse() == true) &amp;&amp; ($this-&gt;save() ==
+true) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return true;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} else {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue;background:yellow'>// self destruct</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue;background:yellow'>  $this = null;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return false;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( ($this-&gt;parse() == true) &amp;&amp; ($this-&gt;save() ==
+true) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return true;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} else {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return false;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<b><span style='font-size:10.0pt;font-family:"Courier New";color:blue'><br
+clear=all style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693704"></a><a name="_Toc119693030"><span lang=EN>limit
+-20, 20</span></a></h1>
+
+<p class=MsoNormal><span lang=EN><a
+href="http://www.oscommerce.com/community/bugs,1605">http://www.oscommerce.com/community/bugs,1605</a></span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<h3><span lang=EN>Problem:</span></h3>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>1064 - You have an error in your SQL syntax;
+check the manual that corresponds to your MySQL server version for the right
+syntax to use near '-20, 20' at line 1</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<h3><span lang=EN>Solution:</span></h3>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>Line 67 in catalog/includes/classes/split_page_results.php
+must be changed from:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$this-&gt;sql_query .= &quot; limit &quot; . <span
+style='background:yellow'>$offset</span> . &quot;, &quot; . $this-&gt;number_of_rows_per_page;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$this-&gt;sql_query .= &quot; limit &quot; . <span
+style='background:yellow'>max($offset, 0)</span> . &quot;, &quot; . $this-&gt;number_of_rows_per_page;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>Line 38 in
+catalog/admin/includes/classes/split_page_results.php must be changed from:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$sql_query .= &quot; limit &quot; . <span style='background:yellow'>$offset</span>
+. &quot;, &quot; . $max_rows_per_page;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$sql_query .= &quot; limit &quot; . <span style='background:yellow'>max($offset,
+0)</span> . &quot;, &quot; . $max_rows_per_page;</span></p>
+
+<b><span lang=EN style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693705"></a><a name="_Toc119693031">Database Input
+Enhancement</a></h1>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Native MySQL functions should be used in preference to the
+addslashes() function, to properly protect the SQL queries being executed on
+the database server.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following function must be replaced in
+catalog/includes/functions/database.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 126-128, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_db_input($string) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return addslashes($string);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre><span style='font-size:9.0pt;color:blue'>function tep_db_input($string, $link = 'db_link') {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  global $$link;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (function_exists('mysql_real_escape_string')) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return mysql_real_escape_string($string, $$link);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  } elseif (function_exists('mysql_escape_string')) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return mysql_escape_string($string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>&nbsp;</span></pre><pre><span style='font-size:9.0pt;
+color:blue'>  return addslashes($string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>}</span></pre>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following function must be replaced in
+catalog/admin/includes/functions/database.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 130-132, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_db_input($string) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return addslashes($string);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre><span style='font-size:9.0pt;color:blue'>function tep_db_input($string, $link = 'db_link') {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  global $$link;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (function_exists('mysql_real_escape_string')) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return mysql_real_escape_string($string, $$link);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  } elseif (function_exists('mysql_escape_string')) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return mysql_escape_string($string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>&nbsp;</span></pre><pre><span style='font-size:9.0pt;
+color:blue'>  return addslashes($string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>}</span></pre><b><span style='font-size:
+16.0pt;font-family:Arial'><br clear=all style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693706"></a><a name="_Toc119693032">Adding Non-Existing
+Products To Cart</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1617">http://www.oscommerce.com/community/bugs,1617</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>It is possible to add non-existing products into the
+shopping cart which may prevent customers from removing the products from their
+cart.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following functions must be replaced in
+catalog/includes/functions/general.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 912-921, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_get_uprid($prid, $params) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $uprid = $prid;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ( (is_array($params)) &amp;&amp; (!strstr($prid, '{')) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    while (list($option, $value) = each($params)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $uprid = $uprid . '{' . $option . '}' . $value;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return $uprid;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span style='font-size:10.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre><span style='font-size:9.0pt;color:blue'>function tep_get_uprid($prid, $params) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (is_numeric($prid)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    $uprid = $prid;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    if (is_array($params) &amp;&amp; (sizeof($params) &gt; 0)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      $attributes_check = true;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      $attributes_ids = '';</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      reset($params);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      while (list($option, $value) = each($params)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        if (is_numeric($option) &amp;&amp; is_numeric($value)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          $attributes_ids .= '{' . (int)$option . '}' . (int)$value;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          $attributes_check = false;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          break;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      if ($attributes_check == true) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $uprid .= $attributes_ids;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    $uprid = tep_get_prid($prid);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    if (is_numeric($uprid)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      if (strpos($prid, '{') !== false) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $attributes_check = true;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $attributes_ids = '';</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// strpos()+1 to remove up to and including the first { which would create an empty array element in explode()</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $attributes = explode('{', substr($prid, strpos($prid, '{')+1));</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        for ($i=0, $n=sizeof($attributes); $i&lt;$n; $i++) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          $pair = explode('}', $attributes[$i]);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          if (is_numeric($pair[0]) &amp;&amp; is_numeric($pair[1])) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>            $attributes_ids .= '{' . (int)$pair[0] . '}' . (int)$pair[1];</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>            $attributes_check = false;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>            break;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        if ($attributes_check == true) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          $uprid .= $attributes_ids;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      return false;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>&nbsp;</span></pre><pre><span style='font-size:9.0pt;
+color:blue'>  return $uprid;</span></pre><pre><span style='font-size:9.0pt;
+color:blue'>}</span></pre><pre>&nbsp;</pre>
+
+<p class=MsoNormal>Lines 925-929, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_get_prid($uprid) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $pieces = explode('{', $uprid);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return $pieces[0];</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<pre>&nbsp;</pre><pre><span style='font-size:9.0pt;color:blue'>function tep_get_prid($uprid) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  $pieces = explode('{', $uprid);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (is_numeric($pieces[0])) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return $pieces[0];</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    return false;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>}</span></pre><pre><span style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><span
+style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>The following functions must be replaced in
+catalog/includes/classes/shopping_cart.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 78-108, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function add_cart($products_id, $qty = '1', $attributes = '',
+$notify = true) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  global $new_products_id_in_cart, $customer_id;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $products_id = tep_get_uprid($products_id, $attributes);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ($notify == true) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $new_products_id_in_cart = $products_id;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    tep_session_register('new_products_id_in_cart');</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ($this-&gt;in_cart($products_id)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $this-&gt;update_quantity($products_id, $qty, $attributes);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  } else {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $this-&gt;contents[] = array($products_id);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $this-&gt;contents[$products_id] = array('qty' =&gt; $qty);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>// insert into database</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (tep_session_is_registered('customer_id'))
+tep_db_query(&quot;insert into &quot; . TABLE_CUSTOMERS_BASKET . &quot;
+(customers_id, products_id, customers_basket_quantity,
+customers_basket_date_added) values ('&quot; . (int)$customer_id . &quot;',
+'&quot; . tep_db_input($products_id) . &quot;', '&quot; . $qty . &quot;',
+'&quot; . date('Ymd') . &quot;')&quot;);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (is_array($attributes)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      reset($attributes);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      while (list($option, $value) = each($attributes)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>        $this-&gt;contents[$products_id]['attributes'][$option] =
+$value;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>// insert into database</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>        if (tep_session_is_registered('customer_id'))
+tep_db_query(&quot;insert into &quot; . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . &quot;
+(customers_id, products_id, products_options_id, products_options_value_id)
+values ('&quot; . (int)$customer_id . &quot;', '&quot; .
+tep_db_input($products_id) . &quot;', '&quot; . (int)$option . &quot;', '&quot;
+. (int)$value . &quot;')&quot;);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $this-&gt;cleanup();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>// assign a temporary unique ID to the order contents to prevent
+hack attempts during the checkout procedure</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $this-&gt;cartID = $this-&gt;generate_cart_id();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre><span style='font-size:9.0pt;color:blue'>function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  global $new_products_id_in_cart, $customer_id;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  $products_id_string = tep_get_uprid($products_id, $attributes);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  $products_id = tep_get_prid($products_id_string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (is_numeric($products_id) &amp;&amp; is_numeric($qty)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    $check_product_query = tep_db_query(&quot;select products_status from &quot; . TABLE_PRODUCTS . &quot; where products_id = '&quot; . (int)$products_id . &quot;'&quot;);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    $check_product = tep_db_fetch_array($check_product_query);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    if (($check_product !== false) &amp;&amp; ($check_product['products_status'] == '1')) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      if ($notify == true) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $new_products_id_in_cart = $products_id;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        tep_session_register('new_products_id_in_cart');</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      if ($this-&gt;in_cart($products_id_string)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $this-&gt;update_quantity($products_id_string, $qty, $attributes);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      } else {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $this-&gt;contents[$products_id_string] = array('qty' =&gt; $qty);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// insert into database</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        if (tep_session_is_registered('customer_id')) tep_db_query(&quot;insert into &quot; . TABLE_CUSTOMERS_BASKET . &quot; (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('&quot; . (int)$customer_id . &quot;', '&quot; . tep_db_input($products_id_string) . &quot;', '&quot; . (int)$qty . &quot;', '&quot; . date('Ymd') . &quot;')&quot;);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        if (is_array($attributes)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          reset($attributes);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          while (list($option, $value) = each($attributes)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>            $this-&gt;contents[$products_id_string]['attributes'][$option] = $value;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// insert into database</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>            if (tep_session_is_registered('customer_id')) tep_db_query(&quot;insert into &quot; . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . &quot; (customers_id, products_id, products_options_id, products_options_value_id) values ('&quot; . (int)$customer_id . &quot;', '&quot; . tep_db_input($products_id_string) . &quot;', '&quot; . (int)$option . &quot;', '&quot; . (int)$value . &quot;')&quot;);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>          }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      $this-&gt;cleanup();</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      $this-&gt;cartID = $this-&gt;generate_cart_id();</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>}</span></pre><span style='font-size:12.0pt;font-family:"Times New Roman"'><br
+clear=all style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>Lines 110-127, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function update_quantity($products_id, $quantity = '', $attributes
+= '') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  global $customer_id;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (empty($quantity)) return true; // nothing needs to be updated
+if theres no quantity, so we return true..</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $this-&gt;contents[$products_id] = array('qty' =&gt; $quantity);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>// update database</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (tep_session_is_registered('customer_id'))
+tep_db_query(&quot;update &quot; . TABLE_CUSTOMERS_BASKET . &quot; set
+customers_basket_quantity = '&quot; . $quantity . &quot;' where customers_id =
+'&quot; . (int)$customer_id . &quot;' and products_id = '&quot; . tep_db_input($products_id)
+. &quot;'&quot;);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (is_array($attributes)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    reset($attributes);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    while (list($option, $value) = each($attributes)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $this-&gt;contents[$products_id]['attributes'][$option] =
+$value;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>// update database</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      if (tep_session_is_registered('customer_id')) tep_db_query(&quot;update
+&quot; . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . &quot; set
+products_options_value_id = '&quot; . (int)$value . &quot;' where customers_id
+= '&quot; . (int)$customer_id . &quot;' and products_id = '&quot; .
+tep_db_input($products_id) . &quot;' and products_options_id = '&quot; .
+(int)$option . &quot;'&quot;);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<pre><span style='font-size:9.0pt;color:blue'>function update_quantity($products_id, $quantity = '', $attributes = '') {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  global $customer_id;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  $products_id_string = tep_get_uprid($products_id, $attributes);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  $products_id = tep_get_prid($products_id_string);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  if (is_numeric($products_id) &amp;&amp; isset($this-&gt;contents[$products_id_string]) &amp;&amp; is_numeric($quantity)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    $this-&gt;contents[$products_id_string] = array('qty' =&gt; $quantity);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// update database</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    if (tep_session_is_registered('customer_id')) tep_db_query(&quot;update &quot; . TABLE_CUSTOMERS_BASKET . &quot; set customers_basket_quantity = '&quot; . (int)$quantity . &quot;' where customers_id = '&quot; . (int)$customer_id . &quot;' and products_id = '&quot; . tep_db_input($products_id_string) . &quot;'&quot;);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>&nbsp;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    if (is_array($attributes)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      reset($attributes);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      while (list($option, $value) = each($attributes)) {</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        $this-&gt;contents[$products_id_string]['attributes'][$option] = $value;</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>// update database</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>        if (tep_session_is_registered('customer_id')) tep_db_query(&quot;update &quot; . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . &quot; set products_options_value_id = '&quot; . (int)$value . &quot;' where customers_id = '&quot; . (int)$customer_id . &quot;' and products_id = '&quot; . tep_db_input($products_id_string) . &quot;' and products_options_id = '&quot; . (int)$option . &quot;'&quot;);</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>      }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>    }</span></pre><pre><span
+style='font-size:9.0pt;color:blue'>  }</span></pre><pre><span style='font-size:
+9.0pt;color:blue'>}</span></pre><b><span style='font-size:16.0pt;font-family:
+Arial'><br clear=all style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693707"></a><a name="_Toc119693033">Session ID XSS Issue</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1546">http://www.oscommerce.com/community/bugs,1546</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span lang=EN>A cross site scripting issue exists with
+malformed session IDs being used in the tep_href_link() function.</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<h3><span lang=EN>Solution:</span></h3>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>Line 66 in
+catalog/includes/functions/html_output.php must be changed from:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$link .= $separator . <span style='background:yellow'>$_sid</span>;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$link .= $separator . <span style='background:yellow'>tep_output_string($_sid)</span>;</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693708"></a><a name="_Toc119693034">Validate Session ID</a></h1>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Validate the session ID and redirect to the front page when an
+invalid session ID is requested.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following function must be replaced in
+catalog/includes/functions/sessions.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 66-68, from:</p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_session_start() {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return session_start();</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN>to:</span></p>
+
+<p class=MsoNormal><span lang=EN>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_session_start() {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $sane_session_id = true;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (isset($HTTP_GET_VARS[tep_session_name()])) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (preg_match('/^[a-zA-Z0-9]+$/',
+$HTTP_GET_VARS[tep_session_name()]) == false) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      unset($HTTP_GET_VARS[tep_session_name()]);</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $sane_session_id = false;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  } elseif (isset($HTTP_POST_VARS[tep_session_name()])) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (preg_match('/^[a-zA-Z0-9]+$/',
+$HTTP_POST_VARS[tep_session_name()]) == false) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      unset($HTTP_POST_VARS[tep_session_name()]);</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $sane_session_id = false;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  } elseif (isset($HTTP_COOKIE_VARS[tep_session_name()])) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (preg_match('/^[a-zA-Z0-9]+$/',
+$HTTP_COOKIE_VARS[tep_session_name()]) == false) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $session_data = session_get_cookie_params();</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      setcookie(tep_session_name(), '', time()-42000,
+$session_data['path'], $session_data['domain']);</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $sane_session_id = false;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ($sane_session_id == false) {</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL',
+false));</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  return session_start();</span></p>
+
+<p class=MsoNormal><span lang=EN style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<b><span lang=EN style='font-size:9.0pt;font-family:Arial;color:blue'><br
+clear=all style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693709"></a><a name="_Toc119693035">File Manager Problem</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1391">http://www.oscommerce.com/community/bugs,1391</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Parsing errors occur when saving edited files through the
+File Manager.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 148 in catalog/admin/file_manager.php must be changed
+from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$file_contents = <span style='background:yellow'>htmlspecialchars(implode('',
+$file_array))</span>;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$file_contents = <span style='background:yellow'>addslashes(implode('',
+$file_array))</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal>Note: This update also requires the Contact Us Form XSS
+Issue update in order to function correctly.<span style='font-size:9.0pt;
+color:blue'><br clear=all style='page-break-before:always'>
+</span><a name="_Toc119693710"></a><a name="_Toc119693036"><span
+class=Heading1Char><span style='font-size:16.0pt'>HTTP Header Injection</span></span></a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span lang=EN>By using malicious data it is possible to
+inject headers into HTTP requests.</span> </p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following function must be replaced in
+catalog/includes/functions/general.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 22-32, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_redirect($url) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ( (ENABLE_SSL == true) &amp;&amp; (getenv('HTTPS') == 'on') )
+{ // We are loading an SSL page</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) { //
+NONSSL url</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER)); //
+Change it to SSL</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  header('Location: ' . $url);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  tep_exit();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_redirect($url) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ( (strstr($url, &quot;\n&quot;) != false) || (strstr($url,
+&quot;\r&quot;) != false) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL',
+false));</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ( (ENABLE_SSL == true) &amp;&amp; (getenv('HTTPS') == 'on') )
+{ // We are loading an SSL page</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) { //
+NONSSL url</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER)); //
+Change it to SSL</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  header('Location: ' . $url);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  tep_exit();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<span style='font-size:9.0pt;font-family:"Courier New";color:blue'><br
+clear=all style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>The following function must be replaced in
+catalog/admin/includes/functions/general.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 15-26, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_redirect($url) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  global $logger;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  header('Location: ' . $url);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (STORE_PAGE_PARSE_TIME == 'true') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (!is_object($logger)) $logger = new logger;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $logger-&gt;timer_stop();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  exit;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function tep_redirect($url) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  global $logger;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if ( (strstr($url, &quot;\n&quot;) != false) || (strstr($url,
+&quot;\r&quot;) != false) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL',
+false));</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  header('Location: ' . $url);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (STORE_PAGE_PARSE_TIME == 'true') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (!is_object($logger)) $logger = new logger;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $logger-&gt;timer_stop();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  exit;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span><span style='font-size:9.0pt;color:blue'><br clear=all
+style='page-break-before:always'>
+</span><a name="_Toc119693711"></a><a name="_Toc119693037"><span
+class=Heading1Char><span style='font-size:16.0pt'>E-Mail Header Injection</span></span></a></p>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,2488">http://www.oscommerce.com/community/bugs,2488</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span lang=EN>By using malicious data it is possible to
+inject headers into emails the online store sends.</span><span lang=EN> </span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following function must be replaced in catalog/includes/classes/email.php
+and catalog/admin/includes/classes/email.php.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 473-504, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function send($to_name, $to_addr, $from_name, $from_addr, $subject
+= '', $headers = '') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $to = (($to_name != '') ? '&quot;' . $to_name . '&quot; &lt;' .
+$to_addr . '&gt;' : $to_addr);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $from = (($from_name != '') ? '&quot;' . $from_name . '&quot;
+&lt;' . $from_addr . '&gt;' : $from_addr);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (is_string($headers)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $headers = explode($this-&gt;lf, trim($headers));</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  for ($i=0; $i&lt;count($headers); $i++) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if (is_array($headers[$i])) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      for ($j=0; $j&lt;count($headers[$i]); $j++) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>        if ($headers[$i][$j] != '') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>          $xtra_headers[] = $headers[$i][$j];</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>        }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    if ($headers[$i] != '') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>      $xtra_headers[] = $headers[$i];</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (!isset($xtra_headers)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $xtra_headers = array();</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (EMAIL_TRANSPORT == 'smtp') {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    return mail($to_addr, $subject, $this-&gt;output, 'From: ' .
+$from . $this-&gt;lf . 'To: ' . $to . $this-&gt;lf . implode($this-&gt;lf,
+$this-&gt;headers) . $this-&gt;lf . implode($this-&gt;lf, $xtra_headers));</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  } else {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    return mail($to, $subject, $this-&gt;output, 'From:
+'.$from.$this-&gt;lf.implode($this-&gt;lf,
+$this-&gt;headers).$this-&gt;lf.implode($this-&gt;lf, $xtra_headers));</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>function send($to_name, $to_addr, $from_name, $from_addr, $subject
+= '', $headers = '') {<br>
+  <span style='background:yellow'>if ((strstr($to_name, &quot;\n&quot;) !=
+false) || (strstr($to_name, &quot;\r&quot;) != false)) {</span></span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue;background:yellow'>    return false;<br>
+  }<br>
+<br>
+  if ((strstr($to_addr, &quot;\n&quot;) != false) || (strstr($to_addr,
+&quot;\r&quot;) != false)) {<br>
+    return false;<br>
+  }<br>
+<br>
+  if ((strstr($subject, &quot;\n&quot;) != false) || (strstr($subject,
+&quot;\r&quot;) != false)) {<br>
+    return false;<br>
+  }<br>
+<br>
+  if ((strstr($from_name, &quot;\n&quot;) != false) || (strstr($from_name,
+&quot;\r&quot;) != false)) {<br>
+    return false;<br>
+  }<br>
+<br>
+  if ((strstr($from_addr, &quot;\n&quot;) != false) || (strstr($from_addr,
+&quot;\r&quot;) != false)) {<br>
+    return false;<br>
+  }</span><span style='font-size:9.0pt;font-family:"Courier New";color:blue'><br>
+<br>
+  $to = (($to_name != '') ? '&quot;' . $to_name . '&quot; &lt;' . $to_addr .
+'&gt;' : $to_addr);<br>
+  $from = (($from_name != '') ? '&quot;' . $from_name . '&quot; &lt;' . $from_addr
+. '&gt;' : $from_addr);<br>
+<br>
+  if (is_string($headers)) {<br>
+    $headers = explode($this-&gt;lf, trim($headers));<br>
+  }<br>
+<br>
+  for ($i=0; $i&lt;count($headers); $i++) {<br>
+    if (is_array($headers[$i])) {<br>
+      for ($j=0; $j&lt;count($headers[$i]); $j++) {<br>
+        if ($headers[$i][$j] != '') {<br>
+          $xtra_headers[] = $headers[$i][$j];<br>
+        }<br>
+      }<br>
+    }<br>
+<br>
+    if ($headers[$i] != '') {<br>
+      $xtra_headers[] = $headers[$i];<br>
+    }<br>
+  }<br>
+<br>
+  if (!isset($xtra_headers)) {<br>
+    $xtra_headers = array();<br>
+  }<br>
+<br>
+  if (EMAIL_TRANSPORT == 'smtp') {<br>
+    return mail($to_addr, $subject, $this-&gt;output, 'From: ' . $from .
+$this-&gt;lf . 'To: ' . $to . $this-&gt;lf . implode($this-&gt;lf,
+$this-&gt;headers) . $this-&gt;lf . implode($this-&gt;lf, $xtra_headers));<br>
+  } else {<br>
+    return mail($to, $subject, $this-&gt;output, 'From:
+'.$from.$this-&gt;lf.implode($this-&gt;lf, $this-&gt;headers).$this-&gt;lf.implode($this-&gt;lf,
+$xtra_headers));<br>
+  }<br>
+}</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693712"></a><a name="_Toc119693038">Contact Us Form XSS
+Issue</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,2422">http://www.oscommerce.com/community/bugs,2422</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span lang=EN>By using malicious data it is possible to
+inject HTML into the page.</span> </p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 221-225 in catalog/includes/functions/html_output.php
+must be changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (isset($GLOBALS[$name])) &amp;&amp; ($reinsert_value == true)
+) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>stripslashes($GLOBALS[$name])</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (tep_not_null($text)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>$text</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (isset($GLOBALS[$name])) &amp;&amp; ($reinsert_value == true)
+) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>tep_output_string_protected(stripslashes($GLOBALS[$name]))</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (tep_not_null($text)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>tep_output_string_protected($text)</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 244-248 in
+catalog/admin/includes/functions/html_output.php must be changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (isset($GLOBALS[$name])) &amp;&amp; ($reinsert_value == true)
+) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>stripslashes($GLOBALS[$name])</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (tep_not_null($text)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>$text</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (isset($GLOBALS[$name])) &amp;&amp; ($reinsert_value == true)
+) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>tep_output_string_protected(stripslashes($GLOBALS[$name]))</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (tep_not_null($text)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $field .= <span style='background:yellow'>tep_output_string_protected($text)</span>;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693713"></a><a name="_Toc119693039">Open Redirector</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,2970">http://www.oscommerce.com/community/bugs,2970</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>There is no URL checking being performed on the redirection
+page, and allows external sources to use the page as an open redirect relay.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 27-29 in catalog/redirect.php must be changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if (isset($HTTP_GET_VARS['goto']) &amp;&amp;
+tep_not_null($HTTP_GET_VARS['goto'])) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  tep_redirect('http://' . $HTTP_GET_VARS['goto']);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if (isset($HTTP_GET_VARS['goto']) &amp;&amp; tep_not_null($HTTP_GET_VARS['goto']))
+{</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $check_query = tep_db_query(&quot;select products_url from &quot;
+. TABLE_PRODUCTS_DESCRIPTION . &quot; where products_url = '&quot; .
+tep_db_input($HTTP_GET_VARS['goto']) . &quot;' limit 1&quot;);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (tep_db_num_rows($check_query)) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    tep_redirect('http://' . $HTTP_GET_VARS['goto']);</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693714"></a><a name="_Toc119693040">Extra Slashes In New
+Products</a></h1>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>When new products are entered and previewed, hitting the
+back button to edit the product data again adds extra slashes to apostrophes in
+the products name and description.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following lines must be replaced in catalog/admin/categories.php:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 504, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo
+tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' .
+$languages[$i]['image'], $languages[$i]['name']) . '&amp;nbsp;' .
+tep_draw_input_field('products_name[' . $languages[$i]['id'] . ']',
+(isset($products_name[$languages[$i]['id']]) ? <span style='background:yellow'>$products_name[$languages[$i]['id']]</span>
+: tep_get_products_name($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo
+tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' .
+$languages[$i]['image'], $languages[$i]['name']) . '&amp;nbsp;' .
+tep_draw_input_field('products_name[' . $languages[$i]['id'] . ']',
+(isset($products_name[$languages[$i]['id']]) ? <span style='background:yellow'>stripslashes($products_name[$languages[$i]['id']])</span>
+: tep_get_products_name($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 538, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo
+tep_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']',
+'soft', '70', '15', (isset($products_description[$languages[$i]['id']]) ? <span
+style='background:yellow'>$products_description[$languages[$i]['id']]</span> :
+tep_get_products_description($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo tep_draw_textarea_field('products_description['
+. $languages[$i]['id'] . ']', 'soft', '70', '15',
+(isset($products_description[$languages[$i]['id']]) ? <span style='background:
+yellow'>stripslashes($products_description[$languages[$i]['id']])</span> :
+tep_get_products_description($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>Line 574, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo
+tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' .
+$languages[$i]['image'], $languages[$i]['name']) . '&amp;nbsp;' .
+tep_draw_input_field('products_url[' . $languages[$i]['id'] . ']',
+(isset($products_url[$languages[$i]['id']]) ? <span style='background:yellow'>$products_url[$languages[$i]['id']]</span>
+: tep_get_products_url($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&lt;td class=&quot;main&quot;&gt;&lt;?php echo
+tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' .
+$languages[$i]['image'], $languages[$i]['name']) . '&amp;nbsp;' .
+tep_draw_input_field('products_url[' . $languages[$i]['id'] . ']',
+(isset($products_url[$languages[$i]['id']]) ? <span style='background:yellow'>stripslashes($products_url[$languages[$i]['id']])</span>
+: tep_get_products_url($pInfo-&gt;products_id, $languages[$i]['id'])));
+?&gt;&lt;/td&gt;</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693715"></a><a name="_Toc119693041">Order Status Filtering</a></h1>
+
+<p class=MsoNormal><a href="http://www.oscommerce.com/community/bugs,1543">http://www.oscommerce.com/community/bugs,1543</a></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>After changing the order status filtering on the
+Administration Tool -&gt; Customers -&gt; Orders page, selecting &quot;All
+Orders&quot; would show an empty listing of orders.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 357 in catalog/admin/orders.php must be changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=NormalCourierNew><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (isset($HTTP_GET_VARS['status'])) {</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>} elseif (isset($HTTP_GET_VARS['status']) <span style='background:
+yellow'>&amp;&amp; is_numeric($HTTP_GET_VARS['status']) &amp;&amp;
+($HTTP_GET_VARS['status'] &gt; 0)</span>) {</span></p>
+
+<b><span style='font-size:16.0pt;font-family:Arial'><br clear=all
+style='page-break-before:always'>
+</span></b>
+
+<h1><a name="_Toc119693716"></a><a name="_Toc119693042">MySQL 5.0 Compatibility</a></h1>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Problem:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>MySQL 5.0 introduces Server SQL modes as part of its SQL
+2003 standards support, and uses a more stricter approach to executing SQL
+queries. This is performed by default with setting STRICT_TRANS_TABLES as a
+Server SQL mode.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Due to this new setting, MySQL fails on certain SQL queries
+and produces error messages on the screen.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<h3>Solution:</h3>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Lines 213-223 in catalog/advanced_search_result.php must be
+changed from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$from_str = &quot;from &quot; . TABLE_PRODUCTS . &quot; p left join
+&quot; . TABLE_MANUFACTURERS . &quot; m using(manufacturers_id) left join
+&quot; . TABLE_SPECIALS . &quot; s on p.products_id = s.products_id, &quot; .
+TABLE_PRODUCTS_DESCRIPTION . &quot; pd, &quot; . TABLE_CATEGORIES . &quot; c,
+&quot; . TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c&quot;;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (DISPLAY_PRICE_WITH_TAX == 'true') &amp;&amp;
+(tep_not_null($pfrom) || tep_not_null($pto)) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (!tep_session_is_registered('customer_country_id')) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $customer_country_id = STORE_COUNTRY;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $customer_zone_id = STORE_ZONE;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $from_str .= &quot; left join &quot; . TABLE_TAX_RATES . &quot;
+tr on p.products_tax_class_id = tr.tax_class_id left join &quot; .
+TABLE_ZONES_TO_GEO_ZONES . &quot; gz on tr.tax_zone_id = gz.geo_zone_id and
+(gz.zone_country_id is null or gz.zone_country_id = '0' or gz.zone_country_id =
+'&quot; . (int)$customer_country_id . &quot;') and (gz.zone_id is null or
+gz.zone_id = '0' or gz.zone_id = '&quot; . (int)$customer_zone_id .
+&quot;')&quot;;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$where_str = &quot; where p.products_status = '1' and p.products_id
+= pd.products_id and pd.language_id = '&quot; . (int)$languages_id . &quot;'
+and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id
+&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$from_str = &quot;from &quot; . TABLE_PRODUCTS . &quot; p left join
+&quot; . TABLE_MANUFACTURERS . &quot; m using(manufacturers_id) left join
+&quot; . TABLE_SPECIALS . &quot; s on p.products_id = s.products_id&quot;;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>if ( (DISPLAY_PRICE_WITH_TAX == 'true') &amp;&amp;
+(tep_not_null($pfrom) || tep_not_null($pto)) ) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  if (!tep_session_is_registered('customer_country_id')) {</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $customer_country_id = STORE_COUNTRY;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>    $customer_zone_id = STORE_ZONE;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  }</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>  $from_str .= &quot; left join &quot; . TABLE_TAX_RATES . &quot;
+tr on p.products_tax_class_id = tr.tax_class_id left join &quot; .
+TABLE_ZONES_TO_GEO_ZONES . &quot; gz on tr.tax_zone_id = gz.geo_zone_id and
+(gz.zone_country_id is null or gz.zone_country_id = '0' or gz.zone_country_id =
+'&quot; . (int)$customer_country_id . &quot;') and (gz.zone_id is null or
+gz.zone_id = '0' or gz.zone_id = '&quot; . (int)$customer_zone_id .
+&quot;')&quot;;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>}</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$from_str .= &quot;, &quot; . TABLE_PRODUCTS_DESCRIPTION . &quot;
+pd, &quot; . TABLE_CATEGORIES . &quot; c, &quot; . TABLE_PRODUCTS_TO_CATEGORIES
+. &quot; p2c&quot;;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$where_str = &quot; where p.products_status = '1' and p.products_id
+= pd.products_id and pd.language_id = '&quot; . (int)$languages_id . &quot;'
+and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id
+&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following lines must be replaced in catalog/index.php:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 175, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p,
+&quot; . TABLE_PRODUCTS_DESCRIPTION . &quot; pd, &quot; . TABLE_MANUFACTURERS .
+&quot; m, &quot; . TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c <span
+style='background:yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on
+p.products_id = s.products_id</span> where p.products_status = '1' and
+p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '&quot; .
+(int)$HTTP_GET_VARS['manufacturers_id'] . &quot;' and p.products_id =
+p2c.products_id and pd.products_id = p2c.products_id and pd.language_id =
+'&quot; . (int)$languages_id . &quot;' and p2c.categories_id = '&quot; .
+(int)$HTTP_GET_VARS['filter_id'] . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p <span
+style='background:yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on
+p.products_id = s.products_id</span>, &quot; . TABLE_PRODUCTS_DESCRIPTION .
+&quot; pd, &quot; . TABLE_MANUFACTURERS . &quot; m, &quot; .
+TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c where p.products_status = '1' and
+p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '&quot; .
+(int)$HTTP_GET_VARS['manufacturers_id'] . &quot;' and p.products_id =
+p2c.products_id and pd.products_id = p2c.products_id and pd.language_id =
+'&quot; . (int)$languages_id . &quot;' and p2c.categories_id = '&quot; .
+(int)$HTTP_GET_VARS['filter_id'] . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>Line 178, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p,
+&quot; . TABLE_PRODUCTS_DESCRIPTION . &quot; pd, &quot; . TABLE_MANUFACTURERS .
+&quot; m <span style='background:yellow'>left join &quot; . TABLE_SPECIALS .
+&quot; s on p.products_id = s.products_id</span> where p.products_status = '1'
+and pd.products_id = p.products_id and pd.language_id = '&quot; .
+(int)$languages_id . &quot;' and p.manufacturers_id = m.manufacturers_id and
+m.manufacturers_id = '&quot; . (int)$HTTP_GET_VARS['manufacturers_id'] .
+&quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p <span
+style='background:yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on
+p.products_id = s.products_id</span>, &quot; . TABLE_PRODUCTS_DESCRIPTION .
+&quot; pd, &quot; . TABLE_MANUFACTURERS . &quot; m where p.products_status =
+'1' and pd.products_id = p.products_id and pd.language_id = '&quot; . (int)$languages_id
+. &quot;' and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id =
+'&quot; . (int)$HTTP_GET_VARS['manufacturers_id'] . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 184, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p,
+&quot; . TABLE_PRODUCTS_DESCRIPTION . &quot; pd, &quot; . TABLE_MANUFACTURERS .
+&quot; m, &quot; . TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c <span
+style='background:yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on
+p.products_id = s.products_id</span> where p.products_status = '1' and
+p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '&quot; . (int)$HTTP_GET_VARS['filter_id']
+. &quot;' and p.products_id = p2c.products_id and pd.products_id =
+p2c.products_id and pd.language_id = '&quot; . (int)$languages_id . &quot;' and
+p2c.categories_id = '&quot; . (int)$current_category_id . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS . &quot; p <span
+style='background:yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on
+p.products_id = s.products_id</span>, &quot; . TABLE_PRODUCTS_DESCRIPTION .
+&quot; pd, &quot; . TABLE_MANUFACTURERS . &quot; m, &quot; .
+TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c where p.products_status = '1' and
+p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '&quot; .
+(int)$HTTP_GET_VARS['filter_id'] . &quot;' and p.products_id = p2c.products_id
+and pd.products_id = p2c.products_id and pd.language_id = '&quot; .
+(int)$languages_id . &quot;' and p2c.categories_id = '&quot; . (int)$current_category_id
+. &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman"'><br clear=all
+style='page-break-before:always'>
+</span>
+
+<p class=MsoNormal>Line 187, from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as
+specials_new_products_price, IF(s.status, s.specials_new_products_price,
+p.products_price) as final_price from &quot; . TABLE_PRODUCTS_DESCRIPTION .
+&quot; pd, &quot; . TABLE_PRODUCTS . &quot; p left join &quot; .
+TABLE_MANUFACTURERS . &quot; m on p.manufacturers_id = m.manufacturers_id,
+&quot; . TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c <span style='background:
+yellow'>left join &quot; . TABLE_SPECIALS . &quot; s on p.products_id =
+s.products_id</span> where p.products_status = '1' and p.products_id =
+p2c.products_id and pd.products_id = p2c.products_id and pd.language_id =
+'&quot; . (int)$languages_id . &quot;' and p2c.categories_id = '&quot; .
+(int)$current_category_id . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>$listing_sql = &quot;select &quot; . $select_column_list . &quot;
+p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id,
+IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price,
+IF(s.status, s.specials_new_products_price, p.products_price) as final_price
+from &quot; . TABLE_PRODUCTS_DESCRIPTION . &quot; pd, &quot; . TABLE_PRODUCTS .
+&quot; p left join &quot; . TABLE_MANUFACTURERS . &quot; m on
+p.manufacturers_id = m.manufacturers_id <span style='background:yellow'>left
+join &quot; . TABLE_SPECIALS . &quot; s on p.products_id = s.products_id</span>,
+&quot; . TABLE_PRODUCTS_TO_CATEGORIES . &quot; p2c where p.products_status =
+'1' and p.products_id = p2c.products_id and pd.products_id = p2c.products_id
+and pd.language_id = '&quot; . (int)$languages_id . &quot;' and p2c.categories_id
+= '&quot; . (int)$current_category_id . &quot;'&quot;;</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>Line 292 in catalog/admin/categories.php must be changed
+from:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>tep_db_query(&quot;insert into &quot; . TABLE_PRODUCTS . &quot;
+(products_quantity, products_model,products_image, products_price,
+products_date_added, products_date_available, products_weight, products_status,
+products_tax_class_id, manufacturers_id) values ('&quot; .
+tep_db_input($product['products_quantity']) . &quot;', '&quot; .
+tep_db_input($product['products_model']) . &quot;', '&quot; .
+tep_db_input($product['products_image']) . &quot;', '&quot; .
+tep_db_input($product['products_price']) . &quot;',  now(), <span
+style='background:yellow'>'&quot; .
+tep_db_input($product['products_date_available']) . &quot;'</span>, '&quot; .
+tep_db_input($product['products_weight']) . &quot;', '0', '&quot; .
+(int)$product['products_tax_class_id'] . &quot;', '&quot; .
+(int)$product['manufacturers_id'] . &quot;')&quot;);</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>to:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>tep_db_query(&quot;insert into &quot; . TABLE_PRODUCTS . &quot;
+(products_quantity, products_model,products_image, products_price,
+products_date_added, products_date_available, products_weight, products_status,
+products_tax_class_id, manufacturers_id) values ('&quot; .
+tep_db_input($product['products_quantity']) . &quot;', '&quot; .
+tep_db_input($product['products_model']) . &quot;', '&quot; .
+tep_db_input($product['products_image']) . &quot;', '&quot; .
+tep_db_input($product['products_price']) . &quot;',  now(), <span
+style='background:yellow'>&quot; . (empty($product['products_date_available'])
+? &quot;null&quot; : &quot;'&quot; .
+tep_db_input($product['products_date_available']) . &quot;'&quot;) . &quot;</span>,
+'&quot; . tep_db_input($product['products_weight']) . &quot;', '0', '&quot; .
+(int)$product['products_tax_class_id'] . &quot;', '&quot; .
+(int)$product['manufacturers_id'] . &quot;')&quot;);</span></p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>The following SQL queries need to be performed:</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>ALTER TABLE whos_online MODIFY COLUMN last_page_url VARCHAR(255)
+NOT NULL;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>ALTER TABLE customers MODIFY COLUMN customers_default_address_id
+INTEGER;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>&nbsp;</span></p>
+
+<p class=MsoNormal><span style='font-size:9.0pt;font-family:"Courier New";
+color:blue'>ALTER TABLE customers_basket MODIFY COLUMN final_price
+DECIMAL(15,4);</span></p>
+
+</div>
+
+</body>
+
+</html>

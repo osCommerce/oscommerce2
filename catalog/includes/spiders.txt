@@ -1,0 +1,54 @@
+$Id: spiders.txt,v 1.2 2003/05/05 17:58:17 dgw_ Exp $
+almaden.ibm.com
+appie 1.1
+architext
+ask jeeves
+asterias2.0
+augurfind
+baiduspider
+bannana_bot
+bdcindexer
+crawler
+crawler@fast
+docomo
+fast-webcrawler
+fluffy the spider
+frooglebot
+geobot
+googlebot
+gulliver
+henrythemiragorobot
+ia_archiver
+infoseek
+kit_fireball
+lachesis
+lycos_spider
+mantraagent
+mercator
+moget/1.0
+muscatferret
+nationaldirectory-webspider
+naverrobot
+ncsa beta
+netresearchserver
+ng/1.0
+osis-project
+polybot
+pompos
+scooter
+seventwentyfour
+sidewinder
+sleek spider
+slurp/si
+slurp@inktomi.com
+steeler/1.3
+szukacz
+t-h-u-n-d-e-r-s-t-o-n-e
+teoma
+turnitinbot
+ultraseek
+vagabondo
+voilabot
+w3c_validator
+zao/0
+zyborg/1.0
