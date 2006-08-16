@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2006 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,12 +17,7 @@ define('BOX_TITLE_STATISTICS', 'Statistics');
 
 define('BOX_ENTRY_SUPPORT_SITE', 'Support Site');
 define('BOX_ENTRY_SUPPORT_FORUMS', 'Support Forums');
-define('BOX_ENTRY_MAILING_LISTS', 'Mailing Lists');
-define('BOX_ENTRY_BUG_REPORTS', 'Bug Reports');
-define('BOX_ENTRY_FAQ', 'FAQ');
-define('BOX_ENTRY_LIVE_DISCUSSIONS', 'Live Discussions');
-define('BOX_ENTRY_CVS_REPOSITORY', 'CVS Repository');
-define('BOX_ENTRY_INFORMATION_PORTAL', 'Information Portal');
+define('BOX_ENTRY_CONTRIBUTIONS', 'Contributions');
 
 define('BOX_ENTRY_CUSTOMERS', 'Customers:');
 define('BOX_ENTRY_PRODUCTS', 'Products:');

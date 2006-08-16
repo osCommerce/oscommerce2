@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2006 osCommerce
 
   Released under the GNU General Public License
 */
@@ -115,13 +115,8 @@ A.sub:hover { color: #dddddd; text-decoration: underline; }
 
   $contents[] = array('params' => 'class="infoBox"',
                       'text'  => '<a href="http://www.oscommerce.com" target="_blank">' . BOX_ENTRY_SUPPORT_SITE . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/forum" target="_blank">' . BOX_ENTRY_SUPPORT_FORUMS . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/mlists" target="_blank">' . BOX_ENTRY_MAILING_LISTS . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/bugs" target="_blank">' . BOX_ENTRY_BUG_REPORTS . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/faq" target="_blank">' . BOX_ENTRY_FAQ . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/irc" target="_blank">' . BOX_ENTRY_LIVE_DISCUSSIONS . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/community.php/cvs" target="_blank">' . BOX_ENTRY_CVS_REPOSITORY . '</a><br>' .
-                                 '<a href="http://www.oscommerce.com/about.php/portal" target="_blank">' . BOX_ENTRY_INFORMATION_PORTAL . '</a>');
+                                 '<a href="http://forums.oscommerce.com" target="_blank">' . BOX_ENTRY_SUPPORT_FORUMS . '</a><br>' .
+                                 '<a href="http://www.oscommerce.com/community/contributions" target="_blank">' . BOX_ENTRY_CONTRIBUTIONS . '</a>');
 
   $box = new box;
   echo $box->menuBox($heading, $contents);
