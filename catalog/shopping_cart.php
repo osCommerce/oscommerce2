@@ -81,13 +81,13 @@
           echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                       from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                      where pa.products_id = '" . $products[$i]['id'] . "'
-                                       and pa.options_id = '" . $option . "'
+                                      where pa.products_id = '" . (int)$products[$i]['id'] . "'
+                                       and pa.options_id = '" . (int)$option . "'
                                        and pa.options_id = popt.products_options_id
-                                       and pa.options_values_id = '" . $value . "'
+                                       and pa.options_values_id = '" . (int)$value . "'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . $languages_id . "'
-                                       and poval.language_id = '" . $languages_id . "'");
+                                       and popt.language_id = '" . (int)$languages_id . "'
+                                       and poval.language_id = '" . (int)$languages_id . "'");
           $attributes_values = tep_db_fetch_array($attributes);
 
           $products[$i][$option]['products_options_name'] = $attributes_values['products_options_name'];

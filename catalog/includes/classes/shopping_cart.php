@@ -81,7 +81,19 @@
       $products_id_string = tep_get_uprid($products_id, $attributes);
       $products_id = tep_get_prid($products_id_string);
 
-      if (is_numeric($products_id) && is_numeric($qty)) {
+      $attributes_pass_check = true;
+
+      if (is_array($attributes)) {
+        reset($attributes);
+        while (list($option, $value) = each($attributes)) {
+          if (!is_numeric($option) || !is_numeric($value)) {
+            $attributes_pass_check = false;
+            break;
+          }
+        }
+      }
+
+      if (is_numeric($products_id) && is_numeric($qty) && ($attributes_pass_check == true)) {
         $check_product_query = tep_db_query("select products_status from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
         $check_product = tep_db_fetch_array($check_product_query);
 
@@ -122,7 +134,19 @@
       $products_id_string = tep_get_uprid($products_id, $attributes);
       $products_id = tep_get_prid($products_id_string);
 
-      if (is_numeric($products_id) && isset($this->contents[$products_id_string]) && is_numeric($quantity)) {
+      $attributes_pass_check = true;
+
+      if (is_array($attributes)) {
+        reset($attributes);
+        while (list($option, $value) = each($attributes)) {
+          if (!is_numeric($option) || !is_numeric($value)) {
+            $attributes_pass_check = false;
+            break;
+          }
+        }
+      }
+
+      if (is_numeric($products_id) && isset($this->contents[$products_id_string]) && is_numeric($quantity) && ($attributes_pass_check == true)) {
         $this->contents[$products_id_string] = array('qty' => $quantity);
 // update database
         if (tep_session_is_registered('customer_id')) tep_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . (int)$quantity . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id_string) . "'");
