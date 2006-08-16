@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2006 osCommerce
 
   Released under the GNU General Public License
 
@@ -22,8 +22,8 @@
     if (!is_array($ar)) return false;
 
     while (list($key, $value) = each($ar)) {
-      if (is_array($value)) {
-        do_magic_quotes_gpc($value);
+      if (is_array($ar[$key])) {
+        do_magic_quotes_gpc($ar[$key]);
       } else {
         $ar[$key] = addslashes($value);
       }
