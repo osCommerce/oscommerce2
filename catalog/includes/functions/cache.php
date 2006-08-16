@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2006 osCommerce
 
   Released under the GNU General Public License
 */
@@ -100,6 +100,8 @@
   function tep_cache_categories_box($auto_expire = false, $refresh = false) {
     global $cPath, $language, $languages_id, $tree, $cPath_array, $categories_string;
 
+    $cache_output = '';
+
     if (($refresh == true) || !read_cache($cache_output, 'categories_box-' . $language . '.cache' . $cPath, $auto_expire)) {
       ob_start();
       include(DIR_WS_BOXES . 'categories.php');
@@ -117,8 +119,10 @@
   function tep_cache_manufacturers_box($auto_expire = false, $refresh = false) {
     global $HTTP_GET_VARS, $language;
 
+    $cache_output = '';
+
     $manufacturers_id = '';
-    if (isset($HTTP_GET_VARS['manufactuers_id']) && tep_not_null($HTTP_GET_VARS['manufacturers_id'])) {
+    if (isset($HTTP_GET_VARS['manufactuers_id']) && is_numeric($HTTP_GET_VARS['manufacturers_id'])) {
       $manufacturers_id = $HTTP_GET_VARS['manufacturers_id'];
     }
 
@@ -139,12 +143,16 @@
   function tep_cache_also_purchased($auto_expire = false, $refresh = false) {
     global $HTTP_GET_VARS, $language, $languages_id;
 
-    if (($refresh == true) || !read_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id'], $auto_expire)) {
-      ob_start();
-      include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
-      $cache_output = ob_get_contents();
-      ob_end_clean();
-      write_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id']);
+    $cache_output = '';
+
+    if (isset($HTTP_GET_VARS['products_id']) && is_numeric($HTTP_GET_VARS['products_id'])) {
+      if (($refresh == true) || !read_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id'], $auto_expire)) {
+        ob_start();
+        include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
+        $cache_output = ob_get_contents();
+        ob_end_clean();
+        write_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id']);
+      }
     }
 
     return $cache_output;
