@@ -12,6 +12,7 @@ Parse GET Variables In Cache Functions
 PHP 3 Session ID XSS Issue
 Product Attributes SQL Injection
 Resize Images To Round Numbers
+Use The Correct Country Name Value When Formatting Addresses
 
 ## Update 051113 (13th November 2005)
 
@@ -252,6 +253,34 @@ $height = $image_size[1] * $ratio;
 to:
 
 $height = intval($image_size[1] * $ratio);
+
+------------------------------------------------------------------------------
+Use The Correct Country Name Value When Formatting Addresses
+http://www.oscommerce.com/community/bugs,1291
+http://svn.oscommerce.com/trac/changeset/713
+------------------------------------------------------------------------------
+
+Problem:
+
+Depending on the values passed to tep_address_format(), an array value could be used as the country name instead of a string value.
+
+Solution:
+
+The following line must be replaced in catalog/includes/functions/general.php:
+
+Line 453, from:
+
+$country = tep_output_string_protected($address['country']);
+
+to:
+
+$country = tep_output_string_protected($address['country']['title']);
+
+The following line must be removed:
+
+Line 483:
+
+if ($country == '') $country = tep_output_string_protected($address['country']);
 
 ###########################
 ###### Update 051113 ######
