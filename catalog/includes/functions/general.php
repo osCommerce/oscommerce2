@@ -450,7 +450,7 @@
         $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
       }
     } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']);
+      $country = tep_output_string_protected($address['country']['title']);
     } else {
       $country = '';
     }
@@ -480,7 +480,6 @@
     $statecomma = '';
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = tep_output_string_protected($address['country']);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format['format'];
