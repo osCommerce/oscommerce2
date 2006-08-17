@@ -13,6 +13,7 @@ PHP 3 Session ID XSS Issue
 Product Attributes SQL Injection
 Resize Images To Round Numbers
 Use The Correct Country Name Value When Formatting Addresses
+Prevent The Session ID Being Passed In Tell-A-Friend E-Mails
 
 ## Update 051113 (13th November 2005)
 
@@ -281,6 +282,28 @@ The following line must be removed:
 Line 483:
 
 if ($country == '') $country = tep_output_string_protected($address['country']);
+
+------------------------------------------------------------------------------
+Prevent The Session ID Being Passed In Tell-A-Friend E-Mails
+http://www.oscommerce.com/community/bugs,3986
+http://svn.oscommerce.com/trac/changeset/715
+------------------------------------------------------------------------------
+
+Problem:
+
+If the customer has cookies disabled their session ID may exist in the store URL used in tell-a-friend emails.
+
+Solution:
+
+The following line must be replaced in catalog/tell_a_friend.php:
+
+Line 77, from:
+
+$email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'])) . "\n\n" .
+
+to:
+
+$email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false)) . "\n\n" .
 
 ###########################
 ###### Update 051113 ######
