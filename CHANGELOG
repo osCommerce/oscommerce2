@@ -1,7 +1,13 @@
-$Id: CHANGELOG,v 1.23 2003/07/12 09:38:07 hpdl Exp $
+$Id: $
 
 osCommerce Changelog
-Copyright (c) 2005 osCommerce
+Copyright (c) 2006 osCommerce
+
+------------------------------------------------------------------------------
+08/17/2006 osCommerce 2.2 Milestone 2 Update 060817
+------------------------------------------------------------------------------
+
+Please review the update-20060817.txt file for the important changes made.
 
 ------------------------------------------------------------------------------
 11/13/2005 osCommerce 2.2 Milestone 2 Update 051113
@@ -15,7 +21,7 @@ Copyright (c) 2005 osCommerce
 11/12/2005 osCommerce 2.2 Milestone 2 Update 051112
 ------------------------------------------------------------------------------
 
-Please review the update-20051112.html file for the important changes made.
+Please review the update-20060817.txt file for the important changes made.
 
  * Index language definition: updated the Wiki link to point to the Knowledge
    Base site
