@@ -14,6 +14,7 @@ Product Attributes SQL Injection
 Resize Images To Round Numbers
 Use The Correct Country Name Value When Formatting Addresses
 Prevent The Session ID Being Passed In Tell-A-Friend E-Mails
+Properly Remove Deleted Products That Exist In Shopping Carts
 
 ## Update 051113 (13th November 2005)
 
@@ -304,6 +305,30 @@ $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link(FILENAME_PRODUCT_INFO, 'pr
 to:
 
 $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false)) . "\n\n" .
+
+------------------------------------------------------------------------------
+Properly Remove Deleted Products That Exist In Shopping Carts
+http://www.oscommerce.com/community/bugs,3193
+http://svn.oscommerce.com/trac/changeset/717
+------------------------------------------------------------------------------
+
+Problem:
+
+Deleting products via the Administration Tool would not successfully remove the product from customers shopping carts if the product had attributes.
+
+Solution:
+
+The following lines must be replaced in catalog/admin/includes/functions/general.php:
+
+Lines 900-901, from:
+
+tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where products_id = '" . (int)$product_id . "'");
+tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where products_id = '" . (int)$product_id . "'");
+
+to:
+
+tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where products_id = '" . (int)$product_id . "' or products_id like '" . (int)$product_id . "{'");
+tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where products_id = '" . (int)$product_id . "' or products_id like '" . (int)$product_id . "{'");
 
 ###########################
 ###### Update 051113 ######
