@@ -122,7 +122,7 @@
     $cache_output = '';
 
     $manufacturers_id = '';
-    if (isset($HTTP_GET_VARS['manufactuers_id']) && is_numeric($HTTP_GET_VARS['manufacturers_id'])) {
+    if (isset($HTTP_GET_VARS['manufacturers_id']) && is_numeric($HTTP_GET_VARS['manufacturers_id'])) {
       $manufacturers_id = $HTTP_GET_VARS['manufacturers_id'];
     }
 
