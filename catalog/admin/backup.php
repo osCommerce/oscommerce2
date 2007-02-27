@@ -73,6 +73,7 @@
 
             if (!isset($index[$kname])) {
               $index[$kname] = array('unique' => !$keys['Non_unique'],
+                                     'fulltext' => ($keys['Index_type'] == 'FULLTEXT' ? '1' : '0'),
                                      'columns' => array());
             }
 
@@ -86,6 +87,8 @@
 
             if ($kname == 'PRIMARY') {
               $schema .= '  PRIMARY KEY (' . $columns . ')';
+            } elseif ( $info['fulltext'] == '1' ) {
+              $schema .= '  FULLTEXT ' . $kname . ' (' . $columns . ')';
             } elseif ($info['unique']) {
               $schema .= '  UNIQUE ' . $kname . ' (' . $columns . ')';
             } else {
@@ -97,27 +100,28 @@
           fputs($fp, $schema);
 
 // dump the data
-          $rows_query = tep_db_query("select " . implode(',', $table_list) . " from " . $table);
-          while ($rows = tep_db_fetch_array($rows_query)) {
-            $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
+          if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) ) {
+            $rows_query = tep_db_query("select " . implode(',', $table_list) . " from " . $table);
+            while ($rows = tep_db_fetch_array($rows_query)) {
+              $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
 
-            reset($table_list);
-            while (list(,$i) = each($table_list)) {
-              if (!isset($rows[$i])) {
-                $schema .= 'NULL, ';
-              } elseif (tep_not_null($rows[$i])) {
-                $row = addslashes($rows[$i]);
-                $row = ereg_replace("\n#", "\n".'\#', $row);
+              reset($table_list);
+              while (list(,$i) = each($table_list)) {
+                if (!isset($rows[$i])) {
+                  $schema .= 'NULL, ';
+                } elseif (tep_not_null($rows[$i])) {
+                  $row = addslashes($rows[$i]);
+                  $row = ereg_replace("\n#", "\n".'\#', $row);
 
-                $schema .= '\'' . $row . '\', ';
-              } else {
-                $schema .= '\'\', ';
+                  $schema .= '\'' . $row . '\', ';
+                } else {
+                  $schema .= '\'\', ';
+                }
               }
+
+              $schema = ereg_replace(', $', '', $schema) . ');' . "\n";
+              fputs($fp, $schema);
             }
-
-            $schema = ereg_replace(', $', '', $schema) . ');' . "\n";
-            fputs($fp, $schema);
-
           }
         }
 
@@ -249,6 +253,11 @@
           for ($i=0, $n=sizeof($sql_array); $i<$n; $i++) {
             tep_db_query($sql_array[$i]);
           }
+
+          tep_session_close();
+
+          tep_db_query("delete from " . TABLE_WHOS_ONLINE);
+          tep_db_query("delete from " . TABLE_SESSIONS);
 
           tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
           tep_db_query("insert into " . TABLE_CONFIGURATION . " values ('', 'Last Database Restore', 'DB_LAST_RESTORE', '" . $read_from . "', 'Last database restore file', '6', '', '', now(), '', '')");
