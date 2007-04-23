@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,10 +16,9 @@
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
 
-// Check if register_globals is enabled.
-// Since this is a temporary measure this message is hardcoded. The requirement will be removed before 2.2 is finalized.
-  if (function_exists('ini_get')) {
-    ini_get('register_globals') or exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory.');
+// check support for register_globals
+  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION < 4.3) ) {
+    exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
   }
 
 // Set the local configuration parameters - mainly for developers
@@ -30,6 +29,9 @@
 
 // Define the project version
   define('PROJECT_VERSION', 'osCommerce 2.2-MS2');
+
+// some code to solve compatibility issues
+  require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set php_self in the local scope
   $PHP_SELF = (isset($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : $HTTP_SERVER_VARS['SCRIPT_NAME']);
@@ -76,9 +78,6 @@
 // include shopping cart class
   require(DIR_WS_CLASSES . 'shopping_cart.php');
 
-// some code to solve compatibility issues
-  require(DIR_WS_FUNCTIONS . 'compatibility.php');
-
 // check to see if php implemented session management functions - if not, include php3/php4 compatible session class
   if (!function_exists('session_start')) {
     define('PHP_SESSION_NAME', 'osCAdminID');
@@ -105,6 +104,10 @@
 
 // lets start our session
   tep_session_start();
+
+  if ( (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
+    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
+  }
 
 // set the language
   if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {

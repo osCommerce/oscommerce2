@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -24,10 +24,10 @@
     }
 
     function _sess_read($key) {
-      $qid = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' and expiry > '" . time() . "'");
+      $value_query = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' and expiry > '" . time() . "'");
+      $value = tep_db_fetch_array($value_query);
 
-      $value = tep_db_fetch_array($qid);
-      if ($value['value']) {
+      if (isset($value['value'])) {
         return $value['value'];
       }
 
@@ -40,10 +40,10 @@
       $expiry = time() + $SESS_LIFE;
       $value = $val;
 
-      $qid = tep_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
-      $total = tep_db_fetch_array($qid);
+      $check_query = tep_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
+      $check = tep_db_fetch_array($check_query);
 
-      if ($total['total'] > 0) {
+      if ($check['total'] > 0) {
         return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input($expiry) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
       } else {
         return tep_db_query("insert into " . TABLE_SESSIONS . " values ('" . tep_db_input($key) . "', '" . tep_db_input($expiry) . "', '" . tep_db_input($value) . "')");
@@ -64,19 +64,68 @@
   }
 
   function tep_session_start() {
+    global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS;
+
+    $sane_session_id = true;
+
+    if (isset($HTTP_GET_VARS[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) {
+        unset($HTTP_GET_VARS[tep_session_name()]);
+
+        $sane_session_id = false;
+      }
+    } elseif (isset($HTTP_POST_VARS[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) {
+        unset($HTTP_POST_VARS[tep_session_name()]);
+
+        $sane_session_id = false;
+      }
+    } elseif (isset($HTTP_COOKIE_VARS[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false) {
+        $session_data = session_get_cookie_params();
+
+        setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
+
+        $sane_session_id = false;
+      }
+    }
+
+    if ($sane_session_id == false) {
+      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+    }
+
     return session_start();
   }
 
   function tep_session_register($variable) {
-    return session_register($variable);
+    if (PHP_VERSION < 4.3) {
+      return session_register($variable);
+    } else {
+      if (isset($GLOBALS[$variable])) {
+        $_SESSION[$variable] =& $GLOBALS[$variable];
+      } else {
+        $_SESSION[$variable] = null;
+      }
+      $GLOBALS[$variable] =& $_SESSION[$variable];
+    }
+
+    return false;
   }
 
   function tep_session_is_registered($variable) {
-    return session_is_registered($variable);
+    if (PHP_VERSION < 4.3) {
+      return session_is_registered($variable);
+    } else {
+      return isset($_SESSION[$variable]);
+    }
   }
 
   function tep_session_unregister($variable) {
-    return session_unregister($variable);
+    if (PHP_VERSION < 4.3) {
+      return session_unregister($variable);
+    } else {
+      unset($_SESSION[$variable]);
+    }
   }
 
   function tep_session_id($sessid = '') {
@@ -96,7 +145,9 @@
   }
 
   function tep_session_close() {
-    if (function_exists('session_close')) {
+    if (PHP_VERSION >= '4.0.4') {
+      return session_write_close();
+    } elseif (function_exists('session_close')) {
       return session_close();
     }
   }

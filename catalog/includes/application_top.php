@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,10 +16,9 @@
 // set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
 
-// check if register_globals is enabled.
-// since this is a temporary measure this message is hardcoded. The requirement will be removed before 2.2 is finalized.
-  if (function_exists('ini_get')) {
-    ini_get('register_globals') or exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory.');
+// check support for register_globals
+  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION < 4.3) ) {
+    exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
   }
 
 // Set the local configuration parameters - mainly for developers
@@ -36,6 +35,9 @@
 
 // define the project version
   define('PROJECT_VERSION', 'osCommerce 2.2-MS2');
+
+// some code to solve compatibility issues
+  require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set the type of request (secure or not)
   $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
@@ -125,9 +127,6 @@
 // include navigation history class
   require(DIR_WS_CLASSES . 'navigation_history.php');
 
-// some code to solve compatibility issues
-  require(DIR_WS_FUNCTIONS . 'compatibility.php');
-
 // check if sessions are supported, otherwise use the php3 compatible session class
   if (!function_exists('session_start')) {
     define('PHP_SESSION_NAME', 'osCsid');
@@ -194,6 +193,10 @@
   } else {
     tep_session_start();
     $session_started = true;
+  }
+
+  if ( ($session_started == true) && (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
+    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
   }
 
 // set SID once, even if empty

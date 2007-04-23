@@ -5,12 +5,9 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2006 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
-
-  Modified by Marco Canini, <m.canini@libero.it>
-  - Fixed a bug with arrays in $HTTP_xxx_VARS
 */
 
 ////
@@ -34,6 +31,14 @@
   if (!is_array($HTTP_GET_VARS)) $HTTP_GET_VARS = array();
   if (!is_array($HTTP_POST_VARS)) $HTTP_POST_VARS = array();
   if (!is_array($HTTP_COOKIE_VARS)) $HTTP_COOKIE_VARS = array();
+
+  if ( (PHP_VERSION >= 5.0) && function_exists('ini_get') && (ini_get('register_long_arrays') == false) ) {
+    $HTTP_GET_VARS =& $_GET;
+    $HTTP_POST_VARS =& $_POST;
+    $HTTP_COOKIE_VARS =& $_COOKIE;
+    $HTTP_SESSION_VARS =& $_SESSION;
+    $HTTP_SERVER_VARS =& $_SERVER;
+  }
 
 // handle magic_quotes_gpc turned off.
   if (!get_magic_quotes_gpc()) {

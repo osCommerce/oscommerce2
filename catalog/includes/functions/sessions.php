@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -101,18 +101,35 @@
     global $session_started;
 
     if ($session_started == true) {
-      return session_register($variable);
-    } else {
-      return false;
+      if (PHP_VERSION < 4.3) {
+        return session_register($variable);
+      } else {
+        if (isset($GLOBALS[$variable])) {
+          $_SESSION[$variable] =& $GLOBALS[$variable];
+        } else {
+          $_SESSION[$variable] = null;
+        }
+        $GLOBALS[$variable] =& $_SESSION[$variable];
+      }
     }
+
+    return false;
   }
 
   function tep_session_is_registered($variable) {
-    return session_is_registered($variable);
+    if (PHP_VERSION < 4.3) {
+      return session_is_registered($variable);
+    } else {
+      return isset($_SESSION[$variable]);
+    }
   }
 
   function tep_session_unregister($variable) {
-    return session_unregister($variable);
+    if (PHP_VERSION < 4.3) {
+      return session_unregister($variable);
+    } else {
+      unset($_SESSION[$variable]);
+    }
   }
 
   function tep_session_id($sessid = '') {
