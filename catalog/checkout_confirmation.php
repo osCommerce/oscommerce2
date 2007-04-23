@@ -110,7 +110,17 @@
 <!-- body_text //-->
     <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td>
+<?php
+  if (isset($$payment->form_action_url)) {
+    $form_action_url = $$payment->form_action_url;
+  } else {
+    $form_action_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+  }
+
+  echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');
+?>
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_confirmation.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
@@ -309,19 +319,11 @@
           <tr>
             <td align="right" class="main">
 <?php
-  if (isset($$payment->form_action_url)) {
-    $form_action_url = $$payment->form_action_url;
-  } else {
-    $form_action_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
-  }
-
-  echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');
-
   if (is_array($payment_modules->modules)) {
     echo $payment_modules->process_button();
   }
 
-  echo tep_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . '</form>' . "\n";
+  echo tep_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . "\n";
 ?>
             </td>
           </tr>
@@ -362,7 +364,7 @@
           </tr>
         </table></td>
       </tr>
-    </table></td>
+    </table></form></td>
 <!-- body_text_eof //-->
     <td width="<?php echo BOX_WIDTH; ?>" valign="top"><table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="0" cellpadding="2">
 <!-- right_navigation //-->
