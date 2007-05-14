@@ -1171,9 +1171,10 @@
   function tep_currency_exists($code) {
     $code = tep_db_prepare_input($code);
 
-    $currency_code = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . tep_db_input($code) . "'");
-    if (tep_db_num_rows($currency_code)) {
-      return $code;
+    $currency_query = tep_db_query("select code from " . TABLE_CURRENCIES . " where code = '" . tep_db_input($code) . "' limit 1");
+    if (tep_db_num_rows($currency_query)) {
+      $currency = tep_db_fetch_array($currency_query);
+      return $currency['code'];
     } else {
       return false;
     }
