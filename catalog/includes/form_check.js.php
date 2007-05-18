@@ -20,7 +20,7 @@ function check_input(field_name, field_size, message) {
   if (form.elements[field_name] && (form.elements[field_name].type != "hidden")) {
     var field_value = form.elements[field_name].value;
 
-    if (field_value == '' || field_value.length < field_size) {
+    if (field_value.length < field_size) {
       error_message = error_message + "* " + message + "\n";
       error = true;
     }
@@ -63,7 +63,7 @@ function check_password(field_name_1, field_name_2, field_size, message_1, messa
     var password = form.elements[field_name_1].value;
     var confirmation = form.elements[field_name_2].value;
 
-    if (password == '' || password.length < field_size) {
+    if (password.length < field_size) {
       error_message = error_message + "* " + message_1 + "\n";
       error = true;
     } else if (password != confirmation) {
@@ -79,10 +79,10 @@ function check_password_new(field_name_1, field_name_2, field_name_3, field_size
     var password_new = form.elements[field_name_2].value;
     var password_confirmation = form.elements[field_name_3].value;
 
-    if (password_current == '' || password_current.length < field_size) {
+    if (password_current.length < field_size) {
       error_message = error_message + "* " + message_1 + "\n";
       error = true;
-    } else if (password_new == '' || password_new.length < field_size) {
+    } else if (password_new.length < field_size) {
       error_message = error_message + "* " + message_2 + "\n";
       error = true;
     } else if (password_new != password_confirmation) {
