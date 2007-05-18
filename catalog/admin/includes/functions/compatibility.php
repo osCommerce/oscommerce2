@@ -18,6 +18,7 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return false;
 
+    reset($ar);
     while (list($key, $value) = each($ar)) {
       if (is_array($ar[$key])) {
         do_magic_quotes_gpc($ar[$key]);
@@ -25,6 +26,7 @@
         $ar[$key] = addslashes($value);
       }
     }
+    reset($ar);
   }
 
   if (PHP_VERSION >= 4.1) {
