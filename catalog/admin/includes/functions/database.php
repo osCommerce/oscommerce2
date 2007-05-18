@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -111,8 +111,10 @@
     return mysql_data_seek($db_query, $row_number);
   }
 
-  function tep_db_insert_id() {
-    return mysql_insert_id();
+  function tep_db_insert_id($link = 'db_link') {
+    global $$link;
+
+    return mysql_insert_id($$link);
   }
 
   function tep_db_free_result($db_query) {
