@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -52,8 +52,8 @@
       return $this->currencies[$code]['value'];
     }
 
-    function display_price($products_price, $products_tax, $quantity = 1) {
-      return $this->format(tep_add_tax($products_price, $products_tax) * $quantity);
+    function display_price($products_price, $products_tax, $quantity = 1, $currency_type = DEFAULT_CURRENCY) {
+      return $this->format(tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$currency_type]['decimal_places']) * $quantity);
     }
   }
 ?>

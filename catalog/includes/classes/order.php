@@ -241,7 +241,7 @@
           }
         }
 
-        $shown_price = tep_add_tax($this->products[$index]['final_price'], $this->products[$index]['tax']) * $this->products[$index]['qty'];
+        $shown_price = $currencies->calculate_price($this->products[$index]['final_price'], $this->products[$index]['tax'], $this->products[$index]['qty']);
         $this->info['subtotal'] += $shown_price;
 
         $products_tax = $this->products[$index]['tax'];
