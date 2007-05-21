@@ -48,6 +48,21 @@
     do_magic_quotes_gpc($HTTP_COOKIE_VARS);
   }
 
+// if register_globals is disabled copy the $_GET and $_POST variables to $GLOBALS
+  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION >= 4.3) ) {
+    foreach ( $_GET as $key => $value ) {
+      if ( !isset($GLOBALS[$key]) ) {
+        $GLOBALS[$key] =& $_GET[$key];
+      }
+    }
+
+    foreach ( $_POST as $key => $value ) {
+      if ( !isset($GLOBALS[$key]) ) {
+        $GLOBALS[$key] =& $_POST[$key];
+      }
+    }
+  }
+
   if (!function_exists('array_splice')) {
     function array_splice(&$array, $maximum) {
       if (sizeof($array) >= $maximum) {
