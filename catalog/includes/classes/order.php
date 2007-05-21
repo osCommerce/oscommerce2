@@ -71,7 +71,7 @@
                               'city' => $order['customers_city'],
                               'postcode' => $order['customers_postcode'],
                               'state' => $order['customers_state'],
-                              'country' => $order['customers_country'],
+                              'country' => array('title' => $order['customers_country']),
                               'format_id' => $order['customers_address_format_id'],
                               'telephone' => $order['customers_telephone'],
                               'email_address' => $order['customers_email_address']);
@@ -83,7 +83,7 @@
                               'city' => $order['delivery_city'],
                               'postcode' => $order['delivery_postcode'],
                               'state' => $order['delivery_state'],
-                              'country' => $order['delivery_country'],
+                              'country' => array('title' => $order['delivery_country']),
                               'format_id' => $order['delivery_address_format_id']);
 
       if (empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
@@ -97,7 +97,7 @@
                              'city' => $order['billing_city'],
                              'postcode' => $order['billing_postcode'],
                              'state' => $order['billing_state'],
-                             'country' => $order['billing_country'],
+                             'country' => array('title' => $order['billing_country']),
                              'format_id' => $order['billing_address_format_id']);
 
       $index = 0;
