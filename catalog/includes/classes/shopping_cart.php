@@ -81,6 +81,10 @@
       $products_id_string = tep_get_uprid($products_id, $attributes);
       $products_id = tep_get_prid($products_id_string);
 
+      if (defined('MAX_QTY_IN_CART') && (MAX_QTY_IN_CART > 0) && ((int)$qty > MAX_QTY_IN_CART)) {
+        $qty = MAX_QTY_IN_CART;
+      }
+
       $attributes_pass_check = true;
 
       if (is_array($attributes)) {
@@ -133,6 +137,10 @@
 
       $products_id_string = tep_get_uprid($products_id, $attributes);
       $products_id = tep_get_prid($products_id_string);
+
+      if (defined('MAX_QTY_IN_CART') && (MAX_QTY_IN_CART > 0) && ((int)$quantity > MAX_QTY_IN_CART)) {
+        $quantity = MAX_QTY_IN_CART;
+      }
 
       $attributes_pass_check = true;
 
