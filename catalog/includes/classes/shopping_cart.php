@@ -106,7 +106,7 @@
           if ($this->in_cart($products_id_string)) {
             $this->update_quantity($products_id_string, $qty, $attributes);
           } else {
-            $this->contents[$products_id_string] = array('qty' => $qty);
+            $this->contents[$products_id_string] = array('qty' => (int)$qty);
 // insert into database
             if (tep_session_is_registered('customer_id')) tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id_string) . "', '" . (int)$qty . "', '" . date('Ymd') . "')");
 
@@ -147,7 +147,7 @@
       }
 
       if (is_numeric($products_id) && isset($this->contents[$products_id_string]) && is_numeric($quantity) && ($attributes_pass_check == true)) {
-        $this->contents[$products_id_string] = array('qty' => $quantity);
+        $this->contents[$products_id_string] = array('qty' => (int)$quantity);
 // update database
         if (tep_session_is_registered('customer_id')) tep_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . (int)$quantity . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id_string) . "'");
 
