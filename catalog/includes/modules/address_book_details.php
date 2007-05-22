@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -27,12 +27,14 @@
         <td><table border="0" cellspacing="2" cellpadding="2">
 <?php
   if (ACCOUNT_GENDER == 'true') {
+    $male = $female = false;
     if (isset($gender)) {
       $male = ($gender == 'm') ? true : false;
-    } else {
+      $female = !$male;
+    } elseif (isset($entry['entry_gender'])) {
       $male = ($entry['entry_gender'] == 'm') ? true : false;
+      $female = !$male;
     }
-    $female = !$male;
 ?>
           <tr>
             <td class="main"><?php echo ENTRY_GENDER; ?></td>

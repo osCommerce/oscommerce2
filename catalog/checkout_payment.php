@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -65,6 +65,9 @@
   $order = new order;
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
+  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
+    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  }
 
   $total_weight = $cart->show_weight();
   $total_count = $cart->count_contents();
@@ -322,7 +325,7 @@ function rowOutEffect(object) {
           <tr class="infoBoxContents">
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
-                <td><?php echo tep_draw_textarea_field('comments', 'soft', '60', '5'); ?></td>
+                <td><?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $comments); ?></td>
               </tr>
             </table></td>
           </tr>

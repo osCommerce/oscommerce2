@@ -34,6 +34,7 @@
     $HTTP_POST_VARS =& $_POST;
     $HTTP_COOKIE_VARS =& $_COOKIE;
     $HTTP_SESSION_VARS =& $_SESSION;
+    $HTTP_POST_FILES =& $_FILES;
     $HTTP_SERVER_VARS =& $_SERVER;
   } else {
     if (!is_array($HTTP_GET_VARS)) $HTTP_GET_VARS = array();
@@ -46,21 +47,6 @@
     do_magic_quotes_gpc($HTTP_GET_VARS);
     do_magic_quotes_gpc($HTTP_POST_VARS);
     do_magic_quotes_gpc($HTTP_COOKIE_VARS);
-  }
-
-// if register_globals is disabled copy the $_GET and $_POST variables to $GLOBALS
-  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION >= 4.3) ) {
-    foreach ( $_GET as $key => $value ) {
-      if ( !isset($GLOBALS[$key]) ) {
-        $GLOBALS[$key] =& $_GET[$key];
-      }
-    }
-
-    foreach ( $_POST as $key => $value ) {
-      if ( !isset($GLOBALS[$key]) ) {
-        $GLOBALS[$key] =& $_POST[$key];
-      }
-    }
   }
 
   if (!function_exists('array_splice')) {

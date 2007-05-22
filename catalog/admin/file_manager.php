@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -56,7 +56,7 @@
         break;
       case 'processuploads':
         for ($i=1; $i<6; $i++) {
-          if (isset($GLOBALS['file_' . $i]) && tep_not_null($GLOBALS['file_' . $i])) {
+          if (is_uploaded_file($HTTP_POST_FILES['file_' . $i]['tmp_name'])) {
             new upload('file_' . $i, $current_path);
           }
         }

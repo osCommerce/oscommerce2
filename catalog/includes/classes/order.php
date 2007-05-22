@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -131,7 +131,7 @@
     }
 
     function cart() {
-      global $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment;
+      global $HTTP_POST_VARS, $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments;
 
       $this->content_type = $cart->get_content_type();
 
@@ -151,16 +151,16 @@
                           'currency' => $currency,
                           'currency_value' => $currencies->currencies[$currency]['value'],
                           'payment_method' => $payment,
-                          'cc_type' => (isset($GLOBALS['cc_type']) ? $GLOBALS['cc_type'] : ''),
-                          'cc_owner' => (isset($GLOBALS['cc_owner']) ? $GLOBALS['cc_owner'] : ''),
-                          'cc_number' => (isset($GLOBALS['cc_number']) ? $GLOBALS['cc_number'] : ''),
-                          'cc_expires' => (isset($GLOBALS['cc_expires']) ? $GLOBALS['cc_expires'] : ''),
+                          'cc_type' => (isset($HTTP_POST_VARS['cc_type']) ? $HTTP_POST_VARS['cc_type'] : ''),
+                          'cc_owner' => (isset($HTTP_POST_VARS['cc_owner']) ? $HTTP_POST_VARS['cc_owner'] : ''),
+                          'cc_number' => (isset($HTTP_POST_VARS['cc_number']) ? $HTTP_POST_VARS['cc_number'] : ''),
+                          'cc_expires' => (isset($HTTP_POST_VARS['cc_expires']) ? $HTTP_POST_VARS['cc_expires'] : ''),
                           'shipping_method' => $shipping['title'],
                           'shipping_cost' => $shipping['cost'],
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
-                          'comments' => (isset($GLOBALS['comments']) ? $GLOBALS['comments'] : ''));
+                          'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
 
       if (isset($GLOBALS[$payment]) && is_object($GLOBALS[$payment])) {
         $this->info['payment_method'] = $GLOBALS[$payment]->title;
