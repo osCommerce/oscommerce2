@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -46,13 +46,13 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
-// load the before_process function from the payment modules
-  $payment_modules->before_process();
-
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;
 
   $order_totals = $order_total_modules->process();
+
+// load the before_process function from the payment modules
+  $payment_modules->before_process();
 
   $sql_data_array = array('customers_id' => $customer_id,
                           'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
