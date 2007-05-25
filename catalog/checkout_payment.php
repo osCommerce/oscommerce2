@@ -258,7 +258,7 @@ function rowOutEffect(object) {
                     <td class="main" align="right">
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id']);
+      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $payment));
     } else {
       echo tep_draw_hidden_field('payment', $selection[$i]['id']);
     }
