@@ -77,7 +77,10 @@
           }
         }
 
-        if ($categories_image = new upload('categories_image', DIR_FS_CATALOG_IMAGES)) {
+        $categories_image = new upload('categories_image');
+        $categories_image->set_destination(DIR_FS_CATALOG_IMAGES);
+
+        if ($categories_image->parse() && $categories_image->save()) {
           tep_db_query("update " . TABLE_CATEGORIES . " set categories_image = '" . tep_db_input($categories_image->filename) . "' where categories_id = '" . (int)$categories_id . "'");
         }
 
