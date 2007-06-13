@@ -192,7 +192,7 @@ A.sub:hover { color: #dddddd; text-decoration: underline; }
                       <tr><?php echo tep_draw_form('languages', 'index.php', '', 'get'); ?>
                         <td class="heading"><?php echo HEADING_TITLE; ?></td>
                         <td align="right"><?php echo tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"'); ?></td>
-                      </form></tr>
+                      <?php echo tep_hide_session_id(); ?></form></tr>
                     </table></td>
                   </tr>
 <?php

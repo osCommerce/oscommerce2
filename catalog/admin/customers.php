@@ -697,7 +697,7 @@ function check_form() {
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
             <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . tep_draw_input_field('search'); ?></td>
-          </form></tr>
+          <?php echo tep_hide_session_id(); ?></form></tr>
         </table></td>
       </tr>
       <tr>

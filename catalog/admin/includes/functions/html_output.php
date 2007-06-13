@@ -292,6 +292,18 @@
   }
 
 ////
+// Hide form elements
+  function tep_hide_session_id() {
+    $string = '';
+
+    if (defined('SID') && tep_not_null(SID)) {
+      $string = tep_draw_hidden_field(tep_session_name(), tep_session_id());
+    }
+
+    return $string;
+  }
+
+////
 // Output a form pull down menu
   function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;

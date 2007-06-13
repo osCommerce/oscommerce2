@@ -77,9 +77,7 @@
           }
         }
 
-        if (SID) $display_links .= tep_draw_hidden_field(tep_session_name(), tep_session_id());
-
-        $display_links .= '</form>';
+        $display_links .= tep_hide_session_id() . '</form>';
       } else {
         $display_links = sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages);
       }
