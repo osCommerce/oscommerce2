@@ -253,7 +253,7 @@
           $options[] = array('id' => $filterlist['id'], 'text' => $filterlist['name']);
         }
         echo tep_draw_pull_down_menu('filter_id', $options, (isset($HTTP_GET_VARS['filter_id']) ? $HTTP_GET_VARS['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo '</form></td>' . "\n";
+        echo tep_hide_session_id() . '</form></td>' . "\n";
       }
     }
 
