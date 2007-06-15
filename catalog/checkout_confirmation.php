@@ -66,6 +66,7 @@
 
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;
+  $order_total_modules->process();
 
 // Stock Check
   $any_out_of_stock = false;
@@ -237,7 +238,6 @@
             <td width="70%" valign="top" align="right"><table border="0" cellspacing="0" cellpadding="2">
 <?php
   if (MODULE_ORDER_TOTAL_INSTALLED) {
-    $order_total_modules->process();
     echo $order_total_modules->output();
   }
 ?>
