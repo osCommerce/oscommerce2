@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: database_tables.php,v 1.1 2003/03/14 02:10:58 hpdl Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,6 +13,7 @@
 // define the database table names used in the project
   define('TABLE_ADDRESS_BOOK', 'address_book');
   define('TABLE_ADDRESS_FORMAT', 'address_format');
+  define('TABLE_ADMINISTRATORS', 'administrators');
   define('TABLE_BANNERS', 'banners');
   define('TABLE_BANNERS_HISTORY', 'banners_history');
   define('TABLE_CATEGORIES', 'categories');

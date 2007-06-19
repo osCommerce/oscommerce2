@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: application_top.php,v 1.162 2003/07/12 09:39:03 hpdl Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
@@ -107,6 +107,29 @@
 
   if ( (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
+  }
+
+  if (!tep_session_is_registered('admin')) {
+    $redirect = false;
+
+    $current_page = basename($PHP_SELF);
+
+    if ($current_page != FILENAME_LOGIN) {
+      if (!tep_session_is_registered('redirect_origin')) {
+        tep_session_register('redirect_origin');
+
+        $redirect_origin = array('page' => $current_page,
+                                 'get' => $HTTP_GET_VARS);
+      }
+
+      $redirect = true;
+    }
+
+    if ($redirect == true) {
+      tep_redirect(tep_href_link(FILENAME_LOGIN));
+    }
+
+    unset($redirect);
   }
 
 // set the language

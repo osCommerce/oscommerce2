@@ -46,6 +46,14 @@ CREATE TABLE address_format (
   PRIMARY KEY (address_format_id)
 );
 
+DROP TABLE IF EXISTS administrators;
+CREATE TABLE administrators (
+  id int NOT NULL auto_increment,
+  user_name varchar(32) binary NOT NULL,
+  user_password varchar(40) NOT NULL,
+  PRIMARY KEY (id)
+);
+
 DROP TABLE IF EXISTS banners;
 CREATE TABLE banners (
   banners_id int NOT NULL auto_increment,
