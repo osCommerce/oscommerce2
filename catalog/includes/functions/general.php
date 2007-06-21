@@ -1224,13 +1224,15 @@
   }
 
   function tep_get_ip_address() {
-    if (isset($_SERVER)) {
-      if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-      } elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    global $HTTP_SERVER_VARS;
+
+    if (isset($HTTP_SERVER_VARS)) {
+      if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
+        $ip = $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'];
+      } elseif (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
+        $ip = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
       } else {
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
       }
     } else {
       if (getenv('HTTP_X_FORWARDED_FOR')) {
