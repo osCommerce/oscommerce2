@@ -162,7 +162,7 @@
     if (tep_not_null($HTTP_POST_VARS)) {
 /* Re-Post all POST'ed variables */
       reset($HTTP_POST_VARS);
-      while(list($key, $value) = each($HTTP_POST_VARS)) echo tep_draw_hidden_field($key, $value);
+      while (list($key, $value) = each($HTTP_POST_VARS)) echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo '<a href="' . tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit') . '">' . tep_image_button('button_back.gif', IMAGE_BACK) . '</a> ' . tep_image_submit('button_update.gif', IMAGE_UPDATE) . ' <a href="' . tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id) . '">' . tep_image_button('button_cancel.gif', IMAGE_CANCEL) . '</a>'; ?></td>
