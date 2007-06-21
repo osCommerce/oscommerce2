@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: database.php,v 1.3 2003/07/09 01:11:05 hpdl Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -29,107 +29,14 @@
     return mysql_select_db($database);
   }
 
-  function osc_db_close($link = 'db_link') {
-    global $$link;
-
-    return mysql_close($$link);
-  }
-
   function osc_db_query($query, $link = 'db_link') {
     global $$link;
 
     return mysql_query($query, $$link);
   }
 
-  function osc_db_fetch_array($db_query) {
-    return mysql_fetch_array($db_query);
-  }
-
   function osc_db_num_rows($db_query) {
     return mysql_num_rows($db_query);
-  }
-
-  function osc_db_data_seek($db_query, $row_number) {
-    return mysql_data_seek($db_query, $row_number);
-  }
-
-  function osc_db_insert_id() {
-    return mysql_insert_id();
-  }
-
-  function osc_db_free_result($db_query) {
-    return mysql_free_result($db_query);
-  }
-
-  function osc_db_test_create_db_permission($database) {
-    global $db_error;
-
-    $db_created = false;
-    $db_error = false;
-
-    if (!$database) {
-      $db_error = 'No Database selected.';
-      return false;
-    }
-
-    if (!$db_error) {
-      if (!@osc_db_select_db($database)) {
-        $db_created = true;
-        if (!@osc_db_query('create database ' . $database)) {
-          $db_error = mysql_error();
-        }
-      } else {
-        $db_error = mysql_error();
-      }
-      if (!$db_error) {
-        if (@osc_db_select_db($database)) {
-          if (@osc_db_query('create table temp ( temp_id int(5) )')) {
-            if (@osc_db_query('drop table temp')) {
-              if ($db_created) {
-                if (@osc_db_query('drop database ' . $database)) {
-                } else {
-                  $db_error = mysql_error();
-                }
-              }
-            } else {
-              $db_error = mysql_error();
-            }
-          } else {
-            $db_error = mysql_error();
-          }
-        } else {
-          $db_error = mysql_error();
-        }
-      }
-    }
-
-    if ($db_error) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  function osc_db_test_connection($database) {
-    global $db_error;
-
-    $db_error = false;
-
-    if (!$db_error) {
-      if (!@osc_db_select_db($database)) {
-        $db_error = mysql_error();
-      } else {
-        if (!@osc_db_query('select count(*) from configuration')) {
-          $db_error = mysql_error();
-        }
-      }
-    }
-
-    if ($db_error) {
-      return false;
-    } else {
-      return true;
-    }
   }
 
   function osc_db_install($database, $sql_file) {
@@ -198,7 +105,7 @@
         }
       }
 
-      osc_db_query("drop table if exists address_book, address_format, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, languages, manufacturers, manufacturers_info, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, products, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones");
+      osc_db_query("drop table if exists address_book, address_format, administrators, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, languages, manufacturers, manufacturers_info, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, products, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones");
 
       for ($i=0; $i<sizeof($sql_array); $i++) {
         osc_db_query($sql_array[$i]);
