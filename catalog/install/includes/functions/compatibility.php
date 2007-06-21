@@ -21,4 +21,10 @@
     if (!is_array($HTTP_POST_VARS)) $HTTP_POST_VARS = array();
     if (!is_array($HTTP_COOKIE_VARS)) $HTTP_COOKIE_VARS = array();
   }
+
+  if (!function_exists('is_numeric')) {
+    function is_numeric($param) {
+      return ereg('^[0-9]{1,50}.?[0-9]{0,50}$', $param);
+    }
+  }
 ?>
