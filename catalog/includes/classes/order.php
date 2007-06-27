@@ -163,7 +163,11 @@
                           'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
 
       if (isset($GLOBALS[$payment]) && is_object($GLOBALS[$payment])) {
-        $this->info['payment_method'] = $GLOBALS[$payment]->title;
+        if (isset($GLOBALS[$payment]->public_title)) {
+          $this->info['payment_method'] = $GLOBALS[$payment]->public_title;
+        } else {
+          $this->info['payment_method'] = $GLOBALS[$payment]->title;
+        }
 
         if ( isset($GLOBALS[$payment]->order_status) && is_numeric($GLOBALS[$payment]->order_status) && ($GLOBALS[$payment]->order_status > 0) ) {
           $this->info['order_status'] = $GLOBALS[$payment]->order_status;
