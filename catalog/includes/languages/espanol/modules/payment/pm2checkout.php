@@ -11,6 +11,7 @@
 */
 
   define('MODULE_PAYMENT_2CHECKOUT_TEXT_TITLE', '2CheckOut');
+  define('MODULE_PAYMENT_2CHECKOUT_TEXT_PUBLIC_TITLE', 'Cr&eacute;dito');
   define('MODULE_PAYMENT_2CHECKOUT_TEXT_DESCRIPTION', 'Tarjeta de Cr&eacute;dito para Pruebas:<br><br>Numero: 4111111111111111<br>Caducidad: Cualquiera');
   define('MODULE_PAYMENT_2CHECKOUT_TEXT_ERROR_MESSAGE', 'Ha ocurrido un error procesando su tarjeta de cr&eacute;dito, por favor int&eacute;ntelo de nuevo.');
   define('MODULE_PAYMENT_2CHECKOUT_TEXT_WARNING_DEMO_MODE', 'In Review: Transaction performed in demo mode.');

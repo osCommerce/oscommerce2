@@ -19,6 +19,7 @@
 
       $this->code = 'pm2checkout';
       $this->title = MODULE_PAYMENT_2CHECKOUT_TEXT_TITLE;
+      $this->public_title = MODULE_PAYMENT_2CHECKOUT_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_2CHECKOUT_TEXT_DESCRIPTION;
       $this->sort_order = MODULE_PAYMENT_2CHECKOUT_SORT_ORDER;
       $this->enabled = ((MODULE_PAYMENT_2CHECKOUT_STATUS == 'True') ? true : false);
@@ -61,7 +62,7 @@
 
     function selection() {
       return array('id' => $this->code,
-                   'module' => $this->title);
+                   'module' => $this->public_title . (strlen(MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION) > 0 ? ' (' . MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION . ')' : ''));
     }
 
     function pre_confirmation_check() {
@@ -73,7 +74,7 @@
     }
 
     function process_button() {
-      global $HTTP_POST_VARS, $currencies, $order;
+      global $HTTP_POST_VARS, $currencies, $order, $languages_id;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', number_format($order->info['total'], 2)) .
@@ -105,6 +106,17 @@
 
       if (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Test') {
         $process_button_string .= tep_draw_hidden_field('demo', 'Y');
+      }
+
+      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
+
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang = tep_db_fetch_array($lang_query);
+
+      switch (strtolower($lang['code'])) {
+        case 'es':
+          $process_button_string .= tep_draw_hidden_field('lang', 'sp');
+          break;
       }
 
       return $process_button_string;
@@ -159,6 +171,7 @@
     function install() {
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable 2CheckOut Module', 'MODULE_PAYMENT_2CHECKOUT_STATUS', 'True', 'Do you want to accept 2CheckOut payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Seller ID', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', '', 'Seller ID used for the 2CheckOut service', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Public Description', 'MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION', 'Visa, American Express', 'Public description to show next to the payment method title', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'Test', 'Transaction mode used for the 2Checkout service', '6', '0', 'tep_cfg_select_option(array(\'Test\', \'Production\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', '', 'The secret word to confirm transactions with (must be the same as defined on the merchat account configuration page', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
@@ -171,7 +184,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_2CHECKOUT_STATUS', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', 'MODULE_PAYMENT_2CHECKOUT_ZONE', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER');
+      return array('MODULE_PAYMENT_2CHECKOUT_STATUS', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', 'MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', 'MODULE_PAYMENT_2CHECKOUT_ZONE', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER');
     }
   }
 ?>
