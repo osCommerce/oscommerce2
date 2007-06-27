@@ -153,7 +153,7 @@
                           'payment_method' => $payment,
                           'cc_type' => (isset($HTTP_POST_VARS['cc_type']) ? $HTTP_POST_VARS['cc_type'] : ''),
                           'cc_owner' => (isset($HTTP_POST_VARS['cc_owner']) ? $HTTP_POST_VARS['cc_owner'] : ''),
-                          'cc_number' => (isset($HTTP_POST_VARS['cc_number']) ? $HTTP_POST_VARS['cc_number'] : ''),
+                          'cc_number' => (isset($HTTP_POST_VARS['cc_number_nh-dns']) ? $HTTP_POST_VARS['cc_number_nh-dns'] : ''),
                           'cc_expires' => (isset($HTTP_POST_VARS['cc_expires']) ? $HTTP_POST_VARS['cc_expires'] : ''),
                           'shipping_method' => $shipping['title'],
                           'shipping_cost' => $shipping['cost'],

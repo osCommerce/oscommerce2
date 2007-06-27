@@ -56,12 +56,12 @@
     function javascript_validation() {
       $js = '  if (payment_value == "' . $this->code . '") {' . "\n" .
             '    var cc_owner = document.checkout_payment.cc_owner.value;' . "\n" .
-            '    var cc_number = document.checkout_payment.cc_number.value;' . "\n" .
+            '    var cc_number_nh-dns = document.checkout_payment.cc_number_nh-dns.value;' . "\n" .
             '    if (cc_owner == "" || cc_owner.length < ' . CC_OWNER_MIN_LENGTH . ') {' . "\n" .
             '      error_message = error_message + "' . MODULE_PAYMENT_CC_TEXT_JS_CC_OWNER . '";' . "\n" .
             '      error = 1;' . "\n" .
             '    }' . "\n" .
-            '    if (cc_number == "" || cc_number.length < ' . CC_NUMBER_MIN_LENGTH . ') {' . "\n" .
+            '    if (cc_number_nh-dns == "" || cc_number_nh-dns.length < ' . CC_NUMBER_MIN_LENGTH . ') {' . "\n" .
             '      error_message = error_message + "' . MODULE_PAYMENT_CC_TEXT_JS_CC_NUMBER . '";' . "\n" .
             '      error = 1;' . "\n" .
             '    }' . "\n" .
@@ -87,7 +87,7 @@
                          'fields' => array(array('title' => MODULE_PAYMENT_CC_TEXT_CREDIT_CARD_OWNER,
                                                  'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
                                            array('title' => MODULE_PAYMENT_CC_TEXT_CREDIT_CARD_NUMBER,
-                                                 'field' => tep_draw_input_field('cc_number')),
+                                                 'field' => tep_draw_input_field('cc_number_nh-dns')),
                                            array('title' => MODULE_PAYMENT_CC_TEXT_CREDIT_CARD_EXPIRES,
                                                  'field' => tep_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $expires_year))));
 
@@ -100,7 +100,7 @@
       include(DIR_WS_CLASSES . 'cc_validation.php');
 
       $cc_validation = new cc_validation();
-      $result = $cc_validation->validate($HTTP_POST_VARS['cc_number'], $HTTP_POST_VARS['cc_expires_month'], $HTTP_POST_VARS['cc_expires_year']);
+      $result = $cc_validation->validate($HTTP_POST_VARS['cc_number_nh-dns'], $HTTP_POST_VARS['cc_expires_month'], $HTTP_POST_VARS['cc_expires_year']);
 
       $error = '';
       switch ($result) {
@@ -147,7 +147,7 @@
       $process_button_string = tep_draw_hidden_field('cc_owner', $HTTP_POST_VARS['cc_owner']) .
                                tep_draw_hidden_field('cc_expires', $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year']) .
                                tep_draw_hidden_field('cc_type', $this->cc_card_type) .
-                               tep_draw_hidden_field('cc_number', $this->cc_card_number);
+                               tep_draw_hidden_field('cc_number_nh-dns', $this->cc_card_number);
 
       return $process_button_string;
     }
@@ -156,10 +156,10 @@
       global $HTTP_POST_VARS, $order;
 
       if ( (defined('MODULE_PAYMENT_CC_EMAIL')) && (tep_validate_email(MODULE_PAYMENT_CC_EMAIL)) ) {
-        $len = strlen($HTTP_POST_VARS['cc_number']);
+        $len = strlen($HTTP_POST_VARS['cc_number_nh-dns']);
 
-        $this->cc_middle = substr($HTTP_POST_VARS['cc_number'], 4, ($len-8));
-        $order->info['cc_number'] = substr($HTTP_POST_VARS['cc_number'], 0, 4) . str_repeat('X', (strlen($HTTP_POST_VARS['cc_number']) - 8)) . substr($HTTP_POST_VARS['cc_number'], -4);
+        $this->cc_middle = substr($HTTP_POST_VARS['cc_number_nh-dns'], 4, ($len-8));
+        $order->info['cc_number'] = substr($HTTP_POST_VARS['cc_number_nh-dns'], 0, 4) . str_repeat('X', (strlen($HTTP_POST_VARS['cc_number_nh-dns']) - 8)) . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4);
       }
     }
 
