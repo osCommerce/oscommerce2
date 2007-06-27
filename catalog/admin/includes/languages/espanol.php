@@ -1,11 +1,11 @@
 <?php
 /*
-  $Id: espanol.php,v 1.101 2003/07/07 09:23:06 dgw_ Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -60,6 +60,7 @@ define('BOX_HEADING_CONFIGURATION', 'Configuraci&oacute;n');
 define('BOX_CONFIGURATION_MYSTORE', 'Mi Tienda');
 define('BOX_CONFIGURATION_LOGGING', 'Registro');
 define('BOX_CONFIGURATION_CACHE', 'Cach&eacute;');
+define('BOX_CONFIGURATION_ADMINISTRATORS', 'Administrators');
 
 // modules box text in includes/boxes/modules.php
 define('BOX_HEADING_MODULES', 'M&oacute;dulos');
