@@ -55,21 +55,6 @@
           <td align="right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
           <td align="right"><img src="images/<?php echo (($compat_register_globals == true) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
-
-<?php
-    if (PHP_VERSION >= 5) {
-?>
-
-        <tr>
-          <td>register_long_arrays</td>
-          <td align="right"><?php echo (((int)ini_get('register_long_arrays') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (((int)ini_get('register_long_arrays') == 1) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
-        </tr>
-
-<?php
-    }
-?>
-
         <tr>
           <td>magic_quotes</td>
           <td align="right"><?php echo (((int)ini_get('magic_quotes') == 0) ? 'Off' : 'On'); ?></td>
@@ -151,10 +136,6 @@
   if (function_exists('ini_get')) {
     if ($compat_register_globals == false) {
       $warning_array['register_globals'] = 'Compatibility with register_globals is supported from PHP 4.3+. This setting <u>must be enabled</u> due to an older PHP version being used.';
-    }
-
-    if ((PHP_VERSION >= 5) && ((int)ini_get('register_long_arrays') == 0)) {
-      $warning_array['register_long_arrays'] = 'This setting <u>must be enabled</u> for a successful installation and operation of your online store.';
     }
   }
 
