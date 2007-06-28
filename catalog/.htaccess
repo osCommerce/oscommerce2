@@ -1,4 +1,4 @@
-# $Id: .htaccess,v 1.3 2003/06/12 10:53:20 hpdl Exp $
+# $Id: $
 #
 # This is used with Apache WebServers
 #
@@ -17,24 +17,24 @@
 # The following makes adjustments to the SSL protocol for Internet
 # Explorer browsers
 
-<IfModule mod_setenvif.c>
-  <IfDefine SSL>
-    SetEnvIf User-Agent ".*MSIE.*" \
-             nokeepalive ssl-unclean-shutdown \
-             downgrade-1.0 force-response-1.0
-  </IfDefine>
-</IfModule>
+#<IfModule mod_setenvif.c>
+#  <IfDefine SSL>
+#    SetEnvIf User-Agent ".*MSIE.*" \
+#             nokeepalive ssl-unclean-shutdown \
+#             downgrade-1.0 force-response-1.0
+#  </IfDefine>
+#</IfModule>
 
 # If Search Engine Friendly URLs do not work, try enabling the
 # following Apache configuration parameter
-#
+
 # AcceptPathInfo On
 
 # Fix certain PHP values
 # (commented out by default to prevent errors occuring on certain
 # servers)
-#
-#<IfModule mod_php4.c>
-#  php_value session.use_trans_sid 0
-#  php_value register_globals 1
-#</IfModule>
+
+# php_value session.use_trans_sid 0
+# php_value register_globals 1
+# php_value register_long_arrays 1
+
