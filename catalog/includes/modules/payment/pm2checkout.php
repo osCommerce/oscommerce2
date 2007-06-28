@@ -62,7 +62,7 @@
 
     function selection() {
       return array('id' => $this->code,
-                   'module' => $this->public_title . (strlen(MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION) > 0 ? ' (' . MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION . ')' : ''));
+                   'module' => $this->public_title . (strlen(MODULE_PAYMENT_2CHECKOUT_TEXT_PUBLIC_DESCRIPTION) > 0 ? ' (' . MODULE_PAYMENT_2CHECKOUT_TEXT_PUBLIC_DESCRIPTION . ')' : ''));
     }
 
     function pre_confirmation_check() {
@@ -80,7 +80,6 @@
                                tep_draw_hidden_field('total', number_format($order->info['total'], 2)) .
                                tep_draw_hidden_field('cart_order_id', date('YmdHis')) .
                                tep_draw_hidden_field('fixed', 'Y') .
-                               tep_draw_hidden_field('pay_method', 'CC') .
                                tep_draw_hidden_field('card_holder_name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
                                tep_draw_hidden_field('street_address', $order->billing['street_address']) .
                                tep_draw_hidden_field('city', $order->billing['city']) .
@@ -118,6 +117,9 @@
           $process_button_string .= tep_draw_hidden_field('lang', 'sp');
           break;
       }
+
+      $process_button_string .= tep_draw_hidden_field('cart_brand_name', 'oscommerce') .
+                                tep_draw_hidden_field('cart_version_name', PROJECT_VERSION);
 
       return $process_button_string;
     }
@@ -171,7 +173,6 @@
     function install() {
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable 2CheckOut Module', 'MODULE_PAYMENT_2CHECKOUT_STATUS', 'True', 'Do you want to accept 2CheckOut payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Seller ID', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', '', 'Seller ID used for the 2CheckOut service', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Public Description', 'MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION', 'Visa, American Express', 'Public description to show next to the payment method title', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'Test', 'Transaction mode used for the 2Checkout service', '6', '0', 'tep_cfg_select_option(array(\'Test\', \'Production\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', '', 'The secret word to confirm transactions with (must be the same as defined on the merchat account configuration page', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
@@ -184,7 +185,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_2CHECKOUT_STATUS', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', 'MODULE_PAYMENT_2CHECKOUT_PUBLIC_DESCRIPTION', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', 'MODULE_PAYMENT_2CHECKOUT_ZONE', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER');
+      return array('MODULE_PAYMENT_2CHECKOUT_STATUS', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', 'MODULE_PAYMENT_2CHECKOUT_ZONE', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER');
     }
   }
 ?>
