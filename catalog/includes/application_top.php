@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: application_top.php,v 1.280 2003/07/12 09:38:07 hpdl Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
@@ -34,7 +34,7 @@
   }
 
 // define the project version
-  define('PROJECT_VERSION', 'osCommerce 2.2-MS2');
+  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2 RC1');
 
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
