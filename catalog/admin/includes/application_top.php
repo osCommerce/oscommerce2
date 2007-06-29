@@ -109,6 +109,27 @@
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
   }
 
+// set the language
+  if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {
+    if (!tep_session_is_registered('language')) {
+      tep_session_register('language');
+      tep_session_register('languages_id');
+    }
+
+    include(DIR_WS_CLASSES . 'language.php');
+    $lng = new language();
+
+    if (isset($HTTP_GET_VARS['language']) && tep_not_null($HTTP_GET_VARS['language'])) {
+      $lng->set_language($HTTP_GET_VARS['language']);
+    } else {
+      $lng->get_browser_language();
+    }
+
+    $language = $lng->language['directory'];
+    $languages_id = $lng->language['id'];
+  }
+
+// redirect to login page if administrator is not yet logged in
   if (!tep_session_is_registered('admin')) {
     $redirect = false;
 
@@ -130,26 +151,6 @@
     }
 
     unset($redirect);
-  }
-
-// set the language
-  if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {
-    if (!tep_session_is_registered('language')) {
-      tep_session_register('language');
-      tep_session_register('languages_id');
-    }
-
-    include(DIR_WS_CLASSES . 'language.php');
-    $lng = new language();
-
-    if (isset($HTTP_GET_VARS['language']) && tep_not_null($HTTP_GET_VARS['language'])) {
-      $lng->set_language($HTTP_GET_VARS['language']);
-    } else {
-      $lng->get_browser_language();
-    }
-
-    $language = $lng->language['directory'];
-    $languages_id = $lng->language['id'];
   }
 
 // include the language translations
