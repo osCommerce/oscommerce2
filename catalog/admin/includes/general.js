@@ -1,19 +1,23 @@
 function SetFocus() {
   if (document.forms.length > 0) {
-    var field = document.forms[0];
-    for (i=0; i<field.length; i++) {
-      if ( (field.elements[i].type != "image") &&
-           (field.elements[i].type != "hidden") &&
-           (field.elements[i].type != "reset") &&
-           (field.elements[i].type != "submit") ) {
+    for (f=0; f<document.forms.length; f++) {
+      if (document.forms[f].name != "adminlanguage") {
+        var field = document.forms[f];
+        for (i=0; i<field.length; i++) {
+          if ( (field.elements[i].type != "image") &&
+               (field.elements[i].type != "hidden") &&
+               (field.elements[i].type != "reset") &&
+               (field.elements[i].type != "submit") ) {
 
-        document.forms[0].elements[i].focus();
+            document.forms[f].elements[i].focus();
 
-        if ( (field.elements[i].type == "text") ||
-             (field.elements[i].type == "password") )
-          document.forms[0].elements[i].select();
+            if ( (field.elements[i].type == "text") ||
+                 (field.elements[i].type == "password") )
+              document.forms[f].elements[i].select();
 
-        break;
+            break;
+          }
+        }
       }
     }
   }
