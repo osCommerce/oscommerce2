@@ -1,5 +1,6 @@
 function SetFocus() {
   if (document.forms.length > 0) {
+    isNotAdminLanguage:
     for (f=0; f<document.forms.length; f++) {
       if (document.forms[f].name != "adminlanguage") {
         var field = document.forms[f];
@@ -15,7 +16,7 @@ function SetFocus() {
                  (field.elements[i].type == "password") )
               document.forms[f].elements[i].select();
 
-            break;
+            break isNotAdminLanguage;
           }
         }
       }
