@@ -40,7 +40,7 @@ define('HTML_PARAMS','dir="ltr" lang="en"');
 define('CHARSET', 'iso-8859-1');
 
 // page title
-define('TITLE', 'osCommerce');
+define('TITLE', 'osCommerce Online Merchant Administration Tool');
 
 // header text in includes/header.php
 define('HEADER_TITLE_TOP', 'Administration');
