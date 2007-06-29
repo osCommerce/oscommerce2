@@ -346,7 +346,7 @@
                                   'customer_notified' => '0',
                                   'comments' => '');
 
-          if (($md5var4 == $HTTP_GET_VARS['sovar4']) && ($HTTP_GET_VARS['betrag_integer'] == $order_total_integer)) {
+          if (($md5var4 == $HTTP_GET_VARS['sovar4']) && ((int)$HTTP_GET_VARS['betrag_integer'] == (int)$order_total_integer)) {
             $sql_data_array['comments'] = 'Zahlung durch Sofortüberweisung Weiter-Button/Weiterleitung bestätigt!';
           } else {
             $sql_data_array['comments'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($HTTP_GET_VARS['betrag_integer']/100) . '!=' . ($order_total_integer/100);

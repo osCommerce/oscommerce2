@@ -69,7 +69,7 @@
         $order_total_integer = '0' . $order_total_integer;
       }
 
-      if ($betrag_integer == $order_total_integer) {
+      if ((int)$betrag_integer == (int)$order_total_integer) {
         $comment = 'Zahlung durch Sofortüberweisung Benachrichtigung bestätigt!';
       } else {
         $comment = "Sofortüberweisungs Transaktionscheck fehlgeschlagen. Bitte manuell überprüfen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
