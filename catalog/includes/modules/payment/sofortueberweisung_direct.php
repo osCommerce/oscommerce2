@@ -74,21 +74,16 @@
     }
 
     function process_button() {
-     global $order, $cart, $customer_id, $insert_id, $messageStack, $breadcrumb, $currencies,$cart, $PHP_SELF, $language;
+     global $order, $cart, $customer_id, $insert_id, $currencies;
 
       // We need the cartID
       if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
       if (empty($cart->cartID)) $cart->cartID = $cart->generate_cart_id();
 
-      // Fix for osC Bug
-      // $order->info['total'] is in 'before_process' String without Tax
-      // so it has to be set here
-      $_SESSION['sofortueberweisung_total'] = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');
-
       $parameter= array();
       $parameter['kdnr']	= MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR;  // Repräsentiert Ihre Kundennummer bei der Sofortüberweisung
       $parameter['projekt'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT;  // Die verantwortliche Projektnummer bei der Sofortüberweisung, zu der die Zahlung gehört
-      $parameter['betrag'] = $_SESSION['sofortueberweisung_total'];  // Beziffert den Zahlungsbetrag, der an Sie übermittelt werden soll
+      $parameter['betrag'] = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');  // Beziffert den Zahlungsbetrag, der an Sie übermittelt werden soll
       $vzweck1 = str_replace('{{orderid}}', $insert_id, MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_V_ZWECK_1);
       $vzweck2 = str_replace('{{orderid}}', $insert_id, MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_V_ZWECK_2);
 
@@ -150,18 +145,26 @@
       global $HTTP_GET_VARS, $order, $currencies;
       $md5var4 = md5($HTTP_GET_VARS['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
       // Statusupdate nur wenn keine Cartänderung vorgenommen
-      // Valid returns are i.e. 13.12 or 13,12 changes sometimes
-      if ($md5var4 == $HTTP_GET_VARS['sovar4'] && ($HTTP_GET_VARS['betrag'] == number_format($_SESSION['sofortueberweisung_total'], 2, ',', '') || $HTTP_GET_VARS['betrag'] == number_format($_SESSION['sofortueberweisung_total'], 2, '.', '') ) ) {
+      $order_total_integer = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','')*100;
+      if ($order_total_integer < 1) {
+        $order_total_integer = '000';
+      } elseif ($order_total_integer < 10) {
+        $order_total_integer = '00' . $order_total_integer;
+      } elseif ($order_total_integer < 100) {
+        $order_total_integer = '0' . $order_total_integer;
+      }
+
+      if (($md5var4 == $HTTP_GET_VARS['sovar4']) && ($HTTP_GET_VARS['betrag_integer'] == $order_total_integer)) {
         // we have an verified order
         if ( (int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID > 0) {
           $this->order_status = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID;
           $order->info['order_status'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID;
         }
       } else {
-        $order->info['comments'] .= "\n" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . $HTTP_GET_VARS['betrag'] .'!=' . $_SESSION['sofortueberweisung_total'] ;
+        $order->info['comments'] .= "\n" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . $HTTP_GET_VARS['betrag'] .'!=' . number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');
       }
       if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
-        $order->info['comments'] .= "\n" . serialize($_REQUEST);
+        $order->info['comments'] .= "\n" . serialize($HTTP_GET_VARS);
       }
 
       return false;
