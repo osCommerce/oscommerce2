@@ -32,7 +32,7 @@
       if (is_object($order)) $this->update_status();
 
       $this->email_footer = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_EMAIL_FOOTER;
-      $this->text_redirect = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_REDIRECT;
+
       $this->form_action_url = 'https://www.sofort-ueberweisung.de/payment.php';
     }
 
