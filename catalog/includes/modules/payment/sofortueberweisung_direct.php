@@ -161,7 +161,7 @@
           $order->info['order_status'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID;
         }
       } else {
-        $order->info['comments'] .= "\n" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . $HTTP_GET_VARS['betrag'] .'!=' . number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');
+        $order->info['comments'] .= "\n" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($HTTP_GET_VARS['betrag_integer']/100) .'!=' . ($order_total_integer/100);
       }
       if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
         $order->info['comments'] .= "\n" . serialize($HTTP_GET_VARS);
