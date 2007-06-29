@@ -253,7 +253,7 @@
 
     function process_button() {
      global $order, $cart, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
-var_dump($cart_Sofortueberweisung_Direct_ID);
+
       $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
       $parameter= array();
