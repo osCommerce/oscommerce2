@@ -308,7 +308,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $billto, $payment, $currencies, $cart, $cart_ChronoPay_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart, $cart_ChronoPay_ID;
       global $$payment;
 
       $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
