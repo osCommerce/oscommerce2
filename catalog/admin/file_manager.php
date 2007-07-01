@@ -145,7 +145,7 @@
       $filename_input_field = tep_draw_input_field('filename');
     } elseif ($action == 'edit') {
       if ($file_array = file($current_path . '/' . $HTTP_GET_VARS['info'])) {
-        $file_contents = addslashes(implode('', $file_array));
+        $file_contents = implode('', $file_array);
       }
       $filename_input_field = $HTTP_GET_VARS['info'] . tep_draw_hidden_field('filename', $HTTP_GET_VARS['info']);
     }
