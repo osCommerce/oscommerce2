@@ -313,8 +313,25 @@
 
       $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
 
+      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+      if (tep_db_num_rows($check_query)) {
+        $check = tep_db_fetch_array($check_query);
+
+        if ($check['orders_status'] == MODULE_PAYMENT_CHRONOPAY_PREPARE_ORDER_STATUS_ID) {
+          $sql_data_array = array('orders_id' => $order_id,
+                                  'orders_status_id' => MODULE_PAYMENT_CHRONOPAY_PREPARE_ORDER_STATUS_ID,
+                                  'date_added' => 'now()',
+                                  'customer_notified' => '0',
+                                  'comments' => '');
+
+          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
+      }
+
+      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_CHRONOPAY_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_CHRONOPAY_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+
       $sql_data_array = array('orders_id' => $order_id,
-                              'orders_status_id' => $order->info['order_status'],
+                              'orders_status_id' => (MODULE_PAYMENT_CHRONOPAY_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_CHRONOPAY_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
                               'date_added' => 'now()',
                               'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                               'comments' => $order->info['comments']);
