@@ -506,8 +506,8 @@
 
         $languages = tep_get_languages();
 
-        foreach ($languages as $lang) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [ChronoPay]')");
+        for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Preparing [ChronoPay]')");
         }
       } else {
         $check = tep_db_fetch_array($check_query);

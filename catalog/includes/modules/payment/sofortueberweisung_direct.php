@@ -311,7 +311,8 @@
         $parameter['key'] = md5(implode("|", $tmparray));
       }
       $process_button_string = '';
-      foreach ($parameter as $key => $value) {
+      reset($parameter);
+      while (list($key, $value) = each($parameter)) {
         $process_button_string .= tep_draw_hidden_field($key, $value). "\n";
       }
 
@@ -552,8 +553,8 @@
 
         $languages = tep_get_languages();
 
-        foreach ($languages as $lang) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sofortüberweisung Vorbereitung')");
+        for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofortüberweisung Vorbereitung')");
         }
       } else {
         $check = tep_db_fetch_array($check_query);
