@@ -1,15 +1,15 @@
 <?php
 /*
-  $Id: paypal.php,v 1.7 2002/11/01 05:39:27 hpdl Exp $
+  $Id: $
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
 
   define('MODULE_PAYMENT_PAYPAL_TEXT_TITLE', 'PayPal');
-  define('MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION', 'PayPal');
+  define('MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>');
 ?>
