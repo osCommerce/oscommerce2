@@ -1,7 +1,125 @@
 $Id: $
 
-osCommerce Changelog
-Copyright (c) 2006 osCommerce
+osCommerce Online Merchant Changelog
+Copyright (c) 2007 osCommerce
+
+------------------------------------------------------------------------------
+07/xx/2007 osCommerce Online Merchant 2.2 RC1
+------------------------------------------------------------------------------
+
+* Remove additional slashes when editing a file in the Administration Tool ->
+  Tools -> File Manager section.
+  [r1652]
+
+* Update Administration Tool pages. Introduce index summary modules
+  (backported from v3.0).
+  [r1633, r1634, r1635]
+
+* Increase configuration_title and configuration_key field sizes
+  [r1631]
+
+* Update project version. Update osCommerce logo. Use standard store_logo.png
+  image to easily allow the store logo to be changed.
+  [r1626]
+
+* New administrators page to create, edit, and delete administrators
+  [r1625]
+
+* Filter the parameters to not include any containing '_nh_dns' in the name so
+  they do not get stored in the navigation history session file.
+  [r1619, r1620]
+
+* Add a public_title variable to the payment modules so the payment method can
+  display "Credit Card" instead of the name of the payment service provider.
+  [r1617, r1621]
+
+* When editing reviews, strip additional slashes in the reviews text before
+  storing it in the database.
+  [r1614]
+
+* PHP < 4.1 compatibility update.
+  [r1612]
+
+* Backport v3.0 installation procedure.
+  [r1611, r1613, r1629]
+
+* Add a simple administrator login routine to the Administrator Tool.
+  [r1610, r1632]
+
+* Process the order total modules earlier on the checkout confirmation page.
+  [r1609]
+
+* Fix typo in the products new page.
+  [r1608]
+
+* Add the session ID to the GET based forms as a hidden field value.
+  [r1606, r1607]
+
+* Updating category settings without selecting a category image was removing
+  the previous category image.
+  [r1603]
+
+* Check the selected payment module radio field.
+  [r1601]
+
+* Load the payment modules after the order total modules to get the proper
+  final order total value. This will break some payment modules duplicating
+  the checkout_process.php logic (ie, PayPal IPN contribution).
+  [r1600]
+
+* Improve the logic of accepting state names.
+  [r1598]
+
+* Add a new configuration parameter to control the maximum quantity a product
+  can be added to the shopping cart (99 by default).
+  [r1596]
+
+* The quantity is added to the database as an integer so the quantity in the
+  shopping cart session should also be treated as an integer.
+  [r1595]
+
+* Fix the display of the country name on the order history page.
+  [r1594]
+
+* Don't calculate prices with tax by rounding the net value, as this brings
+  down the default precision of 4 to the decimal places the selected currency
+  has.
+  [r1592, r1593]
+
+* Fix sql injection vulnerability when sorting product listings.
+  [r1591]
+
+* Pass the connection identifier link to the mysql_insert_id() function.
+  [r1590]
+
+* Reset the array index counter after working through its elements.
+  [r1589]
+
+* Respect the Configuration -> Minimum Values settings.
+  [r1587, r1588]
+
+* Correct the display of the billing address on the invoice and packing slip
+  pages.
+  [r1586]
+
+* Fix currency case-sensitivity bug.
+  [r1585]
+
+* Add a register_globals compatibility layer for PHP 4.3+ servers.
+  [r1583, r1584, r1597, r1599, r1647]
+
+* Allow payment modules to display input fields on the checkout confirmation
+  page.
+  [r1582]
+
+* Add fulltext support into the database backup dumps.
+  Don't backup the data from the sessions table nor the who's online table.
+  Delete the contents of the sessions table and who's online table after a
+  restoration has been performed.
+  [r1274]
+
+* Fix manufacturers caching block.
+  [r726]
 
 ------------------------------------------------------------------------------
 08/17/2006 osCommerce 2.2 Milestone 2 Update 060817
