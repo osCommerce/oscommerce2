@@ -12,5 +12,5 @@
 
   define('MODULE_PAYMENT_CHRONOPAY_TEXT_TITLE', 'ChronoPay');
   define('MODULE_PAYMENT_CHRONOPAY_TEXT_PUBLIC_TITLE', 'Tarjeta de Cr&eacute;dito');
-  define('MODULE_PAYMENT_CHRONOPAY_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.chronopay.com" style="text-decoration: underline; font-weight: bold;">Visita la web de ChronoPay</a>');
+  define('MODULE_PAYMENT_CHRONOPAY_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.chronopay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">Visita la web de ChronoPay</a>');
 ?>

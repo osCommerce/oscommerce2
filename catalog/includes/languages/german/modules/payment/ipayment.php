@@ -12,7 +12,7 @@
 
   define('MODULE_PAYMENT_IPAYMENT_TEXT_TITLE', 'iPayment');
   define('MODULE_PAYMENT_IPAYMENT_TEXT_PUBLIC_TITLE', 'Kreditkarte');
-  define('MODULE_PAYMENT_IPAYMENT_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.ipayment.de" style="text-decoration: underline; font-weight: bold;">iPayment Webseite besuchen</a>');
+  define('MODULE_PAYMENT_IPAYMENT_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.ipayment.de" target="_blank" style="text-decoration: underline; font-weight: bold;">iPayment Webseite besuchen</a>');
   define('IPAYMENT_ERROR_HEADING', 'Folgender Fehler wurde von iPayment w&auml;hrend des Prozesses gemeldet:');
   define('IPAYMENT_ERROR_MESSAGE', 'Bitte kontrollieren Sie die Daten Ihrer Kreditkarte!');
   define('MODULE_PAYMENT_IPAYMENT_TEXT_CREDIT_CARD_OWNER', 'Kreditkarteninhaber');

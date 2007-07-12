@@ -11,5 +11,5 @@
 */
 
   define('MODULE_PAYMENT_PAYPAL_TEXT_TITLE', 'PayPal');
-  define('MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>');
+  define('MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" target="_blank" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>&nbsp;<a href="javascript:toggleDivBlock(\'paypalInfo\');">(info)</a><span id="paypalInfo" style="display: none;"><br><i>Using the above link to signup at PayPal grants osCommerce a small financial bonus for referring a customer.</i></span>');
 ?>
