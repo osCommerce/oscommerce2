@@ -127,10 +127,12 @@
     function filter_parameters($parameters) {
       $clean = array();
 
-      reset($parameters);
-      while (list($key, $value) = each($parameters)) {
-        if (strpos($key, '_nh-dns') < 1) {
-          $clean[$key] = $value;
+      if (is_array($parameters)) {
+        reset($parameters);
+        while (list($key, $value) = each($parameters)) {
+          if (strpos($key, '_nh-dns') < 1) {
+            $clean[$key] = $value;
+          }
         }
       }
 
