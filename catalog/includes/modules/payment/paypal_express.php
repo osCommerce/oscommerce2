@@ -19,6 +19,7 @@
 
       $this->code = 'paypal_express';
       $this->title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_TITLE;
+      $this->public_title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_DESCRIPTION;
       $this->sort_order = MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER;
       $this->enabled = ((MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS == 'True') ? true : false);
@@ -73,7 +74,7 @@
 
     function selection() {
       return array('id' => $this->code,
-                   'module' => $this->title);
+                   'module' => $this->public_title);
     }
 
     function pre_confirmation_check() {
