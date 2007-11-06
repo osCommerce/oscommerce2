@@ -92,7 +92,12 @@
     }
 
     function before_process() {
-      global $messageStack, $currencies, $order, $sendto, $ppe_token, $ppe_payerid;
+      global $currencies, $order, $sendto, $ppe_token, $ppe_payerid;
+
+/*
+ * The following is commented out due to another block further below being
+ * commented out. These calculations are not not needed if the item list is
+ * not sent with the transaction.
 
       $item_amount = $order->info['subtotal'];
       $shipping_amount = $order->info['shipping_cost'];
@@ -118,6 +123,7 @@
       if (DISPLAY_PRICE_WITH_TAX == 'true') {
         $item_amount -= $tax_amount;
       }
+*/
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $api_url = 'https://api-3t.paypal.com/nvp';
@@ -134,10 +140,15 @@
                       'PAYMENTACTION' => 'Sale',
                       'PAYERID' => $ppe_payerid,
                       'AMT' => $currencies->format_raw($order->info['total']),
+                      'CURRENCYCODE' => $order->info['currency']);
+
+/*
+ * The following prevents a transaction from occuring when the order total
+ * has been altered by an order_total module (low order fee, discounts, ..).
+
                       'ITEMAMT' => $currencies->format_raw($item_amount),
                       'SHIPPINGAMT' => $currencies->format_raw($shipping_amount),
                       'TAXAMT' => $currencies->format_raw($tax_amount),
-                      'CURRENCYCODE' => $order->info['currency']);
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
         $params['L_NAME' . $i] = $order->products[$i]['name'];
@@ -146,6 +157,7 @@
         $params['L_TAXAMT' . $i] = $currencies->format_raw(($order->products[$i]['tax']/100) * $order->products[$i]['final_price']);
         $params['L_AMT' . $i] = $currencies->format_raw($order->products[$i]['final_price']);
       }
+*/
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
