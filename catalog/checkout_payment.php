@@ -52,12 +52,14 @@
     $billto = $customer_default_address_id;
   } else {
 // verify the selected billing address
-    $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
-    $check_address = tep_db_fetch_array($check_address_query);
+    if ( (is_array($billto) && empty($billto)) || is_numeric($billto) ) {
+      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
+      $check_address = tep_db_fetch_array($check_address_query);
 
-    if ($check_address['total'] != '1') {
-      $billto = $customer_default_address_id;
-      if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+      if ($check_address['total'] != '1') {
+        $billto = $customer_default_address_id;
+        if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+      }
     }
   }
 

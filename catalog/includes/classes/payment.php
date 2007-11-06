@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -120,6 +120,22 @@
       }
 
       return $js;
+    }
+
+    function checkout_initialization_method() {
+      $initialize_array = array();
+
+      if (is_array($this->modules)) {
+        reset($this->modules);
+        while (list(, $value) = each($this->modules)) {
+          $class = substr($value, 0, strrpos($value, '.'));
+          if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'checkout_initialization_method')) {
+            $initialize_array[] = $GLOBALS[$class]->checkout_initialization_method();
+          }
+        }
+      }
+
+      return $initialize_array;
     }
 
     function selection() {
