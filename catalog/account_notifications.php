@@ -38,9 +38,10 @@
       tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set global_product_notifications = '" . (int)$product_global . "' where customers_info_id = '" . (int)$customer_id . "'");
     } elseif (sizeof($products) > 0) {
       $products_parsed = array();
-      for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-        if (is_numeric($products[$i])) {
-          $products_parsed[] = $products[$i];
+      reset($products);
+      while (list(, $value) = each($products)) {
+        if (is_numeric($value)) {
+          $products_parsed[] = $value;
         }
       }
 
