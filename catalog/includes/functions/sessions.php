@@ -104,9 +104,11 @@
       if (PHP_VERSION < 4.3) {
         return session_register($variable);
       } else {
-        $_SESSION[$variable] = (isset($GLOBALS[$variable])) ? $GLOBALS[$variable] : null;
+        global $$variable;
 
-        $GLOBALS[$variable] =& $_SESSION[$variable];
+        $_SESSION[$variable] = (isset($$variable)) ? $$variable : null;
+
+        $$variable =& $_SESSION[$variable];
       }
     }
 
