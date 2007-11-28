@@ -106,9 +106,10 @@
       } else {
         global $$variable;
 
-        $_SESSION[$variable] = (isset($$variable)) ? $$variable : null;
+        $_SESSION[$variable] = (isset($$variable)) ? $$variable : (isset($GLOBALS[$variable])) ? $GLOBALS[$variable] : null;
 
         $$variable =& $_SESSION[$variable];
+        $GLOBALS[$variable] =& $_SESSION[$variable];
       }
     }
 
