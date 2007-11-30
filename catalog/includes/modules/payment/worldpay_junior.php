@@ -266,7 +266,7 @@
     }
 
     function process_button() {
-      global $order, $currency, $languages_id, $language, $customer_id, $cart_Worldpay_Junior_ID;
+      global $order, $currencies, $currency, $languages_id, $language, $customer_id, $cart_Worldpay_Junior_ID;
 
       $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
 
@@ -274,7 +274,7 @@
       $lang = tep_db_fetch_array($lang_query);
 
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) .
-                               tep_draw_hidden_field('amount', number_format($order->info['total'], 2)) .
+                               tep_draw_hidden_field('amount', $currencies->format_raw($order->info['total'])) .
                                tep_draw_hidden_field('currency', $currency) .
                                tep_draw_hidden_field('cartId', $order_id) .
                                tep_draw_hidden_field('desc', STORE_NAME) .
@@ -286,6 +286,10 @@
                                tep_draw_hidden_field('email', $order->customer['email_address']) .
                                tep_draw_hidden_field('fixContact', 'Y') .
                                tep_draw_hidden_field('lang', strtoupper($lang['code']));
+
+      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization') {
+        $process_button_string .= tep_draw_hidden_field('authMode', 'E');
+      }
 
       if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
         $process_button_string .= tep_draw_hidden_field('testMode', '100');
@@ -526,6 +530,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable WorldPay Select Junior Module', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'True', 'Do you want to accept WorldPay Select Junior payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installation ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', '', 'Your WorldPay Installation ID', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Encryption Password', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD', '', 'The encryption password to validate transaction responses with', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'Capture', 'The processing method to use for each transaction', '6', '0', 'tep_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Test Mode', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'True', 'Process transactions in test mode?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
@@ -538,7 +543,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER');
+      return array('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER');
     }
   }
 ?>
