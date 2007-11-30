@@ -94,37 +94,6 @@
     function before_process() {
       global $currencies, $order, $sendto, $ppe_token, $ppe_payerid;
 
-/*
- * The following is commented out due to another block further below being
- * commented out. These calculations are not not needed if the item list is
- * not sent with the transaction.
-
-      $item_amount = $order->info['subtotal'];
-      $shipping_amount = $order->info['shipping_cost'];
-      $tax_amount = $order->info['tax'];
-
-      $shipping_module = substr($GLOBALS['shipping']['id'], 0, strpos($GLOBALS['shipping']['id'], '_'));
-
-      if (($shipping_amount > 0) && ($GLOBALS[$shipping_module]->tax_class > 0)) {
-        if (DISPLAY_PRICE_WITH_TAX == 'true') {
-          $shipping_tax = tep_get_tax_rate($GLOBALS[$shipping_module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_value = $shipping_amount - ($shipping_amount / (($shipping_tax < 10) ? "1.0" . str_replace('.', '', $shipping_tax) : "1." . str_replace('.', '', $shipping_tax)));
-
-          $tax_amount -= $shipping_tax_value;
-        } else {
-          $shipping_tax = tep_get_tax_rate($GLOBALS[$shipping_module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_value = tep_calculate_tax($shipping_amount, $shipping_tax);
-
-          $shipping_amount += $shipping_tax_value;
-          $tax_amount -= $shipping_tax_value;
-        }
-      }
-
-      if (DISPLAY_PRICE_WITH_TAX == 'true') {
-        $item_amount -= $tax_amount;
-      }
-*/
-
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $api_url = 'https://api-3t.paypal.com/nvp';
       } else {
@@ -137,27 +106,10 @@
                       'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
                       'METHOD' => 'DoExpressCheckoutPayment',
                       'TOKEN' => $ppe_token,
-                      'PAYMENTACTION' => 'Sale',
+                      'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
                       'PAYERID' => $ppe_payerid,
                       'AMT' => $currencies->format_raw($order->info['total']),
                       'CURRENCYCODE' => $order->info['currency']);
-
-/*
- * The following prevents a transaction from occuring when the order total
- * has been altered by an order_total module (low order fee, discounts, ..).
-
-                      'ITEMAMT' => $currencies->format_raw($item_amount),
-                      'SHIPPINGAMT' => $currencies->format_raw($shipping_amount),
-                      'TAXAMT' => $currencies->format_raw($tax_amount),
-
-      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $params['L_NAME' . $i] = $order->products[$i]['name'];
-        $params['L_NUMBER' . $i] = $order->products[$i]['id'];
-        $params['L_QTY' . $i] = $order->products[$i]['qty'];
-        $params['L_TAXAMT' . $i] = $currencies->format_raw(($order->products[$i]['tax']/100) * $order->products[$i]['final_price']);
-        $params['L_AMT' . $i] = $currencies->format_raw($order->products[$i]['final_price']);
-      }
-*/
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
@@ -208,6 +160,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('API Password', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD', '', 'The password to use for the PayPal API service', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('API Signature', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE', '', 'The signature to use for the PayPal API service', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER', 'Live', 'Use the live or testing (sandbox) gateway server to process transactions?', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
@@ -219,7 +172,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_CURL');
+      return array('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_CURL');
     }
 
     function sendTransactionToGateway($url, $parameters) {

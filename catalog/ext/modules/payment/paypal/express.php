@@ -236,6 +236,7 @@
       $order = new order;
 
       $params['METHOD'] = 'SetExpressCheckout';
+      $params['PAYMENTACTION'] = ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization');
       $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL');
       $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL');
       $params['AMT'] = $currencies->format_raw($order->info['total']);
