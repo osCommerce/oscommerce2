@@ -105,7 +105,7 @@
                       'PARTNER' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER,
                       'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD,
                       'TENDER' => 'P',
-                      'TRXTYPE' => 'S',
+                      'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                       'CURRENCY' => $order->info['currency'],
                       'EMAIL' => $order->customer['email_address'],
                       'TOKEN' => $ppeuk_token,
@@ -182,6 +182,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Password', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD', '', 'The 6- to 32-character password that you defined while registering for the account.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Partner', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER', 'PayPalUK', 'The ID provided to you by the authorised PayPal Reseller who registered you for the Payflow SDK. If you purchased your account directly from PayPal, use PayPalUK.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_SERVER', 'Live', 'Use the live or testing (sandbox) gateway server to process transactions?', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
@@ -193,7 +194,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_STATUS', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_VENDOR', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_USERNAME', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ZONE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_CURL');
+      return array('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_STATUS', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_VENDOR', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_USERNAME', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ZONE', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_EXPRESS_UK_CURL');
     }
 
     function sendTransactionToGateway($url, $parameters, $headers = null) {

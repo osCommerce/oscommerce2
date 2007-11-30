@@ -66,7 +66,7 @@
                   'PARTNER' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER,
                   'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD,
                   'TENDER' => 'P',
-                  'TRXTYPE' => 'S');
+                  'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'));
 
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'retrieve':
