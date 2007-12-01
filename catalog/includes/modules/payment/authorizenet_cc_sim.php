@@ -86,43 +86,46 @@
 
       $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $currencies->format_raw($order->info['total']), rand(1, 1000), $currency);
 
-      $process_button_string .= tep_draw_hidden_field('x_login', MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID) .
+      $process_button_string .= tep_draw_hidden_field('x_login', substr(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, 0, 20)) .
                                 tep_draw_hidden_field('x_version', '3.1') .
                                 tep_draw_hidden_field('x_show_form', 'PAYMENT_FORM') .
                                 tep_draw_hidden_field('x_relay_response', 'TRUE') .
                                 tep_draw_hidden_field('x_relay_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false)) .
-                                tep_draw_hidden_field('x_first_name', $order->billing['firstname']) .
-                                tep_draw_hidden_field('x_last_name', $order->billing['lastname']) .
-                                tep_draw_hidden_field('x_company', $order->billing['company']) .
-                                tep_draw_hidden_field('x_address', $order->billing['street_address']) .
-                                tep_draw_hidden_field('x_city', $order->billing['city']) .
-                                tep_draw_hidden_field('x_state', $order->billing['state']) .
-                                tep_draw_hidden_field('x_zip', $order->billing['postcode']) .
-                                tep_draw_hidden_field('x_country', $order->billing['country']['title']) .
-                                tep_draw_hidden_field('x_phone', $order->customer['telephone']) .
-                                tep_draw_hidden_field('x_cust_id', $customer_id) .
+                                tep_draw_hidden_field('x_first_name', substr($order->billing['firstname'], 0, 50)) .
+                                tep_draw_hidden_field('x_last_name', substr($order->billing['lastname'], 0, 50)) .
+                                tep_draw_hidden_field('x_company', substr($order->billing['company'], 0, 50)) .
+                                tep_draw_hidden_field('x_address', substr($order->billing['street_address'], 0, 60)) .
+                                tep_draw_hidden_field('x_city', substr($order->billing['city'], 0, 40)) .
+                                tep_draw_hidden_field('x_state', substr($order->billing['state'], 0, 40)) .
+                                tep_draw_hidden_field('x_zip', substr($order->billing['postcode'], 0, 20)) .
+                                tep_draw_hidden_field('x_country', substr($order->billing['country']['title'], 0, 60)) .
+                                tep_draw_hidden_field('x_phone', substr($order->customer['telephone'], 0, 25)) .
+                                tep_draw_hidden_field('x_cust_id', substr($customer_id, 0, 20)) .
                                 tep_draw_hidden_field('x_customer_ip', tep_get_ip_address()) .
-                                tep_draw_hidden_field('x_email', $order->customer['email_address']) .
-                                tep_draw_hidden_field('x_description', STORE_NAME) .
-                                tep_draw_hidden_field('x_ship_to_first_name', $order->delivery['firstname']) .
-                                tep_draw_hidden_field('x_ship_to_last_name', $order->delivery['lastname']) .
-                                tep_draw_hidden_field('x_ship_to_company', $order->delivery['company']) .
-                                tep_draw_hidden_field('x_ship_to_address', $order->delivery['street_address']) .
-                                tep_draw_hidden_field('x_ship_to_city', $order->delivery['city']) .
-                                tep_draw_hidden_field('x_ship_to_state', $order->delivery['state']) .
-                                tep_draw_hidden_field('x_ship_to_zip', $order->delivery['postcode']) .
-                                tep_draw_hidden_field('x_ship_to_country', $order->delivery['country']['title']) .
-                                tep_draw_hidden_field('x_amount', $currencies->format_raw($order->info['total'])) .
-                                tep_draw_hidden_field('x_currency_code', $currency) .
+                                tep_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
+                                tep_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .
+                                tep_draw_hidden_field('x_amount', substr($currencies->format_raw($order->info['total']), 0, 15)) .
+                                tep_draw_hidden_field('x_currency_code', substr($currency, 0, 3)) .
                                 tep_draw_hidden_field('x_method', 'CC') .
                                 tep_draw_hidden_field('x_type', 'AUTH_ONLY');
+
+      if (is_numeric($sendto) && ($sendto > 0)) {
+        $process_button_string .= tep_draw_hidden_field('x_ship_to_first_name', substr($order->delivery['firstname'], 0, 50)) .
+                                  tep_draw_hidden_field('x_ship_to_last_name', substr($order->delivery['lastname'], 0, 50)) .
+                                  tep_draw_hidden_field('x_ship_to_company', substr($order->delivery['company'], 0, 50)) .
+                                  tep_draw_hidden_field('x_ship_to_address', substr($order->delivery['street_address'], 0, 60)) .
+                                  tep_draw_hidden_field('x_ship_to_city', substr($order->delivery['city'], 0, 40)) .
+                                  tep_draw_hidden_field('x_ship_to_state', substr($order->delivery['state'], 0, 40)) .
+                                  tep_draw_hidden_field('x_ship_to_zip', substr($order->delivery['postcode'], 0, 20)) .
+                                  tep_draw_hidden_field('x_ship_to_country', substr($order->delivery['country']['title'], 0, 60));
+      }
 
       if (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE == 'Test') {
         $process_button_string .= tep_draw_hidden_field('x_test_request', 'TRUE');
       }
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . $order->products[$i]['name'] . '<|>' . $order->products[$i]['name'] . '<|>' . $order->products[$i]['qty'] . '<|>' . $currencies->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
+        $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $currencies->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
       $tax_value = 0;

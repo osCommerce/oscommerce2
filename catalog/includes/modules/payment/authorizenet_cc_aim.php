@@ -99,45 +99,48 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $customer_id, $order, $currency, $currencies;
+      global $HTTP_POST_VARS, $customer_id, $order, $sendto, $currency, $currencies;
 
-      $params = array('x_login' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID,
-                      'x_tran_key' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY,
+      $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
+                      'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
                       'x_version' => '3.1',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
                       'x_encap_char' => '"',
                       'x_relay_response' => 'FALSE',
-                      'x_first_name' => $order->billing['firstname'],
-                      'x_last_name' => $order->billing['lastname'],
-                      'x_company' => $order->billing['company'],
-                      'x_address' => $order->billing['street_address'],
-                      'x_city' => $order->billing['city'],
-                      'x_state' => $order->billing['state'],
-                      'x_zip' => $order->billing['postcode'],
-                      'x_country' => $order->billing['country']['title'],
-                      'x_phone' => $order->customer['telephone'],
-                      'x_cust_id' => $customer_id,
+                      'x_first_name' => substr($order->billing['firstname'], 0, 50),
+                      'x_last_name' => substr($order->billing['lastname'], 0, 50),
+                      'x_company' => substr($order->billing['company'], 0, 50),
+                      'x_address' => substr($order->billing['street_address'], 0, 60),
+                      'x_city' => substr($order->billing['city'], 0, 40),
+                      'x_state' => substr($order->billing['state'], 0, 40),
+                      'x_zip' => substr($order->billing['postcode'], 0, 20),
+                      'x_country' => substr($order->billing['country']['title'], 0, 60),
+                      'x_phone' => substr($order->customer['telephone'], 0, 25),
+                      'x_cust_id' => substr($customer_id, 0, 20),
                       'x_customer_ip' => tep_get_ip_address(),
-                      'x_email' => $order->customer['email_address'],
-                      'x_description' => STORE_NAME,
-                      'x_ship_to_first_name' => $order->delivery['firstname'],
-                      'x_ship_to_last_name' => $order->delivery['lastname'],
-                      'x_ship_to_company' => $order->delivery['company'],
-                      'x_ship_to_address' => $order->delivery['street_address'],
-                      'x_ship_to_city' => $order->delivery['city'],
-                      'x_ship_to_state' => $order->delivery['state'],
-                      'x_ship_to_zip' => $order->delivery['postcode'],
-                      'x_ship_to_country' => $order->delivery['country']['title'],
-                      'x_amount' => $currencies->format_raw($order->info['total']),
-                      'x_currency_code' => $currency,
+                      'x_email' => substr($order->customer['email_address'], 0, 255),
+                      'x_description' => substr(STORE_NAME, 0, 255),
+                      'x_amount' => substr($currencies->format_raw($order->info['total']), 0, 15),
+                      'x_currency_code' => substr($currency, 0, 3),
                       'x_method' => 'CC',
                       'x_type' => 'AUTH_ONLY',
-                      'x_card_num' => $HTTP_POST_VARS['cc_number_nh-dns'],
+                      'x_card_num' => substr($HTTP_POST_VARS['cc_number_nh-dns'], 0, 22),
                       'x_exp_date' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year']);
 
       if (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_WITH_CVC == 'True') {
-        $params['x_card_code'] = $HTTP_POST_VARS['cc_cvc_nh-dns'];
+        $params['x_card_code'] = substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4);
+      }
+
+      if (is_numeric($sendto) && ($sendto > 0)) {
+        $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
+        $params['x_ship_to_last_name'] = substr($order->delivery['lastname'], 0, 50);
+        $params['x_ship_to_company'] = substr($order->delivery['company'], 0, 50);
+        $params['x_ship_to_address'] = substr($order->delivery['street_address'], 0, 60);
+        $params['x_ship_to_city'] = substr($order->delivery['city'], 0, 40);
+        $params['x_ship_to_state'] = substr($order->delivery['state'], 0, 40);
+        $params['x_ship_to_zip'] = substr($order->delivery['postcode'], 0, 20);
+        $params['x_ship_to_country'] = substr($order->delivery['country']['title'], 0, 60);
       }
 
       if (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE == 'Test') {
@@ -167,7 +170,7 @@
       $post_string = substr($post_string, 0, -1);
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $post_string .= '&x_line_item=' . ($i+1) . '<|>' . $order->products[$i]['name'] . '<|>' . $order->products[$i]['name'] . '<|>' . $order->products[$i]['qty'] . '<|>' . $currencies->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
+        $post_string .= '&x_line_item=' . ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $currencies->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
       }
 
       switch (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER) {
