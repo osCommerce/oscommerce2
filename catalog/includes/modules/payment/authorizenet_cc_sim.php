@@ -82,7 +82,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currency, $currencies;
+      global $customer_id, $order, $sendto, $currency, $currencies;
 
       $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $currencies->format_raw($order->info['total']), rand(1, 1000), $currency);
 
