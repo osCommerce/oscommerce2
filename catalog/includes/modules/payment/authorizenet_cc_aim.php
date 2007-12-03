@@ -170,7 +170,7 @@
       $post_string = substr($post_string, 0, -1);
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $post_string .= '&x_line_item=' . ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $currencies->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
+        $post_string .= '&x_line_item=' . urlencode($i+1) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 31)) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 255)) . '<|>' . urlencode($order->products[$i]['qty']) . '<|>' . urlencode($currencies->format_raw($order->products[$i]['final_price'])) . '<|>' . urlencode($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
       }
 
       switch (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER) {
