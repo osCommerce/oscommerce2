@@ -124,7 +124,7 @@
                       'x_amount' => substr($currencies->format_raw($order->info['total']), 0, 15),
                       'x_currency_code' => substr($currency, 0, 3),
                       'x_method' => 'CC',
-                      'x_type' => 'AUTH_ONLY',
+                      'x_type' => ((MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'),
                       'x_card_num' => substr($HTTP_POST_VARS['cc_number_nh-dns'], 0, 22),
                       'x_exp_date' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year']);
 
@@ -287,6 +287,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Hash', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH', '', 'The MD5 hash value to verify transactions with', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER', 'Live', 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE', 'Live', 'Transaction mode used for processing orders', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD', 'Authorization', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Capture\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
@@ -298,7 +299,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_WITH_CVC', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CURL');
+      return array('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_WITH_CVC', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER', 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CURL');
     }
 
     function _hmac($key, $data) {
