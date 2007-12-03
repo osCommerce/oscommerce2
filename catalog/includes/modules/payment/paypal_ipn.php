@@ -272,7 +272,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $languages_id, $currencies, $currency, $cart_PayPal_IPN_ID, $shipping;
+      global $customer_id, $order, $sendto, $languages_id, $currencies, $currency, $cart_PayPal_IPN_ID, $shipping;
 
       $process_button_string = '';
       $parameters = array();
@@ -344,12 +344,24 @@
       $parameters['currency_code'] = $currency;
       $parameters['invoice'] = substr($cart_PayPal_IPN_ID, strpos($cart_PayPal_IPN_ID, '-')+1);
       $parameters['custom'] = $customer_id;
-      $parameters['no_shipping'] = '1';
       $parameters['no_note'] = '1';
       $parameters['notify_url'] = tep_href_link('ext/modules/payment/paypal/ipn.php', '', 'SSL', false, false);
       $parameters['return'] = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
       $parameters['cancel_return'] = tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL');
       $parameters['bn'] = 'osCommerce; ' . PROJECT_VERSION;
+
+      if (is_numeric($sendto) && ($sendto > 0)) {
+        $parameters['address_override'] = '1';
+        $parameters['first_name'] = $order->delivery['firstname'];
+        $parameters['last_name'] = $order->delivery['lastname'];
+        $parameters['address1'] = $order->delivery['street_address'];
+        $parameters['city'] = $order->delivery['city'];
+        $parameters['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $parameters['zip'] = $order->delivery['postcode'];
+        $parameters['country'] = $order->delivery['country']['iso_code_2'];
+      } else {
+        $parameters['no_shipping'] = '1';
+      }
 
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE)) {
         $parameters['page_style'] = MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE;
