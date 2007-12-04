@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -90,10 +90,11 @@ function tep_unlink_temp_dir($dir)
     umask(0000);
     mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
     symlink(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'], DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']);
-    tep_redirect(tep_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']));
-  } else {
-// This will work on all systems, but will need considerable resources
-// We could also loop with fread($fp, 4096) to save memory
-    readfile(DIR_FS_DOWNLOAD . $downloads['orders_products_filename']);
+    if (file_exists(DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename'])) {
+      tep_redirect(tep_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']));
+    }
   }
+
+// Fallback to readfile() delivery method. This will work on all systems, but will need considerable resources
+  readfile(DIR_FS_DOWNLOAD . $downloads['orders_products_filename']);
 ?>
