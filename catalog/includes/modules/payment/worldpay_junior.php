@@ -304,7 +304,7 @@
     }
 
     function before_process() {
-      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart, $cart_Worldpay_Junior_ID;
+      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Worldpay_Junior_ID;
       global $$payment;
 
       $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);

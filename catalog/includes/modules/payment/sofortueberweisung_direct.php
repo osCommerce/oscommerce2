@@ -339,7 +339,7 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
+      global $HTTP_GET_VARS, $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
       global $$payment;
 
       $md5var4 = md5($HTTP_GET_VARS['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
