@@ -276,6 +276,7 @@
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) .
                                tep_draw_hidden_field('amount', $currencies->format_raw($order->info['total'])) .
                                tep_draw_hidden_field('currency', $currency) .
+                               tep_draw_hidden_field('hideCurrency', 'true') .
                                tep_draw_hidden_field('cartId', $order_id) .
                                tep_draw_hidden_field('desc', STORE_NAME) .
                                tep_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
