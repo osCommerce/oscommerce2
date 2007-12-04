@@ -272,83 +272,24 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $languages_id, $currencies, $currency, $cart_PayPal_IPN_ID, $shipping;
+      global $customer_id, $order, $sendto, $currencies, $currency, $cart_PayPal_IPN_ID, $shipping;
 
       $process_button_string = '';
-      $parameters = array();
-
-      if ( (MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_TYPE == 'Per Item') && (MODULE_PAYMENT_PAYPAL_IPN_EWP_STATUS == 'False') ) {
-        $parameters['cmd'] = '_cart';
-        $parameters['upload'] = '1';
-
-        for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-          $item = $i+1;
-
-          $tax_value = ($order->products[$i]['tax'] / 100) * $order->products[$i]['final_price'];
-
-          $parameters['item_name_' . $item] = $order->products[$i]['name'];
-          $parameters['amount_' . $item] = number_format($order->products[$i]['final_price'], $currencies->get_decimal_places($currency));
-          $parameters['tax_' . $item] = number_format($tax_value, $currencies->get_decimal_places($currency));
-          $parameters['quantity_' . $item] = $order->products[$i]['qty'];
-
-          if ($i == 0) {
-            if (DISPLAY_PRICE_WITH_TAX == 'true') {
-              $shipping_cost = $order->info['shipping_cost'];
-            } else {
-              $module = substr($shipping['id'], 0, strpos($shipping['id'], '_'));
-              $shipping_tax = tep_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-              $shipping_cost = $order->info['shipping_cost'] + tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-            }
-
-            $parameters['shipping_' . $item] = number_format($shipping_cost, $currencies->get_decimal_places($currency));
-          }
-
-          if (isset($order->products[$i]['attributes'])) {
-            for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-              if (DOWNLOAD_ENABLED == 'true') {
-                $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
-                                     from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                     left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
-                                     on pa.products_attributes_id=pad.products_attributes_id
-                                     where pa.products_id = '" . $order->products[$i]['id'] . "'
-                                     and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
-                                     and pa.options_id = popt.products_options_id
-                                     and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
-                                     and pa.options_values_id = poval.products_options_values_id
-                                     and popt.language_id = '" . $languages_id . "'
-                                     and poval.language_id = '" . $languages_id . "'";
-                $attributes = tep_db_query($attributes_query);
-              } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
-              }
-              $attributes_values = tep_db_fetch_array($attributes);
-
-// Unfortunately PayPal only accepts two attributes per product, so the
-// third attribute onwards will not be shown at PayPal
-              $parameters['on' . $j . '_' . $item] = $attributes_values['products_options_name'];
-              $parameters['os' . $j . '_' . $item] = $attributes_values['products_options_values_name'];
-            }
-          }
-        }
-
-        $parameters['num_cart_items'] = $item;
-      } else {
-        $parameters['cmd'] = '_xclick';
-        $parameters['item_name'] = STORE_NAME;
-        $parameters['shipping'] = number_format($order->info['shipping_cost'], $currencies->get_decimal_places($currency));
-        $parameters['tax'] = number_format($order->info['tax'], $currencies->get_decimal_places($currency));
-      }
-
-      $parameters['business'] = MODULE_PAYMENT_PAYPAL_IPN_ID;
-      $parameters['amount'] = number_format($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax'], $currencies->get_decimal_places($currency));
-      $parameters['currency_code'] = $currency;
-      $parameters['invoice'] = substr($cart_PayPal_IPN_ID, strpos($cart_PayPal_IPN_ID, '-')+1);
-      $parameters['custom'] = $customer_id;
-      $parameters['no_note'] = '1';
-      $parameters['notify_url'] = tep_href_link('ext/modules/payment/paypal/ipn.php', '', 'SSL', false, false);
-      $parameters['return'] = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
-      $parameters['cancel_return'] = tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL');
-      $parameters['bn'] = 'osCommerce; ' . PROJECT_VERSION;
+      $parameters = array('cmd' => '_xclick',
+                          'item_name' => STORE_NAME,
+                          'shipping' => $currencies->format_raw($order->info['shipping_cost']),
+                          'tax' => $currencies->format_raw($order->info['tax']),
+                          'business' => MODULE_PAYMENT_PAYPAL_IPN_ID,
+                          'amount' => $currencies->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
+                          'currency_code' => $currency,
+                          'invoice' => substr($cart_PayPal_IPN_ID, strpos($cart_PayPal_IPN_ID, '-')+1),
+                          'custom' => $customer_id,
+                          'no_note' => '1',
+                          'notify_url' => tep_href_link('ext/modules/payment/paypal/ipn.php', '', 'SSL', false, false),
+                          'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                          'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                          'bn' => 'osCommerce; ' . PROJECT_VERSION,
+                          'paymentaction' => ((MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $parameters['address_override'] = '1';
@@ -361,6 +302,13 @@
         $parameters['country'] = $order->delivery['country']['iso_code_2'];
       } else {
         $parameters['no_shipping'] = '1';
+        $parameters['first_name'] = $order->billing['firstname'];
+        $parameters['last_name'] = $order->billing['lastname'];
+        $parameters['address1'] = $order->billing['street_address'];
+        $parameters['city'] = $order->billing['city'];
+        $parameters['state'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
+        $parameters['zip'] = $order->billing['postcode'];
+        $parameters['country'] = $order->billing['country']['iso_code_2'];
       }
 
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE)) {
@@ -439,7 +387,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart, $cart_PayPal_IPN_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_IPN_ID;
       global $$payment;
 
       $order_id = substr($cart_PayPal_IPN_ID, strpos($cart_PayPal_IPN_ID, '-')+1);
@@ -652,8 +600,8 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_IPN_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Preparing Order Status', 'MODULE_PAYMENT_PAYPAL_IPN_PREPARE_ORDER_STATUS_ID', '" . $status_id . "', 'Set the status of prepared orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set PayPal Acknowledged Order Status', 'MODULE_PAYMENT_PAYPAL_IPN_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_TYPE', 'Per Item', 'Send individual items to PayPal or aggregate all as one total item?', '6', '6', 'tep_cfg_select_option(array(\'Per Item\',\'Aggregate\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Gateway Server', 'MODULE_PAYMENT_PAYPAL_IPN_GATEWAY_SERVER', 'Live', 'Use the testing (sandbox) or live gateway server for transactions?', '6', '6', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Page Style', 'MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE', '', 'The page style to use for the transaction procedure (defined at your PayPal Profile page)', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_PAYPAL_IPN_DEBUG_EMAIL', '', 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Encrypted Web Payments', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_STATUS', 'False', 'Do you want to enable Encrypted Web Payments?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
@@ -663,7 +611,6 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your PayPal Public Certificate ID', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_CERT_ID', '', 'The Certificate ID to use from your PayPal Encrypted Payment Settings Profile.', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Working Directory', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_WORKING_DIRECTORY', '', 'The working directory to use for temporary files. (trailing slash needed)', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('OpenSSL Location', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_OPENSSL', '/usr/bin/openssl', 'The location of the openssl binary file.', '6', '4', now())");
-
     }
 
     function remove() {
@@ -671,7 +618,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_PAYPAL_IPN_STATUS', 'MODULE_PAYMENT_PAYPAL_IPN_ID', 'MODULE_PAYMENT_PAYPAL_IPN_ZONE', 'MODULE_PAYMENT_PAYPAL_IPN_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_IPN_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_IPN_GATEWAY_SERVER', 'MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_TYPE', 'MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE', 'MODULE_PAYMENT_PAYPAL_IPN_DEBUG_EMAIL', 'MODULE_PAYMENT_PAYPAL_IPN_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_STATUS', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PRIVATE_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PUBLIC_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PAYPAL_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_CERT_ID', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_WORKING_DIRECTORY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_OPENSSL');
+      return array('MODULE_PAYMENT_PAYPAL_IPN_STATUS', 'MODULE_PAYMENT_PAYPAL_IPN_ID', 'MODULE_PAYMENT_PAYPAL_IPN_ZONE', 'MODULE_PAYMENT_PAYPAL_IPN_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_IPN_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_IPN_GATEWAY_SERVER', 'MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_IPN_PAGE_STYLE', 'MODULE_PAYMENT_PAYPAL_IPN_DEBUG_EMAIL', 'MODULE_PAYMENT_PAYPAL_IPN_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_STATUS', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PRIVATE_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PUBLIC_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_PAYPAL_KEY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_CERT_ID', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_WORKING_DIRECTORY', 'MODULE_PAYMENT_PAYPAL_IPN_EWP_OPENSSL');
     }
   }
 ?>
