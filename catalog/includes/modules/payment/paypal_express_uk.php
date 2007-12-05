@@ -149,6 +149,10 @@
             $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_DECLINED;
             break;
 
+          case '1000':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED;
+            break;
+
           default:
             $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_GENERAL;
             break;

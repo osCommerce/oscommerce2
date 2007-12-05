@@ -18,4 +18,5 @@
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_CFG_ERROR', 'Error: Payment module configuration error. Please verify the login credentials.');
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_ADDRESS', 'Error: A match of the Shipping Address City, State, and Postal Code failed. Please try again.');
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_DECLINED', 'Error: This transaction has been declined. Please try again.');
+  define('MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED', 'Error: PayPal Express Checkout has been disabled for this merchant. Please contact PayPal Customer Service.');
 ?>

@@ -30,6 +30,7 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
+  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express_uk.php');
   require('includes/modules/payment/paypal_express_uk.php');
 
   $paypal_express_uk = new paypal_express_uk();
@@ -229,6 +230,31 @@
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
+      } else {
+        switch ($response_array['RESULT']) {
+          case '1':
+          case '26':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_CFG_ERROR;
+            break;
+
+          case '7':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_ADDRESS;
+            break;
+
+          case '12':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_DECLINED;
+            break;
+
+          case '1000':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED;
+            break;
+
+          default:
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_GENERAL;
+            break;
+        }
+
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
@@ -263,6 +289,23 @@
 
       if ($response_array['RESULT'] == '0') {
         tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+      } else {
+        switch ($response_array['RESULT']) {
+          case '1':
+          case '26':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_CFG_ERROR;
+            break;
+
+          case '1000':
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED;
+            break;
+
+          default:
+            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_GENERAL;
+            break;
+        }
+
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
