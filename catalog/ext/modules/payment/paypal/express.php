@@ -83,7 +83,7 @@
       $response_array = array();
       parse_str($response, $response_array);
 
-      if ($response_array['ACK'] == 'Success') {
+      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         include(DIR_WS_CLASSES . 'order.php');
 
         if ($cart->get_content_type() != 'virtual') {
@@ -227,6 +227,8 @@
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
+      } else {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       break;
@@ -258,8 +260,10 @@
       $response_array = array();
       parse_str($response, $response_array);
 
-      if ($response_array['ACK'] == 'Success') {
+      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+      } else {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       break;
