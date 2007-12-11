@@ -20,7 +20,7 @@
   }
   
 // Check that order_id, customer_id and filename match
-  $downloads_query = tep_db_query("select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd where o.customers_id = '" . $customer_id . "' and o.orders_id = '" . (int)$HTTP_GET_VARS['order'] . "' and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_download_id = '" . (int)$HTTP_GET_VARS['id'] . "' and opd.orders_products_filename != ''");
+  $downloads_query = tep_db_query("select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd where o.customers_id = '" . $customer_id . "' and o.orders_id = '" . (int)$HTTP_GET_VARS['order'] . "' and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_download_id = '" . (int)$HTTP_GET_VARS['id'] . "' and opd.orders_products_filename != '' and o.orders_status = '" . ((DOWNLOAD_ORDER_STATUS_LEVEL > 0) ? (int)DOWNLOAD_ORDER_STATUS_LEVEL : (int)DEFAULT_ORDERS_STATUS_ID) . "'");
   if (!tep_db_num_rows($downloads_query)) die;
   $downloads = tep_db_fetch_array($downloads_query);
 // MySQL 3.22 does not have INTERVAL
