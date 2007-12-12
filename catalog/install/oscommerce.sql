@@ -327,6 +327,8 @@ CREATE TABLE orders_status (
    orders_status_id int DEFAULT '0' NOT NULL,
    language_id int DEFAULT '1' NOT NULL,
    orders_status_name varchar(32) NOT NULL,
+   public_flag int DEFAULT '1',
+   downloads_flag int DEFAULT '0',
    PRIMARY KEY (orders_status_id, language_id),
    KEY idx_orders_status_name (orders_status_name)
 );
@@ -816,7 +818,6 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Download by redirect', 'DOWNLOAD_BY_REDIRECT', 'false', 'Use browser redirection for download. Disable on non-Unix systems.', '13', '2', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Expiry delay (days)' ,'DOWNLOAD_MAX_DAYS', '7', 'Set number of days before the download link expires. 0 means no limit.', '13', '3', '', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Maximum number of downloads' ,'DOWNLOAD_MAX_COUNT', '5', 'Set the maximum number of downloads. 0 means no download authorized.', '13', '4', '', now());
-INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('Order status level activation', 'DOWNLOAD_ORDER_STATUS_LEVEL', '0', 'Activate downloads at the defined order status level.', '13', '5', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable GZip Compression', 'GZIP_COMPRESSION', 'false', 'Enable HTTP GZip compression.', '14', '1', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Compression Level', 'GZIP_LEVEL', '5', 'Use this compression level 0-9 (0 = minimum, 9 = maximum).', '14', '2', now());
@@ -1134,15 +1135,15 @@ INSERT INTO manufacturers_info VALUES (9, 1, 'http://www.hewlettpackard.com', 0,
 INSERT INTO manufacturers_info VALUES (9, 2, 'http://www.hewlettpackard.de', 0, null);
 INSERT INTO manufacturers_info VALUES (9, 3, 'http://welcome.hp.com/country/es/spa/welcome.htm', 0, null);
 
-INSERT INTO orders_status VALUES ( '1', '1', 'Pending');
-INSERT INTO orders_status VALUES ( '1', '2', 'Offen');
-INSERT INTO orders_status VALUES ( '1', '3', 'Pendiente');
-INSERT INTO orders_status VALUES ( '2', '1', 'Processing');
-INSERT INTO orders_status VALUES ( '2', '2', 'In Bearbeitung');
-INSERT INTO orders_status VALUES ( '2', '3', 'Proceso');
-INSERT INTO orders_status VALUES ( '3', '1', 'Delivered');
-INSERT INTO orders_status VALUES ( '3', '2', 'Versendet');
-INSERT INTO orders_status VALUES ( '3', '3', 'Entregado');
+INSERT INTO orders_status VALUES ( '1', '1', 'Pending', '1', '0');
+INSERT INTO orders_status VALUES ( '1', '2', 'Offen', '1', '0');
+INSERT INTO orders_status VALUES ( '1', '3', 'Pendiente', '1', '0');
+INSERT INTO orders_status VALUES ( '2', '1', 'Processing', '1', '1');
+INSERT INTO orders_status VALUES ( '2', '2', 'In Bearbeitung', '1', '1');
+INSERT INTO orders_status VALUES ( '2', '3', 'Proceso', '1', '1');
+INSERT INTO orders_status VALUES ( '3', '1', 'Delivered', '1', '1');
+INSERT INTO orders_status VALUES ( '3', '2', 'Versendet', '1', '1');
+INSERT INTO orders_status VALUES ( '3', '3', 'Entregado', '1', '1');
 
 INSERT INTO products VALUES (1,32,'MG200MMS','matrox/mg200mms.gif',299.99, now(),null,null,23.00,1,1,1,0);
 INSERT INTO products VALUES (2,32,'MG400-32MB','matrox/mg400-32mb.gif',499.99, now(),null,null,23.00,1,1,1,0);

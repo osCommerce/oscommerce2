@@ -1252,7 +1252,7 @@
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {
-    global $customer_id;
+    global $customer_id, $languages_id;
 
     if (is_numeric($id) == false) {
       if (tep_session_is_registered('customer_id')) {
@@ -1268,7 +1268,7 @@
       }
     }
 
-    $orders_check_query = tep_db_query("select count(*) as total from " . TABLE_ORDERS . " where customers_id = '" . (int)$id . "'");
+    $orders_check_query = tep_db_query("select count(*) as total from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_STATUS . " s where o.customers_id = '" . (int)$id . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and s.public_flag = '1'");
     $orders_check = tep_db_fetch_array($orders_check_query);
 
     return $orders_check['total'];

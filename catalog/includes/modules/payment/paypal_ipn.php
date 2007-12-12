@@ -586,7 +586,7 @@
         $languages = tep_get_languages();
 
         foreach ($languages as $lang) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [PayPal IPN]')");
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, public_flag, downloads_flag) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [PayPal IPN]', 0, 0)");
         }
       } else {
         $check = tep_db_fetch_array($check_query);
