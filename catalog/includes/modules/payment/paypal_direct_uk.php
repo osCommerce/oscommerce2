@@ -32,9 +32,7 @@
 
       $this->cc_types = array('0' => 'Visa',
                               '1' => 'MasterCard',
-                              '8' => 'Discover Card',
-                              '8' => 'American Express',
-                              '9' => 'Switch',
+                              '9' => 'Maestro',
                               'S' => 'Solo');
     }
 
@@ -83,32 +81,37 @@
                                'text' => $value);
       }
 
-      $expires_month = array();
+      $today = getdate();
+
+      $months_array = array();
       for ($i=1; $i<13; $i++) {
-        $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
+        $months_array[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
       }
 
-      $today = getdate(); 
-      $expires_year = array();
+      $year_valid_from_array = array();
+      for ($i=$today['year']-10; $i < $today['year']+1; $i++) {
+        $year_valid_from_array[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+      }
+
+      $year_expires_array = array();
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $expires_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        $year_expires_array[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
       }
 
-      $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_OWNER,
+      $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_OWNER,
                                                     'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_TYPE,
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_TYPE,
                                                     'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_NUMBER,
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_NUMBER,
                                                     'field' => tep_draw_input_field('cc_number_nh-dns')),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_EXPIRES,
-                                                    'field' => tep_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $expires_year)),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_CVC,
-                                                    'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"'))));
-
-      if (isset($this->cc_types['9']) || isset($this->cc_types['S'])) {
-        $confirmation['fields'][] = array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_ISSUE_NUMBER,
-                                          'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_UK_CREDIT_CARD_ISSUE_NUMBER_INFO);
-      }
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_VALID_FROM,
+                                                    'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_VALID_FROM_INFO),
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_EXPIRES,
+                                                    'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_CVC,
+                                                    'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
+                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_ISSUE_NUMBER,
+                                                    'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_UK_CARD_ISSUE_NUMBER_INFO)));
 
       return $confirmation;
     }
@@ -145,10 +148,11 @@
                         'EMAIL' => $order->customer['email_address'],
                         'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
                         'ACCTTYPE' => $HTTP_POST_VARS['cc_type'],
+                        'CARDSTART' => $HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'],
                         'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
                         'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns']);
 
-        if ( (isset($this->cc_types['9']) && ($HTTP_POST_VARS['cc_type'] == '9')) || (isset($this->cc_types['S']) && ($HTTP_POST_VARS['cc_type'] == 'S')) ) {
+        if ( ($HTTP_POST_VARS['cc_type'] == '9') || ($HTTP_POST_VARS['cc_type'] == 'S') ) {
           $params['CARDISSUE'] = $HTTP_POST_VARS['cc_issue_nh-dns'];
         }
 
