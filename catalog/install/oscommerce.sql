@@ -3,7 +3,7 @@
 # osCommerce, Open Source E-Commerce Solutions
 # http://www.oscommerce.com
 #
-# Copyright (c) 2003 osCommerce
+# Copyright (c) 2007 osCommerce
 #
 # Released under the GNU General Public License
 #
@@ -68,7 +68,8 @@ CREATE TABLE banners (
   date_added datetime NOT NULL,
   date_status_change datetime DEFAULT NULL,
   status int(1) DEFAULT '1' NOT NULL,
-  PRIMARY KEY  (banners_id)
+  PRIMARY KEY (banners_id),
+  KEY idx_banners_group (banners_group)
 );
 
 DROP TABLE IF EXISTS banners_history;
@@ -78,7 +79,8 @@ CREATE TABLE banners_history (
   banners_shown int(5) NOT NULL DEFAULT '0',
   banners_clicked int(5) NOT NULL DEFAULT '0',
   banners_history_date datetime NOT NULL,
-  PRIMARY KEY  (banners_history_id)
+  PRIMARY KEY (banners_history_id),
+  KEY idx_banners_history_banners_id (banners_id)
 );
 
 DROP TABLE IF EXISTS categories;
@@ -163,7 +165,8 @@ CREATE TABLE currencies (
   decimal_places char(1),
   value float(13,8),
   last_updated datetime NULL,
-  PRIMARY KEY (currencies_id)
+  PRIMARY KEY (currencies_id),
+  KEY idx_currencies_code (code)
 );
 
 DROP TABLE IF EXISTS customers;
@@ -179,7 +182,8 @@ CREATE TABLE customers (
    customers_fax varchar(32),
    customers_password varchar(40) NOT NULL,
    customers_newsletter char(1),
-   PRIMARY KEY (customers_id)
+   PRIMARY KEY (customers_id),
+   KEY idx_customers_email_address (customers_email_address)
 );
 
 DROP TABLE IF EXISTS customers_basket;
@@ -190,7 +194,8 @@ CREATE TABLE customers_basket (
   customers_basket_quantity int(2) NOT NULL,
   final_price decimal(15,4),
   customers_basket_date_added char(8),
-  PRIMARY KEY (customers_basket_id)
+  PRIMARY KEY (customers_basket_id),
+  KEY idx_customers_basket_customers_id (customers_id)
 );
 
 DROP TABLE IF EXISTS customers_basket_attributes;
@@ -200,7 +205,8 @@ CREATE TABLE customers_basket_attributes (
   products_id tinytext NOT NULL,
   products_options_id int NOT NULL,
   products_options_value_id int NOT NULL,
-  PRIMARY KEY (customers_basket_attributes_id)
+  PRIMARY KEY (customers_basket_attributes_id),
+  KEY idx_customers_basket_att_customers_id (customers_id)
 );
 
 DROP TABLE IF EXISTS customers_info;
@@ -305,7 +311,8 @@ CREATE TABLE orders (
   orders_date_finished datetime,
   currency char(3),
   currency_value decimal(14,6),
-  PRIMARY KEY (orders_id)
+  PRIMARY KEY (orders_id),
+  KEY idx_orders_customers_id (customers_id)
 );
 
 DROP TABLE IF EXISTS orders_products;
@@ -319,7 +326,9 @@ CREATE TABLE orders_products (
   final_price decimal(15,4) NOT NULL,
   products_tax decimal(7,4) NOT NULL,
   products_quantity int(2) NOT NULL,
-  PRIMARY KEY (orders_products_id)
+  PRIMARY KEY (orders_products_id),
+  KEY idx_orders_products_orders_id (orders_id),
+  KEY idx_orders_products_products_id (products_id)
 );
 
 DROP TABLE IF EXISTS orders_status;
@@ -341,7 +350,8 @@ CREATE TABLE orders_status_history (
    date_added datetime NOT NULL,
    customer_notified int(1) DEFAULT '0',
    comments text,
-   PRIMARY KEY (orders_status_history_id)
+   PRIMARY KEY (orders_status_history_id),
+   KEY idx_orders_status_history_orders_id (orders_id)
 );
 
 DROP TABLE IF EXISTS orders_products_attributes;
@@ -353,7 +363,8 @@ CREATE TABLE orders_products_attributes (
   products_options_values varchar(32) NOT NULL,
   options_values_price decimal(15,4) NOT NULL,
   price_prefix char(1) NOT NULL,
-  PRIMARY KEY (orders_products_attributes_id)
+  PRIMARY KEY (orders_products_attributes_id),
+  KEY idx_orders_products_att_orders_id (orders_id)
 );
 
 DROP TABLE IF EXISTS orders_products_download;
@@ -364,7 +375,8 @@ CREATE TABLE orders_products_download (
   orders_products_filename varchar(255) NOT NULL default '',
   download_maxdays int(2) NOT NULL default '0',
   download_count int(2) NOT NULL default '0',
-  PRIMARY KEY  (orders_products_download_id)
+  PRIMARY KEY  (orders_products_download_id),
+  KEY idx_orders_products_download_orders_id (orders_id)
 );
 
 DROP TABLE IF EXISTS orders_total;
@@ -396,6 +408,7 @@ CREATE TABLE products (
   manufacturers_id int NULL,
   products_ordered int NOT NULL default '0',
   PRIMARY KEY (products_id),
+  KEY idx_products_model (products_model),
   KEY idx_products_date_added (products_date_added)
 );
 
@@ -407,7 +420,8 @@ CREATE TABLE products_attributes (
   options_values_id int NOT NULL,
   options_values_price decimal(15,4) NOT NULL,
   price_prefix char(1) NOT NULL,
-  PRIMARY KEY (products_attributes_id)
+  PRIMARY KEY (products_attributes_id),
+  KEY idx_products_attributes_products_id (products_id)
 );
 
 DROP TABLE IF EXISTS products_attributes_download;
@@ -480,7 +494,9 @@ CREATE TABLE reviews (
   date_added datetime,
   last_modified datetime,
   reviews_read int(5) NOT NULL default '0',
-  PRIMARY KEY (reviews_id)
+  PRIMARY KEY (reviews_id),
+  KEY idx_reviews_products_id (products_id),
+  KEY idx_reviews_customers_id (customers_id)
 );
 
 DROP TABLE IF EXISTS reviews_description;
@@ -509,7 +525,8 @@ CREATE TABLE specials (
   expires_date datetime,
   date_status_change datetime,
   status int(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (specials_id)
+  PRIMARY KEY (specials_id),
+  KEY idx_specials_products_id (products_id)
 );
 
 DROP TABLE IF EXISTS tax_class;
@@ -562,7 +579,8 @@ CREATE TABLE zones (
   zone_country_id int NOT NULL,
   zone_code varchar(32) NOT NULL,
   zone_name varchar(32) NOT NULL,
-  PRIMARY KEY (zone_id)
+  PRIMARY KEY (zone_id),
+  KEY idx_zones_country_id (zone_country_id)
 );
 
 DROP TABLE IF EXISTS zones_to_geo_zones;
@@ -573,7 +591,8 @@ CREATE TABLE zones_to_geo_zones (
    geo_zone_id int NULL,
    last_modified datetime NULL,
    date_added datetime NOT NULL,
-   PRIMARY KEY (association_id)
+   PRIMARY KEY (association_id),
+   KEY idx_zones_to_geo_zones_country_id (zone_country_id)
 );
 
 
