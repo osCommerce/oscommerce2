@@ -4,6 +4,62 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2007 osCommerce
 
 ------------------------------------------------------------------------------
+xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
+------------------------------------------------------------------------------
+
+* Payment module changes:
+  - Authorize.net module replaced with newer AIM and SIM modules.
+  - New PayPal Express Checkout, PayPal Express Checkout (UK), PayPal Direct,
+    and PayPal Direct (UK) modules.
+  - Removed paypal.php module. The paypal_ipn.php module is the new PayPal
+    Website Payments Standard module.
+  - Removed PayQuake module (the gateway now uses Authorize.net).
+
+* Add indexes to database tables.
+  [r1729]
+
+* Introduce an active download flag and a public status flag to the order
+  status levels.
+  [r1724, r1725, r1728] (r1724 was reverted in r1725)
+
+* Fix the shipping address when a virtual product was added to the cart and
+  replaced with a physical product.
+  [r1716]
+
+* Improve register_globals compatibility layer when registering session
+  variables.
+  [r1704, r1705, r1723]
+
+* Correctly parse the products to remove from the product notifications list.
+  [r1703]
+
+* Introduce the ability to show additional checkout buttons on the shopping
+  cart page for certain payment methods (eg, PayPal Express Checkout).
+  Introduce the ability to define foreign shipping and billing addresses
+  during the checkout procedure (eg, the shipping address provided by PayPal
+  Express Checkout).
+  [r1699]
+
+* Calling $order_total_modules->process() multiple times would duplicate the
+  output data due to the order total modules already being instantiated.
+  [r1698]
+
+* Make sure $parameters is an array in the navigation history class.
+  [r1696]
+
+* Remove secondary pre-euro currencies from display.
+  Introduce new format_raw() class method to format prices without the
+  currency formatting.
+  [r1695]
+
+* Fix downloads when "Download by redirect" and "SEFU" are both enabled.
+  Fallback to readfile() download delivery mechanism if direct download files.
+  [r1681, r1720]
+
+* Add toggleDivBlock() Javascript function to admin/includes/general.js.
+  [r1663]
+
+------------------------------------------------------------------------------
 07/03/2007 osCommerce Online Merchant 2.2 RC1
 ------------------------------------------------------------------------------
 
