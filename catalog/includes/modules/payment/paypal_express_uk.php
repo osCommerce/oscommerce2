@@ -106,13 +106,13 @@
                       'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD,
                       'TENDER' => 'P',
                       'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
-                      'CURRENCY' => $order->info['currency'],
                       'EMAIL' => $order->customer['email_address'],
                       'TOKEN' => $ppeuk_token,
                       'ACTION' => 'D',
                       'PAYERID' => $ppeuk_payerid,
                       'AMT' => $currencies->format_raw($order->info['total']),
-                      'CURRENCYCODE' => $order->info['currency']);
+                      'CURRENCY' => $order->info['currency'],
+                      'BUTTONSOURCE' => 'osCommerce22_Default_PRO2EC');
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];

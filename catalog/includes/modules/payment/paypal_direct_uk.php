@@ -150,7 +150,8 @@
                         'ACCTTYPE' => $HTTP_POST_VARS['cc_type'],
                         'CARDSTART' => $HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'],
                         'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns']);
+                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns'],
+                        'BUTTONSOURCE' => 'osCommerce22_Default_PRO2DP');
 
         if ( ($HTTP_POST_VARS['cc_type'] == '9') || ($HTTP_POST_VARS['cc_type'] == 'S') ) {
           $params['CARDISSUE'] = $HTTP_POST_VARS['cc_issue_nh-dns'];

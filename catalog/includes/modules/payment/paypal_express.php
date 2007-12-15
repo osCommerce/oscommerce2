@@ -109,7 +109,8 @@
                       'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
                       'PAYERID' => $ppe_payerid,
                       'AMT' => $currencies->format_raw($order->info['total']),
-                      'CURRENCYCODE' => $order->info['currency']);
+                      'CURRENCYCODE' => $order->info['currency'],
+                      'BUTTONSOURCE' => 'osCommerce22_Default_EC');
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];

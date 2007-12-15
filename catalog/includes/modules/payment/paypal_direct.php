@@ -154,7 +154,8 @@
                         'ZIP' => $order->billing['postcode'],
                         'EMAIL' => $order->customer['email_address'],
                         'PHONENUM' => $order->customer['telephone'],
-                        'CURRENCYCODE' => $order->info['currency']);
+                        'CURRENCYCODE' => $order->info['currency'],
+                        'BUTTONSOURCE' => 'osCommerce22_Default_DP');
 
         if ( ($HTTP_POST_VARS['cc_type'] == 'SWITCH') || ($HTTP_POST_VARS['cc_type'] == 'SOLO') ) {
           $params['ISSUENUMBER'] = $HTTP_POST_VARS['cc_issue_nh-dns'];

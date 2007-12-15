@@ -288,7 +288,7 @@
                           'notify_url' => tep_href_link('ext/modules/payment/paypal/ipn.php', '', 'SSL', false, false),
                           'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                           'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                          'bn' => 'osCommerce; ' . PROJECT_VERSION,
+                          'bn' => 'osCommerce22_Default_ST',
                           'paymentaction' => ((MODULE_PAYMENT_PAYPAL_IPN_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
 
       if (is_numeric($sendto) && ($sendto > 0)) {
