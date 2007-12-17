@@ -156,8 +156,7 @@
                 break;
             }
 
-            $free_shipping = false;
-            if ( (($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) || (tep_count_shipping_modules() < 1) ) {
+            if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
               include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
@@ -165,23 +164,24 @@
           }
 
           if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+          $shipping = false;
 
-          if ($free_shipping == true) {
-            $shipping = 'free_free';
-          } else {
+          if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+            if ($free_shipping == true) {
+              $shipping = 'free_free';
+            } else {
 // get all available shipping quotes
-            $quotes = $shipping_modules->quote();
+              $quotes = $shipping_modules->quote();
 
 // select cheapest shipping method
-            $shipping = $shipping_modules->cheapest();
-          }
-
-          if (is_array($shipping)) {
-            $shipping = $shipping['id'];
+              $shipping = $shipping_modules->cheapest();
+              $shipping = $shipping['id'];
+            }
           }
 
           if (strpos($shipping, '_')) {
             list($module, $method) = explode('_', $shipping);
+
             if ( is_object($$module) || ($shipping == 'free_free') ) {
               if ($shipping == 'free_free') {
                 $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
@@ -189,30 +189,31 @@
               } else {
                 $quote = $shipping_modules->quote($method, $module);
               }
+
               if (isset($quote['error'])) {
                 tep_session_unregister('shipping');
+
+                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $shipping = array('id' => $shipping,
                                     'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                     'cost' => $quote[0]['methods'][0]['cost']);
-
-                  if (!tep_session_is_registered('payment')) tep_session_register('payment');
-                  $payment = $paypal_express_uk->code;
-
-                  if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
-                  $ppeuk_token = $response_array['TOKEN'];
-
-                  if (!tep_session_is_registered('ppeuk_payerid')) tep_session_register('ppeuk_payerid');
-                  $ppeuk_payerid = $response_array['PAYERID'];
-
-                  tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
                 }
               }
-            } else {
-              tep_session_unregister('shipping');
             }
           }
+
+          if (!tep_session_is_registered('payment')) tep_session_register('payment');
+          $payment = $paypal_express_uk->code;
+
+          if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
+          $ppeuk_token = $response_array['TOKEN'];
+
+          if (!tep_session_is_registered('ppeuk_payerid')) tep_session_register('ppeuk_payerid');
+          $ppeuk_payerid = $response_array['PAYERID'];
+
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         } else {
           if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
           $shipping = false;
@@ -267,8 +268,8 @@
       $params['CURRENCY'] = $order->info['currency'];
       $params['EMAIL'] = $order->customer['email_address'];
       $params['AMT'] = $currencies->format_raw($order->info['total']);
-      $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express_uk.php', 'osC_Action=retrieve', 'SSL');
-      $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL');
+      $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express_uk.php', 'osC_Action=retrieve', 'SSL', true, false);
+      $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false);
       $params['AMT'] = $currencies->format_raw($order->info['total']);
 
       if ($order->content_type == 'virtual') {
