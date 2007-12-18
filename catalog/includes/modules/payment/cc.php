@@ -122,7 +122,9 @@
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
       }
 
+      $order->info['cc_owner'] = $HTTP_POST_VARS['cc_owner'];
       $order->info['cc_type'] = $cc_validation->cc_type;
+      $order->info['cc_number'] = $HTTP_POST_VARS['cc_number_nh-dns'];
       $order->info['cc_expires'] = $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'];
 
       if ( (defined('MODULE_PAYMENT_CC_EMAIL')) && (tep_validate_email(MODULE_PAYMENT_CC_EMAIL)) ) {
