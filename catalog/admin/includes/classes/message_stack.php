@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 
@@ -48,14 +48,12 @@
     }
 
     function add_session($message, $type = 'error') {
-      global $messageToStack;
-
       if (!tep_session_is_registered('messageToStack')) {
+        $GLOBALS['messageToStack'] = array();
         tep_session_register('messageToStack');
-        $messageToStack = array();
       }
 
-      $messageToStack[] = array('text' => $message, 'type' => $type);
+      $GLOBALS['messageToStack'][] = array('text' => $message, 'type' => $type);
     }
 
     function reset() {
