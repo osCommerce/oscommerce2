@@ -58,7 +58,7 @@
         $currency_value = $this->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $this->currencies[$currency_code]['decimal_places']), $this->currencies[$currency_code]['decimal_places']);
+      return number_format(tep_round($number * $currency_value, $this->currencies[$currency_code]['decimal_places']), $this->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function calculate_price($products_price, $products_tax, $quantity = 1) {
