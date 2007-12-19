@@ -1,4 +1,4 @@
-$Id: $
+$Id$
 
 osCommerce Online Merchant Changelog
 Copyright (c) 2007 osCommerce
@@ -15,6 +15,14 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
     Website Payments Standard module.
   - Removed PayQuake module (the gateway now uses Authorize.net).
 
+* Move the logic of storing the credit card number from the order class to
+  the payment module level.
+  [r1736]
+
+* Use the free shipping language definition for the shipping title when free
+  shipping is active.
+  [r1732]
+
 * Add indexes to database tables.
   [r1729]
 
@@ -28,7 +36,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
 
 * Improve register_globals compatibility layer when registering session
   variables.
-  [r1704, r1705, r1723]
+  [r1704, r1705, r1723, r1735]
 
 * Correctly parse the products to remove from the product notifications list.
   [r1703]
@@ -50,7 +58,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
 * Remove secondary pre-euro currencies from display.
   Introduce new format_raw() class method to format prices without the
   currency formatting.
-  [r1695]
+  [r1695, r1737]
 
 * Fix downloads when "Download by redirect" and "SEFU" are both enabled.
   Fallback to readfile() download delivery mechanism if direct download files.
