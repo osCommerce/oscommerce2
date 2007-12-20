@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: languages.php,v 1.9 2003/07/07 09:23:06 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

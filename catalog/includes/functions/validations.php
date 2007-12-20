@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: validations.php,v 1.11 2003/02/11 01:31:02 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

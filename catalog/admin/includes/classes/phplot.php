@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: phplot.php,v 1.2 2003/06/20 16:23:08 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

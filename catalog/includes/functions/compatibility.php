@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: compatibility.php,v 1.19 2003/04/09 16:12:54 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

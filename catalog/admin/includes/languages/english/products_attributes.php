@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: products_attributes.php,v 1.6 2002/03/30 16:01:04 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

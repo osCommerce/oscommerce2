@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: sessions.php,v 1.15 2003/06/16 16:24:00 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

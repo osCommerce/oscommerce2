@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: reviews.php,v 1.6 2002/01/30 16:24:23 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

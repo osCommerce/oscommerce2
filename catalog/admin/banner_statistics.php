@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: banner_statistics.php,v 1.5 2003/06/20 00:30:15 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

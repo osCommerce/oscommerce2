@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: account_history.php,v 1.7 2003/05/19 20:17:50 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

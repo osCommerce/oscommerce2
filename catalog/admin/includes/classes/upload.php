@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: upload.php,v 1.2 2003/06/20 00:18:30 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

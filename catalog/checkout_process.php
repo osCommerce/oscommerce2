@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: checkout_process.php,v 1.128 2003/05/28 18:00:29 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

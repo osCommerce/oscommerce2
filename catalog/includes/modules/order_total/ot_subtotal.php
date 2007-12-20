@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: ot_subtotal.php,v 1.7 2003/02/13 00:12:04 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

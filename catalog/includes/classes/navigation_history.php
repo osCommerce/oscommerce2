@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: navigation_history.php,v 1.6 2003/06/09 22:23:43 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

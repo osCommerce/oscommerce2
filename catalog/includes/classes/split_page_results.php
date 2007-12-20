@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: split_page_results.php,v 1.15 2003/06/09 22:35:34 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

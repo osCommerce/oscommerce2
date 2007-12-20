@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: contact_us.php,v 1.7 2002/04/17 15:57:07 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

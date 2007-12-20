@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: info_shopping_cart.php,v 1.19 2003/02/13 03:01:48 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

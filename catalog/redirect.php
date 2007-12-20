@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: redirect.php,v 1.10 2003/06/05 23:31:31 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

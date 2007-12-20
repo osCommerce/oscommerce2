@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: checkout_payment_address.php,v 1.4 2003/07/08 16:45:36 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

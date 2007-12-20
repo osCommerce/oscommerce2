@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: email.php,v 1.8 2003/06/11 22:24:34 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

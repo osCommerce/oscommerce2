@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: catalog.php,v 1.21 2003/07/09 01:18:53 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

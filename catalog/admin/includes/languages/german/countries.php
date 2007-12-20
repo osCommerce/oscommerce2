@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: countries.php,v 1.8 2002/01/19 23:00:00 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

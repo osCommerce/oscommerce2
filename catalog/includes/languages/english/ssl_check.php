@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: ssl_check.php,v 1.1 2003/03/10 23:32:20 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

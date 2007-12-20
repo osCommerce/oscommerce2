@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: banner_manager.php,v 1.73 2003/06/29 22:50:51 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

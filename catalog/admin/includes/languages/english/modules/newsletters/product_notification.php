@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: product_notification.php,v 1.3 2002/03/10 01:34:25 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: account_newsletters.php,v 1.2 2003/07/11 09:04:22 jan0815 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

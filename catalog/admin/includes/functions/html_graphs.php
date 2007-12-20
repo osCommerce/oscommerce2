@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: html_graphs.php,v 1.7 2003/06/20 00:18:31 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

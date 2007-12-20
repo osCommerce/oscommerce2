@@ -1,4 +1,4 @@
-# $Id: oscommerce.sql,v 1.84 2003/05/27 17:32:16 hpdl Exp $
+# $Id$
 #
 # osCommerce, Open Source E-Commerce Solutions
 # http://www.oscommerce.com

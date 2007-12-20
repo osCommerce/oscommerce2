@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: reviews.php,v 1.5 2002/11/12 00:45:21 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

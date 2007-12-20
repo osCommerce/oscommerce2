@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: orders_status.php,v 1.7 2002/01/30 11:10:08 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

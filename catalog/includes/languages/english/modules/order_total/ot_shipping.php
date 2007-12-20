@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: ot_shipping.php,v 1.2 2003/02/05 22:34:45 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

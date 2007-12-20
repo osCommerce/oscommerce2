@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: filenames.php,v 1.4 2003/06/11 17:38:00 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

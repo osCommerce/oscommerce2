@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: account_password.php,v 1.1 2003/05/19 19:55:45 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

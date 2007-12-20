@@ -1,5 +1,5 @@
 /*
-  $Id: general.js,v 1.3 2003/02/10 22:30:55 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

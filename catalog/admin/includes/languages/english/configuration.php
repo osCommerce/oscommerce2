@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: configuration.php,v 1.7 2002/01/04 03:51:40 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

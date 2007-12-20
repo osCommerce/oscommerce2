@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: banner_yearly.php,v 1.3 2002/05/09 18:28:46 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

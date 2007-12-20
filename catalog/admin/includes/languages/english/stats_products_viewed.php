@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: stats_products_viewed.php,v 1.5 2002/03/30 15:51:03 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

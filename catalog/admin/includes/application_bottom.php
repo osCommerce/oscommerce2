@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: application_bottom.php,v 1.8 2002/03/15 02:40:38 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

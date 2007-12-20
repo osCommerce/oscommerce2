@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: english.php,v 1.114 2003/07/09 18:13:39 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

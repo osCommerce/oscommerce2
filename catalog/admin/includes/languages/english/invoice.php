@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: invoice.php,v 1.1 2002/06/11 18:17:59 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: german.php,v 1.124 2003/07/11 09:03:49 jan0815 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

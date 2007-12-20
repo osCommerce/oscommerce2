@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: http_client.php,v 1.1 2002/11/01 02:26:03 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

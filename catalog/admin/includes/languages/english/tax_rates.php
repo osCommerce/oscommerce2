@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: tax_rates.php,v 1.7 2003/03/13 03:14:01 thomasamoulton Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

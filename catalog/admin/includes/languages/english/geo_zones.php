@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: geo_zones.php,v 1.7 2003/05/05 20:45:15 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

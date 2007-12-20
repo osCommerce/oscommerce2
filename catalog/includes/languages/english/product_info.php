@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: product_info.php,v 1.15 2002/11/19 01:48:08 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

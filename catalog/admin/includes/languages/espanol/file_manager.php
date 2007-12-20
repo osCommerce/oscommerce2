@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: file_manager.php,v 1.15 2003/07/06 20:33:01 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

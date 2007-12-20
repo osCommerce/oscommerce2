@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: privacy.php,v 1.22 2003/06/05 23:26:23 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

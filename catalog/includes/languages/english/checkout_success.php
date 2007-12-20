@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: checkout_success.php,v 1.12 2003/04/15 17:47:42 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: customers.php,v 1.12 2002/01/12 18:46:27 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

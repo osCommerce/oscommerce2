@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: banner_infobox.php,v 1.3 2003/07/11 18:15:42 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

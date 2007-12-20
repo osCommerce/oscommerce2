@@ -1,4 +1,4 @@
-# $Id: tld.txt,v 1.2 2003/02/10 22:30:57 hpdl Exp $
+# $Id$
 #
 # osCommerce, Open Source E-Commerce Solutions
 # http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: nochex.php,v 1.3 2003/04/15 17:48:50 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

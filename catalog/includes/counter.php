@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: counter.php,v 1.5 2003/02/10 22:30:52 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

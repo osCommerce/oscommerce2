@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: cache.php,v 1.13 2003/05/03 20:52:25 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: ot_shipping.php,v 1.15 2003/02/07 22:01:57 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

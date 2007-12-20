@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: nochex.php,v 1.12 2003/01/29 19:57:15 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

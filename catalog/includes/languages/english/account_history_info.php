@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: account_history_info.php,v 1.17 2003/06/05 15:43:49 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

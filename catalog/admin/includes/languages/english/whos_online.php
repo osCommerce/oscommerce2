@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: whos_online.php,v 1.5 2002/03/30 15:48:55 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

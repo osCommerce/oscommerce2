@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: popup_search_help.php,v 1.4 2003/06/05 23:26:23 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

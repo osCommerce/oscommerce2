@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: html_output.php,v 1.56 2003/07/09 01:15:48 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

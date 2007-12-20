@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: validations.php,v 1.1 2003/03/15 14:38:38 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: checkout_process.php,v 1.29 2003/07/11 09:04:22 jan0815 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

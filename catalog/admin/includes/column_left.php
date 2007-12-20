@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: column_left.php,v 1.15 2002/01/11 05:03:25 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

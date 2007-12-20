@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: ot_loworderfee.php,v 1.1 2002/04/08 22:12:08 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

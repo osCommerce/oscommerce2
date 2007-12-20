@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: server_info.php,v 1.4 2002/03/30 15:06:44 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

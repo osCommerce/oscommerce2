@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: sessions.php,v 1.9 2003/06/23 01:20:05 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

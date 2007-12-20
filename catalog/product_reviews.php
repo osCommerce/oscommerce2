@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: product_reviews.php,v 1.50 2003/06/09 23:03:55 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: cookie_usage.php,v 1.4 2003/07/08 16:56:04 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

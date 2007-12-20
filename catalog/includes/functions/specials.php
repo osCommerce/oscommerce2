@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: specials.php,v 1.6 2003/06/09 21:25:32 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

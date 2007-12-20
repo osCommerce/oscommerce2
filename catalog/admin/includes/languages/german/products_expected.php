@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: products_expected.php,v 1.8 2002/03/30 15:09:07 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

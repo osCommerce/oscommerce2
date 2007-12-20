@@ -1,4 +1,4 @@
-$Id: spiders.txt,v 1.2 2003/05/05 17:58:17 dgw_ Exp $
+$Id$
 almaden.ibm.com
 appie 1.1
 architext

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: secpay.php,v 1.7 2002/11/18 14:45:29 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: newsletter.php,v 1.3 2002/03/08 18:38:18 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: banner_daily.php,v 1.2 2002/05/09 14:09:38 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

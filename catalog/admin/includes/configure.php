@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: configure.php,v 1.14 2003/02/21 16:55:24 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

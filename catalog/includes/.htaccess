@@ -1,4 +1,4 @@
-# $Id: .htaccess,v 1.4 2001/04/22 20:30:03 dwatkins Exp $
+# $Id$
 #
 # This is used with Apache WebServers
 # The following blocks direct HTTP requests in this directory recursively

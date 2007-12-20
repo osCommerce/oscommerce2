@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: index.php,v 1.5 2002/03/30 14:32:08 harley_vb Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

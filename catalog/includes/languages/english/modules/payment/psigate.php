@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: psigate.php,v 1.3 2002/11/18 14:45:25 project3000 Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

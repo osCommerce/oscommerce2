@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: popup_image.php,v 1.7 2003/06/20 00:40:23 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

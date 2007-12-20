@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: countries.php,v 1.4 2002/01/12 17:02:18 hpdl Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com

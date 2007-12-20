@@ -1,6 +1,6 @@
 <?php
 /*
-  $Id: split_page_results.php,v 1.13 2003/05/05 17:56:50 dgw_ Exp $
+  $Id$
 
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
