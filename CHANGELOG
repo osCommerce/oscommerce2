@@ -36,7 +36,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
 
 * Improve register_globals compatibility layer when registering session
   variables.
-  [r1704, r1705, r1723, r1735]
+  [r1704, r1705, r1723, r1741] (r1704, r1705, and r1723 were all reverted in r1741)
 
 * Correctly parse the products to remove from the product notifications list.
   [r1703]
