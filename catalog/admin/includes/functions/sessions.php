@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+  if ( (PHP_VERSION >= 4.3) && ((bool)ini_get('register_globals') == false) ) {
+    @ini_set('session.bug_compat_42', 1);
+    @ini_set('session.bug_compat_warn', 0);
+  }
+
   if (STORE_SESSIONS == 'mysql') {
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
@@ -101,12 +106,11 @@
     if (PHP_VERSION < 4.3) {
       return session_register($variable);
     } else {
-      global $$variable;
-
-      $_SESSION[$variable] = (isset($$variable)) ? $$variable : (isset($GLOBALS[$variable])) ? $GLOBALS[$variable] : null;
-
-      $$variable =& $_SESSION[$variable];
-      $GLOBALS[$variable] =& $_SESSION[$variable];
+      if (isset($GLOBALS[$variable])) {
+        $_SESSION[$variable] =& $GLOBALS[$variable];
+      } else {
+        $_SESSION[$variable] = null;
+      }
     }
 
     return false;
@@ -116,7 +120,7 @@
     if (PHP_VERSION < 4.3) {
       return session_is_registered($variable);
     } else {
-      return isset($_SESSION[$variable]);
+      return array_key_exists($variable, $_SESSION);
     }
   }
 
