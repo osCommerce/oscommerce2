@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -18,10 +18,10 @@
     switch ($action) {
       case 'insert':
         $name = tep_db_prepare_input($HTTP_POST_VARS['name']);
-        $code = tep_db_prepare_input($HTTP_POST_VARS['code']);
+        $code = tep_db_prepare_input(substr($HTTP_POST_VARS['code'], 0, 2));
         $image = tep_db_prepare_input($HTTP_POST_VARS['image']);
         $directory = tep_db_prepare_input($HTTP_POST_VARS['directory']);
-        $sort_order = tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
+        $sort_order = (int)tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
 
         tep_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, sort_order) values ('" . tep_db_input($name) . "', '" . tep_db_input($code) . "', '" . tep_db_input($image) . "', '" . tep_db_input($directory) . "', '" . tep_db_input($sort_order) . "')");
         $insert_id = tep_db_insert_id();
@@ -71,10 +71,10 @@
       case 'save':
         $lID = tep_db_prepare_input($HTTP_GET_VARS['lID']);
         $name = tep_db_prepare_input($HTTP_POST_VARS['name']);
-        $code = tep_db_prepare_input($HTTP_POST_VARS['code']);
+        $code = tep_db_prepare_input(substr($HTTP_POST_VARS['code'], 0, 2));
         $image = tep_db_prepare_input($HTTP_POST_VARS['image']);
         $directory = tep_db_prepare_input($HTTP_POST_VARS['directory']);
-        $sort_order = tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
+        $sort_order = (int)tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
 
         tep_db_query("update " . TABLE_LANGUAGES . " set name = '" . tep_db_input($name) . "', code = '" . tep_db_input($code) . "', image = '" . tep_db_input($image) . "', directory = '" . tep_db_input($directory) . "', sort_order = '" . tep_db_input($sort_order) . "' where languages_id = '" . (int)$lID . "'");
 
