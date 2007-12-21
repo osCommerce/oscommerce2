@@ -186,7 +186,7 @@
         $arg_separator = ini_get('arg_separator.output');
 
         if ( empty($arg_separator) ) {
-          $separator = '&';
+          $arg_separator = '&';
         }
       }
 
@@ -217,7 +217,7 @@
         return null;
       }
 
-      return implode($separator, $tmp);
+      return implode($arg_separator, $tmp);
     }
 
 // Helper function
