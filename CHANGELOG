@@ -15,6 +15,38 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
     Website Payments Standard module.
   - Removed PayQuake module (the gateway now uses Authorize.net).
 
+* Make the database session storage handler return an empty string for
+  variables that don't exist in the session instead of returning a boolean
+  false value.
+  [r1752]
+
+* Fix a variable name being checked against in the
+  Administration Tool -> Tools -> Newsletter Manager section.
+  [r1751]
+
+* Improve the product nofitication logic on the checkout success page.
+  [r1749]
+
+* Fix http_build_query() compatibility function in the Administration Tool.
+  [r1748]
+
+* Increase the orders.payment_method database table field length to 255
+  characters.
+  [r1747]
+
+* MySQL 5.0 Strict Mode compatibility fixes.
+  [r1746]
+
+* Fix logic with nested tables in the Administration Tool tableBlock class.
+  [r1745]
+
+* Add checks when creating files and directories on the
+  Administration Tool -> Tools -> File Manager section.
+  [r1744]
+
+* Remove HTML formatting from credit card processing error messages.
+  [r1743]
+
 * Move the logic of storing the credit card number from the order class to
   the payment module level.
   [r1736]
@@ -46,7 +78,8 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
   Introduce the ability to define foreign shipping and billing addresses
   during the checkout procedure (eg, the shipping address provided by PayPal
   Express Checkout).
-  [r1699]
+  Add further checks to the checkout process page to prevent fraud orders.
+  [r1699, r1750]
 
 * Calling $order_total_modules->process() multiple times would duplicate the
   output data due to the order total modules already being instantiated.
