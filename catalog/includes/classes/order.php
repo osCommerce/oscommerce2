@@ -76,7 +76,7 @@
                               'telephone' => $order['customers_telephone'],
                               'email_address' => $order['customers_email_address']);
 
-      $this->delivery = array('name' => $order['delivery_name'],
+      $this->delivery = array('name' => trim($order['delivery_name']),
                               'company' => $order['delivery_company'],
                               'street_address' => $order['delivery_street_address'],
                               'suburb' => $order['delivery_suburb'],
@@ -159,9 +159,26 @@
                                   'countries_iso_code_3' => $sendto['country_iso_code_3'],
                                   'address_format_id' => $sendto['address_format_id'],
                                   'entry_state' => $sendto['zone_name']);
-      } else {
+      } elseif (is_numeric($sendto)) {
         $shipping_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$customer_id . "' and ab.address_book_id = '" . (int)$sendto . "'");
         $shipping_address = tep_db_fetch_array($shipping_address_query);
+      } else {
+        $shipping_address = array('entry_firstname' => null,
+                                  'entry_lastname' => null,
+                                  'entry_company' => null,
+                                  'entry_street_address' => null,
+                                  'entry_suburb' => null,
+                                  'entry_postcode' => null,
+                                  'entry_city' => null,
+                                  'entry_zone_id' => null,
+                                  'zone_name' => null,
+                                  'entry_country_id' => null,
+                                  'countries_id' => null,
+                                  'countries_name' => null,
+                                  'countries_iso_code_2' => null,
+                                  'countries_iso_code_3' => null,
+                                  'address_format_id' => 0,
+                                  'entry_state' => null);
       }
 
       if (is_array($billto) && !empty($billto)) {

@@ -17,9 +17,15 @@
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
-  
-  if (!tep_session_is_registered('sendto')) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+
+// if there is nothing in the customers cart, redirect them to the shopping cart page
+  if ($cart->count_contents() < 1) {
+    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+  }
+
+// if no shipping method has been selected, redirect the customer to the shipping method selection page
+  if (!tep_session_is_registered('shipping') || !tep_session_is_registered('sendto')) {
+    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
   if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!tep_session_is_registered('payment')) ) {
@@ -46,6 +52,26 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
+// Stock Check
+  $any_out_of_stock = false;
+  if (STOCK_CHECK == 'true') {
+    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
+        $any_out_of_stock = true;
+      }
+    }
+    // Out of Stock
+    if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
+      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    }
+  }
+
+  $payment_modules->update_status();
+
+  if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+  }
+
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;
 
@@ -66,7 +92,7 @@
                           'customers_telephone' => $order->customer['telephone'], 
                           'customers_email_address' => $order->customer['email_address'],
                           'customers_address_format_id' => $order->customer['format_id'], 
-                          'delivery_name' => $order->delivery['firstname'] . ' ' . $order->delivery['lastname'], 
+                          'delivery_name' => trim($order->delivery['firstname'] . ' ' . $order->delivery['lastname']),
                           'delivery_company' => $order->delivery['company'],
                           'delivery_street_address' => $order->delivery['street_address'], 
                           'delivery_suburb' => $order->delivery['suburb'], 
