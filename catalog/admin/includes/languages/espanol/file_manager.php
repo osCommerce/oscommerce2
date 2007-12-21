@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -35,4 +35,5 @@ define('ERROR_FILE_NOT_WRITEABLE', 'Error: No puedo escribir en este fichero. As
 define('ERROR_DIRECTORY_NOT_REMOVEABLE', 'Error: No puedo eliminar el directorio. Asigne los permisos adecuados a: %s');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Error: No puedo eliminar este fichero. Asigne los permisos adecuados a: %s');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Error: No existe el directorio: %s');
+define('ERROR_FILENAME_EMPTY', 'Error: Please enter a filename to store the contents in.');
 ?>

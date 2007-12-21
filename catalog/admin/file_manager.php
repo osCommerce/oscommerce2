@@ -43,15 +43,21 @@
         if (!$tep_remove_error) tep_redirect(tep_href_link(FILENAME_FILE_MANAGER));
         break;
       case 'insert':
-        if (mkdir($current_path . '/' . $HTTP_POST_VARS['folder_name'], 0777)) {
+        if (isset($HTTP_POST_VARS['folder_name']) && tep_not_null(basename($HTTP_POST_VARS['folder_name'])) && mkdir($current_path . '/' . basename($HTTP_POST_VARS['folder_name']), 0777)) {
           tep_redirect(tep_href_link(FILENAME_FILE_MANAGER, 'info=' . urlencode($HTTP_POST_VARS['folder_name'])));
         }
         break;
       case 'save':
-        if ($fp = fopen($current_path . '/' . $HTTP_POST_VARS['filename'], 'w+')) {
-          fputs($fp, stripslashes($HTTP_POST_VARS['file_contents']));
-          fclose($fp);
-          tep_redirect(tep_href_link(FILENAME_FILE_MANAGER, 'info=' . urlencode($HTTP_POST_VARS['filename'])));
+        if (isset($HTTP_POST_VARS['filename']) && tep_not_null(basename($HTTP_POST_VARS['filename']))) {
+          if (is_writeable($current_path) && ($fp = fopen($current_path . '/' . basename($HTTP_POST_VARS['filename']), 'w+'))) {
+            fputs($fp, stripslashes($HTTP_POST_VARS['file_contents']));
+            fclose($fp);
+            tep_redirect(tep_href_link(FILENAME_FILE_MANAGER, 'info=' . urlencode(basename($HTTP_POST_VARS['filename']))));
+          }
+        } else {
+          $action = 'new_file';
+          $directory_writeable = true;
+          $messageStack->add(ERROR_FILENAME_EMPTY, 'error');
         }
         break;
       case 'processuploads':
