@@ -41,10 +41,10 @@
 
         if (isset($contents[$i][0]) && is_array($contents[$i][0])) {
           for ($x=0, $y=sizeof($contents[$i]); $x<$y; $x++) {
-            if (isset($contents[$i][$x]['text']) && tep_not_null(isset($contents[$i][$x]['text']))) {
+            if (isset($contents[$i][$x]['text']) && tep_not_null($contents[$i][$x]['text'])) {
               $tableBox_string .= '    <td';
               if (isset($contents[$i][$x]['align']) && tep_not_null($contents[$i][$x]['align'])) $tableBox_string .= ' align="' . $contents[$i][$x]['align'] . '"';
-              if (isset($contents[$i][$x]['params']) && tep_not_null(isset($contents[$i][$x]['params']))) {
+              if (isset($contents[$i][$x]['params']) && tep_not_null($contents[$i][$x]['params'])) {
                 $tableBox_string .= ' ' . $contents[$i][$x]['params'];
               } elseif (tep_not_null($this->table_data_parameters)) {
                 $tableBox_string .= ' ' . $this->table_data_parameters;
