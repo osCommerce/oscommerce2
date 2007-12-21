@@ -36,7 +36,7 @@
         return $value['value'];
       }
 
-      return false;
+      return '';
     }
 
     function _sess_write($key, $val) {
