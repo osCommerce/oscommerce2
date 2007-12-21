@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2007 osCommerce
 
   Released under the GNU General Public License
 */
@@ -18,13 +18,25 @@
   }
 
   if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'update')) {
-    $notify_string = 'action=notify&';
-    $notify = $HTTP_POST_VARS['notify'];
-    if (!is_array($notify)) $notify = array($notify);
-    for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-      $notify_string .= 'notify[]=' . $notify[$i] . '&';
+    $notify_string = '';
+
+    if (isset($HTTP_POST_VARS['notify']) && !empty($HTTP_POST_VARS['notify'])) {
+      $notify = $HTTP_POST_VARS['notify'];
+
+      if (!is_array($notify)) {
+        $notify = array($notify);
+      }
+
+      for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
+        if (is_numeric($notify[$i])) {
+          $notify_string .= 'notify[]=' . $notify[$i] . '&';
+        }
+      }
+
+      if (!empty($notify_string)) {
+        $notify_string = 'action=notify&' . substr($notify_string, 0, -1);
+      }
     }
-    if (strlen($notify_string) > 0) $notify_string = substr($notify_string, 0, -1);
 
     tep_redirect(tep_href_link(FILENAME_DEFAULT, $notify_string));
   }
