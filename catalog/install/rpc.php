@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -20,10 +20,10 @@
   if (isset($HTTP_GET_VARS['action']) && !empty($HTTP_GET_VARS['action'])) {
     switch ($HTTP_GET_VARS['action']) {
       case 'dbCheck':
-        $db = array('DB_SERVER' => trim(urldecode($HTTP_GET_VARS['server'])),
-                    'DB_SERVER_USERNAME' => trim(urldecode($HTTP_GET_VARS['username'])),
-                    'DB_SERVER_PASSWORD' => trim(urldecode($HTTP_GET_VARS['password'])),
-                    'DB_DATABASE' => trim(urldecode($HTTP_GET_VARS['name']))
+        $db = array('DB_SERVER' => trim(rawurldecode($HTTP_GET_VARS['server'])),
+                    'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
+                    'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
+                    'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name']))
                    );
 
         $db_error = false;
@@ -45,10 +45,10 @@
         break;
 
       case 'dbImport':
-        $db = array('DB_SERVER' => trim(urldecode($HTTP_GET_VARS['server'])),
-                    'DB_SERVER_USERNAME' => trim(urldecode($HTTP_GET_VARS['username'])),
-                    'DB_SERVER_PASSWORD' => trim(urldecode($HTTP_GET_VARS['password'])),
-                    'DB_DATABASE' => trim(urldecode($HTTP_GET_VARS['name'])),
+        $db = array('DB_SERVER' => trim(rawurldecode($HTTP_GET_VARS['server'])),
+                    'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
+                    'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
+                    'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name'])),
                    );
 
         osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
