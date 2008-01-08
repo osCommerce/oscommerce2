@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -43,21 +43,20 @@
         }
       }
 
-      $this->types = array('Express' => 'Express Mail',
-                           'First Class' => 'First-Class Mail',
-                           'Priority' => 'Priority Mail',
-                           'Parcel' => 'Parcel Post');
+      $this->types = array('EXPRESS' => 'Express Mail',
+                           'FIRST CLASS' => 'First-Class Mail',
+                           'PRIORITY' => 'Priority Mail',
+                           'PARCEL' => 'Parcel Post');
 
-      $this->intl_types = array('GXG Document' => 'Global Express Guaranteed Document Service',
-                                'GXG Non-Document' => 'Global Express Guaranteed Non-Document Service',
-                                'Express' => 'Global Express Mail (EMS)',
-                                'Priority Lg' => 'Global Priority Mail - Flat-rate Envelope (large)',
-                                'Priority Sm' => 'Global Priority Mail - Flat-rate Envelope (small)',
-                                'Priority Var' => 'Global Priority Mail - Variable Weight Envelope (single)',
-                                'Airmail Letter' => 'Airmail Letter Post',
-                                'Airmail Parcel' => 'Airmail Parcel Post',
-                                'Surface Letter' => 'Economy (Surface) Letter Post',
-                                'Surface Post' => 'Economy (Surface) Parcel Post');
+      $this->intl_types = array('Global Express Guaranteed',
+                                'Global Express Guaranteed Non-Document Rectangular',
+                                'Global Express Guaranteed Non-Document Non-Rectangular',
+                                'Express Mail International (EMS)',
+                                'Express Mail International (EMS) Flat Rate Envelope',
+                                'Priority Mail International',
+                                'Priority Mail International Flat Rate Envelope',
+                                'Priority Mail International Flat Rate Box',
+                                'First-Class Mail International');
 
       $this->countries = $this->country_list();
     }
@@ -128,7 +127,6 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable USPS Shipping', 'MODULE_SHIPPING_USPS_STATUS', 'True', 'Do you want to offer USPS shipping?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Enter the USPS User ID', 'MODULE_SHIPPING_USPS_USERID', 'NONE', 'Enter the USPS USERID assigned to you.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Enter the USPS Password', 'MODULE_SHIPPING_USPS_PASSWORD', 'NONE', 'See USERID, above.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Which server to use', 'MODULE_SHIPPING_USPS_SERVER', 'production', 'An account at USPS is needed to use the Production server', '6', '0', 'tep_cfg_select_option(array(\'test\', \'production\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Handling Fee', 'MODULE_SHIPPING_USPS_HANDLING', '0', 'Handling fee for this shipping method.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_USPS_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_USPS_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
@@ -140,7 +138,7 @@
     }
 
     function keys() {
-      return array('MODULE_SHIPPING_USPS_STATUS', 'MODULE_SHIPPING_USPS_USERID', 'MODULE_SHIPPING_USPS_PASSWORD', 'MODULE_SHIPPING_USPS_SERVER', 'MODULE_SHIPPING_USPS_HANDLING', 'MODULE_SHIPPING_USPS_TAX_CLASS', 'MODULE_SHIPPING_USPS_ZONE', 'MODULE_SHIPPING_USPS_SORT_ORDER');
+      return array('MODULE_SHIPPING_USPS_STATUS', 'MODULE_SHIPPING_USPS_USERID', 'MODULE_SHIPPING_USPS_PASSWORD', 'MODULE_SHIPPING_USPS_HANDLING', 'MODULE_SHIPPING_USPS_TAX_CLASS', 'MODULE_SHIPPING_USPS_ZONE', 'MODULE_SHIPPING_USPS_SORT_ORDER');
     }
 
     function _setService($service) {
@@ -208,25 +206,15 @@
         $request = 'API=IntlRate&XML=' . urlencode($request);
       }
 
-      switch (MODULE_SHIPPING_USPS_SERVER) {
-        case 'production': $usps_server = 'production.shippingapis.com';
-                           $api_dll = 'shippingapi.dll';
-                           break;
-        case 'test':
-        default:           $usps_server = 'testing.shippingapis.com';
-                           $api_dll = 'ShippingAPITest.dll';
-                           break;
-      }
-
       $body = '';
 
       $http = new httpClient();
-      if ($http->Connect($usps_server, 80)) {
-        $http->addHeader('Host', $usps_server);
+      if ($http->Connect('production.shippingapis.com', 80)) {
+        $http->addHeader('Host', 'production.shippingapis.com');
         $http->addHeader('User-Agent', 'osCommerce');
         $http->addHeader('Connection', 'Close');
 
-        if ($http->Get('/' . $api_dll . '?' . $request)) $body = $http->getBody();
+        if ($http->Get('/shippingapi.dll?' . $request)) $body = $http->getBody();
 
         $http->Disconnect();
       } else {
