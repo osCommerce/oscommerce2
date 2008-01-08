@@ -1,7 +1,7 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2007 osCommerce
+Copyright (c) 2008 osCommerce
 
 ------------------------------------------------------------------------------
 xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
@@ -14,6 +14,19 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
   - Removed paypal.php module. The paypal_ipn.php module is the new PayPal
     Website Payments Standard module.
   - Removed PayQuake module (the gateway now uses Authorize.net).
+
+* Shipping module changes:
+  - USPS updated to match new shipping methods. The test/production server
+    parameter has been removed as the test server only works with specific
+    test-cases.
+
+* Verify the customers primary address when it is being updated.
+  Verify the number of address book entries before inserting a new one.
+  [r1766]
+
+* Avoid removal of products when deleting a category in a search result
+  listing.
+  [r1754]
 
 * Make the database session storage handler return an empty string for
   variables that don't exist in the session instead of returning a boolean
@@ -35,7 +48,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
   [r1747]
 
 * MySQL 5.0 Strict Mode compatibility fixes.
-  [r1746]
+  [r1746, 1755]
 
 * Fix logic with nested tables in the Administration Tool tableBlock class.
   [r1745]
