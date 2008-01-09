@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,6 +16,8 @@
 // class constructor
     function paypal_direct_uk() {
       global $order;
+
+      $this->signature = 'paypal|paypal_direct_uk|1.0|2.2';
 
       $this->code = 'paypal_direct_uk';
       $this->title = MODULE_PAYMENT_PAYPAL_DIRECT_UK_TEXT_TITLE;
@@ -228,7 +230,7 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PayPal Direct (UK) Module', 'MODULE_PAYMENT_PAYPAL_DIRECT_UK_STATUS', 'False', 'Do you want to accept PayPal Direct (UK) payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PayPal Direct (UK)', 'MODULE_PAYMENT_PAYPAL_DIRECT_UK_STATUS', 'False', 'Do you want to accept PayPal Direct (UK) payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor', 'MODULE_PAYMENT_PAYPAL_DIRECT_UK_VENDOR', '', 'Your merchant login ID that you created when you registered for the Website Payments Pro account.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('User', 'MODULE_PAYMENT_PAYPAL_DIRECT_UK_USERNAME', '', 'If you set up one or more additional users on the account, this value is the ID of the user authorised to process transactions. If, however, you have not set up additional users on the account, USER has the same value as VENDOR.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Password', 'MODULE_PAYMENT_PAYPAL_DIRECT_UK_PASSWORD', '', 'The 6- to 32-character password that you defined while registering for the account.', '6', '0', now())");
@@ -269,8 +271,6 @@
       if (!empty($headers) && is_array($headers)) {
         $header = array_merge($header, $headers);
       }
-
-      $connection_method = 0;
 
       if (function_exists('curl_init')) {
         $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));

@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,6 +16,8 @@
 // class constructor
     function paypal_direct() {
       global $order;
+
+      $this->signature = 'paypal|paypal_direct|1.0|2.2';
 
       $this->code = 'paypal_direct';
       $this->title = MODULE_PAYMENT_PAYPAL_DIRECT_TEXT_TITLE;
@@ -241,8 +243,6 @@
       if (isset($server['user']) && isset($server['pass'])) {
         $header[] = 'Authorization: Basic ' . base64_encode($server['user'] . ':' . $server['pass']);
       }
-
-      $connection_method = 0;
 
       if (function_exists('curl_init')) {
         $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));

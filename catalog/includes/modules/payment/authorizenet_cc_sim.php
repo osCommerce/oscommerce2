@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,6 +16,8 @@
 // class constructor
     function authorizenet_cc_sim() {
       global $order;
+
+      $this->signature = 'authorizenet|authorizenet_cc_sim|1.0|2.2';
 
       $this->code = 'authorizenet_cc_sim';
       $this->title = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_TITLE;
@@ -207,7 +209,7 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Authorize.net Credit Card SIM Module', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS', 'False', 'Do you want to accept Authorize.net Credit Card SIM payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Authorize.net Credit Card SIM', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS', 'False', 'Do you want to accept Authorize.net Credit Card SIM payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Login ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID', '', 'The login ID used for the Authorize.net service', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY', '', 'Transaction key used for encrypting data', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Hash', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH', '', 'The MD5 hash value to verify transactions with', '6', '0', now())");

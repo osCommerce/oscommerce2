@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,6 +16,8 @@
 // class constructor
     function worldpay_junior() {
       global $order;
+
+      $this->signature = 'worldpay|worldpay_junior|1.0|2.2';
 
       $this->code = 'worldpay_junior';
       $this->title = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE;
@@ -528,7 +530,7 @@
         $status_id = $check['orders_status_id'];
       }
 
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable WorldPay Select Junior Module', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'True', 'Do you want to accept WorldPay Select Junior payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable WorldPay Select Junior', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'False', 'Do you want to accept WorldPay Select Junior payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installation ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', '', 'Your WorldPay Installation ID', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Encryption Password', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD', '', 'The encryption password to validate transaction responses with', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'Capture', 'The processing method to use for each transaction', '6', '0', 'tep_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
