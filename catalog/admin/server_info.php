@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -111,7 +111,7 @@ hr {display: none;}
     $phpinfo = str_replace('border: 1px', '', $phpinfo);
     ereg('<body>(.*)</body>', $phpinfo, $regs);
     echo '<table border="1" cellpadding="3" width="600" style="border: 0px; border-color: #000000;">' .
-         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v2.2 RC1" /></a><h1 class="p"> ' . PROJECT_VERSION . '</h1></td>' . 
+         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="' . PROJECT_VERSION . '" /></a><h1 class="p"> ' . PROJECT_VERSION . '</h1></td>' . 
          '  </tr>' .
          '</table>';
     echo $regs[1];

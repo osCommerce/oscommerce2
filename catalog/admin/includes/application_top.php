@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -28,7 +28,7 @@
   require('includes/configure.php');
 
 // Define the project version
-  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2 RC1');
+  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2 RC2');
 
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
