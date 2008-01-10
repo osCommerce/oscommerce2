@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -30,16 +30,16 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express_uk.php');
-  require('includes/modules/payment/paypal_express_uk.php');
+  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_uk_express.php');
+  require('includes/modules/payment/paypal_uk_express.php');
 
-  $paypal_express_uk = new paypal_express_uk();
+  $paypal_uk_express = new paypal_uk_express();
 
-  if (!$paypal_express_uk->check() || !$paypal_express_uk->enabled) {
+  if (!$paypal_uk_express->check() || !$paypal_uk_express->enabled) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  if (MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_SERVER == 'Live') {
+  if (MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TRANSACTION_SERVER == 'Live') {
     $api_url = 'https://payflowpro.verisign.com/transaction';
     $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
   } else {
@@ -62,12 +62,12 @@
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
   $cartID = $cart->cartID;
 
-  $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_UK_USERNAME) ? MODULE_PAYMENT_PAYPAL_EXPRESS_UK_USERNAME : MODULE_PAYMENT_PAYPAL_EXPRESS_UK_VENDOR),
-                  'VENDOR' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_VENDOR,
-                  'PARTNER' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PARTNER,
-                  'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_UK_PASSWORD,
+  $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_UK_EXPRESS_USERNAME) ? MODULE_PAYMENT_PAYPAL_UK_EXPRESS_USERNAME : MODULE_PAYMENT_PAYPAL_UK_EXPRESS_VENDOR),
+                  'VENDOR' => MODULE_PAYMENT_PAYPAL_UK_EXPRESS_VENDOR,
+                  'PARTNER' => MODULE_PAYMENT_PAYPAL_UK_EXPRESS_PARTNER,
+                  'PWD' => MODULE_PAYMENT_PAYPAL_UK_EXPRESS_PASSWORD,
                   'TENDER' => 'P',
-                  'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_UK_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'));
+                  'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'));
 
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'retrieve':
@@ -82,7 +82,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_express_uk->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_uk_express->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -205,7 +205,7 @@
           }
 
           if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_express_uk->code;
+          $payment = $paypal_uk_express->code;
 
           if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
           $ppeuk_token = $response_array['TOKEN'];
@@ -221,7 +221,7 @@
           $sendto = false;
 
           if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_express_uk->code;
+          $payment = $paypal_uk_express->code;
 
           if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
           $ppeuk_token = $response_array['TOKEN'];
@@ -235,23 +235,23 @@
         switch ($response_array['RESULT']) {
           case '1':
           case '26':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_CFG_ERROR;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_CFG_ERROR;
             break;
 
           case '7':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_ADDRESS;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_ADDRESS;
             break;
 
           case '12':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_DECLINED;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_DECLINED;
             break;
 
           case '1000':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_EXPRESS_DISABLED;
             break;
 
           default:
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_GENERAL;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_GENERAL;
             break;
         }
 
@@ -284,7 +284,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_express_uk->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_uk_express->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -294,15 +294,15 @@
         switch ($response_array['RESULT']) {
           case '1':
           case '26':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_CFG_ERROR;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_CFG_ERROR;
             break;
 
           case '1000':
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_EXPRESS_DISABLED;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_EXPRESS_DISABLED;
             break;
 
           default:
-            $error_message = MODULE_PAYMENT_PAYPAL_EXPRESS_UK_ERROR_GENERAL;
+            $error_message = MODULE_PAYMENT_PAYPAL_UK_EXPRESS_ERROR_GENERAL;
             break;
         }
 
