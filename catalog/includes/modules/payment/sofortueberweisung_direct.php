@@ -6,7 +6,7 @@
   http://www.oscommerce.com
 
   Copyright (c) 2006 - 2007 Henri Schmidhuber (http://www.in-solution.de)
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -573,7 +573,12 @@
         $languages = tep_get_languages();
 
         for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, public_flag, downloads_flag) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofortüberweisung Vorbereitung', 0, 0)");
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofortüberweisung Vorbereitung')");
+        }
+
+        $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+        if (tep_db_num_rows($flags_query) == 1) {
+          tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
         }
       } else {
         $check = tep_db_fetch_array($check_query);
