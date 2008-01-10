@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  if (!class_exists('httpClient')) {
+    require('includes/classes/http_client.php');
+  }
+
   class usps {
     var $code, $title, $description, $icon, $enabled, $countries;
 
