@@ -10,15 +10,22 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
 * Payment module changes:
   - Authorize.net module replaced with newer AIM and SIM modules.
   - New PayPal Express Checkout, PayPal Express Checkout (UK), PayPal Direct,
-    and PayPal Direct (UK) modules.
-  - Removed paypal.php module. The paypal_ipn.php module is the new PayPal
-    Website Payments Standard module.
+    PayPal Direct (UK), and PayPal Website Payments Standard modules.
+  - Removed paypal.php and paypal_ipn.php modules.
   - Removed PayQuake module (the gateway now uses Authorize.net).
 
 * Shipping module changes:
   - USPS updated to match new shipping methods. The test/production server
     parameter has been removed as the test server only works with specific
     test-cases.
+
+* Add a .htaccess file to the admin/includes/ directory to prevent direct HTTP
+  requests to PHP files.
+  [r1775]
+
+* Fix the pagination links on the Administration Tool -> Products Attributes
+  page.
+  [r1774, r1776]
 
 * Verify the customers primary address when it is being updated.
   Verify the number of address book entries before inserting a new one.
