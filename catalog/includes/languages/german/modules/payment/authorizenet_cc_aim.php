@@ -16,7 +16,7 @@
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER', 'Kreditkarteninhaber:');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_NUMBER', 'Kreditkarten-Nr.:');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_EXPIRES', 'G&uuml;ltig bis:');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CVC', 'Kreditkartenprüfnummer:');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CVC', 'Kreditkartenpr&uuml;fnummer:');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_TITLE', 'Fehler bei der Verarbeitung der Kreditkarte');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_GENERAL', 'Bitte versuchen Sie erneut. Wenn das Problem weiterhin besteht, w&auml;hlen Sie bitte eine andere Zahlungsweise.');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_DECLINED', 'Ihre Kreditkarte wurde abgelehnt. Bitte versuchen Sie es mit einer anderen Karte oder w&auml;hlen Sie eine andere Zahlungsweise.');
