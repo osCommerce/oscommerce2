@@ -11,16 +11,16 @@
 */
 
   define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_TITLE', 'Authorize.net Credit Card AIM');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_PUBLIC_TITLE', 'Credit Card (Processed by Authorize.net)');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.authorize.net" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit Authorize.net Website</a>');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER', 'Credit Card Owner:');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_NUMBER', 'Credit Card Number:');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_EXPIRES', 'Credit Card Expiry Date:');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CVC', 'Credit Card Check Number (CVC):');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_TITLE', 'There has been an error processing your credit card');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_GENERAL', 'Please try again and if problems persist, please try another payment method.');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_DECLINED', 'This credit card transaction has been declined. Please try again and if problems persist, please try another credit card or payment method.');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_INVALID_EXP_DATE', 'The credit card expiration date is invalid. Please check the card information and try again.');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_EXPIRED', 'The credit card has expired. Please try again with another card or payment method.');
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_CVC', 'The credit card check number (CVC) is invalid. Please check the card information and try again.');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_PUBLIC_TITLE', 'Kreditkarte (verarbeitet durch Authorize.net)');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.authorize.net" target="_blank" style="text-decoration: underline; font-weight: bold;">Authorize.net Website besuchen</a>');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER', 'Kreditkarteninhaber:');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_NUMBER', 'Kreditkarten-Nr.:');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_EXPIRES', 'G&uuml;ltig bis:');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CVC', 'Kreditkartenprüfnummer (CVC):');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_TITLE', 'Fehler bei der &Uuml;berpr&uuml;fung der Kreditkarte');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_GENERAL', 'Bitte versuchen Sie erneut. Wenn das Problem weiterhin besteht, w&auml;hlen Sie bitte eine andere Zahlungsweise.');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_DECLINED', 'Ihre Kreditkarte wurde abgelehnt. Bitte versuchen Sie es mit einer anderen Karte oder w&auml;hlen Sie eine andere Zahlungsweise.');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_INVALID_EXP_DATE', 'Das G&uuml;ltigkeitsdatum der Kreditkarte ist falsch. Bitte &uuml;berpr&uuml;fen Sie die Kreditkarteninformationen.');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_EXPIRED', 'Die Kreditkarte ist abgelaufen. Bitte versuchen Sie es erneut mit einer anderen Karte oder Zahlungsweise.');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_CVC', 'Die Kreditkartenpr&uuml;fnummer ist ung&uuml;ltig. Bitte &uuml;berpr&uuml;fen Sie die Kreditkarteninformationen und versuchen Sie es erneut');
 ?>
