@@ -249,7 +249,7 @@
                 $i = strpos($restore_query, ';')-1;
 
                 if (eregi('^create*', $query)) {
-                  $table_name = trim(substr($query, strpos($query, 'table ')+6));
+                  $table_name = trim(substr($query, stripos($query, 'table ')+6));
                   $table_name = substr($table_name, 0, strpos($table_name, ' '));
 
                   $drop_table_names[] = $table_name;
