@@ -107,7 +107,7 @@
     }
 
     function before_process() {
-      global $currencies, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $HTTP_POST_VARS, $comments;
+      global $order, $sendto, $ppeuk_token, $ppeuk_payerid, $HTTP_POST_VARS, $comments;
 
       if (empty($comments)) {
         if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
@@ -133,7 +133,7 @@
                       'TOKEN' => $ppeuk_token,
                       'ACTION' => 'D',
                       'PAYERID' => $ppeuk_payerid,
-                      'AMT' => $currencies->format_raw($order->info['total']),
+                      'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCY' => $order->info['currency'],
                       'BUTTONSOURCE' => 'osCommerce22_Default_PRO2EC');
 
@@ -269,6 +269,21 @@
       }
 
       return $result;
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

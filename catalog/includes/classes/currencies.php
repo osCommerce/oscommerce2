@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -45,20 +45,6 @@
       }
 
       return $format_string;
-    }
-
-    function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currency;
-
-      if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
-      }
-
-      if (empty($currency_value) || !is_numeric($currency_value)) {
-        $currency_value = $this->currencies[$currency_code]['value'];
-      }
-
-      return number_format(tep_round($number * $currency_value, $this->currencies[$currency_code]['decimal_places']), $this->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function calculate_price($products_price, $products_tax, $quantity = 1) {

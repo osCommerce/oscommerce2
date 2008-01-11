@@ -123,7 +123,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $currencies, $order, $sendto;
+      global $HTTP_POST_VARS, $order, $sendto;
 
       if (isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && isset($this->cc_types[$HTTP_POST_VARS['cc_type']]) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_UK_DIRECT_TRANSACTION_SERVER == 'Live') {
@@ -138,7 +138,7 @@
                         'PWD' => MODULE_PAYMENT_PAYPAL_UK_DIRECT_PASSWORD,
                         'TENDER' => 'C',
                         'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_UK_DIRECT_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
-                        'AMT' => $currencies->format_raw($order->info['total']),
+                        'AMT' => $this->format_raw($order->info['total']),
                         'CURRENCY' => $order->info['currency'],
                         'NAME' => $HTTP_POST_VARS['cc_owner'],
                         'STREET' => $order->billing['street_address'],
@@ -296,6 +296,21 @@
       }
 
       return $result;
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

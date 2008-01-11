@@ -267,10 +267,9 @@
       $params['ACTION'] = 'S';
       $params['CURRENCY'] = $order->info['currency'];
       $params['EMAIL'] = $order->customer['email_address'];
-      $params['AMT'] = $currencies->format_raw($order->info['total']);
+      $params['AMT'] = $paypal_uk_express->format_raw($order->info['total']);
       $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express_uk.php', 'osC_Action=retrieve', 'SSL', true, false);
       $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false);
-      $params['AMT'] = $currencies->format_raw($order->info['total']);
 
       if ($order->content_type == 'virtual') {
         $params['NOSHIPPING'] = '1';

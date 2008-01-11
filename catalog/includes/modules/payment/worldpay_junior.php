@@ -268,7 +268,7 @@
     }
 
     function process_button() {
-      global $order, $currencies, $currency, $languages_id, $language, $customer_id, $cart_Worldpay_Junior_ID;
+      global $order, $currency, $languages_id, $language, $customer_id, $cart_Worldpay_Junior_ID;
 
       $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
 
@@ -276,7 +276,7 @@
       $lang = tep_db_fetch_array($lang_query);
 
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) .
-                               tep_draw_hidden_field('amount', $currencies->format_raw($order->info['total'])) .
+                               tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
                                tep_draw_hidden_field('currency', $currency) .
                                tep_draw_hidden_field('hideCurrency', 'true') .
                                tep_draw_hidden_field('cartId', $order_id) .
@@ -552,6 +552,21 @@
 
     function keys() {
       return array('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER');
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

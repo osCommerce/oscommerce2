@@ -98,7 +98,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $customer_id, $order, $sendto, $currency, $currencies;
+      global $HTTP_POST_VARS, $customer_id, $order, $sendto, $currency;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -120,7 +120,7 @@
                       'x_customer_ip' => tep_get_ip_address(),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
-                      'x_amount' => substr($currencies->format_raw($order->info['total']), 0, 15),
+                      'x_amount' => substr($this->format_raw($order->info['total']), 0, 15),
                       'x_currency_code' => substr($currency, 0, 3),
                       'x_method' => 'CC',
                       'x_type' => ((MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'),
@@ -147,15 +147,15 @@
 
       foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
-          $tax_value += $currencies->format_raw($value);
+          $tax_value += $this->format_raw($value);
         }
       }
 
       if ($tax_value > 0) {
-        $params['x_tax'] = $currencies->format_raw($tax_value);
+        $params['x_tax'] = $this->format_raw($tax_value);
       }
 
-      $params['x_freight'] = $currencies->format_raw($order->info['shipping_cost']);
+      $params['x_freight'] = $this->format_raw($order->info['shipping_cost']);
 
       $post_string = '';
 
@@ -166,7 +166,7 @@
       $post_string = substr($post_string, 0, -1);
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $post_string .= '&x_line_item=' . urlencode($i+1) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 31)) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 255)) . '<|>' . urlencode($order->products[$i]['qty']) . '<|>' . urlencode($currencies->format_raw($order->products[$i]['final_price'])) . '<|>' . urlencode($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
+        $post_string .= '&x_line_item=' . urlencode($i+1) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 31)) . '<|>' . urlencode(substr($order->products[$i]['name'], 0, 255)) . '<|>' . urlencode($order->products[$i]['qty']) . '<|>' . urlencode($this->format_raw($order->products[$i]['final_price'])) . '<|>' . urlencode($order->products[$i]['tax'] > 0 ? 'YES' : 'NO');
       }
 
       switch (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER) {
@@ -195,7 +195,7 @@
 
       if ($regs[0] == '1') {
         if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH)) {
-          if (strtoupper($regs[37]) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $regs[6] . $currencies->format_raw($order->info['total'])))) {
+          if (strtoupper($regs[37]) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $regs[6] . $this->format_raw($order->info['total'])))) {
             $error = 'general';
           }
         }
@@ -356,6 +356,21 @@
       }
 
       return $result;
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

@@ -242,7 +242,7 @@
       $params['PAYMENTACTION'] = ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization');
       $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false);
       $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false);
-      $params['AMT'] = $currencies->format_raw($order->info['total']);
+      $params['AMT'] = $paypal_express->format_raw($order->info['total']);
       $params['CURRENCYCODE'] = $order->info['currency'];
 
       if ($order->content_type == 'virtual') {

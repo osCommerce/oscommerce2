@@ -274,15 +274,15 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currencies, $currency, $cart_PayPal_Standard_ID, $shipping;
+      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping;
 
       $process_button_string = '';
       $parameters = array('cmd' => '_xclick',
                           'item_name' => STORE_NAME,
-                          'shipping' => $currencies->format_raw($order->info['shipping_cost']),
-                          'tax' => $currencies->format_raw($order->info['tax']),
+                          'shipping' => $this->format_raw($order->info['shipping_cost']),
+                          'tax' => $this->format_raw($order->info['tax']),
                           'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
-                          'amount' => $currencies->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
+                          'amount' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
                           'currency_code' => $currency,
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
@@ -626,6 +626,21 @@
 
     function keys() {
       return array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS', 'MODULE_PAYMENT_PAYPAL_STANDARD_ID', 'MODULE_PAYMENT_PAYPAL_STANDARD_ZONE', 'MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER', 'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE', 'MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL', 'MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PRIVATE_KEY', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PUBLIC_KEY', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PAYPAL_KEY', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_CERT_ID', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY', 'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_OPENSSL');
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

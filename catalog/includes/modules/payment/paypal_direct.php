@@ -125,7 +125,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $currencies, $order, $sendto;
+      global $HTTP_POST_VARS, $order, $sendto;
 
       if (isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && isset($this->cc_types[$HTTP_POST_VARS['cc_type']]) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_SERVER == 'Live') {
@@ -141,7 +141,7 @@
                         'METHOD' => 'DoDirectPayment',
                         'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
                         'IPADDRESS' => tep_get_ip_address(),
-                        'AMT' => $currencies->format_raw($order->info['total']),
+                        'AMT' => $this->format_raw($order->info['total']),
                         'CREDITCARDTYPE' => $HTTP_POST_VARS['cc_type'],
                         'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
                         'STARTDATE' => $HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'],
@@ -264,6 +264,21 @@
       }
 
       return $result;
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>
