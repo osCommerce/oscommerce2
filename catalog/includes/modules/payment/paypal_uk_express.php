@@ -95,7 +95,7 @@
       $confirmation = false;
 
       if (empty($comments)) {
-        $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
+        $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_COMMENTS,
                                                       'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
       }
 
