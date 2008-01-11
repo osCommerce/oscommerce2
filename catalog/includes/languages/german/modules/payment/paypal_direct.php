@@ -16,11 +16,11 @@
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_OWNER', 'Karteninhaber:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_TYPE', 'Kartentyp:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_NUMBER', 'Kartennummer:');
-  define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM', 'g&uuml;ltig von:');
+  define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM', 'G&uuml;ltig von:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM_INFO', '(falls vorhanden)');
-  define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES', 'g&uuml;ltig bis:');
+  define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES', 'G&uuml;ltig bis:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_CVC', 'Kartenpr&uuml;fnummer:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER', 'Kartenausgabenummer:');
   define('MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER_INFO', '(nur f&uuml;r Maestro und Solo Karten)');
-  define('MODULE_PAYMENT_PAYPAL_DIRECT_ERROR_ALL_FIELDS_REQUIRED', 'Fehler: Alle Eingabefeld sind ben&ouml;tigt.');
+  define('MODULE_PAYMENT_PAYPAL_DIRECT_ERROR_ALL_FIELDS_REQUIRED', 'Fehler: Alle Eingabefelde sind ben&ouml;tigt.');
 ?>
