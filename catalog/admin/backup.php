@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -206,6 +206,7 @@
 
         if (isset($restore_query)) {
           $sql_array = array();
+          $drop_table_names = array();
           $sql_length = strlen($restore_query);
           $pos = strpos($restore_query, ';');
           for ($i=$pos; $i<$sql_length; $i++) {
@@ -239,16 +240,25 @@
                 $next = 'insert';
               }
               if ( (eregi('create', $next)) || (eregi('insert', $next)) || (eregi('drop t', $next)) ) {
+                $query = substr($restore_query, 0, $i);
+
                 $next = '';
-                $sql_array[] = substr($restore_query, 0, $i);
+                $sql_array[] = $query;
                 $restore_query = ltrim(substr($restore_query, $i+1));
                 $sql_length = strlen($restore_query);
                 $i = strpos($restore_query, ';')-1;
+
+                if (eregi('^create*', $query)) {
+                  $table_name = trim(substr($query, strpos($query, 'table ')+6));
+                  $table_name = substr($table_name, 0, strpos($table_name, ' '));
+
+                  $drop_table_names[] = $table_name;
+                }
               }
             }
           }
 
-          tep_db_query("drop table if exists address_book, address_format, administrators, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, languages, manufacturers, manufacturers_info, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, products, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones");
+          tep_db_query('drop table if exists ' . implode(', ', $drop_table_names));
 
           for ($i=0, $n=sizeof($sql_array); $i<$n; $i++) {
             tep_db_query($sql_array[$i]);
