@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  define('MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_TITLE', 'PayPal Express Checkout (UK)');
+  define('MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_TITLE', 'PayPal Website Payments Pro (UK) Express Checkout');
   define('MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_PUBLIC_TITLE', 'PayPal Express');
   define('MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_DESCRIPTION', '<b>Attencion: PayPal necesita el PayPal Website Payments Pro (UK) Direct Payments M&oacute;dulo de Pago cuando este M&oacute;dulo esta instalado.</b><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" target="_blank" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>&nbsp;<a href="javascript:toggleDivBlock(\'paypalExpressUKInfo\');">(info)</a><span id="paypalExpressUKInfo" style="display: none;"><br><i>Con el uso del Link para usar PayPal osCommerce dar a cada Cliente nuevo un pequeno Bonus.</i></span>');
   define('MODULE_PAYMENT_PAYPAL_UK_EXPRESS_TEXT_BUTTON', 'Pague con PayPal');
