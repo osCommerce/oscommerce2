@@ -86,7 +86,20 @@
     }
 
     function confirmation() {
-      return false;
+      global $comments;
+
+      if (!isset($comments)) {
+        $comments = null;
+      }
+
+      $confirmation = false;
+
+      if (empty($comments)) {
+        $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+      }
+
+      return $confirmation;
     }
 
     function process_button() {
@@ -94,7 +107,15 @@
     }
 
     function before_process() {
-      global $currencies, $order, $sendto, $ppe_token, $ppe_payerid;
+      global $currencies, $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments;
+
+      if (empty($comments)) {
+        if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
+          $comments = tep_db_prepare_input($HTTP_POST_VARS['ppecomments']);
+
+          $order->info['comments'] = $comments;
+        }
+      }
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $api_url = 'https://api-3t.paypal.com/nvp';
