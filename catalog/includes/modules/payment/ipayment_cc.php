@@ -90,7 +90,7 @@
                                               array('title' => MODULE_PAYMENT_IPAYMENT_CC_TEXT_CREDIT_CARD_EXPIRES,
                                                     'field' => tep_draw_pull_down_menu('cc_expdate_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('cc_expdate_year', $expires_year)),
                                               array('title' => MODULE_PAYMENT_IPAYMENT_CC_TEXT_CREDIT_CARD_CHECKNUMBER,
-                                                    'field' => tep_draw_input_field('cc_checkcode', '', 'size="4" maxlength="3"'))));
+                                                    'field' => tep_draw_input_field('cc_checkcode', '', 'size="5" maxlength="4"'))));
 
       return $confirmation;
     }
