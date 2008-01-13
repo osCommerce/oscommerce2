@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -15,7 +15,21 @@
     require ('includes/application_top.php');
 
     if ($HTTP_POST_VARS['transStatus'] == 'Y') {
-      if (isset($HTTP_POST_VARS['M_hash']) && !empty($HTTP_POST_VARS['M_hash']) && ($HTTP_POST_VARS['M_hash'] == md5($HTTP_POST_VARS['M_sid'] . $HTTP_POST_VARS['M_cid'] . $HTTP_POST_VARS['cartId'] . $HTTP_POST_VARS['M_lang'] . number_format($HTTP_POST_VARS['amount'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_ENCRYPTION_PASSWORD))) {
+      $pass = false;
+
+      if (isset($HTTP_POST_VARS['M_hash']) && !empty($HTTP_POST_VARS['M_hash']) && ($HTTP_POST_VARS['M_hash'] == md5($HTTP_POST_VARS['M_sid'] . $HTTP_POST_VARS['M_cid'] . $HTTP_POST_VARS['cartId'] . $HTTP_POST_VARS['M_lang'] . number_format($HTTP_POST_VARS['amount'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
+        $pass = true;
+      }
+
+      if (isset($HTTP_POST_VARS['callbackPW']) && ($HTTP_POST_VARS['callbackPW'] != MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD)) {
+        $pass = false;
+      }
+
+      if (tep_not_null(MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD) && !isset($HTTP_POST_VARS['callbackPW'])) {
+        $pass = false;
+      }
+
+      if ($pass == true) {
         include('includes/languages/' . basename($HTTP_POST_VARS['M_lang']) . '/modules/payment/worldpay_junior.php');
 
         $order_query = tep_db_query("select orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['cartId'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['M_cid'] . "'");
