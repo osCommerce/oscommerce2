@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,6 +16,8 @@
 // class constructor
     function ipayment() {
       global $order;
+
+      $this->signature = 'ipayment|ipayment_cc|1.0|2.2';
 
       $this->code = 'ipayment';
       $this->title = MODULE_PAYMENT_IPAYMENT_TEXT_TITLE;
@@ -94,7 +96,7 @@
     }
 
     function process_button() {
-      global $order, $currencies, $currency;
+      global $order, $currency;
 
       $zone_code = '';
 
@@ -115,8 +117,8 @@
 //                               tep_draw_hidden_field('strict_id_check', 1) .
                                tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
                                tep_draw_hidden_field('trx_currency', $currency) .
-                               tep_draw_hidden_field('trx_amount', number_format($order->info['total'] * 100, 0, '','')) .
-                               tep_draw_hidden_field('trx_typ', 'auth') .
+                               tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
+                               tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
                                tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
                                tep_draw_hidden_field('addr_street', $order->billing['street_address']) .
                                tep_draw_hidden_field('addr_city', $order->billing['city']) .
@@ -130,16 +132,16 @@
                                tep_draw_hidden_field('client_version', PROJECT_VERSION);
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD)) {
-        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_USER_ID . number_format($order->info['total'] * 100, 0, '','') . $currency . MODULE_PAYMENT_IPAYMENT_PASSWORD . MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD));
+        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . MODULE_PAYMENT_IPAYMENT_PASSWORD . MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD));
       }
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $HTTP_GET_VARS;
+      global $HTTP_GET_VARS, $order, $currency;
 
-      if (tep_not_null(MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD) && ($HTTP_GET_VARS['trx_securityhash'] != md5(MODULE_PAYMENT_IPAYMENT_USER_ID . number_format($order->info['total'] * 100, 0, '','') . $currency . MODULE_PAYMENT_IPAYMENT_PASSWORD . MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD))) {
+      if (tep_not_null(MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD) && ($HTTP_GET_VARS['trx_securityhash'] != md5(MODULE_PAYMENT_IPAYMENT_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . MODULE_PAYMENT_IPAYMENT_PASSWORD . MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD))) {
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
       }
 
@@ -176,6 +178,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Account Number', 'MODULE_PAYMENT_IPAYMENT_ID', '99999', 'The account number used for the iPayment service', '6', '2', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('User ID', 'MODULE_PAYMENT_IPAYMENT_USER_ID', '99999', 'The user ID for the iPayment service', '6', '3', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('User Password', 'MODULE_PAYMENT_IPAYMENT_PASSWORD', '0', 'The user password for the iPayment service', '6', '4', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_IPAYMENT_TRANSACTION_METHOD', 'Authorization', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Capture\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Hash Password', 'MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD', '', 'The secret hash password to validate transactions with', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_IPAYMENT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_IPAYMENT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
@@ -187,7 +190,22 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_IPAYMENT_STATUS', 'MODULE_PAYMENT_IPAYMENT_ID', 'MODULE_PAYMENT_IPAYMENT_USER_ID', 'MODULE_PAYMENT_IPAYMENT_PASSWORD', 'MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD', 'MODULE_PAYMENT_IPAYMENT_ZONE', 'MODULE_PAYMENT_IPAYMENT_ORDER_STATUS_ID', 'MODULE_PAYMENT_IPAYMENT_SORT_ORDER');
+      return array('MODULE_PAYMENT_IPAYMENT_STATUS', 'MODULE_PAYMENT_IPAYMENT_ID', 'MODULE_PAYMENT_IPAYMENT_USER_ID', 'MODULE_PAYMENT_IPAYMENT_PASSWORD', 'MODULE_PAYMENT_IPAYMENT_TRANSACTION_METHOD', 'MODULE_PAYMENT_IPAYMENT_SECRET_HASH_PASSWORD', 'MODULE_PAYMENT_IPAYMENT_ZONE', 'MODULE_PAYMENT_IPAYMENT_ORDER_STATUS_ID', 'MODULE_PAYMENT_IPAYMENT_SORT_ORDER');
+    }
+
+// format prices without currency formatting
+    function format_raw($number, $currency_code = '', $currency_value = '') {
+      global $currencies, $currency;
+
+      if (empty($currency_code) || !$this->is_set($currency_code)) {
+        $currency_code = $currency;
+      }
+
+      if (empty($currency_value) || !is_numeric($currency_value)) {
+        $currency_value = $currencies->currencies[$currency_code]['value'];
+      }
+
+      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>
