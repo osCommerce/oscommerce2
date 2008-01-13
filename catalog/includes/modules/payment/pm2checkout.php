@@ -17,7 +17,7 @@
     function pm2checkout() {
       global $order;
 
-      $this->signature = '2checkout|pm2checkout|1.0|2.2';
+      $this->signature = '2checkout|pm2checkout|1.1|2.2';
 
       $this->code = 'pm2checkout';
       $this->title = MODULE_PAYMENT_2CHECKOUT_TEXT_TITLE;
@@ -76,7 +76,7 @@
     }
 
     function process_button() {
-      global $HTTP_POST_VARS, $currencies, $order, $languages_id;
+      global $HTTP_POST_VARS, $currencies, $currency, $order, $languages_id;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', number_format($order->info['total'], 2)) .
@@ -100,7 +100,7 @@
         $process_button_string .= tep_draw_hidden_field('c_prod_' . ($i+1), (int)$order->products[$i]['id'] . ',' . (int)$order->products[$i]['qty']) .
                                   tep_draw_hidden_field('c_name_' . ($i+1), $order->products[$i]['name']) .
                                   tep_draw_hidden_field('c_description_' . ($i+1), $order->products[$i]['name']) .
-                                  tep_draw_hidden_field('c_price_' . ($i+1), $currencies->calculate_price($order->products[$i]['final_price'], $order->products[$i]['tax'], 1));
+                                  tep_draw_hidden_field('c_price_' . ($i+1), tep_round(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), $currencies->currencies[$currency]['decimal_places']));
       }
 
       $process_button_string .= tep_draw_hidden_field('id_type', '1');
