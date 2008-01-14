@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -35,5 +35,5 @@ define('ERROR_FILE_NOT_WRITEABLE', 'Fehler: Die Datei ist schreibgesch&uuml;tzt.
 define('ERROR_DIRECTORY_NOT_REMOVEABLE', 'Fehler: Das Verzeichnis kann nicht gel&ouml;scht werden. Bitte korrigieren Sie die Zugriffsrechte f&uuml;r: %s !');
 define('ERROR_FILE_NOT_REMOVEABLE', 'Fehler: Die Datei kann nicht gel&ouml;scht werden. Bitte korrigieren Sie die Zugriffsrechte f&uuml;r: %s !');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Verzeichnis %s existiert nicht!');
-define('ERROR_FILENAME_EMPTY', 'Error: Please enter a filename to store the contents in.');
+define('ERROR_FILENAME_EMPTY', 'Fehler: Bitte geben Sie einen Dateinamen an.');
 ?>
