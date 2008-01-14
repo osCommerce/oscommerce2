@@ -141,7 +141,7 @@
     function before_process() {
       global $HTTP_GET_VARS, $order, $currency;
 
-      if ($HTTP_GET_VARS['ret_errorcode'] != 0) {
+      if ($HTTP_GET_VARS['ret_errorcode'] != '0') {
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($HTTP_GET_VARS['ret_errormsg'])));
       }
 
