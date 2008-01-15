@@ -19,6 +19,16 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
     parameter has been removed as the test server only works with specific
     test-cases.
 
+* Retrieve product names in one query for the new products module.
+  [r1806]
+
+* When restoring a database, only drop tables that are being restored.
+  [r1804, r1805]
+
+* Display module version on the Administration Tool if it contains a version
+  signature string.
+  [r1802]
+
 * Add a .htaccess file to the admin/includes/ directory to prevent direct HTTP
   requests to PHP files.
   [r1775]
@@ -55,7 +65,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
   [r1747]
 
 * MySQL 5.0 Strict Mode compatibility fixes.
-  [r1746, 1755]
+  [r1746, 1755, 1810]
 
 * Fix logic with nested tables in the Administration Tool tableBlock class.
   [r1745]
@@ -109,9 +119,7 @@ xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
   [r1696]
 
 * Remove secondary pre-euro currencies from display.
-  Introduce new format_raw() class method to format prices without the
-  currency formatting.
-  [r1695, r1737]
+  [r1695]
 
 * Fix downloads when "Download by redirect" and "SEFU" are both enabled.
   Fallback to readfile() download delivery mechanism if direct download files.
