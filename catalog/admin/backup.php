@@ -372,7 +372,7 @@
     $dir = dir(DIR_FS_BACKUP);
     $contents = array();
     while ($file = $dir->read()) {
-      if (!is_dir(DIR_FS_BACKUP . $file)) {
+      if (!is_dir(DIR_FS_BACKUP . $file) && in_array(substr($file, -3), array('zip', 'sql', '.gz'))) {
         $contents[] = $file;
       }
     }
