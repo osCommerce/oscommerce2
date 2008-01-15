@@ -5624,12 +5624,13 @@ catalog/admin/includes/languages/german/modules.php</p>
 
 <ul>
   <li>When restoring a database, only drop tables that are being restored.</li>
+  <li>Show only .sql, .zip, and .gz files in the backups listing.</li>
 </ul>
 
 <p class="affectedFiles"><b>Affected Files</b><br />
 catalog/admin/backup.php</p>
 
-<span class="affectedFiles">File: catalog/admin/backup.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1805">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1805">raw</a>)</span>
+<span class="affectedFiles">File: catalog/admin/backup.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1821">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1821">raw</a>)</span>
 
 <table class="diff hardDiff unifiedDiff" cellspacing="0">
         <tr>
@@ -5739,6 +5740,36 @@ catalog/admin/backup.php</p>
         </tr>
         <tr>
                     <td class="diffLineNumbers">254</td><td class="diffLineNumbers">264</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tep_db_query($sql_array[$i]);</td>
+        </tr>
+   <tr class="diffSkipped">
+    <td class="diffLineNumbers">&nbsp;</td>
+    <td class="diffLineNumbers">&nbsp;</td>
+    <td class="diffMarkerCol"><pre class="diffPre">&hellip;</pre></td>
+    <td class="diffContent"><pre class="diffPre">&hellip;</pre></td>
+   </tr>
+        <tr>
+                    <td class="diffLineNumbers">362</td><td class="diffLineNumbers">372</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; $dir = dir(DIR_FS_BACKUP);</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">363</td><td class="diffLineNumbers">373</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; $contents = array();</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">364</td><td class="diffLineNumbers">374</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; while ($file = $dir-&gt;read()) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbersA">365</td><td class="diffLineNumbers">&nbsp;</td><td class="diffMarkerColA"><span class="textDelMarker">-</span></td><td class="lineContent ediffContentA">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!is_dir(DIR_FS_BACKUP . $file)) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">375</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent ediffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!is_dir(DIR_FS_BACKUP . $file) <span class="ediffChangedB">&amp;</span><span class="ediffChangedB">&amp;</span> <span class="ediffChangedB">in</span><span class="ediffChangedB">_</span><span class="ediffChangedB">array</span><span class="ediffChangedB">(</span><span class="ediffChangedB">substr</span><span class="ediffChangedB">(</span><span class="ediffChangedB">$</span><span class="ediffChangedB">file</span><span class="ediffChangedB">,</span> <span class="ediffChangedB">-</span><span class="ediffChangedB">3</span>)<span class="ediffChangedB">,</span> <span class="ediffChangedB">array</span><span class="ediffChangedB">(</span><span class="ediffChangedB">&#039;</span><span class="ediffChangedB">zip</span><span class="ediffChangedB">&#039;</span><span class="ediffChangedB">,</span> <span class="ediffChangedB">&#039;</span><span class="ediffChangedB">sql</span><span class="ediffChangedB">&#039;</span><span class="ediffChangedB">,</span> <span class="ediffChangedB">&#039;</span><span class="ediffChangedB">.</span><span class="ediffChangedB">gz</span><span class="ediffChangedB">&#039;</span><span class="ediffChangedB">)</span><span class="ediffChangedB">)</span><span class="ediffChangedB">)</span> {</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">366</td><td class="diffLineNumbers">376</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $contents[] = $file;</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">367</td><td class="diffLineNumbers">377</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">368</td><td class="diffLineNumbers">378</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; }</td>
         </tr>
 </table>
 
