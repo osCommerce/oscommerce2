@@ -17,7 +17,7 @@
     function paypal_direct() {
       global $order;
 
-      $this->signature = 'paypal|paypal_direct|1.0|2.2';
+      $this->signature = 'paypal|paypal_direct|1.1|2.2';
 
       $this->code = 'paypal_direct';
       $this->title = MODULE_PAYMENT_PAYPAL_DIRECT_TEXT_TITLE;
@@ -68,59 +68,153 @@
     }
 
     function selection() {
-      return array('id' => $this->code,
-                   'module' => $this->public_title);
+      $selection = array('id' => $this->code,
+                         'module' => $this->public_title);
+
+      if (MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE == 'Payment') {
+        global $order;
+
+        $types_array = array();
+        while (list($key, $value) = each($this->cc_types)) {
+          $types_array[] = array('id' => $key,
+                                 'text' => $value);
+        }
+
+        $today = getdate();
+
+        $months_array = array();
+        for ($i=1; $i<13; $i++) {
+          $months_array[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
+        }
+
+        $year_valid_from_array = array();
+        for ($i=$today['year']-10; $i < $today['year']+1; $i++) {
+          $year_valid_from_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        }
+
+        $year_expires_array = array();
+        for ($i=$today['year']; $i < $today['year']+10; $i++) {
+          $year_expires_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        }
+
+        $selection['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_OWNER,
+                                           'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_TYPE,
+                                           'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_NUMBER,
+                                           'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM,
+                                           'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM_INFO),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES,
+                                           'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_CVC,
+                                           'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
+                                     array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER,
+                                           'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER_INFO));
+      }
+
+      return $selection;
     }
 
     function pre_confirmation_check() {
+      if (MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE == 'Payment') {
+        global $HTTP_POST_VARS;
+
+        if (!isset($HTTP_POST_VARS['cc_owner']) || empty($HTTP_POST_VARS['cc_owner']) || (strlen($HTTP_POST_VARS['cc_owner']) < CC_OWNER_MIN_LENGTH) || !isset($HTTP_POST_VARS['cc_type']) || !isset($this->cc_types[$HTTP_POST_VARS['cc_type']]) || !isset($HTTP_POST_VARS['cc_number_nh-dns']) || empty($HTTP_POST_VARS['cc_number_nh-dns']) || (strlen($HTTP_POST_VARS['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
+          $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_DIRECT_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner=' . urlencode($HTTP_POST_VARS['cc_owner']) . '&cc_starts_month=' . $HTTP_POST_VARS['cc_starts_month'] . '&cc_starts_year=' . $HTTP_POST_VARS['cc_starts_year'] . '&cc_expires_month=' . $HTTP_POST_VARS['cc_expires_month'] . '&cc_expires_year=' . $HTTP_POST_VARS['cc_expires_year'];
+
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
+        }
+      }
+
       return false;
     }
 
     function confirmation() {
-      global $order;
+      $confirmation = array();
 
-      $types_array = array();
-      while (list($key, $value) = each($this->cc_types)) {
-        $types_array[] = array('id' => $key,
-                               'text' => $value);
+      if (MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE == 'Payment') {
+        global $HTTP_POST_VARS;
+
+        $confirmation['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_OWNER,
+                                              'field' => $HTTP_POST_VARS['cc_owner']),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_TYPE,
+                                              'field' => $this->cc_types[$HTTP_POST_VARS['cc_type']]),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_NUMBER,
+                                              'field' => str_repeat('X', strlen($HTTP_POST_VARS['cc_number_nh-dns']) - 4) . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4)),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM,
+                                              'field' => $HTTP_POST_VARS['cc_starts_month'] . '/' . $HTTP_POST_VARS['cc_starts_year']),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES,
+                                              'field' => $HTTP_POST_VARS['cc_expires_month'] . '/' . $HTTP_POST_VARS['cc_expires_year']),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_CVC,
+                                              'field' => $HTTP_POST_VARS['cc_cvc_nh-dns']));
+
+        if (isset($HTTP_POST_VARS['cc_issue_nh-dns']) && !empty($HTTP_POST_VARS['cc_issue_nh-dns'])) {
+          $confirmation['fields'][] = array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER,
+                                            'field' => $HTTP_POST_VARS['cc_issue_nh-dns']);
+        }
+      } else {
+        global $order;
+
+        $types_array = array();
+        while (list($key, $value) = each($this->cc_types)) {
+          $types_array[] = array('id' => $key,
+                                 'text' => $value);
+        }
+
+        $today = getdate();
+
+        $months_array = array();
+        for ($i=1; $i<13; $i++) {
+          $months_array[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
+        }
+
+        $year_valid_from_array = array();
+        for ($i=$today['year']-10; $i < $today['year']+1; $i++) {
+          $year_valid_from_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        }
+
+        $year_expires_array = array();
+        for ($i=$today['year']; $i < $today['year']+10; $i++) {
+          $year_expires_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
+        }
+
+        $confirmation['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_OWNER,
+                                              'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_TYPE,
+                                              'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_NUMBER,
+                                              'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM,
+                                              'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM_INFO),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES,
+                                              'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_CVC,
+                                              'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
+                                        array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER,
+                                              'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER_INFO));
       }
-
-      $today = getdate();
-
-      $months_array = array();
-      for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
-      }
-
-      $year_valid_from_array = array();
-      for ($i=$today['year']-10; $i < $today['year']+1; $i++) {
-        $year_valid_from_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
-      }
-
-      $year_expires_array = array();
-      for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $year_expires_array[] = array('id' => strftime('%Y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
-      }
-
-      $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_OWNER,
-                                                    'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_TYPE,
-                                                    'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_NUMBER,
-                                                    'field' => tep_draw_input_field('cc_number_nh-dns')),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM,
-                                                    'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_VALID_FROM_INFO),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_EXPIRES,
-                                                    'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_CVC,
-                                                    'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
-                                              array('title' => MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER,
-                                                    'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_DIRECT_CARD_ISSUE_NUMBER_INFO)));
 
       return $confirmation;
     }
 
     function process_button() {
+      if (MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE == 'Payment') {
+        global $HTTP_POST_VARS;
+
+        $process_button_string = tep_draw_hidden_field('cc_owner', $HTTP_POST_VARS['cc_owner']) .
+                                 tep_draw_hidden_field('cc_type', $HTTP_POST_VARS['cc_type']) .
+                                 tep_draw_hidden_field('cc_number_nh-dns', $HTTP_POST_VARS['cc_number_nh-dns']) .
+                                 tep_draw_hidden_field('cc_starts_month', $HTTP_POST_VARS['cc_starts_month']) .
+                                 tep_draw_hidden_field('cc_starts_year', $HTTP_POST_VARS['cc_starts_year']) .
+                                 tep_draw_hidden_field('cc_expires_month', $HTTP_POST_VARS['cc_expires_month']) .
+                                 tep_draw_hidden_field('cc_expires_year', $HTTP_POST_VARS['cc_expires_year']) .
+                                 tep_draw_hidden_field('cc_cvc_nh-dns', $HTTP_POST_VARS['cc_cvc_nh-dns']) .
+                                 tep_draw_hidden_field('cc_issue_nh-dns', $HTTP_POST_VARS['cc_issue_nh-dns']);
+
+        return $process_button_string;
+      }
+
       return false;
     }
 
@@ -197,6 +291,14 @@
     }
 
     function get_error() {
+      if (MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE == 'Payment') {
+        global $HTTP_GET_VARS;
+
+        $error = array('error' => stripslashes(urldecode($HTTP_GET_VARS['error'])));
+
+        return $error;
+      }
+
       return false;
     }
 
@@ -215,6 +317,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('API Signature', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_SIGNATURE', '', 'The signature to use for the PayPal API service.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_SERVER', 'Live', 'Use the live or testing (sandbox) gateway server to process transactions?', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Card Acceptance Page', 'MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE', 'Confirmation', 'The location to accept card information. Either on the Checkout Confirmation page or the Checkout Payment page.', '6', '0', 'tep_cfg_select_option(array(\'Confirmation\', \'Payment\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_DIRECT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYPAL_DIRECT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYPAL_DIRECT_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
@@ -226,7 +329,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_PAYPAL_DIRECT_STATUS', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_USERNAME', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_PASSWORD', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_SIGNATURE', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_DIRECT_ZONE', 'MODULE_PAYMENT_PAYPAL_DIRECT_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_DIRECT_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_DIRECT_CURL');
+      return array('MODULE_PAYMENT_PAYPAL_DIRECT_STATUS', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_USERNAME', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_PASSWORD', 'MODULE_PAYMENT_PAYPAL_DIRECT_API_SIGNATURE', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_SERVER', 'MODULE_PAYMENT_PAYPAL_DIRECT_TRANSACTION_METHOD', 'MODULE_PAYMENT_PAYPAL_DIRECT_CARD_INPUT_PAGE', 'MODULE_PAYMENT_PAYPAL_DIRECT_ZONE', 'MODULE_PAYMENT_PAYPAL_DIRECT_ORDER_STATUS_ID', 'MODULE_PAYMENT_PAYPAL_DIRECT_SORT_ORDER', 'MODULE_PAYMENT_PAYPAL_DIRECT_CURL');
     }
 
     function sendTransactionToGateway($url, $parameters) {
