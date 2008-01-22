@@ -287,8 +287,6 @@
         parse_str($response, $response_array);
 
         if ($response_array['RESULT'] != '0') {
-          var_dump($post_string);
-          var_dump($response_array);exit;
           switch ($response_array['RESULT']) {
             case '1':
             case '26':
