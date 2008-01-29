@@ -17,7 +17,7 @@
     function paypal_express() {
       global $order;
 
-      $this->signature = 'paypal|paypal_express|1.0|2.2';
+      $this->signature = 'paypal|paypal_express|1.1|2.2';
 
       $this->code = 'paypal_express';
       $this->title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_TITLE;
@@ -107,7 +107,7 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments;
+      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments;
 
       if (empty($comments)) {
         if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
@@ -117,23 +117,10 @@
         }
       }
 
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
-                      'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
-                      'VERSION' => '3.2',
-                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
-                      'METHOD' => 'DoExpressCheckoutPayment',
-                      'TOKEN' => $ppe_token,
-                      'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
+      $params = array('TOKEN' => $ppe_token,
                       'PAYERID' => $ppe_payerid,
                       'AMT' => $this->format_raw($order->info['total']),
-                      'CURRENCYCODE' => $order->info['currency'],
-                      'BUTTONSOURCE' => 'osCommerce22_Default_EC');
+                      'CURRENCYCODE' => $order->info['currency']);
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
@@ -144,20 +131,21 @@
         $params['SHIPTOZIP'] = $order->delivery['postcode'];
       }
 
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
+      $response_array = $this->doExpressCheckoutPayment($params);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+      }
+
+      if (!tep_session_is_registered('customer_id')) {
+        $response_array = $this->getExpressCheckoutDetails($ppe_token);
+
+        $customer_id = 0;
+        $order->customer['email_address'] = $response_array['EMAIL'];
+
+        if (isset($response_array['PHONENUM']) && !empty($response_array['PHONENUM'])) {
+          $order->customer['telephone'] = $response_array['PHONENUM'];
+        }
       }
     }
 
@@ -249,6 +237,104 @@
       }
 
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+    }
+
+    function setExpressCheckout($parameters) {
+      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+        $api_url = 'https://api-3t.paypal.com/nvp';
+      } else {
+        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
+                      'VERSION' => '3.2',
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
+                      'METHOD' => 'SetExpressCheckout',
+                      'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
+                      'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
+                      'CANCELURL' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false));
+
+      if (is_array($parameters) && !empty($parameters)) {
+        $params = array_merge($params, $parameters);
+      }
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($api_url, $post_string);
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      return $response_array;
+    }
+
+    function getExpressCheckoutDetails($token) {
+      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+        $api_url = 'https://api-3t.paypal.com/nvp';
+      } else {
+        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
+                      'VERSION' => '3.2',
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
+                      'METHOD' => 'GetExpressCheckoutDetails',
+                      'TOKEN' => $token);
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($api_url, $post_string);
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      return $response_array;
+    }
+
+    function doExpressCheckoutPayment($parameters) {
+      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+        $api_url = 'https://api-3t.paypal.com/nvp';
+      } else {
+        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
+                      'VERSION' => '3.2',
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
+                      'METHOD' => 'DoExpressCheckoutPayment',
+                      'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
+                      'BUTTONSOURCE' => 'osCommerce22_Default_EC');
+
+      if (is_array($parameters) && !empty($parameters)) {
+        $params = array_merge($params, $parameters);
+      }
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($api_url, $post_string);
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      return $response_array;
     }
   }
 ?>
