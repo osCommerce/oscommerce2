@@ -2095,7 +2095,7 @@ catalog/checkout_success.php</p>
 catalog/admin/includes/functions/sessions.php<br />
 catalog/includes/functions/sessions.php</p>
 
-<span class="affectedFiles">File: catalog/admin/includes/functions/sessions.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/sessions.php?r1=1583&r2=1741">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/sessions.php?r1=1583&r2=1741">raw</a>)</span>
+<span class="affectedFiles">File: catalog/admin/includes/functions/sessions.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/sessions.php?r1=1583&r2=1830">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/sessions.php?r1=1583&r2=1830">raw</a>)</span>
 
 <table class="diff hardDiff unifiedDiff" cellspacing="0">
         <tr>
@@ -2174,10 +2174,10 @@ catalog/includes/functions/sessions.php</p>
                     <td class="diffLineNumbers">118</td><td class="diffLineNumbers">122</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; } else {</td>
         </tr>
         <tr>
-            <td class="diffLineNumbersA">119</td><td class="diffLineNumbers">&nbsp;</td><td class="diffMarkerColA"><span class="textDelMarker">-</span></td><td class="lineContent ediffContentA">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return <span class="ediffChangedA">isset</span>($_SESSION<span class="ediffChangedA">[</span><span class="ediffChangedA">$</span><span class="ediffChangedA">variable</span><span class="ediffChangedA">]</span>);</td>
+            <td class="diffLineNumbersA">119</td><td class="diffLineNumbers">&nbsp;</td><td class="diffMarkerColA"><span class="textDelMarker">-</span></td><td class="lineContent ediffContentA">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return isset($_SESSION<span class="ediffChangedA">[</span>$variable<span class="ediffChangedA">]</span>);</td>
         </tr>
         <tr>
-            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">123</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent ediffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return <span class="ediffChangedB">array</span><span class="ediffChangedB">_</span><span class="ediffChangedB">key</span><span class="ediffChangedB">_</span><span class="ediffChangedB">exists</span>($<span class="ediffChangedB">variable</span><span class="ediffChangedB">,</span> <span class="ediffChangedB">$</span>_SESSION);</td>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">123</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent ediffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return isset($_SESSION<span class="ediffChangedB">)</span> <span class="ediffChangedB">&amp;</span><span class="ediffChangedB">&amp;</span> <span class="ediffChangedB">array</span><span class="ediffChangedB">_</span><span class="ediffChangedB">key</span><span class="ediffChangedB">_</span><span class="ediffChangedB">exists</span><span class="ediffChangedB">(</span>$variable<span class="ediffChangedB">,</span> <span class="ediffChangedB">$</span><span class="ediffChangedB">_</span><span class="ediffChangedB">SESSION</span>);</td>
         </tr>
         <tr>
                     <td class="diffLineNumbers">120</td><td class="diffLineNumbers">124</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; }</td>
@@ -2192,7 +2192,7 @@ catalog/includes/functions/sessions.php</p>
 
 <br />
 
-<span class="affectedFiles">File: catalog/includes/functions/sessions.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/includes/functions/sessions.php?r1=1647&r2=1741">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/includes/functions/sessions.php?r1=1647&r2=1741">raw</a>)</span>
+<span class="affectedFiles">File: catalog/includes/functions/sessions.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/includes/functions/sessions.php?r1=1647&r2=1830">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/includes/functions/sessions.php?r1=1647&r2=1830">raw</a>)</span>
 
 <table class="diff hardDiff unifiedDiff" cellspacing="0">
         <tr>
@@ -2292,10 +2292,10 @@ catalog/includes/functions/sessions.php</p>
                     <td class="diffLineNumbers">119</td><td class="diffLineNumbers">126</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; } else {</td>
         </tr>
         <tr>
-            <td class="diffLineNumbersA">120</td><td class="diffLineNumbers">&nbsp;</td><td class="diffMarkerColA"><span class="textDelMarker">-</span></td><td class="lineContent ediffContentA">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return <span class="ediffChangedA">isset</span>($_SESSION<span class="ediffChangedA">[</span><span class="ediffChangedA">$</span><span class="ediffChangedA">variable</span><span class="ediffChangedA">]</span>);</td>
+            <td class="diffLineNumbersA">120</td><td class="diffLineNumbers">&nbsp;</td><td class="diffMarkerColA"><span class="textDelMarker">-</span></td><td class="lineContent ediffContentA">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return isset($_SESSION<span class="ediffChangedA">[</span>$variable<span class="ediffChangedA">]</span>);</td>
         </tr>
         <tr>
-            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">127</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent ediffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return <span class="ediffChangedB">array</span><span class="ediffChangedB">_</span><span class="ediffChangedB">key</span><span class="ediffChangedB">_</span><span class="ediffChangedB">exists</span>($<span class="ediffChangedB">variable</span><span class="ediffChangedB">,</span> <span class="ediffChangedB">$</span>_SESSION);</td>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">127</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent ediffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return isset($_SESSION<span class="ediffChangedB">)</span> <span class="ediffChangedB">&amp;</span><span class="ediffChangedB">&amp;</span> <span class="ediffChangedB">array</span><span class="ediffChangedB">_</span><span class="ediffChangedB">key</span><span class="ediffChangedB">_</span><span class="ediffChangedB">exists</span><span class="ediffChangedB">(</span>$variable<span class="ediffChangedB">,</span> <span class="ediffChangedB">$</span><span class="ediffChangedB">_</span><span class="ediffChangedB">SESSION</span>);</td>
         </tr>
         <tr>
                     <td class="diffLineNumbers">121</td><td class="diffLineNumbers">128</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; }</td>
@@ -5628,7 +5628,8 @@ catalog/admin/includes/languages/german/modules.php</p>
 </ul>
 
 <p class="affectedFiles"><b>Affected Files</b><br />
-catalog/admin/backup.php</p>
+catalog/admin/backup.php<br />
+catalog/admin/includes/functions/compatibility.php</p>
 
 <span class="affectedFiles">File: catalog/admin/backup.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1821">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/backup.php?r1=1755&r2=1821">raw</a>)</span>
 
@@ -5770,6 +5771,112 @@ catalog/admin/backup.php</p>
         </tr>
         <tr>
                     <td class="diffLineNumbers">368</td><td class="diffLineNumbers">378</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+</table>
+
+<br />
+
+<span class="affectedFiles">File: catalog/admin/includes/functions/compatibility.php (<a href="http://svn.oscommerce.com/fisheye/browse/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/compatibility.php?r1=1748&r2=1829">online</a>) (<a href="http://svn.oscommerce.com/fisheye/rdiff/osCommerce/oscommerce2/trunk/catalog/admin/includes/functions/compatibility.php?r1=1748&r2=1829">raw</a>)</span>
+
+<table class="diff hardDiff unifiedDiff" cellspacing="0">
+        <tr>
+                    <td class="diffLineNumbers">237</td><td class="diffLineNumbers">237</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return implode($arg_separator, $tmp);</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">238</td><td class="diffLineNumbers">238</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">239</td><td class="diffLineNumbers">239</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">&nbsp; }</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">240</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">241</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">/*</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">242</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;* stripos() natively supported from PHP 5.0</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">243</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;* From Pear::PHP_Compat</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">244</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;*/</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">245</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">246</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp; if (!function_exists(&#039;stripos&#039;)) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">247</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp; function stripos($haystack, $needle, $offset = null) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">248</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $fix = 0;</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">249</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">250</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (!is_null($offset)) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">251</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if ($offset &gt; 0) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">252</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $haystack = substr($haystack, $offset, strlen($haystack) - $offset);</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">253</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $fix = $offset;</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">254</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">255</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">256</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">257</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $segments = explode(strtolower($needle), strtolower($haystack), 2);</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">258</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">259</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">// Check there was a match</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">260</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (count($segments) == 1) {</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">261</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">262</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">263</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">264</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $position = strlen($segments[0]) + $fix;</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">265</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB"></td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">266</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return $position;</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">267</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp;&nbsp;&nbsp; }</td>
+        </tr>
+        <tr>
+            <td class="diffLineNumbers">&nbsp;</td><td class="diffLineNumbersB">268</td><td class="diffMarkerColB"><span class="textAddMarker">+</span></td><td class="lineContent diffContentB">&nbsp; }</td>
+        </tr>
+        <tr>
+                    <td class="diffLineNumbers">240</td><td class="diffLineNumbers">269</td><td class="diffMarkerCol">&nbsp;</td><td class="lineContent diffContent">?&gt;</td>
         </tr>
 </table>
 

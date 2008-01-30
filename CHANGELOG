@@ -4,7 +4,24 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2008 osCommerce
 
 ------------------------------------------------------------------------------
-xx/xx/xxxx osCommerce Online Merchant 2.2 RC2
+01/30/2008 osCommerce Online Merchant 2.2 RC2a
+------------------------------------------------------------------------------
+
+Due to two bugs that were introduced with 2.2 RC2, it has been repackaged as
+2.2 RC2a with the following changes:
+
+* The Administration Tool -> Backup Manager -> Restoration routine failed on
+  PHP <5 servers due to the use of stripos(). A compatibility function has
+  been added to fix this.
+  [r1829]
+
+* The reference of $_SESSION in the tep_session_is_registered() function
+  produces a PHP warning when the session has not been started (ie, for search
+  engine spiders). This has been fixed by checking if $_SESSION is set.
+  [r1830]
+
+------------------------------------------------------------------------------
+01/16/2008 osCommerce Online Merchant 2.2 RC2
 ------------------------------------------------------------------------------
 
 * Payment module changes:
