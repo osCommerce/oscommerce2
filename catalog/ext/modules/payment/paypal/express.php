@@ -15,6 +15,17 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!tep_session_is_registered('customer_id')) {
+    if ($cart->get_content_type() != 'physical') {
+      $snapshot = array('page' => 'ext/modules/payment/paypal/express.php',
+                        'mode' => $request_type,
+                        'get' => $HTTP_GET_VARS,
+                        'post' => $HTTP_POST_VARS);
+
+      $navigation->set_snapshot($snapshot);
+
+      tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    }
+
     $customer_id = 0;
     $customer_default_address_id = 0;
   }
