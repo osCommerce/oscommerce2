@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -124,7 +124,7 @@
     if (PHP_VERSION < 4.3) {
       return session_is_registered($variable);
     } else {
-      return array_key_exists($variable, $_SESSION);
+      return isset($_SESSION) && array_key_exists($variable, $_SESSION);
     }
   }
 
