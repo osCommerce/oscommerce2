@@ -135,6 +135,13 @@
 
     $current_page = basename($PHP_SELF);
 
+// if the first page request is to the login page, set the current page to the index page
+// so the redirection on a successful login is not made to the login page again
+    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
+      $current_page = FILENAME_DEFAULT;
+      $HTTP_GET_VARS = array();
+    }
+
     if ($current_page != FILENAME_LOGIN) {
       if (!tep_session_is_registered('redirect_origin')) {
         tep_session_register('redirect_origin');
@@ -143,11 +150,19 @@
                                  'get' => $HTTP_GET_VARS);
       }
 
+// try to automatically login with the HTTP Authentication values if it exists
+      if (!tep_session_is_registered('auth_ignore')) {
+        if (isset($HTTP_SERVER_VARS['PHP_AUTH_USER']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_USER']) && isset($HTTP_SERVER_VARS['PHP_AUTH_PW']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_PW'])) {
+          $redirect_origin['auth_user'] = $HTTP_SERVER_VARS['PHP_AUTH_USER'];
+          $redirect_origin['auth_pw'] = $HTTP_SERVER_VARS['PHP_AUTH_PW'];
+        }
+      }
+
       $redirect = true;
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
