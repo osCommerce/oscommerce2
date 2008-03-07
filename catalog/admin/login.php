@@ -17,11 +17,21 @@
 
   $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
 
+// prepare to logout an active administrator if the login page is accessed again
+  if (tep_session_is_registered('admin')) {
+    $action = 'logoff';
+  }
+
   if (tep_not_null($action)) {
     switch ($action) {
       case 'process':
-        $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user'])) {
+          $username = tep_db_prepare_input($redirect_origin['auth_user']);
+          $password = tep_db_prepare_input($redirect_origin['auth_pw']);
+        } else {
+          $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
+          $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+        }
 
         $check_query = tep_db_query("select id, user_name, user_password from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "'");
 
@@ -58,6 +68,12 @@
       case 'logoff':
         tep_session_unregister('selected_box');
         tep_session_unregister('admin');
+
+        if (isset($HTTP_SERVER_VARS['PHP_AUTH_USER']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_USER']) && isset($HTTP_SERVER_VARS['PHP_AUTH_PW']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_PW'])) {
+          tep_session_register('auth_ignore');
+          $auth_ignore = true;
+        }
+
         tep_redirect(tep_href_link(FILENAME_DEFAULT));
 
         break;
