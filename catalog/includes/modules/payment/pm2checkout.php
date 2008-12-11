@@ -134,7 +134,7 @@
     function before_process() {
       global $HTTP_POST_VARS;
 
-      if ($HTTP_POST_VARS['credit_card_processed'] != 'Y') {
+      if ( ($HTTP_POST_VARS['credit_card_processed'] != 'Y') && ($HTTP_POST_VARS['credit_card_processed'] != 'K') ){
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
       }
     }
