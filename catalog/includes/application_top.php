@@ -200,6 +200,12 @@
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
   }
 
+// initialize a session token
+  if (!tep_session_is_registered('sessiontoken')) {
+    $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+    tep_session_register('sessiontoken');
+  }
+
 // set SID once, even if empty
   $SID = (defined('SID') ? SID : '');
 
