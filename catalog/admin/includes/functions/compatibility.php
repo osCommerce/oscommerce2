@@ -80,7 +80,7 @@
   if (!function_exists('checkdnsrr')) {
     function checkdnsrr($host, $type) {
       if(tep_not_null($host) && tep_not_null($type)) {
-        @exec("nslookup -type=$type $host", $output);
+        @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output);
         while(list($k, $line) = each($output)) {
           if(eregi("^$host", $line)) {
             return true;
