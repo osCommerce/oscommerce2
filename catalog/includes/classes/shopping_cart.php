@@ -56,6 +56,9 @@
       }
 
       $this->cleanup();
+
+// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
+      $this->cartID = $this->generate_cart_id();
     }
 
     function reset($reset_database = false) {
