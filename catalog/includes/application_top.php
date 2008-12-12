@@ -93,6 +93,7 @@
       $GET_array = array();
       $PHP_SELF = str_replace(getenv('PATH_INFO'), '', $PHP_SELF);
       $vars = explode('/', substr(getenv('PATH_INFO'), 1));
+      do_magic_quotes_gpc($vars);
       for ($i=0, $n=sizeof($vars); $i<$n; $i++) {
         if (strpos($vars[$i], '[]')) {
           $GET_array[substr($vars[$i], 0, -2)][] = $vars[$i+1];
