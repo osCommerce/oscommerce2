@@ -12,7 +12,7 @@
 
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_TITLE', 'PayPal Website Payments Pro - Direct Payments');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_PUBLIC_TITLE', 'Tarjeta de Cr&eacute;dito or tarjeta del banco');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION', '<b>Attencion: PayPal necesita el PayPal Express Checkout M&oacute;dulo de Pago cuando este M&oacute;dulo esta instalado.</b><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" target="_blank" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>&nbsp;<a href="javascript:toggleDivBlock(\'paypalDirectInfo\');">(info)</a><span id="paypalDirectInfo" style="display: none;"><br><i>Con el uso del Link para usar PayPal osCommerce dar a cada Cliente nuevo un pequeno Bonus.</i></span>');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION', '<b>Attencion: PayPal necesita el PayPal Website Payments Pro - Express Checkout M&oacute;dulo de Pago cuando este M&oacute;dulo esta instalado.</b><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com/mrb/pal=PS2X9Q773CKG4" target="_blank" style="text-decoration: underline; font-weight: bold;">Visita la web de PayPal</a>&nbsp;<a href="javascript:toggleDivBlock(\'paypalDirectInfo\');">(info)</a><span id="paypalDirectInfo" style="display: none;"><br><i>Con el uso del Link para usar PayPal osCommerce dar a cada Cliente nuevo un pequeno Bonus.</i></span>');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER', 'Titular de la tarjeta:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE', 'Tipo de tarjeta:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER', 'N&uacute;mero de tarjeta:');
