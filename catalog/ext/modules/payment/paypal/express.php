@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2008 osCommerce
 
   Released under the GNU General Public License
 */
@@ -35,11 +35,11 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  require('includes/modules/payment/paypal_pro_ec.php');
+  require('includes/modules/payment/paypal_express.php');
 
-  $paypal_pro_ec = new paypal_pro_ec();
+  $paypal_express = new paypal_express();
 
-  if (!$paypal_pro_ec->check() || !$paypal_pro_ec->enabled) {
+  if (!$paypal_express->check() || !$paypal_express->enabled) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -60,7 +60,7 @@
 
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'retrieve':
-      $response_array = $paypal_pro_ec->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
+      $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         include(DIR_WS_CLASSES . 'order.php');
@@ -201,7 +201,7 @@
           }
 
           if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_pro_ec->code;
+          $payment = $paypal_express->code;
 
           if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
           $ppe_token = $response_array['TOKEN'];
@@ -221,7 +221,7 @@
           $sendto = false;
 
           if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_pro_ec->code;
+          $payment = $paypal_express->code;
 
           if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
           $ppe_token = $response_array['TOKEN'];
@@ -238,7 +238,7 @@
       break;
 
     default:
-      if (MODULE_PAYMENT_PAYPAL_PRO_EC_TRANSACTION_SERVER == 'Live') {
+      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
       } else {
         $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
@@ -247,14 +247,14 @@
       include(DIR_WS_CLASSES . 'order.php');
       $order = new order;
 
-      $params = array('AMT' => $paypal_pro_ec->format_raw($order->info['total']),
+      $params = array('AMT' => $paypal_express->format_raw($order->info['total']),
                       'CURRENCYCODE' => $order->info['currency']);
 
       if ($order->content_type == 'virtual') {
         $params['NOSHIPPING'] = '1';
       }
 
-      $response_array = $paypal_pro_ec->setExpressCheckout($params);
+      $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
