@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2009 osCommerce
 
   Released under the GNU General Public License
 */
@@ -262,7 +262,7 @@
       $post_string = '';
 
       foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
       }
 
       $post_string = substr($post_string, 0, -1);
@@ -291,7 +291,7 @@
       $post_string = '';
 
       foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
       }
 
       $post_string = substr($post_string, 0, -1);
@@ -325,7 +325,7 @@
       $post_string = '';
 
       foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
       }
 
       $post_string = substr($post_string, 0, -1);
