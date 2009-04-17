@@ -136,17 +136,6 @@
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
-
-      if (!tep_session_is_registered('customer_id')) {
-        $response_array = $this->getExpressCheckoutDetails($ppe_token);
-
-        $customer_id = 0;
-        $order->customer['email_address'] = $response_array['EMAIL'];
-
-        if (isset($response_array['PHONENUM']) && !empty($response_array['PHONENUM'])) {
-          $order->customer['telephone'] = $response_array['PHONENUM'];
-        }
-      }
     }
 
     function after_process() {
@@ -248,7 +237,7 @@
 
       $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
                       'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
-                      'VERSION' => '3.2',
+                      'VERSION' => '56.0',
                       'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
                       'METHOD' => 'SetExpressCheckout',
                       'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
@@ -283,7 +272,7 @@
 
       $params = array('USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
                       'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
-                      'VERSION' => '3.2',
+                      'VERSION' => '56.0',
                       'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
                       'METHOD' => 'GetExpressCheckoutDetails',
                       'TOKEN' => $token);
