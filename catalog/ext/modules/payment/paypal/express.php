@@ -270,34 +270,29 @@
               }
             }
           }
-
-          if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_express->code;
-
-          if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
-          $ppe_token = $response_array['TOKEN'];
-
-          if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
-          $ppe_payerid = $response_array['PAYERID'];
-
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         } else {
           if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
           $shipping = false;
 
           $sendto = false;
-
-          if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_express->code;
-
-          if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
-          $ppe_token = $response_array['TOKEN'];
-
-          if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
-          $ppe_payerid = $response_array['PAYERID'];
-
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
+
+        if (!tep_session_is_registered('payment')) tep_session_register('payment');
+        $payment = $paypal_express->code;
+
+        if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
+        $ppe_token = $response_array['TOKEN'];
+
+        if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
+        $ppe_payerid = $response_array['PAYERID'];
+
+        if (!tep_session_is_registered('ppe_payerstatus')) tep_session_register('ppe_payerstatus');
+        $ppe_payerstatus = $response_array['PAYERSTATUS'];
+
+        if (!tep_session_is_registered('ppe_addressstatus')) tep_session_register('ppe_addressstatus');
+        $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
+
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
