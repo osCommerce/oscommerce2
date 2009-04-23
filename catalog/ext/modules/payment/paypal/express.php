@@ -17,9 +17,9 @@
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
-  }
+//  if ($cart->count_contents() < 1) {
+//    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+//  }
 
 // initialize variables if the customer is not logged in
   if (!tep_session_is_registered('customer_id')) {
@@ -50,6 +50,173 @@
   $cartID = $cart->cartID;
 
   switch ($HTTP_GET_VARS['osC_Action']) {
+    case 'callbackSet':
+// Can't use getExpressCheckoutDetails to verify the request as it breaks the callback response :-(
+//      $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_POST_VARS['TOKEN']);
+
+//      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+        $counter = 0;
+
+        while (true) {
+          if (isset($HTTP_POST_VARS['L_NUMBER' . $counter])) {
+            $cart->add_cart($HTTP_POST_VARS['L_NUMBER' . $counter], $HTTP_POST_VARS['L_QTY' . $counter]);
+          } else {
+            break;
+          }
+
+          $counter++;
+        }
+
+// exit if there is nothing in the shopping cart
+        if ($cart->count_contents() < 1) {
+          exit;
+        }
+
+        $sendto = array('firstname' => '',
+                        'lastname' => '',
+                        'company' => '',
+                        'street_address' => '',
+                        'suburb' => '',
+                        'postcode' => $HTTP_POST_VARS['SHIPTOZIP'],
+                        'city' => $HTTP_POST_VARS['SHIPTOCITY'],
+                        'zone_id' => '',
+                        'zone_name' => $HTTP_POST_VARS['SHIPTOSTATE'],
+                        'country_id' => '',
+                        'country_name' => $HTTP_POST_VARS['SHIPTOCOUNTRY'],
+                        'country_iso_code_2' => '',
+                        'country_iso_code_3' => '',
+                        'address_format_id' => '');
+
+        $country_query = tep_db_query("select * from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($sendto['country_name']) . "' limit 1");
+        if (tep_db_num_rows($country_query)) {
+          $country = tep_db_fetch_array($country_query);
+
+          $sendto['country_id'] = $country['countries_id'];
+          $sendto['country_name'] = $country['countries_name'];
+          $sendto['country_iso_code_2'] = $country['countries_iso_code_2'];
+          $sendto['country_iso_code_3'] = $country['countries_iso_code_3'];
+          $sendto['address_format_id'] = $country['address_format_id'];
+        }
+
+        if ($sendto['country_id'] > 0) {
+          $zone_query = tep_db_query("select * from " . TABLE_ZONES . " where zone_country_id = '" . (int)$sendto['country_id'] . "' and (zone_name = '" . tep_db_input($sendto['zone_name']) . "' or zone_code = '" . tep_db_input($sendto['zone_name']) . "') limit 1");
+          if (tep_db_num_rows($zone_query)) {
+            $zone = tep_db_fetch_array($zone_query);
+
+            $sendto['zone_id'] = $zone['zone_id'];
+            $sendto['zone_name'] = $zone['zone_name'];
+          }
+        }
+
+        $billto = $sendto;
+
+        $quotes_array = array();
+
+        include(DIR_WS_CLASSES . 'order.php');
+
+        if ($cart->get_content_type() != 'virtual') {
+          $order = new order;
+
+          $total_weight = $cart->show_weight();
+          $total_count = $cart->count_contents();
+
+// load all enabled shipping modules
+          include(DIR_WS_CLASSES . 'shipping.php');
+          $shipping_modules = new shipping;
+
+          $free_shipping = false;
+
+          if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
+            $pass = false;
+
+            switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
+              case 'national':
+                if ($order->delivery['country_id'] == STORE_COUNTRY) {
+                  $pass = true;
+                }
+                break;
+
+              case 'international':
+                if ($order->delivery['country_id'] != STORE_COUNTRY) {
+                  $pass = true;
+                }
+                break;
+
+              case 'both':
+                $pass = true;
+                break;
+            }
+
+            if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
+              $free_shipping = true;
+
+              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+            }
+          }
+
+          if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+            if ($free_shipping == true) {
+              $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
+                                      'label' => FREE_SHIPPING_TITLE,
+                                      'cost' => '0');
+            } else {
+// get all available shipping quotes
+              $quotes = $shipping_modules->quote();
+
+              foreach ($quotes as $quote) {
+                if (!isset($quote['error'])) {
+                  foreach ($quote['methods'] as $rate) {
+                    $quotes_array[] = array('name' => $quote['module'],
+                                            'label' => $rate['title'],
+                                            'cost' => $rate['cost']);
+                  }
+                }
+              }
+            }
+          }
+        } else {
+          $quotes_array[] = array('name' => 'No Shipping',
+                                  'label' => 'No Shipping',
+                                  'cost' => '0');
+        }
+
+        $params = array('METHOD' => 'CallbackResponse',
+                        'OFFERINSURANCEOPTION' => 'false');
+
+        $counter = 0;
+        $cheapest_rate = null;
+        $cheapest_counter = $counter;
+
+        foreach ($quotes_array as $quote) {
+          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+          $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
+          $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
+
+          if (is_null($cheapest_rate) || ($quote['cost'] < $cheapest_rate)) {
+            $cheapest_rate = $quote['cost'];
+            $cheapest_counter = $counter;
+          }
+
+          $counter++;
+        }
+
+        $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+
+        $post_string = '';
+
+        foreach ($params as $key => $value) {
+          $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+        }
+
+        $post_string = substr($post_string, 0, -1);
+
+        echo $post_string;
+//      }
+
+      exit;
+
+      break;
     case 'retrieve':
       $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
@@ -240,9 +407,30 @@
 // get all available shipping quotes
               $quotes = $shipping_modules->quote();
 
+              $shipping_set = false;
+
+// if available, set the selected shipping rate from PayPals order review page
+              if (isset($response_array['SHIPPINGOPTIONNAME']) && isset($response_array['SHIPPINGOPTIONAMOUNT'])) {
+                foreach ($quotes as $quote) {
+                  if (!isset($quote['error'])) {
+                    foreach ($quote['methods'] as $rate) {
+                      if ($response_array['SHIPPINGOPTIONNAME'] == $quote['module'] . ' (' . $rate['title'] . ')') {
+                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'])) {
+                          $shipping = $quote['id'] . '_' . $rate['id'];
+                          $shipping_set = true;
+                          break 2;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              if ($shipping_set == false) {
 // select cheapest shipping method
-              $shipping = $shipping_modules->cheapest();
-              $shipping = $shipping['id'];
+                $shipping = $shipping_modules->cheapest();
+                $shipping = $shipping['id'];
+              }
             }
           }
 
@@ -300,6 +488,11 @@
       break;
 
     default:
+      if (tep_session_is_registered('shipping')) {
+        $shipping = null;
+        tep_session_unregister('shipping');
+      }
+
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
       } else {
@@ -309,13 +502,134 @@
       include(DIR_WS_CLASSES . 'order.php');
       $order = new order;
 
-      $params = array('AMT' => $paypal_express->format_raw($order->info['total']),
+      $params = array('TAXAMT' => $order->info['tax'],
                       'CURRENCYCODE' => $order->info['currency']);
 
 // A billing address is required for digital orders so we use the shipping address PayPal provides
 //      if ($order->content_type == 'virtual') {
 //        $params['NOSHIPPING'] = '1';
 //      }
+
+      $line_item_no = 0;
+      $items_total = 0;
+
+      foreach ($order->products as $product) {
+        $params['L_NAME' . $line_item_no] = $product['name'];
+        $params['L_AMT' . $line_item_no] = $paypal_express->format_raw($product['final_price']);
+        $params['L_NUMBER' . $line_item_no] = $product['id'];
+        $params['L_QTY' . $line_item_no] = $product['qty'];
+
+        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+          $product_tax = $product['final_price'] - ($product['final_price'] / (($product['tax'] < 10) ? "1.0" . str_replace('.', '', $product['tax']) : "1." . str_replace('.', '', $product['tax'])));
+        } else {
+          $product_tax = ($product['tax'] / 100) * $product['final_price'];
+        }
+
+        $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
+
+        $items_total += $currencies->calculate_price($product['final_price'], $product['tax'], $product['qty']);
+
+        $line_item_no++;
+      }
+
+      $params['ITEMAMT'] = $items_total;
+
+      $params['INSURANCEOPTIONSOFFERED'] = 'false';
+
+      $quotes_array = array();
+
+      if ($cart->get_content_type() != 'virtual') {
+        $total_weight = $cart->show_weight();
+        $total_count = $cart->count_contents();
+
+// load all enabled shipping modules
+        include(DIR_WS_CLASSES . 'shipping.php');
+        $shipping_modules = new shipping;
+
+        $free_shipping = false;
+
+        if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
+          $pass = false;
+
+          switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
+            case 'national':
+              if ($order->delivery['country_id'] == STORE_COUNTRY) {
+                $pass = true;
+              }
+              break;
+
+            case 'international':
+              if ($order->delivery['country_id'] != STORE_COUNTRY) {
+                $pass = true;
+              }
+              break;
+
+            case 'both':
+              $pass = true;
+              break;
+          }
+
+          if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
+            $free_shipping = true;
+
+            include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+          }
+        }
+
+        if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+          if ($free_shipping == true) {
+            $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
+                                    'label' => FREE_SHIPPING_TITLE,
+                                    'cost' => '0');
+          } else {
+// get all available shipping quotes
+            $quotes = $shipping_modules->quote();
+
+            foreach ($quotes as $quote) {
+              if (!isset($quote['error'])) {
+                foreach ($quote['methods'] as $rate) {
+                  $quotes_array[] = array('name' => $quote['module'],
+                                          'label' => $rate['title'],
+                                          'cost' => $rate['cost']);
+                }
+              }
+            }
+          }
+        }
+      } else {
+        $quotes_array[] = array('name' => 'No Shipping',
+                                'label' => 'No Shipping',
+                                'cost' => '0');
+      }
+
+      $counter = 0;
+      $cheapest_rate = null;
+      $expensive_rate = null;
+      $cheapest_counter = $counter;
+
+      foreach ($quotes_array as $quote) {
+        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+        $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
+        $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
+
+        if (is_null($cheapest_rate) || ($quote['cost'] < $cheapest_rate)) {
+          $cheapest_rate = $quote['cost'];
+          $cheapest_counter = $counter;
+        }
+
+        if (is_null($expensive_rate) || ($quote['cost'] > $expensive_rate)) {
+          $expensive_rate = $quote['cost'];
+        }
+
+        $counter++;
+      }
+
+      $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+      $params['SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate);
+      $params['AMT'] = $paypal_express->format_raw($order->info['total'] + $cheapest_rate);
+      $params['MAXAMT'] = $paypal_express->format_raw($params['AMT'] + $expensive_rate + 100); // safely pad higher for dynamic shipping rates (eg, USPS express)
+      $params['CALLBACKTIMEOUT'] = '5';
 
       $response_array = $paypal_express->setExpressCheckout($params);
 
