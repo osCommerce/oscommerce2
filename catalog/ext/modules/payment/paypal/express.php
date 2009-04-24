@@ -16,11 +16,6 @@
   require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
 
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-//  if ($cart->count_contents() < 1) {
-//    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
-//  }
-
 // initialize variables if the customer is not logged in
   if (!tep_session_is_registered('customer_id')) {
     $customer_id = 0;
@@ -158,7 +153,8 @@
             if ($free_shipping == true) {
               $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
                                       'label' => FREE_SHIPPING_TITLE,
-                                      'cost' => '0');
+                                      'cost' => '0',
+                                      'tax' => '0');
             } else {
 // get all available shipping quotes
               $quotes = $shipping_modules->quote();
@@ -168,7 +164,8 @@
                   foreach ($quote['methods'] as $rate) {
                     $quotes_array[] = array('name' => $quote['module'],
                                             'label' => $rate['title'],
-                                            'cost' => $rate['cost']);
+                                            'cost' => $rate['cost'],
+                                            'tax' => isset($quote['tax']) ? $quote['tax'] : '0');
                   }
                 }
               }
@@ -177,7 +174,8 @@
         } else {
           $quotes_array[] = array('name' => 'No Shipping',
                                   'label' => 'No Shipping',
-                                  'cost' => '0');
+                                  'cost' => '0',
+                                  'tax' => '0');
         }
 
         $params = array('METHOD' => 'CallbackResponse',
@@ -192,6 +190,7 @@
           $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
+          $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
           if (is_null($cheapest_rate) || ($quote['cost'] < $cheapest_rate)) {
             $cheapest_rate = $quote['cost'];
@@ -218,6 +217,11 @@
 
       break;
     case 'retrieve':
+// if there is nothing in the customers cart, redirect them to the shopping cart page
+      if ($cart->count_contents() < 1) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      }
+
       $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
@@ -488,6 +492,11 @@
       break;
 
     default:
+// if there is nothing in the customers cart, redirect them to the shopping cart page
+      if ($cart->count_contents() < 1) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      }
+
       if (tep_session_is_registered('shipping')) {
         $shipping = null;
         tep_session_unregister('shipping');
@@ -502,8 +511,7 @@
       include(DIR_WS_CLASSES . 'order.php');
       $order = new order;
 
-      $params = array('TAXAMT' => $order->info['tax'],
-                      'CURRENCYCODE' => $order->info['currency']);
+      $params = array('CURRENCYCODE' => $order->info['currency']);
 
 // A billing address is required for digital orders so we use the shipping address PayPal provides
 //      if ($order->content_type == 'virtual') {
@@ -512,6 +520,7 @@
 
       $line_item_no = 0;
       $items_total = 0;
+      $tax_total = 0;
 
       foreach ($order->products as $product) {
         $params['L_NAME' . $line_item_no] = $product['name'];
@@ -526,6 +535,7 @@
         }
 
         $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
+        $tax_total += $params['L_TAXAMT' . $line_item_no];
 
         $items_total += $currencies->calculate_price($product['final_price'], $product['tax'], $product['qty']);
 
@@ -533,6 +543,7 @@
       }
 
       $params['ITEMAMT'] = $items_total;
+      $params['TAXAMT'] = $tax_total;
 
       $params['INSURANCEOPTIONSOFFERED'] = 'false';
 
@@ -580,7 +591,8 @@
           if ($free_shipping == true) {
             $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
                                     'label' => FREE_SHIPPING_TITLE,
-                                    'cost' => '0');
+                                    'cost' => '0',
+                                    'tax' => '0');
           } else {
 // get all available shipping quotes
             $quotes = $shipping_modules->quote();
@@ -590,7 +602,8 @@
                 foreach ($quote['methods'] as $rate) {
                   $quotes_array[] = array('name' => $quote['module'],
                                           'label' => $rate['title'],
-                                          'cost' => $rate['cost']);
+                                          'cost' => $rate['cost'],
+                                          'tax' => $quote['tax']);
                 }
               }
             }
@@ -599,7 +612,8 @@
       } else {
         $quotes_array[] = array('name' => 'No Shipping',
                                 'label' => 'No Shipping',
-                                'cost' => '0');
+                                'cost' => '0',
+                                'tax' => '0');
       }
 
       $counter = 0;
@@ -608,18 +622,20 @@
       $cheapest_counter = $counter;
 
       foreach ($quotes_array as $quote) {
+        $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+
         $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
         $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-        $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
+        $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
-        if (is_null($cheapest_rate) || ($quote['cost'] < $cheapest_rate)) {
-          $cheapest_rate = $quote['cost'];
+        if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
+          $cheapest_rate = $shipping_rate;
           $cheapest_counter = $counter;
         }
 
-        if (is_null($expensive_rate) || ($quote['cost'] > $expensive_rate)) {
-          $expensive_rate = $quote['cost'];
+        if (is_null($expensive_rate) || ($shipping_rate > $expensive_rate)) {
+          $expensive_rate = $shipping_rate;
         }
 
         $counter++;
@@ -627,7 +643,7 @@
 
       $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       $params['SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate);
-      $params['AMT'] = $paypal_express->format_raw($order->info['total'] + $cheapest_rate);
+      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['TAXAMT'] + $params['SHIPPINGAMT']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['AMT'] + $expensive_rate + 100); // safely pad higher for dynamic shipping rates (eg, USPS express)
       $params['CALLBACKTIMEOUT'] = '5';
 

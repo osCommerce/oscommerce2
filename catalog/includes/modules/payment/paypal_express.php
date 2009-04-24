@@ -80,8 +80,30 @@
     }
 
     function pre_confirmation_check() {
+      global $HTTP_GET_VARS, $order, $ppe_token;
+
       if (!tep_session_is_registered('ppe_token')) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
+      }
+
+      if (!isset($HTTP_GET_VARS['do'])) {
+        $response_array = $this->getExpressCheckoutDetails($ppe_token);
+
+        if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+// load the selected shipping module
+          include(DIR_WS_CLASSES . 'shipping.php');
+          $shipping_modules = new shipping($shipping);
+
+          include(DIR_WS_CLASSES . 'order_total.php');
+          $order_total_modules = new order_total;
+          $order_total_modules->process();
+
+          if ($response_array['AMT'] == $this->format_raw($order->info['total'])) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+          } else {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL'));
+          }
+        }
       }
     }
 
