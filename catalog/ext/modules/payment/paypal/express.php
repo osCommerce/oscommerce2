@@ -530,16 +530,12 @@
         $params['L_NUMBER' . $line_item_no] = $product['id'];
         $params['L_QTY' . $line_item_no] = $product['qty'];
 
-        if (DISPLAY_PRICE_WITH_TAX == 'true') {
-          $product_tax = $product['final_price'] - ($product['final_price'] / (($product['tax'] < 10) ? "1.0" . str_replace('.', '', $product['tax']) : "1." . str_replace('.', '', $product['tax'])));
-        } else {
-          $product_tax = ($product['tax'] / 100) * $product['final_price'];
-        }
+        $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
 
         $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
-        $tax_total += $params['L_TAXAMT' . $line_item_no];
+        $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
-        $items_total += $currencies->calculate_price($product['final_price'], $product['tax'], $product['qty']);
+        $items_total += $paypal_express->format_raw($product['final_price'] + $product_tax) * $product['qty'];
 
         $line_item_no++;
       }
@@ -645,7 +641,7 @@
 
       $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       $params['SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate);
-      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['TAXAMT'] + $params['SHIPPINGAMT']);
+      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['SHIPPINGAMT']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['AMT'] + $expensive_rate + 100); // safely pad higher for dynamic shipping rates (eg, USPS express)
       $params['CALLBACKTIMEOUT'] = '5';
 
