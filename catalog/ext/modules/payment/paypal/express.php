@@ -360,9 +360,9 @@
           tep_session_register('customer_default_address_id');
           tep_session_register('customer_country_id');
           tep_session_register('customer_zone_id');
-        }
 
-        $billto = $sendto;
+          $billto = $sendto;
+        }
 
         include(DIR_WS_CLASSES . 'order.php');
 
