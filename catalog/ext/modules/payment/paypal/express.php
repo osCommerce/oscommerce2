@@ -151,7 +151,8 @@
 
           if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
-              $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
+              $quotes_array[] = array('id' => 'free_free',
+                                      'name' => FREE_SHIPPING_TITLE,
                                       'label' => FREE_SHIPPING_TITLE,
                                       'cost' => '0',
                                       'tax' => '0');
@@ -162,7 +163,8 @@
               foreach ($quotes as $quote) {
                 if (!isset($quote['error'])) {
                   foreach ($quote['methods'] as $rate) {
-                    $quotes_array[] = array('name' => $quote['module'],
+                    $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
+                                            'name' => $quote['module'],
                                             'label' => $rate['title'],
                                             'cost' => $rate['cost'],
                                             'tax' => isset($quote['tax']) ? $quote['tax'] : '0');
@@ -172,7 +174,8 @@
             }
           }
         } else {
-          $quotes_array[] = array('name' => 'No Shipping',
+          $quotes_array[] = array('id' => 'null',
+                                  'name' => 'No Shipping',
                                   'label' => 'No Shipping',
                                   'cost' => '0',
                                   'tax' => '0');
@@ -188,7 +191,7 @@
         foreach ($quotes_array as $quote) {
           $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
@@ -421,7 +424,7 @@
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
                       if ($response_array['SHIPPINGOPTIONNAME'] == $quote['module'] . ' (' . $rate['title'] . ')') {
-                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'])) {
+                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']))) {
                           $shipping = $quote['id'] . '_' . $rate['id'];
                           $shipping_set = true;
                           break 2;
@@ -499,11 +502,6 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
-      if (tep_session_is_registered('shipping')) {
-        $shipping = null;
-        tep_session_unregister('shipping');
-      }
-
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
         $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
       } else {
@@ -542,6 +540,16 @@
 
       $params['ITEMAMT'] = $items_total;
       $params['TAXAMT'] = $tax_total;
+
+      if (tep_not_null($order->delivery['firstname'])) {
+        $params['ADDROVERRIDE'] = '1';
+        $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
+        $params['SHIPTOSTREET'] = $order->delivery['street_address'];
+        $params['SHIPTOCITY'] = $order->delivery['city'];
+        $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $params['SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
+        $params['SHIPTOZIP'] = $order->delivery['postcode'];
+      }
 
       $quotes_array = array();
 
@@ -586,7 +594,8 @@
         if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ($free_shipping == true) {
 // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//            $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
+//            $quotes_array[] = array('id' => 'free_free',
+//                                    'name' => FREE_SHIPPING_TITLE,
 //                                    'label' => FREE_SHIPPING_TITLE,
 //                                    'cost' => '0.00',
 //                                    'tax' => '0');
@@ -598,7 +607,8 @@
               if (!isset($quote['error'])) {
                 foreach ($quote['methods'] as $rate) {
                   if ($rate['cost'] > 0) { // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-                    $quotes_array[] = array('name' => $quote['module'],
+                    $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
+                                            'name' => $quote['module'],
                                             'label' => $rate['title'],
                                             'cost' => $rate['cost'],
                                             'tax' => $quote['tax']);
@@ -610,7 +620,8 @@
         }
       } else {
 // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//        $quotes_array[] = array('name' => 'No Shipping',
+//        $quotes_array[] = array('id' => 'null',
+//                                'name' => 'No Shipping',
 //                                'label' => 'No Shipping',
 //                                'cost' => '0',
 //                                'tax' => '0');
@@ -620,11 +631,12 @@
       $cheapest_rate = null;
       $expensive_rate = 0;
       $cheapest_counter = $counter;
+      $default_shipping = null;
 
       foreach ($quotes_array as $quote) {
         $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
         $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
         $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
@@ -638,7 +650,16 @@
           $expensive_rate = $shipping_rate;
         }
 
+        if (tep_not_null($shipping) && ($shipping['id'] == $quote['id'])) {
+          $default_shipping = $counter;
+        }
+
         $counter++;
+      }
+
+      if (!is_null($default_shipping)) {
+        $cheapest_rate = $params['L_SHIPPINGOPTIONAMOUNT' . $default_shipping];
+        $cheapest_counter = $default_shipping;
       }
 
       if (!is_null($cheapest_rate)) {
