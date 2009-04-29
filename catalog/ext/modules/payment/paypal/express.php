@@ -535,15 +535,13 @@
         $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
         $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
-        $items_total += $paypal_express->format_raw($product['final_price'] + $product_tax) * $product['qty'];
+        $items_total += $paypal_express->format_raw($product['final_price']) * $product['qty'];
 
         $line_item_no++;
       }
 
       $params['ITEMAMT'] = $items_total;
       $params['TAXAMT'] = $tax_total;
-
-      $params['INSURANCEOPTIONSOFFERED'] = 'false';
 
       $quotes_array = array();
 
@@ -587,10 +585,11 @@
 
         if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ($free_shipping == true) {
-            $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
-                                    'label' => FREE_SHIPPING_TITLE,
-                                    'cost' => '0',
-                                    'tax' => '0');
+// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
+//            $quotes_array[] = array('name' => FREE_SHIPPING_TITLE,
+//                                    'label' => FREE_SHIPPING_TITLE,
+//                                    'cost' => '0.00',
+//                                    'tax' => '0');
           } else {
 // get all available shipping quotes
             $quotes = $shipping_modules->quote();
@@ -598,25 +597,28 @@
             foreach ($quotes as $quote) {
               if (!isset($quote['error'])) {
                 foreach ($quote['methods'] as $rate) {
-                  $quotes_array[] = array('name' => $quote['module'],
-                                          'label' => $rate['title'],
-                                          'cost' => $rate['cost'],
-                                          'tax' => $quote['tax']);
+                  if ($rate['cost'] > 0) { // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
+                    $quotes_array[] = array('name' => $quote['module'],
+                                            'label' => $rate['title'],
+                                            'cost' => $rate['cost'],
+                                            'tax' => $quote['tax']);
+                  }
                 }
               }
             }
           }
         }
       } else {
-        $quotes_array[] = array('name' => 'No Shipping',
-                                'label' => 'No Shipping',
-                                'cost' => '0',
-                                'tax' => '0');
+// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
+//        $quotes_array[] = array('name' => 'No Shipping',
+//                                'label' => 'No Shipping',
+//                                'cost' => '0',
+//                                'tax' => '0');
       }
 
       $counter = 0;
       $cheapest_rate = null;
-      $expensive_rate = null;
+      $expensive_rate = 0;
       $cheapest_counter = $counter;
 
       foreach ($quotes_array as $quote) {
@@ -632,18 +634,26 @@
           $cheapest_counter = $counter;
         }
 
-        if (is_null($expensive_rate) || ($shipping_rate > $expensive_rate)) {
+        if ($shipping_rate > $expensive_rate) {
           $expensive_rate = $shipping_rate;
         }
 
         $counter++;
       }
 
-      $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+      if (!is_null($cheapest_rate)) {
+        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true)) ) { // Live server requires SSL to be enabled
+          $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+          $params['CALLBACKTIMEOUT'] = '5';
+        }
+
+        $params['INSURANCEOPTIONSOFFERED'] = 'false';
+        $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+      }
+
       $params['SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate);
-      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['SHIPPINGAMT']);
+      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['TAXAMT'] + $params['SHIPPINGAMT']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['AMT'] + $expensive_rate + 100); // safely pad higher for dynamic shipping rates (eg, USPS express)
-      $params['CALLBACKTIMEOUT'] = '5';
 
       $response_array = $paypal_express->setExpressCheckout($params);
 

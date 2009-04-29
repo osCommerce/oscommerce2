@@ -307,7 +307,6 @@
                       'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE,
                       'METHOD' => 'SetExpressCheckout',
                       'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
-                      'CALLBACK' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false),
                       'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
                       'CANCELURL' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false));
 
