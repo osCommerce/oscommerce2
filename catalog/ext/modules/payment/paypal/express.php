@@ -46,10 +46,7 @@
 
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'callbackSet':
-// Can't use getExpressCheckoutDetails to verify the request as it breaks the callback response :-(
-//      $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_POST_VARS['TOKEN']);
-
-//      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+      if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
 
         while (true) {
@@ -216,7 +213,7 @@
         $post_string = substr($post_string, 0, -1);
 
         echo $post_string;
-//      }
+      }
 
       exit;
 
@@ -249,7 +246,7 @@
             $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
             $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
 
-            $customer_password = tep_create_random_value(ENTRY_PASSWORD_MIN_LENGTH);
+            $customer_password = tep_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
 
             $sql_data_array = array('customers_firstname' => $customers_firstname,
                                     'customers_lastname' => $customers_lastname,
@@ -663,7 +660,7 @@
       }
 
       if (!is_null($cheapest_rate)) {
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true)) ) { // Live server requires SSL to be enabled
+        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
           $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
           $params['CALLBACKTIMEOUT'] = '5';
         }
