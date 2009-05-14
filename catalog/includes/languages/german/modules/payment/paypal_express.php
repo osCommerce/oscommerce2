@@ -22,5 +22,7 @@
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS', 'Anmerkungen:');
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_EMAIL_PASSWORD', 'An account has automatically been created for you with the following e-mail address and password:' . "\n\n" . 'Store Account E-Mail Address: %s' . "\n" . 'Store Account Password: %s' . "\n\n");
 
+  define('MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON', 'https://www.paypalobjects.com/de_DE/i/btn/btn_xpressCheckout.gif');
+
   unset($paypal_express_ping_button);
 ?>

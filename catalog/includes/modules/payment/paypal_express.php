@@ -59,10 +59,10 @@
     function checkout_initialization_method() {
       global $language;
 
-      if (file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif')) {
-        $image = 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif';
+      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON') && ereg('^https\:\/\/www\.paypalobjects\.com\/[a-z]{2}\_[A-Z]{2}\/i\/btn\/btn\_xpressCheckout\.gif$', MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON) ) {
+        $image = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
       } else {
-        $image = 'ext/modules/payment/paypal/images/btn_express.gif';
+        $image = 'https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif';
       }
 
       $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image . '" border="0" alt="" title="' . tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON) . '" /></a>';
