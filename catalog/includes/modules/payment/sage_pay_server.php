@@ -115,9 +115,11 @@
           $sig .= $HTTP_POST_VARS['PayerStatus'];
         }
 
-        if ( in_array($HTTP_POST_VARS['CardType'], array('VISA', 'MC', 'DELTA', 'SOLO', 'MAESTRO', 'UKE', 'AMEX', 'DC', 'JCB', 'LASER', 'PAYPAL')) ) {
-          $sig .= $HTTP_POST_VARS['CardType'] . $HTTP_POST_VARS['Last4Digits'];
+        if ( in_array($HTTP_POST_VARS['CardType'], array('VISA', 'MC', 'DELTA', 'SOLO', 'MAESTRO', 'UKE', 'AMEX', 'DC', 'JCB', 'SWITCH', 'LASER', 'PAYPAL')) ) {
+          $sig .= $HTTP_POST_VARS['CardType'];
         }
+
+        $sig .= $HTTP_POST_VARS['Last4Digits'];
 
         if (isset($HTTP_POST_VARS['VPSSignature']) && ($HTTP_POST_VARS['VPSSignature'] == strtoupper(md5($sig)))) {
           if ( ($HTTP_POST_VARS['Status'] != 'OK') && ($HTTP_POST_VARS['Status'] != 'AUTHENTICATED') && ($HTTP_POST_VARS['Status'] != 'REGISTERED') ) {
