@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  function sage_pay_form_textarea_field($value = '', $key = '') {
+    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+  }
+
   class sage_pay_form {
     var $code, $title, $description, $enabled;
 
@@ -17,7 +21,7 @@
     function sage_pay_form() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_form|1.1|2.2';
+      $this->signature = 'sage_pay|sage_pay_form|1.2|2.2';
 
       $this->code = 'sage_pay_form';
       $this->title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_TITLE;
@@ -133,6 +137,28 @@
 
       if ($crypt['DeliveryCountry'] == 'US') {
         $crypt['DeliveryState'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], '');
+      }
+
+      if (tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL)) {
+        $crypt['VendorEMail'] = substr(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL, 0, 255);
+      }
+
+      switch (MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL) {
+        case 'No One':
+          $crypt['SendEMail'] = 0;
+          break;
+
+        case 'Customer and Vendor':
+          $crypt['SendEMail'] = 1;
+          break;
+
+        case 'Vendor Only':
+          $crypt['SendEMail'] = 2;
+          break;
+      }
+
+      if (tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE)) {
+        $crypt['eMailMessage'] = substr(MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE, 0, 7500);
       }
 
       $contents = array();
@@ -254,6 +280,9 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Encryption Password', 'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD', '', 'The encrpytion password to secure transactions with.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD', 'Authenticate', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER', 'Simulator', 'Perform transactions on the production server or on the testing server.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\', \'Simulator\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor E-Mail', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL', '', 'An e-mail address on which you can be contacted when a transaction completes. NOTE: If you wish to use multiple email addresses, you should add them using the : (colon) character as a separator. e.g. me@mail1.com:me@mail2.com', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Send E-Mail', 'MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL', 'Customer and Vendor', 'Who to send e-mails to.', '6', '0', 'tep_cfg_select_option(array(\'No One\', \'Customer and Vendor\', \'Vendor Only\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Customer E-Mail Message', 'MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE', '', 'A message to the customer which is inserted into the successful transaction e-mails only.', '6', '0', 'sage_pay_form_textarea_field(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
@@ -264,7 +293,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME', 'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER', 'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE', 'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID', 'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER');
+      return array('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME', 'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL', 'MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL', 'MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE', 'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE', 'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID', 'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER');
     }
 
 // format prices without currency formatting
