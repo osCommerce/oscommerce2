@@ -49,6 +49,11 @@
     do_magic_quotes_gpc($HTTP_COOKIE_VARS);
   }
 
+// set default timezone if none exists (PHP 5.3 throws an E_WARNING)
+  if ((strlen(ini_get('date.timezone')) < 1) && function_exists('date_default_timezone_set')) {
+    date_default_timezone_set(@date_default_timezone_get());
+  }
+
   if (!function_exists('is_numeric')) {
     function is_numeric($param) {
       return ereg("^[0-9]{1,50}.?[0-9]{0,50}$", $param);
