@@ -594,7 +594,7 @@
     $search_str = trim(strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
-    $pieces = split('[[:space:]]+', $search_str);
+    $pieces = preg_split('/[[:space:]]+/', $search_str);
     $objects = array();
     $tmpstring = '';
     $flag = '';
@@ -1043,7 +1043,7 @@
 ////
 // Get the number of times a word/character is present in a string
   function tep_word_count($string, $needle) {
-    $temp_array = split($needle, $string);
+    $temp_array = preg_split('/' . $needle . '/', $string);
 
     return sizeof($temp_array);
   }
@@ -1053,7 +1053,7 @@
 
     if (empty($modules)) return $count;
 
-    $modules_array = split(';', $modules);
+    $modules_array = explode(';', $modules);
 
     for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
       $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));

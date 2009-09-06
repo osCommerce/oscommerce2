@@ -340,7 +340,7 @@
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
       }
 
-      $string_array = split(chr(10), $transaction_response);
+      $string_array = explode(chr(10), $transaction_response);
       $return = array();
 
       foreach ($string_array as $string) {
