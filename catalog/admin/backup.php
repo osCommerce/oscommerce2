@@ -239,7 +239,7 @@
               if ($next == '') { // get the last insert query
                 $next = 'insert';
               }
-              if ( (eregi('create', $next)) || (eregi('insert', $next)) || (eregi('drop t', $next)) ) {
+              if ( (preg_match('/create/i', $next)) || (preg_match('/insert/i', $next)) || (preg_match('/drop t/i', $next)) ) {
                 $query = substr($restore_query, 0, $i);
 
                 $next = '';
@@ -248,7 +248,7 @@
                 $sql_length = strlen($restore_query);
                 $i = strpos($restore_query, ';')-1;
 
-                if (eregi('^create*', $query)) {
+                if (preg_match('/^create*/i', $query)) {
                   $table_name = trim(substr($query, stripos($query, 'table ')+6));
                   $table_name = substr($table_name, 0, strpos($table_name, ' '));
 

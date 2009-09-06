@@ -16,19 +16,19 @@
     function validate($number, $expiry_m, $expiry_y) {
       $this->cc_number = preg_replace('/[^0-9]/', '', $number);
 
-      if (ereg('^4[0-9]{12}([0-9]{3})?$', $this->cc_number)) {
+      if (preg_match('/^4[0-9]{12}([0-9]{3})?$/', $this->cc_number)) {
         $this->cc_type = 'Visa';
-      } elseif (ereg('^5[1-5][0-9]{14}$', $this->cc_number)) {
+      } elseif (preg_match('/^5[1-5][0-9]{14}$/', $this->cc_number)) {
         $this->cc_type = 'Master Card';
-      } elseif (ereg('^3[47][0-9]{13}$', $this->cc_number)) {
+      } elseif (preg_match('/^3[47][0-9]{13}$/', $this->cc_number)) {
         $this->cc_type = 'American Express';
-      } elseif (ereg('^3(0[0-5]|[68][0-9])[0-9]{11}$', $this->cc_number)) {
+      } elseif (preg_match('/^3(0[0-5]|[68][0-9])[0-9]{11}$/', $this->cc_number)) {
         $this->cc_type = 'Diners Club';
-      } elseif (ereg('^6011[0-9]{12}$', $this->cc_number)) {
+      } elseif (preg_match('/^6011[0-9]{12}$/', $this->cc_number)) {
         $this->cc_type = 'Discover';
-      } elseif (ereg('^(3[0-9]{4}|2131|1800)[0-9]{11}$', $this->cc_number)) {
+      } elseif (preg_match('/^(3[0-9]{4}|2131|1800)[0-9]{11}$/', $this->cc_number)) {
         $this->cc_type = 'JCB';
-      } elseif (ereg('^5610[0-9]{12}$', $this->cc_number)) { 
+      } elseif (preg_match('/^5610[0-9]{12}$/', $this->cc_number)) {
         $this->cc_type = 'Australian BankCard';
       } else {
         return -1;

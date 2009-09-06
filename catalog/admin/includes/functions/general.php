@@ -939,7 +939,7 @@
               $languages = tep_get_languages();
               for ($j=0, $k=sizeof($languages); $j<$k; $j++) {
                 $cached_file_unlink = preg_replace('/-language/', '-' . $languages[$j]['directory'], $cached_file);
-                if (ereg('^' . $cached_file_unlink, $cache_file)) {
+                if (preg_match('/^/' . $cached_file_unlink, $cache_file)) {
                   @unlink(DIR_FS_CACHE . $cache_file);
                 }
               }
