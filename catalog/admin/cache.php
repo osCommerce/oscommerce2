@@ -91,7 +91,7 @@
         while ($cache_file = $dir->read()) {
           $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
 
-          if (preg_match('/^/' . $cached_file, $cache_file)) {
+          if (preg_match('/^' . $cached_file. '/', $cache_file)) {
             $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cache_file));
             break;
           }

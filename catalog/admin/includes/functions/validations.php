@@ -89,12 +89,12 @@
                   $tld = trim($words[0]);
                   // TLDs should be 3 letters or more
                   if (preg_match('/^[a-z]{3,}$/i', $tld) == 1) {
-                    $tld_pattern .= '/^' . $tld . '$|/i';
+                    $tld_pattern .= '^' . $tld . '$|';
                   }
                 }
                 // Remove last '|'
                 $tld_pattern = substr($tld_pattern, 0, -1);
-                if (preg_match("$tld_pattern", $top_level_domain) == 0) {
+                if (preg_match("/$tld_pattern/i", $top_level_domain) == 0) {
                     $valid_address = false;
                 }
               }

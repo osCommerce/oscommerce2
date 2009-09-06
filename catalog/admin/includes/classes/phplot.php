@@ -672,12 +672,12 @@ class PHPlot{
 				$which_xpos, $which_ypos, $which_color, $which_font, $which_text); 
 		} else { 
 			if ($which_valign == 'top') { 
-				$which_ypos = $which_ypos - ImageFontHeight($which_font);
+				$which_ypos = $which_ypos - ImageFontHeight((int)$which_font);
 			}
 			$which_text = preg_replace("/\r/","",$which_text);
 			$str = explode("\n",$which_text); //multiple lines submitted by Remi Ricard
-			$height = ImageFontHeight($which_font);
-			$width = ImageFontWidth($which_font);
+			$height = ImageFontHeight((int)$which_font);
+			$width = ImageFontWidth((int)$which_font);
 			if ($which_angle == 90) {  //Vertical Code Submitted by Marlin Viss
 				for($i=0;$i<count($str);$i++) { 
 					ImageStringUp($this->img, $which_font, ($i*$height + $which_xpos), $which_ypos, $str[$i], $which_color);
@@ -686,9 +686,9 @@ class PHPlot{
 				for($i=0;$i<count($str);$i++) { 
 					if ($which_halign == 'center') { 
                     	$xpos = $which_xpos - strlen($str[$i]) * $width/2;
- 						ImageString($this->img, $which_font, $xpos, ($i*$height + $which_ypos), $str[$i], $which_color);
+ 						ImageString($this->img, (int)$which_font, $xpos, ($i*$height + $which_ypos), $str[$i], $which_color);
 					} else { 
-						ImageString($this->img, $which_font, $which_xpos, ($i*$height + $which_ypos), $str[$i], $which_color); 
+						ImageString($this->img, (int)$which_font, $which_xpos, ($i*$height + $which_ypos), $str[$i], $which_color);
 					}
 				} 
 			}
