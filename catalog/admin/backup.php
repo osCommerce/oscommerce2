@@ -63,7 +63,7 @@
             $schema .= ',' . "\n";
           }
 
-          $schema = ereg_replace(",\n$", '', $schema);
+          $schema = preg_replace("/,\n$/", '', $schema);
 
 // add the keys
           $index = array();
@@ -111,7 +111,7 @@
                   $schema .= 'NULL, ';
                 } elseif (tep_not_null($rows[$i])) {
                   $row = addslashes($rows[$i]);
-                  $row = ereg_replace("\n#", "\n".'\#', $row);
+                  $row = preg_replace("/\n#/", "\n".'\#', $row);
 
                   $schema .= '\'' . $row . '\', ';
                 } else {
@@ -119,7 +119,7 @@
                 }
               }
 
-              $schema = ereg_replace(', $', '', $schema) . ');' . "\n";
+              $schema = preg_replace('/, $/', '', $schema) . ');' . "\n";
               fputs($fp, $schema);
             }
           }

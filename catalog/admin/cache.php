@@ -80,7 +80,7 @@
     }
 
     for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
-      $cached_file = ereg_replace('-language', '-' . $language, $cache_blocks[$i]['file']);
+      $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
 
       if (file_exists(DIR_FS_CACHE . $cached_file)) {
         $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cached_file));
@@ -89,7 +89,7 @@
         $dir = dir(DIR_FS_CACHE);
 
         while ($cache_file = $dir->read()) {
-          $cached_file = ereg_replace('-language', '-' . $language, $cache_blocks[$i]['file']);
+          $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
 
           if (ereg('^' . $cached_file, $cache_file)) {
             $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cache_file));

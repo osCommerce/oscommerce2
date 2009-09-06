@@ -674,7 +674,7 @@ class PHPlot{
 			if ($which_valign == 'top') { 
 				$which_ypos = $which_ypos - ImageFontHeight($which_font);
 			}
-			$which_text = ereg_replace("\r","",$which_text);
+			$which_text = preg_replace("/\r/","",$which_text);
 			$str = split("\n",$which_text); //multiple lines submitted by Remi Ricard
 			$height = ImageFontHeight($which_font);
 			$width = ImageFontWidth($which_font);

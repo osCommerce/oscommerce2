@@ -58,9 +58,9 @@
   }
 
   function tep_sanitize_string($string) {
-    $string = ereg_replace(' +', ' ', trim($string));
-
-    return preg_replace("/[<>]/", '_', $string);
+    $patterns = array ('/ +/','/[<>]/');
+    $replace = array (' ', '_');
+    return preg_replace($patterns, $replace, trim($string));
   }
 
 ////
@@ -584,7 +584,7 @@
     if (@date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
       return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
     } else {
-      return ereg_replace('2037' . '$', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
+      return preg_replace('/2037/' . '$', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
     }
   }
 
@@ -635,7 +635,7 @@
 */
 
 // Add this word to the $tmpstring, starting the $tmpstring
-        $tmpstring = trim(ereg_replace('"', ' ', $pieces[$k]));
+        $tmpstring = trim(preg_replace('/"/', ' ', $pieces[$k]));
 
 // Check for one possible exception to the rule. That there is a single quoted word.
         if (substr($pieces[$k], -1 ) == '"') {
@@ -685,7 +685,7 @@
    $piece onto the tail of the string, push the $tmpstring onto the $haves,
    kill the $tmpstring, turn the $flag "off", and return.
 */
-            $tmpstring .= ' ' . trim(ereg_replace('"', ' ', $pieces[$k]));
+            $tmpstring .= ' ' . trim(preg_replace('/"/', ' ', $pieces[$k]));
 
 // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
@@ -1300,7 +1300,7 @@
 // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   function tep_convert_linefeeds($from, $to, $string) {
     if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return ereg_replace('(' . implode('|', $from) . ')', $to, $string);
+      return preg_replace('/(' . implode('|', $from) . ')/', $to, $string);
     } else {
       return str_replace($from, $to, $string);
     }
