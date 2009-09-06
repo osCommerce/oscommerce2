@@ -10,6 +10,6 @@
   Released under the GNU General Public License
 */
 
-define(ADMIN_INDEX_CUSTOMERS_TITLE, 'Customers');
-define(ADMIN_INDEX_CUSTOMERS_DATE, 'Date');
+define('ADMIN_INDEX_CUSTOMERS_TITLE', 'Customers');
+define('ADMIN_INDEX_CUSTOMERS_DATE', 'Date');
 ?>

@@ -36,7 +36,7 @@
   $graph->SetMarginsPixels(15,15,15,30);
 
   $graph->SetTitleFontSize('4');
-  $graph->SetTitle('TEXT_BANNERS_LAST_3_DAYS');
+  $graph->SetTitle(TEXT_BANNERS_LAST_3_DAYS);
 
   $graph->SetDataValues($stats);
   $graph->SetDataColors(array('blue','red'),array('blue', 'red'));

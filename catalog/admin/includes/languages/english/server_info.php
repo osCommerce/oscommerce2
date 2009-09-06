@@ -21,5 +21,5 @@ define('TITLE_PHP_VERSION', 'PHP Version:');
 define('TITLE_ZEND_VERSION', 'Zend:');
 define('TITLE_DATABASE_HOST', 'Database Host:');
 define('TITLE_DATABASE', 'Database:');
-define('TITLE_DATABASE_DATE', 'Datebase Date:');
+define('TITLE_DATABASE_DATE', 'Database Date:');
 ?>
