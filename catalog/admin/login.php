@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  $login_request = true;
+
   require('includes/application_top.php');
   require('includes/functions/password_funcs.php');
 
