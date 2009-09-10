@@ -157,7 +157,7 @@
       } else {
         $cc_type = substr($HTTP_POST_VARS['cc_type'], 0, 15);
         $cc_owner = substr($HTTP_POST_VARS['cc_owner'], 0, 50);
-        $cc_number = substr(ereg_replace('[^0-9]', '', $HTTP_POST_VARS['cc_number_nh-dns']), 0, 20);
+        $cc_number = substr(preg_replace('/[^0-9]/', '', $HTTP_POST_VARS['cc_number_nh-dns']), 0, 20);
         $cc_start = null;
         $cc_expires = null;
         $cc_issue = null;
@@ -340,7 +340,7 @@
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
       }
 
-      $string_array = split(chr(10), $transaction_response);
+      $string_array = explode(chr(10), $transaction_response);
       $return = array();
 
       foreach ($string_array as $string) {

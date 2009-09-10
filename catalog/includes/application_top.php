@@ -348,7 +348,7 @@
                                     while (list($key, $value) = each($HTTP_POST_VARS)) {
                                       if (is_array($value)) {
                                         while (list($key2, $value2) = each($value)) {
-                                          if (ereg ("(.*)\]\[(.*)", $key2, $var)) {
+                                          if (preg_match ("/(.*)\]\[(.*)/", $key2, $var)) {
                                             $id2[$var[1]][$var[2]] = $value2;
                                           }
                                         }

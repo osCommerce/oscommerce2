@@ -123,7 +123,7 @@
 
   if (!function_exists('is_numeric')) {
     function is_numeric($param) {
-      return ereg('^[0-9]{1,50}.?[0-9]{0,50}$', $param);
+      return preg_match('/^[0-9]{1,50}.?[0-9]{0,50}$/', $param);
     }
   }
 
@@ -173,7 +173,7 @@
       if(tep_not_null($host) && tep_not_null($type)) {
         @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output);
         while(list($k, $line) = each($output)) {
-          if(eregi("^$host", $line)) {
+          if(preg_match("/^$host/i", $line)) {
             return true;
           }
         }

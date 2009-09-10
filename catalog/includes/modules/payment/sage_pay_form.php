@@ -205,7 +205,7 @@
       if (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
         $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
-        $string_array = split('&', $transaction_response);
+        $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
 
         foreach ($string_array as $string) {
@@ -243,7 +243,7 @@
       } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
         $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
-        $string_array = split('&', $transaction_response);
+        $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
 
         foreach ($string_array as $string) {

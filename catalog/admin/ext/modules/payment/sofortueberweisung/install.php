@@ -27,11 +27,11 @@
         $char = chr(tep_rand(0,255));
       }
       if ($type == 'mixed') {
-        if (eregi('^[a-z0-9]$', $char)) $rand_value .= $char;
+        if (preg_match('/^[a-z0-9]$/i', $char)) $rand_value .= $char;
       } elseif ($type == 'chars') {
-        if (eregi('^[a-z]$', $char)) $rand_value .= $char;
+        if (preg_match('/^[a-z]$/i', $char)) $rand_value .= $char;
       } elseif ($type == 'digits') {
-        if (ereg('^[0-9]$', $char)) $rand_value .= $char;
+        if (preg_match('/^[0-9]$/i', $char)) $rand_value .= $char;
       }
     }
 
@@ -40,7 +40,7 @@
 
   // Module already installed
   if (defined('MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS') && (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS == 'True')) {
-    die('Modul bereits installiert<br><a href="' . tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zurück zum ShopAdmin</a>');
+    die('Modul bereits installiert<br><a href="' . tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zurï¿½ck zum ShopAdmin</a>');
   }
 
   $parameter = array();
@@ -159,7 +159,7 @@ function submitForm() {
 	wert = document.getElementById('sammel_input_email').value;
 	if(!is_error) if(wert == '') {alert('Bitte Email-Adresse eintragen'); is_error=true;}
 
-	//if(!is_error) if(document.getElementById('sammel_input_ustid').value == '' && document.getElementById('sammel_input_steuernummer').value == '') {alert('Bitte alle Pflichtfelder ausfüllen'); is_error=true;}
+	//if(!is_error) if(document.getElementById('sammel_input_ustid').value == '' && document.getElementById('sammel_input_steuernummer').value == '') {alert('Bitte alle Pflichtfelder ausfï¿½llen'); is_error=true;}
 
 	wert1 = document.getElementById('sammel_input_telefon').value;
 	wert2 = document.getElementById('sammel_input_mobil').value;
@@ -220,7 +220,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 	          <tr><td>Firma*</td><td><input id="sammel_input_firma" size="40" type="text" value="<?php echo STORE_NAME; ?>" onkeyup="javascript:giveValue(this.value,'user[firma]','user[r_firma]','project[firma]', '', '')"></td></tr>
 	          <tr><td>Rechtsform</td><td>
 				<select onchange="javascript:giveValue(this.value,'user[rechtsform]', '', '', '', '')">
-					<option value="">Bitte auswählen...</option>
+					<option value="">Bitte auswï¿½hlen...</option>
 					<option value="AG" >AG</option>
 					<option value="AG & Co. OHG" >AG & Co. OHG</option>
 					<option value="ARGE" >ARGE</option>
@@ -234,7 +234,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 					<option value="KG" >KG</option>
 					<option value="KGaA" >KGaA</option>
 					<option value="OHG" >OHG</option>
-					<option value="Selbstständig" >Selbstständig</option>
+					<option value="Selbststï¿½ndig" >Selbststï¿½ndig</option>
 					<option value="VvAG" >VvAG</option>
 					<option value="Sonstige" >Sonstige</option>
 				</select>
@@ -246,23 +246,23 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 	          <tr><td>Mobil+</td><td><input id="sammel_input_mobil" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[anspr_mobil]', '', '', '', '')"></td></tr>
 	          <tr><td>Telefax</td><td><input size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[anspr_fax]','project[telefax]','user[telefax]', '', '')"></td></tr>
             <tr><td colspan="2"><hr /></td></tr>
-			      <tr><td colspan="2"><b>Konto auf welches die Zahlungseingänge gutgeschrieben werden:</b></td></tr>
+			      <tr><td colspan="2"><b>Konto auf welches die Zahlungseingï¿½nge gutgeschrieben werden:</b></td></tr>
 	          <tr><td>Konto Inhaber*</td><td><input id="sammel_input_konto_inhaber" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[elv_konto_inhaber]', 'project[an_konto_inhaber]', '', '', '')"></td></tr>
 	          <tr><td>Kontonummer*</td><td><input maxlength="15"  id="sammel_input_kontonummer" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[elv_konto_nr]', 'project[an_konto_nr]', '', '', '')"></td></tr>
 	          <tr><td>Bankleitzahl*</td><td><input maxlength="8" id="sammel_input_blz" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[elv_konto_blz]', 'project[an_konto_blz]', '', '', '')"></td></tr>
 	          <tr><td>Name der Bank*</td><td><input id="sammel_input_bank" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[elv_konto_bank]', 'project[an_konto_bank]', '', '', '')"></td></tr>
-            <tr><td colspan="2"><b>Hiermit beauftrage ich Sie, die fälligen <a href="https://www.sofortueberweisung.de/cms/index.php?plink=tarife&l=1&fs=" target="_blank">Beträge</a> per Lastschrift von meinem Konto einzuziehen.</b></td></tr>
+            <tr><td colspan="2"><b>Hiermit beauftrage ich Sie, die fï¿½lligen <a href="https://www.sofortueberweisung.de/cms/index.php?plink=tarife&l=1&fs=" target="_blank">Betrï¿½ge</a> per Lastschrift von meinem Konto einzuziehen.</b></td></tr>
 	          <tr><td>Ustid</td><td><input id="sammel_input_ustid" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[ustid]', '', '', '', '')"></td></tr>
 	          <tr><td>Steuernr</td><td><input id="sammel_input_steuernummer" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[steuernr]', '', '', '', '')"></td></tr>
             <tr><td colspan="2"><hr /></td></tr>
 	          <tr><td>Homepage*</td><td><input id="sammel_input_homepage" size="40" type="text" value="<?php echo tep_catalog_href_link() ;?>" onkeyup="javascript:giveValue(this.value,'project[homepage]','user[homepage]', '', '', '')"></td></tr>
 	          <tr><td>Email*</td><td><input id="sammel_input_email" size="40" type="text" value="<?php echo STORE_OWNER_EMAIL_ADDRESS; ?>" onkeyup="javascript:giveValue(this.value,'user[r_email]','user[anspr_email]','project[email]','user[email]','alert[alert_email_adresse]')"></td></tr>
-			      <tr><td>Email-Benachrichtigungen bei Zahlungseingängen aktivieren:</td>
+			      <tr><td>Email-Benachrichtigungen bei Zahlungseingï¿½ngen aktivieren:</td>
 			        <td><input type="radio" name="sammel_input_email_flag" value="1" CHECKED onfocus="javascript:giveValue(this.value,'alert[alert_email_status]', '', '', '', '')"> Ja  <input type="radio" name="sammel_input_email_flag" value="0" onfocus="javascript:giveValue(this.value,'alert[alert_email_status]', '', '', '', '')"> Nein</td>
 			      </tr>
         	  <tr>
 	            <td colspan="2">
-	              <input type="button" name="Absenden" value="Absenden" onclick="javascript:submitForm()"><br><b>Nach der Registrierung des Projekts bei Sofortüberweisung, unbedingt dem Link zurück zum Shop folgen!</b>
+	              <input type="button" name="Absenden" value="Absenden" onclick="javascript:submitForm()"><br><b>Nach der Registrierung des Projekts bei Sofortï¿½berweisung, unbedingt dem Link zurï¿½ck zum Shop folgen!</b>
 		        </td>
 	          </tr>
 	        </table>
@@ -298,7 +298,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 		  </table>
 		</td>
 	  </tr>
-	  <tr><td style="padding-left: 20px;">* zeichnet Pflichtfelder aus<br />+ zeichnet Felder aus, bei denen mindestens eines gefüllt sein muss<br />Alle Zahlen sind ohne Leerzeichen einzugeben</td></tr>
+	  <tr><td style="padding-left: 20px;">* zeichnet Pflichtfelder aus<br />+ zeichnet Felder aus, bei denen mindestens eines gefï¿½llt sein muss<br />Alle Zahlen sind ohne Leerzeichen einzugeben</td></tr>
     </table>
   </td></tr>
   <tr>
@@ -334,7 +334,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
   </table>
 
   <table border="1" id="table5" style="display:none;">
-  <tr><td colspan=3>Konto, von dem die Gebühren von Sofort-Überweisung abgebucht werden:</td></tr>
+  <tr><td colspan=3>Konto, von dem die Gebï¿½hren von Sofort-ï¿½berweisung abgebucht werden:</td></tr>
   <tr><td>Konto Inhaber</td><td><input type="text" name="user[elv_konto_inhaber]" value=""></td><td>*</td></tr>
   <tr><td>Kontonr</td><td><input type="text" name="user[elv_konto_nr]" value=""></td><td>*</td></tr>
   <tr><td>Konto BLZ</td><td><input type="text" name="user[elv_konto_blz]" value=""></td><td>*</td></tr>

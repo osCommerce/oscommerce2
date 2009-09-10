@@ -59,7 +59,7 @@
     function checkout_initialization_method() {
       global $language;
 
-      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON') && ereg('^https\:\/\/www\.paypalobjects\.com\/[a-z]{2}\_[A-Z]{2}\/i\/btn\/btn\_xpressCheckout\.gif$', MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON) ) {
+      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON') && preg_match('/^https\:\/\/www\.paypalobjects\.com\/[a-z]{2}\_[A-Z]{2}\/i\/btn\/btn\_xpressCheckout\.gif$/', MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON) ) {
         $image = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
       } else {
         $image = 'https://www.paypalobjects.com/en_US/i/btn/btn_xpressCheckout.gif';
