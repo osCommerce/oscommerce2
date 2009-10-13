@@ -68,7 +68,7 @@
             }
 
             if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
-              $htpasswd_array[] = $username . ':' . crypt($password, base64_encode($password));
+              $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
             }
 
             $fp = fopen(DIR_FS_ADMIN . '.htpasswd_oscommerce', 'w');
@@ -134,7 +134,7 @@
             }
 
             if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
-              $htpasswd_array[] = $username . ':' . crypt($password, base64_encode($password));
+              $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
             }
           }
 
