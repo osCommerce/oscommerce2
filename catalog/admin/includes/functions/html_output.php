@@ -13,6 +13,8 @@
 ////
 // The HTML href link wrapper function
   function tep_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+    $page = tep_output_string($page);
+
     if ($page == '') {
       die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>Function used:<br><br>tep_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</b>');
     }
@@ -30,7 +32,7 @@
     if ($parameters == '') {
       $link = $link . $page . '?' . SID;
     } else {
-      $link = $link . $page . '?' . $parameters . '&' . SID;
+      $link = $link . $page . '?' . tep_output_string($parameters) . '&' . SID;
     }
 
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);

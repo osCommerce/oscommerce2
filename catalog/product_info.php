@@ -139,7 +139,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
           }
         }
 
-        if (isset($cart->contents[$HTTP_GET_VARS['products_id']]['attributes'][$products_options_name['products_options_id']])) {
+        if (is_string($HTTP_GET_VARS['products_id']) && isset($cart->contents[$HTTP_GET_VARS['products_id']]['attributes'][$products_options_name['products_options_id']])) {
           $selected_attribute = $cart->contents[$HTTP_GET_VARS['products_id']]['attributes'][$products_options_name['products_options_id']];
         } else {
           $selected_attribute = false;

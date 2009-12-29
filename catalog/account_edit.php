@@ -52,7 +52,7 @@
     }
 
     if (ACCOUNT_DOB == 'true') {
-      if (!checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4))) {
+      if ((is_numeric(tep_date_raw($dob)) == false) || (@checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4)) == false)) {
         $error = true;
 
         $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
