@@ -52,7 +52,9 @@
     $ip_domain_pat='/^\[([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\]$/i';
     $domain_pat = "/^$atom(\.$atom)*$/i";
 
-    if (preg_match($mail_pat, $email, $components)) {
+    if (strlen(trim($email)) > 255) {
+      $valid_address = false;
+    } elseif (preg_match($mail_pat, $email, $components)) {
       $user = $components[1];
       $domain = $components[2];
       // validate user
