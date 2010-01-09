@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS address_book;
 CREATE TABLE address_book (
    address_book_id int NOT NULL auto_increment,
    customers_id int NOT NULL,
-   entry_gender char(1) NOT NULL,
+   entry_gender char(1),
    entry_company varchar(255),
    entry_firstname varchar(255) NOT NULL,
    entry_lastname varchar(255) NOT NULL,
@@ -172,7 +172,7 @@ CREATE TABLE currencies (
 DROP TABLE IF EXISTS customers;
 CREATE TABLE customers (
    customers_id int NOT NULL auto_increment,
-   customers_gender char(1) NOT NULL,
+   customers_gender char(1),
    customers_firstname varchar(255) NOT NULL,
    customers_lastname varchar(255) NOT NULL,
    customers_dob datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
