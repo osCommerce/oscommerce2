@@ -46,7 +46,7 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><b>PHP Settings</td>
+          <td><strong>PHP Settings</strong></td>
           <td align="right"></td>
           <td align="right" width="25"></td>
         </tr>
@@ -81,7 +81,7 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><b>PHP Extensions</b></td>
+          <td><strong>Required PHP Extensions</strong></td>
           <td align="right" width="25"></td>
         </tr>
         <tr>
@@ -137,6 +137,10 @@
     if ($compat_register_globals == false) {
       $warning_array['register_globals'] = 'Compatibility with register_globals is supported from PHP 4.3+. This setting <u>must be enabled</u> due to an older PHP version being used.';
     }
+  }
+
+  if (!extension_loaded('mysql') || !extension_loaded('gd') || !extension_loaded('curl') || !extension_loaded('openssl')) {
+    $warning_array['missing_extensions'] = 'One or more required extensions are missing. Please check the information shown under "Required PHP Extensions" for more details.';
   }
 
   if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
