@@ -160,7 +160,7 @@
     if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
       reset($HTTP_GET_VARS);
       while (list($key, $value) = each($HTTP_GET_VARS)) {
-        if ( (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
+        if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
       }
@@ -914,7 +914,7 @@
 // Return a product ID with attributes
   function tep_get_uprid($prid, $params) {
     if (is_numeric($prid)) {
-      $uprid = $prid;
+      $uprid = (int)$prid;
 
       if (is_array($params) && (sizeof($params) > 0)) {
         $attributes_check = true;
@@ -974,7 +974,7 @@
     $pieces = explode('{', $uprid);
 
     if (is_numeric($pieces[0])) {
-      return $pieces[0];
+      return (int)$pieces[0];
     } else {
       return false;
     }
