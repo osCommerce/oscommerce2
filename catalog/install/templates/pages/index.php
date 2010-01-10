@@ -89,6 +89,10 @@
           <td align="right"><img src="images/<?php echo (extension_loaded('mysql') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
         <tr>
+          <td><strong>Optional PHP Extensions</strong></td>
+          <td align="right" width="25"></td>
+        </tr>
+        <tr>
           <td>GD</td>
           <td align="right"><img src="images/<?php echo (extension_loaded('gd') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
@@ -139,8 +143,8 @@
     }
   }
 
-  if (!extension_loaded('mysql') || !extension_loaded('gd') || !extension_loaded('curl') || !extension_loaded('openssl')) {
-    $warning_array['missing_extensions'] = 'One or more required extensions are missing. Please check the information shown under "Required PHP Extensions" for more details.';
+  if (!extension_loaded('mysql')) {
+    $warning_array['mysql'] = 'The MySQL extension is required but is not installed. Please enable it to continue installation.';
   }
 
   if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
