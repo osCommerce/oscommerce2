@@ -32,7 +32,7 @@
     <div class="infoPaneContents">
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><b>PHP Version</b></td>
+          <td><strong>PHP Version</strong></td>
           <td align="right"><?php echo PHP_VERSION; ?></td>
           <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
@@ -167,7 +167,7 @@
       reset($warning_array);
       while (list($key, $value) = each($warning_array)) {
         echo '        <tr>' . "\n" .
-             '          <td valign="top"><b>' . $key . '</b></td>' . "\n" .
+             '          <td valign="top"><strong>' . $key . '</strong></td>' . "\n" .
              '          <td valign="top">' . $value . '</td>' . "\n" .
              '        </tr>' . "\n";
       }
