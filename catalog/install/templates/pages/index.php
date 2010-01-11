@@ -88,6 +88,11 @@
           <td>MySQL</td>
           <td align="right"><img src="images/<?php echo (extension_loaded('mysql') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
+      </table>
+
+      <br />
+
+      <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
           <td><strong>Optional PHP Extensions</strong></td>
           <td align="right" width="25"></td>
