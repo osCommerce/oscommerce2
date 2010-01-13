@@ -11,6 +11,7 @@
 */
 
 // define the database table names used in the project
+  define('TABLE_ACTION_RECORDER', 'action_recorder');
   define('TABLE_ADDRESS_BOOK', 'address_book');
   define('TABLE_ADDRESS_FORMAT', 'address_format');
   define('TABLE_ADMINISTRATORS', 'administrators');

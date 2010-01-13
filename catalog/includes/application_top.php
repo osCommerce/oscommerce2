@@ -318,6 +318,9 @@
   }
   $navigation->add_current_page();
 
+// action recorder
+  include('includes/classes/action_recorder.php');
+
 // Shopping cart actions
   if (isset($HTTP_GET_VARS['action'])) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
