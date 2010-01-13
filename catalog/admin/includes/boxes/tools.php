@@ -18,10 +18,11 @@
   $contents = array();
 
   $heading[] = array('text'  => BOX_HEADING_TOOLS,
-                     'link'  => tep_href_link(FILENAME_BACKUP, 'selected_box=tools'));
+                     'link'  => tep_href_link(FILENAME_ACTION_RECORDER, 'selected_box=tools'));
 
   if ($selected_box == 'tools') {
-    $contents[] = array('text'  => '<a href="' . tep_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink">' . BOX_TOOLS_BACKUP . '</a><br>' .
+    $contents[] = array('text'  => '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER) . '" class="menuBoxContentLink">' . BOX_TOOLS_ACTION_RECORDER . '</a><br>' .
+                                   '<a href="' . tep_href_link(FILENAME_BACKUP) . '" class="menuBoxContentLink">' . BOX_TOOLS_BACKUP . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_BANNER_MANAGER) . '" class="menuBoxContentLink">' . BOX_TOOLS_BANNER_MANAGER . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_CACHE) . '" class="menuBoxContentLink">' . BOX_TOOLS_CACHE . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_DEFINE_LANGUAGE) . '" class="menuBoxContentLink">' . BOX_TOOLS_DEFINE_LANGUAGE . '</a><br>' .

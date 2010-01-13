@@ -66,6 +66,15 @@
       $messageStack->add('friend', ERROR_TO_ADDRESS);
     }
 
+    $actionRecorder = new actionRecorder('ar_tell_a_friend', (tep_session_is_registered('customer_id') ? $customer_id : null), $from_name);
+    if (!$actionRecorder->canPerform()) {
+      $error = true;
+
+      $actionRecorder->record(false);
+
+      $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
+    }
+
     if ($error == false) {
       $email_subject = sprintf(TEXT_EMAIL_SUBJECT, $from_name, STORE_NAME);
       $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $product_info['products_name'], STORE_NAME) . "\n\n";
@@ -78,6 +87,8 @@
                      sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . HTTP_SERVER . DIR_WS_CATALOG . "\n");
 
       tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
+
+      $actionRecorder->record();
 
       $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $product_info['products_name'], tep_output_string_protected($to_name)), 'success');
 

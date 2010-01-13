@@ -199,6 +199,9 @@
 // file uploading class
   require(DIR_WS_CLASSES . 'upload.php');
 
+// action recorder
+  require(DIR_WS_CLASSES . 'action_recorder.php');
+
 // calculate category path
   if (isset($HTTP_GET_VARS['cPath'])) {
     $cPath = $HTTP_GET_VARS['cPath'];
