@@ -34,4 +34,5 @@ define('ERROR_TO_NAME', 'Fehler: Der Empf&auml;ngername darf nicht leer sein.');
 define('ERROR_TO_ADDRESS', 'Fehler: Die Empf&auml;nger-Email-Adresse darf nicht leer sein.');
 define('ERROR_FROM_NAME', 'Fehler: Der Absendername (Ihr Name) muss angegeben werden.');
 define('ERROR_FROM_ADDRESS', 'Fehler: Die Absenderadresse muss eine g&uuml;ltige Mail-Adresse sein.');
+define('ERROR_ACTION_RECORDER', 'Error: An e-mail has already been sent. Please try again in %s minutes.');
 ?>

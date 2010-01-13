@@ -19,6 +19,20 @@
 #       * Comments should be like these, full line comments.
 #         (don't use inline comments)
 
+DROP TABLE IF EXISTS action_recorder;
+CREATE TABLE action_recorder (
+  id int NOT NULL auto_increment,
+  module varchar(255) NOT NULL,
+  customer_id int,
+  identifier varchar(255) NOT NULL,
+  date_added datetime NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_action_recorder_module (module),
+  KEY idx_action_recorder_customer_id (customer_id),
+  KEY idx_action_recorder_identifier (identifier),
+  KEY idx_action_recorder_date_added (date_added)
+);
+
 DROP TABLE IF EXISTS address_book;
 CREATE TABLE address_book (
    address_book_id int NOT NULL auto_increment,
@@ -726,6 +740,7 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Review Text', 'REVIEW_TEXT_MIN_LENGTH', '50', 'Minimum length of review text', '2', '14', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Best Sellers', 'MIN_DISPLAY_BESTSELLERS', '1', 'Minimum number of best sellers to display', '2', '15', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Also Purchased', 'MIN_DISPLAY_ALSO_PURCHASED', '1', 'Minimum number of products to display in the \'This Customer Also Purchased\' box', '2', '16', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Tell A Friend E-Mails', 'MIN_TELL_A_FRIEND_EMAIL_MINUTES', '15', 'Minimum number of minutes to allow 1 e-mail to be sent (eg, 15 for 1 e-mail every 15 minutes)', '2', '17', now());
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Address Book Entries', 'MAX_ADDRESS_BOOK_ENTRIES', '5', 'Maximum address book entries a customer is allowed to have', '3', '1', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Search Results', 'MAX_DISPLAY_SEARCH_RESULTS', '20', 'Amount of products to list', '3', '2', now());
