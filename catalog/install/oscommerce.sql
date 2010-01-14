@@ -25,6 +25,7 @@ CREATE TABLE action_recorder (
   module varchar(255) NOT NULL,
   customer_id int,
   identifier varchar(255) NOT NULL,
+  success char(1),
   date_added datetime NOT NULL,
   PRIMARY KEY (id),
   KEY idx_action_recorder_module (module),

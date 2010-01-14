@@ -15,12 +15,16 @@
     var $_customer_id;
 
     function actionRecorder($module) {
-      global $customer_id;
+      global $customer_id, $language;
 
       $module = tep_sanitize_string(str_replace(' ', '', $module));
 
       if (!class_exists($module)) {
         if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.php')) {
+          if (file_exists(DIR_WS_LANGUAGES . $language . '/modules/action_recorder/' . $module . '.php')) {
+            include(DIR_WS_LANGUAGES . $language . '/modules/action_recorder/' . $module . '.php');
+          }
+
           include(DIR_WS_MODULES . 'action_recorder/' . $module . '.php');
         } else {
           return false;
@@ -42,7 +46,7 @@
           if ($GLOBALS[$this->_module]->check()) {
             return true;
           } else {
-            $this->record();
+            $this->record(false);
 
             return false;
           }
@@ -54,15 +58,27 @@
       return false;
     }
 
+    function getTitle() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->_title;
+      }
+    }
+
     function getIdentifier() {
       if (tep_not_null($this->_module)) {
         return $GLOBALS[$this->_module]->_identifier;
       }
     }
 
-    function record() {
+    function record($success = true) {
       if (tep_not_null($this->_module)) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, customer_id, identifier, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_customer_id . "', '" . tep_db_input($this->getIdentifier()) . "', now())");
+        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, customer_id, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_customer_id . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success ? 1 : 0) . "', now())");
+      }
+    }
+
+    function expireEntries() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->expireEntries();
       }
     }
   }
