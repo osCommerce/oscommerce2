@@ -22,7 +22,9 @@
       if (defined('MIN_TELL_A_FRIEND_EMAIL_MINUTES') && is_numeric(MIN_TELL_A_FRIEND_EMAIL_MINUTES) && (MIN_TELL_A_FRIEND_EMAIL_MINUTES > 0)) {
         $this->_min_minutes = (int)MIN_TELL_A_FRIEND_EMAIL_MINUTES;
       }
+    }
 
+    function setIdentifier() {
       $this->_identifier = tep_get_ip_address();
     }
 
@@ -38,7 +40,11 @@
     }
 
     function expireEntries() {
+      global $db_link;
+
       tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = 'ar_tell_a_friend' and date_added < date_sub(now(), interval " . (int)$this->_min_minutes  . " minute)");
+
+      return mysql_affected_rows($db_link);
     }
   }
 ?>
