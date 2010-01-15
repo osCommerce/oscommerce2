@@ -90,14 +90,22 @@
 
       $attributes_pass_check = true;
 
-      if (is_array($attributes)) {
+      if (is_array($attributes) && !empty($attributes)) {
         reset($attributes);
         while (list($option, $value) = each($attributes)) {
           if (!is_numeric($option) || !is_numeric($value)) {
             $attributes_pass_check = false;
             break;
+          } else {
+            $check_query = tep_db_query("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id . "' and options_id = '" . (int)$option . "' and options_values_id = '" . (int)$value . "' limit 1");
+            if (tep_db_num_rows($check_query) < 1) {
+              $attributes_pass_check = false;
+              break;
+            }
           }
         }
+      } elseif (tep_has_product_attributes($products_id)) {
+        $attributes_pass_check = false;
       }
 
       if (is_numeric($products_id) && is_numeric($qty) && ($attributes_pass_check == true)) {
