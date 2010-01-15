@@ -167,11 +167,9 @@ define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Su Email no parece correcto!</span>');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">email ya existe!</span>');
 define('ENTRY_COMPANY', 'Nombre empresa:');
-define('ENTRY_COMPANY_ERROR', '');
 define('ENTRY_STREET_ADDRESS', 'Direcci&oacute;n:');
 define('ENTRY_STREET_ADDRESS_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' letras</span>');
-define('ENTRY_SUBURB', '');
-define('ENTRY_SUBURB_ERROR', '');
+define('ENTRY_SUBURB', 'Suburbio:');
 define('ENTRY_POST_CODE', 'C&oacute;digo Postal:');
 define('ENTRY_POST_CODE_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_POSTCODE_MIN_LENGTH . ' letras</span>');
 define('ENTRY_CITY', 'Poblaci&oacute;n:');
@@ -179,15 +177,13 @@ define('ENTRY_CITY_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_CITY_MIN
 define('ENTRY_STATE', 'Provincia:');
 define('ENTRY_STATE_ERROR', '&nbsp;<span class="errorText">obligatorio</span>');
 define('ENTRY_COUNTRY', 'Pa&iacute;s:');
-define('ENTRY_COUNTRY_ERROR', '');
+define('ENTRY_COUNTRY_ERROR', 'Debe seleccionar un pa&iacute;s de la lista desplegable.');
 define('ENTRY_TELEPHONE_NUMBER', 'Tel&eacute;fono:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_TELEPHONE_MIN_LENGTH . ' letras</span>');
 define('ENTRY_FAX_NUMBER', 'Fax:');
-define('ENTRY_FAX_NUMBER_ERROR', '');
 define('ENTRY_NEWSLETTER', 'Bolet&iacute;n:');
 define('ENTRY_NEWSLETTER_YES', 'suscrito');
 define('ENTRY_NEWSLETTER_NO', 'no suscrito');
-define('ENTRY_NEWSLETTER_ERROR', '');
 
 // images
 define('IMAGE_ANI_SEND_EMAIL', 'Enviando E-Mail');
