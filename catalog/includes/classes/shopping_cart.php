@@ -90,7 +90,7 @@
 
       $attributes_pass_check = true;
 
-      if (is_array($attributes)) {
+      if (is_array($attributes) && !empty($attributes)) {
         reset($attributes);
         while (list($option, $value) = each($attributes)) {
           if (!is_numeric($option) || !is_numeric($value)) {
@@ -104,6 +104,8 @@
             }
           }
         }
+      } elseif (tep_has_product_attributes($products_id)) {
+        $attributes_pass_check = false;
       }
 
       if (is_numeric($products_id) && is_numeric($qty) && ($attributes_pass_check == true)) {
