@@ -98,6 +98,7 @@ define('BOX_REPORTS_ORDERS_TOTAL', 'Kunden-Bestellstatistik');
 
 // tools text in includes/boxes/tools.php
 define('BOX_HEADING_TOOLS', 'Hilfsprogramme');
+define('BOX_TOOLS_ACTION_RECORDER', 'Action Recorder');
 define('BOX_TOOLS_BACKUP', 'Datenbanksicherung');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
 define('BOX_TOOLS_CACHE', 'Cache Steuerung');
@@ -166,9 +167,11 @@ define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">mindestens ' 
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">ung&uuml;ltige eMail-Adresse!</span>');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">Diese eMail-Adresse existiert schon!</span>');
 define('ENTRY_COMPANY', 'Firmenname:');
+define('ENTRY_COMPANY_ERROR', '');
 define('ENTRY_STREET_ADDRESS', 'Strasse:');
 define('ENTRY_STREET_ADDRESS_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' Buchstaben</span>');
 define('ENTRY_SUBURB', 'weitere Anschrift:');
+define('ENTRY_SUBURB_ERROR', '');
 define('ENTRY_POST_CODE', 'Postleitzahl:');
 define('ENTRY_POST_CODE_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_POSTCODE_MIN_LENGTH . ' Zahlen</span>');
 define('ENTRY_CITY', 'Stadt:');
@@ -176,12 +179,15 @@ define('ENTRY_CITY_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_C
 define('ENTRY_STATE', 'Bundesland:');
 define('ENTRY_STATE_ERROR', '&nbsp;<span class="errorText">notwendige Eingabe</font></small>');
 define('ENTRY_COUNTRY', 'Land:');
+define('ENTRY_COUNTRY_ERROR', '');
 define('ENTRY_TELEPHONE_NUMBER', 'Telefonnummer:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">mindestens ' . ENTRY_TELEPHONE_MIN_LENGTH . ' Zahlen</span>');
 define('ENTRY_FAX_NUMBER', 'Telefaxnummer:');
+define('ENTRY_FAX_NUMBER_ERROR', '');
 define('ENTRY_NEWSLETTER', 'Rundschreiben:');
 define('ENTRY_NEWSLETTER_YES', 'abonniert');
 define('ENTRY_NEWSLETTER_NO', 'nicht abonniert');
+define('ENTRY_NEWSLETTER_ERROR', '');
 
 // images
 define('IMAGE_ANI_SEND_EMAIL', 'eMail versenden');
@@ -257,6 +263,7 @@ define('TEXT_DISPLAY_NUMBER_OF_BANNERS', 'Angezeigt werden <b>%d</b> bis <b>%d</
 define('TEXT_DISPLAY_NUMBER_OF_COUNTRIES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> L&auml;ndern)');
 define('TEXT_DISPLAY_NUMBER_OF_CUSTOMERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Kunden)');
 define('TEXT_DISPLAY_NUMBER_OF_CURRENCIES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> W&auml;hrungen)');
+define('TEXT_DISPLAY_NUMBER_OF_ENTRIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> entries)');
 define('TEXT_DISPLAY_NUMBER_OF_LANGUAGES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Sprachen)');
 define('TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Herstellern)');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Rundschreiben)');

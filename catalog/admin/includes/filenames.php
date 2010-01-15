@@ -11,6 +11,7 @@
 */
 
 // define the filenames used in the project
+  define('FILENAME_ACTION_RECORDER', 'action_recorder.php');
   define('FILENAME_ADMINISTRATORS', 'administrators.php');
   define('FILENAME_BACKUP', 'backup.php');
   define('FILENAME_BANNER_MANAGER', 'banner_manager.php');

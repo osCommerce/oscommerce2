@@ -34,6 +34,7 @@
       $this->_module = $module;
 
       $GLOBALS[$this->_module] = new $module();
+      $GLOBALS[$this->_module]->setIdentifier();
 
       if (tep_session_is_registered('customer_id')) {
         $this->_customer_id = $customer_id;

@@ -98,6 +98,7 @@ define('BOX_REPORTS_ORDERS_TOTAL', 'Total por Cliente');
 
 // tools text in includes/boxes/tools.php
 define('BOX_HEADING_TOOLS', 'Herramientas');
+define('BOX_TOOLS_ACTION_RECORDER', 'Action Recorder');
 define('BOX_TOOLS_BACKUP', 'Copia de Seguridad');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banners');
 define('BOX_TOOLS_CACHE', 'Control de Cach&eacute;');
@@ -166,9 +167,11 @@ define('ENTRY_EMAIL_ADDRESS_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', '&nbsp;<span class="errorText">Su Email no parece correcto!</span>');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', '&nbsp;<span class="errorText">email ya existe!</span>');
 define('ENTRY_COMPANY', 'Nombre empresa:');
+define('ENTRY_COMPANY_ERROR', '');
 define('ENTRY_STREET_ADDRESS', 'Direcci&oacute;n:');
 define('ENTRY_STREET_ADDRESS_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' letras</span>');
 define('ENTRY_SUBURB', '');
+define('ENTRY_SUBURB_ERROR', '');
 define('ENTRY_POST_CODE', 'C&oacute;digo Postal:');
 define('ENTRY_POST_CODE_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_POSTCODE_MIN_LENGTH . ' letras</span>');
 define('ENTRY_CITY', 'Poblaci&oacute;n:');
@@ -176,12 +179,15 @@ define('ENTRY_CITY_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_CITY_MIN
 define('ENTRY_STATE', 'Provincia:');
 define('ENTRY_STATE_ERROR', '&nbsp;<span class="errorText">obligatorio</span>');
 define('ENTRY_COUNTRY', 'Pa&iacute;s:');
+define('ENTRY_COUNTRY_ERROR', '');
 define('ENTRY_TELEPHONE_NUMBER', 'Tel&eacute;fono:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', '&nbsp;<span class="errorText">min ' . ENTRY_TELEPHONE_MIN_LENGTH . ' letras</span>');
 define('ENTRY_FAX_NUMBER', 'Fax:');
+define('ENTRY_FAX_NUMBER_ERROR', '');
 define('ENTRY_NEWSLETTER', 'Bolet&iacute;n:');
 define('ENTRY_NEWSLETTER_YES', 'suscrito');
 define('ENTRY_NEWSLETTER_NO', 'no suscrito');
+define('ENTRY_NEWSLETTER_ERROR', '');
 
 // images
 define('IMAGE_ANI_SEND_EMAIL', 'Enviando E-Mail');
@@ -257,6 +263,7 @@ define('TEXT_DISPLAY_NUMBER_OF_BANNERS', 'Viendo del <b>%d</b> al <b>%d</b> (de 
 define('TEXT_DISPLAY_NUMBER_OF_COUNTRIES', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> paises)');
 define('TEXT_DISPLAY_NUMBER_OF_CUSTOMERS', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> clientes)');
 define('TEXT_DISPLAY_NUMBER_OF_CURRENCIES', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> monedas)');
+define('TEXT_DISPLAY_NUMBER_OF_ENTRIES', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> entries)');
 define('TEXT_DISPLAY_NUMBER_OF_LANGUAGES', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> idiomas)');
 define('TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> fabricantes)');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSLETTERS', 'Viendo del <b>%d</b> al <b>%d</b> (de <b>%d</b> boletines)');
