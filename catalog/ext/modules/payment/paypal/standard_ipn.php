@@ -13,6 +13,10 @@
   chdir('../../../../');
   require('includes/application_top.php');
 
+  if (!defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') || (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS  != 'True')) {
+    exit;
+  }
+
   $parameters = 'cmd=_notify-validate';
 
   reset($HTTP_POST_VARS);

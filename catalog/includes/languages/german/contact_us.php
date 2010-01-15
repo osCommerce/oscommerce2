@@ -18,4 +18,6 @@ define('EMAIL_SUBJECT', 'Anfrage von ' . STORE_NAME);
 define('ENTRY_NAME', 'Vollst&auml;ndiger Name:');
 define('ENTRY_EMAIL', 'eMail-Adresse:');
 define('ENTRY_ENQUIRY', 'Anfrage:');
+
+define('ERROR_ACTION_RECORDER', 'Error: An enquiry has already been sent. Please try again in %s minutes.');
 ?>

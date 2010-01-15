@@ -34,4 +34,5 @@ define('ERROR_TO_NAME', 'Error: La direcci&oacute;n de su amigo no puede estar v
 define('ERROR_TO_ADDRESS', 'Error: La direcci&oacute;n de su amigo debe ser v&aacute;lida.');
 define('ERROR_FROM_NAME', 'Error: Su nombre no debe estar vacio.');
 define('ERROR_FROM_ADDRESS', 'Error: Su direcci&oacute;n de email debe de ser v&aacute;lida.');
+define('ERROR_ACTION_RECORDER', 'Error: An e-mail has already been sent. Please try again in %s minutes.');
 ?>
