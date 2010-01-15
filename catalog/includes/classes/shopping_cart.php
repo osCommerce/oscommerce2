@@ -96,6 +96,12 @@
           if (!is_numeric($option) || !is_numeric($value)) {
             $attributes_pass_check = false;
             break;
+          } else {
+            $check_query = tep_db_query("select products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id . "' and options_id = '" . (int)$option . "' and options_values_id = '" . (int)$value . "' limit 1");
+            if (tep_db_num_rows($check_query) < 1) {
+              $attributes_pass_check = false;
+              break;
+            }
           }
         }
       }
