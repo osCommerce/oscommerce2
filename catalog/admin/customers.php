@@ -482,11 +482,7 @@ function check_form() {
             <td class="main">
 <?php
     if ($error == true) {
-      if ($entry_company_error == true) {
-        echo tep_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="32"') . '&nbsp;' . ENTRY_COMPANY_ERROR;
-      } else {
-        echo $cInfo->entry_company . tep_draw_hidden_field('entry_company');
-      }
+      echo $cInfo->entry_company . tep_draw_hidden_field('entry_company');
     } else {
       echo tep_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="32"');
     }
@@ -528,11 +524,7 @@ function check_form() {
             <td class="main">
 <?php
     if ($error == true) {
-      if ($entry_suburb_error == true) {
-        echo tep_draw_input_field('suburb', $cInfo->entry_suburb, 'maxlength="32"') . '&nbsp;' . ENTRY_SUBURB_ERROR;
-      } else {
-        echo $cInfo->entry_suburb . tep_draw_hidden_field('entry_suburb');
-      }
+      echo $cInfo->entry_suburb . tep_draw_hidden_field('entry_suburb');
     } else {
       echo tep_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
     }
