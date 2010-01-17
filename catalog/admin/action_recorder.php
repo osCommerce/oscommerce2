@@ -26,8 +26,6 @@
     $dir->close();
   }
 
-  $expired_entries = 0;
-
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
@@ -40,12 +38,31 @@
     $class = substr($file, 0, strrpos($file, '.'));
     if (tep_class_exists($class)) {
       $$class = new $class;
-      $expired_entries += $$class->expireEntries();
     }
   }
 
-  if ($expired_entries > 0) {
-    $messageStack->add(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
+  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+
+  if (tep_not_null($action)) {
+    switch ($action) {
+      case 'expire':
+        $expired_entries = 0;
+
+        for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
+          $file = $directory_array[$i];
+
+          $class = substr($file, 0, strrpos($file, '.'));
+          if (tep_class_exists($class)) {
+            $expired_entries += $$class->expireEntries();
+          }
+        }
+
+        $messageStack->add_session(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
+
+        tep_redirect(tep_href_link(FILENAME_ACTION_RECORDER));
+
+        break;
+    }
   }
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -72,10 +89,10 @@
 <!-- body_text //-->
     <td width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td><table border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire') . '">' . tep_image_button('button_delete.gif', IMAGE_DELETE) . '</a>'; ?></td>
           </tr>
         </table></td>
       </tr>
