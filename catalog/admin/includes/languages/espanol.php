@@ -67,6 +67,7 @@ define('BOX_HEADING_MODULES', 'M&oacute;dulos');
 define('BOX_MODULES_PAYMENT', 'Pago');
 define('BOX_MODULES_SHIPPING', 'Env&iacute;o');
 define('BOX_MODULES_ORDER_TOTAL', 'Totalizaci&oacute;n');
+define('BOX_MODULES_ACTION_RECORDER', 'Action Recorder');
 
 // categories box text in includes/boxes/catalog.php
 define('BOX_HEADING_CATALOG', 'Cat&aacute;logo');

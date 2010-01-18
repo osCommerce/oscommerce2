@@ -28,10 +28,10 @@
     }
 
     $actionRecorder = new actionRecorder('ar_contact_us');
-    if (!$actionRecorder->check()) {
+    if (!$actionRecorder->canPerform()) {
       $error = true;
 
-      $messageStack->add('contact', sprintf(ERROR_ACTION_RECORDER, (defined('MIN_CONTACT_US_EMAIL_MINUTES') ? (int)MIN_CONTACT_US_EMAIL_MINUTES : 15)));
+      $messageStack->add('contact', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)));
     }
 
     if ($error == false) {
