@@ -28,6 +28,12 @@
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
         break;
+      case 'actionrecorder':
+        $module_type = 'action_recorder';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'action_recorder/';
+        $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
+        break;
       case 'payment':
       default:
         $module_type = 'payment';

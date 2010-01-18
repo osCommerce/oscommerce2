@@ -67,10 +67,10 @@
     }
 
     $actionRecorder = new actionRecorder('ar_tell_a_friend');
-    if (!$actionRecorder->check()) {
+    if (!$actionRecorder->canPerform()) {
       $error = true;
 
-      $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MIN_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MIN_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
+      $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
     }
 
     if ($error == false) {

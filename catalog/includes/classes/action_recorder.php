@@ -15,20 +15,25 @@
     var $_customer_id;
 
     function actionRecorder($module) {
-      global $customer_id, $language;
+      global $customer_id, $language, $PHP_SELF;
 
       $module = tep_sanitize_string(str_replace(' ', '', $module));
 
-      if (!class_exists($module)) {
-        if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.php')) {
-          if (file_exists(DIR_WS_LANGUAGES . $language . '/modules/action_recorder/' . $module . '.php')) {
-            include(DIR_WS_LANGUAGES . $language . '/modules/action_recorder/' . $module . '.php');
+      if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
+        if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
+          if (!class_exists($module)) {
+            if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
+              include(DIR_WS_LANGUAGES . $language . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              include(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+            } else {
+              return false;
+            }
           }
-
-          include(DIR_WS_MODULES . 'action_recorder/' . $module . '.php');
         } else {
           return false;
         }
+      } else {
+        return false;
       }
 
       $this->_module = $module;
@@ -41,10 +46,10 @@
       }
     }
 
-    function check() {
+    function canPerform() {
       if (tep_not_null($this->_module)) {
-        if ($GLOBALS[$this->_module]->_log_retries == true) {
-          if ($GLOBALS[$this->_module]->check()) {
+        if ($GLOBALS[$this->_module]->log_retries == true) {
+          if ($GLOBALS[$this->_module]->canPerform()) {
             return true;
           } else {
             $this->record(false);
@@ -52,7 +57,7 @@
             return false;
           }
         } else {
-          return $GLOBALS[$this->_module]->check();
+          return $GLOBALS[$this->_module]->canPerform();
         }
       }
 
@@ -61,13 +66,13 @@
 
     function getTitle() {
       if (tep_not_null($this->_module)) {
-        return $GLOBALS[$this->_module]->_title;
+        return $GLOBALS[$this->_module]->title;
       }
     }
 
     function getIdentifier() {
       if (tep_not_null($this->_module)) {
-        return $GLOBALS[$this->_module]->_identifier;
+        return $GLOBALS[$this->_module]->identifier;
       }
     }
 

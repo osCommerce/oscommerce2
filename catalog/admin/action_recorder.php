@@ -115,7 +115,7 @@
     $module = $actions['module'];
 
     if (is_object($$module)) {
-      $module = $$module->_title;
+      $module = $$module->title;
     }
 
     if ((!isset($HTTP_GET_VARS['aID']) || (isset($HTTP_GET_VARS['aID']) && ($HTTP_GET_VARS['aID'] == $actions['id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
