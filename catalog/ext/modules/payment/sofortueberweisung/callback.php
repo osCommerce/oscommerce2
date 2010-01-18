@@ -14,18 +14,22 @@
   chdir('../../../../');
   require ('includes/application_top.php');
 
-  $order_id = $customer_id = $pw = $betrag_integer = '';
+  if (!defined('MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS') || (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS  != 'True')) {
+    exit;
+  }
+
+  $kunden_var_0 = $kunden_var_1 = $pw = $betrag_integer = '';
 
   if (isset($HTTP_GET_VARS['kunden_var_0'])) {
-    $order_id = $HTTP_GET_VARS['kunden_var_0'];
+    $kunden_var_0 = $HTTP_GET_VARS['kunden_var_0'];
   } elseif (isset($HTTP_POST_VARS['kunden_var_0'])) {
-    $order_id = $HTTP_POST_VARS['kunden_var_0'];
+    $kunden_var_0 = $HTTP_POST_VARS['kunden_var_0'];
   }
 
   if (isset($HTTP_GET_VARS['kunden_var_1'])) {
-    $customer_id = $HTTP_GET_VARS['kunden_var_1'];
+    $kunden_var_1 = $HTTP_GET_VARS['kunden_var_1'];
   } elseif (isset($HTTP_POST_VARS['kunden_var_1'])) {
-    $customer_id = $HTTP_POST_VARS['kunden_var_1'];
+    $kunden_var_1 = $HTTP_POST_VARS['kunden_var_1'];
   }
 
   if (isset($HTTP_GET_VARS['pw'])) {
@@ -41,7 +45,7 @@
   }
 
   // Check if Order exists
-  if (empty($order_id) || empty($customer_id) || empty($pw)) {
+  if (empty($kunden_var_0) || empty($kunden_var_1) || empty($pw)) {
     exit();
   }
 
@@ -52,12 +56,12 @@
   }
 
   // check if order exists
-  $order_query = tep_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
+  $order_query = tep_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . (int)$kunden_var_0 . "' and customers_id = '" . (int)$kunden_var_1 . "'");
   if (tep_db_num_rows($order_query) > 0) {
     $order = tep_db_fetch_array($order_query);
 
     if ($order['orders_status'] == MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PREPARE_ORDER_STATUS_ID) {
-      $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" .  (int)$order_id . "' and class = 'ot_total' limit 1");
+      $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" .  (int)$kunden_var_0 . "' and class = 'ot_total' limit 1");
       $total = tep_db_fetch_array($total_query);
 
       $order_total_integer = number_format($total['value'] * $currencies->get_value('EUR'), 2, '.','')*100;
@@ -81,7 +85,7 @@
 
       $order_status = (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
 
-      $sql_data_array = array('orders_id' => (int)$order_id,
+      $sql_data_array = array('orders_id' => (int)$kunden_var_0,
                               'orders_status_id' => $order_status,
                               'date_added' => 'now()',
                               'customer_notified' => '0',
@@ -89,7 +93,7 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status . "', last_modified = now() where orders_id = '" . (int)$kunden_var_0 . "'");
     }
   }
 ?>
