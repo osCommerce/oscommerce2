@@ -1230,25 +1230,50 @@
   function tep_get_ip_address() {
     global $HTTP_SERVER_VARS;
 
-    if (isset($HTTP_SERVER_VARS)) {
-      if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
-        $ip = $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'];
-      } elseif (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
-        $ip = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
-      } else {
-        $ip = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-      }
-    } else {
-      if (getenv('HTTP_X_FORWARDED_FOR')) {
-        $ip = getenv('HTTP_X_FORWARDED_FOR');
-      } elseif (getenv('HTTP_CLIENT_IP')) {
-        $ip = getenv('HTTP_CLIENT_IP');
-      } else {
-        $ip = getenv('REMOTE_ADDR');
+    $ip_address = null;
+    $ip_addresses = array();
+
+    if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
+      foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+        $x_ip = trim($x_ip);
+
+        if ( preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $x_ip) ) {
+          $ip_addresses[] = $x_ip;
+        }
       }
     }
 
-    return $ip;
+    if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
+    }
+
+    if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
+    }
+
+    if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
+    }
+
+    $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+
+    foreach ( $ip_addresses as $ip ) {
+      if (!empty($ip)) {
+        if (preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/', $ip, $match)) {
+          $ip_address = $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4];
+
+          if (!empty($ip_address) && $ip_address != '...') {
+            break;
+          }
+        }
+      }
+    }
+
+    if (empty($ip_address) || $ip_address == '...') {
+      return '';
+    } else {
+      return $ip_address;
+    }
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {
