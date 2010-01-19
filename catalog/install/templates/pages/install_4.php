@@ -83,6 +83,8 @@
     $http_catalog .= '/';
   }
 
+  $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
+
   $file_contents = '<?php' . "\n" .
                    '  define(\'HTTP_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'HTTPS_SERVER\', \'' . $http_server . '\');' . "\n" .
@@ -125,8 +127,8 @@
                    '  define(\'HTTPS_CATALOG_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'ENABLE_SSL_CATALOG\', \'false\');' . "\n" .
                    '  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . $dir_fs_document_root . '\');' . "\n" .
-                   '  define(\'DIR_WS_ADMIN\', \'' . $http_catalog .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) . '/\');' . "\n" .
-                   '  define(\'DIR_FS_ADMIN\', \'' . $dir_fs_document_root .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) . '/\');' . "\n" .
+                   '  define(\'DIR_WS_ADMIN\', \'' . $http_catalog .  $admin_folder . '/\');' . "\n" .
+                   '  define(\'DIR_FS_ADMIN\', \'' . $dir_fs_document_root .  $admin_folder . '/\');' . "\n" .
                    '  define(\'DIR_WS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_FS_CATALOG\', \'' . $dir_fs_document_root . '\');' . "\n" .
                    '  define(\'DIR_WS_IMAGES\', \'images/\');' . "\n" .
@@ -156,8 +158,8 @@
   fclose($fp);
   @chmod($dir_fs_document_root . 'admin/includes/configure.php', 0644);
    
-  if (trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) !== 'admin') {
-    rename('../admin','../' . trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
+  if ($admin_folder !== 'admin') {
+    rename('../admin','../' . $admin_folder);
   }
 ?>
 
@@ -170,20 +172,20 @@
     <ol>
       <li>Delete the catalog/install folder.</li>
 <?php
-  if (file_exists($dir_fs_document_root . '/includes/configure.php') && is_writable($dir_fs_document_root . '/includes/configure.php')) {
+  if (@file_exists($dir_fs_document_root . '/includes/configure.php') && is_writable($dir_fs_document_root . '/includes/configure.php')) {
 ?>
       <li>Reset the permissions on <?php echo $dir_fs_document_root;?>includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
 <?php
   }
-  if (file_exists($dir_fs_document_root .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) . '/includes/configure.php') && is_writable($dir_fs_document_root . 'admin/includes/configure.php')) {
+  if (@file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && is_writable($dir_fs_document_root . 'admin/includes/configure.php')) {
 ?>
-      <li>Reset the permissions on <?php echo $dir_fs_document_root .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']);?>/includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/admin/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
+      <li>Reset the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/admin/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
 <?php
 }
 ?>
       <li>Set the permissions on <?php echo $dir_fs_document_root;?>images directory to 755 (or 777 when you still can't add pictures in the admin when adding new products).</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']);?>/images/graphs directory to 755 (777 if that doesn't work)</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']);?>/backups to 755 (this is the folder to store the database backup of your store in the "Tools" section of the store admin).</li>
+      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/images/graphs directory to 755 (777 if that doesn't work)</li>
+      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/backups to 755 (this is the folder to store the database backup of your store in the "Tools" section of the store admin).</li>
       <li>The store admin directory on your server needs to be password protected using .htaccess. This can be done on some hosts using the "Administrators" page in the administration section. If this does not work consult your webhosts control panel and documentation.</li>
     </ol>
 
@@ -192,7 +194,7 @@
     <table border="0" width="99%" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" width="50%"><a href="<?php echo $http_server . $http_catalog . 'index.php'; ?>" target="_blank"><img src="images/button_catalog.gif" border="0" alt="Catalog" /></a></td>
-        <td align="center" width="50%"><a href="<?php echo $http_server . $http_catalog . trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) . '/index.php'; ?>" target="_blank"><img src="images/button_administration_tool.gif" border="0" alt="Administration Tool" /></a></td>
+        <td align="center" width="50%"><a href="<?php echo $http_server . $http_catalog . $admin_folder . '/index.php'; ?>" target="_blank"><img src="images/button_administration_tool.gif" border="0" alt="Administration Tool" /></a></td>
       </tr>
     </table>
   </div>
