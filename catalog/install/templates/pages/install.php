@@ -121,7 +121,7 @@
     <table border="0" width="99%" cellspacing="0" cellpadding="5" class="inputForm">
       <tr>
         <td class="inputField"><?php echo 'Database Server<br />' . osc_draw_input_field('DB_SERVER', 'localhost', 'class="text"'); ?></td>
-        <td class="inputDescription">The address of the database server in the form of a hostname or IP address. Often "localhost" (without the parentheses) will work fine.</td>
+        <td class="inputDescription">The address of the database server in the form of a hostname or IP address.</td>
       </tr>
       <tr>
         <td class="inputField"><?php echo 'Username<br />' . osc_draw_input_field('DB_SERVER_USERNAME', null, 'class="text"'); ?></td>
