@@ -1227,6 +1227,26 @@
     setcookie($name, $value, $expire, $path, (tep_not_null($domain) ? $domain : ''), $secure);
   }
 
+  function tep_validate_ip_address($ip_address) {
+    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
+      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
+    }
+
+    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
+      $parts = explode('.', $ip_address);
+
+      foreach ($parts as $ip_parts) {
+        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
+          return false; // number is not within 0-255
+        }
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
   function tep_get_ip_address() {
     global $HTTP_SERVER_VARS;
 
@@ -1237,7 +1257,7 @@
       foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
         $x_ip = trim($x_ip);
 
-        if ( preg_match('/^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/', $x_ip) ) {
+        if (tep_validate_ip_address($x_ip)) {
           $ip_addresses[] = $x_ip;
         }
       }
@@ -1258,22 +1278,13 @@
     $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
 
     foreach ( $ip_addresses as $ip ) {
-      if (!empty($ip)) {
-        if (preg_match('/^([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/', $ip, $match)) {
-          $ip_address = $match[1] . '.' . $match[2] . '.' . $match[3] . '.' . $match[4];
-
-          if (!empty($ip_address) && $ip_address != '...') {
-            break;
-          }
-        }
+      if (!empty($ip) && tep_validate_ip_address($ip)) {
+        $ip_address = $ip;
+        break;
       }
     }
 
-    if (empty($ip_address) || $ip_address == '...') {
-      return '';
-    } else {
-      return $ip_address;
-    }
+    return $ip_address;
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {
