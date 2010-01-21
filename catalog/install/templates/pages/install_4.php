@@ -85,14 +85,18 @@
 
   $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
 
+  if (empty($admin_folder) || !is_writable($dir_fs_document_root . $admin_folder)) {
+    $admin_folder = 'admin';
+  }
+
   $file_contents = '<?php' . "\n" .
                    '  define(\'HTTP_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'HTTPS_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'ENABLE_SSL\', false);' . "\n" .
-                   '  define(\'HTTP_COOKIE_DOMAIN\', \'' . $http_url['host'] . '\');' . "\n" .
-                   '  define(\'HTTPS_COOKIE_DOMAIN\', \'' . $http_url['host'] . '\');' . "\n" .
-                   '  define(\'HTTP_COOKIE_PATH\', \'' . $http_catalog . '\');' . "\n" .
-                   '  define(\'HTTPS_COOKIE_PATH\', \'' . $http_catalog . '\');' . "\n" .
+                   '  define(\'HTTP_COOKIE_DOMAIN\', \'\');' . "\n" .
+                   '  define(\'HTTPS_COOKIE_DOMAIN\', \'\');' . "\n" .
+                   '  define(\'HTTP_COOKIE_PATH\', \'\');' . "\n" .
+                   '  define(\'HTTPS_COOKIE_PATH\', \'\');' . "\n" .
                    '  define(\'DIR_WS_HTTP_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_HTTPS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_IMAGES\', \'images/\');' . "\n" .
@@ -156,38 +160,15 @@
   $fp = fopen($dir_fs_document_root . 'admin/includes/configure.php', 'w');
   fputs($fp, $file_contents);
   fclose($fp);
+
   @chmod($dir_fs_document_root . 'admin/includes/configure.php', 0644);
-   
-  if ($admin_folder !== 'admin') {
-    rename('../admin','../' . $admin_folder);
+
+  if ($admin_folder != 'admin') {
+    @rename($dir_fs_document_root . 'admin', $dir_fs_document_root . $admin_folder);
   }
 ?>
 
     <p>The installation and configuration was successful!</p>
-
-    <br />
-    <h3>Post-Installation</h3>
-
-    <p>After installing osCommerce follow these steps for post-installation which will help secure your site:</p>
-    <ol>
-      <li>Delete the catalog/install folder.</li>
-<?php
-  if (@file_exists($dir_fs_document_root . '/includes/configure.php') && is_writable($dir_fs_document_root . '/includes/configure.php')) {
-?>
-      <li>Reset the permissions on <?php echo $dir_fs_document_root;?>includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
-<?php
-  }
-  if (@file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && is_writable($dir_fs_document_root . 'admin/includes/configure.php')) {
-?>
-      <li>Reset the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/admin/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
-<?php
-}
-?>
-      <li>Set the permissions on <?php echo $dir_fs_document_root;?>images directory to 755 (or 777 when you still can't add pictures in the admin when adding new products).</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/images/graphs directory to 755 (777 if that doesn't work)</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/backups to 755 (this is the folder to store the database backup of your store in the "Tools" section of the store admin).</li>
-      <li>The store admin directory on your server needs to be password protected using .htaccess. This can be done on some hosts using the "Administrators" page in the administration section. If this does not work consult your webhosts control panel and documentation.</li>
-    </ol>
 
     <br />
 
@@ -197,5 +178,38 @@
         <td align="center" width="50%"><a href="<?php echo $http_server . $http_catalog . $admin_folder . '/index.php'; ?>" target="_blank"><img src="images/button_administration_tool.gif" border="0" alt="Administration Tool" /></a></td>
       </tr>
     </table>
+
+    <br />
+
+    <h3>Post-Installation Notes</h3>
+
+    <p>It is recommended to follow the following post-installation steps to secure your osCommerce Online Merchant online store:</p>
+
+    <ol>
+      <li>Delete the <?php echo $dir_fs_document_root . 'install'; ?> directory.</li>
+
+<?php
+  if (file_exists($dir_fs_document_root . 'includes/configure.php') && is_writable($dir_fs_document_root . 'includes/configure.php')) {
+?>
+
+      <li>Set the permissions on <?php echo $dir_fs_document_root . 'includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
+
+<?php
+  }
+
+  if (file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && is_writable($dir_fs_document_root . $admin_folder . '/includes/configure.php')) {
+?>
+
+      <li>Set the permissions on <?php echo $dir_fs_document_root . $admin_folder . '/includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
+
+<?php
+  }
+?>
+
+      <li>Set the permissions on <?php echo $dir_fs_document_root . 'images'; ?> to 755 (or 777 if product images cannot still be uploaded from the Administration Tool).</li>
+      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder . '/images/graphs'; ?> to 755 (or 777 if the Administration Tool cannot still create graphs).</li>
+      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder . '/backups'; ?> to 755 (or 777 if the Administration Tool cannot still create backups).</li>
+      <li>The Administration Tool should be further protected using htaccess/htpasswd and can be set-up within the Configuration -> Administrators page.</li>
+    </ol>
   </div>
 </div>

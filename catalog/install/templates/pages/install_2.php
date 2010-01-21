@@ -10,11 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if ( $HTTP_SERVER_VARS['HTTP_HOST'] == 'localhost') {
-    $www_location = 'http://127.0.0.1';
-  } else {
-    $www_location = 'http://' . $HTTP_SERVER_VARS['HTTP_HOST'];
-  }
+  $www_location = 'http://' . $HTTP_SERVER_VARS['HTTP_HOST'];
 
   if (isset($HTTP_SERVER_VARS['REQUEST_URI']) && !empty($HTTP_SERVER_VARS['REQUEST_URI'])) {
     $www_location .= $HTTP_SERVER_VARS['REQUEST_URI'];
@@ -60,7 +56,7 @@
     <table border="0" width="99%" cellspacing="0" cellpadding="5" class="inputForm">
       <tr>
         <td class="inputField"><?php echo 'WWW Address<br />' . osc_draw_input_field('HTTP_WWW_ADDRESS', $www_location, 'class="text"'); ?></td>
-        <td class="inputDescription">The web address to the online store. <?php echo ($HTTP_SERVER_VARS['HTTP_HOST'] == 'localhost') ? '<br /><strong>Note:</strong> 127.0.0.1 is equivalent to localhost but is prefered due to setting of cookies which needs a dot in an address to be able to be set.' : '';?></td>
+        <td class="inputDescription">The web address to the online store.</td>
       </tr>
       <tr>
         <td class="inputField"><?php echo 'Webserver Root Directory<br />' . osc_draw_input_field('DIR_FS_DOCUMENT_ROOT', $dir_fs_www_root, 'class="text"'); ?></td>
