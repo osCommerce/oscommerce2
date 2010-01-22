@@ -112,19 +112,11 @@
     }
 
     if ($length = strlen($session_data)) {
-      if (PHP_VERSION < 4) {
-        $start_id = strpos($session_data, 'customer_id[==]s');
-        $start_cart = strpos($session_data, 'cart[==]o');
-        $start_currency = strpos($session_data, 'currency[==]s');
-        $start_country = strpos($session_data, 'customer_country_id[==]s');
-        $start_zone = strpos($session_data, 'customer_zone_id[==]s');
-      } else {
-        $start_id = strpos($session_data, 'customer_id|s');
-        $start_cart = strpos($session_data, 'cart|O');
-        $start_currency = strpos($session_data, 'currency|s');
-        $start_country = strpos($session_data, 'customer_country_id|s');
-        $start_zone = strpos($session_data, 'customer_zone_id|s');
-      }
+      $start_id = strpos($session_data, 'customer_id|s');
+      $start_cart = strpos($session_data, 'cart|O');
+      $start_currency = strpos($session_data, 'currency|s');
+      $start_country = strpos($session_data, 'customer_country_id|s');
+      $start_zone = strpos($session_data, 'customer_zone_id|s');
 
       for ($i=$start_cart; $i<$length; $i++) {
         if ($session_data[$i] == '{') {
@@ -151,12 +143,6 @@
       session_decode($session_data_country);
       session_decode($session_data_zone);
       session_decode($session_data_cart);
-
-      if (PHP_VERSION < 4) {
-        $broken_cart = $cart;
-        $cart = new shoppingCart;
-        $cart->unserialize($broken_cart);
-      }
 
       if (is_object($cart)) {
         $products = $cart->get_products();
