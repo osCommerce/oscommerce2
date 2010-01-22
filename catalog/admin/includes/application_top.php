@@ -78,15 +78,6 @@
 // include shopping cart class
   require(DIR_WS_CLASSES . 'shopping_cart.php');
 
-// check to see if php implemented session management functions - if not, include php3/php4 compatible session class
-  if (!function_exists('session_start')) {
-    define('PHP_SESSION_NAME', 'osCAdminID');
-    define('PHP_SESSION_PATH', '/');
-    define('PHP_SESSION_SAVE_PATH', SESSION_WRITE_DIRECTORY);
-
-    include(DIR_WS_CLASSES . 'sessions.php');
-  }
-
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
