@@ -128,16 +128,6 @@
 // include navigation history class
   require(DIR_WS_CLASSES . 'navigation_history.php');
 
-// check if sessions are supported, otherwise use the php3 compatible session class
-  if (!function_exists('session_start')) {
-    define('PHP_SESSION_NAME', 'osCsid');
-    define('PHP_SESSION_PATH', $cookie_path);
-    define('PHP_SESSION_DOMAIN', $cookie_domain);
-    define('PHP_SESSION_SAVE_PATH', SESSION_WRITE_DIRECTORY);
-
-    include(DIR_WS_CLASSES . 'sessions.php');
-  }
-
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
@@ -251,14 +241,8 @@
     }
   }
 
-// create the shopping cart & fix the cart if necesary
-  if (tep_session_is_registered('cart') && is_object($cart)) {
-    if (PHP_VERSION < 4) {
-      $broken_cart = $cart;
-      $cart = new shoppingCart;
-      $cart->unserialize($broken_cart);
-    }
-  } else {
+// create the shopping cart
+  if (!tep_session_is_registered('cart') || !is_object($cart)) {
     tep_session_register('cart');
     $cart = new shoppingCart;
   }
@@ -306,13 +290,7 @@
   }
 
 // navigation history
-  if (tep_session_is_registered('navigation') && is_object($navigation)) {
-    if (PHP_VERSION < 4) {
-      $broken_navigation = $navigation;
-      $navigation = new navigationHistory;
-      $navigation->unserialize($broken_navigation);
-    }
-  } else {
+  if (!tep_session_is_registered('navigation') || !is_object($navigation)) {
     tep_session_register('navigation');
     $navigation = new navigationHistory;
   }
@@ -345,22 +323,7 @@
                                 if (in_array($HTTP_POST_VARS['products_id'][$i], (is_array($HTTP_POST_VARS['cart_delete']) ? $HTTP_POST_VARS['cart_delete'] : array()))) {
                                   $cart->remove($HTTP_POST_VARS['products_id'][$i]);
                                 } else {
-                                  if (PHP_VERSION < 4) {
-                                    // if PHP3, make correction for lack of multidimensional array.
-                                    reset($HTTP_POST_VARS);
-                                    while (list($key, $value) = each($HTTP_POST_VARS)) {
-                                      if (is_array($value)) {
-                                        while (list($key2, $value2) = each($value)) {
-                                          if (preg_match ("/(.*)\]\[(.*)/", $key2, $var)) {
-                                            $id2[$var[1]][$var[2]] = $value2;
-                                          }
-                                        }
-                                      }
-                                    }
-                                    $attributes = ($id2[$HTTP_POST_VARS['products_id'][$i]]) ? $id2[$HTTP_POST_VARS['products_id'][$i]] : '';
-                                  } else {
-                                    $attributes = ($HTTP_POST_VARS['id'][$HTTP_POST_VARS['products_id'][$i]]) ? $HTTP_POST_VARS['id'][$HTTP_POST_VARS['products_id'][$i]] : '';
-                                  }
+                                  $attributes = ($HTTP_POST_VARS['id'][$HTTP_POST_VARS['products_id'][$i]]) ? $HTTP_POST_VARS['id'][$HTTP_POST_VARS['products_id'][$i]] : '';
                                   $cart->add_cart($HTTP_POST_VARS['products_id'][$i], $HTTP_POST_VARS['cart_quantity'][$i], $attributes, false);
                                 }
                               }
