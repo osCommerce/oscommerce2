@@ -1123,12 +1123,7 @@
 ////
 // Wrapper function for round() for php3 compatibility
   function tep_round($value, $precision) {
-    if (PHP_VERSION < 4) {
-      $exp = pow(10, $precision);
-      return round($value * $exp) / $exp;
-    } else {
-      return round($value, $precision);
-    }
+    return round($value, $precision);
   }
 
 ////
@@ -1193,8 +1188,6 @@
   function tep_call_function($function, $parameter, $object = '') {
     if ($object == '') {
       return call_user_func($function, $parameter);
-    } elseif (PHP_VERSION < 4) {
-      return call_user_method($function, $object, $parameter);
     } else {
       return call_user_func(array($object, $function), $parameter);
     }
