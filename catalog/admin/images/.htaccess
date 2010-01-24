@@ -1,0 +1,10 @@
+# $Id$
+#
+# This is used to restrict access to this folder to anything other
+# than images
+
+# Prevents any script files from being accessed from the images folder
+<FilesMatch "\.(php([0-9]|s)?|s?p?html|cgi|pl|exe)$">
+   Order Deny,Allow
+   Deny from all
+</FilesMatch>
