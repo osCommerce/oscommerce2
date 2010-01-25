@@ -507,6 +507,13 @@ CREATE TABLE reviews_description (
   PRIMARY KEY (reviews_id, languages_id)
 );
 
+DROP TABLE IF EXISTS sec_directory_whitelist;
+CREATE TABLE sec_directory_whitelist (
+  id int NOT NULL auto_increment,
+  directory varchar(255) NOT NULL,
+  PRIMARY KEY (id)
+);
+
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
   sesskey varchar(32) NOT NULL,
@@ -1384,6 +1391,19 @@ INSERT INTO products_to_categories VALUES (27,5);
 INSERT INTO reviews VALUES (1,19,1,'John doe',5, now(),null,0);
 
 INSERT INTO reviews_description VALUES (1,1, 'this has to be one of the funniest movies released for 1999!');
+
+INSERT INTO sec_directory_whitelist values (null, 'admin/backups');
+INSERT INTO sec_directory_whitelist values (null, 'admin/images/graphs');
+INSERT INTO sec_directory_whitelist values (null, 'images');
+INSERT INTO sec_directory_whitelist values (null, 'images/banners');
+INSERT INTO sec_directory_whitelist values (null, 'images/dvd');
+INSERT INTO sec_directory_whitelist values (null, 'images/gt_interactive');
+INSERT INTO sec_directory_whitelist values (null, 'images/hewlett_packard');
+INSERT INTO sec_directory_whitelist values (null, 'images/matrox');
+INSERT INTO sec_directory_whitelist values (null, 'images/microsoft');
+INSERT INTO sec_directory_whitelist values (null, 'images/sierra');
+INSERT INTO sec_directory_whitelist values (null, 'includes/work');
+INSERT INTO sec_directory_whitelist values (null, 'pub');
 
 INSERT INTO specials VALUES (1,3, 39.99, now(), null, null, null, '1');
 INSERT INTO specials VALUES (2,5, 30.00, now(), null, null, null, '1');
