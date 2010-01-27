@@ -12,10 +12,11 @@
 
   class actionRecorder {
     var $_module;
-    var $_customer_id;
+    var $_user_id;
+    var $_user_name;
 
-    function actionRecorder($module) {
-      global $customer_id, $language, $PHP_SELF;
+    function actionRecorder($module, $user_id = null, $user_name = null) {
+      global $language, $PHP_SELF;
 
       $module = tep_sanitize_string(str_replace(' ', '', $module));
 
@@ -38,27 +39,21 @@
 
       $this->_module = $module;
 
+      if (!empty($user_id) && is_numeric($user_id)) {
+        $this->_user_id = $user_id;
+      }
+
+      if (!empty($user_name)) {
+        $this->_user_name = $user_name;
+      }
+
       $GLOBALS[$this->_module] = new $module();
       $GLOBALS[$this->_module]->setIdentifier();
-
-      if (tep_session_is_registered('customer_id')) {
-        $this->_customer_id = $customer_id;
-      }
     }
 
     function canPerform() {
       if (tep_not_null($this->_module)) {
-        if ($GLOBALS[$this->_module]->log_retries == true) {
-          if ($GLOBALS[$this->_module]->canPerform()) {
-            return true;
-          } else {
-            $this->record(false);
-
-            return false;
-          }
-        } else {
-          return $GLOBALS[$this->_module]->canPerform();
-        }
+        return $GLOBALS[$this->_module]->canPerform($this->_user_id, $this->_user_name);
       }
 
       return false;
@@ -78,7 +73,7 @@
 
     function record($success = true) {
       if (tep_not_null($this->_module)) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, customer_id, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_customer_id . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success ? 1 : 0) . "', now())");
+        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
       }
     }
 

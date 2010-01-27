@@ -1296,4 +1296,64 @@
 
     return $tmp_array;
   }
+
+  function tep_validate_ip_address($ip_address) {
+    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
+      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
+    }
+
+    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
+      $parts = explode('.', $ip_address);
+
+      foreach ($parts as $ip_parts) {
+        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
+          return false; // number is not within 0-255
+        }
+      }
+
+      return true;
+    }
+
+    return false;
+  }
+
+  function tep_get_ip_address() {
+    global $HTTP_SERVER_VARS;
+
+    $ip_address = null;
+    $ip_addresses = array();
+
+    if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
+      foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+        $x_ip = trim($x_ip);
+
+        if (tep_validate_ip_address($x_ip)) {
+          $ip_addresses[] = $x_ip;
+        }
+      }
+    }
+
+    if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
+    }
+
+    if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
+    }
+
+    if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
+      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
+    }
+
+    $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+
+    foreach ( $ip_addresses as $ip ) {
+      if (!empty($ip) && tep_validate_ip_address($ip)) {
+        $ip_address = $ip;
+        break;
+      }
+    }
+
+    return $ip_address;
+  }
 ?>

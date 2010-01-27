@@ -108,21 +108,21 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $actions_query_raw = "select ar.id, ar.module, ar.customer_id, ar.success, ar.date_added, c.customers_firstname, c.customers_lastname from " . TABLE_ACTION_RECORDER . " ar left join " . TABLE_CUSTOMERS . " c on (ar.customer_id = c.customers_id) order by ar.date_added desc";
+  $actions_query_raw = "select * from " . TABLE_ACTION_RECORDER . " order by date_added desc";
   $actions_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
   $actions_query = tep_db_query($actions_query_raw);
   while ($actions = tep_db_fetch_array($actions_query)) {
     $module = $actions['module'];
 
     if (is_object($$module)) {
-      $module = $$module->title;
+      $module_title = $$module->title;
     }
 
     if ((!isset($HTTP_GET_VARS['aID']) || (isset($HTTP_GET_VARS['aID']) && ($HTTP_GET_VARS['aID'] == $actions['id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
       $actions_extra_query = tep_db_query("select identifier from " . TABLE_ACTION_RECORDER . " where id = '" . (int)$actions['id'] . "'");
       $actions_extra = tep_db_fetch_array($actions_extra_query);
 
-      $aInfo_array = array_merge($actions, $actions_extra, array('module' => $module));
+      $aInfo_array = array_merge($actions, $actions_extra, array('module' => $module_title));
       $aInfo = new objectInfo($aInfo_array);
     }
 
@@ -133,8 +133,8 @@
     }
 ?>
                 <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (($actions['success'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent"><?php echo $module; ?></td>
-                <td class="dataTableContent"><?php echo ($actions['customer_id'] > 0 ? tep_output_string_protected($actions['customers_firstname'] . ' ' . $actions['customers_lastname']) : '(' . TEXT_GUEST . ')'); ?></td>
+                <td class="dataTableContent"><?php echo $module_title; ?></td>
+                <td class="dataTableContent"><?php echo tep_output_string_protected($actions['user_name']) . ' [' . (int)$actions['user_id'] . ']'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo tep_datetime_short($actions['date_added']); ?></td>
                 <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'aID=' . $actions['id']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>

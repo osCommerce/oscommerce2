@@ -66,9 +66,11 @@
       $messageStack->add('friend', ERROR_TO_ADDRESS);
     }
 
-    $actionRecorder = new actionRecorder('ar_tell_a_friend');
+    $actionRecorder = new actionRecorder('ar_tell_a_friend', (tep_session_is_registered('customer_id') ? $customer_id : null), $from_name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
+
+      $actionRecorder->record(false);
 
       $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
     }

@@ -33,35 +33,46 @@
           $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
         }
 
-        $check_query = tep_db_query("select id, user_name, user_password from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "'");
+        $actionRecorder = new actionRecorderAdmin('ar_admin_login', null, $username);
 
-        if (tep_db_num_rows($check_query) == 1) {
-          $check = tep_db_fetch_array($check_query);
+        if ($actionRecorder->canPerform()) {
+          $check_query = tep_db_query("select id, user_name, user_password from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "'");
 
-          if (tep_validate_password($password, $check['user_password'])) {
-            tep_session_register('admin');
+          if (tep_db_num_rows($check_query) == 1) {
+            $check = tep_db_fetch_array($check_query);
 
-            $admin = array('id' => $check['id'],
-                           'username' => $check['user_name']);
+            if (tep_validate_password($password, $check['user_password'])) {
+              tep_session_register('admin');
 
-            if (tep_session_is_registered('redirect_origin')) {
-              $page = $redirect_origin['page'];
-              $get_string = '';
+              $admin = array('id' => $check['id'],
+                             'username' => $check['user_name']);
 
-              if (function_exists('http_build_query')) {
-                $get_string = http_build_query($redirect_origin['get']);
+              $actionRecorder->_user_id = $admin['id'];
+              $actionRecorder->record();
+
+              if (tep_session_is_registered('redirect_origin')) {
+                $page = $redirect_origin['page'];
+                $get_string = '';
+
+                if (function_exists('http_build_query')) {
+                  $get_string = http_build_query($redirect_origin['get']);
+                }
+
+                tep_session_unregister('redirect_origin');
+
+                tep_redirect(tep_href_link($page, $get_string));
+              } else {
+                tep_redirect(tep_href_link(FILENAME_DEFAULT));
               }
-
-              tep_session_unregister('redirect_origin');
-
-              tep_redirect(tep_href_link($page, $get_string));
-            } else {
-              tep_redirect(tep_href_link(FILENAME_DEFAULT));
             }
           }
+
+          $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+        } else {
+          $messageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
         }
 
-        $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+        $actionRecorder->record(false);
 
         break;
 
