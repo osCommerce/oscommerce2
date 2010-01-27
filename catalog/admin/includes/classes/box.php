@@ -52,7 +52,7 @@
       $this->heading = $this->tableBlock($heading);
 
       $this->table_data_parameters = 'class="menuBoxContent"';
-      $this->contents = $this->tableBlock($contents);
+      $this->contents = (!empty($contents) ? $this->tableBlock($contents) : '');
 
       return $this->heading . $this->contents;
     }
