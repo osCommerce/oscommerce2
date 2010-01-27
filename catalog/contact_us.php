@@ -27,9 +27,11 @@
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
 
-    $actionRecorder = new actionRecorder('ar_contact_us');
+    $actionRecorder = new actionRecorder('ar_contact_us', (tep_session_is_registered('customer_id') ? $customer_id : null), $name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
+
+      $actionRecorder->record(false);
 
       $messageStack->add('contact', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)));
     }

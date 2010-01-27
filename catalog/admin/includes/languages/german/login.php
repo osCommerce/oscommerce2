@@ -21,4 +21,6 @@ define('ERROR_INVALID_ADMINISTRATOR', 'Error: Invalid administrator login attemp
 
 define('BUTTON_LOGIN', 'Login');
 define('BUTTON_CREATE_ADMINISTRATOR', 'Create Administrator');
+
+define('ERROR_ACTION_RECORDER', 'Error: The maximum number of login attempts has been reached. Please try again in %s minutes.');
 ?>
