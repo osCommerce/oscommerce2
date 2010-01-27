@@ -9,6 +9,15 @@
 
   Released under the GNU General Public License
 */
+
+  $dir_fs_document_root = $HTTP_POST_VARS['DIR_FS_DOCUMENT_ROOT'];
+  if ((substr($dir_fs_document_root, -1) != '\\') && (substr($dir_fs_document_root, -1) != '/')) {
+    if (strrpos($dir_fs_document_root, '\\') !== false) {
+      $dir_fs_document_root .= '\\';
+    } else {
+      $dir_fs_document_root .= '/';
+    }
+  }
 ?>
 
 <div class="mainBlock">
@@ -63,10 +72,18 @@
         <td class="inputField"><?php echo 'Administrator Password<br />' . osc_draw_input_field('CFG_ADMINISTRATOR_PASSWORD', null, 'class="text"'); ?></td>
         <td class="inputDescription">The password to use for the administrator account.</td>
       </tr>
+
+<?php
+  if (is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
+?>
       <tr>
         <td class="inputField"><?php echo 'Administration Directory Name<br />' . osc_draw_input_field('CFG_ADMIN_DIRECTORY', 'admin', 'class="text"'); ?></td>
         <td class="inputDescription">This is the directory where the administration section will be installed. You should change this for security reasons.</td>
       </tr>
+<?php
+  }
+?>
+
     </table>
 
     <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>
