@@ -475,11 +475,4 @@
 // initialize the message stack for output messages
   require(DIR_WS_CLASSES . 'message_stack.php');
   $messageStack = new messageStack;
-
-// set which precautions should be checked
-  define('WARN_INSTALL_EXISTENCE', 'true');
-  define('WARN_CONFIG_WRITEABLE', 'true');
-  define('WARN_SESSION_DIRECTORY_NOT_WRITEABLE', 'true');
-  define('WARN_SESSION_AUTO_START', 'true');
-  define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 ?>

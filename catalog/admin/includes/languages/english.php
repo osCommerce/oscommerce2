@@ -283,8 +283,6 @@ define('TEXT_DEFAULT', 'default');
 define('TEXT_SET_DEFAULT', 'Set as default');
 define('TEXT_FIELD_REQUIRED', '&nbsp;<span class="fieldRequired">* Required</span>');
 
-define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: There is currently no default currency set. Please set one at: Administration Tool->Localization->Currencies');
-
 define('TEXT_CACHE_CATEGORIES', 'Categories Box');
 define('TEXT_CACHE_MANUFACTURERS', 'Manufacturers Box');
 define('TEXT_CACHE_ALSO_PURCHASED', 'Also Purchased Module');
@@ -298,5 +296,4 @@ define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
-define('WARNING_FILE_UPLOADS_DISABLED', 'Warning: File uploads are disabled in the php.ini configuration file.');
 ?>
