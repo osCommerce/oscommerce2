@@ -40,24 +40,19 @@
     return $result;
   }
 
-  $rec = array('admin/backups',
-               'admin/images/graphs',
-               'images',
-               'images/banners',
-               'images/dvd',
-               'images/gt_interactive',
-               'images/hewlett_packard',
-               'images/matrox',
-               'images/microsoft',
-               'images/sierra',
-               'pub');
+  $whitelist_array = array();
+
+  $whitelist_query = tep_db_query("select directory from " . TABLE_SEC_DIRECTORY_WHITELIST);
+  while ($whitelist = tep_db_fetch_array($whitelist_query)) {
+    $whitelist_array[] = $whitelist['directory'];
+  }
 
   $admin_dir = basename(DIR_FS_ADMIN);
 
   if ($admin_dir != 'admin') {
-    for ($i=0, $n=sizeof($rec); $i<$n; $i++) {
-      if (substr($rec[$i], 0, 6) == 'admin/') {
-        $rec[$i] = $admin_dir . substr($rec[$i], 5);
+    for ($i=0, $n=sizeof($whitelist_array); $i<$n; $i++) {
+      if (substr($whitelist_array[$i], 0, 6) == 'admin/') {
+        $whitelist_array[$i] = $admin_dir . substr($whitelist_array[$i], 5);
       }
     }
   }
@@ -109,7 +104,7 @@
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo substr($file['name'], strlen(DIR_FS_CATALOG)); ?></td>
                 <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $rec) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
               </tr>
 <?php
     }
