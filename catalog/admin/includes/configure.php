@@ -36,6 +36,8 @@
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
   define('DIR_FS_CATALOG_MODULES', DIR_FS_CATALOG . 'includes/modules/');
   define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
+  define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
+  define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
 
 // define our database connection
   define('DB_SERVER', '');
