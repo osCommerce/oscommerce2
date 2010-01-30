@@ -49,6 +49,7 @@
   define('TABLE_PRODUCTS_TO_CATEGORIES', 'products_to_categories');
   define('TABLE_REVIEWS', 'reviews');
   define('TABLE_REVIEWS_DESCRIPTION', 'reviews_description');
+  define('TABLE_SEC_DIRECTORY_WHITELIST', 'sec_directory_whitelist');
   define('TABLE_SESSIONS', 'sessions');
   define('TABLE_SPECIALS', 'specials');
   define('TABLE_TAX_CLASS', 'tax_class');

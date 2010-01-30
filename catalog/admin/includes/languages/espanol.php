@@ -106,6 +106,7 @@ define('BOX_TOOLS_DEFINE_LANGUAGE', 'Definir Idiomas');
 define('BOX_TOOLS_FILE_MANAGER', 'Archivos');
 define('BOX_TOOLS_MAIL', 'Enviar Email');
 define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Boletines');
+define('BOX_TOOLS_SEC_DIR_PERMISSIONS', 'Security Directory Permissions');
 define('BOX_TOOLS_SERVER_INFO', 'Informaci&oacute;n');
 define('BOX_TOOLS_WHOS_ONLINE', 'Usuarios conectados');
 
