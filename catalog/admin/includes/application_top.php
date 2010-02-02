@@ -197,6 +197,9 @@
 // file uploading class
   require(DIR_WS_CLASSES . 'upload.php');
 
+// action recorder
+  require(DIR_WS_CLASSES . 'action_recorder.php');
+
 // calculate category path
   if (isset($HTTP_GET_VARS['cPath'])) {
     $cPath = $HTTP_GET_VARS['cPath'];
@@ -228,18 +231,4 @@
                         array('title' => TEXT_CACHE_MANUFACTURERS, 'code' => 'manufacturers', 'file' => 'manufacturers_box-language.cache', 'multiple' => true),
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
-
-// check if a default currency is set
-  if (!defined('DEFAULT_CURRENCY')) {
-    $messageStack->add(ERROR_NO_DEFAULT_CURRENCY_DEFINED, 'error');
-  }
-
-// check if a default language is set
-  if (!defined('DEFAULT_LANGUAGE')) {
-    $messageStack->add(ERROR_NO_DEFAULT_LANGUAGE_DEFINED, 'error');
-  }
-
-  if (function_exists('ini_get') && ((bool)ini_get('file_uploads') == false) ) {
-    $messageStack->add(WARNING_FILE_UPLOADS_DISABLED, 'warning');
-  }
 ?>

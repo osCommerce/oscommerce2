@@ -67,6 +67,7 @@ define('BOX_HEADING_MODULES', 'Module');
 define('BOX_MODULES_PAYMENT', 'Zahlungsweise');
 define('BOX_MODULES_SHIPPING', 'Versandart');
 define('BOX_MODULES_ORDER_TOTAL', 'Zusammenfassung');
+define('BOX_MODULES_ACTION_RECORDER', 'Action Recorder');
 
 // categories box text in includes/boxes/catalog.php
 define('BOX_HEADING_CATALOG', 'Katalog');
@@ -282,8 +283,6 @@ define('TEXT_DEFAULT', 'Standard');
 define('TEXT_SET_DEFAULT', 'als Standard definieren');
 define('TEXT_FIELD_REQUIRED', '&nbsp;<span class="fieldRequired">* erforderlich</span>');
 
-define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Fehler: Es wurde keine Standardw&auml;hrung definiert. Bitte definieren Sie unter Adminstration -> Sprachen/W&auml;hrungen -> W&auml;hrungen eine Standardw&auml;hrung.');
-
 define('TEXT_CACHE_CATEGORIES', 'Kategorien Box');
 define('TEXT_CACHE_MANUFACTURERS', 'Hersteller Box');
 define('TEXT_CACHE_ALSO_PURCHASED', 'Modul f&uuml;r ebenfalls gekaufte Artikel');
@@ -297,5 +296,4 @@ define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
-define('WARNING_FILE_UPLOADS_DISABLED', 'Warning: File uploads are disabled in the php.ini configuration file.');
 ?>

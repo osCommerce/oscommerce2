@@ -67,6 +67,7 @@ define('BOX_HEADING_MODULES', 'M&oacute;dulos');
 define('BOX_MODULES_PAYMENT', 'Pago');
 define('BOX_MODULES_SHIPPING', 'Env&iacute;o');
 define('BOX_MODULES_ORDER_TOTAL', 'Totalizaci&oacute;n');
+define('BOX_MODULES_ACTION_RECORDER', 'Action Recorder');
 
 // categories box text in includes/boxes/catalog.php
 define('BOX_HEADING_CATALOG', 'Cat&aacute;logo');
@@ -282,8 +283,6 @@ define('TEXT_DEFAULT', 'predeterminado/a');
 define('TEXT_SET_DEFAULT', 'Establecer como predeterminado/a');
 define('TEXT_FIELD_REQUIRED', '&nbsp;<span class="fieldRequired">* Obligatorio</span>');
 
-define('ERROR_NO_DEFAULT_CURRENCY_DEFINED', 'Error: No hay moneda predeterminada. Por favor establezca una en: Herramientas de Administracion->Localizaci&oacute;n->Monedas');
-
 define('TEXT_CACHE_CATEGORIES', 'Categorias');
 define('TEXT_CACHE_MANUFACTURERS', 'Fabricantes');
 define('TEXT_CACHE_ALSO_PURCHASED', 'Tambi&eacute;n Han Comprado');
@@ -297,5 +296,4 @@ define('ERROR_FILE_NOT_SAVED', 'Error: El archivo subido no se ha guardado.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: Extension de fichero no permitida.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Exito: Fichero guardado con &eacute;xito.');
 define('WARNING_NO_FILE_UPLOADED', 'Advertencia: No se ha subido ningun archivo.');
-define('WARNING_FILE_UPLOADS_DISABLED', 'Warning: Se ha desactivado la subida de archivos en el fichero de configuraci&oacute;n php.ini.');
 ?>

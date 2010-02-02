@@ -83,10 +83,13 @@
     $http_catalog .= '/';
   }
 
-  $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
+  $admin_folder = 'admin';
+  if (isset($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && !empty($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
+    $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
 
-  if (empty($admin_folder) || !is_writable($dir_fs_document_root . $admin_folder)) {
-    $admin_folder = 'admin';
+    if (empty($admin_folder)) {
+      $admin_folder = 'admin';
+    }
   }
 
   $file_contents = '<?php' . "\n" .
@@ -148,7 +151,9 @@
                    '  define(\'DIR_FS_CATALOG_LANGUAGES\', DIR_FS_CATALOG . \'includes/languages/\');' . "\n" .
                    '  define(\'DIR_FS_CATALOG_IMAGES\', DIR_FS_CATALOG . \'images/\');' . "\n" .
                    '  define(\'DIR_FS_CATALOG_MODULES\', DIR_FS_CATALOG . \'includes/modules/\');' . "\n" .
-                   '  define(\'DIR_FS_BACKUP\', DIR_FS_ADMIN . \'backups/\');' . "\n\n" .
+                   '  define(\'DIR_FS_BACKUP\', DIR_FS_ADMIN . \'backups/\');' . "\n" .
+                   '  define(\'DIR_FS_DOWNLOAD\', DIR_FS_CATALOG . \'download/\');' . "\n" .
+                   '  define(\'DIR_FS_DOWNLOAD_PUBLIC\', DIR_FS_CATALOG . \'pub/\');' . "\n\n" .
                    '  define(\'DB_SERVER\', \'' . trim($HTTP_POST_VARS['DB_SERVER']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_USERNAME\', \'' . trim($HTTP_POST_VARS['DB_SERVER_USERNAME']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
@@ -213,6 +218,14 @@
       <li>Delete the <?php echo $dir_fs_document_root . 'install'; ?> directory.</li>
 
 <?php
+  if ($admin_folder == 'admin') {
+?>
+
+      <li>Rename the Administration Tool directory located at <?php echo $dir_fs_document_root . 'admin'; ?>.</li>
+
+<?php
+  }
+
   if (file_exists($dir_fs_document_root . 'includes/configure.php') && is_writable($dir_fs_document_root . 'includes/configure.php')) {
 ?>
 
@@ -230,9 +243,7 @@
   }
 ?>
 
-      <li>Set the permissions on <?php echo $dir_fs_document_root . 'images'; ?> to 755 (or 777 if product images cannot still be uploaded from the Administration Tool).</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder . '/images/graphs'; ?> to 755 (or 777 if the Administration Tool cannot still create graphs).</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder . '/backups'; ?> to 755 (or 777 if the Administration Tool cannot still create backups).</li>
+      <li>Review the directory permissions on the Administration Tool -> Tools -> Security Directory Permissions page.</li>
       <li>The Administration Tool should be further protected using htaccess/htpasswd and can be set-up within the Configuration -> Administrators page.</li>
     </ol>
   </div>
