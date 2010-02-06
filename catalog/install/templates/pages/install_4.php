@@ -72,6 +72,9 @@
     }
   }
 
+  osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "DIR_FS_CACHE"');
+  osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "SESSION_WRITE_DIRECTORY"');
+
   $http_url = parse_url($HTTP_POST_VARS['HTTP_WWW_ADDRESS']);
   $http_server = $http_url['scheme'] . '://' . $http_url['host'];
   $http_catalog = $http_url['path'];
