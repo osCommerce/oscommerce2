@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (isset($currencies) && is_object($currencies)) {
+  if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
 ?>
 <!-- currencies //-->
           <tr>
