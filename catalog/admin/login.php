@@ -130,7 +130,17 @@
     <td><table border="0" width="100%" cellspacing="0" cellpadding="0" height="40">
       <tr>
         <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+
+<?php
+  if (sizeof($languages_array) > 1) {
+?>
+
         <td class="pageHeading" align="right"><?php echo tep_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onChange="this.form.submit();"') . tep_hide_session_id() . '</form>'; ?></td>
+
+<?php
+  }
+?>
+
       </tr>
     </table></td>
   </tr>
