@@ -1133,8 +1133,8 @@ INSERT INTO countries VALUES (237,'Zaire','ZR','ZAR','1');
 INSERT INTO countries VALUES (238,'Zambia','ZM','ZMB','1');
 INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE','1');
 
-INSERT INTO currencies VALUES (1,'US Dollar','USD','$','','.',',','2','1.0000', now());
-INSERT INTO currencies VALUES (2,'Euro','EUR','','EUR','.',',','2','1.1036', now());
+INSERT INTO currencies VALUES (1,'U.S. Dollar','USD','$','','.',',','2','1.0000', now());
+INSERT INTO currencies VALUES (2,'Euro','EUR','','EUR','.',',','2','1.0000', now());
 
 INSERT INTO customers VALUES ( '1', 'm', 'John', 'doe', '2001-01-01 00:00:00', 'root@localhost', '1', '12345', '', 'd95e8fa7f20a009372eb3477473fcd34:1c', '0');
 

@@ -109,6 +109,19 @@
         break;
     }
   }
+
+  $currency_select = array('AUS' => array('title' => 'Australian Dollar', 'code' => 'AUS', 'symbol_left' => '$', 'symbol_right' => '', 'decimal_point' => '.', 'thousands_point' => ',', 'decimal_places' => '2'),
+                           'CAD' => array('title' => 'Canadian Dollar', 'code' => 'CAD', 'symbol_left' => '$', 'symbol_right' => '', 'decimal_point' => '.', 'thousands_point' => ',', 'decimal_places' => '2'),
+                           'EUR' => array('title' => 'Euro', 'code' => 'EUR', 'symbol_left' => '', 'symbol_right' => 'EUR', 'decimal_point' => '.', 'thousands_point' => ',', 'decimal_places' => '2'),
+                           'GBP' => array('title' => 'Pounds Sterling', 'code' => 'GBP', 'symbol_left' => '£', 'symbol_right' => '', 'decimal_point' => '.', 'thousands_point' => ',', 'decimal_places' => '2'),
+                           'USD' => array('title' => 'U.S. Dollar', 'code' => 'USD', 'symbol_left' => '$', 'symbol_right' => '', 'decimal_point' => '.', 'thousands_point' => ',', 'decimal_places' => '2'));
+
+  $currency_select_array = array(array('id' => '', 'text' => TEXT_INFO_COMMON_CURRENCIES));
+  foreach ($currency_select as $cs) {
+    if (!isset($currencies->currencies[$cs['code']])) {
+      $currency_select_array[] = array('id' => $cs['code'], 'text' => '[' . $cs['code'] . '] ' . $cs['title']);
+    }
+  }
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
@@ -122,6 +135,30 @@
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
+
+<script type="text/javascript">
+var currency_select = new Array();
+<?php
+  foreach ($currency_select_array as $cs) {
+    if (!empty($cs['id'])) {
+      echo 'currency_select["' . $cs['id'] . '"] = new Array("' . $currency_select[$cs['id']]['title'] . '", "' . $currency_select[$cs['id']]['symbol_left'] . '", "' . $currency_select[$cs['id']]['symbol_right'] . '", "' . $currency_select[$cs['id']]['decimal_point'] . '", "' . $currency_select[$cs['id']]['thousands_point'] . '", "' . $currency_select[$cs['id']]['decimal_places'] . '");' . "\n";
+    }
+  }
+?>
+
+function updateForm() {
+  var cs = document.forms["currencies"].cs[document.forms["currencies"].cs.selectedIndex].value;
+
+  document.forms["currencies"].title.value = currency_select[cs][0];
+  document.forms["currencies"].code.value = cs;
+  document.forms["currencies"].symbol_left.value = currency_select[cs][1];
+  document.forms["currencies"].symbol_right.value = currency_select[cs][2];
+  document.forms["currencies"].decimal_point.value = currency_select[cs][3];
+  document.forms["currencies"].thousands_point.value = currency_select[cs][4];
+  document.forms["currencies"].decimal_places.value = currency_select[cs][5];
+  document.forms["currencies"].value.value = 1;
+}
+</script>
 
 <!-- body //-->
 <table border="0" width="100%" cellspacing="2" cellpadding="2">
@@ -208,6 +245,7 @@
 
       $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
+      $contents[] = array('text' => '<br>' . tep_draw_pull_down_menu('cs', $currency_select_array, '', 'onchange="updateForm();"'));
       $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_TITLE . '<br>' . tep_draw_input_field('title'));
       $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_CODE . '<br>' . tep_draw_input_field('code'));
       $contents[] = array('text' => '<br>' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br>' . tep_draw_input_field('symbol_left'));
