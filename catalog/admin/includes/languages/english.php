@@ -37,7 +37,7 @@ function tep_date_raw($date, $reverse = false) {
 define('HTML_PARAMS','dir="ltr" lang="en"');
 
 // charset for web pages and emails
-define('CHARSET', 'iso-8859-1');
+define('CHARSET', 'utf-8');
 
 // page title
 define('TITLE', 'osCommerce Online Merchant Administration Tool');
