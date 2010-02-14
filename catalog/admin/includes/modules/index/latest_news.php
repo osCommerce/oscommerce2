@@ -16,7 +16,7 @@ $rss = new lastRSS;
 $rss->items_limit = 5;
 $rss->cache_dir = DIR_FS_CACHE;
 $rss->cache_time = 86400;
-$feed = $rss->get('http://www.oscommerce.com/oscommerce.rdf');
+$feed = $rss->get('http://www.oscommerce.com/rss/news_and_blogs.rss');
 ?>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
@@ -41,7 +41,7 @@ if ($feed) {
 }
 
   echo '  <tr class="dataTableRow">' .
-       '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_facebook.png', ADMIN_INDEX_NEWS_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_twitter.png', ADMIN_INDEX_NEWS_TWITTER) . '</a>&nbsp;<a href="http://www.oscommerce.com/oscommerce.rdf" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_rss.png', ADMIN_INDEX_NEWS_RSS) . '</a>&nbsp;<a href="http://oscommerce.list-manage.com/subscribe?u=a5961750a3635e18fdf4bb539&id=10af90c126" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_newsletter.png', ADMIN_INDEX_NEWS_NEWSLETTER) . '</a></td>' .
+       '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_facebook.png', ADMIN_INDEX_NEWS_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_twitter.png', ADMIN_INDEX_NEWS_TWITTER) . '</a>&nbsp;<a href="http://www.oscommerce.com/rss/news_and_blogs.rss" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_rss.png', ADMIN_INDEX_NEWS_RSS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_newsletter.png', ADMIN_INDEX_NEWS_NEWSLETTER) . '</a></td>' .
        '  </tr>';
 
 ?>
