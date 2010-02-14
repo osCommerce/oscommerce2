@@ -150,7 +150,8 @@
                              'title' => $module->title,
                              'description' => $module->description,
                              'status' => $module->check(),
-                             'signature' => (isset($module->signature) ? $module->signature : null));
+                             'signature' => (isset($module->signature) ? $module->signature : null),
+                             'api_version' => (isset($module->api_version) ? $module->api_version : null));
 
         $module_keys = $module->keys();
 
@@ -263,6 +264,10 @@
           $contents[] = array('text' => '<br>' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<b>' . TEXT_INFO_VERSION . '</b> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
         }
 
+        if (isset($mInfo->api_version)) {
+          $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<b>' . TEXT_INFO_API_VERSION . '</b> ' . $mInfo->api_version);
+        }
+
         $contents[] = array('text' => '<br>' . $mInfo->description);
         $contents[] = array('text' => '<br>' . $keys);
       } else {
@@ -270,6 +275,10 @@
 
         if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
           $contents[] = array('text' => '<br>' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<b>' . TEXT_INFO_VERSION . '</b> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+        }
+
+        if (isset($mInfo->api_version)) {
+          $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<b>' . TEXT_INFO_API_VERSION . '</b> ' . $mInfo->api_version);
         }
 
         $contents[] = array('text' => '<br>' . $mInfo->description);
