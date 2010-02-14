@@ -14,27 +14,25 @@
   $secCheck_messages = array();
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-  $directory_array = array();
-  if ($dir = @dir(DIR_FS_ADMIN . 'includes/modules/security_check/')) {
-    while ($file = $dir->read()) {
+  $secmodules_array = array();
+  if ($secdir = @dir(DIR_FS_ADMIN . 'includes/modules/security_check/')) {
+    while ($file = $secdir->read()) {
       if (!is_dir(DIR_FS_ADMIN . 'includes/modules/security_check/' . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
-          $directory_array[] = $file;
+          $secmodules_array[] = $file;
         }
       }
     }
-    sort($directory_array);
-    $dir->close();
+    sort($secmodules_array);
+    $secdir->close();
   }
 
-  for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
-    $file = $directory_array[$i];
+  foreach ($secmodules_array as $secmodule) {
+    include(DIR_FS_ADMIN . 'includes/modules/security_check/' . $secmodule);
 
-    include(DIR_FS_ADMIN . 'includes/modules/security_check/' . $file);
-
-    $class = 'securityCheck_' . substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
-      $secCheck = new $class;
+    $secclass = 'securityCheck_' . substr($secmodule, 0, strrpos($secmodule, '.'));
+    if (tep_class_exists($secclass)) {
+      $secCheck = new $secclass;
 
       if ( !$secCheck->pass() ) {
         if (!in_array($secCheck->type, $secCheck_types)) {
