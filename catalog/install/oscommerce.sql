@@ -1094,7 +1094,7 @@ INSERT INTO countries VALUES (238,'Zambia','ZM','ZMB','1');
 INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE','1');
 
 INSERT INTO currencies VALUES (1,'U.S. Dollar','USD','$','','.',',','2','1.0000', now());
-INSERT INTO currencies VALUES (2,'Euro','EUR','','EUR','.',',','2','1.0000', now());
+INSERT INTO currencies VALUES (2,'Euro','EUR','','â‚¬','.',',','2','1.0000', now());
 
 INSERT INTO customers VALUES ( '1', 'm', 'John', 'doe', '2001-01-01 00:00:00', 'root@localhost', '1', '12345', '', 'd95e8fa7f20a009372eb3477473fcd34:1c', '0');
 
@@ -1368,7 +1368,7 @@ INSERT INTO zones VALUES (78,38,'YT','Yukon Territory');
 
 # Germany
 INSERT INTO zones VALUES (79,81,'NDS','Niedersachsen');
-INSERT INTO zones VALUES (80,81,'BAW','Baden-Württemberg');
+INSERT INTO zones VALUES (80,81,'BAW','Baden-WÃ¼rttemberg');
 INSERT INTO zones VALUES (81,81,'BAY','Bayern');
 INSERT INTO zones VALUES (82,81,'BER','Berlin');
 INSERT INTO zones VALUES (83,81,'BRG','Brandenburg');
@@ -1382,14 +1382,14 @@ INSERT INTO zones VALUES (90,81,'SAR','Saarland');
 INSERT INTO zones VALUES (91,81,'SAS','Sachsen');
 INSERT INTO zones VALUES (92,81,'SAC','Sachsen-Anhalt');
 INSERT INTO zones VALUES (93,81,'SCN','Schleswig-Holstein');
-INSERT INTO zones VALUES (94,81,'THE','Thüringen');
+INSERT INTO zones VALUES (94,81,'THE','ThÃ¼ringen');
 
 # Austria
 INSERT INTO zones VALUES (95,14,'WI','Wien');
-INSERT INTO zones VALUES (96,14,'NO','Niederösterreich');
-INSERT INTO zones VALUES (97,14,'OO','Oberösterreich');
+INSERT INTO zones VALUES (96,14,'NO','NiederÃ¶sterreich');
+INSERT INTO zones VALUES (97,14,'OO','OberÃ¶sterreich');
 INSERT INTO zones VALUES (98,14,'SB','Salzburg');
-INSERT INTO zones VALUES (99,14,'KN','Kärnten');
+INSERT INTO zones VALUES (99,14,'KN','KÃ¤rnten');
 INSERT INTO zones VALUES (100,14,'ST','Steiermark');
 INSERT INTO zones VALUES (101,14,'TI','Tirol');
 INSERT INTO zones VALUES (102,14,'BL','Burgenland');
@@ -1405,7 +1405,7 @@ INSERT INTO zones VALUES (109,204,'BS','Basel-Stadt');
 INSERT INTO zones VALUES (110,204,'FR','Freiburg');
 INSERT INTO zones VALUES (111,204,'GE','Genf');
 INSERT INTO zones VALUES (112,204,'GL','Glarus');
-INSERT INTO zones VALUES (113,204,'JU','Graubünden');
+INSERT INTO zones VALUES (113,204,'JU','GraubÃ¼nden');
 INSERT INTO zones VALUES (114,204,'JU','Jura');
 INSERT INTO zones VALUES (115,204,'LU','Luzern');
 INSERT INTO zones VALUES (116,204,'NE','Neuenburg');
@@ -1421,10 +1421,10 @@ INSERT INTO zones VALUES (125,204,'UR','Uri');
 INSERT INTO zones VALUES (126,204,'VD','Waadt');
 INSERT INTO zones VALUES (127,204,'VS','Wallis');
 INSERT INTO zones VALUES (128,204,'ZG','Zug');
-INSERT INTO zones VALUES (129,204,'ZH','Zürich');
+INSERT INTO zones VALUES (129,204,'ZH','ZÃ¼rich');
 
 # Spain
-INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'A Coruña','A Coruña');
+INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'A CoruÃ±a','A CoruÃ±a');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Alava','Alava');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Albacete','Albacete');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (195,'Alicante','Alicante');
