@@ -10,13 +10,12 @@
   Released under the GNU General Public License
 */
 
-define('ADMIN_INDEX_NEWS_TITLE', 'Latest osCommerce News');
-define('ADMIN_INDEX_NEWS_DATE', 'Published Date');
-define('ADMIN_INDEX_NEWS_FEED_ERROR', 'Could not load news feed');
+define('ADMIN_INDEX_NEWS_TITLE', 'Latest osCommerce News and Blogs');
+define('ADMIN_INDEX_NEWS_DATE', 'Date');
+define('ADMIN_INDEX_NEWS_FEED_ERROR', 'Could not connect to the news feed. The next attempt will be performed within 24 hours.');
 
-define('ADMIN_INDEX_NEWS_FACEBOOK', 'View the osCommerce Facebook Fan Page');
-define('ADMIN_INDEX_NEWS_TWITTER', 'View the osCommerce Twitter Feed');
-define('ADMIN_INDEX_NEWS_RSS', 'View the osCommerce News RSS Feed');
-define('ADMIN_INDEX_NEWS_NEWSLETTER', 'Signup for the osCommerce Newsletter');
-
+define('ADMIN_INDEX_NEWS_FACEBOOK', 'Become a Fan on Facebook');
+define('ADMIN_INDEX_NEWS_TWITTER', 'Follow osCommerce on Twitter');
+define('ADMIN_INDEX_NEWS_RSS', 'Subscribe to the osCommerce News and Blogs RSS Feed');
+define('ADMIN_INDEX_NEWS_NEWSLETTER', 'Sign Up to the osCommerce Newsletter');
 ?>
