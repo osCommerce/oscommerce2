@@ -128,7 +128,7 @@
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 <?php require('includes/form_check.js.php'); ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0">
+<body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->

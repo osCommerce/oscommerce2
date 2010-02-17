@@ -180,7 +180,7 @@ input {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgrou
 select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; background-color:#FFFFFF; border:1px solid #808080;}
 </style>
 </head>
-<body background="https://www.sofortueberweisung.de/cms/design/kachel.gif" leftmargin="0" topmargin="5" marginwidth="0" marginheight="0" onload="javascript:init()">
+<body background="https://www.sofortueberweisung.de/cms/design/kachel.gif" onload="javascript:init()">
 
 <form method="post" action="https://www.sofort-ueberweisung.de/createnew.php" id="form">
 
