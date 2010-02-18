@@ -311,6 +311,7 @@
 // TABLES: tax_rates, zones_to_geo_zones
   function tep_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $customer_zone_id, $customer_country_id;
+    static $tax_rates = array();
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (!tep_session_is_registered('customer_id')) {
@@ -322,34 +323,45 @@
       }
     }
 
-    $tax_query = tep_db_query("select sum(tax_rate) as tax_rate from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id) left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' group by tr.tax_priority");
-    if (tep_db_num_rows($tax_query)) {
-      $tax_multiplier = 1.0;
-      while ($tax = tep_db_fetch_array($tax_query)) {
-        $tax_multiplier *= 1.0 + ($tax['tax_rate'] / 100);
+    if (!isset($tax_rates[$class_id][$country_id][$zone_id]['rate'])) {
+      $tax_query = tep_db_query("select sum(tax_rate) as tax_rate from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id) left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' group by tr.tax_priority");
+      if (tep_db_num_rows($tax_query)) {
+        $tax_multiplier = 1.0;
+        while ($tax = tep_db_fetch_array($tax_query)) {
+          $tax_multiplier *= 1.0 + ($tax['tax_rate'] / 100);
+        }
+
+        $tax_rates[$class_id][$country_id][$zone_id]['rate'] = ($tax_multiplier - 1.0) * 100;
+      } else {
+        $tax_rates[$class_id][$country_id][$zone_id]['rate'] = 0;
       }
-      return ($tax_multiplier - 1.0) * 100;
-    } else {
-      return 0;
     }
+
+    return $tax_rates[$class_id][$country_id][$zone_id]['rate'];
   }
 
 ////
 // Return the tax description for a zone / class
 // TABLES: tax_rates;
   function tep_get_tax_description($class_id, $country_id, $zone_id) {
-    $tax_query = tep_db_query("select tax_description from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id) left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' order by tr.tax_priority");
-    if (tep_db_num_rows($tax_query)) {
-      $tax_description = '';
-      while ($tax = tep_db_fetch_array($tax_query)) {
-        $tax_description .= $tax['tax_description'] . ' + ';
-      }
-      $tax_description = substr($tax_description, 0, -3);
+    static $tax_rates = array();
 
-      return $tax_description;
-    } else {
-      return TEXT_UNKNOWN_TAX_RATE;
+    if (!isset($tax_rates[$class_id][$country_id][$zone_id]['description'])) {
+      $tax_query = tep_db_query("select tax_description from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id) left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' order by tr.tax_priority");
+      if (tep_db_num_rows($tax_query)) {
+        $tax_description = '';
+        while ($tax = tep_db_fetch_array($tax_query)) {
+          $tax_description .= $tax['tax_description'] . ' + ';
+        }
+        $tax_description = substr($tax_description, 0, -3);
+
+        $tax_rates[$class_id][$country_id][$zone_id]['description'] = $tax_description;
+      } else {
+        $tax_rates[$class_id][$country_id][$zone_id]['description'] = TEXT_UNKNOWN_TAX_RATE;
+      }
     }
+
+    return $tax_rates[$class_id][$country_id][$zone_id]['description'];
   }
 
 ////
