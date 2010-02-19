@@ -20,7 +20,7 @@
     }
 
     function pass() {
-      return file_exists(DIR_FS_CATALOG . 'install');
+      return !file_exists(DIR_FS_CATALOG . 'install');
     }
 
     function getMessage() {
