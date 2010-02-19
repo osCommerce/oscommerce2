@@ -37,10 +37,10 @@
   $PHP_SELF = (isset($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : $HTTP_SERVER_VARS['SCRIPT_NAME']);
 
 // Used in the "Backup Manager" to compress backups
-  define('LOCAL_EXE_GZIP', '/usr/bin/gzip');
-  define('LOCAL_EXE_GUNZIP', '/usr/bin/gunzip');
-  define('LOCAL_EXE_ZIP', '/usr/local/bin/zip');
-  define('LOCAL_EXE_UNZIP', '/usr/local/bin/unzip');
+  define('LOCAL_EXE_GZIP', 'gzip');
+  define('LOCAL_EXE_GUNZIP', 'gunzip');
+  define('LOCAL_EXE_ZIP', 'zip');
+  define('LOCAL_EXE_UNZIP', 'unzip');
 
 // include the list of project filenames
   require(DIR_WS_INCLUDES . 'filenames.php');
