@@ -18,6 +18,7 @@
       global $order;
 
       $this->signature = 'authorizenet|authorizenet_cc_aim|1.0|2.2';
+      $this->api_version = '3.1';
 
       $this->code = 'authorizenet_cc_aim';
       $this->title = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_TITLE;
