@@ -56,7 +56,7 @@ class lastRSS {
     function Get ($rss_url) {
         // If CACHE ENABLED
         if ($this->cache_dir != '') {
-            $cache_file = $this->cache_dir . '/rsscache_' . md5($rss_url);
+            $cache_file = $this->cache_dir . '/rss_' . md5($rss_url) . '.cache';
             $timedif = @(time() - filemtime($cache_file));
             if ($timedif < $this->cache_time) {
                 // cached file is fresh enough, return cached array
