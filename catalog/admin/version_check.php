@@ -25,6 +25,12 @@
       }
     }
 
+    $serialized = serialize($upgrade_versions);
+    if ($f = @fopen(DIR_FS_CACHE . '/versions.cache', 'w')) {
+      fwrite ($f, $serialized, strlen($serialized));
+      fclose($f);
+    }
+
     if (count($upgrade_versions) > 0) {
       $messageStack->add(VERSION_UPGRADES_AVAILABLE, 'error');
     } else {
