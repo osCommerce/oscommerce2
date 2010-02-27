@@ -30,6 +30,7 @@
                                    '<a href="' . tep_href_link(FILENAME_NEWSLETTERS) . '" class="menuBoxContentLink">' . BOX_TOOLS_NEWSLETTER_MANAGER . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_SEC_DIR_PERMISSIONS) . '" class="menuBoxContentLink">' . BOX_TOOLS_SEC_DIR_PERMISSIONS . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_SERVER_INFO) . '" class="menuBoxContentLink">' . BOX_TOOLS_SERVER_INFO . '</a><br>' .
+                                   '<a href="' . tep_href_link(FILENAME_VERSION_CHECK) . '" class="menuBoxContentLink">' . BOX_TOOLS_VERSION_CHECK . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_WHOS_ONLINE) . '" class="menuBoxContentLink">' . BOX_TOOLS_WHOS_ONLINE . '</a>');
   }
 
