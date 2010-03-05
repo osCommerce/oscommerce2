@@ -144,6 +144,8 @@
     ini_set('session.cookie_domain', $cookie_domain);
   }
 
+  @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
+
 // set the session ID if it exists
    if (isset($HTTP_POST_VARS[tep_session_name()])) {
      tep_session_id($HTTP_POST_VARS[tep_session_name()]);
