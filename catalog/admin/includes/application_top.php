@@ -93,6 +93,8 @@
     ini_set('session.cookie_path', DIR_WS_ADMIN);
   }
 
+  @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
+
 // lets start our session
   tep_session_start();
 
