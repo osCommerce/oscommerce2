@@ -10,10 +10,23 @@
   Released under the GNU General Public License
 */
 
-  $last_update_check = LAST_UPDATE_CHECK_TIME;
-  $cache_file = DIR_FS_CACHE . '/versions.cache';
-  if (!empty($last_update_check)) {
-    $date_last_checked = date('F j, Y, H:i:s', $last_update_check);
+  $cache_file = DIR_FS_CACHE . 'oscommerce_version_check.cache';
+  $current_version = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
+  $new_version = false;
+
+  if (file_exists($cache_file)) {
+    $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', filemtime($cache_file)));
+
+    $releases = unserialize(implode('', file($cache_file)));
+
+    foreach ($releases as $version) {
+      $version_array = explode('|', $version);
+
+      if (version_compare($current_version, $version_array[0], '<')) {
+        $new_version = true;
+        break;
+      }
+    }
   } else {
     $date_last_checked = ADMIN_INDEX_UPDATE_CHECK_NEVER;
   }
@@ -21,21 +34,17 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="4">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><?php echo ADMIN_INDEX_UPDATE_CHECK_TITLE; ?></td>
-    <td class="dataTableHeadingContent"></td>
+    <td class="dataTableHeadingContent" align="right"><?php echo ADMIN_INDEX_UPDATE_CHECK_LAST_DATE_CHECK; ?></td>
   </tr>
 <?php
-  echo '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-       '    <td class="dataTableContent" align="left">' . ADMIN_INDEX_UPDATE_CHECK_DATE . ': ' . $date_last_checked . '</td>' .
-       '    <td class="dataTableContent" align="right"><a href="' . tep_href_link(FILENAME_VERSION_CHECK) . '">' . ADMIN_INDEX_UPDATE_CHECK_NOW . '</a></td>' .
-       '  </tr>';
-
-if (file_exists($cache_file)) {
-    $result = unserialize(join('', file($cache_file)));
-    if (count($result) > 0) {
-      echo '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-           '    <td class="dataTableContent" align="left" colspan="2"><strong>' . TEXT_UPGRADE_AVAILABLE . '</strong></td>' .
-           '  </tr>';
-    }
-}
+  if ($new_version == true) {
+    echo '  <tr>' .
+         '    <td class="messageStackWarning" colspan="2">' . tep_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . TEXT_UPGRADE_AVAILABLE . '</strong></td>' .
+         '  </tr>';
+  }
 ?>
+  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">
+    <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_VERSION_CHECK) . '">' . ADMIN_INDEX_UPDATE_CHECK_NOW . '</a>'; ?></td>
+    <td class="dataTableContent" align="right"><?php echo $date_last_checked; ?></td>
+  </tr>
 </table>

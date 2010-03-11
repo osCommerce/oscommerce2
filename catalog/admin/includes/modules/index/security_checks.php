@@ -43,55 +43,7 @@
       }
     }
   }
-?>
 
-<style>
-.secInfo, .secSuccess, .secWarning, .secError {
-  border: 1px solid;
-  margin: 10px 0px;
-  padding: 5px 10px 5px 50px;
-  background-repeat: no-repeat;
-  background-position: 10px center;
-  border-radius: 10px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-}
-
-.secInfo {
-  border-color: #00529B;
-  background-image: url('images/ms_info.png');
-  background: url('images/ms_info.png') no-repeat 10px center, url('images/ms_info_bg.png') repeat-x; /* css3 multiple backgrounds */
-  background-color: #BDE5F8;
-}
-
-.secSuccess {
-  border-color: #4F8A10;
-  background-image: url('images/ms_success.png');
-  background: url('images/ms_success.png') no-repeat 10px center, url('images/ms_success_bg.png') repeat-x; /* css3 multiple backgrounds */
-  background-color: #DFF2BF;
-}
-
-.secWarning {
-  border-color: #9F6000;
-  background-color: #FEEFB3;
-  background-image: url('images/ms_warning.png');
-  background: url('images/ms_warning.png') no-repeat 10px center, url('images/ms_warning_bg.png') repeat-x; /* css3 multiple backgrounds */
-  background-color: #FEEFB3;
-}
-
-.secError {
-  border-color: #D8000C;
-  background-image: url('images/ms_error.png');
-  background: url('images/ms_error.png') no-repeat 10px center, url('images/ms_error_bg.png') repeat-x; /* css3 multiple backgrounds */
-  background-color: #FFBABA;
-}
-
-.secInfo p, .secSuccess p, .secWarning p, .secError p {
-  padding: 2px;
-}
-</style>
-
-<?php
   if (isset($secCheck_messages['error'])) {
     echo '<div class="secError">';
 
