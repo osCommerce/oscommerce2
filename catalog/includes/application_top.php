@@ -420,6 +420,9 @@
   require(DIR_WS_FUNCTIONS . 'specials.php');
   tep_expire_specials();
 
+  require(DIR_WS_CLASSES . 'osc_template.php');
+  $oscTemplate = new oscTemplate();
+
 // calculate category path
   if (isset($HTTP_GET_VARS['cPath'])) {
     $cPath = $HTTP_GET_VARS['cPath'];
