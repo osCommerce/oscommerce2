@@ -11,7 +11,7 @@
 */
 
   $cache_file = DIR_FS_CACHE . 'oscommerce_version_check.cache';
-  $current_version = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
+  $current_version = tep_get_version();
   $new_version = false;
 
   if (file_exists($cache_file)) {
