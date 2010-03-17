@@ -590,12 +590,11 @@
 
         if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ($free_shipping == true) {
-// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//            $quotes_array[] = array('id' => 'free_free',
-//                                    'name' => FREE_SHIPPING_TITLE,
-//                                    'label' => FREE_SHIPPING_TITLE,
-//                                    'cost' => '0.00',
-//                                    'tax' => '0');
+            $quotes_array[] = array('id' => 'free_free',
+                                    'name' => FREE_SHIPPING_TITLE,
+                                    'label' => FREE_SHIPPING_TITLE,
+                                    'cost' => '0.00',
+                                    'tax' => '0');
           } else {
 // get all available shipping quotes
             $quotes = $shipping_modules->quote();
@@ -603,25 +602,16 @@
             foreach ($quotes as $quote) {
               if (!isset($quote['error'])) {
                 foreach ($quote['methods'] as $rate) {
-                  if ($rate['cost'] > 0) { // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-                    $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
-                                            'name' => $quote['module'],
-                                            'label' => $rate['title'],
-                                            'cost' => $rate['cost'],
-                                            'tax' => $quote['tax']);
-                  }
+                  $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
+                                          'name' => $quote['module'],
+                                          'label' => $rate['title'],
+                                          'cost' => $rate['cost'],
+                                          'tax' => $quote['tax']);
                 }
               }
             }
           }
         }
-      } else {
-// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//        $quotes_array[] = array('id' => 'null',
-//                                'name' => 'No Shipping',
-//                                'label' => 'No Shipping',
-//                                'cost' => '0',
-//                                'tax' => '0');
       }
 
       $counter = 0;
