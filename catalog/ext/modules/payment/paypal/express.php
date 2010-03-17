@@ -45,6 +45,12 @@
   $cartID = $cart->cartID;
 
   switch ($HTTP_GET_VARS['osC_Action']) {
+    case 'cancel':
+      tep_session_unregister('ppe_token');
+
+      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+
+      break;
     case 'callbackSet':
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
@@ -666,7 +672,7 @@
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN'] . '&useraction=commit');
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
