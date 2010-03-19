@@ -481,18 +481,18 @@
     }
 
     function sendDebugEmail() {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
         $email_body = '$HTTP_POST_VARS:' . "\n\n";
 
-        reset($HTTP_POST_VARS);
-        while (list($key, $value) = each($HTTP_POST_VARS)) {
+        foreach ($HTTP_POST_VARS as $key => $value);
           $email_body .= $key . '=' . $value . "\n";
         }
 
         $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
 
-        reset($HTTP_GET_VARS);
-        while (list($key, $value) = each($HTTP_GET_VARS)) {
+        foreach ($HTTP_GET_VARS as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 
