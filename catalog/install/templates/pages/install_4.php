@@ -115,8 +115,8 @@
                    '  define(\'ENABLE_SSL\', false);' . "\n" .
                    '  define(\'HTTP_COOKIE_DOMAIN\', \'\');' . "\n" .
                    '  define(\'HTTPS_COOKIE_DOMAIN\', \'\');' . "\n" .
-                   '  define(\'HTTP_COOKIE_PATH\', \'\');' . "\n" .
-                   '  define(\'HTTPS_COOKIE_PATH\', \'\');' . "\n" .
+                   '  define(\'HTTP_COOKIE_PATH\', \'' . $http_catalog . '\');' . "\n" .
+                   '  define(\'HTTPS_COOKIE_PATH\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_HTTP_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_HTTPS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_IMAGES\', \'images/\');' . "\n" .

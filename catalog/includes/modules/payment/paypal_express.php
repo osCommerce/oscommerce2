@@ -486,7 +486,7 @@
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
         $email_body = '$HTTP_POST_VARS:' . "\n\n";
 
-        foreach ($HTTP_POST_VARS as $key => $value);
+        foreach ($HTTP_POST_VARS as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 
