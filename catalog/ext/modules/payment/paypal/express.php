@@ -45,6 +45,12 @@
   $cartID = $cart->cartID;
 
   switch ($HTTP_GET_VARS['osC_Action']) {
+    case 'cancel':
+      tep_session_unregister('ppe_token');
+
+      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+
+      break;
     case 'callbackSet':
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
@@ -590,12 +596,11 @@
 
         if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ($free_shipping == true) {
-// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//            $quotes_array[] = array('id' => 'free_free',
-//                                    'name' => FREE_SHIPPING_TITLE,
-//                                    'label' => FREE_SHIPPING_TITLE,
-//                                    'cost' => '0.00',
-//                                    'tax' => '0');
+            $quotes_array[] = array('id' => 'free_free',
+                                    'name' => FREE_SHIPPING_TITLE,
+                                    'label' => FREE_SHIPPING_TITLE,
+                                    'cost' => '0.00',
+                                    'tax' => '0');
           } else {
 // get all available shipping quotes
             $quotes = $shipping_modules->quote();
@@ -603,25 +608,16 @@
             foreach ($quotes as $quote) {
               if (!isset($quote['error'])) {
                 foreach ($quote['methods'] as $rate) {
-                  if ($rate['cost'] > 0) { // 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-                    $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
-                                            'name' => $quote['module'],
-                                            'label' => $rate['title'],
-                                            'cost' => $rate['cost'],
-                                            'tax' => $quote['tax']);
-                  }
+                  $quotes_array[] = array('id' => $quote['id'] . '_' . $rate['id'],
+                                          'name' => $quote['module'],
+                                          'label' => $rate['title'],
+                                          'cost' => $rate['cost'],
+                                          'tax' => $quote['tax']);
                 }
               }
             }
           }
         }
-      } else {
-// 57.0 does not accept 0.00 shipping rates in setExpressCheckout
-//        $quotes_array[] = array('id' => 'null',
-//                                'name' => 'No Shipping',
-//                                'label' => 'No Shipping',
-//                                'cost' => '0',
-//                                'tax' => '0');
       }
 
       $counter = 0;
@@ -676,7 +672,7 @@
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN'] . '&useraction=commit');
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }

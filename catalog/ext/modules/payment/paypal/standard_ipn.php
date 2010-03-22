@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -140,29 +140,6 @@
       }
 
       tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal IPN Invalid Process', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-    }
-
-    if (isset($HTTP_POST_VARS['invoice']) && is_numeric($HTTP_POST_VARS['invoice']) && ($HTTP_POST_VARS['invoice'] > 0)) {
-      $check_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . $HTTP_POST_VARS['invoice'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
-      if (tep_db_num_rows($check_query) > 0) {
-        $comment_status = $HTTP_POST_VARS['payment_status'];
-
-        if ($HTTP_POST_VARS['payment_status'] == 'Pending') {
-          $comment_status .= '; ' . $HTTP_POST_VARS['pending_reason'];
-        } elseif ( ($HTTP_POST_VARS['payment_status'] == 'Reversed') || ($HTTP_POST_VARS['payment_status'] == 'Refunded') ) {
-          $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
-        }
-
-        tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . ((MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0) ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . $HTTP_POST_VARS['invoice'] . "'");
-
-        $sql_data_array = array('orders_id' => $HTTP_POST_VARS['invoice'],
-                                'orders_status_id' => (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0) ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : DEFAULT_ORDERS_STATUS_ID,
-                                'date_added' => 'now()',
-                                'customer_notified' => '0',
-                                'comments' => 'PayPal IPN Invalid [' . $comment_status . ']');
-
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-      }
     }
   }
 

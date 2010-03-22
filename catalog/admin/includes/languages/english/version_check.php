@@ -14,15 +14,14 @@ define('HEADING_TITLE', 'Version Checker');
 
 define('TABLE_HEADING_VERSION', 'Version');
 define('TABLE_HEADING_RELEASED', 'Release Date');
+define('TABLE_HEADING_ACTION', 'Action');
 
-define('TEXT_RELEASE_NOTES', 'View Release Annoucement / Download');
+define('TEXT_RELEASE_LINK', 'View Release Annoucement');
 
-define('TITLE_CURRENT_VERSION', 'Currently Running:');
+define('TITLE_INSTALLED_VERSION', 'Installed Version:');
 
+define('VERSION_RUNNING_LATEST', 'You are running the latest version of osCommerce Online Merchant.');
+define('VERSION_UPGRADES_AVAILABLE', 'A new version is available for download! (osCommerce Online Merchant v%s)');
 
-define('VERSION_RUNNING_LATEST', 'You are running the latest version of osCommerce');
-define('VERSION_UPGRADES_AVAILABLE', 'A new version of osCommerce is available for download.');
-
-define('ERROR_COULD_NOT_CONNECT', 'Could not connect to osCommerce to check for new versions. Please try again later.');
-
+define('ERROR_COULD_NOT_CONNECT', 'Could not connect to the osCommerce website to check for new versions.');
 ?>

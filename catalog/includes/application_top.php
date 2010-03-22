@@ -33,8 +33,8 @@
     }
   }
 
-// define the project version
-  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2 RC2a');
+// define the project version --- obsolete, now retrieved with tep_get_version()
+  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2');
 
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
@@ -419,6 +419,9 @@
 // auto expire special products
   require(DIR_WS_FUNCTIONS . 'specials.php');
   tep_expire_specials();
+
+  require(DIR_WS_CLASSES . 'osc_template.php');
+  $oscTemplate = new oscTemplate();
 
 // calculate category path
   if (isset($HTTP_GET_VARS['cPath'])) {

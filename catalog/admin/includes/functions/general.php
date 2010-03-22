@@ -11,6 +11,18 @@
 */
 
 ////
+// Get the installed version number
+  function tep_get_version() {
+    static $v;
+
+    if (!isset($v)) {
+      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
+    }
+
+    return $v;
+  }
+
+////
 // Redirect to another page or site
   function tep_redirect($url) {
     global $logger;

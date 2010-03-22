@@ -27,8 +27,8 @@
 // Include application configuration parameters
   require('includes/configure.php');
 
-// Define the project version
-  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2 RC2a');
+// Define the project version --- obsolete, now retrieved with tep_get_version()
+  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2');
 
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
