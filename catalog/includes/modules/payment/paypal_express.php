@@ -308,7 +308,7 @@
     function format_raw($number, $currency_code = '', $currency_value = '') {
       global $currencies, $currency;
 
-      if (empty($currency_code) || !$this->is_set($currency_code)) {
+      if (empty($currency_code) || !$currencies->is_set($currency_code)) {
         $currency_code = $currency;
       }
 
