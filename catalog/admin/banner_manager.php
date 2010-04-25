@@ -125,7 +125,7 @@
           $banner = tep_db_fetch_array($banner_query);
 
           if (is_file(DIR_FS_CATALOG_IMAGES . $banner['banners_image'])) {
-            if (is_writeable(DIR_FS_CATALOG_IMAGES . $banner['banners_image'])) {
+            if (tep_is_writable(DIR_FS_CATALOG_IMAGES . $banner['banners_image'])) {
               unlink(DIR_FS_CATALOG_IMAGES . $banner['banners_image']);
             } else {
               $messageStack->add_session(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
@@ -140,25 +140,25 @@
 
         if (function_exists('imagecreate') && tep_not_null($banner_extensio)) {
           if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
-            if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
               unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension);
             }
           }
 
           if (is_file(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
-            if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
               unlink(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension);
             }
           }
 
           if (is_file(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
-            if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
               unlink(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension);
             }
           }
 
           if (is_file(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
-            if (is_writeable(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
               unlink(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension);
             }
           }
@@ -175,7 +175,7 @@
   $dir_ok = false;
   if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
     if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-      if (is_writeable(DIR_WS_IMAGES . 'graphs')) {
+      if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
         $dir_ok = true;
       } else {
         $messageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');

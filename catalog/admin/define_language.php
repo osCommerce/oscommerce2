@@ -24,7 +24,7 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => is_writable($path . $filename),
+                        'writable' => tep_is_writable($path . $filename),
                         'size' => filesize($path . $filename),
                         'last_modified' => strftime(DATE_TIME_FORMAT, filemtime($path . $filename)));
 
@@ -72,7 +72,7 @@
         if (isset($HTTP_GET_VARS['lngdir']) && isset($HTTP_GET_VARS['filename'])) {
           $file = DIR_FS_CATALOG_LANGUAGES . $HTTP_GET_VARS['filename'];
 
-          if (file_exists($file) && is_writable($file)) {
+          if (file_exists($file) && tep_is_writable($file)) {
             $new_file = fopen($file, 'w');
             $file_contents = stripslashes($HTTP_POST_VARS['file_contents']);
             fwrite($new_file, $file_contents, strlen($file_contents));
@@ -128,7 +128,7 @@
       $contents = implode('', $file_array);
 
       $file_writeable = true;
-      if (!is_writable($file)) {
+      if (!tep_is_writable($file)) {
         $file_writeable = false;
         $messageStack->reset();
         $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
@@ -185,7 +185,7 @@
               </tr>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><a href="<?php echo tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $filename); ?>"><b><?php echo $filename; ?></b></a></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . ((is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . ((tep_is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG_LANGUAGES . $filename)); ?></td>
               </tr>
 <?php

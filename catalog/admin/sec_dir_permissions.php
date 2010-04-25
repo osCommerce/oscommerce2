@@ -24,7 +24,7 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => is_writable($path . $filename));
+                        'writable' => tep_is_writable($path . $filename));
 
           $result[] = $file;
 
