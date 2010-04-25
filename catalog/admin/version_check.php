@@ -134,26 +134,6 @@
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_VERSION; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_RELEASED; ?></td>
-                <td class="dataTableHeadingContent"></td>
-              </tr>
-              
-<?php
-  if (count($upgrade_versions) > 0 ) {
-    foreach ($upgrade_versions as $upgrade) {
-?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><?php echo $upgrade[0]; ?></td>
-                <td class="dataTableContent"><?php echo date('F j, Y', mktime(0, 0, 0, substr($upgrade[1], 4, 2), substr($upgrade[1], 6, 2), substr($upgrade[1], 0, 4))); ?></td>
-                <td class="dataTableContent"><?php echo '<a href="' . $upgrade[2] . '" target="_blank">' . TEXT_RELEASE_NOTES . '</a>'; ?></td>
-              </tr>
-<?php
-    }
-  }
-?>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 

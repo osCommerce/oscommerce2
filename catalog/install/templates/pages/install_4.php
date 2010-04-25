@@ -193,30 +193,6 @@
     <p>The installation and configuration was successful!</p>
 
     <br />
-    <h3>Post-Installation</h3>
-
-    <p>After installing osCommerce follow these steps for post-installation which will help secure your site:</p>
-    <ol>
-      <li>Delete the catalog/install folder.</li>
-<?php
-  if (@file_exists($dir_fs_document_root . '/includes/configure.php') && is_writable($dir_fs_document_root . '/includes/configure.php')) {
-?>
-      <li>Reset the permissions on <?php echo $dir_fs_document_root;?>includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
-<?php
-  }
-  if (@file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && is_writable($dir_fs_document_root . 'admin/includes/configure.php')) {
-?>
-      <li>Reset the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/includes/configure.php to 644 (if you are still getting the warning message at the top of the page after setting this configure.php files to 644 then set the catalog/admin/includes/configure.php file to 444 which is read only - this happens on some servers that have been updated for security reasons).</li>
-<?php
-}
-?>
-      <li>Set the permissions on <?php echo $dir_fs_document_root;?>images directory to 755 (or 777 when you still can't add pictures in the admin when adding new products).</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/images/graphs directory to 755 (777 if that doesn't work)</li>
-      <li>Set the permissions on <?php echo $dir_fs_document_root .  $admin_folder;?>/backups to 755 (this is the folder to store the database backup of your store in the "Tools" section of the store admin).</li>
-      <li>The store admin directory on your server needs to be password protected using .htaccess. This can be done on some hosts using the "Administrators" page in the administration section. If this does not work consult your webhosts control panel and documentation.</li>
-    </ol>
-
-    <br />
 
     <table border="0" width="99%" cellspacing="0" cellpadding="0">
       <tr>

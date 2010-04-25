@@ -12,7 +12,6 @@
 
   require('includes/application_top.php');
 
-  $module_directory = DIR_WS_MODULES . 'index';
   $languages = tep_get_languages();
   $languages_array = array();
   $languages_selected = DEFAULT_LANGUAGE;
@@ -71,9 +70,9 @@
 <?php
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $files = array();
-  if ($dir = @dir($module_directory)) {
+  if ($dir = @dir(DIR_FS_ADMIN . 'includes/modules/index')) {
     while ($file = $dir->read()) {
-      if (!is_dir($module_directory . '/' . $file)) {
+      if (!is_dir($module_directory . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
           $files[] = $file;
         }
