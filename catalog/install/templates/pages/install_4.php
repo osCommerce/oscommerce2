@@ -101,7 +101,7 @@
   }
 
   $admin_folder = 'admin';
-  if (isset($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && !empty($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
+  if (isset($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && !empty($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']) && osc_is_writable($dir_fs_document_root) && osc_is_writable($dir_fs_document_root . 'admin')) {
     $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($HTTP_POST_VARS['CFG_ADMIN_DIRECTORY']));
 
     if (empty($admin_folder)) {
@@ -219,7 +219,7 @@
 <?php
   }
 
-  if (file_exists($dir_fs_document_root . 'includes/configure.php') && is_writable($dir_fs_document_root . 'includes/configure.php')) {
+  if (file_exists($dir_fs_document_root . 'includes/configure.php') && osc_is_writable($dir_fs_document_root . 'includes/configure.php')) {
 ?>
 
       <li>Set the permissions on <?php echo $dir_fs_document_root . 'includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
@@ -227,7 +227,7 @@
 <?php
   }
 
-  if (file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && is_writable($dir_fs_document_root . $admin_folder . '/includes/configure.php')) {
+  if (file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && osc_is_writable($dir_fs_document_root . $admin_folder . '/includes/configure.php')) {
 ?>
 
       <li>Set the permissions on <?php echo $dir_fs_document_root . $admin_folder . '/includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
