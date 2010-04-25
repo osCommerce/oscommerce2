@@ -20,7 +20,7 @@
     }
 
     function pass() {
-      return (file_exists(DIR_FS_CATALOG . 'includes/configure.php') && !is_writable(DIR_FS_CATALOG . 'includes/configure.php'));
+      return (file_exists(DIR_FS_CATALOG . 'includes/configure.php') && !tep_is_writable(DIR_FS_CATALOG . 'includes/configure.php'));
     }
 
     function getMessage() {

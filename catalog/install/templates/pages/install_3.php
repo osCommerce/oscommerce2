@@ -74,7 +74,7 @@
       </tr>
 
 <?php
-  if (is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
+  if (osc_is_writable($dir_fs_document_root) && osc_is_writable($dir_fs_document_root . 'admin')) {
 ?>
       <tr>
         <td class="inputField"><?php echo 'Administration Directory Name<br />' . osc_draw_input_field('CFG_ADMIN_DIRECTORY', 'admin', 'class="text"'); ?></td>
