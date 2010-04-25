@@ -1368,4 +1368,35 @@
 
     return $ip_address;
   }
+
+////
+// Wrapper function for is_writable() for Windows compatibility
+  function tep_is_writable($file) {
+    if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
+      if (file_exists($file)) {
+        $file = realpath($file);
+        if (is_dir($file)) {
+          $result = @tempnam($file, 'osc');
+          if (is_string($result) && file_exists($result)) {
+            unlink($result);
+            return (strpos($result, $file) === 0) ? true : false;
+          }
+        } else {
+          $handle = @fopen($file, 'r+');
+          if (is_resource($handle)) {
+            fclose($handle);
+            return true;
+          }
+        }
+      } else{
+        $dir = dirname($file);
+        if (file_exists($dir) && is_dir($dir) && tep_is_writable($dir)) {
+          return true;
+        }
+      }
+      return false;
+    } else {
+      return is_writable($file);
+    }
+  }
 ?>
