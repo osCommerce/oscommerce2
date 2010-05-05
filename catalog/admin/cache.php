@@ -24,7 +24,7 @@
 
 // check if the cache directory exists
   if (is_dir(DIR_FS_CACHE)) {
-    if (!is_writeable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+    if (!tep_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
     $messageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }

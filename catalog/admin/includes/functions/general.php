@@ -1022,7 +1022,7 @@
       $dir = dir($source);
       while ($file = $dir->read()) {
         if ( ($file != '.') && ($file != '..') ) {
-          if (is_writeable($source . '/' . $file)) {
+          if (tep_is_writable($source . '/' . $file)) {
             tep_remove($source . '/' . $file);
           } else {
             $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
@@ -1032,14 +1032,14 @@
       }
       $dir->close();
 
-      if (is_writeable($source)) {
+      if (tep_is_writable($source)) {
         rmdir($source);
       } else {
         $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
         $tep_remove_error = true;
       }
     } else {
-      if (is_writeable($source)) {
+      if (tep_is_writable($source)) {
         unlink($source);
       } else {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
