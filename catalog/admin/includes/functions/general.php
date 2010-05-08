@@ -794,6 +794,8 @@
 
     $data = array();
 
+    $data['oscommerce']  = array('version' => tep_get_version());
+
     $data['system'] = array('date' => tep_datetime_short(date('Y-m-d H:i:s')),
                             'os' => PHP_OS,
                             'kernel' => $kernel,
