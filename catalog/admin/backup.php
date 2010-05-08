@@ -317,7 +317,7 @@
 // check if the backup directory exists
   $dir_ok = false;
   if (is_dir(DIR_FS_BACKUP)) {
-    if (is_writeable(DIR_FS_BACKUP)) {
+    if (tep_is_writable(DIR_FS_BACKUP)) {
       $dir_ok = true;
     } else {
       $messageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');
