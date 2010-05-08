@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $system = tep_get_system_information();
+  $info = tep_get_system_information();
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>
@@ -50,36 +50,36 @@
             <td><table border="0" cellspacing="0" cellpadding="3">
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_HOST; ?></b></td>
-                <td class="smallText"><?php echo $system['host'] . ' (' . $system['ip'] . ')'; ?></td>
+                <td class="smallText"><?php echo $info['system']['host'] . ' (' . $info['system']['ip'] . ')'; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo TITLE_DATABASE_HOST; ?></b></td>
-                <td class="smallText"><?php echo $system['db_server'] . ' (' . $system['db_ip'] . ')'; ?></td>
+                <td class="smallText"><?php echo $info['mysql']['server'] . ' (' . $info['mysql']['ip'] . ')'; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_OS; ?></b></td>
-                <td class="smallText"><?php echo $system['system'] . ' ' . $system['kernel']; ?></td>
+                <td class="smallText"><?php echo $info['system']['os'] . ' ' . $info['system']['kernel']; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo TITLE_DATABASE; ?></b></td>
-                <td class="smallText"><?php echo $system['db_version']; ?></td>
+                <td class="smallText"><?php echo $info['mysql']['version']; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_DATE; ?></b></td>
-                <td class="smallText"><?php echo $system['date']; ?></td>
+                <td class="smallText"><?php echo $info['system']['date']; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo TITLE_DATABASE_DATE; ?></b></td>
-                <td class="smallText"><?php echo $system['db_date']; ?></td>
+                <td class="smallText"><?php echo $info['mysql']['date']; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_UP_TIME; ?></b></td>
-                <td colspan="3" class="smallText"><?php echo $system['uptime']; ?></td>
+                <td colspan="3" class="smallText"><?php echo $info['system']['uptime']; ?></td>
               </tr>
               <tr>
                 <td colspan="4"><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_HTTP_SERVER; ?></b></td>
-                <td colspan="3" class="smallText"><?php echo $system['http_server']; ?></td>
+                <td colspan="3" class="smallText"><?php echo $info['system']['http_server']; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_PHP_VERSION; ?></b></td>
-                <td colspan="3" class="smallText"><?php echo $system['php'] . ' (' . TITLE_ZEND_VERSION . ' ' . $system['zend'] . ')'; ?></td>
+                <td colspan="3" class="smallText"><?php echo $info['php']['version'] . ' (' . TITLE_ZEND_VERSION . ' ' . $info['php']['zend'] . ')'; ?></td>
               </tr>
             </table></td>
           </tr>
