@@ -49,6 +49,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
+        reset($_POST['configuration']);
         while (list($key, $value) = each($HTTP_POST_VARS['configuration'])) {
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
