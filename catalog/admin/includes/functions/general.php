@@ -224,6 +224,27 @@
     return $select_string;
   }
 
+  function tep_format_system_info_array($array) {
+
+    $output = '';
+    foreach ($array as $section => $child) {
+      $output .= '[' . $section . ']' . "\n";
+      foreach ($child as $variable => $value) {
+        if (is_array($value)) {
+          $output .= $variable . ' = ' . implode(',', $value) ."\n";
+        } else {
+          $output .= $variable . ' = ' . $value . "\n";
+        }
+      }
+
+    $output .= "\n";
+    }
+    return $output;
+
+  }
+
+
+
   function tep_options_name($options_id) {
     global $languages_id;
 
