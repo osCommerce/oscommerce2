@@ -12,7 +12,64 @@
 
   require('includes/application_top.php');
 
-  $info = tep_get_system_information();
+  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+
+  switch ($action) {
+    case 'export':
+      $info = tep_get_system_information(true);
+    break;
+    case 'submit':
+      $info = tep_get_system_information(true);
+      $encoded = base64_encode(serialize($info));
+      $target = '';
+      $response = false;
+      if (function_exists('curl_init')) {
+        $data = array('stats' => $encoded);
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $target);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $response = trim(curl_exec($ch));
+        curl_close($ch);
+      } else {
+        if ($fp = @fsockopen('', 80, $errno, $errstr, 30)) {
+          $data = 'stats=' . $encoded;
+          fputs($fp, "POST  HTTP/1.1\r\n");
+          fputs($fp, "Host: \r\n");
+          fputs($fp, "Content-type: application/x-www-form-urlencoded\r\n");
+          fputs($fp, "Content-length: ".strlen($data)."\r\n");
+          fputs($fp, "Connection: close\r\n\r\n");
+          fputs($fp, $data."\r\n\r\n");
+          while(!feof($fp)) {
+            $response .= fgets($fp,4096);
+          }
+          fclose($fp);
+        }
+      }
+
+
+      if (!$response) {
+        $messageStack->add_session(ERROR_INFO_SUBMIT, 'error');
+      } else {
+        $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
+      }
+      tep_redirect(tep_href_link(FILENAME_SERVER_INFO));
+    break;
+    case 'save':
+      $info = tep_get_system_information(true);
+      $info_file = 'server_info-' . date('YmdHis') . '.txt';
+      header('Content-type: text/plain');
+      header('Content-disposition: attachment; filename=' . $info_file);
+      echo tep_format_system_info_array($info);
+      exit;
+
+    break;
+
+    default:
+      $info = tep_get_system_information();
+      break;
+  }
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>
@@ -44,6 +101,34 @@
           </tr>
         </table></td>
       </tr>
+<?php
+  if ($action == 'export') {
+?>
+      <tr>
+        <td><table border="0" cellspacing="0" cellpadding="2">
+          <tr>
+            <td class="smallText" colspan="2"><?php echo TEXT_EXPORT_INTRO; ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_textarea_field('server configuration', 'soft', '100', '15', tep_format_system_info_array($info)); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+          <td align="right" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=submit') . '">' . tep_image_button('button_send.gif', IMAGE_SEND) . '</a>&nbsp;' . '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=save') . '">' . tep_image_button('button_save.gif', IMAGE_SAVE) . '</a>';?>
+      </tr>
+  <?php
+  } else {
+?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
@@ -83,6 +168,12 @@
               </tr>
             </table></td>
           </tr>
+          <tr>
+            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td><?php echo '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=export') . '">' . tep_image_button('button_export.gif', IMAGE_EXPORT) . '</a>';?></td>
+          </tr>
         </table></td>
       </tr>
       <tr>
@@ -121,6 +212,9 @@ hr {display: none;}
 ?>
         </td>
       </tr>
+<?php
+  }
+ ?>
     </table></td>
 <!-- body_text_eof //-->
   </tr>
