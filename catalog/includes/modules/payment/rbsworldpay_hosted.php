@@ -5,43 +5,47 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
 
-  class worldpay_junior {
+  class rbsworldpay_hosted {
     var $code, $title, $description, $enabled;
 
 // class constructor
-    function worldpay_junior() {
+    function rbsworldpay_hosted() {
       global $order;
 
-      $this->signature = 'worldpay|worldpay_junior|1.0|2.2';
+      $this->signature = 'rbs|worldpay_hosted|1.0|2.2';
 
-      $this->code = 'worldpay_junior';
-      $this->title = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS == 'True') ? true : false);
+      $this->code = 'rbsworldpay_hosted';
+      $this->title = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_TITLE;
+      $this->public_title = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_PUBLIC_TITLE;
+      $this->description = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_DESCRIPTION;
+      $this->sort_order = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_SORT_ORDER;
+      $this->enabled = ((MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS == 'True') ? true : false);
 
-      if ((int)MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID;
+      if ((int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID > 0) {
+        $this->order_status = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID;
       }
 
       if (is_object($order)) $this->update_status();
 
-      $this->form_action_url = 'https://select.worldpay.com/wcc/purchase';
+      if (defined('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE') && (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True')) {
+        $this->form_action_url = 'https://select-test.wp3.rbsworldpay.com/wcc/purchase';
+      } else {
+        $this->form_action_url = 'https://select.wp3.rbsworldpay.com/wcc/purchase';
+      }
     }
 
 // class methods
     function update_status() {
       global $order;
 
-      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE > 0) ) {
+      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
         while ($check = tep_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
@@ -63,10 +67,10 @@
     }
 
     function selection() {
-      global $cart_Worldpay_Junior_ID;
+      global $cart_RBS_Worldpay_Hosted_ID;
 
-      if (tep_session_is_registered('cart_Worldpay_Junior_ID')) {
-        $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
+      if (tep_session_is_registered('cart_RBS_Worldpay_Hosted_ID')) {
+        $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -78,7 +82,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_Worldpay_Junior_ID');
+          tep_session_unregister('cart_RBS_Worldpay_Hosted_ID');
         }
       }
 
@@ -99,17 +103,17 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_Worldpay_Junior_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $languages_id, $order, $order_total_modules;
 
       $insert_order = false;
 
-      if (tep_session_is_registered('cart_Worldpay_Junior_ID')) {
-        $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
+      if (tep_session_is_registered('cart_RBS_Worldpay_Hosted_ID')) {
+        $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_Worldpay_Junior_ID, 0, strlen($cartID))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_RBS_Worldpay_Hosted_ID, 0, strlen($cartID))) ) {
           $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -260,96 +264,96 @@
           }
         }
 
-        $cart_Worldpay_Junior_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_Worldpay_Junior_ID');
+        $cart_RBS_Worldpay_Hosted_ID = $cartID . '-' . $insert_id;
+        tep_session_register('cart_RBS_Worldpay_Hosted_ID');
       }
 
       return false;
     }
 
     function process_button() {
-      global $order, $currency, $languages_id, $language, $customer_id, $cart_Worldpay_Junior_ID;
+      global $order, $currency, $languages_id, $language, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
 
-      $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
+      $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
       $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
       $lang = tep_db_fetch_array($lang_query);
 
-      $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID) .
+      $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
+                               tep_draw_hidden_field('cartId', $order_id) .
                                tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
                                tep_draw_hidden_field('currency', $currency) .
-                               tep_draw_hidden_field('hideCurrency', 'true') .
-                               tep_draw_hidden_field('cartId', $order_id) .
+                               tep_draw_hidden_field('address', $order->billing['street_address']) .
+                               tep_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
                                tep_draw_hidden_field('desc', STORE_NAME) .
                                tep_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               tep_draw_hidden_field('address', $order->billing['street_address']) .
                                tep_draw_hidden_field('postcode', $order->billing['postcode']) .
-                               tep_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
                                tep_draw_hidden_field('tel', $order->customer['telephone']) .
                                tep_draw_hidden_field('email', $order->customer['email_address']) .
                                tep_draw_hidden_field('fixContact', 'Y') .
+                               tep_draw_hidden_field('hideCurrency', 'true') .
                                tep_draw_hidden_field('lang', strtoupper($lang['code'])) .
                                tep_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $currency . ':' . $order_id)) .
-                               tep_draw_hidden_field('MC_callback', substr(tep_href_link('ext/modules/payment/worldpay/junior_callback.php', '', 'NONSSL', false, false), strpos(tep_href_link('ext/modules/payment/worldpay/junior_callback.php', '', 'NONSSL', false, false), '://')+3));
+                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $currency . ':' . $order_id)) .
+                               tep_draw_hidden_field('MC_callback', substr(tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'NONSSL', false, false), strpos(tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'NONSSL', false, false), '://')+3));
 
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD == 'Pre-Authorization') {
+      if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
         $process_button_string .= tep_draw_hidden_field('authMode', 'E');
       }
 
-      if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
+      if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
         $process_button_string .= tep_draw_hidden_field('testMode', '100');
       }
 
       $process_button_string .= tep_draw_hidden_field('M_sid', tep_session_id()) .
                                 tep_draw_hidden_field('M_cid', $customer_id) .
                                 tep_draw_hidden_field('M_lang', $language) .
-                                tep_draw_hidden_field('M_hash', md5(tep_session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD));
+                                tep_draw_hidden_field('M_hash', md5(tep_session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Worldpay_Junior_ID;
+      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
-      $order_id = substr($cart_Worldpay_Junior_ID, strpos($cart_Worldpay_Junior_ID, '-')+1);
+      $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
         $check = tep_db_fetch_array($check_query);
 
-        if ($check['orders_status'] == MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID) {
+        if ($check['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
           $hash_result = false;
 
-          if (isset($HTTP_GET_VARS['hash']) && !empty($HTTP_GET_VARS['hash']) && ($HTTP_GET_VARS['hash'] == md5(tep_session_name() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD))) {
+          if (isset($HTTP_GET_VARS['hash']) && !empty($HTTP_GET_VARS['hash']) && ($HTTP_GET_VARS['hash'] == md5(tep_session_name() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
             $hash_result = true;
           }
 
           $sql_data_array = array('orders_id' => $order_id,
-                                  'orders_status_id' => MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID,
+                                  'orders_status_id' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
                                   'comments' => (($hash_result == true) ? 'WorldPay: Transaction Verified' : 'WorldPay: Incorrect Transaction Hash'));
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-          if (MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE == 'True') {
+          if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
             $sql_data_array = array('orders_id' => $order_id,
-                                    'orders_status_id' => MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID,
+                                    'orders_status_id' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID,
                                     'date_added' => 'now()',
                                     'customer_notified' => '0',
-                                    'comments' => MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE);
+                                    'comments' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE);
 
             tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
           }
         }
       }
 
-      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
 
       $sql_data_array = array('orders_id' => $order_id,
-                              'orders_status_id' => (MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
+                              'orders_status_id' => (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
                               'date_added' => 'now()',
                               'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                               'comments' => $order->info['comments']);
@@ -492,7 +496,7 @@
       tep_session_unregister('payment');
       tep_session_unregister('comments');
 
-      tep_session_unregister('cart_Worldpay_Junior_ID');
+      tep_session_unregister('cart_RBS_Worldpay_Hosted_ID');
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -507,7 +511,7 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS'");
+        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS'");
         $this->_check = tep_db_num_rows($check_query);
       }
       return $this->_check;
@@ -538,16 +542,16 @@
         $status_id = $check['orders_status_id'];
       }
 
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable WorldPay Select Junior', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'False', 'Do you want to accept WorldPay Select Junior payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installation ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', '', 'Your WorldPay Installation ID', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Callback Password', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD', '', 'A password that is sent back in the callback response (specified in the WorldPay Customer Management System)', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Password', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD', '', 'The MD5 secret encryption password used to validate transaction responses with (specified in the WorldPay Customer Management System)', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'Capture', 'The processing method to use for each transaction', '6', '0', 'tep_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Test Mode', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'True', 'Process transactions in test mode?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Preparing Order Status', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', 'Set the status of prepared orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable RBS WorldPay Hosted', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS', 'False', 'Do you want to accept RBS WorldPay Hosted payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installation ID', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID', '', 'Your WorldPay Installation ID', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Callback Password', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD', '', 'A password that is sent back in the callback response (specified in the WorldPay Customer Management System)', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Password', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD', '', 'The MD5 secret encryption password used to validate transaction responses with (specified in the WorldPay Customer Management System)', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD', 'Capture', 'The processing method to use for each transaction', '6', '0', 'tep_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Test Mode', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE', 'True', 'Process transactions in test mode?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Preparing Order Status', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', 'Set the status of prepared orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
     }
 
     function remove() {
@@ -555,7 +559,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', 'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER');
+      return array('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID', 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_SORT_ORDER');
     }
 
 // format prices without currency formatting
