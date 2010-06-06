@@ -21,7 +21,7 @@ define('TITLE_PHP_VERSION', 'PHP Version:');
 define('TITLE_ZEND_VERSION', 'Zend:');
 define('TITLE_DATABASE_HOST', 'Database Host:');
 define('TITLE_DATABASE', 'Database:');
-define('TITLE_DATABASE_DATE', 'Datebase Date:');
+define('TITLE_DATABASE_DATE', 'Database Date:');
 
 define('TEXT_EXPORT_INTRO', 'The following information can be submitted to osCommerce by clicking on the Send button. You can also save the information to a file by clicking Save. This information is totally anonymous and cannot be used to identify an individual system. It will be used for support and development purposes only.');
 define('TEXT_EXPORT_INFO', 'Export Server Information');
