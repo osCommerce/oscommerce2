@@ -135,8 +135,8 @@
                    '  define(\'DB_SERVER_USERNAME\', \'' . trim($HTTP_POST_VARS['DB_SERVER_USERNAME']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
-                   '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
-                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n" .
+                   '  define(\'USE_PCONNECT\', \'' . trim($HTTP_POST_VARS['USE_PCONNECT']) . '\');' . "\n" .
+                   '  define(\'STORE_SESSIONS\', \'' . trim($HTTP_POST_VARS['STORE_SESSIONS']) . '\');' . "\n" .
                    '?>';
 
   $fp = fopen($dir_fs_document_root . 'includes/configure.php', 'w');
@@ -175,8 +175,8 @@
                    '  define(\'DB_SERVER_USERNAME\', \'' . trim($HTTP_POST_VARS['DB_SERVER_USERNAME']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
-                   '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
-                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n" .
+                   '  define(\'USE_PCONNECT\', \'' . trim($HTTP_POST_VARS['USE_PCONNECT']) . '\');' . "\n" .
+                   '  define(\'STORE_SESSIONS\', \'' . trim($HTTP_POST_VARS['STORE_SESSIONS']) . '\');' . "\n" .
                    '?>';
 
   $fp = fopen($dir_fs_document_root . 'admin/includes/configure.php', 'w');

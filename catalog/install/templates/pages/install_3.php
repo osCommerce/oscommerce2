@@ -18,6 +18,9 @@
       $dir_fs_document_root .= '/';
     }
   }
+
+  $session_storage = array(array('id' => 'database', 'text' => 'Database (Default)'),
+                           array('id' => 'files', 'text' => 'Files'));
 ?>
 
 <div class="mainBlock">
@@ -83,7 +86,10 @@
 <?php
   }
 ?>
-
+      <tr>
+        <td class="inputField"><?php echo 'Session Storage<br />' . osc_draw_pull_down_menu('STORE_SESSIONS', $session_storage); ?></td>
+        <td class="inputDescription">Where to store session information. Using the Database is the most secure option</td>
+      </tr>
     </table>
 
     <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>

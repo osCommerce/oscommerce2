@@ -15,7 +15,7 @@
     @ini_set('session.bug_compat_warn', 0);
   }
 
-  if (STORE_SESSIONS == 'mysql') {
+  if (STORE_SESSIONS == 'database') {
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
