@@ -36,7 +36,11 @@
 
       if (is_object($order)) $this->update_status();
 
-      $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
+      if (defined('MODULE_PAYMENT_MONEYBOOKERS_IFRAME') && (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'True')) {
+        $this->form_action_url = tep_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
+      } else {
+        $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
+      }
     }
 
 // class methods
@@ -286,8 +290,7 @@
                             'cancel_url' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                             'cancel_url_target' => 1,
                             'status_url' => tep_href_link('ext/modules/payment/moneybookers/callback.php', '', 'SSL', false, false),
-                            'language' => 'EN',
-                            'logo_url' => MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE,
+                            'language' => MODULE_PAYMENT_MONEYBOOKERS_LANGUAGE_CODE,
                             'prepare_only' => '1',
                             'pay_from_email' => $order->customer['email_address'],
                             'first_name' => $order->billing['firstname'],
@@ -303,6 +306,10 @@
                             'merchant_fields' => 'osc_custid,referring_platform',
                             'osc_custid' => $customer_id,
                             'referring_platform' => 'osCommerce|' . $this->signature);
+
+        if (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'False') {
+          $parameters['logo_url'] = MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE;
+        }
 
         if (tep_not_null(MODULE_PAYMENT_MONEYBOOKERS_DEBUG_EMAIL)) {
           $parameters['status_url2'] = MODULE_PAYMENT_MONEYBOOKERS_DEBUG_EMAIL;
@@ -605,6 +612,7 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Merchant ID', 'MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID', '" . (isset($HTTP_GET_VARS['custid']) ? $HTTP_GET_VARS['custid'] : '') . "', 'The Moneybookers merchant ID assigned to the seller e-mail address', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD', '', 'The secret word to verify transactions with', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Store Logo Image', 'MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE', '" . tep_catalog_href_link('images/store_logo.png', '', 'SSL') . "', 'The URL of the store logo image to display on the gateway transaction page. This must be served through HTTPS otherwise it will not be shown.', '6', '4', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('iFrame Presentation', 'MODULE_PAYMENT_MONEYBOOKERS_IFRAME', 'True', 'Show the Moneybookers payment pages through an iFrame?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_MONEYBOOKERS_DEBUG_EMAIL', '', 'All parameters of an invalid transaction will be sent to this email address.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_MONEYBOOKERS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_MONEYBOOKERS_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
@@ -621,7 +629,7 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_MONEYBOOKERS_STATUS', 'MODULE_PAYMENT_MONEYBOOKERS_PAY_TO', 'MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID', 'MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD', 'MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE', 'MODULE_PAYMENT_MONEYBOOKERS_DEBUG_EMAIL', 'MODULE_PAYMENT_MONEYBOOKERS_ZONE', 'MODULE_PAYMENT_MONEYBOOKERS_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_TRANSACTIONS_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_SORT_ORDER', 'MODULE_PAYMENT_MONEYBOOKERS_CURL');
+      return array('MODULE_PAYMENT_MONEYBOOKERS_STATUS', 'MODULE_PAYMENT_MONEYBOOKERS_PAY_TO', 'MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID', 'MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD', 'MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE', 'MODULE_PAYMENT_MONEYBOOKERS_IFRAME', 'MODULE_PAYMENT_MONEYBOOKERS_DEBUG_EMAIL', 'MODULE_PAYMENT_MONEYBOOKERS_ZONE', 'MODULE_PAYMENT_MONEYBOOKERS_PREPARE_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_TRANSACTIONS_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_ORDER_STATUS_ID', 'MODULE_PAYMENT_MONEYBOOKERS_SORT_ORDER', 'MODULE_PAYMENT_MONEYBOOKERS_CURL');
     }
 
 // format prices without currency formatting
