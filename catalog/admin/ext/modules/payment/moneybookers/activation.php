@@ -132,6 +132,14 @@
           </form>
 <?php
     } else {
+      if ($result == 'VELOCITY_CHECK_EXCEEDED') {
+?>
+          <div style="padding: 5px; background-color: #ff9999;">
+            <p><b><u><?php echo MB_ACTIVATION_SECRET_WORD_ERROR_TITLE; ?></u></b></p>
+            <p><?php echo MB_ACTIVATION_SECRET_WORD_ERROR_EXCEEDED; ?></p>
+          </div>
+<?php
+      }
 ?>
           <p><b><u><?php echo MB_ACTIVATION_SECRET_WORD_TITLE; ?></u></b></p>
           <p><?php echo MB_ACTIVATION_SECRET_WORD_FAIL_TEXT; ?></p>
