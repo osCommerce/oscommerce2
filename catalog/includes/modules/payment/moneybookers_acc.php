@@ -20,6 +20,7 @@
     var $_sid; // Moneybookers transaction session ID
     var $_mbcartID = 'cart_MoneybookersACC_ID';
     var $_payment_method = 'ACC';
+    var $_payment_method_image = 'All_CCs_225x45.gif';
 
 // class constructor
     function moneybookers_acc() {
@@ -40,7 +41,11 @@
 
       if (is_object($order)) $this->update_status();
 
-      $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
+      if (defined('MODULE_PAYMENT_MONEYBOOKERS_IFRAME') && (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'True')) {
+        $this->form_action_url = tep_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
+      } else {
+        $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
+      }
     }
 
 // class methods

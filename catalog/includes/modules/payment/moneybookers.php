@@ -16,6 +16,7 @@
     var $_sid; // Moneybookers transaction session ID
     var $_mbcartID = 'cart_Moneybookers_ID';
     var $_payment_method = '';
+    var $_payment_method_image = 'by_ewallet_90x45.gif';
 
 // class constructor
     function moneybookers() {
@@ -93,7 +94,7 @@
       $this->_deletePreparing();
 
       return array('id' => $this->code,
-                   'module' => $this->public_title);
+                   'module' => $this->public_title . (!empty($this->_payment_method_image) ? '<br />' . tep_image('ext/modules/payment/moneybookers/logos/' . $this->_payment_method_image, $this->public_title) : ''));
     }
 
     function pre_confirmation_check() {
