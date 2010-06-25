@@ -31,6 +31,8 @@
   define('MB_ACTIVATION_SECRET_WORD_TITLE', 'Secret Word Test');
   define('MB_ACTIVATION_SECRET_WORD_SUCCESS_TEXT', 'The secret word has been setup <b>correctly</b>! Transactions can now be securely verified with the payment gateway.');
   define('MB_ACTIVATION_SECRET_WORD_FAIL_TEXT', 'The secret word configuration has <b>failed</b>! Please review the secret word at your Moneybookers "Merchant Tools" account and the configuration of the payment module.');
+  define('MB_ACTIVATION_SECRET_WORD_ERROR_TITLE', 'Error');
+  define('MB_ACTIVATION_SECRET_WORD_ERROR_EXCEEDED', 'The maximum number of tries has been exceeded. Please try again in an hour.');
   define('MB_ACTIVATION_CORE_REQUIRED_TITLE', 'Core Moneybookers Module Required');
   define('MB_ACTIVATION_CORE_REQUIRED_TEXT', 'The core Moneybookers payment module is required to support the Moneybookers Quick Checkout payment options. Please continue to install and configure the core payment module.');
   define('MB_ACTIVATION_VERIFY_ACCOUNT_BUTTON', 'Verify Account');
