@@ -19,6 +19,7 @@
   define('MODULE_PAYMENT_MONEYBOOKERS_TEXT_PUBLIC_TITLE', 'Moneybookers (including Credit and Debit Cards)');
   define('MODULE_PAYMENT_MONEYBOOKERS_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.moneybookers.com/partners/oscommerce" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit Moneybookers Website</a>' . $moneybookers_ping_button);
   define('MODULE_PAYMENT_MONEYBOOKERS_RETURN_TEXT', 'Continue and return to ' . STORE_NAME);
+  define('MODULE_PAYMENT_MONEYBOOKERS_LANGUAGE_CODE', 'EN');
 
   define('MB_ACTIVATION_TITLE', 'Moneybookers Account Activation');
   define('MB_ACTIVATION_ACCOUNT_TITLE', 'Verify Account');
