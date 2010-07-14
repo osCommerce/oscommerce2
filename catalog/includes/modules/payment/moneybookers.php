@@ -304,6 +304,7 @@
                             'country' => $order->billing['country']['iso_code_3'],
                             'amount' => $this->format_raw($order->info['total']),
                             'currency' => $currency,
+                            'hide_login' => '1',
                             'merchant_fields' => 'osc_custid,referring_platform',
                             'osc_custid' => $customer_id,
                             'referring_platform' => 'osCommerce|' . $this->signature);
