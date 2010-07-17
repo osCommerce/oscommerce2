@@ -43,7 +43,7 @@
   $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
 
 // set php_self in the local scope
-  if (!isset($PHP_SELF)) $PHP_SELF = $HTTP_SERVER_VARS['PHP_SELF'];
+  $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($HTTP_SERVER_VARS['SCRIPT_NAME'])) ? basename($HTTP_SERVER_VARS['PHP_SELF']) : basename($HTTP_SERVER_VARS['SCRIPT_NAME']);
 
   if ($request_type == 'NONSSL') {
     define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
