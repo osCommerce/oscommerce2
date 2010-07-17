@@ -34,7 +34,7 @@
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set php_self in the local scope
-  $PHP_SELF = (isset($HTTP_SERVER_VARS['PHP_SELF']) ? $HTTP_SERVER_VARS['PHP_SELF'] : $HTTP_SERVER_VARS['SCRIPT_NAME']);
+  $PHP_SELF = $_SERVER['SCRIPT_FILENAME'];
 
 // Used in the "Backup Manager" to compress backups
   define('LOCAL_EXE_GZIP', 'gzip');
