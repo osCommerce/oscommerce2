@@ -38,8 +38,11 @@
           tep_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "'");
         }
 
-        if ($manufacturers_image = new upload('manufacturers_image', DIR_FS_CATALOG_IMAGES)) {
-          tep_db_query("update " . TABLE_MANUFACTURERS . " set manufacturers_image = '" . $manufacturers_image->filename . "' where manufacturers_id = '" . (int)$manufacturers_id . "'");
+        $manufacturers_image = new upload('manufacturers_image');
+        $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES);
+
+        if ($manufacturers_image->parse() && $manufacturers_image->save()) {
+          tep_db_query("update " . TABLE_MANUFACTURERS . " set manufacturers_image = '" . tep_db_input($manufacturers_image->filename) . "' where manufacturers_id = '" . (int)$manufacturers_id . "'");
         }
 
         $languages = tep_get_languages();
