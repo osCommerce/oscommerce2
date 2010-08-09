@@ -200,8 +200,16 @@ function selectAll(FormName, SelectBox) {
         }
       }
 
-      $mimemessage = new email(array('X-Mailer: osCommerce bulk mailer'));
-      $mimemessage->add_text($this->content);
+      $mimemessage = new email(array('X-Mailer: osCommerce'));
+
+      // Build the text version
+      $text = strip_tags($this->content);
+      if (EMAIL_USE_HTML == 'true') {
+        $mimemessage->add_html($this->content, $text);
+      } else {
+        $mimemessage->add_text($text);
+      }
+
       $mimemessage->build_message();
 
       reset($audience);
