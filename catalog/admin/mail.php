@@ -38,8 +38,15 @@
 
     //Let's build a message object using the email class
     $mimemessage = new email(array('X-Mailer: osCommerce'));
-    // add the message to the object
-    $mimemessage->add_text($message);
+
+    // Build the text version
+    $text = strip_tags($message);
+    if (EMAIL_USE_HTML == 'true') {
+      $mimemessage->add_html($message, $text);
+    } else {
+      $mimemessage->add_text($message);
+    }
+
     $mimemessage->build_message();
     while ($mail = tep_db_fetch_array($mail_query)) {
       $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', $from, $subject);
