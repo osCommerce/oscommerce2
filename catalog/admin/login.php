@@ -41,7 +41,7 @@
           if (tep_db_num_rows($check_query) == 1) {
             $check = tep_db_fetch_array($check_query);
 
-            if (tep_validate_password($password, $check['user_password'])) {
+            if (tep_validate_password($password, $check['user_password'], $check['id'])) {
               tep_session_register('admin');
 
               $admin = array('id' => $check['id'],
