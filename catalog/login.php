@@ -38,6 +38,11 @@
           tep_session_recreate();
         }
 
+// migrate old hashed password to new phpass password
+        if (tep_password_type($check_customer['customers_password']) != 'phpass') {
+          tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
+        }
+
         $check_country_query = tep_db_query("select entry_country_id, entry_zone_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$check_customer['customers_id'] . "' and address_book_id = '" . (int)$check_customer['customers_default_address_id'] . "'");
         $check_country = tep_db_fetch_array($check_country_query);
 
