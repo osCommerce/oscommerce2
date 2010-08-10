@@ -31,7 +31,7 @@
     } else {
       $check_customer = tep_db_fetch_array($check_customer_query);
 // Check that password is good
-      if (!tep_validate_password($password, $check_customer['customers_password'])) {
+      if (!tep_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id'])) {
         $error = true;
       } else {
         if (SESSION_RECREATE == 'True') {
