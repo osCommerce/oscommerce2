@@ -34,6 +34,12 @@
         $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
         break;
+      case 'social_bookmarks':
+        $module_type = 'social_bookmarks';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'social_bookmarks/';
+        $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
+        break;
       case 'payment':
       default:
         $module_type = 'payment';

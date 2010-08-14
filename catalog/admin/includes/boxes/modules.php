@@ -24,7 +24,8 @@
     $contents[] = array('text'  => '<a href="' . tep_href_link(FILENAME_MODULES, 'set=payment', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_PAYMENT . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_SHIPPING . '</a><br>' .
                                    '<a href="' . tep_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ORDER_TOTAL . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=actionrecorder', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ACTION_RECORDER . '</a>');
+                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=actionrecorder', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ACTION_RECORDER . '</a><br>' .
+                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=social_bookmarks', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_SOCIAL_BOOKMARKS . '</a>');
   }
 
   $box = new box;

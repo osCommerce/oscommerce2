@@ -59,8 +59,16 @@
     function send($newsletter_id) {
       $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
 
-      $mimemessage = new email(array('X-Mailer: osCommerce bulk mailer'));
-      $mimemessage->add_text($this->content);
+      $mimemessage = new email(array('X-Mailer: osCommerce'));
+
+      // Build the text version
+      $text = strip_tags($this->content);
+      if (EMAIL_USE_HTML == 'true') {
+        $mimemessage->add_html($this->content, $text);
+      } else {
+        $mimemessage->add_text($text);
+      }
+
       $mimemessage->build_message();
       while ($mail = tep_db_fetch_array($mail_query)) {
         $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', EMAIL_FROM, $this->title);
