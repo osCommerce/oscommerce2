@@ -5,56 +5,35 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
 
 ////
-// This funstion validates a plain text password with an
-// encrpyted password
-  function tep_validate_password($plain, $encrypted, $admin_id = '') {
-    $validated = false;
-    global $hasher;
+// This function validates a plain text password with a
+// salted or phpass password
+  function tep_validate_password($plain, $encrypted) {
     if (tep_not_null($plain) && tep_not_null($encrypted)) {
-      $password_hash_style = tep_what_password($encrypted);
-      switch ($password_hash_style) {
-        case 'salted':
-          $check_old = tep_validate_old_password($plain, $encrypted);
-            if ($check_old == true) {
-              $validated = true;
-// insert password hash using PasswordHash into 
-              $new_password_hash = tep_encrypt_password($plain);
-              if (strlen($new_password_hash) > 19 && (int)$admin_id > 0) {
-                tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . $new_password_hash . "' where id = '" . (int)$admin_id . "'");
-              } else {
-// error with PasswordHash
-                unset($hasher);
-              }
-            }
-           break;
-        case 'phpass':
-          if (!is_object($hasher)) {
-            require_once(DIR_WS_CLASSES . 'PasswordHash.php');
-// hard coded: number of base-2 logarithms of the iteration count used for password stretching (10)
-// Since the admin(s) always have access to the database and can truncate the table
-// administrators when moving to a server that does the encryption differently we can go for
-// the better security and not use portable hashes
-            $hasher = new PasswordHash(10, false);
-          }
-          $validated = $hasher->CheckPassword($plain, $encrypted);
-          break;
-        case 'unknown':
-          $validated = false;
-          break;
-        default:
-          $validated = false;
-          break;
-       }    
+      if (tep_password_type($encrypted) == 'salt') {
+        return tep_validate_old_password($plain, $encrypted);
+      }
+
+      if (!class_exists('PasswordHash')) {
+        include(DIR_WS_CLASSES . 'PasswordHash.php');
+      }
+
+      $hasher = new PasswordHash(10, true);
+
+      return $hasher->CheckPassword($plain, $encrypted);
     }
-    return $validated;
+
+    return false;
   }
-  
+
+////
+// This function validates a plain text password with a
+// salted password
   function tep_validate_old_password($plain, $encrypted) {
     if (tep_not_null($plain) && tep_not_null($encrypted)) {
 // split apart the hash / salt
@@ -71,21 +50,21 @@
   }
 
 ////
-// This function makes a new password from a plaintext password. 
+// This function encrypts a phpass password from a plaintext
+// password.
   function tep_encrypt_password($plain) {
-    global $hasher;
-    if (!is_object($hasher)) {
-      require_once(DIR_WS_CLASSES . 'PasswordHash.php');
-// hard coded: number of base-2 logarithms of the iteration count used for password stretching (10)
-// Since the admin(s) always have access to the database and can truncate the table
-// administrators when moving to a server that does the encryption differently we can go for
-// the better security and not use portable hashes
-      $hasher = new PasswordHash(10, false); 
+    if (!class_exists('PasswordHash')) {
+      include(DIR_WS_CLASSES . 'PasswordHash.php');
     }
-    $password = $hasher->HashPassword($plain);
-    return $password;
+
+    $hasher = new PasswordHash(10, true);
+
+    return $hasher->HashPassword($plain);
   }
 
+////
+// This function encrypts a salted password from a plaintext
+// password.
   function tep_encrypt_old_password($plain) {
     $password = '';
 
@@ -99,17 +78,16 @@
 
     return $password;
   }
-  
-  function tep_what_password($encrypted) {
-    if (strlen($encrypted) == 20 || (strlen($encrypted) > 20 && (substr($encrypted, 0, 3) == '$P$'))  || (strlen($encrypted) == 60 && (substr($encrypted, 0, 4) == '$2a$'))) {
-// phpass style starting with $P$ (portable), $2a$ (CRYPT_BLOWFISH) or length 20 (CRYPT_EXT_DES)
-      return 'phpass';
-    } elseif ((substr($encrypted, 0, 3) != '$P$') && strlen($encrypted) == 35 && (32 == strpos($encrypted, ':'))) {
-// password hash with salt (old version)
-      return 'salted';  
-    } else {
-      return 'unknown';
+
+////
+// This function returns the type of the encrpyted password
+// (phpass or salt)
+  function tep_password_type($encrypted) {
+    if (preg_match('/^[A-Z0-9]{32}\:[A-Z0-9]{2}$/i', $encrypted) === 1) {
+      return 'salt';
     }
+
+    return 'phpass';
   }
 
 ////
