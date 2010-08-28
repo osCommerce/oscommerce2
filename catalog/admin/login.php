@@ -41,7 +41,12 @@
           if (tep_db_num_rows($check_query) == 1) {
             $check = tep_db_fetch_array($check_query);
 
-            if (tep_validate_password($password, $check['user_password'], $check['id'])) {
+            if (tep_validate_password($password, $check['user_password'])) {
+// migrate old hashed password to new phpass password
+              if (tep_password_type($check['user_password']) != 'phpass') {
+                tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
+              }
+
               tep_session_register('admin');
 
               $admin = array('id' => $check['id'],

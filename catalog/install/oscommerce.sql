@@ -196,7 +196,7 @@ CREATE TABLE customers (
    customers_default_address_id int,
    customers_telephone varchar(255) NOT NULL,
    customers_fax varchar(255),
-   customers_password varchar(40) NOT NULL,
+   customers_password varchar(60) NOT NULL,
    customers_newsletter char(1),
    PRIMARY KEY (customers_id),
    KEY idx_customers_email_address (customers_email_address)
