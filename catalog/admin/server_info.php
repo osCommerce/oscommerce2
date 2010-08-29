@@ -16,14 +16,14 @@
 
   switch ($action) {
     case 'export':
-      $info = tep_get_system_information(true);
+      $info = tep_get_system_information();
     break;
 
     case 'submit':
       $target_host = 'www.oscommerce.com';
       $target_path = '/usage_info.php';
 
-      $encoded = base64_encode(serialize(tep_get_system_information(true)));
+      $encoded = base64_encode(serialize(tep_get_system_information()));
 
       $response = false;
 
@@ -70,7 +70,7 @@
     break;
 
     case 'save':
-      $info = tep_get_system_information(true);
+      $info = tep_get_system_information();
       $info_file = 'server_info-' . date('YmdHis') . '.txt';
       header('Content-type: text/plain');
       header('Content-disposition: attachment; filename=' . $info_file);
