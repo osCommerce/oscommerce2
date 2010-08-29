@@ -805,7 +805,7 @@
 
 ////
 // Retreive server information
-  function tep_get_system_information($anonymous = false) {
+  function tep_get_system_information() {
     global $HTTP_SERVER_VARS;
 
     $db_query = tep_db_query("select now() as datetime");
@@ -820,18 +820,14 @@
     $data['system'] = array('date' => tep_datetime_short(date('Y-m-d H:i:s')),
                             'os' => PHP_OS,
                             'kernel' => $kernel,
-                            'host' => $host,
                             'uptime' => @exec('uptime'),
-                            'ip' => gethostbyname($host),
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
     $data['mysql']  = array('version' => 'MySQL ' . (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
-                            'server' => DB_SERVER,
-                            'ip' => gethostbyname(DB_SERVER),
                             'date' => tep_datetime_short($db['datetime']));
 
     $data['php']    = array('version' => PHP_VERSION,
-                            'zend' => (function_exists('zend_version') ? zend_version() : ''),
+                            'zend' => zend_version(),
                             'sapi' => PHP_SAPI,
                             'int_size'	=> defined('PHP_INT_SIZE') ? PHP_INT_SIZE : '',
                             'safe_mode'	=> (int) @ini_get('safe_mode'),
@@ -854,18 +850,6 @@
                             'unicode.semantics' => (int) @ini_get('unicode.semantics'),
                             'zend_thread_safty'	=> (int) function_exists('zend_thread_id'),
                             'extensions' => get_loaded_extensions());
-
-    // If we need anonymous data we need to remove some data which could
-    // potentially be used to identify a particular installation. An MD5 hash
-    // is used purely to identify duplicate submissions
-    if ($anonymous === true) {
-        $data['system']['host'] = md5($data['system']['ip']);
-        $data['system']['ip'] = '0.0.0.0';
-        $data['system']['uptime'] = '0';
-
-        $data['mysql']['server'] = '';
-        $data['mysql']['ip']  = '';
-    }
 
     return $data;
   }
