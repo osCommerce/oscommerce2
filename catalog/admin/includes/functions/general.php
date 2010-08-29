@@ -856,10 +856,10 @@
                             'extensions' => get_loaded_extensions());
 
     // If we need anonymous data we need to remove some data which could
-    // potentially be used to identify a particular installation. A SHA1 hash
+    // potentially be used to identify a particular installation. An MD5 hash
     // is used purely to identify duplicate submissions
     if ($anonymous === true) {
-        $data['system']['host'] = sha1($data['system']['host'] . $data['system']['ip']);
+        $data['system']['host'] = md5($data['system']['ip']);
         $data['system']['ip'] = '0.0.0.0';
         $data['system']['uptime'] = '0';
 
