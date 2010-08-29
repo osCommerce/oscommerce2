@@ -817,14 +817,14 @@
 
     $data['oscommerce']  = array('version' => tep_get_version());
 
-    $data['system'] = array('date' => tep_datetime_short(date('Y-m-d H:i:s')),
+    $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,
                             'kernel' => $kernel,
                             'uptime' => @exec('uptime'),
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
     $data['mysql']  = array('version' => 'MySQL ' . (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
-                            'date' => tep_datetime_short($db['datetime']));
+                            'date' => $db['datetime']);
 
     $data['php']    = array('version' => PHP_VERSION,
                             'zend' => zend_version(),
