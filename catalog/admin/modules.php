@@ -40,6 +40,12 @@
         $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
         break;
+      case 'header_tags':
+        $module_type = 'header_tags';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'header_tags/';
+        $module_key = 'MODULE_HEADER_TAGS_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
+        break;
       case 'payment':
       default:
         $module_type = 'payment';
