@@ -39,36 +39,51 @@
     function buildHeaderTags() {
       global $PHP_SELF;
 
-      $req_module = substr(basename($PHP_SELF), 0, strpos(basename($PHP_SELF), '.'));
-      $directory = realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $req_module);
+      $modules_array = $this->_loadModules('global');
 
-      if (substr($directory, 0, strlen(realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags'))) == realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags')) {
-        if (file_exists($directory)) {
-          $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-          $directory_array = array();
-          if ($dir = @dir($directory)) {
-            while ($file = $dir->read()) {
-              if (!is_dir(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $file)) {
-                if (substr($file, strrpos($file, '.')) == $file_extension) {
-                  $directory_array[] = $file;
+      $req_module = substr(basename($PHP_SELF), 0, strpos(basename($PHP_SELF), '.'));
+
+      if ($req_module != 'global') {
+        $directory = realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $req_module);
+
+        if (substr($directory, 0, strlen(realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags'))) == realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags')) {
+          $modules_array = array_merge($modules_array, $this->_loadModules($req_module));
+        }
+      }
+
+      foreach ($modules_array as $module) {
+        call_user_func(array($module, 'parse'));
+      }
+    }
+
+    function _loadModules($group) {
+      global $PHP_SELF;
+
+      $directory = realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $group);
+      $directory_array = array();
+
+      if (file_exists($directory)) {
+        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+        if ($dir = @dir($directory)) {
+          while ($file = $dir->read()) {
+            if (!is_dir($directory . '/' . $file)) {
+              if (substr($file, strrpos($file, '.')) == $file_extension) {
+                $module = 'ht_' . $this->_toCamel($group) . '_' . substr($file, 0, strpos($file, '.'));
+
+                $directory_array[] = $module;
+
+                if (!class_exists($module)) {
+                  include($directory . '/' . $file);
                 }
               }
             }
-            sort($directory_array);
-            $dir->close();
           }
-
-          foreach ($directory_array as $file) {
-            $module = 'ht_' . $this->_toCamel($req_module) . '_' . substr($file, 0, strpos($file, '.'));
-
-            if (!class_exists($module)) {
-              include($directory . '/' . $file);
-            }
-
-            call_user_func(array($module, 'parse'));
-          }
+          sort($directory_array);
+          $dir->close();
         }
       }
+
+      return $directory_array;
     }
 
     function _toCamel($string) {
