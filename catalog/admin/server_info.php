@@ -16,14 +16,14 @@
 
   switch ($action) {
     case 'export':
-      $info = tep_get_system_information(true);
+      $info = tep_get_system_information();
     break;
 
     case 'submit':
       $target_host = 'www.oscommerce.com';
       $target_path = '/usage_info.php';
 
-      $encoded = base64_encode(serialize(tep_get_system_information(true)));
+      $encoded = base64_encode(serialize(tep_get_system_information()));
 
       $response = false;
 
@@ -70,7 +70,7 @@
     break;
 
     case 'save':
-      $info = tep_get_system_information(true);
+      $info = tep_get_system_information();
       $info_file = 'server_info-' . date('YmdHis') . '.txt';
       header('Content-type: text/plain');
       header('Content-disposition: attachment; filename=' . $info_file);
@@ -141,6 +141,7 @@
       </tr>
   <?php
   } else {
+    $server = parse_url(HTTP_SERVER);
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -148,9 +149,9 @@
             <td><table border="0" cellspacing="0" cellpadding="3">
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_HOST; ?></b></td>
-                <td class="smallText"><?php echo $info['system']['host'] . ' (' . $info['system']['ip'] . ')'; ?></td>
+                <td class="smallText"><?php echo $server['host'] . ' (' . gethostbyname($server['host']) . ')'; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo TITLE_DATABASE_HOST; ?></b></td>
-                <td class="smallText"><?php echo $info['mysql']['server'] . ' (' . $info['mysql']['ip'] . ')'; ?></td>
+                <td class="smallText"><?php echo DB_SERVER . ' (' . gethostbyname(DB_SERVER) . ')'; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_OS; ?></b></td>
