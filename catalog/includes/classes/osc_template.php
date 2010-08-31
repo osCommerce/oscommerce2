@@ -37,61 +37,26 @@
     }
 
     function buildHeaderTags() {
-      global $PHP_SELF;
+      global $language;
 
-      $modules_array = $this->_loadModules('global');
+      if ( defined('MODULE_HEADER_TAGS_INSTALLED') && tep_not_null(MODULE_HEADER_TAGS_INSTALLED) ) {
+        $htm_array = explode(';', MODULE_HEADER_TAGS_INSTALLED);
 
-      $req_module = substr(basename($PHP_SELF), 0, strpos(basename($PHP_SELF), '.'));
+        foreach ( $htm_array as $htm ) {
+          $class = substr($htm, 0, strrpos($htm, '.'));
 
-      if ($req_module != 'global') {
-        $directory = realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $req_module);
-
-        if (substr($directory, 0, strlen(realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags'))) == realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags')) {
-          $modules_array = array_merge($modules_array, $this->_loadModules($req_module));
-        }
-      }
-
-      foreach ($modules_array as $module) {
-        call_user_func(array($module, 'parse'));
-      }
-    }
-
-    function _loadModules($group) {
-      global $PHP_SELF;
-
-      $directory = realpath(DIR_FS_CATALOG . DIR_WS_MODULES . 'header_tags/' . $group);
-      $directory_array = array();
-
-      if (file_exists($directory)) {
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        if ($dir = @dir($directory)) {
-          while ($file = $dir->read()) {
-            if (!is_dir($directory . '/' . $file)) {
-              if (substr($file, strrpos($file, '.')) == $file_extension) {
-                $module = 'ht_' . $this->_toCamel($group) . '_' . substr($file, 0, strpos($file, '.'));
-
-                $directory_array[] = $module;
-
-                if (!class_exists($module)) {
-                  include($directory . '/' . $file);
-                }
-              }
-            }
+          if ( !class_exists($class) ) {
+            include(DIR_WS_LANGUAGES . $language . '/modules/header_tags/' . $htm);
+            include(DIR_WS_MODULES . 'header_tags/' . $class . '.php');
           }
-          sort($directory_array);
-          $dir->close();
+
+          $ht = new $class();
+
+          if ( $ht->isEnabled() ) {
+            $ht->execute();
+          }
         }
       }
-
-      return $directory_array;
-    }
-
-    function _toCamel($string) {
-      $parts = explode('_', $string);
-      $parts = $parts ? array_map('ucfirst', $parts) : array($string);
-      $parts[0] = strtolower(substr($parts[0], 0, 1)) . substr($parts[0], 1);
-
-      return implode('', $parts);
     }
   }
 ?>
