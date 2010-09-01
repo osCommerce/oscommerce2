@@ -130,14 +130,28 @@ class lastRSS {
     // Don't use Parse() in your scripts - use Get($rss_file) instead.
     // -------------------------------------------------------------------
     function Parse ($rss_url) {
+        $rss_content = '';
+
         // Open and load RSS file
-        if ($f = @fopen($rss_url, 'r')) {
-            $rss_content = '';
+        if (function_exists('curl_init')) {
+          $curl = curl_init($rss_url);
+          curl_setopt($curl, CURLOPT_HEADER, 0);
+          curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+
+          $rss_content = curl_exec($curl);
+
+          curl_close($curl);
+        } else {
+          if ($f = @fopen($rss_url, 'r')) {
             while (!feof($f)) {
                 $rss_content .= fgets($f, 4096);
             }
             fclose($f);
+          }
+        }
 
+        if (!empty($rss_content)) {
             // Parse document encoding
             $result['encoding'] = $this->my_preg_match("'encoding=[\'\"](.*?)[\'\"]'si", $rss_content);
             // if document codepage is specified, use it
