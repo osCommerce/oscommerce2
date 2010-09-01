@@ -823,7 +823,7 @@
                             'uptime' => @exec('uptime'),
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
-    $data['mysql']  = array('version' => 'MySQL ' . (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
+    $data['mysql']  = array('version' => (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
                             'date' => $db['datetime']);
 
     $data['php']    = array('version' => PHP_VERSION,

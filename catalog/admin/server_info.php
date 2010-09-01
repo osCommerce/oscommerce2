@@ -20,8 +20,8 @@
     break;
 
     case 'submit':
-      $target_host = 'www.oscommerce.com';
-      $target_path = '/usage_info.php';
+      $target_host = 'usage.oscommerce.com';
+      $target_path = '/submit.php';
 
       $encoded = base64_encode(serialize(tep_get_system_information()));
 
@@ -157,7 +157,7 @@
                 <td class="smallText"><b><?php echo TITLE_SERVER_OS; ?></b></td>
                 <td class="smallText"><?php echo $info['system']['os'] . ' ' . $info['system']['kernel']; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><?php echo TITLE_DATABASE; ?></b></td>
-                <td class="smallText"><?php echo $info['mysql']['version']; ?></td>
+                <td class="smallText"><?php echo 'MySQL ' . $info['mysql']['version']; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><b><?php echo TITLE_SERVER_DATE; ?></b></td>
