@@ -68,51 +68,50 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
-  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-  $files = array();
-  if ($dir = @dir(DIR_FS_ADMIN . 'includes/modules/index')) {
-    while ($file = $dir->read()) {
-      if (!is_dir($module_directory . $file)) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
-          $files[] = $file;
+  if ( defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && tep_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED) ) {
+    $adm_array = explode(';', MODULE_ADMIN_DASHBOARD_INSTALLED);
+
+    $col = 0;
+
+    for ( $i=0, $n=sizeof($adm_array); $i<$n; $i++ ) {
+      $adm = $adm_array[$i];
+
+      $class = substr($adm, 0, strrpos($adm, '.'));
+
+      if ( !class_exists($class) ) {
+        include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
+        include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+      }
+
+      $ad = new $class();
+
+      if ( $ad->isEnabled() ) {
+        if ($col < 1) {
+          echo '          <tr>' . "\n";
+        }
+
+        $col++;
+
+        if ($col <= 2) {
+          echo '            <td width="50%" valign="top">' . "\n";
+        }
+
+        echo $ad->getOutput();
+
+        if ($col <= 2) {
+          echo '            </td>' . "\n";
+        }
+
+        if ( !isset($adm_array[$i+1]) || ($col == 2) ) {
+          if ( !isset($adm_array[$i+1]) && ($col == 1) ) {
+            echo '            <td width="50%" valign="top">&nbsp;</td>' . "\n";
+          }
+
+          $col = 0;
+
+          echo '  </tr>' . "\n";
         }
       }
-    }
-    sort($files);
-    $dir->close();
-  }
-
-  $col = 0;
-
-  for ($i=0, $n=sizeof($files); $i<$n; $i++) {
-    if (file_exists(DIR_WS_LANGUAGES . $language . '/modules/index/' . $files[$i])) {
-      include(DIR_WS_LANGUAGES . $language . '/modules/index/' . $files[$i]);
-    }
-
-    if ($col < 1) {
-      echo '          <tr>' . "\n";
-    }
-
-    $col++;
-
-    if ($col <= 2) {
-      echo '            <td width="50%" valign="top">' . "\n";
-    }
-
-    include('includes/modules/index/' . $files[$i]);
-
-    if ($col <= 2) {
-      echo '            </td>' . "\n";
-    }
-
-    if ( !isset($files[$i+1]) || ($col == 2) ) {
-      if ( !isset($files[$i+1]) && ($col == 1) ) {
-        echo '            <td width="50%" valign="top">&nbsp;</td>' . "\n";
-      }
-
-      $col = 0;
-
-      echo '  </tr>' . "\n";
     }
   }
 ?>

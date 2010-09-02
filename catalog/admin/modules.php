@@ -19,37 +19,50 @@
       case 'shipping':
         $module_type = 'shipping';
         $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_SHIPPING_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
         break;
       case 'ordertotal':
         $module_type = 'order_total';
         $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
         break;
       case 'actionrecorder':
         $module_type = 'action_recorder';
         $module_directory = DIR_FS_CATALOG_MODULES . 'action_recorder/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
         break;
       case 'social_bookmarks':
         $module_type = 'social_bookmarks';
         $module_directory = DIR_FS_CATALOG_MODULES . 'social_bookmarks/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
         break;
       case 'header_tags':
         $module_type = 'header_tags';
         $module_directory = DIR_FS_CATALOG_MODULES . 'header_tags/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_HEADER_TAGS_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
+        break;
+      case 'dashboard':
+        $module_type = 'dashboard';
+        $module_directory = DIR_FS_ADMIN . 'includes/modules/dashboard/';
+        $module_language_directory = DIR_FS_ADMIN . 'includes/languages/';
+        $module_key = 'MODULE_ADMIN_DASHBOARD_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_ADMIN_DASHBOARD);
         break;
       case 'payment':
       default:
         $module_type = 'payment';
         $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_PAYMENT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
         break;
@@ -144,7 +157,7 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/' . $module_type . '/' . $file);
+    include($module_language_directory . $language . '/modules/' . $module_type . '/' . $file);
     include($module_directory . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
