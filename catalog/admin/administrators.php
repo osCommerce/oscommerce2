@@ -14,6 +14,7 @@
 
   $htaccess_array = null;
   $htpasswd_array = null;
+  $is_iis = stripos($HTTP_SERVER_VARS['SERVER_SOFTWARE'], 'iis');
 
   $authuserfile_array = array('##### OSCOMMERCE ADMIN PROTECTION - BEGIN #####',
                               'AuthType Basic',
@@ -22,7 +23,7 @@
                               'Require valid-user',
                               '##### OSCOMMERCE ADMIN PROTECTION - END #####');
 
-  if (file_exists(DIR_FS_ADMIN . '.htpasswd_oscommerce') && tep_is_writable(DIR_FS_ADMIN . '.htpasswd_oscommerce') && file_exists(DIR_FS_ADMIN . '.htaccess') && tep_is_writable(DIR_FS_ADMIN . '.htaccess')) {
+  if (!$is_iis && file_exists(DIR_FS_ADMIN . '.htpasswd_oscommerce') && tep_is_writable(DIR_FS_ADMIN . '.htpasswd_oscommerce') && file_exists(DIR_FS_ADMIN . '.htaccess') && tep_is_writable(DIR_FS_ADMIN . '.htaccess')) {
     $htaccess_array = array();
     $htpasswd_array = array();
 
@@ -225,7 +226,7 @@
     } else {
       $secMessageStack->add(HTPASSWD_SECURED, 'success');
     }
-  } else {
+  } else if (!$is_iis) {
     $secMessageStack->add(HTPASSWD_PERMISSIONS, 'error');
   }
 ?>
@@ -283,7 +284,12 @@
       $aInfo = new objectInfo($admins);
     }
 
+
     $htpasswd_secured = tep_image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Not Secured', 10, 10);
+
+    if ($is_iis) {
+      $htpasswd_secured = 'N/A';
+    }
 
     if (is_array($htpasswd_array)) {
       for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
