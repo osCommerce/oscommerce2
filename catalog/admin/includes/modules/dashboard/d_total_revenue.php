@@ -49,35 +49,76 @@
         $js_array = substr($js_array, 0, -1);
       }
 
-      $output = '<div id="d_total_revenue" style="width: 100%; height: 150px;"></div>' .
-                '<script language="javascript" type="text/javascript">' .
-                '$(function () {' .
-                '  var plot30 = [' . $js_array . '];' .
-                '  $.plot($("#d_total_revenue"), [ {' .
-                '    label: "' . tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK) . '",' .
-                '    data: plot30,' .
-                '    lines: { show: true, fill: true },' .
-                '    color: "#66CC33"' .
-                '  }], {' .
-                '    xaxis: {' .
-                '      ticks: 4,' .
-                '      mode: "time"' .
-                '    },' .
-                '    yaxis: {' .
-                '      ticks: 3,' .
-                '      min: 0' .
-                '    },' .
-                '    grid: {' .
-                '      backgroundColor: { colors: ["#fff", "#eee"] }' .
-                '    },' .
-                '    legend: {' .
-                '      labelFormatter: function(label, series) {' .
-                '        return \'<a href="' . tep_href_link(FILENAME_ORDERS) . '">\' + label + \'</a>\';' .
-                '      }' .
-                '    }' .
-                '  });' .
-                '});' .
-                '</script>';
+      $chart_label = tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
+      $chart_label_link = tep_href_link(FILENAME_ORDERS);
+
+      $output = <<<EOD
+<div id="d_total_revenue" style="width: 100%; height: 150px;"></div>
+<script language="javascript" type="text/javascript">
+$(function () {
+  var plot30 = [$js_array];
+  $.plot($('#d_total_revenue'), [ {
+    label: '$chart_label',
+    data: plot30,
+    lines: { show: true, fill: true },
+    points: { show: true },
+    color: '#66CC33'
+  }], {
+    xaxis: {
+      ticks: 4,
+      mode: 'time'
+    },
+    yaxis: {
+      ticks: 3,
+      min: 0
+    },
+    grid: {
+      backgroundColor: { colors: ['#fff', '#eee'] },
+      hoverable: true
+    },
+    legend: {
+      labelFormatter: function(label, series) {
+        return '<a href="$chart_label_link">' + label + '</a>';
+      }
+    }
+  });
+});
+
+function showTooltip(x, y, contents) {
+  $('<div id="tooltip">' + contents + '</div>').css( {
+    position: 'absolute',
+    display: 'none',
+    top: y + 5,
+    left: x + 5,
+    border: '1px solid #fdd',
+    padding: '2px',
+    backgroundColor: '#fee',
+    opacity: 0.80
+  }).appendTo('body').fadeIn(200);
+}
+
+var monthNames = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
+
+var previousPoint = null;
+$('#d_total_revenue').bind('plothover', function (event, pos, item) {
+  if (item) {
+    if (previousPoint != item.datapoint) {
+      previousPoint = item.datapoint;
+
+      $('#tooltip').remove();
+      var x = item.datapoint[0],
+          y = item.datapoint[1],
+          xdate = new Date(x);
+
+      showTooltip(item.pageX, item.pageY, y + ' for ' + monthNames[xdate.getMonth()] + '-' + xdate.getDate());
+    }
+  } else {
+    $('#tooltip').remove();
+    previousPoint = null;
+  }
+});
+</script>
+EOD;
 
       return $output;
     }
