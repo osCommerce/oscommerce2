@@ -11,6 +11,18 @@
 */
 
 ////
+// Get the installed version number
+  function osc_get_version() {
+    static $v;
+
+    if (!isset($v)) {
+      $v = trim(implode('', file('../includes/version.php')));
+    }
+
+    return $v;
+  }
+
+////
 // Sets timeout for the current script.
 // Cant be used in safe mode.
   function osc_set_time_limit($limit) {
