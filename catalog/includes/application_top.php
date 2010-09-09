@@ -34,7 +34,7 @@
   }
 
 // define the project version --- obsolete, now retrieved with tep_get_version()
-  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.2');
+  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
 
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');

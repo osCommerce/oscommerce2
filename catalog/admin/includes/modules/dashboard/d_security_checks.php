@@ -97,7 +97,7 @@
       }
 
       if (empty($secCheck_messages)) {
-        $output .= '<div class="secSuccess"><p class="smallText">' . ADMIN_INDEX_SECURITY_CHECKS_SUCCESS . '</p></div>';
+        $output .= '<div class="secSuccess"><p class="smallText">' . MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SUCCESS . '</p></div>';
       }
 
       return $output;

@@ -18,11 +18,10 @@
 ?>
 
 <div class="mainBlock">
-  <h1>Welcome to osCommerce Online Merchant v2.2!</h1>
+  <h1>Welcome to osCommerce Online Merchant v<?php echo osc_get_version(); ?>!</h1>
 
-  <p>osCommerce Online Merchant allows you to sell products worldwide with your own online store. The administration side manages products, customers, orders, newsletters, specials, and more to successfully build and thrive on the success of your online business.</p>
-  <p>We have attracted the largest community for an online shop shopping cart solution that consists of over 140,000 registered store owners and developers who help one another out and have provided over 4,000 add-ons that extend the features and potential of your online store.</p>
-  <p>osCommerce Online Merchant and its add-ons are available for free under an Open Source license to help you start selling online sooner without any licensing fees or limitations involved.</p>
+  <p>osCommerce Online Merchant helps you sell products worldwide with your own online store. Its Administration Tool manages products, customers, orders, newsletters, specials, and more to successfully build the success of your online business.</p>
+  <p>osCommerce has attracted a large community of store owners and developers who support each other and have provided over 6,000 free add-ons that can extend the features and potential of your online store.</p>
 </div>
 
 <div class="contentBlock">
