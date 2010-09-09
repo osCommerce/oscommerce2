@@ -621,8 +621,6 @@ CREATE TABLE zones_to_geo_zones (
 
 # data
 
-INSERT INTO address_book VALUES ( '1', '1', 'm', 'ACME Inc.', 'John', 'Doe', '1 Way Street', '', '12345', 'NeverNever', '', '223', '12');
-
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
 INSERT INTO address_format VALUES (2, '$firstname $lastname$cr$streets$cr$city, $state    $postcode$cr$country','$city, $state / $country');
@@ -1105,10 +1103,6 @@ INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE','1');
 INSERT INTO currencies VALUES (1,'U.S. Dollar','USD','$','','.',',','2','1.0000', now());
 INSERT INTO currencies VALUES (2,'Euro','EUR','','€','.',',','2','1.0000', now());
 
-INSERT INTO customers VALUES ( '1', 'm', 'John', 'doe', '2001-01-01 00:00:00', 'root@localhost', '1', '12345', '', 'd95e8fa7f20a009372eb3477473fcd34:1c', '0');
-
-INSERT INTO customers_info VALUES('1', null, '0', now(), null, '0');
-
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',1);
 
 INSERT INTO manufacturers VALUES (1,'Matrox','manufacturer_matrox.gif', now(), null);
@@ -1265,9 +1259,9 @@ INSERT INTO products_to_categories VALUES (25,8);
 INSERT INTO products_to_categories VALUES (26,9);
 INSERT INTO products_to_categories VALUES (27,5);
 
-INSERT INTO reviews VALUES (1,19,1,'John doe',5, now(),null,0);
+INSERT INTO reviews VALUES (1,19,0,'John Doe',5,now(),null,0);
 
-INSERT INTO reviews_description VALUES (1,1, 'this has to be one of the funniest movies released for 1999!');
+INSERT INTO reviews_description VALUES (1,1, 'This has to be one of the funniest movies released for 1999!');
 
 INSERT INTO sec_directory_whitelist values (null, 'admin/backups');
 INSERT INTO sec_directory_whitelist values (null, 'admin/images/graphs');
