@@ -89,8 +89,18 @@
           $module = new $class;
           if ($action == 'install') {
             $module->install();
+
+            $modules_installed = explode(';', constant($module_key));
+            $modules_installed[] = $class . $file_extension;
+            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
           } elseif ($action == 'remove') {
             $module->remove();
+
+            $modules_installed = explode(';', constant($module_key));
+            unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
+            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
           }
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
@@ -126,6 +136,13 @@
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+<?php
+  if (isset($HTTP_GET_VARS['list'])) {
+    echo '            <td class="pageHeading" align="right"><a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set) . '">' . tep_image_button('button_back.gif', IMAGE_BACK) . '</a></td>';
+  } else {
+    echo '            <td class="pageHeading" align="right"><a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new') . '">' . tep_image_button('button_module_install.gif', IMAGE_MODULE_INSTALL) . '</a></td>';
+  }
+?>
           </tr>
         </table></td>
       </tr>
@@ -139,13 +156,23 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
+  $modules_installed = explode(';', constant($module_key));
+
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
   if ($dir = @dir($module_directory)) {
     while ($file = $dir->read()) {
       if (!is_dir($module_directory . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
-          $directory_array[] = $file;
+          if (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] = 'new')) {
+            if (!in_array($file, $modules_installed)) {
+              $directory_array[] = $file;
+            }
+          } else {
+            if (in_array($file, $modules_installed)) {
+              $directory_array[] = $file;
+            }
+          }
         }
       }
     }
@@ -205,26 +232,28 @@
           echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
         }
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($HTTP_GET_VARS['list']) ? '&list=new' : '') . '&module=' . $class) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent" align="right"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($HTTP_GET_VARS['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
   }
 
-  ksort($installed_modules);
-  $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
-  if (tep_db_num_rows($check_query)) {
-    $check = tep_db_fetch_array($check_query);
-    if ($check['configuration_value'] != implode(';', $installed_modules)) {
-      tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+  if (!isset($HTTP_GET_VARS['list'])) {
+    ksort($installed_modules);
+    $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
+    if (tep_db_num_rows($check_query)) {
+      $check = tep_db_fetch_array($check_query);
+      if ($check['configuration_value'] != implode(';', $installed_modules)) {
+        tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+      }
+    } else {
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
     }
-  } else {
-    tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
   }
 ?>
               <tr>
