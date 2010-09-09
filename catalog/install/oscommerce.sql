@@ -125,7 +125,7 @@ CREATE TABLE configuration (
   configuration_id int NOT NULL auto_increment,
   configuration_title varchar(255) NOT NULL,
   configuration_key varchar(255) NOT NULL,
-  configuration_value varchar(255) NOT NULL,
+  configuration_value text NOT NULL,
   configuration_description varchar(255) NOT NULL,
   configuration_group_id int NOT NULL,
   sort_order int(5) NULL,
