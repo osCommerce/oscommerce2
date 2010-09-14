@@ -45,7 +45,7 @@
       $check_customer_query = tep_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
       $check_customer = tep_db_fetch_array($check_customer_query);
 
-      if (tep_validate_password($password_current, $check_customer['customers_password']) {
+      if (tep_validate_password($password_current, $check_customer['customers_password'])) {
         tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
 
         tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
@@ -136,8 +136,8 @@
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . tep_image_button('button_back.gif', IMAGE_BUTTON_BACK) . '</a>'; ?></td>
-                <td align="right"><?php echo tep_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE); ?></td>
+                <td class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_ACCOUNT, '', 'SSL'), 'title' => IMAGE_BUTTON_BACK, 'icon' => 'triangle-1-w', 'priority' => 'secondary')); ?></td>
+                <td class="main" align="right"><?php echo tep_draw_button(array('title' => IMAGE_BUTTON_CONTINUE, 'icon' => 'triangle-1-e', 'priority' => 'primary')); ?></td>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
               </tr>
             </table></td>

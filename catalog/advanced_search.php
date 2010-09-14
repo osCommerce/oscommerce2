@@ -156,7 +156,7 @@ function popupWindow(url) {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="smallText"><?php echo '<a href="javascript:popupWindow(\'' . tep_href_link(FILENAME_POPUP_SEARCH_HELP) . '\')">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></td>
-            <td class="smallText" align="right"><?php echo tep_image_submit('button_search.gif', IMAGE_BUTTON_SEARCH); ?></td>
+            <td class="smallText" align="right"><?php echo tep_draw_button(array('title' => IMAGE_BUTTON_SEARCH, 'icon' => 'search', 'priority' => 'primary')); ?></td>
           </tr>
         </table></td>
       </tr>

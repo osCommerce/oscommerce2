@@ -333,4 +333,62 @@
 
     return tep_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
   }
+
+  function tep_draw_button($params) {
+    static $button_counter = 1;
+
+    $types = array('submit', 'button', 'reset');
+
+    if ( !isset($params['type']) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( !in_array($params['type'], $types) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( ($params['type'] == 'submit') && isset($params['href']) ) {
+      $params['type'] = 'button';
+    }
+
+    $button = '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
+
+    if ( isset($params['href']) ) {
+      if ( isset($params['newwindow']) ) {
+        $button .= ' onclick="window.open(\'' . $params['href'] . '\');"';
+      } else {
+        $button .= ' onclick="document.location.href=\'' . $params['href'] . '\';"';
+      }
+    }
+
+    if ( isset($params['params']) ) {
+      $button .= ' ' . $params['params'];
+    }
+
+    $button .= '>' . $params['title'] . '</button><script>$("#tdb' . $button_counter . '").button(';
+
+    if ( isset($params['icon']) ) {
+      if ( !isset($params['iconpos']) ) {
+        $params['iconpos'] = 'left';
+      }
+
+      if ( $params['iconpos'] == 'left' ) {
+        $button .= '{icons:{primary:"ui-icon-' . $params['icon'] . '"}}';
+      } else {
+        $button .= '{icons:{secondary:"ui-icon-' . $params['icon'] . '"}}';
+      }
+    }
+
+    $button .= ')';
+
+    if ( isset($params['priority']) ) {
+      $button .= '.addClass("ui-priority-' . $params['priority'] . '")';
+    }
+
+    $button .= ';</script>';
+
+    $button_counter++;
+
+    return $button;
+  }
 ?>
