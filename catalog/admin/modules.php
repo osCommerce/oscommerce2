@@ -191,7 +191,7 @@
     if (tep_class_exists($class)) {
       $module = new $class;
       if ($module->check() > 0) {
-        if ($module->sort_order > 0) {
+        if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
           $installed_modules[$module->sort_order] = $file;
         } else {
           $installed_modules[] = $file;
@@ -325,7 +325,7 @@
 
         $contents[] = array('text' => '<br>' . $mInfo->description);
         $contents[] = array('text' => '<br>' . $keys);
-      } else {
+      } elseif (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] == 'new')) {
         $contents[] = array('align' => 'center', 'text' => '<a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install') . '">' . tep_image_button('button_module_install.gif', IMAGE_MODULE_INSTALL) . '</a>');
 
         if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
