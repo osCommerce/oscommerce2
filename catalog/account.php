@@ -92,7 +92,7 @@ function rowOutEffect(object) {
                     <td class="main"><?php echo tep_output_string_protected($order_name) . ', ' . $order_country; ?></td>
                     <td class="main"><?php echo $orders['orders_status_name']; ?></td>
                     <td class="main" align="right"><?php echo $orders['order_total']; ?></td>
-                    <td class="main" align="right"><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL') . '">' . tep_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW) . '</a>'; ?></td>
+                    <td class="smallText" align="right"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $orders['orders_id'], 'SSL'), 'title' => SMALL_IMAGE_BUTTON_VIEW, 'icon' => 'document', 'priority' => 'secondary')); ?></td>
                   </tr>
 <?php
     }

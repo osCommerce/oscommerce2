@@ -304,7 +304,7 @@
     echo $payment_modules->process_button();
   }
 
-  echo tep_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . "\n";
+  echo tep_draw_button(array('title' => IMAGE_BUTTON_CONFIRM_ORDER, 'icon' => 'check', 'priority' => 'primary')) . "\n";
 ?>
             </td>
           </tr>
