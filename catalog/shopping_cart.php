@@ -171,16 +171,16 @@
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="main"><?php echo tep_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART); ?></td>
+                <td class="main"><?php echo tep_draw_button(array('title' => IMAGE_BUTTON_UPDATE_CART, 'icon' => 'refresh', 'priority' => 'secondary')); ?></td>
 <?php
     $back = sizeof($navigation->path)-2;
     if (isset($navigation->path[$back])) {
 ?>
-                <td class="main"><?php echo '<a href="' . tep_href_link($navigation->path[$back]['page'], tep_array_to_string($navigation->path[$back]['get'], array('action')), $navigation->path[$back]['mode']) . '">' . tep_image_button('button_continue_shopping.gif', IMAGE_BUTTON_CONTINUE_SHOPPING) . '</a>'; ?></td>
+                <td class="main"><?php echo tep_draw_button(array('href' => tep_href_link($navigation->path[$back]['page'], tep_array_to_string($navigation->path[$back]['get'], array('action')), $navigation->path[$back]['mode']), 'title' => IMAGE_BUTTON_CONTINUE_SHOPPING, 'icon' => 'triangle-1-w', 'priority' => 'secondary')); ?></td>
 <?php
     }
 ?>
-                <td align="right" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '">' . tep_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT) . '</a>'; ?></td>
+                <td align="right" class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'title' => IMAGE_BUTTON_CHECKOUT, 'icon' => 'triangle-1-e', 'priority' => 'primary')); ?></td>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
               </tr>
             </table></td>
@@ -225,7 +225,7 @@
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td align="right" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE) . '</a>'; ?></td>
+                <td align="right" class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_DEFAULT), 'title' => IMAGE_BUTTON_CONTINUE, 'icon' => 'triangle-1-e', 'priority' => 'secondary')); ?></td>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
               </tr>
             </table></td>
