@@ -137,7 +137,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-          <td align="right" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=submit') . '">' . tep_image_button('button_send.gif', IMAGE_SEND) . '</a>&nbsp;' . '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=save') . '">' . tep_image_button('button_save.gif', IMAGE_SAVE) . '</a>';?>
+          <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SEND, 'arrowreturnthick-1-n', tep_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . tep_draw_button(IMAGE_SAVE, 'disk', tep_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
       </tr>
   <?php
   } else {
@@ -186,7 +186,7 @@
             <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td><?php echo '<a href="' . tep_href_link(FILENAME_SERVER_INFO, 'action=export') . '">' . tep_image_button('button_export.gif', IMAGE_EXPORT) . '</a>';?></td>
+            <td class="smallText"><?php echo tep_draw_button(IMAGE_EXPORT, 'triangle-1-nw', tep_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
           </tr>
         </table></td>
       </tr>

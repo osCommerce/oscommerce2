@@ -89,7 +89,7 @@
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
               <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
-              <td class="main"><?php echo tep_image_submit('button_update.gif', IMAGE_UPDATE); ?></td>
+              <td class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
             </tr>
           </table>
         </form></td>

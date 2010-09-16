@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -337,5 +337,63 @@
     if ($required == true) $field .= TEXT_FIELD_REQUIRED;
 
     return $field;
+  }
+
+////
+// Output a jQuery UI Button
+  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
+    static $button_counter = 1;
+
+    $types = array('submit', 'button', 'reset');
+
+    if ( !isset($params['type']) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( !in_array($params['type'], $types) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( ($params['type'] == 'submit') && isset($link) ) {
+      $params['type'] = 'button';
+    }
+
+    if (!isset($priority)) {
+      $priority = 'secondary';
+    }
+
+    $button = '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
+
+    if ( isset($link) ) {
+      if ( isset($params['newwindow']) ) {
+        $button .= ' onclick="window.open(\'' . $link . '\');"';
+      } else {
+        $button .= ' onclick="document.location.href=\'' . $link . '\';"';
+      }
+    }
+
+    if ( isset($params['params']) ) {
+      $button .= ' ' . $params['params'];
+    }
+
+    $button .= '>' . $title . '</button><script>$("#tdb' . $button_counter . '").button(';
+
+    if ( isset($icon) ) {
+      if ( !isset($params['iconpos']) ) {
+        $params['iconpos'] = 'left';
+      }
+
+      if ( $params['iconpos'] == 'left' ) {
+        $button .= '{icons:{primary:"ui-icon-' . $icon . '"}}';
+      } else {
+        $button .= '{icons:{secondary:"ui-icon-' . $icon . '"}}';
+      }
+    }
+
+    $button .= ').addClass("ui-priority-' . $priority . '");</script>';
+
+    $button_counter++;
+
+    return $button;
   }
 ?>

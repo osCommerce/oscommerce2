@@ -173,7 +173,7 @@
     $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=process'));
     $contents[] = array('text' => TEXT_USERNAME . '<br>' . tep_draw_input_field('username'));
     $contents[] = array('text' => '<br>' . TEXT_PASSWORD . '<br>' . tep_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br><input type="submit" value="' . BUTTON_LOGIN . '" />');
+    $contents[] = array('align' => 'center', 'text' => '<br>' . tep_draw_button(BUTTON_LOGIN, 'key'));
   } else {
     $heading[] = array('text' => '<b>' . HEADING_TITLE . '</b>');
 
@@ -181,7 +181,7 @@
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
     $contents[] = array('text' => '<br>' . TEXT_USERNAME . '<br>' . tep_draw_input_field('username'));
     $contents[] = array('text' => '<br>' . TEXT_PASSWORD . '<br>' . tep_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br><input type="submit" value="' . BUTTON_CREATE_ADMINISTRATOR . '" />');
+    $contents[] = array('align' => 'center', 'text' => '<br>' . tep_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
   }
 
   $box = new box;
