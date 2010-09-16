@@ -42,7 +42,7 @@ function popupWindow(url) {
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="main" align="right"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_DEFAULT), 'title' => IMAGE_BUTTON_CONTINUE, 'icon' => 'triangle-1-e', 'priority' => 'secondary')); ?></td>
+                <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?></td>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
               </tr>
             </table></td>
@@ -191,8 +191,8 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params()), 'title' => IMAGE_BUTTON_REVIEWS, 'icon' => 'comment', 'priority' => 'secondary')); ?></td>
-                <td class="main" align="right"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(array('title' => IMAGE_BUTTON_IN_CART, 'icon' => 'cart', 'priority' => 'primary')); ?></td>
+                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS, 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?></td>
+                <td class="smallText" align="right"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></td>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
               </tr>
             </table></td>
