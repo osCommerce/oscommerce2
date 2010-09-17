@@ -5,10 +5,12 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
+
+  $categories_string = '';
 
   function tep_show_category($counter) {
     global $tree, $categories_string, $cPath_array;
@@ -57,15 +59,6 @@
       tep_show_category($tree[$counter]['next_id']);
     }
   }
-?>
-<!-- categories //-->
-          <tr>
-            <td>
-<?php
-  $info_box_contents = array();
-  $info_box_contents[] = array('text' => BOX_HEADING_CATEGORIES);
-
-  new infoBoxHeading($info_box_contents, true, false);
 
   $categories_string = '';
   $tree = array();
@@ -127,12 +120,12 @@
     }
   }
   tep_show_category($first_element); 
-
-  $info_box_contents = array();
-  $info_box_contents[] = array('text' => $categories_string);
-
-  new infoBox($info_box_contents);
 ?>
-            </td>
-          </tr>
-<!-- categories_eof //-->
+
+<div class="ui-widget infoBoxContainer">
+  <div class="ui-widget-header infoBoxHeading"><?php echo BOX_HEADING_CATEGORIES; ?></div>
+
+  <div class="ui-widget-content infoBoxContents">
+    <?php echo $categories_string; ?>
+  </div>
+</div>

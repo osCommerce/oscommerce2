@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,32 +17,24 @@
   }
 
   if (tep_db_num_rows($best_sellers_query) >= MIN_DISPLAY_BESTSELLERS) {
-?>
-<!-- best_sellers //-->
-          <tr>
-            <td>
-<?php
-    $info_box_contents = array();
-    $info_box_contents[] = array('text' => BOX_HEADING_BESTSELLERS);
-
-    new infoBoxHeading($info_box_contents, false, false);
-
     $rows = 0;
-    $bestsellers_list = '<table border="0" width="100%" cellspacing="0" cellpadding="1">';
+    $bestsellers_list = '<table border="0" width="100%" cellspacing="0" cellpadding="1" class="ui-widget-content infoBoxContents">';
     while ($best_sellers = tep_db_fetch_array($best_sellers_query)) {
       $rows++;
-      $bestsellers_list .= '<tr><td class="infoBoxContents" valign="top">' . tep_row_number_format($rows) . '.</td><td class="infoBoxContents"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $best_sellers['products_id']) . '">' . $best_sellers['products_name'] . '</a></td></tr>';
+      $bestsellers_list .= '<tr><td valign="top">' . tep_row_number_format($rows) . '.</td><td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $best_sellers['products_id']) . '">' . $best_sellers['products_name'] . '</a></td></tr>';
     }
     $bestsellers_list .= '</table>';
-
-    $info_box_contents = array();
-    $info_box_contents[] = array('text' => $bestsellers_list);
-
-    new infoBox($info_box_contents);
 ?>
-            </td>
-          </tr>
-<!-- best_sellers_eof //-->
+
+<div class="ui-widget infoBoxContainer">
+  <div class="ui-widget-header infoBoxHeading"><?php echo BOX_HEADING_BESTSELLERS; ?></div>
+
+<?php
+  echo $bestsellers_list;
+?>
+
+</div>
+
 <?php
   }
 ?>
