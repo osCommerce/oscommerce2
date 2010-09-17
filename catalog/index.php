@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -38,23 +38,13 @@
     $category_query = tep_db_query("select cd.categories_name, c.categories_image from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and cd.categories_id = '" . (int)$current_category_id . "' and cd.language_id = '" . (int)$languages_id . "'");
     $category = tep_db_fetch_array($category_query);
 ?>
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+<h1><?php echo $category['categories_name']; ?></h1>
+
+<div class="contentContainer">
+  <div class="contentText">
+    <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . $category['categories_image'], $category['categories_name'], HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr>
 <?php
     if (isset($cPath) && strpos('_', $cPath)) {
 // check to see if there are deeper categories within the current category
@@ -80,28 +70,26 @@
       $rows++;
       $cPath_new = tep_get_path($categories['categories_id']);
       $width = (int)(100 / MAX_DISPLAY_CATEGORIES_PER_ROW) . '%';
-      echo '                <td align="center" class="smallText" width="' . $width . '" valign="top"><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br>' . $categories['categories_name'] . '</a></td>' . "\n";
+      echo '        <td align="center" class="smallText" width="' . $width . '" valign="top"><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br>' . $categories['categories_name'] . '</a></td>' . "\n";
       if ((($rows / MAX_DISPLAY_CATEGORIES_PER_ROW) == floor($rows / MAX_DISPLAY_CATEGORIES_PER_ROW)) && ($rows != $number_of_categories)) {
-        echo '              </tr>' . "\n";
-        echo '              <tr>' . "\n";
+        echo '      </tr>' . "\n";
+        echo '      <tr>' . "\n";
       }
     }
 
 // needed for the new products module shown below
     $new_products_category_id = $current_category_id;
 ?>
-              </tr>
-            </table></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-          </tr>
-          <tr>
-            <td><?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?></td>
-          </tr>
-        </table></td>
       </tr>
     </table>
+
+    <br />
+
+<?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?>
+
+  </div>
+</div>
+
 <?php
   } elseif ($category_depth == 'products' || isset($HTTP_GET_VARS['manufacturers_id'])) {
 // create column list
@@ -203,12 +191,24 @@
           break;
       }
     }
+
+    $catname = HEADING_TITLE;
+    if (isset($HTTP_GET_VARS['manufacturers_id'])) {
+      $image = tep_db_query("select manufacturers_image, manufacturers_name as catname from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "'");
+      $image = tep_db_fetch_array($image);
+      $catname = $image['catname'];
+    } elseif ($current_category_id) {
+      $image = tep_db_query("select c.categories_image, cd.categories_name as catname from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
+      $image = tep_db_fetch_array($image);
+      $catname = $image['catname'];
+    }
 ?>
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+
+<h1><?php echo $catname; ?></h1>
+
+<div class="contentContainer">
+  <div class="contentText">
+
 <?php
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
@@ -219,7 +219,7 @@
       }
       $filterlist_query = tep_db_query($filterlist_sql);
       if (tep_db_num_rows($filterlist_query) > 1) {
-        echo '            <td align="center" class="main">' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . TEXT_SHOW . '&nbsp;';
+        echo '<div style="float: right;">' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . TEXT_SHOW . '&nbsp;';
         if (isset($HTTP_GET_VARS['manufacturers_id'])) {
           echo tep_draw_hidden_field('manufacturers_id', $HTTP_GET_VARS['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -232,71 +232,40 @@
           $options[] = array('id' => $filterlist['id'], 'text' => $filterlist['name']);
         }
         echo tep_draw_pull_down_menu('filter_id', $options, (isset($HTTP_GET_VARS['filter_id']) ? $HTTP_GET_VARS['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</form></td>' . "\n";
+        echo tep_hide_session_id() . '</form></div>' . "\n";
       }
     }
 
-// Get the right image for the top-right
-    $image = DIR_WS_IMAGES . 'table_background_list.gif';
-    if (isset($HTTP_GET_VARS['manufacturers_id'])) {
-      $image = tep_db_query("select manufacturers_image from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "'");
-      $image = tep_db_fetch_array($image);
-      $image = $image['manufacturers_image'];
-    } elseif ($current_category_id) {
-      $image = tep_db_query("select categories_image from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
-      $image = tep_db_fetch_array($image);
-      $image = $image['categories_image'];
-    }
+    include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
 ?>
-            <td align="right"><?php echo tep_image(DIR_WS_IMAGES . $image, HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><?php include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING); ?></td>
-      </tr>
-    </table>
+
+  </div>
+</div>
+
 <?php
   } else { // default page
 ?>
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_default.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="main"><?php echo tep_customer_greeting(); ?></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo TEXT_MAIN; ?></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-          </tr>
-          <tr>
-            <td><?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?></td>
-          </tr>
+
+<h1><?php echo HEADING_TITLE; ?></h1>
+
+<div class="contentContainer">
+  <div class="contentText">
+    <div>
+      <?php echo tep_customer_greeting(); ?>
+    </div>
+
+    <div>
+      <?php echo TEXT_MAIN; ?>
+    </div>
+  </div>
+
 <?php
+    include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
     include(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
 ?>
-        </table></td>
-      </tr>
-    </table>
+
+</div>
+
 <?php
   }
 

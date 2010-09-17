@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -25,20 +25,10 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_history.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td>
+<h1><?php echo HEADING_TITLE; ?></h1>
+
+<div class="contentContainer">
+
 <?php
   $orders_total = tep_count_customer_orders();
 
@@ -59,77 +49,45 @@
         $order_name = $history['billing_name'];
       }
 ?>
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td class="main"><?php echo '<b>' . TEXT_ORDER_NUMBER . '</b> ' . $history['orders_id']; ?></td>
-              <td class="main" align="right"><?php echo '<b>' . TEXT_ORDER_STATUS . '</b> ' . $history['orders_status_name']; ?></td>
-            </tr>
-          </table>
-          <table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-            <tr class="infoBoxContents">
-              <td><table border="0" width="100%" cellspacing="2" cellpadding="4">
-                <tr>
-                  <td class="main" width="50%" valign="top"><?php echo '<b>' . TEXT_ORDER_DATE . '</b> ' . tep_date_long($history['date_purchased']) . '<br><b>' . $order_type . '</b> ' . tep_output_string_protected($order_name); ?></td>
-                  <td class="main" width="30%" valign="top"><?php echo '<b>' . TEXT_ORDER_PRODUCTS . '</b> ' . $products['count'] . '<br><b>' . TEXT_ORDER_COST . '</b> ' . strip_tags($history['order_total']); ?></td>
-                  <td class="smallText" width="20%"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'document', tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, (isset($HTTP_GET_VARS['page']) ? 'page=' . $HTTP_GET_VARS['page'] . '&' : '') . 'order_id=' . $history['orders_id'], 'SSL'), 'primary'); ?></td>
-                </tr>
-              </table></td>
-            </tr>
-          </table>
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-            </tr>
-          </table>
+
+  <span class="contentHeading"><?php echo TEXT_ORDER_NUMBER . ' ' . $history['orders_id'] . ' <span class="contentText">(' . $history['orders_status_name'] . ')</span>'; ?></span>
+
+  <div class="contentText">
+    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+      <tr>
+        <td width="50%" valign="top"><?php echo '<b>' . TEXT_ORDER_DATE . '</b> ' . tep_date_long($history['date_purchased']) . '<br><b>' . $order_type . '</b> ' . tep_output_string_protected($order_name); ?></td>
+        <td width="30%" valign="top"><?php echo '<b>' . TEXT_ORDER_PRODUCTS . '</b> ' . $products['count'] . '<br><b>' . TEXT_ORDER_COST . '</b> ' . strip_tags($history['order_total']); ?></td>
+        <td width="20%" align="right"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'document', tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, (isset($HTTP_GET_VARS['page']) ? 'page=' . $HTTP_GET_VARS['page'] . '&' : '') . 'order_id=' . $history['orders_id'], 'SSL'), 'primary'); ?></td>
+     </tr>
+    </table>
+  </div>
+
 <?php
     }
+?>
+
+  <div class="contentText">
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></p>
+
+    <p><?php echo $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></p>
+  </div>
+
+<?php
   } else {
 ?>
-          <table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-            <tr class="infoBoxContents">
-              <td><table border="0" width="100%" cellspacing="2" cellpadding="4">
-                <tr>
-                  <td class="main"><?php echo TEXT_NO_PURCHASES; ?></td>
-                </tr>
-              </table></td>
-            </tr>
-          </table>
+
+  <div class="contentText">
+    <p><?php echo TEXT_NO_PURCHASES; ?></p>
+  </div>
+
 <?php
   }
 ?>
-        </td>
-      </tr>
-<?php
-  if ($orders_total > 0) {
-?>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td class="smallText" valign="top"><?php echo $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
-            <td class="smallText" align="right"><?php echo TEXT_RESULT_PAGE . ' ' . $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-<?php
-  }
-?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-          <tr class="infoBoxContents">
-            <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></td>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-    </table>
+
+  <div class="contentText">
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
+  </div>
+</div>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');

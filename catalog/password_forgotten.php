@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -42,71 +42,40 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <?php echo tep_draw_form('password_forgotten', tep_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=process', 'SSL'), 'post', '', true); ?><table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_password_forgotten.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
+<h1><?php echo HEADING_TITLE; ?></h1>
+
 <?php
   if ($messageStack->size('password_forgotten') > 0) {
-?>
-      <tr>
-        <td><?php echo $messageStack->output('password_forgotten'); ?></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-<?php
+    echo '<p>' . $messageStack->output('password_forgotten') . '</p>';
   }
 ?>
+
+<?php echo tep_draw_form('password_forgotten', tep_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=process', 'SSL'), 'post', '', true); ?>
+
+<div class="contentContainer">
+  <div class="contentText">
+    <div><?php echo TEXT_MAIN; ?></div>
+
+    <br />
+
+    <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td><table border="0" width="100%" height="100%" cellspacing="1" cellpadding="2" class="infoBox">
-          <tr class="infoBoxContents">
-            <td><table border="0" width="100%" height="100%" cellspacing="0" cellpadding="2">
-              <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-              </tr>
-              <tr>
-                <td class="main" colspan="2"><?php echo TEXT_MAIN; ?></td>
-              </tr>
-              <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-              </tr>
-              <tr>
-                <td class="main"><?php echo '<b>' . ENTRY_EMAIL_ADDRESS . '</b> ' . tep_draw_input_field('email_address'); ?></td>
-              </tr>
-              <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
+        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
       </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-          <tr class="infoBoxContents">
-            <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_LOGIN, '', 'SSL')); ?></td>
-                <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></td>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-    </table></form>
+    </table>
+
+    <br />
+
+    <div>
+      <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+
+      <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_LOGIN, '', 'SSL')); ?>
+    </div>
+  </div>
+</div>
+
+</form>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');

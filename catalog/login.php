@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -85,123 +85,51 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script language="javascript"><!--
-function session_win() {
-  window.open("<?php echo tep_href_link(FILENAME_INFO_SHOPPING_CART); ?>","info_shopping_cart","height=460,width=430,toolbar=no,statusbar=no,scrollbars=yes").focus();
-}
-//--></script>
+<h1><?php echo HEADING_TITLE; ?></h1>
 
-    <?php echo tep_draw_form('login', tep_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', '', true); ?><table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_login.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
 <?php
   if ($messageStack->size('login') > 0) {
-?>
-      <tr>
-        <td><?php echo $messageStack->output('login'); ?></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-<?php
+    echo '<p>' . $messageStack->output('login') . '</p>';
   }
+?>
 
-  if ($cart->count_contents() > 0) {
-?>
+<div class="contentContainer" style="width: 45%; float: left;">
+  <span class="contentHeading"><?php echo HEADING_NEW_CUSTOMER; ?></span>
+
+  <div class="contentText">
+    <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
+    <p><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
+
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?></p>
+  </div>
+</div>
+
+<div class="contentContainer" style="width: 45%; float: left; border-left: 1px dashed #ccc; padding-left: 3%; margin-left: 3%;">
+  <span class="contentHeading"><?php echo HEADING_RETURNING_CUSTOMER; ?></span>
+
+  <div class="contentText">
+    <p><?php echo TEXT_RETURNING_CUSTOMER; ?></p>
+
+    <?php echo tep_draw_form('login', tep_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', '', true); ?>
+
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr>
-        <td class="smallText"><?php echo TEXT_VISITORS_CART; ?></td>
+        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
+        <td class="fieldKey"><?php echo ENTRY_PASSWORD; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_password_field('password'); ?></td>
       </tr>
-<?php
-  }
-?>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td class="main" width="50%" valign="top"><b><?php echo HEADING_NEW_CUSTOMER; ?></b></td>
-            <td class="main" width="50%" valign="top"><b><?php echo HEADING_RETURNING_CUSTOMER; ?></b></td>
-          </tr>
-          <tr>
-            <td width="50%" height="100%" valign="top"><table border="0" width="100%" height="100%" cellspacing="1" cellpadding="2" class="infoBox">
-              <tr class="infoBoxContents">
-                <td><table border="0" width="100%" height="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main" valign="top"><?php echo TEXT_NEW_CUSTOMER . '<br><br>' . TEXT_NEW_CUSTOMER_INTRODUCTION; ?></td>
-                  </tr>
-                  <tr>
-                    <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                      <tr>
-                        <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                        <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?></td>
-                        <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                      </tr>
-                    </table></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table></td>
-            <td width="50%" height="100%" valign="top"><table border="0" width="100%" height="100%" cellspacing="1" cellpadding="2" class="infoBox">
-              <tr class="infoBoxContents">
-                <td><table border="0" width="100%" height="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main" colspan="2"><?php echo TEXT_RETURNING_CUSTOMER; ?></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><b><?php echo ENTRY_EMAIL_ADDRESS; ?></b></td>
-                    <td class="main"><?php echo tep_draw_input_field('email_address'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><b><?php echo ENTRY_PASSWORD; ?></b></td>
-                    <td class="main"><?php echo tep_draw_password_field('password'); ?></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="smallText" colspan="2"><?php echo '<a href="' . tep_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL') . '">' . TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                      <tr>
-                        <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                        <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_LOGIN, 'key', null, 'primary'); ?></td>
-                        <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                      </tr>
-                    </table></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-    </table></form>
+    </table>
+
+    <p><?php echo '<a href="' . tep_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL') . '">' . TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
+
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_LOGIN, 'key', null, 'primary'); ?></p>
+
+    </form>
+  </div>
+</div>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
