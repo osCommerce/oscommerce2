@@ -298,13 +298,13 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="right" class="main">
+            <td align="right" class="smallText">
 <?php
   if (is_array($payment_modules->modules)) {
     echo $payment_modules->process_button();
   }
 
-  echo tep_draw_button(array('title' => IMAGE_BUTTON_CONFIRM_ORDER, 'icon' => 'check', 'priority' => 'primary')) . "\n";
+  echo tep_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'primary') . "\n";
 ?>
             </td>
           </tr>

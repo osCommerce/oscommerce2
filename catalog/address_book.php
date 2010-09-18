@@ -102,7 +102,7 @@ function rowOutEffect(object) {
                 <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                     <td class="main"><b><?php echo tep_output_string_protected($addresses['firstname'] . ' ' . $addresses['lastname']); ?></b><?php if ($addresses['address_book_id'] == $customer_default_address_id) echo '&nbsp;<small><i>' . PRIMARY_ADDRESS . '</i></small>'; ?></td>
-                    <td class="smallText" align="right"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $addresses['address_book_id'], 'SSL'), 'title' => SMALL_IMAGE_BUTTON_EDIT, 'icon' => 'document', 'priority' => 'secondary')) . ' ' . tep_draw_button(array('href' => tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $addresses['address_book_id'], 'SSL'), 'title' => SMALL_IMAGE_BUTTON_DELETE, 'icon' => 'trash', 'priority' => 'secondary')); ?></td>
+                    <td class="smallText" align="right"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'document', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $addresses['address_book_id'], 'SSL')) . ' ' . tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $addresses['address_book_id'], 'SSL')); ?></td>
                   </tr>
                   <tr>
                     <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
@@ -132,11 +132,11 @@ function rowOutEffect(object) {
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_ACCOUNT, '', 'SSL'), 'title' => IMAGE_BUTTON_BACK, 'icon' => 'triangle-1-w', 'priority' => 'secondary')); ?></td>
+                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></td>
 <?php
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
-                <td class="main" align="right"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'), 'title' => IMAGE_BUTTON_ADD_ADDRESS, 'icon' => 'home', 'priority' => 'primary')); ?></td>
+                <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'home', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'), 'primary'); ?></td>
 <?php
   }
 ?>

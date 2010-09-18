@@ -83,13 +83,16 @@
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
-      <tr><?php echo tep_draw_form('logo', FILENAME_STORE_LOGO, 'action=save', 'post', 'enctype="multipart/form-data"'); ?>
-        <td><table border="0" cellspacing="0" cellpadding="2">
-          <tr>
-            <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
-            <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
-          </tr>
-        </table></td>
+      <tr>
+        <td><?php echo tep_draw_form('logo', FILENAME_STORE_LOGO, 'action=save', 'post', 'enctype="multipart/form-data"'); ?>
+          <table border="0" cellspacing="0" cellpadding="2">
+            <tr>
+              <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
+              <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
+              <td class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
+            </tr>
+          </table>
+        </form></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -103,16 +106,6 @@
       <tr>
         <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . 'store_logo.png'; ?></td>
       </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td class="main" align="right"><?php echo tep_image_submit('button_update.gif', IMAGE_UPDATE); ?></td>
-          </tr>
-        </table></td>
-      </form></tr>
     </table></td>
 <!-- body_text_eof //-->
   </tr>

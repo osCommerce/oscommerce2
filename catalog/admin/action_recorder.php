@@ -129,7 +129,7 @@
                 </td>
               </tr>
             </table></td>
-            <td class="pageHeading" align="right"><?php echo '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) ? '&module=' . $HTTP_GET_VARS['module'] : '')) . '">' . tep_image_button('button_delete.gif', IMAGE_DELETE) . '</a>'; ?></td>
+            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) ? '&module=' . $HTTP_GET_VARS['module'] : '')), 'primary'); ?></td>
           </tr>
         </table></td>
       </tr>

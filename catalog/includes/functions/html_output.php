@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -334,7 +334,9 @@
     return tep_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
   }
 
-  function tep_draw_button($params) {
+////
+// Output a jQuery UI Button
+  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
     static $button_counter = 1;
 
     $types = array('submit', 'button', 'reset');
@@ -347,17 +349,21 @@
       $params['type'] = 'submit';
     }
 
-    if ( ($params['type'] == 'submit') && isset($params['href']) ) {
+    if ( ($params['type'] == 'submit') && isset($link) ) {
       $params['type'] = 'button';
+    }
+
+    if (!isset($priority)) {
+      $priority = 'secondary';
     }
 
     $button = '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
 
-    if ( isset($params['href']) ) {
+    if ( isset($link) ) {
       if ( isset($params['newwindow']) ) {
-        $button .= ' onclick="window.open(\'' . $params['href'] . '\');"';
+        $button .= ' onclick="window.open(\'' . $link . '\');"';
       } else {
-        $button .= ' onclick="document.location.href=\'' . $params['href'] . '\';"';
+        $button .= ' onclick="document.location.href=\'' . $link . '\';"';
       }
     }
 
@@ -365,27 +371,21 @@
       $button .= ' ' . $params['params'];
     }
 
-    $button .= '>' . $params['title'] . '</button><script>$("#tdb' . $button_counter . '").button(';
+    $button .= '>' . $title . '</button><script>$("#tdb' . $button_counter . '").button(';
 
-    if ( isset($params['icon']) ) {
+    if ( isset($icon) ) {
       if ( !isset($params['iconpos']) ) {
         $params['iconpos'] = 'left';
       }
 
       if ( $params['iconpos'] == 'left' ) {
-        $button .= '{icons:{primary:"ui-icon-' . $params['icon'] . '"}}';
+        $button .= '{icons:{primary:"ui-icon-' . $icon . '"}}';
       } else {
-        $button .= '{icons:{secondary:"ui-icon-' . $params['icon'] . '"}}';
+        $button .= '{icons:{secondary:"ui-icon-' . $icon . '"}}';
       }
     }
 
-    $button .= ')';
-
-    if ( isset($params['priority']) ) {
-      $button .= '.addClass("ui-priority-' . $params['priority'] . '")';
-    }
-
-    $button .= ';</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '");</script>';
 
     $button_counter++;
 

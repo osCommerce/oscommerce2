@@ -45,7 +45,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
       </tr>
       <tr>
-        <td align="right" class="main"><?php echo tep_draw_button(array('href' => tep_href_link(FILENAME_LOGIN), 'title' => IMAGE_BUTTON_CONTINUE, 'icon' => 'triangle-1-e', 'priority' => 'secondary')); ?></td>
+        <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_LOGIN)); ?></td>
       </tr>
     </table>
 

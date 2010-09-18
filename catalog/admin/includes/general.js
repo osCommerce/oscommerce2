@@ -8,6 +8,7 @@ function SetFocus() {
           if ( (field.elements[i].type != "image") &&
                (field.elements[i].type != "hidden") &&
                (field.elements[i].type != "reset") &&
+               (field.elements[i].type != "button") &&
                (field.elements[i].type != "submit") ) {
 
             document.forms[f].elements[i].focus();
