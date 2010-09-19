@@ -19,7 +19,7 @@
         <parameterEntry
             type="ProviderPath"
             scope="setAcl"
-            match="catalog/includes/configure.php" />
+            match="catalog/includes/configure.php$" />
   </parameter>
 
   <parameter name="SetAclParameter2"
@@ -30,7 +30,7 @@
     <parameterEntry
         type="ProviderPath"
         scope="setAcl"
-        match="catalog/admin/includes/configure.php" />
+        match="catalog/admin/includes/configure.php$" />
   </parameter>
 
   <parameter name="SetAclParameter3"
@@ -41,7 +41,7 @@
     <parameterEntry
         type="ProviderPath"
         scope="setAcl"
-        match="catalog/images" />
+        match="catalog/images$" />
   </parameter>
 
   <parameter name="SetAclParameter4"
@@ -52,7 +52,7 @@
     <parameterEntry
         type="ProviderPath"
         scope="setAcl"
-        match="catalog/admin/images/graphs" />
+        match="catalog/admin/images/graphs$" />
   </parameter>
 
   <parameter name="SetAclParameter5"
@@ -63,7 +63,7 @@
     <parameterEntry
         type="ProviderPath"
         scope="setAcl"
-        match="catalog/admin/backups" />
+        match="catalog/admin/backups$" />
   </parameter>
 
   <parameter name="SetAclParameter6"
@@ -74,7 +74,7 @@
     <parameterEntry
         type="ProviderPath"
         scope="setAcl"
-        match="catalog/includes/work" />
+        match="catalog/includes/work$" />
   </parameter>
   
   <parameter name="DatabaseServer"
