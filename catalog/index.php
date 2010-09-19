@@ -42,7 +42,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+            <td class="pageHeading"><?php echo $category['categories_name']; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . $category['categories_image'], $category['categories_name'], HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
@@ -208,7 +208,23 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+<?php
+// Get the right image for the top-right
+    $image = DIR_WS_IMAGES . 'table_background_list.gif';
+    $heading_title = HEADING_TITLE;
+    if (isset($HTTP_GET_VARS['manufacturers_id'])) {
+      $image = tep_db_query("select manufacturers_name, manufacturers_image from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "'");
+      $image = tep_db_fetch_array($image);
+      $heading_title = $image['manufacturers_name'];
+      $image = $image['manufacturers_image'];
+    } elseif ($current_category_id) {
+      $image = tep_db_query("select cd.categories_name, c.categories_image from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and cd.categories_id = '" . (int)$current_category_id . "' and cd.language_id = '" . (int)$languages_id . "'");
+      $image = tep_db_fetch_array($image);
+      $heading_title = $image['categories_name'];
+      $image = $image['categories_image'];
+    }
+?>
+              <td class="pageHeading"><?php echo $heading_title; ?></td>
 <?php
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
@@ -235,20 +251,8 @@
         echo tep_hide_session_id() . '</form></td>' . "\n";
       }
     }
-
-// Get the right image for the top-right
-    $image = DIR_WS_IMAGES . 'table_background_list.gif';
-    if (isset($HTTP_GET_VARS['manufacturers_id'])) {
-      $image = tep_db_query("select manufacturers_image from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "'");
-      $image = tep_db_fetch_array($image);
-      $image = $image['manufacturers_image'];
-    } elseif ($current_category_id) {
-      $image = tep_db_query("select categories_image from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
-      $image = tep_db_fetch_array($image);
-      $image = $image['categories_image'];
-    }
 ?>
-            <td align="right"><?php echo tep_image(DIR_WS_IMAGES . $image, HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td align="right"><?php echo tep_image(DIR_WS_IMAGES . $image, $heading_title, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>

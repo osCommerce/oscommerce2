@@ -76,7 +76,7 @@ define('BOX_HEADING_CATEGORIES', 'Categories');
 define('BOX_HEADING_MANUFACTURERS', 'Manufacturers');
 
 // whats_new box text in includes/boxes/whats_new.php
-define('BOX_HEADING_WHATS_NEW', 'What\'s New?');
+define('BOX_HEADING_WHATS_NEW', 'New Products');
 
 // quick_find box text in includes/boxes/quick_find.php
 define('BOX_HEADING_SEARCH', 'Quick Find');
@@ -84,7 +84,7 @@ define('BOX_SEARCH_TEXT', 'Use keywords to find the product you are looking for.
 define('BOX_SEARCH_ADVANCED_SEARCH', 'Advanced Search');
 
 // specials box text in includes/boxes/specials.php
-define('BOX_HEADING_SPECIALS', 'Specials');
+define('BOX_HEADING_SPECIALS', 'Special Offers');
 
 // reviews box text in includes/boxes/reviews.php
 define('BOX_HEADING_REVIEWS', 'Reviews');
@@ -276,9 +276,8 @@ define('ICON_ERROR', 'Error');
 define('ICON_SUCCESS', 'Success');
 define('ICON_WARNING', 'Warning');
 
-define('TEXT_GREETING_PERSONAL', 'Welcome back <span class="greetUser">%s!</span> Would you like to see which <a href="%s"><u>new products</u></a> are available to purchase?');
-define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s, please <a href="%s"><u>log yourself in</u></a> with your account information.</small>');
-define('TEXT_GREETING_GUEST', 'Welcome <span class="greetUser">Guest!</span> Would you like to <a href="%s"><u>log yourself in</u></a>? Or would you prefer to <a href="%s"><u>create an account</u></a>?');
+define('TEXT_GREETING_PERSONAL', 'Hello again <span class="greetUser">%s!</span> We have some <a href="%s"><u>new products</u></a> for you. (Not <u><a href="%s">%s</a></u>?)');
+define('TEXT_GREETING_GUEST', 'Hello <span class="greetUser">Guest!</span> Feel free to <a href="%s"><u>log yourself in</u></a> or browse some of our <a href="%s"><u>new products</u></a>');
 
 define('TEXT_SORT_PRODUCTS', 'Sort products ');
 define('TEXT_DESCENDINGLY', 'descendingly');
