@@ -94,7 +94,7 @@
 ?>
 
 <div class="contentContainer" style="width: 45%; float: left;">
-  <span class="contentHeading"><?php echo HEADING_NEW_CUSTOMER; ?></span>
+  <h2><?php echo HEADING_NEW_CUSTOMER; ?></h2>
 
   <div class="contentText">
     <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
@@ -105,7 +105,7 @@
 </div>
 
 <div class="contentContainer" style="width: 45%; float: left; border-left: 1px dashed #ccc; padding-left: 3%; margin-left: 3%;">
-  <span class="contentHeading"><?php echo HEADING_RETURNING_CUSTOMER; ?></span>
+  <h2><?php echo HEADING_RETURNING_CUSTOMER; ?></h2>
 
   <div class="contentText">
     <p><?php echo TEXT_RETURNING_CUSTOMER; ?></p>

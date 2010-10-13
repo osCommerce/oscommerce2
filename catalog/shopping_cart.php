@@ -33,7 +33,7 @@
 <?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product')); ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo TABLE_HEADING_PRODUCTS; ?></span>
+  <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="0" cellpadding="0">

@@ -78,13 +78,13 @@
 <?php echo tep_draw_form('account_notifications', tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL'), 'post', '', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo MY_NOTIFICATIONS_TITLE; ?></span>
+  <h2><?php echo MY_NOTIFICATIONS_TITLE; ?></h2>
 
   <div class="contentText">
     <?php echo MY_NOTIFICATIONS_DESCRIPTION; ?>
   </div>
 
-  <span class="contentHeading"><?php echo GLOBAL_NOTIFICATIONS_TITLE; ?></span>
+  <h2><?php echo GLOBAL_NOTIFICATIONS_TITLE; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -99,7 +99,7 @@
   if ($global['global_product_notifications'] != '1') {
 ?>
 
-  <span class="contentHeading"><?php echo NOTIFICATIONS_TITLE; ?></span>
+  <h2><?php echo NOTIFICATIONS_TITLE; ?></h2>
 
   <div class="contentText">
 

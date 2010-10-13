@@ -33,28 +33,28 @@
 ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo MY_ACCOUNT_TITLE; ?></span>
+  <h2><?php echo MY_ACCOUNT_TITLE; ?></h2>
 
   <div class="contentText">
-    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>);">
+    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>); margin: 0;">
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL') . '">' . MY_ACCOUNT_INFORMATION . '</a>'; ?></li>
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL') . '">' . MY_ACCOUNT_ADDRESS_BOOK . '</a>'; ?></li>
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL') . '">' . MY_ACCOUNT_PASSWORD . '</a>'; ?></li>
     </ul>
   </div>
 
-  <span class="contentHeading"><?php echo MY_ORDERS_TITLE; ?></span>
+  <h2><?php echo MY_ORDERS_TITLE; ?></h2>
 
   <div class="contentText">
-    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>);">
+    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>); margin: 0;">
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . MY_ORDERS_VIEW . '</a>'; ?></li>
     </ul>
   </div>
 
-  <span class="contentHeading"><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></span>
+  <h2><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></h2>
 
   <div class="contentText">
-    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>);">
+    <ul style="list-style-image: url(<?php echo DIR_WS_IMAGES . 'arrow_green.gif'; ?>); margin: 0;">
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_NEWSLETTERS . '</a>'; ?></li>
       <li><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_PRODUCTS . '</a>'; ?></li>
     </ul>

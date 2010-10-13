@@ -50,7 +50,7 @@
       }
 ?>
 
-  <span class="contentHeading"><?php echo TEXT_ORDER_NUMBER . ' ' . $history['orders_id'] . ' <span class="contentText">(' . $history['orders_status_name'] . ')</span>'; ?></span>
+  <h2><?php echo TEXT_ORDER_NUMBER . ' ' . $history['orders_id'] . ' <span class="contentText">(' . $history['orders_status_name'] . ')</span>'; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="2" cellpadding="2">

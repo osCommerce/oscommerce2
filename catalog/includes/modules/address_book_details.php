@@ -14,8 +14,8 @@
 ?>
 
   <div>
-    <span class="contentHeading"><?php echo NEW_ADDRESS_TITLE; ?></span>
     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+    <h2><?php echo NEW_ADDRESS_TITLE; ?></h2>
   </div>
 
   <div class="contentText">

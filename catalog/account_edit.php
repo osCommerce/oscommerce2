@@ -135,8 +135,9 @@
 
 <div class="contentContainer">
   <div>
-    <span class="contentHeading"><?php echo MY_ACCOUNT_TITLE; ?></span>
-    <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+    <div class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
+
+    <h2><?php echo MY_ACCOUNT_TITLE; ?></h2>
   </div>
 
   <div class="contentText">

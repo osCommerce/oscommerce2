@@ -119,8 +119,8 @@
 
 <div class="contentContainer">
   <div>
-    <span class="contentHeading"><?php echo FORM_TITLE_CUSTOMER_DETAILS; ?></span>
     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+    <h2><?php echo FORM_TITLE_CUSTOMER_DETAILS; ?></h2>
   </div>
 
   <div class="contentText">
@@ -136,7 +136,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo FORM_TITLE_FRIEND_DETAILS; ?></span>
+  <h2><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -151,7 +151,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></span>
+  <h2><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -160,8 +160,6 @@
       </tr>
     </table>
   </div>
-
-  <br />
 
   <div>
     <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>

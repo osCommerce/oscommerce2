@@ -270,8 +270,8 @@
 
 <div class="contentContainer">
   <div>
-    <span class="contentHeading"><?php echo CATEGORY_PERSONAL; ?></span>
     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+    <h2><?php echo CATEGORY_PERSONAL; ?></h2>
   </div>
 
   <div class="contentText">
@@ -323,7 +323,7 @@
   if (ACCOUNT_COMPANY == 'true') {
 ?>
 
-  <span class="contentHeading"><?php echo CATEGORY_COMPANY; ?></span>
+  <h2><?php echo CATEGORY_COMPANY; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -338,7 +338,7 @@
   }
 ?>
 
-  <span class="contentHeading"><?php echo CATEGORY_ADDRESS; ?></span>
+  <h2><?php echo CATEGORY_ADDRESS; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -408,7 +408,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo CATEGORY_CONTACT; ?></span>
+  <h2><?php echo CATEGORY_CONTACT; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
@@ -427,7 +427,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo CATEGORY_PASSWORD; ?></span>
+  <h2><?php echo CATEGORY_PASSWORD; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">

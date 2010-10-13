@@ -192,7 +192,7 @@ function rowOutEffect(object) {
 <?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'post', '', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></span>
+  <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
 
   <div class="contentText">
     <div class="ui-widget infoBoxContainer" style="float: right;">
@@ -212,7 +212,7 @@ function rowOutEffect(object) {
   if (tep_count_shipping_modules() > 0) {
 ?>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></span>
+  <h2><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
 
 <?php
     if (sizeof($quotes) > 1 && sizeof($quotes[0]) > 1) {
@@ -319,9 +319,7 @@ function rowOutEffect(object) {
   }
 ?>
 
-  <br />
-
-  <span class="contentHeading"><?php echo TABLE_HEADING_COMMENTS; ?></span>
+  <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
     <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5'); ?>

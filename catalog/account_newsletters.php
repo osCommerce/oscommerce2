@@ -52,7 +52,7 @@
 <?php echo tep_draw_form('account_newsletter', tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL'), 'post', '', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo MY_NEWSLETTERS_TITLE; ?></span>
+  <h2><?php echo MY_NEWSLETTERS_TITLE; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2">

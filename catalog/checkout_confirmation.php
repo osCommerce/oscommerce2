@@ -103,7 +103,7 @@
 ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo HEADING_SHIPPING_INFORMATION; ?></span>
+  <h2><?php echo HEADING_SHIPPING_INFORMATION; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="1" cellpadding="2">
@@ -193,7 +193,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo HEADING_BILLING_INFORMATION; ?></span>
+  <h2><?php echo HEADING_BILLING_INFORMATION; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="1" cellpadding="2">
@@ -230,7 +230,7 @@
     if ($confirmation = $payment_modules->confirmation()) {
 ?>
 
-  <span class="contentHeading"><?php echo HEADING_PAYMENT_INFORMATION; ?></span>
+  <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
 
   <div class="contentText">
     <table border="0" cellspacing="0" cellpadding="2">
@@ -263,7 +263,7 @@
   if (tep_not_null($order->info['comments'])) {
 ?>
 
-  <span class="contentHeading"><?php echo '<b>' . HEADING_ORDER_COMMENTS . '</b> <a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></span>
+  <h2><?php echo '<b>' . HEADING_ORDER_COMMENTS . '</b> <a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></h2>
 
   <div class="contentText">
     <?php echo nl2br(tep_output_string_protected($order->info['comments'])) . tep_draw_hidden_field('comments', $order->info['comments']); ?>
