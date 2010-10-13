@@ -207,7 +207,6 @@
 <h1><?php echo $catname; ?></h1>
 
 <div class="contentContainer">
-  <div class="contentText">
 
 <?php
 // optional Product List Filter
@@ -219,7 +218,7 @@
       }
       $filterlist_query = tep_db_query($filterlist_sql);
       if (tep_db_num_rows($filterlist_query) > 1) {
-        echo '<div style="float: right;">' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($HTTP_GET_VARS['manufacturers_id'])) {
           echo tep_draw_hidden_field('manufacturers_id', $HTTP_GET_VARS['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -232,14 +231,13 @@
           $options[] = array('id' => $filterlist['id'], 'text' => $filterlist['name']);
         }
         echo tep_draw_pull_down_menu('filter_id', $options, (isset($HTTP_GET_VARS['filter_id']) ? $HTTP_GET_VARS['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</form></div>' . "\n";
+        echo tep_hide_session_id() . '</p></form></div>' . "\n";
       }
     }
 
     include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
 ?>
 
-  </div>
 </div>
 
 <?php
@@ -250,16 +248,20 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div>
-      <?php echo tep_customer_greeting(); ?>
-    </div>
-
-    <div>
-      <?php echo TEXT_MAIN; ?>
-    </div>
+    <?php echo tep_customer_greeting(); ?>
   </div>
 
 <?php
+    if (tep_not_null(TEXT_MAIN)) {
+?>
+
+  <div class="contentText">
+    <?php echo TEXT_MAIN; ?>
+  </div>
+
+<?php
+    }
+
     include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
     include(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
 ?>

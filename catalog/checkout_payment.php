@@ -140,7 +140,7 @@ function rowOutEffect(object) {
   }
 ?>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></span>
+  <h2><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h2>
 
   <div class="contentText">
     <div class="ui-widget infoBoxContainer" style="float: right;">
@@ -156,7 +156,7 @@ function rowOutEffect(object) {
 
   <div style="clear: both;"></div>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></span>
+  <h2><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h2>
 
 <?php
   $selection = $payment_modules->selection();
@@ -259,7 +259,7 @@ function rowOutEffect(object) {
 
   </div>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_COMMENTS; ?></span>
+  <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
     <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $comments); ?>

@@ -24,7 +24,7 @@
   if (tep_db_num_rows($downloads_query) > 0) {
 ?>
 
-  <span class="contentHeading"><?php echo HEADING_DOWNLOAD; ?></span>
+  <h2><?php echo HEADING_DOWNLOAD; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="1" cellpadding="2">

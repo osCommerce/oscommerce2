@@ -80,8 +80,8 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
 ?>
 
   <div>
-    <span class="contentHeading"><?php echo sprintf(TEXT_REVIEW_BY, tep_output_string_protected($review['customers_name'])); ?></span>
     <span style="float: right;"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, tep_date_long($review['date_added'])); ?></span>
+    <h2><?php echo sprintf(TEXT_REVIEW_BY, tep_output_string_protected($review['customers_name'])); ?></h2>
   </div>
 
   <div class="contentText">

@@ -23,9 +23,11 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <p><?php echo TEXT_INFORMATION; ?></p>
+    <?php echo TEXT_INFORMATION; ?>
+  </div>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?></p>
+  <div style="float: right;">
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?>
   </div>
 </div>
 

@@ -120,7 +120,7 @@ function popupWindow(url) {
 <?php echo tep_draw_form('advanced_search', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', 'NONSSL', false), 'get', 'onSubmit="return check_form(this);"') . tep_hide_session_id(); ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo HEADING_SEARCH_CRITERIA; ?></span>
+  <h2><?php echo HEADING_SEARCH_CRITERIA; ?></h2>
 
   <div class="contentText">
     <div>

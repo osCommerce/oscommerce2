@@ -14,25 +14,25 @@
   if (tep_db_num_rows($expected_query) > 0) {
 ?>
 
-  <br />
-
   <div class="ui-widget infoBoxContainer">
     <div class="ui-widget-header ui-corner-top infoBoxHeading">
       <span><?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?></span>
       <span style="float: right;"><?php echo TABLE_HEADING_DATE_EXPECTED; ?></span>
     </div>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="ui-widget-content ui-corner-bottom productListTable">
+    <div class="ui-widget-content ui-corner-bottom">
+      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListTable">
 <?php
     while ($expected = tep_db_fetch_array($expected_query)) {
-      echo '      <tr>' . "\n" .
-           '        <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $expected['products_id']) . '">' . $expected['products_name'] . '</a></td>' . "\n" .
-           '        <td align="right">' . tep_date_short($expected['date_expected']) . '</td>' . "\n" .
-           '      </tr>' . "\n";
+      echo '        <tr>' . "\n" .
+           '          <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $expected['products_id']) . '">' . $expected['products_name'] . '</a></td>' . "\n" .
+           '          <td align="right">' . tep_date_short($expected['date_expected']) . '</td>' . "\n" .
+           '        </tr>' . "\n";
     }
 ?>
 
-    </table>
+      </table>
+    </div>
   </div>
 
 <?php

@@ -267,7 +267,7 @@
 ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo DELETE_ADDRESS_TITLE; ?></span>
+  <h2><?php echo DELETE_ADDRESS_TITLE; ?></h2>
 
   <div class="contentText">
     <p><?php echo DELETE_ADDRESS_DESCRIPTION; ?></p>

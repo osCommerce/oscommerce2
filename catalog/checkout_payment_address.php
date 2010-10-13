@@ -261,7 +261,7 @@ function check_form_optional(form_name) {
   if ($process == false) {
 ?>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_PAYMENT_ADDRESS; ?></span>
+  <h2><?php echo TABLE_HEADING_PAYMENT_ADDRESS; ?></h2>
 
   <div class="contentText">
     <div class="ui-widget infoBoxContainer" style="float: right;">
@@ -281,7 +281,7 @@ function check_form_optional(form_name) {
     if ($addresses_count > 1) {
 ?>
 
-  <span class="contentHeading"><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></span>
+  <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
 
   <div class="contentText">
     <div style="float: right;">
@@ -330,9 +330,7 @@ function check_form_optional(form_name) {
   if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-  <br />
-
-  <span class="contentHeading"><?php echo TABLE_HEADING_NEW_PAYMENT_ADDRESS; ?></span>
+  <h2><?php echo TABLE_HEADING_NEW_PAYMENT_ADDRESS; ?></h2>
 
   <div class="contentText">
     <?php echo TEXT_CREATE_NEW_PAYMENT_ADDRESS; ?>

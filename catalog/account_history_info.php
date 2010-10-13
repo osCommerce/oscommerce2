@@ -42,7 +42,7 @@
 <h1><?php echo HEADING_TITLE; ?></h1>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo sprintf(HEADING_ORDER_NUMBER, $HTTP_GET_VARS['order_id']) . ' <span class="contentText">(' . $order->info['orders_status'] . ')</span>'; ?></span>
+  <h2><?php echo sprintf(HEADING_ORDER_NUMBER, $HTTP_GET_VARS['order_id']) . ' <span class="contentText">(' . $order->info['orders_status'] . ')</span>'; ?></h2>
 
   <div class="contentText">
     <div>
@@ -124,7 +124,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo HEADING_BILLING_INFORMATION; ?></span>
+  <h2><?php echo HEADING_BILLING_INFORMATION; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="1" cellpadding="2">
@@ -157,7 +157,7 @@
     </table>
   </div>
 
-  <span class="contentHeading"><?php echo HEADING_ORDER_HISTORY; ?></span>
+  <h2><?php echo HEADING_ORDER_HISTORY; ?></h2>
 
   <div class="contentText">
     <table border="0" width="100%" cellspacing="1" cellpadding="2">

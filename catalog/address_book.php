@@ -34,7 +34,7 @@
 ?>
 
 <div class="contentContainer">
-  <span class="contentHeading"><?php echo PRIMARY_ADDRESS_TITLE; ?></span>
+  <h2><?php echo PRIMARY_ADDRESS_TITLE; ?></h2>
 
   <div class="contentText">
     <div class="ui-widget infoBoxContainer" style="float: right;">
@@ -50,7 +50,7 @@
 
   <div style="clear: both;"></div>
 
-  <span class="contentHeading"><?php echo ADDRESS_BOOK_TITLE; ?></span>
+  <h2><?php echo ADDRESS_BOOK_TITLE; ?></h2>
 
   <div class="contentText">
 
