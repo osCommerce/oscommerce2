@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -24,39 +24,22 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product')); ?><table border="0" width="100%" cellspacing="0" cellpadding="0">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_image(DIR_WS_IMAGES . 'table_background_cart.gif', HEADING_TITLE, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
+<h1><?php echo HEADING_TITLE; ?></h1>
+
 <?php
   if ($cart->count_contents() > 0) {
 ?>
-      <tr>
-        <td>
+
+<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product')); ?>
+
+<div class="contentContainer">
+  <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
+
+  <div class="contentText">
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
 <?php
     $info_box_contents = array();
-    $info_box_contents[0][] = array('align' => 'center',
-                                    'params' => 'class="productListing-heading"',
-                                    'text' => TABLE_HEADING_REMOVE);
-
-    $info_box_contents[0][] = array('params' => 'class="productListing-heading"',
-                                    'text' => TABLE_HEADING_PRODUCTS);
-
-    $info_box_contents[0][] = array('align' => 'center',
-                                    'params' => 'class="productListing-heading"',
-                                    'text' => TABLE_HEADING_QUANTITY);
-
-    $info_box_contents[0][] = array('align' => 'right',
-                                    'params' => 'class="productListing-heading"',
-                                    'text' => TABLE_HEADING_TOTAL);
 
     $any_out_of_stock = 0;
     $products = $cart->get_products();
@@ -86,22 +69,12 @@
     }
 
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (($i/2) == floor($i/2)) {
-        $info_box_contents[] = array('params' => 'class="productListing-even"');
-      } else {
-        $info_box_contents[] = array('params' => 'class="productListing-odd"');
-      }
-
-      $cur_row = sizeof($info_box_contents) - 1;
-
-      $info_box_contents[$cur_row][] = array('align' => 'center',
-                                             'params' => 'class="productListing-data" valign="top"',
-                                             'text' => tep_draw_checkbox_field('cart_delete[]', $products[$i]['id']));
+      echo '          <tr>';
 
       $products_name = '<table border="0" cellspacing="2" cellpadding="2">' .
                        '  <tr>' .
-                       '    <td class="productListing-data" align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                       '    <td class="productListing-data" valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><b>' . $products[$i]['name'] . '</b></a>';
+                       '    <td align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                       '    <td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><b>' . $products[$i]['name'] . '</b></a>';
 
       if (STOCK_CHECK == 'true') {
         $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -115,129 +88,88 @@
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         reset($products[$i]['attributes']);
         while (list($option, $value) = each($products[$i]['attributes'])) {
-          $products_name .= '<br><small><i> - ' . $products[$i][$option]['products_options_name'] . ' ' . $products[$i][$option]['products_options_values_name'] . '</i></small>';
+          $products_name .= '<br /><small><i> - ' . $products[$i][$option]['products_options_name'] . ' ' . $products[$i][$option]['products_options_values_name'] . '</i></small>';
         }
       }
+
+      $products_name .= '<br /><br />' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'refresh') . '&nbsp;&nbsp;&nbsp;or <a href="' . tep_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product') . '">remove</a>';
 
       $products_name .= '    </td>' .
                         '  </tr>' .
                         '</table>';
 
-      $info_box_contents[$cur_row][] = array('params' => 'class="productListing-data"',
-                                             'text' => $products_name);
-
-      $info_box_contents[$cur_row][] = array('align' => 'center',
-                                             'params' => 'class="productListing-data" valign="top"',
-                                             'text' => tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']));
-
-      $info_box_contents[$cur_row][] = array('align' => 'right',
-                                             'params' => 'class="productListing-data" valign="top"',
-                                             'text' => '<b>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</b>');
+      echo '        <td valign="top">' . $products_name . '</td>' .
+           '        <td align="right" valign="top"><b>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</b></td>' .
+           '      </tr>';
     }
-
-    new productListingBox($info_box_contents);
 ?>
-        </td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td align="right" class="main"><b><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($cart->show_total()); ?></b></td>
-      </tr>
+
+    </table>
+
+    <p align="right"><b><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($cart->show_total()); ?></b></p>
+
 <?php
     if ($any_out_of_stock == 1) {
       if (STOCK_ALLOW_CHECKOUT == 'true') {
 ?>
-      <tr>
-        <td class="stockWarning" align="center"><br><?php echo OUT_OF_STOCK_CAN_CHECKOUT; ?></td>
-      </tr>
+
+    <p class="stockWarning" align="center"><?php echo OUT_OF_STOCK_CAN_CHECKOUT; ?></p>
+
 <?php
       } else {
 ?>
-      <tr>
-        <td class="stockWarning" align="center"><br><?php echo OUT_OF_STOCK_CANT_CHECKOUT; ?></td>
-      </tr>
+
+    <p class="stockWarning" align="center"><?php echo OUT_OF_STOCK_CANT_CHECKOUT; ?></p>
+
 <?php
       }
     }
 ?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-          <tr class="infoBoxContents">
-            <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_UPDATE_CART, 'refresh'); ?></td>
-<?php
-    $back = sizeof($navigation->path)-2;
-    if (isset($navigation->path[$back])) {
-?>
-                <td class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE_SHOPPING, 'triangle-1-w', tep_href_link($navigation->path[$back]['page'], tep_array_to_string($navigation->path[$back]['get'], array('action')), $navigation->path[$back]['mode'])); ?></td>
-<?php
-    }
-?>
-                <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary'); ?></td>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
+
+    <br />
+
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary'); ?></p>
+
 <?php
     $initialize_checkout_methods = $payment_modules->checkout_initialization_method();
 
     if (!empty($initialize_checkout_methods)) {
 ?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td align="right" class="main" style="padding-right: 50px;"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></td>
-      </tr>
+
+    <p align="right" style="padding-right: 50px;"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></p>
+
 <?php
       reset($initialize_checkout_methods);
       while (list(, $value) = each($initialize_checkout_methods)) {
 ?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td align="right" class="main"><?php echo $value; ?></td>
-      </tr>
+
+    <p align="right"><?php echo $value; ?></p>
+
 <?php
       }
     }
-  } else {
 ?>
-      <tr>
-        <td align="center" class="main"><?php new infoBox(array(array('text' => TEXT_CART_EMPTY))); ?></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '100%', '10'); ?></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="1" cellpadding="2" class="infoBox">
-          <tr class="infoBoxContents">
-            <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-                <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?></td>
-                <td width="10"><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-<?php
-  }
-?>
-    </table></form>
+
+  </div>
+</div>
+
+</form>
 
 <?php
+  } else {
+?>
+
+<div class="contentContainer">
+  <div class="contentText">
+    <?php echo TEXT_CART_EMPTY; ?>
+
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?></p>
+  </div>
+</div>
+
+<?php
+  }
+
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

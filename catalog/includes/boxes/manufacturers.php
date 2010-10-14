@@ -5,23 +5,13 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
 
   $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
   if ($number_of_rows = tep_db_num_rows($manufacturers_query)) {
-?>
-<!-- manufacturers //-->
-          <tr>
-            <td>
-<?php
-    $info_box_contents = array();
-    $info_box_contents[] = array('text' => BOX_HEADING_MANUFACTURERS);
-
-    new infoBoxHeading($info_box_contents, false, false);
-
     if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
       $manufacturers_list = '';
@@ -33,8 +23,7 @@
 
       $manufacturers_list = substr($manufacturers_list, 0, -4);
 
-      $info_box_contents = array();
-      $info_box_contents[] = array('text' => $manufacturers_list);
+      $content = $manufacturers_list;
     } else {
 // Display a drop-down
       $manufacturers_array = array();
@@ -48,16 +37,20 @@
                                        'text' => $manufacturers_name);
       }
 
-      $info_box_contents = array();
-      $info_box_contents[] = array('form' => tep_draw_form('manufacturers', tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false), 'get'),
-                                   'text' => tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($HTTP_GET_VARS['manufacturers_id']) ? $HTTP_GET_VARS['manufacturers_id'] : ''), 'onChange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '" style="width: 100%"') . tep_hide_session_id());
+      $content = tep_draw_form('manufacturers', tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false), 'get') .
+                 tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($HTTP_GET_VARS['manufacturers_id']) ? $HTTP_GET_VARS['manufacturers_id'] : ''), 'onChange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '" style="width: 100%"') . tep_hide_session_id() .
+                 '</form>';
     }
-
-    new infoBox($info_box_contents);
 ?>
-            </td>
-          </tr>
-<!-- manufacturers_eof //-->
+
+<div class="ui-widget infoBoxContainer">
+  <div class="ui-widget-header infoBoxHeading"><?php echo BOX_HEADING_MANUFACTURERS; ?></div>
+
+  <div class="ui-widget-content infoBoxContents">
+    <?php echo $content; ?>
+  </div>
+</div>
+
 <?php
   }
 ?>

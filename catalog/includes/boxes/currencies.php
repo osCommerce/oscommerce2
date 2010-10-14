@@ -5,22 +5,12 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
 
   if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
-?>
-<!-- currencies //-->
-          <tr>
-            <td>
-<?php
-    $info_box_contents = array();
-    $info_box_contents[] = array('text' => BOX_HEADING_CURRENCIES);
-
-    new infoBoxHeading($info_box_contents, false, false);
-
     reset($currencies->currencies);
     $currencies_array = array();
     while (list($key, $value) = each($currencies->currencies)) {
@@ -34,17 +24,21 @@
         $hidden_get_variables .= tep_draw_hidden_field($key, $value);
       }
     }
-
-    $info_box_contents = array();
-    $info_box_contents[] = array('form' => tep_draw_form('currencies', tep_href_link(basename($PHP_SELF), '', $request_type, false), 'get'),
-                                 'align' => 'center',
-                                 'text' => tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onChange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id());
-
-    new infoBox($info_box_contents);
 ?>
-            </td>
-          </tr>
-<!-- currencies_eof //-->
+
+<div class="ui-widget infoBoxContainer">
+  <div class="ui-widget-header infoBoxHeading"><?php echo BOX_HEADING_CURRENCIES; ?></div>
+
+  <div class="ui-widget-content infoBoxContents">
+
+<?php
+    echo tep_draw_form('currencies', tep_href_link(basename($PHP_SELF), '', $request_type, false), 'get') .
+         tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onChange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
+?>
+
+  </div>
+</div>
+
 <?php
   }
 ?>

@@ -378,16 +378,26 @@
 
     $button .= '>' . $title . '</button><script>$("#tdb' . $button_counter . '").button(';
 
+    $args = array();
+
     if ( isset($icon) ) {
       if ( !isset($params['iconpos']) ) {
         $params['iconpos'] = 'left';
       }
 
       if ( $params['iconpos'] == 'left' ) {
-        $button .= '{icons:{primary:"ui-icon-' . $icon . '"}}';
+        $args[] = 'icons:{primary:"ui-icon-' . $icon . '"}';
       } else {
-        $button .= '{icons:{secondary:"ui-icon-' . $icon . '"}}';
+        $args[] = 'icons:{secondary:"ui-icon-' . $icon . '"}';
       }
+    }
+
+    if (empty($title)) {
+      $args[] = 'text:false';
+    }
+
+    if (!empty($args)) {
+      $button .= '{' . implode(',', $args) . '}';
     }
 
     $button .= ').addClass("ui-priority-' . $priority . '");</script>';

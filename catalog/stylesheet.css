@@ -4,22 +4,123 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
+
+.ui-widget {
+  font-family: Lucida Grande, Lucida Sans, Verdana, Arial, sans-serif;
+  font-size: 11px;
+}
+
+body {
+  background: #fff;
+  color: #000;
+  margin: 0px;
+  font-size: 11px;
+  font-family: Lucida Grande, Lucida Sans, Verdana, Arial, sans-serif;
+}
+
+#bodyWrapper {
+}
+
+#bodyContent {
+}
+
+#header {
+  height: 60px;
+}
+
+#storeLogo {
+  float: left;
+  margin-top: 5px;
+}
+
+#headerShortcuts {
+  float: right;
+  margin-top: 15px;
+}
+
+#columnLeft {
+  padding-top: 5px;
+}
+
+#columnRight {
+  padding-top: 5px;
+}
+
+.infoBoxContainer { }
+
+.infoBoxHeading {
+  padding: 2px;
+  font-size: 11px;
+}
+
+.infoBoxContents {
+  padding: 5px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.contentContainer {
+  padding-bottom: 10px;
+}
+
+.contentContainer h2 {
+  font-size: 16px;
+  text-decoration: underline;
+  font-weight: normal;
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+
+.contentText, .contentText table {
+  padding: 5px 0 5px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.productListTable {
+  padding: 5px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.productListTable tr.alt td {
+  background-color: #ecf6fc;
+}
+
+.fieldKey {
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 1.5;
+  width: 150px;
+}
+
+.fieldValue {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 0;
+  padding-bottom: 5px;
+}
+
+table, p {
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+
 
 .boxText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
 .errorBox { font-family : Verdana, Arial, sans-serif; font-size : 10px; background: #ffb3b5; font-weight: bold; }
 .stockWarning { font-family : Verdana, Arial, sans-serif; font-size : 10px; color: #cc0033; }
 .productsNotifications { background: #f2fff7; }
 .orderEdit { font-family : Verdana, Arial, sans-serif; font-size : 10px; color: #70d250; text-decoration: underline; }
-
-BODY {
-  background: #ffffff;
-  color: #000000;
-  margin: 0px;
-}
 
 A {
   color: #000000;
@@ -99,12 +200,6 @@ TD.footer {
 
 .infoBox {
   background: #b6b7cb;
-}
-
-.infoBoxContents {
-  background: #f8f8f9;
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
 }
 
 .infoBoxNotice {
@@ -199,17 +294,6 @@ TD.accountCategory {
   font-family: Verdana, Arial, sans-serif;
   font-size: 13px;
   color: #aabbdd;
-}
-
-TD.fieldKey {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-TD.fieldValue {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 12px;
 }
 
 TD.tableHeading {

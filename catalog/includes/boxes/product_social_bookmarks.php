@@ -32,24 +32,15 @@
 
     if ( !empty($social_bookmarks) ) {
 ?>
-<!-- product_social_bookmarks //-->
-          <tr>
-            <td>
-<?php
-      $info_box_contents = array();
-      $info_box_contents[] = array('text' => BOX_HEADING_SOCIAL_BOOKMARKS);
 
-      new infoBoxHeading($info_box_contents, false, false);
+<div class="ui-widget infoBoxContainer">
+  <div class="ui-widget-header infoBoxHeading"><?php echo BOX_HEADING_SOCIAL_BOOKMARKS; ?></div>
 
-      $info_box_contents = array();
-      $info_box_contents[] = array('align' => 'center',
-                                   'text' => implode(' ', $social_bookmarks));
+  <div class="ui-widget-content infoBoxContents" style="text-align: center;">
+    <?php echo implode(' ', $social_bookmarks); ?>
+  </div>
+</div>
 
-      new infoBox($info_box_contents);
-?>
-            </td>
-          </tr>
-<!-- product_social_bookmarks_eof //-->
 <?php
     }
   }
