@@ -9,10 +9,6 @@
 
   Released under the GNU General Public License
 */
-
-  $persitent_connections = array(array('id' => 'false', 'text' => 'No (Default)'),
-                           array('id' => 'true', 'text' => 'Yes'));
-
 ?>
 
 <script language="javascript" type="text/javascript" src="ext/xmlhttp/xmlhttp.js"></script>
@@ -138,10 +134,6 @@
       <tr>
         <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?></td>
         <td class="inputDescription">The name of the database to hold the data in.</td>
-      </tr>
-      <tr>
-        <td class="inputField"><?php echo 'Use Persistent Connections<br />' . osc_draw_pull_down_menu('USE_PCONNECT', $persitent_connections); ?></td>
-        <td class="inputDescription">Do you want to use persistent database connections</td>
       </tr>
     </table>
 
