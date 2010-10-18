@@ -461,6 +461,17 @@ CREATE TABLE products_description (
   KEY products_name (products_name)
 );
 
+DROP TABLE IF EXISTS products_images;
+CREATE TABLE products_images (
+  id int NOT NULL auto_increment,
+  products_id int NOT NULL,
+  image varchar(64),
+  htmlcontent text,
+  sort_order int NOT NULL,
+  PRIMARY KEY (id),
+  KEY products_images_prodid (products_id)
+);
+
 DROP TABLE IF EXISTS products_notifications;
 CREATE TABLE products_notifications (
   products_id int NOT NULL,
@@ -650,6 +661,7 @@ INSERT INTO categories VALUES ('17', 'subcategory_cdrom_drives.gif', '1', '0', n
 INSERT INTO categories VALUES ('18', 'subcategory_simulation.gif', '2', '0', now(), null);
 INSERT INTO categories VALUES ('19', 'subcategory_action_games.gif', '2', '0', now(), null);
 INSERT INTO categories VALUES ('20', 'subcategory_strategy.gif', '2', '0', now(), null);
+INSERT INTO categories VALUES ('21', 'category_gadgets.png', '0', '4', now(), null);
 
 INSERT INTO categories_description VALUES ( '1', '1', 'Hardware');
 INSERT INTO categories_description VALUES ( '2', '1', 'Software');
@@ -671,6 +683,7 @@ INSERT INTO categories_description VALUES ( '17', '1', 'CDROM Drives');
 INSERT INTO categories_description VALUES ( '18', '1', 'Simulation');
 INSERT INTO categories_description VALUES ( '19', '1', 'Action');
 INSERT INTO categories_description VALUES ( '20', '1', 'Strategy');
+INSERT INTO categories_description VALUES ( '21', '1', 'Gadgets');
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Store Name', 'STORE_NAME', 'osCommerce', 'The name of my store', '1', '1', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Store Owner', 'STORE_OWNER', 'Harald Ponce de Leon', 'The name of my store owner', '1', '2', now());
@@ -1114,6 +1127,7 @@ INSERT INTO manufacturers VALUES (6,'Canon','manufacturer_canon.gif', now(), nul
 INSERT INTO manufacturers VALUES (7,'Sierra','manufacturer_sierra.gif', now(), null);
 INSERT INTO manufacturers VALUES (8,'GT Interactive','manufacturer_gt_interactive.gif', now(), null);
 INSERT INTO manufacturers VALUES (9,'Hewlett Packard','manufacturer_hewlett_packard.gif', now(), null);
+INSERT INTO manufacturers VALUES (10,'Samsung','manufacturer_samsung.png', now(), null);
 
 INSERT INTO manufacturers_info VALUES (1, 1, 'http://www.matrox.com', 0, null);
 INSERT INTO manufacturers_info VALUES (2, 1, 'http://www.microsoft.com', 0, null);
@@ -1124,6 +1138,7 @@ INSERT INTO manufacturers_info VALUES (6, 1, 'http://www.canon.com', 0, null);
 INSERT INTO manufacturers_info VALUES (7, 1, 'http://www.sierra.com', 0, null);
 INSERT INTO manufacturers_info VALUES (8, 1, 'http://www.infogrames.com', 0, null);
 INSERT INTO manufacturers_info VALUES (9, 1, 'http://www.hewlettpackard.com', 0, null);
+INSERT INTO manufacturers_info VALUES (10, 1, 'http://www.samsung.com', 0, null);
 
 INSERT INTO orders_status VALUES ( '1', '1', 'Pending', '1', '0');
 INSERT INTO orders_status VALUES ( '2', '1', 'Processing', '1', '1');
@@ -1156,6 +1171,7 @@ INSERT INTO products VALUES (24,17,'PC-DISC','gt_interactive/disciples.gif',90.0
 INSERT INTO products VALUES (25,16,'MSINTKB','microsoft/intkeyboardps2.gif',69.99, now(),null,null,8.00,1,1,2,0);
 INSERT INTO products VALUES (26,10,'MSIMEXP','microsoft/imexplorer.gif',64.95, now(),null,null,8.00,1,1,2,0);
 INSERT INTO products VALUES (27,8,'HPLJ1100XI','hewlett_packard/lj1100xi.gif',499.99, now(),null,null,45.00,1,1,9,0);
+INSERT INTO products VALUES (28,100,'GT-P1000','samsung/galaxy_tab.gif',749.99, now(),null,null,1,1,1,10,0);
 
 INSERT INTO products_description VALUES (1,1,'Matrox G200 MMS','Reinforcing its position as a multi-monitor trailblazer, Matrox Graphics Inc. has once again developed the most flexible and highly advanced solution in the industry. Introducing the new Matrox G200 Multi-Monitor Series; the first graphics card ever to support up to four DVI digital flat panel displays on a single 8&quot; PCI board.<br /><br />With continuing demand for digital flat panels in the financial workplace, the Matrox G200 MMS is the ultimate in flexible solutions. The Matrox G200 MMS also supports the new digital video interface (DVI) created by the Digital Display Working Group (DDWG) designed to ease the adoption of digital flat panels. Other configurations include composite video capture ability and onboard TV tuner, making the Matrox G200 MMS the complete solution for business needs.<br /><br />Based on the award-winning MGA-G200 graphics chip, the Matrox G200 Multi-Monitor Series provides superior 2D/3D graphics acceleration to meet the demanding needs of business applications such as real-time stock quotes (Versus), live video feeds (Reuters & Bloombergs), multiple windows applications, word processing, spreadsheets and CAD.','www.matrox.com/mga/products/g200_mms/home.cfm',0);
 INSERT INTO products_description VALUES (2,1,'Matrox G400 32MB','<strong>Dramatically Different High Performance Graphics</strong><br /><br />Introducing the Millennium G400 Series - a dramatically different, high performance graphics experience. Armed with the industry\'s fastest graphics chip, the Millennium G400 Series takes explosive acceleration two steps further by adding unprecedented image quality, along with the most versatile display options for all your 3D, 2D and DVD applications. As the most powerful and innovative tools in your PC\'s arsenal, the Millennium G400 Series will not only change the way you see graphics, but will revolutionize the way you use your computer.<br /><br /><strong>Key features:</strong><ul><li>New Matrox G400 256-bit DualBus graphics chip</li><li>Explosive 3D, 2D and DVD performance</li><li>DualHead Display</li><li>Superior DVD and TV output</li><li>3D Environment-Mapped Bump Mapping</li><li>Vibrant Color Quality rendering </li><li>UltraSharp DAC of up to 360 MHz</li><li>3D Rendering Array Processor</li><li>Support for 16 or 32 MB of memory</li></ul>','www.matrox.com/mga/products/mill_g400/home.htm',0);
@@ -1184,6 +1200,7 @@ INSERT INTO products_description VALUES (24,1,'Disciples: Sacred Lands','A new a
 INSERT INTO products_description VALUES (25,1,'Microsoft Internet Keyboard PS/2','The Internet Keyboard has 10 Hot Keys on a comfortable standard keyboard design that also includes a detachable palm rest. The Hot Keys allow you to browse the web, or check e-mail directly from your keyboard. The IntelliType Pro software also allows you to customize your hot keys - make the Internet Keyboard work the way you want it to!','',0);
 INSERT INTO products_description VALUES (26,1,'Microsoft IntelliMouse Explorer','Microsoft introduces its most advanced mouse, the IntelliMouse Explorer! IntelliMouse Explorer features a sleek design, an industrial-silver finish, a glowing red underside and taillight, creating a style and look unlike any other mouse. IntelliMouse Explorer combines the accuracy and reliability of Microsoft IntelliEye optical tracking technology, the convenience of two new customizable function buttons, the efficiency of the scrolling wheel and the comfort of expert ergonomic design. All these great features make this the best mouse for the PC!','www.microsoft.com/hardware/mouse/explorer.asp',0);
 INSERT INTO products_description VALUES (27,1,'Hewlett Packard LaserJet 1100Xi','HP has always set the pace in laser printing technology. The new generation HP LaserJet 1100 series sets another impressive pace, delivering a stunning 8 pages per minute print speed. The 600 dpi print resolution with HP\'s Resolution Enhancement technology (REt) makes every document more professional.<br /><br />Enhanced print speed and laser quality results are just the beginning. With 2MB standard memory, HP LaserJet 1100xi users will be able to print increasingly complex pages. Memory can be increased to 18MB to tackle even more complex documents with ease. The HP LaserJet 1100xi supports key operating systems including Windows 3.1, 3.11, 95, 98, NT 4.0, OS/2 and DOS. Network compatibility available via the optional HP JetDirect External Print Servers.<br /><br />HP LaserJet 1100xi also features The Document Builder for the Web Era from Trellix Corp. (featuring software to create Web documents).','www.pandi.hp.com/pandi-db/prodinfo.main?product=laserjet1100',0);
+INSERT INTO products_description VALUES (28,1,'Samsung Galaxy Tab','<p>Powered by a Cortex A8 1.0GHz application processor, the Samsung GALAXY Tab is designed to deliver high performance whenever and wherever you are. At the same time, HD video contents are supported by a wide range of multimedia formats (DivX, XviD, MPEG4, H.263, H.264 and more), which maximizes the joy of entertainment.</p><p>With 3G HSPA connectivity, 802.11n Wi-Fi, and Bluetooth 3.0, the Samsung GALAXY Tab enhances users\' mobile communication on a whole new level. Video conferencing and push email on the large 7-inch display make communication more smooth and efficient. For voice telephony, the Samsung GALAXY Tab turns out to be a perfect speakerphone on the desk, or a mobile phone on the move via Bluetooth headset.</p>','http://galaxytab.samsungmobile.com',0);
 
 INSERT INTO products_attributes VALUES (1,1,4,1,0.00,'+');
 INSERT INTO products_attributes VALUES (2,1,4,2,50.00,'+');
@@ -1200,6 +1217,11 @@ INSERT INTO products_attributes VALUES (26, 22, 5, 10, '0.00', '+');
 INSERT INTO products_attributes VALUES (27, 22, 5, 13, '0.00', '+');
 
 INSERT INTO products_attributes_download VALUES (26, 'unreal.zip', 7, 3);
+
+INSERT INTO products_images VALUES (1,28,'samsung/galaxy_tab_1.jpg',null,1);
+INSERT INTO products_images VALUES (2,28,'samsung/galaxy_tab_2.jpg',null,2);
+INSERT INTO products_images VALUES (3,28,'samsung/galaxy_tab_3.jpg',null,3);
+INSERT INTO products_images VALUES (4,28,'samsung/galaxy_tab_4.jpg','<object width="640" height="385"><param name="movie" value="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="640" height="385"></embed></object>',4);
 
 INSERT INTO products_options VALUES (1,1,'Color');
 INSERT INTO products_options VALUES (2,1,'Size');
@@ -1258,6 +1280,7 @@ INSERT INTO products_to_categories VALUES (24,20);
 INSERT INTO products_to_categories VALUES (25,8);
 INSERT INTO products_to_categories VALUES (26,9);
 INSERT INTO products_to_categories VALUES (27,5);
+INSERT INTO products_to_categories VALUES (28,21);
 
 INSERT INTO reviews VALUES (1,19,0,'John Doe',5,now(),null,0);
 
