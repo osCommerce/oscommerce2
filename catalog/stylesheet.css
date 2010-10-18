@@ -114,6 +114,19 @@ table, p {
   line-height: 1.5;
 }
 
+#piGal ul {
+  list-style-type: none;
+}
+
+#piGal img {
+  -webkit-box-shadow: 0px 2px 3px #999;
+  -moz-box-shadow: 0px 2px 3px #999;
+}
+
+#piGal .outer {
+  margin-left: -30px;
+}
+
 
 
 .boxText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }

@@ -72,6 +72,57 @@ function popupWindow(url) {
 
 <?php
     if (tep_not_null($product_info['products_image'])) {
+      $pi_query = tep_db_query("select image, htmlcontent from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
+
+      if (tep_db_num_rows($pi_query) > 0) {
+?>
+
+    <div id="piGal" style="float: right;">
+      <ul>
+
+<?php
+        $pi_counter = 0;
+        while ($pi = tep_db_fetch_array($pi_query)) {
+          $pi_counter++;
+
+          $pi_entry = '        <li><a href="';
+
+          if (tep_not_null($pi['htmlcontent'])) {
+            $pi_entry .= '#piGalimg_' . $pi_counter;
+          } else {
+            $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image']);
+          }
+
+          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a></li>';
+
+          if (tep_not_null($pi['htmlcontent'])) {
+            $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
+          }
+
+          $pi_entry .= '</li>';
+
+          echo $pi_entry;
+        }
+?>
+
+      </ul>
+    </div>
+
+<script type="text/javascript">
+$("#piGal a[rel^='fancybox']").fancybox({
+  cyclic: true
+});
+
+$('#piGal ul').bxGallery({
+  maxwidth: 300,
+  maxheight: 200,
+  thumbwidth: 75,
+  thumbcontainer: 300
+});
+</script>
+
+<?php
+      } else {
 ?>
 
     <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
@@ -84,6 +135,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
     </div>
 
 <?php
+      }
     }
 ?>
 
@@ -97,7 +149,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
 
     <p><?php echo TEXT_PRODUCT_OPTIONS; ?></p>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <p>
 <?php
       $products_options_name_query = tep_db_query("select distinct popt.products_options_id, popt.products_options_name from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$HTTP_GET_VARS['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "' order by popt.products_options_name");
       while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
@@ -116,55 +168,37 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
           $selected_attribute = false;
         }
 ?>
-      <tr>
-        <td class="fieldKey"><?php echo $products_options_name['products_options_name'] . ':'; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?></td>
-      </tr>
+      <b><?php echo $products_options_name['products_options_name'] . ':'; ?></b><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
 <?php
       }
 ?>
-    </table>
+    </p>
 
 <?php
     }
-
-    $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "'");
-    $reviews = tep_db_fetch_array($reviews_query);
-    if ($reviews['count'] > 0) {
 ?>
 
-    <p><?php echo TEXT_CURRENT_REVIEWS . ' ' . $reviews['count']; ?></p>
+    <div style="clear: both;"></div>
 
 <?php
-    }
-
-    if (tep_not_null($product_info['products_url'])) {
-?>
-
-    <p><?php echo sprintf(TEXT_MORE_INFORMATION, tep_href_link(FILENAME_REDIRECT, 'action=url&goto=' . urlencode($product_info['products_url']), 'NONSSL', true, false)); ?></p>
-
-<?php
-    }
-
     if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
 ?>
 
     <p style="text-align: center;"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($product_info['products_date_available'])); ?></p>
 
 <?php
-    } else {
-?>
-
-    <p style="text-align: center;"><?php echo sprintf(TEXT_DATE_ADDED, tep_date_long($product_info['products_date_added'])); ?></p>
-
-<?php
     }
+
+    $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "'");
+    $reviews = tep_db_fetch_array($reviews_query);
 ?>
+
+    <br />
 
     <div>
       <div style="float: right;"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></div>
 
-      <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS, 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
+      <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
     </div>
 
 <?php
