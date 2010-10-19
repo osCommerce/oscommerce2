@@ -18,7 +18,7 @@
     switch ($action) {
       case 'insert':
         $name = tep_db_prepare_input($HTTP_POST_VARS['name']);
-        $code = tep_db_prepare_input(substr($HTTP_POST_VARS['code'], 0, 2));
+        $code = tep_db_prepare_input($HTTP_POST_VARS['code'], 0, 5));
         $image = tep_db_prepare_input($HTTP_POST_VARS['image']);
         $directory = tep_db_prepare_input($HTTP_POST_VARS['directory']);
         $sort_order = (int)tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
@@ -71,7 +71,7 @@
       case 'save':
         $lID = tep_db_prepare_input($HTTP_GET_VARS['lID']);
         $name = tep_db_prepare_input($HTTP_POST_VARS['name']);
-        $code = tep_db_prepare_input(substr($HTTP_POST_VARS['code'], 0, 2));
+        $code = tep_db_prepare_input(substr($HTTP_POST_VARS['code'], 0, 5));
         $image = tep_db_prepare_input($HTTP_POST_VARS['image']);
         $directory = tep_db_prepare_input($HTTP_POST_VARS['directory']);
         $sort_order = (int)tep_db_prepare_input($HTTP_POST_VARS['sort_order']);
