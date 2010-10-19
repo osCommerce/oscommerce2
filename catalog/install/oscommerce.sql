@@ -240,7 +240,7 @@ DROP TABLE IF EXISTS languages;
 CREATE TABLE languages (
   languages_id int NOT NULL auto_increment,
   name varchar(32)  NOT NULL,
-  code char(2) NOT NULL,
+  code char(5) NOT NULL,
   image varchar(64),
   directory varchar(32),
   sort_order int(3),
