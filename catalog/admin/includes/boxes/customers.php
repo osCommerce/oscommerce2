@@ -5,29 +5,24 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
+
+  $cl_box_groups[] = array(
+    'heading' => BOX_HEADING_CUSTOMERS,
+    'apps' => array(
+      array(
+        'code' => FILENAME_CUSTOMERS,
+        'title' => BOX_CUSTOMERS_CUSTOMERS,
+        'link' => tep_href_link(FILENAME_CUSTOMERS)
+      ),
+      array(
+        'code' => FILENAME_ORDERS,
+        'title' => BOX_CUSTOMERS_ORDERS,
+        'link' => tep_href_link(FILENAME_ORDERS)
+      )
+    )
+  );
 ?>
-<!-- customers //-->
-          <tr>
-            <td>
-<?php
-  $heading = array();
-  $contents = array();
-
-  $heading[] = array('text'  => BOX_HEADING_CUSTOMERS,
-                     'link'  => tep_href_link(FILENAME_CUSTOMERS, 'selected_box=customers'));
-
-  if ($selected_box == 'customers') {
-    $contents[] = array('text'  => '<a href="' . tep_href_link(FILENAME_CUSTOMERS, '', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_CUSTOMERS_CUSTOMERS . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_ORDERS, '', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_CUSTOMERS_ORDERS . '</a>');
-  }
-
-  $box = new box;
-  echo $box->menuBox($heading, $contents);
-?>
-            </td>
-          </tr>
-<!-- customers_eof //-->

@@ -5,34 +5,49 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
+
+  $cl_box_groups[] = array(
+    'heading' => BOX_HEADING_MODULES,
+    'apps' => array(
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_PAYMENT,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=payment')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_SHIPPING,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=shipping')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_ORDER_TOTAL,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=ordertotal')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_ACTION_RECORDER,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=actionrecorder')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_HEADER_TAGS,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=header_tags')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_SOCIAL_BOOKMARKS,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=social_bookmarks')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_ADMIN_DASHBOARD,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=dashboard')
+      )
+    )
+  );
 ?>
-<!-- modules //-->
-          <tr>
-            <td>
-<?php
-  $heading = array();
-  $contents = array();
-
-  $heading[] = array('text'  => BOX_HEADING_MODULES,
-                     'link'  => tep_href_link(FILENAME_MODULES, 'set=payment&selected_box=modules'));
-
-  if ($selected_box == 'modules') {
-    $contents[] = array('text'  => '<a href="' . tep_href_link(FILENAME_MODULES, 'set=payment', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_PAYMENT . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_SHIPPING . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ORDER_TOTAL . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=actionrecorder', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ACTION_RECORDER . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=header_tags', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_HEADER_TAGS . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=social_bookmarks', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_SOCIAL_BOOKMARKS . '</a><br>' .
-                                   '<a href="' . tep_href_link(FILENAME_MODULES, 'set=dashboard', 'NONSSL') . '" class="menuBoxContentLink">' . BOX_MODULES_ADMIN_DASHBOARD . '</a>');
-  }
-
-  $box = new box;
-  echo $box->menuBox($heading, $contents);
-?>
-            </td>
-          </tr>
-<!-- modules_eof //-->
