@@ -35,6 +35,10 @@
     }
   }
 
+  if ($col === 1 || $col === 2) {
+    $new_prods_content .= '</tr>';
+  }
+
   $new_prods_content .= '</table>';
 ?>
 

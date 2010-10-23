@@ -35,6 +35,10 @@
         }
       }
 
+      if ($col === 1 || $col === 2) {
+        $also_pur_prods_content .= '</tr>';
+      }
+
       $also_pur_prods_content .= '</table>';
 ?>
 
