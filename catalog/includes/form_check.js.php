@@ -73,25 +73,6 @@ function check_password(field_name_1, field_name_2, field_size, message_1, messa
   }
 }
 
-function check_password_new(field_name_1, field_name_2, field_name_3, field_size, message_1, message_2, message_3) {
-  if (form.elements[field_name_1] && (form.elements[field_name_1].type != "hidden")) {
-    var password_current = form.elements[field_name_1].value;
-    var password_new = form.elements[field_name_2].value;
-    var password_confirmation = form.elements[field_name_3].value;
-
-    if (password_current.length < field_size) {
-      error_message = error_message + "* " + message_1 + "\n";
-      error = true;
-    } else if (password_new.length < field_size) {
-      error_message = error_message + "* " + message_2 + "\n";
-      error = true;
-    } else if (password_new != password_confirmation) {
-      error_message = error_message + "* " + message_3 + "\n";
-      error = true;
-    }
-  }
-}
-
 function check_form(form_name) {
   if (submitted == true) {
     alert("<?php echo JS_ERROR_SUBMITTED; ?>");
@@ -121,7 +102,7 @@ function check_form(form_name) {
   check_input("telephone", <?php echo ENTRY_TELEPHONE_MIN_LENGTH; ?>, "<?php echo ENTRY_TELEPHONE_NUMBER_ERROR; ?>");
 
   check_password("password", "confirmation", <?php echo ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_ERROR; ?>", "<?php echo ENTRY_PASSWORD_ERROR_NOT_MATCHING; ?>");
-  check_password_new("password_current", "password_new", "password_confirmation", <?php echo ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING; ?>");
+  check_password("password_new", "password_confirmation", <?php echo ENTRY_PASSWORD_MIN_LENGTH; ?>, "<?php echo ENTRY_PASSWORD_NEW_ERROR; ?>", "<?php echo ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING; ?>");
 
   if (error == true) {
     alert(error_message);

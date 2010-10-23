@@ -27,11 +27,7 @@
 
     $error = false;
 
-    if (strlen($password_current) < ENTRY_PASSWORD_MIN_LENGTH) {
-      $error = true;
-
-      $messageStack->add('account_password', ENTRY_PASSWORD_CURRENT_ERROR);
-    } elseif (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
+    if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
 
       $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);
