@@ -44,7 +44,7 @@ function popupWindow(url) {
 }
 //--></script>
 
-<div>
+<div class="contentContainer">
   <h1 style="float: right;"><?php echo $products_price; ?></h1>
   <h1><?php echo $products_name; ?></h1>
 </div>
@@ -127,7 +127,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
 
   <br />
 
-  <div>
+  <div class="contentText" style="clear: both;">
     <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, tep_get_all_get_params()), 'primary'); ?></span>
 
     <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params())); ?>
