@@ -96,7 +96,7 @@
   </div>
 
   <div class="contentText">
-    <?php echo TEXT_THANKS_FOR_SHOPPING; ?></h3>
+    <h3><?php echo TEXT_THANKS_FOR_SHOPPING; ?></h3>
   </div>
 
 <?php if (DOWNLOAD_ENABLED == 'true') include(DIR_WS_MODULES . 'downloads.php'); ?>
