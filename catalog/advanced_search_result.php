@@ -48,7 +48,7 @@
     }
 
     if (isset($HTTP_GET_VARS['keywords'])) {
-      $keywords = $HTTP_GET_VARS['keywords'];
+      $keywords = tep_db_prepare_input($HTTP_GET_VARS['keywords']);
     }
 
     $date_check_error = false;
