@@ -372,3 +372,6 @@ SPAN.errorText {
 /* input requirement */
 
 .inputRequirement { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
+
+/* Manufacturers list */
+ul.manufacturers-list { list-style: none; margin: 0; padding-left: 1em; text-indent: -1em; }
