@@ -141,7 +141,6 @@ A {
 }
 
 A:hover {
-  color: #AABBDD;
   text-decoration: underline;
 }
 
@@ -256,7 +255,6 @@ TABLE.productListing {
 .productListing-heading {
   font-family: Verdana, Arial, sans-serif;
   font-size: 10px;
-  background: #b6b7cb;
   color: #FFFFFF;
   font-weight: bold;
 }
