@@ -28,9 +28,7 @@
         $products_id = tep_db_prepare_input($HTTP_POST_VARS['products_id']);
         $products_price = tep_db_prepare_input($HTTP_POST_VARS['products_price']);
         $specials_price = tep_db_prepare_input($HTTP_POST_VARS['specials_price']);
-        $day = tep_db_prepare_input($HTTP_POST_VARS['day']);
-        $month = tep_db_prepare_input($HTTP_POST_VARS['month']);
-        $year = tep_db_prepare_input($HTTP_POST_VARS['year']);
+        $expdate = tep_db_prepare_input($HTTP_POST_VARS['expdate']);
 
         if (substr($specials_price, -1) == '%') {
           $new_special_insert_query = tep_db_query("select products_id, products_price from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
@@ -41,13 +39,11 @@
         }
 
         $expires_date = '';
-        if (tep_not_null($day) && tep_not_null($month) && tep_not_null($year)) {
-          $expires_date = $year;
-          $expires_date .= (strlen($month) == 1) ? '0' . $month : $month;
-          $expires_date .= (strlen($day) == 1) ? '0' . $day : $day;
+        if (tep_not_null($expdate)) {
+          $expires_date = substr($expdate, 0, 4) . substr($expdate, 5, 2) . substr($expdate, 8, 2);
         }
 
-        tep_db_query("insert into " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status) values ('" . (int)$products_id . "', '" . tep_db_input($specials_price) . "', now(), '" . tep_db_input($expires_date) . "', '1')");
+        tep_db_query("insert into " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status) values ('" . (int)$products_id . "', '" . tep_db_input($specials_price) . "', now(), " . (tep_not_null($expires_date) ? "'" . tep_db_input($expires_date) . "'" : 'null') . ", '1')");
 
         tep_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $HTTP_GET_VARS['page']));
         break;
@@ -55,20 +51,16 @@
         $specials_id = tep_db_prepare_input($HTTP_POST_VARS['specials_id']);
         $products_price = tep_db_prepare_input($HTTP_POST_VARS['products_price']);
         $specials_price = tep_db_prepare_input($HTTP_POST_VARS['specials_price']);
-        $day = tep_db_prepare_input($HTTP_POST_VARS['day']);
-        $month = tep_db_prepare_input($HTTP_POST_VARS['month']);
-        $year = tep_db_prepare_input($HTTP_POST_VARS['year']);
+        $expdate = tep_db_prepare_input($HTTP_POST_VARS['expdate']);
 
         if (substr($specials_price, -1) == '%') $specials_price = ($products_price - (($specials_price / 100) * $products_price));
 
         $expires_date = '';
-        if (tep_not_null($day) && tep_not_null($month) && tep_not_null($year)) {
-          $expires_date = $year;
-          $expires_date .= (strlen($month) == 1) ? '0' . $month : $month;
-          $expires_date .= (strlen($day) == 1) ? '0' . $day : $day;
+        if (tep_not_null($expdate)) {
+          $expires_date = substr($expdate, 0, 4) . substr($expdate, 5, 2) . substr($expdate, 8, 2);
         }
 
-        tep_db_query("update " . TABLE_SPECIALS . " set specials_new_products_price = '" . tep_db_input($specials_price) . "', specials_last_modified = now(), expires_date = '" . tep_db_input($expires_date) . "' where specials_id = '" . (int)$specials_id . "'");
+        tep_db_query("update " . TABLE_SPECIALS . " set specials_new_products_price = '" . tep_db_input($specials_price) . "', specials_last_modified = now(), expires_date = " . (tep_not_null($expires_date) ? "'" . tep_db_input($expires_date) . "'" : 'null') . " where specials_id = '" . (int)$specials_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $HTTP_GET_VARS['page'] . '&sID=' . $specials_id));
         break;
@@ -83,17 +75,7 @@
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-
-  if ( ($action == 'new') || ($action == 'edit') ) {
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/calendar.css">
-<script language="JavaScript" src="includes/javascript/calendarcode.js"></script>
-<?php
-  }
-?>
-
-<div id="popupcalendar" class="text"></div>
-
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
@@ -138,9 +120,17 @@
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo tep_draw_input_field('day', (isset($sInfo->expires_date) ? substr($sInfo->expires_date, 8, 2) : ''), 'size="2" maxlength="2" class="cal-TextBox"') . tep_draw_input_field('month', (isset($sInfo->expires_date) ? substr($sInfo->expires_date, 5, 2) : ''), 'size="2" maxlength="2" class="cal-TextBox"') . tep_draw_input_field('year', (isset($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) : ''), 'size="4" maxlength="4" class="cal-TextBox"'); ?><a class="so-BtnLink" href="javascript:calClick();return false;" onmouseover="calSwapImg('BTN_date', 'img_Date_OVER',true);" onmouseout="calSwapImg('BTN_date', 'img_Date_UP',true);" onclick="calSwapImg('BTN_date', 'img_Date_DOWN');showCalendar('new_special','dteWhen','BTN_date');return false;"><?php echo tep_image(DIR_WS_IMAGES . 'cal_date_up.gif', 'Calendar', '22', '17', 'align="absmiddle" name="BTN_date"'); ?></a></td>
+            <td class="main"><?php echo tep_draw_input_field('expdate', (tep_not_null($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) . '-' . substr($sInfo->expires_date, 5, 2) . '-' . substr($sInfo->expires_date, 8, 2) : ''), 'id="expdate"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
-        </table></td>
+        </table>
+
+<script type="text/javascript">
+$('#expdate').datepicker({
+  dateFormat: 'yy-mm-dd'
+});
+</script>
+
+        </td>
       </tr>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">

@@ -99,8 +99,6 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<div id="spiffycalendar" class="text"></div>
-
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">

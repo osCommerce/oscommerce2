@@ -348,7 +348,7 @@
                        'products_last_modified' => '',
                        'products_date_available' => '',
                        'products_status' => '',
-                           'products_tax_class_id' => '',
+                       'products_tax_class_id' => '',
                        'manufacturers_id' => '');
 
     $pInfo = new objectInfo($parameters);
@@ -388,11 +388,6 @@
       default: $in_status = true; $out_status = false;
     }
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script language="JavaScript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
-<script language="javascript"><!--
-  var dateAvailable = new ctlSpiffyCalendarBox("dateAvailable", "new_product", "products_date_available","btnDate1","<?php echo $pInfo->products_date_available; ?>",scBTNMODE_CUSTOMBLUE);
-//--></script>
 <script language="javascript"><!--
 var tax_rates = new Array();
 <?php
@@ -463,8 +458,8 @@ function updateNet() {
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?><br><small>(YYYY-MM-DD)</small></td>
-            <td class="main"><?php echo tep_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;'; ?><script language="javascript">dateAvailable.writeControl(); dateAvailable.dateFormat="yyyy-MM-dd";</script></td>
+            <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?></td>
+            <td class="main"><?php echo tep_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . tep_draw_input_field('products_date_available', $pInfo->products_date_available, 'id="products_date_available"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -571,7 +566,15 @@ updateGross();
       <tr>
         <td class="smallText" align="right"><?php echo tep_draw_hidden_field('products_date_added', (tep_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d'))) . tep_draw_button(IMAGE_PREVIEW, 'document', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($HTTP_GET_VARS['pID']) ? '&pID=' . $HTTP_GET_VARS['pID'] : ''))); ?></td>
       </tr>
-    </table></form>
+    </table>
+
+<script type="text/javascript">
+$('#products_date_available').datepicker({
+  dateFormat: 'yy-mm-dd'
+});
+</script>
+
+    </form>
 <?php
   } elseif ($action == 'new_product_preview') {
     if (tep_not_null($HTTP_POST_VARS)) {
