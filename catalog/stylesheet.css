@@ -252,16 +252,18 @@ TABLE.productListing {
   border-spacing: 1px;
 }
 
-.productListing-heading {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
+.productListingHeader {
+  table-layout: fixed;
   color: #FFFFFF;
   font-weight: bold;
 }
 
-TD.productListing-data {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
+.productListingHeader A:hover {
+  color: #FFFFFF;
+}
+
+.productListingData {
+  table-layout: fixed;
 }
 
 A.pageResults {
