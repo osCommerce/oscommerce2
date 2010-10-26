@@ -385,3 +385,16 @@ SPAN.errorText {
 /* input requirement */
 
 .inputRequirement { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
+
+/* account link list */
+
+.accountLinkList {
+  list-style-type: none;
+  margin: 2px 2px 2px 10px;
+  padding: 5px;
+}
+
+.accountLinkListEntry {
+  float: left;
+  margin-right: 5px;
+}
