@@ -482,8 +482,8 @@
       $HR = '<hr>';
       $hr = '<hr>';
       if ( ($boln == '') && ($eoln == "\n") ) { // Values not specified, use rational defaults
-        $CR = '<br>';
-        $cr = '<br>';
+        $CR = '<br />';
+        $cr = '<br />';
         $eoln = $cr;
       } else { // Use values supplied
         $CR = $eoln . $boln;

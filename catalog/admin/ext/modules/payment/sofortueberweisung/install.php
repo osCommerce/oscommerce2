@@ -40,7 +40,7 @@
 
   // Module already installed
   if (defined('MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS') && (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS == 'True')) {
-    die('Modul bereits installiert<br><a href="' . tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zur�ck zum ShopAdmin</a>');
+    die('Modul bereits installiert<br /><a href="' . tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zur�ck zum ShopAdmin</a>');
   }
 
   $parameter = array();
@@ -262,7 +262,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 			      </tr>
         	  <tr>
 	            <td colspan="2">
-	              <input type="button" name="Absenden" value="Absenden" onclick="javascript:submitForm()"><br><b>Nach der Registrierung des Projekts bei Sofort�berweisung, unbedingt dem Link zur�ck zum Shop folgen!</b>
+	              <input type="button" name="Absenden" value="Absenden" onclick="javascript:submitForm()"><br /><b>Nach der Registrierung des Projekts bei Sofort�berweisung, unbedingt dem Link zur�ck zum Shop folgen!</b>
 		        </td>
 	          </tr>
 	        </table>

@@ -41,7 +41,7 @@ define('TEXT_BANNERS_EXPIRES_AT_DATE', 'Expires At: <b>%s</b>');
 define('TEXT_BANNERS_EXPIRES_AT_IMPRESSIONS', 'Expires At: <b>%s</b> impressions');
 define('TEXT_BANNERS_STATUS_CHANGE', 'Status Change: %s');
 
-define('TEXT_BANNERS_DATA', 'D<br>A<br>T<br>A');
+define('TEXT_BANNERS_DATA', 'D<br />A<br />T<br />A');
 define('TEXT_BANNERS_LAST_3_DAYS', 'Last 3 Days');
 define('TEXT_BANNERS_BANNER_VIEWS', 'Banner Views');
 define('TEXT_BANNERS_BANNER_CLICKS', 'Banner Clicks');

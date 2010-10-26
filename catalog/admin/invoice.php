@@ -51,7 +51,7 @@
             <td class="main"><b><?php echo ENTRY_SOLD_TO; ?></b></td>
           </tr>
           <tr>
-            <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br>'); ?></td>
+            <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
           </tr>
           <tr>
             <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
@@ -68,7 +68,7 @@
             <td class="main"><b><?php echo ENTRY_SHIP_TO; ?></b></td>
           </tr>
           <tr>
-            <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br>'); ?></td>
+            <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -107,7 +107,7 @@
 
       if (isset($order->products[$i]['attributes']) && (($k = sizeof($order->products[$i]['attributes'])) > 0)) {
         for ($j = 0; $j < $k; $j++) {
-          echo '<br><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
+          echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
           if ($order->products[$i]['attributes'][$j]['price'] != '0') echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
           echo '</i></small></nobr>';
         }
@@ -140,7 +140,7 @@
 </table>
 <!-- body_text_eof //-->
 
-<br>
+<br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

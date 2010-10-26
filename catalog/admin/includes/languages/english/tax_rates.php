@@ -26,7 +26,7 @@ define('TEXT_INFO_CLASS_TITLE', 'Tax Class Title:');
 define('TEXT_INFO_COUNTRY_NAME', 'Country:');
 define('TEXT_INFO_ZONE_NAME', 'Zone:');
 define('TEXT_INFO_TAX_RATE', 'Tax Rate (%):');
-define('TEXT_INFO_TAX_RATE_PRIORITY', 'Tax rates at the same priority are added, others are compounded.<br><br>Priority:');
+define('TEXT_INFO_TAX_RATE_PRIORITY', 'Tax rates at the same priority are added, others are compounded.<br /><br />Priority:');
 define('TEXT_INFO_RATE_DESCRIPTION', 'Description:');
 define('TEXT_INFO_INSERT_INTRO', 'Please enter the new tax class with its related data');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this tax rate?');
