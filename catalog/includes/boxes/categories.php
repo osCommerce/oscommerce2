@@ -53,7 +53,7 @@
       }
     }
 
-    $categories_string .= '<br>';
+    $categories_string .= '<br />';
 
     if ($tree[$counter]['next_id'] != false) {
       tep_show_category($tree[$counter]['next_id']);

@@ -93,7 +93,7 @@
     $heading[] = array('text' => '<b>' . $pInfo->products_name . '</b>');
 
     $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CATEGORIES, 'pID=' . $pInfo->products_id . '&action=new_product')));
-    $contents[] = array('text' => '<br>' . TEXT_INFO_DATE_EXPECTED . ' ' . tep_date_short($pInfo->products_date_available));
+    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_EXPECTED . ' ' . tep_date_short($pInfo->products_date_available));
   }
 
   if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
@@ -117,7 +117,7 @@
 <!-- footer //-->
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 <!-- footer_eof //-->
-<br>
+<br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

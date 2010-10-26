@@ -79,9 +79,9 @@ function selectAll(FormName, SelectBox) {
 
       $choose_audience_string .= '<form name="notifications" action="' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $HTTP_GET_VARS['nID'] . '&action=confirm') . '" method="post" onSubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
                                  '  <tr>' . "\n" .
-                                 '    <td align="center" class="smallText"><b>' . TEXT_PRODUCTS . '</b><br>' . tep_draw_pull_down_menu('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText">&nbsp;<br>' . $global_button . '<br><br><br><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br><br><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br><br><br>' . tep_draw_button(IMAGE_SEND, 'mail-closed', null, 'primary') . '<br><br>' . $cancel_button . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText"><b>' . TEXT_SELECTED_PRODUCTS . '</b><br>' . tep_draw_pull_down_menu('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><b>' . TEXT_PRODUCTS . '</b><br />' . tep_draw_pull_down_menu('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . tep_draw_button(IMAGE_SEND, 'mail-closed', null, 'primary') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><b>' . TEXT_SELECTED_PRODUCTS . '</b><br />' . tep_draw_pull_down_menu('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
                                  '  </tr>' . "\n" .
                                  '</table></form>';
 

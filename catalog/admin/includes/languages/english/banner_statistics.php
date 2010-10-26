@@ -16,7 +16,7 @@ define('TABLE_HEADING_SOURCE', 'Source');
 define('TABLE_HEADING_VIEWS', 'Views');
 define('TABLE_HEADING_CLICKS', 'Clicks');
 
-define('TEXT_BANNERS_DATA', 'D<br>a<br>t<br>a');
+define('TEXT_BANNERS_DATA', 'D<br />a<br />t<br />a');
 define('TEXT_BANNERS_DAILY_STATISTICS', '%s Daily Statistics For %s %s');
 define('TEXT_BANNERS_MONTHLY_STATISTICS', '%s Monthly Statistics For %s');
 define('TEXT_BANNERS_YEARLY_STATISTICS', '%s Yearly Statistics');
