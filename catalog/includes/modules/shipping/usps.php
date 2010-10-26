@@ -111,7 +111,7 @@
           for ($i=0; $i<$size; $i++) {
             list($type, $cost) = each($uspsQuote[$i]);
 
-// echo "USPS $type @ $cost<br>";
+// echo "USPS $type @ $cost<br />";
 	    if (($method == '' && in_array($type, $this->types)) || $method == $type) {
 	       if (strpos($type, "Flat Rate")) $type_flat = $type . ', subject to verification';
 	       else $type_flat = $type;

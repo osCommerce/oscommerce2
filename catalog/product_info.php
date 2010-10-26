@@ -54,7 +54,7 @@ function popupWindow(url) {
     }
 
     if (tep_not_null($product_info['products_model'])) {
-      $products_name = $product_info['products_name'] . '<br><span class="smallText">[' . $product_info['products_model'] . ']</span>';
+      $products_name = $product_info['products_name'] . '<br /><span class="smallText">[' . $product_info['products_model'] . ']</span>';
     } else {
       $products_name = $product_info['products_name'];
     }

@@ -109,18 +109,18 @@
           echo $key . '=' . $value . '&';
         }
         if (sizeof($this->path[$i]['post']) > 0) {
-          echo '<br>';
+          echo '<br />';
           while (list($key, $value) = each($this->path[$i]['post'])) {
-            echo '&nbsp;&nbsp;<b>' . $key . '=' . $value . '</b><br>';
+            echo '&nbsp;&nbsp;<b>' . $key . '=' . $value . '</b><br />';
           }
         }
-        echo '<br>';
+        echo '<br />';
       }
 
       if (sizeof($this->snapshot) > 0) {
-        echo '<br><br>';
+        echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br>';
+        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br />';
       }
     }
 
