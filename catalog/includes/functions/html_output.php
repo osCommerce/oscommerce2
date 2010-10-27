@@ -371,7 +371,7 @@
       $button .= ' ' . $params['params'];
     }
 
-    $button .= '>' . $title . '</button><script>$("#tdb' . $button_counter . '").button(';
+    $button .= '>' . $title . '</button><script type="text/javascript">$("#tdb' . $button_counter . '").button(';
 
     $args = array();
 
