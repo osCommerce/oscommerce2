@@ -109,7 +109,7 @@
 
     if (tep_not_null($parameters)) $image .= ' ' . $parameters;
 
-    $image .= '>';
+    $image .= ' />';
 
     return $image;
   }
@@ -120,13 +120,13 @@
   function tep_image_submit($image, $alt = '', $parameters = '') {
     global $language;
 
-    $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" border="0" alt="' . tep_output_string($alt) . '"';
+    $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
 
     if (tep_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
-    $image_submit .= '>';
+    $image_submit .= ' />';
 
     return $image_submit;
   }
@@ -184,7 +184,7 @@
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
-    $field .= '>';
+    $field .= ' />';
 
     return $field;
   }
@@ -210,7 +210,7 @@
 
     if (tep_not_null($parameters)) $selection .= ' ' . $parameters;
 
-    $selection .= '>';
+    $selection .= ' />';
 
     return $selection;
   }
@@ -272,7 +272,7 @@
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
-    $field .= '>';
+    $field .= ' />';
 
     return $field;
   }
@@ -309,7 +309,7 @@
     for ($i=0, $n=sizeof($values); $i<$n; $i++) {
       $field .= '<option value="' . tep_output_string($values[$i]['id']) . '"';
       if ($default == $values[$i]['id']) {
-        $field .= ' SELECTED';
+        $field .= ' selected="selected"';
       }
 
       $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
