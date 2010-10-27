@@ -156,7 +156,7 @@
     }
 
     if (DEFAULT_LANGUAGE == $languages['code']) {
-      echo '                <td class="dataTableContent"><b>' . $languages['name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
+      echo '                <td class="dataTableContent"><strong>' . $languages['name'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
     } else {
       echo '                <td class="dataTableContent">' . $languages['name'] . '</td>' . "\n";
     }
@@ -191,7 +191,7 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</strong>');
 
       $contents = array('form' => tep_draw_form('languages', FILENAME_LANGUAGES, 'action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
@@ -204,7 +204,7 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $HTTP_GET_VARS['lID'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</strong>');
 
       $contents = array('form' => tep_draw_form('languages', FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
@@ -217,21 +217,21 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</strong>');
 
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $lInfo->name . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $lInfo->name . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm'), 'primary') : '') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     default:
       if (is_object($lInfo)) {
-        $heading[] = array('text' => '<b>' . $lInfo->name . '</b>');
+        $heading[] = array('text' => '<strong>' . $lInfo->name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $HTTP_GET_VARS['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . tep_draw_button(IMAGE_DETAILS, 'info', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
         $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
         $contents[] = array('text' => '<br />' . tep_image(DIR_WS_CATALOG_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, $lInfo->name));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_CATALOG_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
+        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_CATALOG_LANGUAGES . '<strong>' . $lInfo->directory . '</strong>');
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
       }
       break;

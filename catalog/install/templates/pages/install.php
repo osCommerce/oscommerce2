@@ -33,7 +33,7 @@
 
           setTimeout("document.getElementById('installForm').submit();", 2000);
         } else {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem importing the database. The following error had occured:</p><p><b>%s</b></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
+          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem importing the database. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
         }
       }
 
@@ -52,7 +52,7 @@
 
           loadXMLDoc("rpc.php?action=dbImport&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName), handleHttpResponse_DoImport);
         } else {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><b>%s</b></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
+          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
           formSubmited = false;
         }
       } else {

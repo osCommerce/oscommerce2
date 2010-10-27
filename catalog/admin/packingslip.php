@@ -47,7 +47,7 @@
       <tr>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><b><?php echo ENTRY_SOLD_TO; ?></b></td>
+            <td class="main"><strong><?php echo ENTRY_SOLD_TO; ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
@@ -64,7 +64,7 @@
         </table></td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><b><?php echo ENTRY_SHIP_TO; ?></b></td>
+            <td class="main"><strong><?php echo ENTRY_SHIP_TO; ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
@@ -79,7 +79,7 @@
   <tr>
     <td><table border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
+        <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
         <td class="main"><?php echo $order->info['payment_method']; ?></td>
       </tr>
     </table></td>

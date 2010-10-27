@@ -68,7 +68,7 @@
       <tr><?php echo tep_draw_form('review', FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $HTTP_GET_VARS['rID'] . '&action=preview'); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><b><?php echo ENTRY_PRODUCT; ?></b> <?php echo $rInfo->products_name; ?><br /><b><?php echo ENTRY_FROM; ?></b> <?php echo $rInfo->customers_name; ?><br /><br /><b><?php echo ENTRY_DATE; ?></b> <?php echo tep_date_short($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo tep_date_short($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
         </table></td>
@@ -76,7 +76,7 @@
       <tr>
         <td><table witdh="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><b><?php echo ENTRY_REVIEW; ?></b><br /><br /><?php echo tep_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo tep_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text); ?></td>
           </tr>
           <tr>
             <td class="smallText" align="right"><?php echo ENTRY_REVIEW_TEXT; ?></td>
@@ -87,7 +87,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td class="main"><b><?php echo ENTRY_RATING; ?></b>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php for ($i=1; $i<=5; $i++) echo tep_draw_radio_field('reviews_rating', $i, '', $rInfo->reviews_rating) . '&nbsp;'; echo TEXT_GOOD; ?></td>
+        <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php for ($i=1; $i<=5; $i++) echo tep_draw_radio_field('reviews_rating', $i, '', $rInfo->reviews_rating) . '&nbsp;'; echo TEXT_GOOD; ?></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -118,7 +118,7 @@
       <tr><?php echo tep_draw_form('update', FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $HTTP_GET_VARS['rID'] . '&action=update', 'post', 'enctype="multipart/form-data"'); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><b><?php echo ENTRY_PRODUCT; ?></b> <?php echo $rInfo->products_name; ?><br /><b><?php echo ENTRY_FROM; ?></b> <?php echo $rInfo->customers_name; ?><br /><br /><b><?php echo ENTRY_DATE; ?></b> <?php echo tep_date_short($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo tep_date_short($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
         </table>
@@ -126,7 +126,7 @@
       <tr>
         <td><table witdh="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td valign="top" class="main"><b><?php echo ENTRY_REVIEW; ?></b><br /><br /><?php echo nl2br(tep_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
+            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(tep_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -134,7 +134,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td class="main"><b><?php echo ENTRY_RATING; ?></b>&nbsp;<?php echo tep_image(DIR_WS_CATALOG_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></td>
+        <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo tep_image(DIR_WS_CATALOG_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -227,16 +227,16 @@
 
     switch ($action) {
       case 'delete':
-        $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_REVIEW . '</b>');
+        $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_REVIEW . '</strong>');
 
         $contents = array('form' => tep_draw_form('reviews', FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id . '&action=deleteconfirm'));
         $contents[] = array('text' => TEXT_INFO_DELETE_REVIEW_INTRO);
-        $contents[] = array('text' => '<br /><b>' . $rInfo->products_name . '</b>');
+        $contents[] = array('text' => '<br /><strong>' . $rInfo->products_name . '</strong>');
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id)));
         break;
       default:
       if (isset($rInfo) && is_object($rInfo)) {
-        $heading[] = array('text' => '<b>' . $rInfo->products_name . '</b>');
+        $heading[] = array('text' => '<strong>' . $rInfo->products_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($rInfo->date_added));

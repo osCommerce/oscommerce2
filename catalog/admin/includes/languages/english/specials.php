@@ -20,7 +20,7 @@ define('TABLE_HEADING_ACTION', 'Action');
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date:');
-define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul>');
+define('TEXT_SPECIALS_PRICE_TIP', '<strong>Specials Notes:</strong><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <strong>20%</strong></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <strong>49.99</strong></li><li>Leave the expiry date empty for no expiration</li></ul>');
 
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');

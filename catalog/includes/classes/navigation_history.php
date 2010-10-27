@@ -111,7 +111,7 @@
         if (sizeof($this->path[$i]['post']) > 0) {
           echo '<br />';
           while (list($key, $value) = each($this->path[$i]['post'])) {
-            echo '&nbsp;&nbsp;<b>' . $key . '=' . $value . '</b><br />';
+            echo '&nbsp;&nbsp;<strong>' . $key . '=' . $value . '</strong><br />';
           }
         }
         echo '<br />';

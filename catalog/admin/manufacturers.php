@@ -172,7 +172,7 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_MANUFACTURER . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_HEADING_NEW_MANUFACTURER . '</strong>');
 
       $contents = array('form' => tep_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_NEW_INTRO);
@@ -189,7 +189,7 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $HTTP_GET_VARS['mID'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<b>' . TEXT_HEADING_EDIT_MANUFACTURER . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_HEADING_EDIT_MANUFACTURER . '</strong>');
 
       $contents = array('form' => tep_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_EDIT_INTRO);
@@ -206,11 +206,11 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $mInfo->manufacturers_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . TEXT_HEADING_DELETE_MANUFACTURER . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_HEADING_DELETE_MANUFACTURER . '</strong>');
 
       $contents = array('form' => tep_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $mInfo->manufacturers_name . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $mInfo->manufacturers_name . '</strong>');
       $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('delete_image', '', true) . ' ' . TEXT_DELETE_IMAGE);
 
       if ($mInfo->products_count > 0) {
@@ -222,7 +222,7 @@
       break;
     default:
       if (isset($mInfo) && is_object($mInfo)) {
-        $heading[] = array('text' => '<b>' . $mInfo->manufacturers_name . '</b>');
+        $heading[] = array('text' => '<strong>' . $mInfo->manufacturers_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_MANUFACTURERS, 'page=' . $HTTP_GET_VARS['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . tep_date_short($mInfo->date_added));

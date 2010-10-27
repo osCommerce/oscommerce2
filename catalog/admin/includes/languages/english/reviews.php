@@ -21,7 +21,7 @@ define('ENTRY_PRODUCT', 'Product:');
 define('ENTRY_FROM', 'From:');
 define('ENTRY_DATE', 'Date:');
 define('ENTRY_REVIEW', 'Review:');
-define('ENTRY_REVIEW_TEXT', '<small><font color="#ff0000"><b>NOTE:</b></font></small>&nbsp;HTML is not translated!&nbsp;');
+define('ENTRY_REVIEW_TEXT', '<small><font color="#ff0000"><strong>NOTE:</strong></font></small>&nbsp;HTML is not translated!&nbsp;');
 define('ENTRY_RATING', 'Rating:');
 
 define('TEXT_INFO_DELETE_REVIEW_INTRO', 'Are you sure you want to delete this review?');
@@ -36,7 +36,7 @@ define('TEXT_INFO_REVIEW_SIZE', 'Size:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'Average Rating:');
 
 define('TEXT_OF_5_STARS', '%s of 5 Stars!');
-define('TEXT_GOOD', '<small><font color="#ff0000"><b>GOOD</b></font></small>');
-define('TEXT_BAD', '<small><font color="#ff0000"><b>BAD</b></font></small>');
+define('TEXT_GOOD', '<small><font color="#ff0000"><strong>GOOD</strong></font></small>');
+define('TEXT_BAD', '<small><font color="#ff0000"><strong>BAD</strong></font></small>');
 define('TEXT_INFO_HEADING_DELETE_REVIEW', 'Delete Review');
 ?>

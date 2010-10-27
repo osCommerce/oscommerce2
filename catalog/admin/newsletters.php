@@ -254,7 +254,7 @@
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main" valign="middle"><?php echo tep_image(DIR_WS_IMAGES . 'ani_send_email.gif', IMAGE_ANI_SEND_EMAIL); ?></td>
-            <td class="main" valign="middle"><b><?php echo TEXT_PLEASE_WAIT; ?></b></td>
+            <td class="main" valign="middle"><strong><?php echo TEXT_PLEASE_WAIT; ?></strong></td>
           </tr>
         </table></td>
       </tr>
@@ -267,7 +267,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td class="main"><font color="#ff0000"><b><?php echo TEXT_FINISHED_SENDING_EMAILS; ?></b></font></td>
+        <td class="main"><font color="#ff0000"><strong><?php echo TEXT_FINISHED_SENDING_EMAILS; ?></strong></font></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -333,16 +333,16 @@
 
   switch ($action) {
     case 'delete':
-      $heading[] = array('text' => '<b>' . $nInfo->title . '</b>');
+      $heading[] = array('text' => '<strong>' . $nInfo->title . '</strong>');
 
       $contents = array('form' => tep_draw_form('newsletters', FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $nInfo->title . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $nInfo->title . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $HTTP_GET_VARS['nID'])));
       break;
     default:
       if (is_object($nInfo)) {
-        $heading[] = array('text' => '<b>' . $nInfo->title . '</b>');
+        $heading[] = array('text' => '<strong>' . $nInfo->title . '</strong>');
 
         if ($nInfo->locked > 0) {
           $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=new')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=delete')) . tep_draw_button(IMAGE_PREVIEW, 'document', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview')) . tep_draw_button(IMAGE_SEND, 'mail-closed', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=send')) . tep_draw_button(IMAGE_UNLOCK, 'unlocked', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $HTTP_GET_VARS['page'] . '&nID=' . $nInfo->newsletters_id . '&action=unlock')));

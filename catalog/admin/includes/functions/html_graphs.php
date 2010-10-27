@@ -100,7 +100,7 @@
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $start_graph_string .= ' bgcolor="' . $vals['hbgcolor'] . '"';
 
-      $start_graph_string .= ' colspan="' . $colspan . '"><font color="' . $vals['hfcolor'] . '" style="' . $vals['hfstyle'] . '"><b>' . $vals['hlabel'] . '</b></font></td>' . "\n" .
+      $start_graph_string .= ' colspan="' . $colspan . '"><font color="' . $vals['hfcolor'] . '" style="' . $vals['hfstyle'] . '"><strong>' . $vals['hlabel'] . '</strong></font></td>' . "\n" .
                              '  </tr>' . "\n" .
                              '  <tr>' . "\n" .
                              '    <td align="center" valign="center"';
@@ -108,7 +108,7 @@
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $start_graph_string .= ' bgcolor="' . $vals['vbgcolor'] . '"';
 
-      $start_graph_string .=  ' rowspan="' . $rowspan . '"><font color="' . $vals['vfcolor'] . '" style="' . $vals['vfstyle'] . '"><b>' . $vals['vlabel'] . '</b></font></td>' . "\n" .
+      $start_graph_string .=  ' rowspan="' . $rowspan . '"><font color="' . $vals['vfcolor'] . '" style="' . $vals['vfstyle'] . '"><strong>' . $vals['vlabel'] . '</strong></font></td>' . "\n" .
                               '  </tr>' . "\n";
     }
 

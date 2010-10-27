@@ -120,7 +120,7 @@
           <tr><?php echo tep_draw_form('language', FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $HTTP_GET_VARS['filename'] . '&action=save'); ?>
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
-                <td class="main"><b><?php echo $HTTP_GET_VARS['filename']; ?></b></td>
+                <td class="main"><strong><?php echo $HTTP_GET_VARS['filename']; ?></strong></td>
               </tr>
               <tr>
                 <td class="main"><?php echo tep_draw_textarea_field('file_contents', 'soft', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
@@ -143,7 +143,7 @@
     } else {
 ?>
           <tr>
-            <td class="main"><b><?php echo TEXT_FILE_DOES_NOT_EXIST; ?></b></td>
+            <td class="main"><strong><?php echo TEXT_FILE_DOES_NOT_EXIST; ?></strong></td>
           </tr>
           <tr>
             <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -165,7 +165,7 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_LAST_MODIFIED; ?></td>
               </tr>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><a href="<?php echo tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $filename); ?>"><b><?php echo $filename; ?></b></a></td>
+                <td class="dataTableContent"><a href="<?php echo tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
                 <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . ((tep_is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG_LANGUAGES . $filename)); ?></td>
               </tr>

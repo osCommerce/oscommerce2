@@ -205,7 +205,7 @@ function updateForm() {
     }
 
     if (DEFAULT_CURRENCY == $currency['code']) {
-      echo '                <td class="dataTableContent"><b>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
+      echo '                <td class="dataTableContent"><strong>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
     } else {
       echo '                <td class="dataTableContent">' . $currency['title'] . '</td>' . "\n";
     }
@@ -242,7 +242,7 @@ function updateForm() {
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_CURRENCY . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_CURRENCY . '</strong>');
 
       $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
@@ -259,7 +259,7 @@ function updateForm() {
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $HTTP_GET_VARS['cID'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CURRENCY . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CURRENCY . '</strong>');
 
       $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
@@ -275,15 +275,15 @@ function updateForm() {
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CURRENCY . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CURRENCY . '</strong>');
 
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $cInfo->title . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $cInfo->title . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_currency) ? tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id . '&action=deleteconfirm'), 'primary') : '') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id)));
       break;
     default:
       if (is_object($cInfo)) {
-        $heading[] = array('text' => '<b>' . $cInfo->title . '</b>');
+        $heading[] = array('text' => '<strong>' . $cInfo->title . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_CURRENCIES, 'page=' . $HTTP_GET_VARS['page'] . '&cID=' . $cInfo->currencies_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . ' ' . $cInfo->title);

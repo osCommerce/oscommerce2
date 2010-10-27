@@ -635,12 +635,12 @@
 <?php
     } elseif (($action == 'delete_product_attribute') && ($HTTP_GET_VARS['attribute_id'] == $attributes_values['products_attributes_id'])) {
 ?>
-            <td class="smallText">&nbsp;<b><?php echo $attributes_values["products_attributes_id"]; ?></b>&nbsp;</td>
-            <td class="smallText">&nbsp;<b><?php echo $products_name_only; ?></b>&nbsp;</td>
-            <td class="smallText">&nbsp;<b><?php echo $options_name; ?></b>&nbsp;</td>
-            <td class="smallText">&nbsp;<b><?php echo $values_name; ?></b>&nbsp;</td>
-            <td align="right" class="smallText">&nbsp;<b><?php echo $attributes_values["options_values_price"]; ?></b>&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<b><?php echo $attributes_values["price_prefix"]; ?></b>&nbsp;</td>
+            <td class="smallText">&nbsp;<strong><?php echo $attributes_values["products_attributes_id"]; ?></strong>&nbsp;</td>
+            <td class="smallText">&nbsp;<strong><?php echo $products_name_only; ?></strong>&nbsp;</td>
+            <td class="smallText">&nbsp;<strong><?php echo $options_name; ?></strong>&nbsp;</td>
+            <td class="smallText">&nbsp;<strong><?php echo $values_name; ?></strong>&nbsp;</td>
+            <td align="right" class="smallText">&nbsp;<strong><?php echo $attributes_values["options_values_price"]; ?></strong>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<strong><?php echo $attributes_values["price_prefix"]; ?></strong>&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_attribute&attribute_id=' . $HTTP_GET_VARS['attribute_id'] . '&' . $page_info), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info, 'NONSSL')); ?>&nbsp;</td>
 <?php
     } else {

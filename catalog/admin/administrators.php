@@ -306,7 +306,7 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_ADMINISTRATOR . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_ADMINISTRATOR . '</strong>');
 
       $contents = array('form' => tep_draw_form('administrator', FILENAME_ADMINISTRATORS, 'action=insert', 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
@@ -320,7 +320,7 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS)));
       break;
     case 'edit':
-      $heading[] = array('text' => '<b>' . $aInfo->user_name . '</b>');
+      $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
       $contents = array('form' => tep_draw_form('administrator', FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=save', 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
@@ -345,16 +345,16 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . $aInfo->user_name . '</b>');
+      $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
       $contents = array('form' => tep_draw_form('administrator', FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $aInfo->user_name . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $aInfo->user_name . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     default:
       if (isset($aInfo) && is_object($aInfo)) {
-        $heading[] = array('text' => '<b>' . $aInfo->user_name . '</b>');
+        $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=delete')));
       }

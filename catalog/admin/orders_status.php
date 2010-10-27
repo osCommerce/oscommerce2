@@ -130,7 +130,7 @@
     }
 
     if (DEFAULT_ORDERS_STATUS_ID == $orders_status['orders_status_id']) {
-      echo '                <td class="dataTableContent"><b>' . $orders_status['orders_status_name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
+      echo '                <td class="dataTableContent"><strong>' . $orders_status['orders_status_name'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
     } else {
       echo '                <td class="dataTableContent">' . $orders_status['orders_status_name'] . '</td>' . "\n";
     }
@@ -166,7 +166,7 @@
 
   switch ($action) {
     case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_ORDERS_STATUS . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_ORDERS_STATUS . '</strong>');
 
       $contents = array('form' => tep_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
@@ -184,7 +184,7 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'])));
       break;
     case 'edit':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_ORDERS_STATUS . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_ORDERS_STATUS . '</strong>');
 
       $contents = array('form' => tep_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id  . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
@@ -202,16 +202,16 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ORDERS_STATUS . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_ORDERS_STATUS . '</strong>');
 
       $contents = array('form' => tep_draw_form('status', FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id  . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $oInfo->orders_status_name . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $oInfo->orders_status_name . '</strong>');
       if ($remove_status) $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id)));
       break;
     default:
       if (isset($oInfo) && is_object($oInfo)) {
-        $heading[] = array('text' => '<b>' . $oInfo->orders_status_name . '</b>');
+        $heading[] = array('text' => '<strong>' . $oInfo->orders_status_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oInfo->orders_status_id . '&action=delete')));
 

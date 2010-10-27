@@ -79,7 +79,7 @@
   $contents = array();
 
   if (isset($info)) {
-    $heading[] = array('text' => '<b>' . TABLE_HEADING_SHOPPING_CART . '</b>');
+    $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
 
     if (STORE_SESSIONS == 'mysql') {
       $session_data = tep_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");

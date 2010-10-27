@@ -377,17 +377,17 @@ $('#expires_date').datepicker({
   $contents = array();
   switch ($action) {
     case 'delete':
-      $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
+      $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
       $contents = array('form' => tep_draw_form('banners', FILENAME_BANNER_MANAGER, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $bInfo->banners_id . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $bInfo->banners_title . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $bInfo->banners_title . '</strong>');
       if ($bInfo->banners_image) $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $HTTP_GET_VARS['bID'])));
       break;
     default:
       if (is_object($bInfo)) {
-        $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
+        $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $bInfo->banners_id . '&action=new')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $bInfo->banners_id . '&action=delete')) . tep_draw_button(IMAGE_DETAILS, 'info', tep_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $HTTP_GET_VARS['page'] . '&bID=' . $bInfo->banners_id)));
         $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . tep_date_short($bInfo->date_added));

@@ -97,25 +97,25 @@
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><b><?php echo TEXT_CUSTOMER; ?></b><br /><?php echo $mail_sent_to; ?></td>
+                <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo $mail_sent_to; ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><b><?php echo TEXT_FROM; ?></b><br /><?php echo htmlspecialchars(stripslashes($HTTP_POST_VARS['from'])); ?></td>
+                <td class="smallText"><strong><?php echo TEXT_FROM; ?></strong><br /><?php echo htmlspecialchars(stripslashes($HTTP_POST_VARS['from'])); ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><b><?php echo TEXT_SUBJECT; ?></b><br /><?php echo htmlspecialchars(stripslashes($HTTP_POST_VARS['subject'])); ?></td>
+                <td class="smallText"><strong><?php echo TEXT_SUBJECT; ?></strong><br /><?php echo htmlspecialchars(stripslashes($HTTP_POST_VARS['subject'])); ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><b><?php echo TEXT_MESSAGE; ?></b><br /><?php echo nl2br(htmlspecialchars(stripslashes($HTTP_POST_VARS['message']))); ?></td>
+                <td class="smallText"><strong><?php echo TEXT_MESSAGE; ?></strong><br /><?php echo nl2br(htmlspecialchars(stripslashes($HTTP_POST_VARS['message']))); ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

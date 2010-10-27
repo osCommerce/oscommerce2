@@ -58,7 +58,7 @@
     <table border="0" cellspacing="2" cellpadding="2">
       <tr>
         <td><?php echo tep_draw_checkbox_field('newsletter_general', '1', (($newsletter['customers_newsletter'] == '1') ? true : false), 'onclick="checkBox(\'newsletter_general\')"'); ?></td>
-        <td><b><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER; ?></b><br /><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION; ?></td>
+        <td><strong><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER; ?></strong><br /><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION; ?></td>
       </tr>
     </table>
   </div>
