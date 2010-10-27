@@ -31,13 +31,13 @@
 
       $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><font color="#ff0000"><b>' . sprintf(TEXT_COUNT_CUSTOMERS, $mail['count']) . '</b></font></td>' . "\n" .
+                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, $mail['count']) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><b>' . $this->title . '</b></td>' . "\n" .
+                        '    <td class="main"><strong>' . $this->title . '</strong></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .

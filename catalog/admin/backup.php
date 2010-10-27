@@ -434,7 +434,7 @@
 
   switch ($action) {
     case 'backup':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_BACKUP . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_BACKUP . '</strong>');
 
       $contents = array('form' => tep_draw_form('backup', FILENAME_BACKUP, 'action=backupnow'));
       $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
@@ -452,13 +452,13 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_BACKUP, 'copy', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP)));
       break;
     case 'restore':
-      $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
+      $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
       $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     case 'restorelocal':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</b>');
+      $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</strong>');
 
       $contents = array('form' => tep_draw_form('restore', FILENAME_BACKUP, 'action=restorelocalnow', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
@@ -467,16 +467,16 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP)));
       break;
     case 'delete':
-      $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
+      $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
       $contents = array('form' => tep_draw_form('delete', FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $buInfo->file . '</b>');
+      $contents[] = array('text' => '<br /><strong>' . $buInfo->file . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     default:
       if (isset($buInfo) && is_object($buInfo)) {
-        $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
+        $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);

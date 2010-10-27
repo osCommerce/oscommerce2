@@ -48,7 +48,7 @@
       <tr>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><b><?php echo ENTRY_SOLD_TO; ?></b></td>
+            <td class="main"><strong><?php echo ENTRY_SOLD_TO; ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
@@ -65,7 +65,7 @@
         </table></td>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main"><b><?php echo ENTRY_SHIP_TO; ?></b></td>
+            <td class="main"><strong><?php echo ENTRY_SHIP_TO; ?></strong></td>
           </tr>
           <tr>
             <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
@@ -80,7 +80,7 @@
   <tr>
     <td><table border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td class="main"><b><?php echo ENTRY_PAYMENT_METHOD; ?></b></td>
+        <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
         <td class="main"><?php echo $order->info['payment_method']; ?></td>
       </tr>
     </table></td>
@@ -116,10 +116,10 @@
       echo '        </td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['model'] . '</td>' . "\n";
       echo '        <td class="dataTableContent" align="right" valign="top">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><b>' . $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . '</b></td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><b>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true), true, $order->info['currency'], $order->info['currency_value']) . '</b></td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><b>' . $currencies->format($order->products[$i]['final_price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</b></td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><b>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</b></td>' . "\n";
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true), true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format($order->products[$i]['final_price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n";
       echo '      </tr>' . "\n";
     }
 ?>

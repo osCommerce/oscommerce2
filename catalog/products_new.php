@@ -62,7 +62,7 @@
 ?>
       <tr>
         <td width="<?php echo SMALL_IMAGE_WIDTH + 10; ?>" valign="top" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $products_new['products_image'], $products_new['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></td>
-        <td valign="top" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '"><b><u>' . $products_new['products_name'] . '</u></b></a><br />' . TEXT_DATE_ADDED . ' ' . tep_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER . ' ' . $products_new['manufacturers_name'] . '<br /><br />' . TEXT_PRICE . ' ' . $products_price; ?></td>
+        <td valign="top" class="main"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '"><strong><u>' . $products_new['products_name'] . '</u></strong></a><br />' . TEXT_DATE_ADDED . ' ' . tep_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER . ' ' . $products_new['manufacturers_name'] . '<br /><br />' . TEXT_PRICE . ' ' . $products_price; ?></td>
         <td align="right" valign="middle" class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $products_new['products_id'])); ?></td>
       </tr>
 <?php

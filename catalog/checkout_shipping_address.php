@@ -297,7 +297,7 @@ function check_form_optional(form_name) {
 
   <div class="contentText">
     <div style="float: right;">
-      <?php echo '<b>' . TITLE_PLEASE_SELECT . '</b>'; ?>
+      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
     </div>
 
     <?php echo TEXT_SELECT_OTHER_SHIPPING_DESTINATION; ?>
@@ -320,7 +320,7 @@ function check_form_optional(form_name) {
         }
 ?>
 
-        <td><b><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></b></td>
+        <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
         <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $sendto)); ?></td>
       </tr>
       <tr>

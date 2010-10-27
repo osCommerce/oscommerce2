@@ -119,7 +119,7 @@
 
   switch ($action) {
     case 'edit':
-      $heading[] = array('text' => '<b>' . $cInfo->configuration_title . '</b>');
+      $heading[] = array('text' => '<strong>' . $cInfo->configuration_title . '</strong>');
 
       if ($cInfo->set_function) {
         eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value) . '");');
@@ -129,12 +129,12 @@
 
       $contents = array('form' => tep_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $HTTP_GET_VARS['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $cInfo->configuration_title . '</b><br />' . $cInfo->configuration_description . '<br />' . $value_field);
+      $contents[] = array('text' => '<br /><strong>' . $cInfo->configuration_title . '</strong><br />' . $cInfo->configuration_description . '<br />' . $value_field);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CONFIGURATION, 'gID=' . $HTTP_GET_VARS['gID'] . '&cID=' . $cInfo->configuration_id)));
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
-        $heading[] = array('text' => '<b>' . $cInfo->configuration_title . '</b>');
+        $heading[] = array('text' => '<strong>' . $cInfo->configuration_title . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CONFIGURATION, 'gID=' . $HTTP_GET_VARS['gID'] . '&cID=' . $cInfo->configuration_id . '&action=edit')));
         $contents[] = array('text' => '<br />' . $cInfo->configuration_description);

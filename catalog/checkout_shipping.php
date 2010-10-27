@@ -220,7 +220,7 @@ function rowOutEffect(object) {
 
   <div class="contentText">
     <div style="float: right;">
-      <?php echo '<b>' . TITLE_PLEASE_SELECT . '</b>'; ?>
+      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
     </div>
 
     <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
@@ -246,7 +246,7 @@ function rowOutEffect(object) {
 ?>
 
       <tr>
-        <td><b><?php echo FREE_SHIPPING_TITLE; ?></b>&nbsp;<?php echo $quotes[$i]['icon']; ?></td>
+        <td><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></td>
       </tr>
       <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, 0)">
         <td style="padding-left: 15px;"><?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . tep_draw_hidden_field('shipping', 'free_free'); ?></td>
@@ -259,7 +259,7 @@ function rowOutEffect(object) {
 ?>
 
       <tr>
-        <td colspan="3"><b><?php echo $quotes[$i]['module']; ?></b>&nbsp;<?php if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></td>
+        <td colspan="3"><strong><?php echo $quotes[$i]['module']; ?></strong>&nbsp;<?php if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></td>
       </tr>
 
 <?php

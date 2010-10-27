@@ -16,7 +16,7 @@ define('NAVBAR_TITLE_2', 'Product Notifications');
 define('HEADING_TITLE', 'Product Notifications');
 
 define('MY_NOTIFICATIONS_TITLE', 'My Product Notifications');
-define('MY_NOTIFICATIONS_DESCRIPTION', 'The product notification list allows you to stay up to date on products you find of interest.<br /><br />To be up to date on all product changes, select <b>Global Product Notifications</b>.');
+define('MY_NOTIFICATIONS_DESCRIPTION', 'The product notification list allows you to stay up to date on products you find of interest.<br /><br />To be up to date on all product changes, select <strong>Global Product Notifications</strong>.');
 
 define('GLOBAL_NOTIFICATIONS_TITLE', 'Global Product Notifications');
 define('GLOBAL_NOTIFICATIONS_DESCRIPTION', 'Recieve notifications on all available products.');
