@@ -111,7 +111,7 @@
         </table></td>
       </tr>
       <tr>
-        <td class="smallText"><?php echo TITLE_INSTALLED_VERSION . ' <b>osCommerce Online Merchant v' . $current_version . '</b>'; ?></td>
+        <td class="smallText"><?php echo TITLE_INSTALLED_VERSION . ' <strong>osCommerce Online Merchant v' . $current_version . '</strong>'; ?></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

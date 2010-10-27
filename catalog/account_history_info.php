@@ -58,7 +58,7 @@
 ?>
         <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td><b><?php echo HEADING_DELIVERY_ADDRESS; ?></b></td>
+            <td><strong><?php echo HEADING_DELIVERY_ADDRESS; ?></strong></td>
           </tr>
           <tr>
             <td><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
@@ -67,7 +67,7 @@
     if (tep_not_null($order->info['shipping_method'])) {
 ?>
           <tr>
-            <td><b><?php echo HEADING_SHIPPING_METHOD; ?></b></td>
+            <td><strong><?php echo HEADING_SHIPPING_METHOD; ?></strong></td>
           </tr>
           <tr>
             <td><?php echo $order->info['shipping_method']; ?></td>
@@ -84,16 +84,16 @@
   if (sizeof($order->info['tax_groups']) > 1) {
 ?>
           <tr>
-            <td colspan="2"><b><?php echo HEADING_PRODUCTS; ?></b></td>
-            <td align="right"><b><?php echo HEADING_TAX; ?></b></td>
-            <td align="right"><b><?php echo HEADING_TOTAL; ?></b></td>
+            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
 <?php
   } else {
 ?>
           <tr>
-            <td colspan="2"><b><?php echo HEADING_PRODUCTS; ?></b></td>
-            <td align="right"><b><?php echo HEADING_TOTAL; ?></b></td>
+            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
 <?php
   }
@@ -131,13 +131,13 @@
       <tr>
         <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td><b><?php echo HEADING_BILLING_ADDRESS; ?></b></td>
+            <td><strong><?php echo HEADING_BILLING_ADDRESS; ?></strong></td>
           </tr>
           <tr>
             <td><?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
           </tr>
           <tr>
-            <td><b><?php echo HEADING_PAYMENT_METHOD; ?></b></td>
+            <td><strong><?php echo HEADING_PAYMENT_METHOD; ?></strong></td>
           </tr>
           <tr>
             <td><?php echo $order->info['payment_method']; ?></td>

@@ -168,14 +168,14 @@
   $contents = array();
 
   if (tep_db_num_rows($admins_check_query) > 0) {
-    $heading[] = array('text' => '<b>' . HEADING_TITLE . '</b>');
+    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
     $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=process'));
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . tep_draw_input_field('username'));
     $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . tep_draw_password_field('password'));
     $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_LOGIN, 'key'));
   } else {
-    $heading[] = array('text' => '<b>' . HEADING_TITLE . '</b>');
+    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
     $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=create'));
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);

@@ -30,14 +30,14 @@
     $categories_string .= tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">';
 
     if (isset($cPath_array) && in_array($counter, $cPath_array)) {
-      $categories_string .= '<b>';
+      $categories_string .= '<strong>';
     }
 
 // display category name
     $categories_string .= $tree[$counter]['name'];
 
     if (isset($cPath_array) && in_array($counter, $cPath_array)) {
-      $categories_string .= '</b>';
+      $categories_string .= '</strong>';
     }
 
     if (tep_has_category_subcategories($counter)) {

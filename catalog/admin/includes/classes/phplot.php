@@ -1077,7 +1077,7 @@ class PHPlot{
 
 	function PrintError($error_message) {
 	// prints the error message to stdout and die
-		echo "<p><b>Fatal error</b>: $error_message<p>";
+		echo "<p><strong>Fatal error</strong>: $error_message<p>";
 		die;
 	}
 

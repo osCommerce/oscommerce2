@@ -131,7 +131,7 @@ function rowOutEffect(object) {
 ?>
 
   <div class="contentText">
-    <?php echo '<b>' . tep_output_string_protected($error['title']) . '</b>'; ?>
+    <?php echo '<strong>' . tep_output_string_protected($error['title']) . '</strong>'; ?>
 
     <p class="messageStackError"><?php echo tep_output_string_protected($error['error']); ?></p>
   </div>
@@ -166,7 +166,7 @@ function rowOutEffect(object) {
 
   <div class="contentText">
     <div style="float: right;">
-      <?php echo '<b>' . TITLE_PLEASE_SELECT . '</b>'; ?>
+      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
     </div>
 
     <?php echo TEXT_SELECT_PAYMENT_METHOD; ?>
@@ -201,7 +201,7 @@ function rowOutEffect(object) {
     }
 ?>
 
-        <td><b><?php echo $selection[$i]['module']; ?></b></td>
+        <td><strong><?php echo $selection[$i]['module']; ?></strong></td>
         <td align="right">
 
 <?php
