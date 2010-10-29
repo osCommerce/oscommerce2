@@ -373,6 +373,12 @@ SPAN.errorText {
 
 .inputRequirement { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
 
+/* buttons */
+
+.tdbLink a { }
+
+.tdbLink button { }
+
 /* account link list */
 
 .accountLinkList {
