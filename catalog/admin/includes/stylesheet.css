@@ -4,7 +4,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -128,3 +128,25 @@ FORM { display: inline; }
 .secInfo p, .secSuccess p, .secWarning p, .secError p {
   padding: 2px;
 }
+
+#adminAppMenu {
+  float: left;
+  width: 150px;
+  padding: 5px;
+}
+
+#adminAppMenu h3 {
+}
+
+#adminAppMenu ul {
+  list-style: none;
+  margin: -5px 0 -5px -10px;
+  padding: 0;
+}
+
+#contentText {
+  margin-left: 160px;
+}
+
+/* Custom jQuery UI */
+.ui-widget { font-family: Lucida Grande, Lucida Sans, Arial, sans-serif; font-size: 11px; }

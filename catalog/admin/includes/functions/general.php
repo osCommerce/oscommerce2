@@ -892,7 +892,7 @@
       }
       $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br />';
     }
-    $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
+    $calculated_category_path_string = substr($calculated_category_path_string, 0, -6);
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
@@ -908,7 +908,7 @@
       }
       $calculated_category_path_string = substr($calculated_category_path_string, 0, -1) . '<br />';
     }
-    $calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
+    $calculated_category_path_string = substr($calculated_category_path_string, 0, -6);
 
     if (strlen($calculated_category_path_string) < 1) $calculated_category_path_string = TEXT_TOP;
 
