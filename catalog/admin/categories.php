@@ -264,6 +264,62 @@
           }
         }
 
+        $pi_sort_order = 0;
+        $piArray = array(0);
+
+        foreach ($HTTP_POST_FILES as $key => $value) {
+// Update existing large product images
+          if (preg_match('/^products_image_large_([0-9]+)$/', $key, $matches)) {
+            $pi_sort_order++;
+
+            $sql_data_array = array('htmlcontent' => tep_db_prepare_input($HTTP_POST_VARS['products_image_htmlcontent_' . $matches[1]]),
+                                    'sort_order' => $pi_sort_order);
+
+            $t = new upload($key);
+            $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            if ($t->parse() && $t->save()) {
+              $sql_data_array['image'] = tep_db_prepare_input($t->filename);
+            }
+
+            tep_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "' and id = '" . (int)$matches[1] . "'");
+
+            $piArray[] = (int)$matches[1];
+          } elseif (preg_match('/^products_image_large_new_([0-9]+)$/', $key, $matches)) {
+// Insert new large product images
+            $sql_data_array = array('products_id' => (int)$products_id,
+                                    'htmlcontent' => tep_db_prepare_input($HTTP_POST_VARS['products_image_htmlcontent_new_' . $matches[1]]));
+
+            $t = new upload($key);
+            $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            if ($t->parse() && $t->save()) {
+              $pi_sort_order++;
+
+              $sql_data_array['image'] = tep_db_prepare_input($t->filename);
+              $sql_data_array['sort_order'] = $pi_sort_order;
+
+              tep_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
+
+              $piArray[] = tep_db_insert_id();
+            }
+          }
+        }
+
+        $product_images_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "' and id not in (" . implode(',', $piArray) . ")");
+        if (tep_db_num_rows($product_images_query)) {
+          while ($product_images = tep_db_fetch_array($product_images_query)) {
+            $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_IMAGES . " where image = '" . tep_db_input($product_images['image']) . "'");
+            $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+
+            if ($duplicate_image['total'] < 2) {
+              if (file_exists(DIR_FS_CATALOG_IMAGES . $product_images['image'])) {
+                @unlink(DIR_FS_CATALOG_IMAGES . $product_images['image']);
+              }
+            }
+          }
+
+          tep_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "' and id not in (" . implode(',', $piArray) . ")");
+        }
+
         if (USE_CACHE == 'true') {
           tep_reset_cache_block('categories');
           tep_reset_cache_block('also_purchased');
@@ -298,6 +354,11 @@
               tep_db_query("insert into " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url, products_viewed) values ('" . (int)$dup_products_id . "', '" . (int)$description['language_id'] . "', '" . tep_db_input($description['products_name']) . "', '" . tep_db_input($description['products_description']) . "', '" . tep_db_input($description['products_url']) . "', '0')");
             }
 
+            $product_images_query = tep_db_query("select image, htmlcontent, sort_order from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "'");
+            while ($product_images = tep_db_fetch_array($product_images_query)) {
+              tep_db_query("insert into " . TABLE_PRODUCTS_IMAGES . " (products_id, image, htmlcontent, sort_order) values ('" . (int)$dup_products_id . "', '" . tep_db_input($product_images['image']) . "', '" . tep_db_input($product_images['htmlcontent']) . "', '" . tep_db_input($product_images['sort_order']) . "')");
+            }
+
             tep_db_query("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) values ('" . (int)$dup_products_id . "', '" . (int)$categories_id . "')");
             $products_id = $dup_products_id;
           }
@@ -330,6 +391,7 @@
                        'products_quantity' => '',
                        'products_model' => '',
                        'products_image' => '',
+                       'products_larger_images' => array(),
                        'products_price' => '',
                        'products_weight' => '',
                        'products_date_added' => '',
@@ -346,6 +408,14 @@
       $product = tep_db_fetch_array($product_query);
 
       $pInfo->objectInfo($product);
+
+      $product_images_query = tep_db_query("select id, image, htmlcontent, sort_order from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product['products_id'] . "' order by sort_order");
+      while ($product_images = tep_db_fetch_array($product_images_query)) {
+        $pInfo->products_larger_images[] = array('id' => $product_images['id'],
+                                                 'image' => $product_images['image'],
+                                                 'htmlcontent' => $product_images['htmlcontent'],
+                                                 'sort_order' => $product_images['sort_order']);
+      }
     }
 
     $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
@@ -520,8 +590,72 @@ updateGross();
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
-            <td class="main"><?php echo tep_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . tep_draw_file_field('products_image') . '<br />' . tep_draw_separator('pixel_trans.gif', '24', '15') . '&nbsp;' . $pInfo->products_image; ?></td>
+            <td class="main" valign="top"><?php echo TEXT_PRODUCTS_IMAGE; ?></td>
+            <td class="main" style="padding-left: 30px;">
+              <div><?php echo '<strong>Main Image <small>(' . SMALL_IMAGE_WIDTH . ' x ' . SMALL_IMAGE_HEIGHT . 'px)</small></strong><br />' . (tep_not_null($pInfo->products_image) ? '<a href="' . DIR_WS_CATALOG_IMAGES . $pInfo->products_image . '" target="_blank">' . $pInfo->products_image . '</a> &#124; ' : '') . tep_draw_file_field('products_image'); ?></div>
+
+              <ul id="piList">
+<?php
+    $pi_counter = 0;
+
+    foreach ($pInfo->products_larger_images as $pi) {
+      $pi_counter++;
+
+      echo '                <li id="piId' . $pi_counter . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: right;"></span><a href="#" onclick="showPiDelConfirm(' . $pi_counter . ');return false;" class="ui-icon ui-icon-trash" style="float: right;"></a><strong>Large Image</strong><br />' . tep_draw_file_field('products_image_large_' . $pi['id']) . '<br /><a href="' . DIR_WS_CATALOG_IMAGES . $pi['image'] . '" target="_blank">' . $pi['image'] . '</a><br />' . tep_draw_textarea_field('products_image_htmlcontent_' . $pi['id'], 'soft', '70', '3', $pi['htmlcontent']) . '</li>';
+    }
+?>
+              </ul>
+
+              <a href="#" onclick="addNewPiForm();return false;"><span class="ui-icon ui-icon-plus" style="float: left;"></span>Add Large Image</a>
+
+<div id="piDelConfirm" title="Delete Large Product Image?">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Please confirm the removal of the large product image.</p>
+</div>
+
+<style type="text/css">
+#piList { list-style-type: none; margin: 0; padding: 0; }
+#piList li { margin: 5px 0; padding: 2px; }
+</style>
+
+<script type="text/javascript">
+$('#piList').sortable({
+  containment: 'parent'
+});
+
+var piSize = <?php echo $pi_counter; ?>;
+
+function addNewPiForm() {
+  piSize++;
+
+  $('#piList').append('<li id="piId' + piSize + '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: right;"></span><a href="#" onclick="showPiDelConfirm(' + piSize + ');return false;" class="ui-icon ui-icon-trash" style="float: right;"></a><strong>Large Image</strong><br /><input type="file" name="products_image_large_new_' + piSize + '" /><br /><textarea name="products_image_htmlcontent_new_' + piSize + '" wrap="soft" cols="70" rows="3"></textarea></li>');
+}
+
+var piDelConfirmId = 0;
+
+$('#piDelConfirm').dialog({
+  autoOpen: false,
+  resizable: false,
+  draggable: false,
+  modal: true,
+  buttons: {
+    'Delete': function() {
+      $('#piId' + piDelConfirmId).effect('blind').remove();
+      $(this).dialog('close');
+    },
+    Cancel: function() {
+      $(this).dialog('close');
+    }
+  }
+});
+
+function showPiDelConfirm(piId) {
+  piDelConfirmId = piId;
+
+  $('#piDelConfirm').dialog('open');
+}
+</script>
+
+            </td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

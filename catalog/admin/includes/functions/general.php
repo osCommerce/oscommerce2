@@ -951,6 +951,22 @@
       }
     }
 
+    $product_images_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
+    if (tep_db_num_rows($product_images_query)) {
+      while ($product_images = tep_db_fetch_array($product_images_query)) {
+        $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_IMAGES . " where image = '" . tep_db_input($product_images['image']) . "'");
+        $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+
+        if ($duplicate_image['total'] < 2) {
+          if (file_exists(DIR_FS_CATALOG_IMAGES . $product_images['image'])) {
+            @unlink(DIR_FS_CATALOG_IMAGES . $product_images['image']);
+          }
+        }
+      }
+
+      tep_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
+    }
+
     tep_db_query("delete from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "'");
     tep_db_query("delete from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
     tep_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
