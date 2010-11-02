@@ -42,6 +42,7 @@
   define('TABLE_PRODUCTS_ATTRIBUTES', 'products_attributes');
   define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_download');
   define('TABLE_PRODUCTS_DESCRIPTION', 'products_description');
+  define('TABLE_PRODUCTS_IMAGES', 'products_images');
   define('TABLE_PRODUCTS_NOTIFICATIONS', 'products_notifications');
   define('TABLE_PRODUCTS_OPTIONS', 'products_options');
   define('TABLE_PRODUCTS_OPTIONS_VALUES', 'products_options_values');
