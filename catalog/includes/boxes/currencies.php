@@ -33,7 +33,7 @@
 
 <?php
     echo tep_draw_form('currencies', tep_href_link(basename($PHP_SELF), '', $request_type, false), 'get') .
-         tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onChange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
+         tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
 ?>
 
   </div>
