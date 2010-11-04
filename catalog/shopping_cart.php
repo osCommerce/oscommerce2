@@ -39,8 +39,6 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
 <?php
-    $info_box_contents = array();
-
     $any_out_of_stock = 0;
     $products = $cart->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
