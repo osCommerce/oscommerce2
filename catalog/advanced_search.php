@@ -130,9 +130,24 @@ function popupWindow(url) {
     <br />
 
     <div>
-      <span><?php echo '<a href="javascript:popupWindow(\'' . tep_href_link(FILENAME_POPUP_SEARCH_HELP) . '\')">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></span>
+      <span><?php echo '<a href="' . tep_href_link(FILENAME_POPUP_SEARCH_HELP) . '" target="_blank" onclick="$(\'#helpSearch\').dialog(\'open\'); return false;">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></span>
       <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_SEARCH, 'search', null, 'primary'); ?></span>
     </div>
+
+    <div id="helpSearch" title="<?php echo HEADING_SEARCH_HELP; ?>">
+      <p><?php echo TEXT_SEARCH_HELP; ?></p>
+    </div>
+
+<script type="text/javascript">
+$('#helpSearch').dialog({
+  autoOpen: false,
+  buttons: {
+    Ok: function() {
+      $(this).dialog('close');
+    }
+  }
+});
+</script>
 
     <br />
 
