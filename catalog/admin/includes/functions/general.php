@@ -781,9 +781,9 @@
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
 
-      if ($key_value == $select_array[$i]) $string .= ' CHECKED';
+      if ($key_value == $select_array[$i]) $string .= ' checked="checked"';
 
-      $string .= '> ' . $select_array[$i];
+      $string .= ' /> ' . $select_array[$i];
     }
 
     return $string;
@@ -796,8 +796,8 @@
     while (list($key, $value) = each($select_array)) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
-      if ($key_value == $key) $string .= ' CHECKED';
-      $string .= '> ' . $value;
+      if ($key_value == $key) $string .= ' checked="checked"';
+      $string .= ' /> ' . $value;
     }
 
     return $string;

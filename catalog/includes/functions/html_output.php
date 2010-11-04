@@ -157,7 +157,7 @@
     $form .= '>';
 
     if ( ($tokenize == true) && isset($sessiontoken) ) {
-      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($sessiontoken) . '">';
+      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($sessiontoken) . '" />';
     }
 
     return $form;
@@ -209,7 +209,7 @@
     if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
     if ( ($checked == true) || (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name]) && (($HTTP_GET_VARS[$name] == 'on') || (stripslashes($HTTP_GET_VARS[$name]) == $value))) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name]) && (($HTTP_POST_VARS[$name] == 'on') || (stripslashes($HTTP_POST_VARS[$name]) == $value))) ) {
-      $selection .= ' CHECKED';
+      $selection .= ' checked="checked"';
     }
 
     if (tep_not_null($parameters)) $selection .= ' ' . $parameters;
