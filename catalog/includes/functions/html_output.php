@@ -170,6 +170,10 @@
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
+
     if ( ($reinsert_value == true) && ( (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name])) ) ) {
       if (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) {
         $value = stripslashes($HTTP_GET_VARS[$name]);
@@ -234,6 +238,10 @@
 
     $field = '<textarea name="' . tep_output_string($name) . '" wrap="' . tep_output_string($wrap) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
+
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
@@ -293,6 +301,10 @@
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<select name="' . tep_output_string($name) . '"';
+
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
