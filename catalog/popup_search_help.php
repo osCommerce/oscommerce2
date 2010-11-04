@@ -25,19 +25,22 @@
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body>
-<?php
-  $info_box_contents = array();
-  $info_box_contents[] = array('text' => HEADING_SEARCH_HELP);
 
-  new infoBoxHeading($info_box_contents, true, true);
+<div id="bodyWrapper">
+  <div id="bodyContent">
+    <h1><?php echo HEADING_SEARCH_HELP; ?></h1>
 
-  $info_box_contents = array();
-  $info_box_contents[] = array('text' => TEXT_SEARCH_HELP);
+    <div class="contentContainer">
+      <div class="contentText">
+        <?php echo TEXT_SEARCH_HELP; ?>
+      </div>
 
-  new infoBox($info_box_contents);
-?>
-
-<p class="smallText" align="right"><?php echo '<a href="javascript:window.close()">' . TEXT_CLOSE_WINDOW . '</a>'; ?></p>
+      <div style="float: right;">
+        <?php echo '<a href="#" onclick="window.close(); return false;">' . TEXT_CLOSE_WINDOW . '</a>'; ?>
+      </div>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
