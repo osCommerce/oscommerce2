@@ -12,6 +12,7 @@
 
   class ht_manufacturer_title {
     var $code = 'ht_manufacturer_title';
+    var $group = 'header_tags';
     var $title;
     var $description;
     var $sort_order;

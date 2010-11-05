@@ -22,6 +22,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_SHIPPING_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
+        $template_integration = false;
         break;
       case 'ordertotal':
         $module_type = 'order_total';
@@ -29,6 +30,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
+        $template_integration = false;
         break;
       case 'actionrecorder':
         $module_type = 'action_recorder';
@@ -36,6 +38,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
+        $template_integration = false;
         break;
       case 'social_bookmarks':
         $module_type = 'social_bookmarks';
@@ -43,6 +46,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
+        $template_integration = false;
         break;
       case 'header_tags':
         $module_type = 'header_tags';
@@ -50,6 +54,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_HEADER_TAGS_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
+        $template_integration = true;
         break;
       case 'dashboard':
         $module_type = 'dashboard';
@@ -57,6 +62,7 @@
         $module_language_directory = DIR_FS_ADMIN . 'includes/languages/';
         $module_key = 'MODULE_ADMIN_DASHBOARD_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_ADMIN_DASHBOARD);
+        $template_integration = false;
         break;
       case 'payment':
       default:
@@ -65,6 +71,7 @@
         $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
         $module_key = 'MODULE_PAYMENT_INSTALLED';
         define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
+        $template_integration = false;
         break;
     }
   }
@@ -234,6 +241,21 @@
       }
     } else {
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+    }
+
+    if ($template_integration == true) {
+      $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
+      if (tep_db_num_rows($check_query)) {
+        $check = tep_db_fetch_array($check_query);
+        $tbgroups_array = explode(';', $check['configuration_value']);
+        if (!in_array($module_type, $tbgroups_array)) {
+          $tbgroups_array[] = $module_type;
+          sort($tbgroups_array);
+          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $tbgroups_array) . "', last_modified = now() where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
+        }
+      } else {
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', '" . $module_type . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+      }
     }
   }
 ?>

@@ -12,6 +12,7 @@
 
   class ht_category_title {
     var $code = 'ht_category_title';
+    var $group = 'header_tags';
     var $title;
     var $description;
     var $sort_order;
