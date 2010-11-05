@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  $oscTemplate->buildHeaderTags();
+  $oscTemplate->buildBlocks();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html <?php echo HTML_PARAMS; ?>>
@@ -26,7 +26,7 @@
 <script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.1.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="ext/960gs/<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? 'rtl_' : ''); ?>960_24_col.css" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
-<?php echo $oscTemplate->getHeaderTags(); ?>
+<?php echo $oscTemplate->getBlocks('header_tags'); ?>
 </head>
 <body>
 

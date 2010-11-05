@@ -21,5 +21,7 @@
 
 </div> <!-- bodyWrapper //-->
 
+<?php echo $oscTemplate->getBlocks('footer_scripts'); ?>
+
 </body>
 </html>
