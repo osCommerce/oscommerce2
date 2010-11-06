@@ -49,7 +49,7 @@
         foreach ($tbgroups_array as $group) {
           $module_key = 'MODULE_' . strtoupper($group) . '_INSTALLED';
 
-          if ( defined($module_key) && tep_not_null($module_key) ) {
+          if ( defined($module_key) && tep_not_null(constant($module_key)) ) {
             $modules_array = explode(';', constant($module_key));
 
             foreach ( $modules_array as $module ) {
