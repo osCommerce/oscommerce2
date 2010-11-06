@@ -98,15 +98,18 @@
 //! Cache the categories box
 // Cache the categories box
   function tep_cache_categories_box($auto_expire = false, $refresh = false) {
-    global $cPath, $language, $languages_id, $tree, $cPath_array, $categories_string;
+    global $cPath, $language;
 
     $cache_output = '';
 
     if (($refresh == true) || !read_cache($cache_output, 'categories_box-' . $language . '.cache' . $cPath, $auto_expire)) {
-      ob_start();
-      include(DIR_WS_BOXES . 'categories.php');
-      $cache_output = ob_get_contents();
-      ob_end_clean();
+      if (!class_exists('bm_categories')) {
+        include(DIR_WS_MODULES . 'boxes/bm_categories.php');
+      }
+
+      $bm_categories = new bm_categories();
+      $cache_output = $bm_categories->getData();
+
       write_cache($cache_output, 'categories_box-' . $language . '.cache' . $cPath);
     }
 
@@ -127,10 +130,13 @@
     }
 
     if (($refresh == true) || !read_cache($cache_output, 'manufacturers_box-' . $language . '.cache' . $manufacturers_id, $auto_expire)) {
-      ob_start();
-      include(DIR_WS_BOXES . 'manufacturers.php');
-      $cache_output = ob_get_contents();
-      ob_end_clean();
+      if (!class_exists('bm_manufacturers')) {
+        include(DIR_WS_MODULES . 'boxes/bm_manufacturers.php');
+      }
+
+      $bm_manufacturers = new bm_manufacturers();
+      $cache_output = $bm_manufacturers->getData();
+
       write_cache($cache_output, 'manufacturers_box-' . $language . '.cache' . $manufacturers_id);
     }
 

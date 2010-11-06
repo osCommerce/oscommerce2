@@ -40,6 +40,11 @@
       ),
       array(
         'code' => FILENAME_MODULES,
+        'title' => BOX_MODULES_BOXES,
+        'link' => tep_href_link(FILENAME_MODULES, 'set=boxes')
+      ),
+      array(
+        'code' => FILENAME_MODULES,
         'title' => BOX_MODULES_SOCIAL_BOOKMARKS,
         'link' => tep_href_link(FILENAME_MODULES, 'set=social_bookmarks')
       ),

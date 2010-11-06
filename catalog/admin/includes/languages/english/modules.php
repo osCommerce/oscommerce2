@@ -15,6 +15,7 @@ define('HEADING_TITLE_MODULES_SHIPPING', 'Shipping Modules');
 define('HEADING_TITLE_MODULES_ORDER_TOTAL', 'Order Total Modules');
 define('HEADING_TITLE_MODULES_ACTION_RECORDER', 'Action Recorder Modules');
 define('HEADING_TITLE_MODULES_HEADER_TAGS', 'Header Tag Modules');
+define('HEADING_TITLE_MODULES_BOXES', 'Box Modules');
 define('HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS', 'Social Bookmark Modules');
 define('HEADING_TITLE_MODULES_ADMIN_DASHBOARD', 'Admin Dashboard Modules');
 
