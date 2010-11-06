@@ -56,6 +56,14 @@
         define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
         $template_integration = true;
         break;
+      case 'boxes':
+        $module_type = 'boxes';
+        $module_directory = DIR_FS_CATALOG_MODULES . 'boxes/';
+        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
+        $module_key = 'MODULE_BOXES_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_BOXES);
+        $template_integration = true;
+        break;
       case 'dashboard':
         $module_type = 'dashboard';
         $module_directory = DIR_FS_ADMIN . 'includes/modules/dashboard/';
@@ -144,7 +152,7 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $modules_installed = explode(';', constant($module_key));
+  $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();

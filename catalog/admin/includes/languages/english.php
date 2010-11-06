@@ -71,6 +71,7 @@ define('BOX_MODULES_SHIPPING', 'Shipping');
 define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
 define('BOX_MODULES_ACTION_RECORDER', 'Action Recorder');
 define('BOX_MODULES_HEADER_TAGS', 'Header Tags');
+define('BOX_MODULES_BOXES', 'Boxes');
 define('BOX_MODULES_SOCIAL_BOOKMARKS', 'Social Bookmarks');
 define('BOX_MODULES_ADMIN_DASHBOARD', 'Admin Dashboard');
 

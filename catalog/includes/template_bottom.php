@@ -13,9 +13,13 @@
 
 </div> <!-- bodyContent //-->
 
-<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+<div id="columnLeft" class="grid_4 pull_16">
+  <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+</div>
 
-<?php require(DIR_WS_INCLUDES . 'column_right.php'); ?>
+<div id="columnRight" class="grid_4">
+  <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
+</div>
 
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
