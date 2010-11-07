@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -65,6 +65,35 @@
         }
       }
       return false;
+    }
+  }
+
+/*
+ * stripos() natively supported from PHP 5.0
+ * From Pear::PHP_Compat
+ */
+
+  if (!function_exists('stripos')) {
+    function stripos($haystack, $needle, $offset = null) {
+      $fix = 0;
+
+      if (!is_null($offset)) {
+        if ($offset > 0) {
+          $haystack = substr($haystack, $offset, strlen($haystack) - $offset);
+          $fix = $offset;
+        }
+      }
+
+      $segments = explode(strtolower($needle), strtolower($haystack), 2);
+
+// Check there was a match
+      if (count($segments) == 1) {
+        return false;
+      }
+
+      $position = strlen($segments[0]) + $fix;
+
+      return $position;
     }
   }
 ?>
