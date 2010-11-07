@@ -33,13 +33,13 @@ function check_form() {
   var pfrom_float;
   var pto_float;
 
-  if ( ((keywords == '') || (keywords.length < 1)) && ((dfrom == '') || (dfrom == '<?php echo DOB_FORMAT_STRING; ?>') || (dfrom.length < 1)) && ((dto == '') || (dto == '<?php echo DOB_FORMAT_STRING; ?>') || (dto.length < 1)) && ((pfrom == '') || (pfrom.length < 1)) && ((pto == '') || (pto.length < 1)) ) {
+  if ( ((keywords == '') || (keywords.length < 1)) && ((dfrom == '') || (dfrom.length < 1)) && ((dto == '') || (dto.length < 1)) && ((pfrom == '') || (pfrom.length < 1)) && ((pto == '') || (pto.length < 1)) ) {
     error_message = error_message + "* <?php echo ERROR_AT_LEAST_ONE_INPUT; ?>\n";
     error_field = document.advanced_search.keywords;
     error_found = true;
   }
 
-  if ((dfrom.length > 0) && (dfrom != '<?php echo DOB_FORMAT_STRING; ?>')) {
+  if (dfrom.length > 0) {
     if (!IsValidDate(dfrom, '<?php echo DOB_FORMAT_STRING; ?>')) {
       error_message = error_message + "* <?php echo ERROR_INVALID_FROM_DATE; ?>\n";
       error_field = document.advanced_search.dfrom;
@@ -47,7 +47,7 @@ function check_form() {
     }
   }
 
-  if ((dto.length > 0) && (dto != '<?php echo DOB_FORMAT_STRING; ?>')) {
+  if (dto.length > 0) {
     if (!IsValidDate(dto, '<?php echo DOB_FORMAT_STRING; ?>')) {
       error_message = error_message + "* <?php echo ERROR_INVALID_TO_DATE; ?>\n";
       error_field = document.advanced_search.dto;
@@ -55,7 +55,7 @@ function check_form() {
     }
   }
 
-  if ((dfrom.length > 0) && (dfrom != '<?php echo DOB_FORMAT_STRING; ?>') && (IsValidDate(dfrom, '<?php echo DOB_FORMAT_STRING; ?>')) && (dto.length > 0) && (dto != '<?php echo DOB_FORMAT_STRING; ?>') && (IsValidDate(dto, '<?php echo DOB_FORMAT_STRING; ?>'))) {
+  if ((dfrom.length > 0) && (IsValidDate(dfrom, '<?php echo DOB_FORMAT_STRING; ?>')) && (dto.length > 0) && (IsValidDate(dto, '<?php echo DOB_FORMAT_STRING; ?>'))) {
     if (!CheckDateRange(document.advanced_search.dfrom, document.advanced_search.dto)) {
       error_message = error_message + "* <?php echo ERROR_TO_DATE_LESS_THAN_FROM_DATE; ?>\n";
       error_field = document.advanced_search.dto;
@@ -98,8 +98,6 @@ function check_form() {
     error_field.focus();
     return false;
   } else {
-    RemoveFormatString(document.advanced_search.dfrom, "<?php echo DOB_FORMAT_STRING; ?>");
-    RemoveFormatString(document.advanced_search.dto, "<?php echo DOB_FORMAT_STRING; ?>");
     return true;
   }
 }
@@ -174,11 +172,11 @@ $('#helpSearch').dialog({
       </tr>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_DATE_FROM; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('dfrom', DOB_FORMAT_STRING, 'onfocus="RemoveFormatString(this, \'' . DOB_FORMAT_STRING . '\')"'); ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('dfrom'); ?><script type="text/javascript">$('#dfrom').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_DATE_TO; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('dto', DOB_FORMAT_STRING, 'onfocus="RemoveFormatString(this, \'' . DOB_FORMAT_STRING . '\')"'); ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('dto'); ?><script type="text/javascript">$('#dto').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
       </tr>
     </table>
   </div>
