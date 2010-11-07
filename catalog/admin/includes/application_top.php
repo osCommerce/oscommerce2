@@ -21,11 +21,12 @@
     exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
   }
 
-// Set the local configuration parameters - mainly for developers
-  if (file_exists('includes/local/configure.php')) include('includes/local/configure.php');
-
-// Include application configuration parameters
-  require('includes/configure.php');
+// load server configuration parameters
+  if (file_exists('includes/local/configure.php')) { // for developers
+    include('includes/local/configure.php');
+  } else {
+    include('includes/configure.php');
+  }
 
 // Define the project version --- obsolete, now retrieved with tep_get_version()
   define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
