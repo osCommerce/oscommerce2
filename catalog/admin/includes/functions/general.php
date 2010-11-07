@@ -751,6 +751,18 @@
   }
 
 ////
+// Sets the status of a review
+  function tep_set_review_status($reviews_id, $status) {
+    if ($status == '1') {
+      return tep_db_query("update " . TABLE_REVIEWS . " set reviews_status = '1', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
+    } elseif ($status == '0') {
+      return tep_db_query("update " . TABLE_REVIEWS . " set reviews_status = '0', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
+    } else {
+      return -1;
+    }
+  }
+
+////
 // Sets the status of a product on special
   function tep_set_specials_status($specials_id, $status) {
     if ($status == '1') {
