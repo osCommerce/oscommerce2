@@ -109,6 +109,10 @@ h1 {
   padding-bottom: 5px;
 }
 
+img {
+  border: 0;
+}
+
 table, p {
   font-size: 11px;
   line-height: 1.5;
