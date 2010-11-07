@@ -14,75 +14,18 @@
 
   $set = (isset($HTTP_GET_VARS['set']) ? $HTTP_GET_VARS['set'] : '');
 
-  if (tep_not_null($set)) {
-    switch ($set) {
-      case 'shipping':
-        $module_type = 'shipping';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_SHIPPING_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
-        $template_integration = false;
-        break;
-      case 'ordertotal':
-        $module_type = 'order_total';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
-        $template_integration = false;
-        break;
-      case 'actionrecorder':
-        $module_type = 'action_recorder';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'action_recorder/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
-        $template_integration = false;
-        break;
-      case 'social_bookmarks':
-        $module_type = 'social_bookmarks';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'social_bookmarks/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
-        $template_integration = false;
-        break;
-      case 'header_tags':
-        $module_type = 'header_tags';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'header_tags/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_HEADER_TAGS_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
-        $template_integration = true;
-        break;
-      case 'boxes':
-        $module_type = 'boxes';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'boxes/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_BOXES_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_BOXES);
-        $template_integration = true;
-        break;
-      case 'dashboard':
-        $module_type = 'dashboard';
-        $module_directory = DIR_FS_ADMIN . 'includes/modules/dashboard/';
-        $module_language_directory = DIR_FS_ADMIN . 'includes/languages/';
-        $module_key = 'MODULE_ADMIN_DASHBOARD_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ADMIN_DASHBOARD);
-        $template_integration = false;
-        break;
-      case 'payment':
-      default:
-        $module_type = 'payment';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_PAYMENT_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
-        $template_integration = false;
-        break;
-    }
+  $modules = $cfgModules->getAll();
+
+  if (empty($set) || !$cfgModules->exists($set)) {
+    $set = $modules[0]['code'];
   }
+
+  $module_type = $cfgModules->get($set, 'code');
+  $module_directory = $cfgModules->get($set, 'directory');
+  $module_language_directory = $cfgModules->get($set, 'language_directory');
+  $module_key = $cfgModules->get($set, 'key');;
+  define('HEADING_TITLE', $cfgModules->get($set, 'title'));
+  $template_integration = $cfgModules->get($set, 'template_integration');
 
   $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
 
