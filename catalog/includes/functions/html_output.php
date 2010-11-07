@@ -80,7 +80,7 @@
 
 // alt is added to the img tag even if it is null to prevent browsers from outputting
 // the image filename as default
-    $image = '<img src="' . tep_output_string($src) . '" border="0" alt="' . tep_output_string($alt) . '"';
+    $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) {
       $image .= ' title=" ' . tep_output_string($alt) . ' "';
