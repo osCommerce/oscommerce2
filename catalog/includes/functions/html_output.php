@@ -54,18 +54,18 @@
       }
     }
 
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+    if (isset($_sid)) {
+      $link .= $separator . tep_output_string($_sid);
+    }
 
+    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+
+    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
       $link = str_replace('?', '/', $link);
       $link = str_replace('&', '/', $link);
       $link = str_replace('=', '/', $link);
-
-      $separator = '?';
-    }
-
-    if (isset($_sid)) {
-      $link .= $separator . tep_output_string($_sid);
+    } else {
+      $link = str_replace('&', '&amp;', $link);
     }
 
     return $link;
