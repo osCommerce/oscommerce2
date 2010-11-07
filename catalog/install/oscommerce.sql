@@ -520,6 +520,7 @@ CREATE TABLE reviews (
   reviews_rating int(1),
   date_added datetime,
   last_modified datetime,
+  reviews_status tinyint(1) NOT NULL default '0',
   reviews_read int(5) NOT NULL default '0',
   PRIMARY KEY (reviews_id),
   KEY idx_reviews_products_id (products_id),
@@ -1282,7 +1283,7 @@ INSERT INTO products_to_categories VALUES (26,9);
 INSERT INTO products_to_categories VALUES (27,5);
 INSERT INTO products_to_categories VALUES (28,21);
 
-INSERT INTO reviews VALUES (1,19,0,'John Doe',5,now(),null,0);
+INSERT INTO reviews VALUES (1,19,0,'John Doe',5,now(),null,1,0);
 
 INSERT INTO reviews_description VALUES (1,1, 'This has to be one of the funniest movies released for 1999!');
 
