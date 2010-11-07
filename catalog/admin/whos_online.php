@@ -125,7 +125,7 @@
       session_decode($session_data_zone);
       session_decode($session_data_cart);
 
-      if (is_object($cart)) {
+      if (isset($cart) && is_object($cart)) {
         $products = $cart->get_products();
         for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
           $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
