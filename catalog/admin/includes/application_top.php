@@ -217,16 +217,6 @@
     $current_category_id = 0;
   }
 
-// default open navigation box
-  if (!tep_session_is_registered('selected_box')) {
-    tep_session_register('selected_box');
-    $selected_box = 'configuration';
-  }
-
-  if (isset($HTTP_GET_VARS['selected_box'])) {
-    $selected_box = $HTTP_GET_VARS['selected_box'];
-  }
-
 // the following cache blocks are used in the Tools->Cache section
 // ('language' in the filename is automatically replaced by available languages)
   $cache_blocks = array(array('title' => TEXT_CACHE_CATEGORIES, 'code' => 'categories', 'file' => 'categories_box-language.cache', 'multiple' => true),

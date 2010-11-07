@@ -82,7 +82,6 @@
         break;
 
       case 'logoff':
-        tep_session_unregister('selected_box');
         tep_session_unregister('admin');
 
         if (isset($HTTP_SERVER_VARS['PHP_AUTH_USER']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_USER']) && isset($HTTP_SERVER_VARS['PHP_AUTH_PW']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_PW'])) {
