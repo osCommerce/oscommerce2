@@ -217,6 +217,10 @@
     $current_category_id = 0;
   }
 
+// initialize configuration modules
+  require(DIR_WS_CLASSES . 'cfg_modules.php');
+  $cfgModules = new cfg_modules();
+
 // the following cache blocks are used in the Tools->Cache section
 // ('language' in the filename is automatically replaced by available languages)
   $cache_blocks = array(array('title' => TEXT_CACHE_CATEGORIES, 'code' => 'categories', 'file' => 'categories_box-language.cache', 'multiple' => true),
