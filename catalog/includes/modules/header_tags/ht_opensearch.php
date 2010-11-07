@@ -12,6 +12,7 @@
 
   class ht_opensearch {
     var $code = 'ht_opensearch';
+    var $group = 'header_tags';
     var $title;
     var $description;
     var $sort_order;
@@ -30,7 +31,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addHeaderTag('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />');
+      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {

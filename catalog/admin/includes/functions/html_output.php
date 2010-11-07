@@ -78,7 +78,7 @@
 
     if (tep_not_null($parameters)) $image .= ' ' . $parameters;
 
-    $image .= '>';
+    $image .= ' />';
 
     return $image;
   }
@@ -95,7 +95,7 @@
 
     if (tep_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
-    $image_submit .= '>';
+    $image_submit .= ' />';
 
     return $image_submit;
   }
@@ -176,6 +176,10 @@
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
+
     if ( ($reinsert_value == true) && ( (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name])) ) ) {
       if (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) {
         $value = stripslashes($HTTP_GET_VARS[$name]);
@@ -190,7 +194,7 @@
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
-    $field .= '>';
+    $field .= ' />';
 
     if ($required == true) $field .= TEXT_FIELD_REQUIRED;
 
@@ -223,10 +227,10 @@
     if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
     if ( ($checked == true) || (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name]) && (($HTTP_GET_VARS[$name] == 'on') || (stripslashes($HTTP_GET_VARS[$name]) == $value))) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name]) && (($HTTP_POST_VARS[$name] == 'on') || (stripslashes($HTTP_POST_VARS[$name]) == $value))) || (tep_not_null($compare) && ($value == $compare)) ) {
-      $selection .= ' CHECKED';
+      $selection .= ' checked="checked"';
     }
 
-    $selection .= '>';
+    $selection .= ' />';
 
     return $selection;
   }
@@ -249,6 +253,10 @@
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<textarea name="' . tep_output_string($name) . '" wrap="' . tep_output_string($wrap) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
+
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
@@ -288,7 +296,7 @@
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
-    $field .= '>';
+    $field .= ' />';
 
     return $field;
   }
@@ -312,6 +320,10 @@
 
     $field = '<select name="' . tep_output_string($name) . '"';
 
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
+
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
@@ -327,7 +339,7 @@
     for ($i=0, $n=sizeof($values); $i<$n; $i++) {
       $field .= '<option value="' . tep_output_string($values[$i]['id']) . '"';
       if ($default == $values[$i]['id']) {
-        $field .= ' SELECTED';
+        $field .= ' selected="selected"';
       }
 
       $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
@@ -362,21 +374,31 @@
       $priority = 'secondary';
     }
 
-    $button = '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
+    $button = '<span class="tdbLink">';
 
-    if ( isset($link) ) {
+    if ( ($params['type'] == 'button') && isset($link) ) {
+      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+
       if ( isset($params['newwindow']) ) {
-        $button .= ' onclick="window.open(\'' . $link . '\');"';
-      } else {
-        $button .= ' onclick="document.location.href=\'' . $link . '\';"';
+        $button .= ' target="_blank"';
       }
+    } else {
+      $button .= '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
     }
 
     if ( isset($params['params']) ) {
       $button .= ' ' . $params['params'];
     }
 
-    $button .= '>' . $title . '</button><script>$("#tdb' . $button_counter . '").button(';
+    $button .= '>' . $title;
+
+    if ( ($params['type'] == 'button') && isset($link) ) {
+      $button .= '</a>';
+    } else {
+      $button .= '</button>';
+    }
+
+    $button .= '</span><script type="text/javascript">$("#tdb' . $button_counter . '").button(';
 
     $args = array();
 
@@ -400,7 +422,7 @@
       $button .= '{' . implode(',', $args) . '}';
     }
 
-    $button .= ').addClass("ui-priority-' . $priority . '");</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
 
     $button_counter++;
 

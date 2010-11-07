@@ -54,18 +54,18 @@
       }
     }
 
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+    if (isset($_sid)) {
+      $link .= $separator . tep_output_string($_sid);
+    }
 
+    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+
+    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
       $link = str_replace('?', '/', $link);
       $link = str_replace('&', '/', $link);
       $link = str_replace('=', '/', $link);
-
-      $separator = '?';
-    }
-
-    if (isset($_sid)) {
-      $link .= $separator . tep_output_string($_sid);
+    } else {
+      $link = str_replace('&', '&amp;', $link);
     }
 
     return $link;
@@ -80,7 +80,7 @@
 
 // alt is added to the img tag even if it is null to prevent browsers from outputting
 // the image filename as default
-    $image = '<img src="' . tep_output_string($src) . '" border="0" alt="' . tep_output_string($alt) . '"';
+    $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) {
       $image .= ' title=" ' . tep_output_string($alt) . ' "';
@@ -157,7 +157,7 @@
     $form .= '>';
 
     if ( ($tokenize == true) && isset($sessiontoken) ) {
-      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($sessiontoken) . '">';
+      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($sessiontoken) . '" />';
     }
 
     return $form;
@@ -169,6 +169,10 @@
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
+
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
 
     if ( ($reinsert_value == true) && ( (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name])) ) ) {
       if (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) {
@@ -205,7 +209,7 @@
     if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
     if ( ($checked == true) || (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name]) && (($HTTP_GET_VARS[$name] == 'on') || (stripslashes($HTTP_GET_VARS[$name]) == $value))) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name]) && (($HTTP_POST_VARS[$name] == 'on') || (stripslashes($HTTP_POST_VARS[$name]) == $value))) ) {
-      $selection .= ' CHECKED';
+      $selection .= ' checked="checked"';
     }
 
     if (tep_not_null($parameters)) $selection .= ' ' . $parameters;
@@ -233,6 +237,10 @@
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<textarea name="' . tep_output_string($name) . '" wrap="' . tep_output_string($wrap) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
+
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
@@ -293,6 +301,10 @@
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<select name="' . tep_output_string($name) . '"';
+
+    if (strpos($parameters, 'id=') === false) {
+      $field .= ' id="' . tep_output_string($name) . '"';
+    }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 

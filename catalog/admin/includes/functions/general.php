@@ -781,9 +781,9 @@
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
 
-      if ($key_value == $select_array[$i]) $string .= ' CHECKED';
+      if ($key_value == $select_array[$i]) $string .= ' checked="checked"';
 
-      $string .= '> ' . $select_array[$i];
+      $string .= ' /> ' . $select_array[$i];
     }
 
     return $string;
@@ -796,8 +796,8 @@
     while (list($key, $value) = each($select_array)) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
-      if ($key_value == $key) $string .= ' CHECKED';
-      $string .= '> ' . $value;
+      if ($key_value == $key) $string .= ' checked="checked"';
+      $string .= ' /> ' . $value;
     }
 
     return $string;
@@ -811,7 +811,7 @@
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
-    list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
+    @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
 
     $data = array();
 
@@ -949,6 +949,22 @@
       if (file_exists(DIR_FS_CATALOG_IMAGES . $product_image['products_image'])) {
         @unlink(DIR_FS_CATALOG_IMAGES . $product_image['products_image']);
       }
+    }
+
+    $product_images_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
+    if (tep_db_num_rows($product_images_query)) {
+      while ($product_images = tep_db_fetch_array($product_images_query)) {
+        $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_IMAGES . " where image = '" . tep_db_input($product_images['image']) . "'");
+        $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+
+        if ($duplicate_image['total'] < 2) {
+          if (file_exists(DIR_FS_CATALOG_IMAGES . $product_images['image'])) {
+            @unlink(DIR_FS_CATALOG_IMAGES . $product_images['image']);
+          }
+        }
+      }
+
+      tep_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
     }
 
     tep_db_query("delete from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "'");

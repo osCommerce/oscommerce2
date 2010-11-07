@@ -20,6 +20,7 @@ define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('PHP_DATE_TIME_FORMAT', 'm/d/Y H:i:s'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
+define('JQUERY_DATEPICKER_FORMAT', 'mm/dd/yy'); // see http://docs.jquery.com/UI/Datepicker/formatDate
 
 ////
 // Return date in raw format
@@ -65,13 +66,6 @@ define('BOX_CONFIGURATION_STORE_LOGO', 'Store Logo');
 
 // modules box text in includes/boxes/modules.php
 define('BOX_HEADING_MODULES', 'Modules');
-define('BOX_MODULES_PAYMENT', 'Payment');
-define('BOX_MODULES_SHIPPING', 'Shipping');
-define('BOX_MODULES_ORDER_TOTAL', 'Order Total');
-define('BOX_MODULES_ACTION_RECORDER', 'Action Recorder');
-define('BOX_MODULES_HEADER_TAGS', 'Header Tags');
-define('BOX_MODULES_SOCIAL_BOOKMARKS', 'Social Bookmarks');
-define('BOX_MODULES_ADMIN_DASHBOARD', 'Admin Dashboard');
 
 // categories box text in includes/boxes/catalog.php
 define('BOX_HEADING_CATALOG', 'Catalog');

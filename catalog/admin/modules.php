@@ -14,60 +14,18 @@
 
   $set = (isset($HTTP_GET_VARS['set']) ? $HTTP_GET_VARS['set'] : '');
 
-  if (tep_not_null($set)) {
-    switch ($set) {
-      case 'shipping':
-        $module_type = 'shipping';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'shipping/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_SHIPPING_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_SHIPPING);
-        break;
-      case 'ordertotal':
-        $module_type = 'order_total';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'order_total/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_ORDER_TOTAL_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ORDER_TOTAL);
-        break;
-      case 'actionrecorder':
-        $module_type = 'action_recorder';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'action_recorder/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_ACTION_RECORDER_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ACTION_RECORDER);
-        break;
-      case 'social_bookmarks':
-        $module_type = 'social_bookmarks';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'social_bookmarks/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_SOCIAL_BOOKMARKS_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_SOCIAL_BOOKMARKS);
-        break;
-      case 'header_tags':
-        $module_type = 'header_tags';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'header_tags/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_HEADER_TAGS_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_HEADER_TAGS);
-        break;
-      case 'dashboard':
-        $module_type = 'dashboard';
-        $module_directory = DIR_FS_ADMIN . 'includes/modules/dashboard/';
-        $module_language_directory = DIR_FS_ADMIN . 'includes/languages/';
-        $module_key = 'MODULE_ADMIN_DASHBOARD_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_ADMIN_DASHBOARD);
-        break;
-      case 'payment':
-      default:
-        $module_type = 'payment';
-        $module_directory = DIR_FS_CATALOG_MODULES . 'payment/';
-        $module_language_directory = DIR_FS_CATALOG_LANGUAGES;
-        $module_key = 'MODULE_PAYMENT_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_PAYMENT);
-        break;
-    }
+  $modules = $cfgModules->getAll();
+
+  if (empty($set) || !$cfgModules->exists($set)) {
+    $set = $modules[0]['code'];
   }
+
+  $module_type = $cfgModules->get($set, 'code');
+  $module_directory = $cfgModules->get($set, 'directory');
+  $module_language_directory = $cfgModules->get($set, 'language_directory');
+  $module_key = $cfgModules->get($set, 'key');;
+  define('HEADING_TITLE', $cfgModules->get($set, 'title'));
+  $template_integration = $cfgModules->get($set, 'template_integration');
 
   $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
 
@@ -137,7 +95,7 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $modules_installed = explode(';', constant($module_key));
+  $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
@@ -235,6 +193,21 @@
     } else {
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
     }
+
+    if ($template_integration == true) {
+      $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
+      if (tep_db_num_rows($check_query)) {
+        $check = tep_db_fetch_array($check_query);
+        $tbgroups_array = explode(';', $check['configuration_value']);
+        if (!in_array($module_type, $tbgroups_array)) {
+          $tbgroups_array[] = $module_type;
+          sort($tbgroups_array);
+          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $tbgroups_array) . "', last_modified = now() where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
+        }
+      } else {
+        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', '" . $module_type . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+      }
+    }
   }
 ?>
               <tr>
@@ -279,7 +252,7 @@
             $use_function = $value['use_function'];
             if (preg_match('/->/', $use_function)) {
               $class_method = explode('->', $use_function);
-              if (!is_object(${$class_method[0]})) {
+              if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
                 include(DIR_WS_CLASSES . $class_method[0] . '.php');
                 ${$class_method[0]} = new $class_method[0]();
               }
