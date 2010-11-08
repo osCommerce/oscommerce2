@@ -48,7 +48,7 @@
     }
 
     if (isset($HTTP_GET_VARS['keywords'])) {
-      $keywords = $HTTP_GET_VARS['keywords'];
+      $keywords = tep_db_prepare_input($HTTP_GET_VARS['keywords']);
     }
 
     $date_check_error = false;
@@ -300,7 +300,7 @@
     $where_str .= " group by p.products_id, tr.tax_priority";
   }
 
-  if ( (!isset($HTTP_GET_VARS['sort'])) || (!preg_match('/[1-8][ad]/i', $HTTP_GET_VARS['sort'])) || (substr($HTTP_GET_VARS['sort'], 0, 1) > sizeof($column_list)) ) {
+  if ( (!isset($HTTP_GET_VARS['sort'])) || (!preg_match('/^[1-8][ad]$/', $HTTP_GET_VARS['sort'])) || (substr($HTTP_GET_VARS['sort'], 0, 1) > sizeof($column_list)) ) {
     for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
       if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
         $HTTP_GET_VARS['sort'] = $i+1 . 'a';

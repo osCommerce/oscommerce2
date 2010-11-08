@@ -654,7 +654,7 @@
 // Turn the flag off for future iterations
           $flag = 'off';
 
-          $objects[] = trim($pieces[$k]);
+          $objects[] = trim(preg_replace('/"/', ' ', $pieces[$k]));
 
           for ($j=0; $j<count($post_objects); $j++) {
             $objects[] = $post_objects[$j];
