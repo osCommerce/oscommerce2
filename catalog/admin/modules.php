@@ -67,6 +67,33 @@
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
+
+  $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
+  $new_modules_counter = 0;
+
+  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+  $directory_array = array();
+  if ($dir = @dir($module_directory)) {
+    while ($file = $dir->read()) {
+      if (!is_dir($module_directory . $file)) {
+        if (substr($file, strrpos($file, '.')) == $file_extension) {
+          if (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] = 'new')) {
+            if (!in_array($file, $modules_installed)) {
+              $directory_array[] = $file;
+            }
+          } else {
+            if (in_array($file, $modules_installed)) {
+              $directory_array[] = $file;
+            } else {
+              $new_modules_counter++;
+            }
+          }
+        }
+      }
+    }
+    sort($directory_array);
+    $dir->close();
+  }
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -79,7 +106,7 @@
   if (isset($HTTP_GET_VARS['list'])) {
     echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
   } else {
-    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
+    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
   }
 ?>
           </tr>
@@ -95,30 +122,6 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
-
-  $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-  $directory_array = array();
-  if ($dir = @dir($module_directory)) {
-    while ($file = $dir->read()) {
-      if (!is_dir($module_directory . $file)) {
-        if (substr($file, strrpos($file, '.')) == $file_extension) {
-          if (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] = 'new')) {
-            if (!in_array($file, $modules_installed)) {
-              $directory_array[] = $file;
-            }
-          } else {
-            if (in_array($file, $modules_installed)) {
-              $directory_array[] = $file;
-            }
-          }
-        }
-      }
-    }
-    sort($directory_array);
-    $dir->close();
-  }
-
   $installed_modules = array();
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
@@ -280,17 +283,19 @@
         $contents[] = array('text' => '<br />' . $mInfo->description);
         $contents[] = array('text' => '<br />' . $keys);
       } elseif (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] == 'new')) {
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
+        if (isset($mInfo)) {
+          $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
 
-        if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-          $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+          if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
+            $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+          }
+
+          if (isset($mInfo->api_version)) {
+            $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+          }
+
+          $contents[] = array('text' => '<br />' . $mInfo->description);
         }
-
-        if (isset($mInfo->api_version)) {
-          $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
-        }
-
-        $contents[] = array('text' => '<br />' . $mInfo->description);
       }
       break;
   }
