@@ -167,11 +167,11 @@
 // Output a form input field
   function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
-
+    static $input_counter = 1;
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
     if (strpos($parameters, 'id=') === false) {
-      $field .= ' id="' . tep_output_string($name) . '"';
+      $field .= ' id="' . tep_sanitize_string(tep_output_string($name . $input_counter)) . '"';
     }
 
     if ( ($reinsert_value == true) && ( (isset($HTTP_GET_VARS[$name]) && is_string($HTTP_GET_VARS[$name])) || (isset($HTTP_POST_VARS[$name]) && is_string($HTTP_POST_VARS[$name])) ) ) {
@@ -189,7 +189,7 @@
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
-
+    $input_counter ++;
     return $field;
   }
 
