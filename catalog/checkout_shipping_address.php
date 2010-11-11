@@ -209,7 +209,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var selected;
 
 function selectRowEffect(object, buttonSelect) {
