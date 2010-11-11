@@ -36,7 +36,7 @@
   <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
 
 <?php
     $any_out_of_stock = 0;
@@ -65,6 +65,9 @@
         }
       }
     }
+    ?>
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+    <?php
 
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       echo '          <tr>';
