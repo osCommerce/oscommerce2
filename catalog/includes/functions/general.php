@@ -70,8 +70,8 @@
   }
 
   function tep_sanitize_string($string) {
-    $patterns = array ('/ +/','/[<>]/');
-    $replace = array (' ', '_');
+    $patterns = array ('/ +/','/[<>]/', '/\[*\]*/');
+    $replace = array (' ', '_', '');
     return preg_replace($patterns, $replace, trim($string));
   }
 

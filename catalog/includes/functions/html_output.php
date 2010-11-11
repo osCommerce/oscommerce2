@@ -303,7 +303,7 @@
     $field = '<select name="' . tep_output_string($name) . '"';
 
     if (strpos($parameters, 'id=') === false) {
-      $field .= ' id="' . tep_output_string($name) . '"';
+      $field .= ' id="' . tep_sanitize_string(tep_output_string($name)) . '"';
     }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
