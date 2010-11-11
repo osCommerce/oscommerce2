@@ -166,7 +166,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
           $selected_attribute = false;
         }
 ?>
-      <b><?php echo $products_options_name['products_options_name'] . ':'; ?></b><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
+      <strong><?php echo $products_options_name['products_options_name'] . ':'; ?></strong><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
 <?php
       }
 ?>
