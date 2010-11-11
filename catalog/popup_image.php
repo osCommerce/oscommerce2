@@ -23,7 +23,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo $products['products_name']; ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>">
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var i=0;
 function resize() {
   if (navigator.appName == 'Netscape') i=40;
