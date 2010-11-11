@@ -73,7 +73,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 function checkForm() {
   var error = 0;
   var error_message = "<?php echo JS_ERROR; ?>";
@@ -124,7 +124,7 @@ function popupWindow(url) {
 ?>
 
   <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_link(FILENAME_POPUP_IMAGE, 'pID=' . $product_info['products_id']) . '\\\')">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>'; ?>');
 //--></script>
 <noscript>
@@ -146,7 +146,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
       </tr>
       <tr>
         <td class="fieldKey" valign="top"><?php echo SUB_TITLE_REVIEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('review', 'soft', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_textarea_field('review', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo SUB_TITLE_RATING; ?></td>

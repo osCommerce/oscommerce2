@@ -156,7 +156,7 @@
   <div class="contentText">
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('message', 'soft', 40, 8); ?></td>
+        <td class="fieldValue"><?php echo tep_draw_textarea_field('message', 40, 8); ?></td>
       </tr>
     </table>
   </div>

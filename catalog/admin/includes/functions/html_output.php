@@ -249,10 +249,10 @@
 
 ////
 // Output a form textarea field
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
+  function tep_draw_textarea_field($name, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
-    $field = '<textarea name="' . tep_output_string($name) . '" wrap="' . tep_output_string($wrap) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
+    $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
     if (strpos($parameters, 'id=') === false) {
       $field .= ' id="' . tep_output_string($name) . '"';

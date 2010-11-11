@@ -96,7 +96,7 @@
 
       if (empty($comments)) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', '60', '5', $comments))));
       }
 
       return $confirmation;

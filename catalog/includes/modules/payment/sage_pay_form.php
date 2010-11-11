@@ -11,7 +11,7 @@
 */
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return tep_draw_textarea_field('configuration[' . $key . ']', 60, 5, $value);
   }
 
   class sage_pay_form {
