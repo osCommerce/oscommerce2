@@ -46,9 +46,9 @@
             $manufacturers_list .= '<a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a><br />';
           }
 
-          $manufacturers_list = substr($manufacturers_list, 0, -4);
+          $manufacturers_list = substr($manufacturers_list, 0, -6);
 
-          $data = $manufacturers_list;
+          $content = $manufacturers_list;
         } else {
 // Display a drop-down
           $manufacturers_array = array();
