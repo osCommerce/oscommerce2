@@ -124,7 +124,7 @@ define('BOX_HEADING_CURRENCIES', 'Currencies');
 define('BOX_HEADING_INFORMATION', 'Information');
 define('BOX_INFORMATION_PRIVACY', 'Privacy Notice');
 define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
-define('BOX_INFORMATION_SHIPPING', 'Shipping & Returns');
+define('BOX_INFORMATION_SHIPPING', 'Shipping &amp; Returns');
 define('BOX_INFORMATION_CONTACT', 'Contact Us');
 
 // social bookmarks box
