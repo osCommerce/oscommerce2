@@ -28,7 +28,7 @@
 
 <?php
   if ($messageStack->size('account') > 0) {
-    echo '<p>' . $messageStack->output('account') . '</p>';
+    echo $messageStack->output('account');
   }
 ?>
 

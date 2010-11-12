@@ -107,7 +107,7 @@ function checkForm() {
 
 <?php
   if ($messageStack->size('review') > 0) {
-    echo '<p>' . $messageStack->output('review') . '</p>';
+    echo $messageStack->output('review');
   }
 ?>
 

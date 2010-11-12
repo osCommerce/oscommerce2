@@ -262,7 +262,7 @@
 
 <?php
   if ($messageStack->size('create_account') > 0) {
-    echo '<p>' . $messageStack->output('create_account') . '</p>';
+    echo $messageStack->output('create_account');
   }
 ?>
 

@@ -258,7 +258,7 @@
 
 <?php
   if ($messageStack->size('addressbook') > 0) {
-    echo '<p>' . $messageStack->output('addressbook') . '</p>';
+    echo $messageStack->output('addressbook');
   }
 ?>
 
