@@ -172,11 +172,11 @@ $('#helpSearch').dialog({
       </tr>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_DATE_FROM; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('dfrom'); ?><script type="text/javascript">$('#dfrom').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('dfrom', '', 'id="dfrom"'); ?><script type="text/javascript">$('#dfrom').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_DATE_TO; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('dto'); ?><script type="text/javascript">$('#dto').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('dto', '', 'id="dto"'); ?><script type="text/javascript">$('#dto').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-10:+0'});</script></td>
       </tr>
     </table>
   </div>
