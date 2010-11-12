@@ -18,15 +18,7 @@
   $product_check = tep_db_fetch_array($product_check_query);
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-?>
 
-<script type="text/javascript"><!--
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-
-<?php
   if ($product_check['total'] < 1) {
 ?>
 
@@ -109,14 +101,10 @@ function popupWindow(url) {
     </div>
 
 <script type="text/javascript">
-$("#piGal a[rel^='fancybox']").fancybox({
-  cyclic: true
-});
-
 $('#piGal ul').bxGallery({
   maxwidth: 300,
   maxheight: 200,
-  thumbwidth: 75,
+  thumbwidth: <?php echo (($pi_counter > 1) ? '75' : '0'); ?>,
   thumbcontainer: 300
 });
 </script>
@@ -125,17 +113,21 @@ $('#piGal ul').bxGallery({
       } else {
 ?>
 
-    <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
-<script type="text/javascript"><!--
-document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_link(FILENAME_POPUP_IMAGE, 'pID=' . $product_info['products_id']) . '\\\')">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>'; ?>');
-//--></script>
-<noscript>
-<?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image']) . '" target="_blank">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>'; ?>
-</noscript>
+    <div id="piGal" style="float: right;">
+      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image']) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
     </div>
 
 <?php
       }
+?>
+
+<script type="text/javascript">
+$("#piGal a[rel^='fancybox']").fancybox({
+  cyclic: true
+});
+</script>
+
+<?php
     }
 ?>
 
