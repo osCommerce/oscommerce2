@@ -443,7 +443,7 @@
 
     $form_action = (isset($HTTP_GET_VARS['pID'])) ? 'update_product' : 'insert_product';
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 var tax_rates = new Array();
 <?php
     for ($i=0, $n=sizeof($tax_class_array); $i<$n; $i++) {
@@ -554,7 +554,7 @@ function updateNet() {
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 updateGross();
 //--></script>
 <?php

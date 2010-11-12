@@ -64,7 +64,7 @@
 <title><?php echo TITLE; ?></title>
 <base href="../../../../">
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<script language="javascript" src="includes/general.js"></script>
+<script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body onload="SetFocus();">
 <!-- header //-->
