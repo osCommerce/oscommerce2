@@ -96,14 +96,6 @@
           }
         }
       }
-
-      if (!$this->hasBlocks('boxes_column_left')) {
-        $this->_grid_content_width += $this->_grid_column_width;
-      }
-
-      if (!$this->hasBlocks('boxes_column_right')) {
-        $this->_grid_content_width += $this->_grid_column_width;
-      }
     }
   }
 ?>
