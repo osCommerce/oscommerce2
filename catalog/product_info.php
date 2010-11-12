@@ -93,7 +93,7 @@ function popupWindow(url) {
             $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image']);
           }
 
-          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a></li>';
+          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a>';
 
           if (tep_not_null($pi['htmlcontent'])) {
             $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
