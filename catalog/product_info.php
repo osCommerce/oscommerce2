@@ -181,18 +181,20 @@ $("#piGal a[rel^='fancybox']").fancybox({
 
 <?php
     }
+?>
 
+  </div>
+
+<?php
     $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and reviews_status = 1");
     $reviews = tep_db_fetch_array($reviews_query);
 ?>
 
-    <br />
+  <div class="buttonSet">
+    <span class="buttonAction"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></span>
 
-    <div>
-      <div style="float: right;"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></div>
-
-      <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
-    </div>
+    <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
+  </div>
 
 <?php
     if ((USE_CACHE == 'true') && empty($SID)) {
@@ -202,7 +204,6 @@ $("#piGal a[rel^='fancybox']").fancybox({
     }
 ?>
 
-  </div>
 </div>
 
 </form>

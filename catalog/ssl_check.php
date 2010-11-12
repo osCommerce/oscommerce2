@@ -34,8 +34,8 @@
     <?php echo TEXT_INFORMATION; ?>
   </div>
 
-  <div style="float: right; clear: both;">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_LOGIN)); ?>
+  <div class="buttonSet">
+    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_LOGIN)); ?></span>
   </div>
 </div>
 
