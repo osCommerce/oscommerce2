@@ -26,7 +26,7 @@
     function moneybookers_pwy() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_pwy|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_pwy|1.0|2.3';
 
       $this->code = 'moneybookers_pwy';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_PWY_TEXT_TITLE;

@@ -26,7 +26,7 @@
     function moneybookers_so2() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_so2|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_so2|1.0|2.3';
 
       $this->code = 'moneybookers_so2';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_SO2_TEXT_TITLE;

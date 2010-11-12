@@ -26,7 +26,7 @@
     function moneybookers_acc() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_acc|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_acc|1.0|2.3';
 
       $this->code = 'moneybookers_acc';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_ACC_TEXT_TITLE;

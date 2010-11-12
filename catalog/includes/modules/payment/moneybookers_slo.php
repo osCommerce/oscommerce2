@@ -26,7 +26,7 @@
     function moneybookers_slo() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_slo|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_slo|1.0|2.3';
 
       $this->code = 'moneybookers_slo';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_SLO_TEXT_TITLE;
