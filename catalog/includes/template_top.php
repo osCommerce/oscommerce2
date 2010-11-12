@@ -30,8 +30,8 @@
 </head>
 <body>
 
-<div id="bodyWrapper" class="container_24">
+<div id="bodyWrapper" class="container_<?php echo $oscTemplate->getGridContainerWidth(); ?>">
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 
-<div id="bodyContent" class="grid_16 push_4">
+<div id="bodyContent" class="grid_<?php echo $oscTemplate->getGridContentWidth(); ?> <?php echo ($oscTemplate->hasBlocks('boxes_column_left') ? 'push_' . $oscTemplate->getGridColumnWidth() : ''); ?>">
