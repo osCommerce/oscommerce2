@@ -68,7 +68,7 @@
 
 <?php
   if ($messageStack->size('account_password') > 0) {
-    echo '<p>' . $messageStack->output('account_password') . '</p>';
+    echo $messageStack->output('account_password');
   }
 ?>
 

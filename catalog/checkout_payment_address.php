@@ -249,7 +249,7 @@ function check_form_optional(form_name) {
 
 <?php
   if ($messageStack->size('checkout_address') > 0) {
-    echo '<p>' . $messageStack->output('checkout_address') . '</p>';
+    echo $messageStack->output('checkout_address');
   }
 ?>
 
