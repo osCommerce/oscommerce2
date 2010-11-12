@@ -84,7 +84,7 @@
   }
 ?>
 
-  <div class="contentText">
+  <div class="buttonSet">
     <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
   </div>
 </div>

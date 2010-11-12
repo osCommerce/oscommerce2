@@ -131,7 +131,13 @@ table, p {
   margin-left: -30px;
 }
 
+.buttonSet {
+  clear: both;
+}
 
+.buttonAction {
+  float: right;
+}
 
 .boxText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
 .errorBox { font-family : Verdana, Arial, sans-serif; font-size : 10px; background: #ffb3b5; font-weight: bold; }
