@@ -26,7 +26,7 @@
     function moneybookers_mae() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_mae|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_mae|1.0|2.3';
 
       $this->code = 'moneybookers_mae';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_MAE_TEXT_TITLE;

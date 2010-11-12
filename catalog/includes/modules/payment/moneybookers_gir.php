@@ -26,7 +26,7 @@
     function moneybookers_gir() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_gir|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_gir|1.0|2.3';
 
       $this->code = 'moneybookers_gir';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_GIR_TEXT_TITLE;

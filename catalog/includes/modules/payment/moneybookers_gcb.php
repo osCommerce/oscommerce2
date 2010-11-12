@@ -26,7 +26,7 @@
     function moneybookers_gcb() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_gcb|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_gcb|1.0|2.3';
 
       $this->code = 'moneybookers_gcb';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_GCB_TEXT_TITLE;

@@ -26,7 +26,7 @@
     function moneybookers_pli() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_pli|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_pli|1.0|2.3';
 
       $this->code = 'moneybookers_pli';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_PLI_TEXT_TITLE;

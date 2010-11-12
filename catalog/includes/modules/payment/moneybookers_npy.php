@@ -26,7 +26,7 @@
     function moneybookers_npy() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_npy|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_npy|1.0|2.3';
 
       $this->code = 'moneybookers_npy';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_NPY_TEXT_TITLE;

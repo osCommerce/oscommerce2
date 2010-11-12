@@ -26,7 +26,7 @@
     function moneybookers_psp() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_psp|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_psp|1.0|2.3';
 
       $this->code = 'moneybookers_psp';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_PSP_TEXT_TITLE;

@@ -26,7 +26,7 @@
     function moneybookers_bwi() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_bwi|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_bwi|1.0|2.3';
 
       $this->code = 'moneybookers_bwi';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_BWI_TEXT_TITLE;

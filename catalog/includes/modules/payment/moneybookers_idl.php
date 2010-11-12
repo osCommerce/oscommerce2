@@ -26,7 +26,7 @@
     function moneybookers_idl() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_idl|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_idl|1.0|2.3';
 
       $this->code = 'moneybookers_idl';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_IDL_TEXT_TITLE;

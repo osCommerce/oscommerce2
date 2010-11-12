@@ -22,7 +22,7 @@
     function moneybookers() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers|1.0|2.3';
 
       $this->code = 'moneybookers';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_TEXT_TITLE;
@@ -622,8 +622,6 @@
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Transactions Order Status', 'MODULE_PAYMENT_MONEYBOOKERS_TRANSACTIONS_ORDER_STATUS_ID', '" . $transactions_status_id . "', 'Set the status of callback transactions to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_MONEYBOOKERS_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_MONEYBOOKERS_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
-
-      tep_redirect(tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'));
     }
 
     function remove() {

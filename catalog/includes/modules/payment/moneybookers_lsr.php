@@ -26,7 +26,7 @@
     function moneybookers_lsr() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_lsr|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_lsr|1.0|2.3';
 
       $this->code = 'moneybookers_lsr';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_LSR_TEXT_TITLE;
