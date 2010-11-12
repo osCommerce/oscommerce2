@@ -46,7 +46,7 @@
 
 <?php
   if ($messageStack->size('password_forgotten') > 0) {
-    echo '<p>' . $messageStack->output('password_forgotten') . '</p>';
+    echo $messageStack->output('password_forgotten');
   }
 ?>
 

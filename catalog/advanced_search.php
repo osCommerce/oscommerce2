@@ -111,7 +111,7 @@ function popupWindow(url) {
 
 <?php
   if ($messageStack->size('search') > 0) {
-    echo '<p>' . $messageStack->output('search') . '</p>';
+    echo $messageStack->output('search');
   }
 ?>
 

@@ -89,7 +89,7 @@
 
 <?php
   if ($messageStack->size('login') > 0) {
-    echo '<p>' . $messageStack->output('login') . '</p>';
+    echo $messageStack->output('login');
   }
 ?>
 

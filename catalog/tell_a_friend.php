@@ -111,7 +111,7 @@
 
 <?php
   if ($messageStack->size('friend') > 0) {
-    echo '<p>' . $messageStack->output('friend') . '</p>';
+    echo $messageStack->output('friend');
   }
 ?>
 

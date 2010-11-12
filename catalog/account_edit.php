@@ -127,7 +127,7 @@
 
 <?php
   if ($messageStack->size('account_edit') > 0) {
-    echo '<p>' . $messageStack->output('account_edit') . '</p>';
+    echo $messageStack->output('account_edit');
   }
 ?>
 
