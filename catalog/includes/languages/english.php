@@ -40,7 +40,7 @@ function tep_date_raw($date, $reverse = false) {
 define('LANGUAGE_CURRENCY', 'USD');
 
 // Global entries for the <html> tag
-define('HTML_PARAMS','xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en"');
+define('HTML_PARAMS', 'dir="ltr" lang="en"');
 
 // charset for web pages and emails
 define('CHARSET', 'utf-8');
