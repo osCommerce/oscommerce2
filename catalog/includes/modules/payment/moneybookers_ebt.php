@@ -26,7 +26,7 @@
     function moneybookers_ebt() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_ebt|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_ebt|1.0|2.3';
 
       $this->code = 'moneybookers_ebt';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_EBT_TEXT_TITLE;

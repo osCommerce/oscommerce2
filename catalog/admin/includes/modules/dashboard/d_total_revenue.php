@@ -54,7 +54,7 @@
 
       $output = <<<EOD
 <div id="d_total_revenue" style="width: 100%; height: 150px;"></div>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
 $(function () {
   var plot30 = [$js_array];
   $.plot($('#d_total_revenue'), [ {

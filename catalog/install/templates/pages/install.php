@@ -11,8 +11,8 @@
 */
 ?>
 
-<script language="javascript" type="text/javascript" src="ext/xmlhttp/xmlhttp.js"></script>
-<script language="javascript" type="text/javascript">
+<script type="text/javascript" src="ext/xmlhttp/xmlhttp.js"></script>
+<script type="text/javascript">
 <!--
 
   var dbServer;

@@ -83,7 +83,7 @@
 
   if (isset($HTTP_GET_VARS['zID']) && (($saction == 'edit') || ($saction == 'new'))) {
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 function resetZoneSelected(theForm) {
   if (theForm.state.value != '') {
     theForm.zone_id.selectedIndex = '0';

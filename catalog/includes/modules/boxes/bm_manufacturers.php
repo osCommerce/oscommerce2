@@ -39,16 +39,16 @@
       if ($number_of_rows = tep_db_num_rows($manufacturers_query)) {
         if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
-          $manufacturers_list = '';
+          $manufacturers_list = '<ul style="list-style: none; margin: 0; padding: 0;">';
           while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
             $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturers['manufacturers_name']);
             if (isset($HTTP_GET_VARS['manufacturers_id']) && ($HTTP_GET_VARS['manufacturers_id'] == $manufacturers['manufacturers_id'])) $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
-            $manufacturers_list .= '<a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a><br />';
+            $manufacturers_list .= '<li><a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
           }
 
-          $manufacturers_list = substr($manufacturers_list, 0, -4);
+          $manufacturers_list .= '</ul>';
 
-          $data = $manufacturers_list;
+          $content = $manufacturers_list;
         } else {
 // Display a drop-down
           $manufacturers_array = array();
@@ -68,7 +68,7 @@
         }
 
         $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . BOX_HEADING_MANUFACTURERS . '</div>' .
+                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents">' . $content . '</div>' .
                   '</div>';
       }

@@ -49,7 +49,7 @@
   <p align="center" class="main"><input type="submit" value="Continue" /></p>
 </noscript>
 </form>
-<script language="javascript">
+<script type="text/javascript">
 document.redirect.submit();
 </script>
 </body>

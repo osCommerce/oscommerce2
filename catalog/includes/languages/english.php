@@ -22,6 +22,7 @@ define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
 define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
+define('JQUERY_DATEPICKER_I18N_CODE', ''); // leave empty for en_US; see http://jqueryui.com/demos/datepicker/#localization
 define('JQUERY_DATEPICKER_FORMAT', 'mm/dd/yy'); // see http://docs.jquery.com/UI/Datepicker/formatDate
 
 ////
@@ -40,7 +41,7 @@ function tep_date_raw($date, $reverse = false) {
 define('LANGUAGE_CURRENCY', 'USD');
 
 // Global entries for the <html> tag
-define('HTML_PARAMS','xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en"');
+define('HTML_PARAMS', 'dir="ltr" lang="en"');
 
 // charset for web pages and emails
 define('CHARSET', 'utf-8');
@@ -69,66 +70,6 @@ define('FEMALE_ADDRESS', 'Ms.');
 
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
-
-// categories box text in includes/boxes/categories.php
-define('BOX_HEADING_CATEGORIES', 'Categories');
-
-// manufacturers box text in includes/boxes/manufacturers.php
-define('BOX_HEADING_MANUFACTURERS', 'Manufacturers');
-
-// whats_new box text in includes/boxes/whats_new.php
-define('BOX_HEADING_WHATS_NEW', 'New Products');
-
-// quick_find box text in includes/boxes/quick_find.php
-define('BOX_HEADING_SEARCH', 'Quick Find');
-define('BOX_SEARCH_TEXT', 'Use keywords to find the product you are looking for.');
-define('BOX_SEARCH_ADVANCED_SEARCH', 'Advanced Search');
-
-// specials box text in includes/boxes/specials.php
-define('BOX_HEADING_SPECIALS', 'Special Offers');
-
-// reviews box text in includes/boxes/reviews.php
-define('BOX_HEADING_REVIEWS', 'Reviews');
-define('BOX_REVIEWS_WRITE_REVIEW', 'Write a review on this product!');
-define('BOX_REVIEWS_NO_REVIEWS', 'There are currently no product reviews');
-define('BOX_REVIEWS_TEXT_OF_5_STARS', '%s of 5 Stars!');
-
-// shopping_cart box text in includes/boxes/shopping_cart.php
-define('BOX_HEADING_SHOPPING_CART', 'Shopping Cart');
-define('BOX_SHOPPING_CART_EMPTY', '0 items');
-
-// order_history box text in includes/boxes/order_history.php
-define('BOX_HEADING_CUSTOMER_ORDERS', 'Order History');
-
-// best_sellers box text in includes/boxes/best_sellers.php
-define('BOX_HEADING_BESTSELLERS', 'Bestsellers');
-define('BOX_HEADING_BESTSELLERS_IN', 'Bestsellers in<br />&nbsp;&nbsp;');
-
-// notifications box text in includes/boxes/products_notifications.php
-define('BOX_HEADING_NOTIFICATIONS', 'Notifications');
-define('BOX_NOTIFICATIONS_NOTIFY', 'Notify me of updates to <strong>%s</strong>');
-define('BOX_NOTIFICATIONS_NOTIFY_REMOVE', 'Do not notify me of updates to <strong>%s</strong>');
-
-// manufacturer box text
-define('BOX_HEADING_MANUFACTURER_INFO', 'Manufacturer Info');
-define('BOX_MANUFACTURER_INFO_HOMEPAGE', '%s Homepage');
-define('BOX_MANUFACTURER_INFO_OTHER_PRODUCTS', 'Other products');
-
-// languages box text in includes/boxes/languages.php
-define('BOX_HEADING_LANGUAGES', 'Languages');
-
-// currencies box text in includes/boxes/currencies.php
-define('BOX_HEADING_CURRENCIES', 'Currencies');
-
-// information box text in includes/boxes/information.php
-define('BOX_HEADING_INFORMATION', 'Information');
-define('BOX_INFORMATION_PRIVACY', 'Privacy Notice');
-define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
-define('BOX_INFORMATION_SHIPPING', 'Shipping & Returns');
-define('BOX_INFORMATION_CONTACT', 'Contact Us');
-
-// social bookmarks box
-define('BOX_HEADING_SOCIAL_BOOKMARKS', 'Share Product');
 
 // checkout procedure text
 define('CHECKOUT_BAR_DELIVERY', 'Delivery Information');
@@ -277,8 +218,9 @@ define('ICON_ERROR', 'Error');
 define('ICON_SUCCESS', 'Success');
 define('ICON_WARNING', 'Warning');
 
-define('TEXT_GREETING_PERSONAL', 'Hello again <span class="greetUser">%s!</span> We have some <a href="%s"><u>new products</u></a> for you. (Not <u><a href="%s">%s</a></u>?)');
-define('TEXT_GREETING_GUEST', 'Hello <span class="greetUser">Guest!</span> Feel free to <a href="%s"><u>log yourself in</u></a> or browse some of our <a href="%s"><u>new products</u></a>');
+define('TEXT_GREETING_PERSONAL', 'Welcome back <span class="greetUser">%s!</span> Would you like to see which <a href="%s"><u>new products</u></a> are available to purchase?');
+define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s, please <a href="%s"><u>log yourself in</u></a> with your account information.</small>');
+define('TEXT_GREETING_GUEST', 'Welcome <span class="greetUser">Guest!</span> Would you like to <a href="%s"><u>log yourself in</u></a>? Or would you prefer to <a href="%s"><u>create an account</u></a>?');
 
 define('TEXT_SORT_PRODUCTS', 'Sort products ');
 define('TEXT_DESCENDINGLY', 'descendingly');

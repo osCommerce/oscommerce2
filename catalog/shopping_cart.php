@@ -36,7 +36,6 @@
   <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
 
 <?php
     $any_out_of_stock = 0;
@@ -65,9 +64,14 @@
         }
       }
     }
+?>
+
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+<?php
 
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      echo '          <tr>';
+      echo '      <tr>';
 
       $products_name = '<table border="0" cellspacing="2" cellpadding="2">' .
                        '  <tr>' .
@@ -124,9 +128,11 @@
     }
 ?>
 
-    <br />
+  </div>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary'); ?></p>
+  <div class="buttonSet">
+    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary'); ?></span>
+  </div>
 
 <?php
     $initialize_checkout_methods = $payment_modules->checkout_initialization_method();
@@ -134,21 +140,20 @@
     if (!empty($initialize_checkout_methods)) {
 ?>
 
-    <p align="right" style="padding-right: 50px;"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></p>
+  <p align="right" style="clear: both; padding: 15px 50px 0 0;"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></p>
 
 <?php
       reset($initialize_checkout_methods);
       while (list(, $value) = each($initialize_checkout_methods)) {
 ?>
 
-    <p align="right"><?php echo $value; ?></p>
+  <p align="right"><?php echo $value; ?></p>
 
 <?php
       }
     }
 ?>
 
-  </div>
 </div>
 
 </form>

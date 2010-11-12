@@ -26,7 +26,7 @@
     function moneybookers_vsa() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_vsa|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_vsa|1.0|2.3';
 
       $this->code = 'moneybookers_vsa';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_VSA_TEXT_TITLE;

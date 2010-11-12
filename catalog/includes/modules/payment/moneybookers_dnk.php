@@ -26,7 +26,7 @@
     function moneybookers_dnk() {
       global $order;
 
-      $this->signature = 'moneybookers|moneybookers_dnk|1.0|2.2';
+      $this->signature = 'moneybookers|moneybookers_dnk|1.0|2.3';
 
       $this->code = 'moneybookers_dnk';
       $this->title = MODULE_PAYMENT_MONEYBOOKERS_DNK_TEXT_TITLE;

@@ -18,15 +18,7 @@
   $product_check = tep_db_fetch_array($product_check_query);
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-?>
 
-<script type="text/javascript"><!--
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-
-<?php
   if ($product_check['total'] < 1) {
 ?>
 
@@ -93,7 +85,7 @@ function popupWindow(url) {
             $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image']);
           }
 
-          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a></li>';
+          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a>';
 
           if (tep_not_null($pi['htmlcontent'])) {
             $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
@@ -109,15 +101,12 @@ function popupWindow(url) {
     </div>
 
 <script type="text/javascript">
-$("#piGal a[rel^='fancybox']").fancybox({
-  cyclic: true
-});
-
 $('#piGal ul').bxGallery({
   maxwidth: 300,
   maxheight: 200,
-  thumbwidth: 75,
-  thumbcontainer: 300
+  thumbwidth: <?php echo (($pi_counter > 1) ? '75' : '0'); ?>,
+  thumbcontainer: 300,
+  load_image: 'ext/jquery/bxGallery/spinner.gif'
 });
 </script>
 
@@ -125,17 +114,21 @@ $('#piGal ul').bxGallery({
       } else {
 ?>
 
-    <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
-<script type="text/javascript"><!--
-document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_link(FILENAME_POPUP_IMAGE, 'pID=' . $product_info['products_id']) . '\\\')">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>'; ?>');
-//--></script>
-<noscript>
-<?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image']) . '" target="_blank">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '<br />' . TEXT_CLICK_TO_ENLARGE . '</a>'; ?>
-</noscript>
+    <div id="piGal" style="float: right;">
+      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image']) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
     </div>
 
 <?php
       }
+?>
+
+<script type="text/javascript">
+$("#piGal a[rel^='fancybox']").fancybox({
+  cyclic: true
+});
+</script>
+
+<?php
     }
 ?>
 
@@ -168,7 +161,7 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
           $selected_attribute = false;
         }
 ?>
-      <b><?php echo $products_options_name['products_options_name'] . ':'; ?></b><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
+      <strong><?php echo $products_options_name['products_options_name'] . ':'; ?></strong><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
 <?php
       }
 ?>
@@ -188,18 +181,20 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
 
 <?php
     }
+?>
 
+  </div>
+
+<?php
     $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and reviews_status = 1");
     $reviews = tep_db_fetch_array($reviews_query);
 ?>
 
-    <br />
+  <div class="buttonSet">
+    <span class="buttonAction"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></span>
 
-    <div>
-      <div style="float: right;"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></div>
-
-      <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
-    </div>
+    <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
+  </div>
 
 <?php
     if ((USE_CACHE == 'true') && empty($SID)) {
@@ -209,7 +204,6 @@ document.write('<?php echo '<a href="javascript:popupWindow(\\\'' . tep_href_lin
     }
 ?>
 
-  </div>
 </div>
 
 </form>
