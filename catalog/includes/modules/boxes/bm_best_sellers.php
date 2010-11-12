@@ -48,7 +48,7 @@
           $bestsellers_list .= '</ol>';
 
           $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . BOX_HEADING_BESTSELLERS . '</div>' .
+                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents">' . $bestsellers_list . '</div>' .
                   '</div>';
 

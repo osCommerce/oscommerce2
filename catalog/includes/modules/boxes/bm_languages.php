@@ -47,7 +47,7 @@
           }
 
           $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . BOX_HEADING_LANGUAGES . '</div>' .
+                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_LANGUAGES_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">' . $languages_string . '</div>' .
                   '</div>';
 

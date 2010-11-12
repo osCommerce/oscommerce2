@@ -45,7 +45,7 @@
         }
 
         $data = '<div class="ui-widget infoBoxContainer">' .
-                '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_PRODUCTS_NEW) . '">' . BOX_HEADING_WHATS_NEW . '</a></div>' .
+                '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_PRODUCTS_NEW) . '">' . MODULE_BOXES_WHATS_NEW_BOX_TITLE . '</a></div>' .
                 '  <div class="ui-widget-content infoBoxContents" style="text-align: center;"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $random_product['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $random_product['products_image'], $random_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $random_product['products_id']) . '">' . $random_product['products_name'] . '</a><br />' . $whats_new_price . '</div>' .
                 '</div>';
 

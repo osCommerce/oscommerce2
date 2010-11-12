@@ -70,66 +70,6 @@ define('FEMALE_ADDRESS', 'Ms.');
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
 
-// categories box text in includes/boxes/categories.php
-define('BOX_HEADING_CATEGORIES', 'Categories');
-
-// manufacturers box text in includes/boxes/manufacturers.php
-define('BOX_HEADING_MANUFACTURERS', 'Manufacturers');
-
-// whats_new box text in includes/boxes/whats_new.php
-define('BOX_HEADING_WHATS_NEW', 'What\'s New?');
-
-// quick_find box text in includes/boxes/quick_find.php
-define('BOX_HEADING_SEARCH', 'Quick Find');
-define('BOX_SEARCH_TEXT', 'Use keywords to find the product you are looking for.');
-define('BOX_SEARCH_ADVANCED_SEARCH', 'Advanced Search');
-
-// specials box text in includes/boxes/specials.php
-define('BOX_HEADING_SPECIALS', 'Specials');
-
-// reviews box text in includes/boxes/reviews.php
-define('BOX_HEADING_REVIEWS', 'Reviews');
-define('BOX_REVIEWS_WRITE_REVIEW', 'Write a review on this product!');
-define('BOX_REVIEWS_NO_REVIEWS', 'There are currently no product reviews');
-define('BOX_REVIEWS_TEXT_OF_5_STARS', '%s of 5 Stars!');
-
-// shopping_cart box text in includes/boxes/shopping_cart.php
-define('BOX_HEADING_SHOPPING_CART', 'Shopping Cart');
-define('BOX_SHOPPING_CART_EMPTY', '0 items');
-
-// order_history box text in includes/boxes/order_history.php
-define('BOX_HEADING_CUSTOMER_ORDERS', 'Order History');
-
-// best_sellers box text in includes/boxes/best_sellers.php
-define('BOX_HEADING_BESTSELLERS', 'Bestsellers');
-define('BOX_HEADING_BESTSELLERS_IN', 'Bestsellers in<br />&nbsp;&nbsp;');
-
-// notifications box text in includes/boxes/products_notifications.php
-define('BOX_HEADING_NOTIFICATIONS', 'Notifications');
-define('BOX_NOTIFICATIONS_NOTIFY', 'Notify me of updates to <strong>%s</strong>');
-define('BOX_NOTIFICATIONS_NOTIFY_REMOVE', 'Do not notify me of updates to <strong>%s</strong>');
-
-// manufacturer box text
-define('BOX_HEADING_MANUFACTURER_INFO', 'Manufacturer Info');
-define('BOX_MANUFACTURER_INFO_HOMEPAGE', '%s Homepage');
-define('BOX_MANUFACTURER_INFO_OTHER_PRODUCTS', 'Other products');
-
-// languages box text in includes/boxes/languages.php
-define('BOX_HEADING_LANGUAGES', 'Languages');
-
-// currencies box text in includes/boxes/currencies.php
-define('BOX_HEADING_CURRENCIES', 'Currencies');
-
-// information box text in includes/boxes/information.php
-define('BOX_HEADING_INFORMATION', 'Information');
-define('BOX_INFORMATION_PRIVACY', 'Privacy Notice');
-define('BOX_INFORMATION_CONDITIONS', 'Conditions of Use');
-define('BOX_INFORMATION_SHIPPING', 'Shipping &amp; Returns');
-define('BOX_INFORMATION_CONTACT', 'Contact Us');
-
-// social bookmarks box
-define('BOX_HEADING_SOCIAL_BOOKMARKS', 'Share Product');
-
 // checkout procedure text
 define('CHECKOUT_BAR_DELIVERY', 'Delivery Information');
 define('CHECKOUT_BAR_PAYMENT', 'Payment Information');
