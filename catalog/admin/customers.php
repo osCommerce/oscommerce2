@@ -231,7 +231,7 @@
 
   if ($action == 'edit' || $action == 'update') {
 ?>
-<script language="javascript"><!--
+<script type="text/javascript"><!--
 
 function check_form() {
   var error = 0;
