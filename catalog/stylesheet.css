@@ -123,8 +123,8 @@ table, p {
 }
 
 #piGal img {
-  -webkit-box-shadow: 0px 2px 3px #999;
-  -moz-box-shadow: 0px 2px 3px #999;
+  -webkit-box-shadow: 0px 0px 1px #000;
+  -moz-box-shadow: 0px 0px 1px #000;
 }
 
 #piGal .outer {
