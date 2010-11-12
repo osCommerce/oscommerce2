@@ -21,7 +21,7 @@
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER . DIR_WS_ADMIN;
     } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL == 'true') {
+      if (ENABLE_SSL_CATALOG == 'true') {
         $link = HTTPS_SERVER . DIR_WS_ADMIN;
       } else {
         $link = HTTP_SERVER . DIR_WS_ADMIN;
