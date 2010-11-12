@@ -143,7 +143,7 @@
       $this->tep_show_category($first_element);
 
       $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading">' . BOX_HEADING_CATEGORIES . '</div>' .
+              '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
               '  <div class="ui-widget-content infoBoxContents">' . $categories_string . '</div>' .
               '</div>';
 

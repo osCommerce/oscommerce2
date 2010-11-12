@@ -54,7 +54,7 @@
           $customer_orders_string .= '</table>';
 
           $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . BOX_HEADING_CUSTOMER_ORDERS . '</div>' .
+                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</div>' .
                   '  ' . $customer_orders_string .
                   '</div>';
 
