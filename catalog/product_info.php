@@ -105,7 +105,8 @@ $('#piGal ul').bxGallery({
   maxwidth: 300,
   maxheight: 200,
   thumbwidth: <?php echo (($pi_counter > 1) ? '75' : '0'); ?>,
-  thumbcontainer: 300
+  thumbcontainer: 300,
+  load_image: 'ext/jquery/bxGallery/spinner.gif'
 });
 </script>
 
