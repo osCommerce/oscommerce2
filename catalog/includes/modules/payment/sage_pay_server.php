@@ -17,7 +17,7 @@
     function sage_pay_server() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_server|1.1|2.2';
+      $this->signature = 'sage_pay|sage_pay_server|1.0|2.3';
 
       $this->code = 'sage_pay_server';
       $this->title = MODULE_PAYMENT_SAGE_PAY_SERVER_TEXT_TITLE;
