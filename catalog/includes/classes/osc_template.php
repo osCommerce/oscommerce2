@@ -13,9 +13,36 @@
   class oscTemplate {
     var $_title;
     var $_blocks = array();
+    var $_grid_container_width = 24;
+    var $_grid_content_width = 16;
+    var $_grid_column_width = 4;
 
     function oscTemplate() {
       $this->_title = TITLE;
+    }
+
+    function setGridContainerWidth($width) {
+      $this->_grid_container_width = $width;
+    }
+
+    function getGridContainerWidth() {
+      return $this->_grid_container_width;
+    }
+
+    function setGridContentWidth($width) {
+      $this->_grid_content_width = $width;
+    }
+
+    function getGridContentWidth() {
+      return $this->_grid_content_width;
+    }
+
+    function setGridColumnWidth($width) {
+      $this->_grid_column_width = $width;
+    }
+
+    function getGridColumnWidth() {
+      return $this->_grid_column_width;
     }
 
     function setTitle($title) {
@@ -68,6 +95,14 @@
             }
           }
         }
+      }
+
+      if (!$this->hasBlocks('boxes_column_left')) {
+        $this->_grid_content_width += $this->_grid_column_width;
+      }
+
+      if (!$this->hasBlocks('boxes_column_right')) {
+        $this->_grid_content_width += $this->_grid_column_width;
       }
     }
   }

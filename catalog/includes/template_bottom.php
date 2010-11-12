@@ -13,13 +13,27 @@
 
 </div> <!-- bodyContent //-->
 
-<div id="columnLeft" class="grid_4 pull_16">
+<?php
+  if ($oscTemplate->hasBlocks('boxes_column_left')) {
+?>
+
+<div id="columnLeft" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?> pull_<?php echo $oscTemplate->getGridContentWidth(); ?>">
   <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
 </div>
 
-<div id="columnRight" class="grid_4">
+<?php
+  }
+
+  if ($oscTemplate->hasBlocks('boxes_column_right')) {
+?>
+
+<div id="columnRight" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?>">
   <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
 </div>
+
+<?php
+  }
+?>
 
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
