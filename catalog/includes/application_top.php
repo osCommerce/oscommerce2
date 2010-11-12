@@ -58,9 +58,6 @@
 // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
-// customization for the design layout
-  define('BOX_WIDTH', 125); // how wide the boxes should be in pixels (default: 125)
-
 // include the database functions
   require(DIR_WS_FUNCTIONS . 'database.php');
 
