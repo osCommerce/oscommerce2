@@ -37,7 +37,6 @@
 
   <div class="contentText">
 
-
 <?php
     $any_out_of_stock = 0;
     $products = $cart->get_products();
@@ -65,12 +64,14 @@
         }
       }
     }
-    ?>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-    <?php
+?>
+
+    <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+<?php
 
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      echo '          <tr>';
+      echo '      <tr>';
 
       $products_name = '<table border="0" cellspacing="2" cellpadding="2">' .
                        '  <tr>' .
