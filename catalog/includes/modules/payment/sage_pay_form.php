@@ -403,7 +403,7 @@
       for ($i=0; $i<strlen($InString); $i++) {
 // Get ASCII code from string, get ASCII code from key (loop through with MOD), XOR the two, get the character from the result
 // % is MOD (modulus), ^ is XOR
-        $output .= chr(ord(substr($InString, $i, 1)) ^ ($KeyList[$i % strlen($Key)]));
+        $output .= @chr(ord(substr($InString, $i, 1)) ^ ($KeyList[$i % strlen($Key)]));
       }
 
 // Return the result
