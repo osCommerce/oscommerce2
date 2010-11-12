@@ -22,8 +22,8 @@
 <script type="text/javascript" src="ext/jquery/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.8.6.min.js"></script>
 <script type="text/javascript" src="ext/jquery/jquery.bxGallery.1.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="ext/jquery/fancybox/jquery.fancybox-1.3.1.css" />
-<script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.1.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="ext/jquery/fancybox/jquery.fancybox-1.3.4.css" />
+<script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <link rel="stylesheet" type="text/css" href="ext/960gs/<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? 'rtl_' : ''); ?>960_24_col.css" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
