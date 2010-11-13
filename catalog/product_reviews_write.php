@@ -12,6 +12,8 @@
 
   require('includes/application_top.php');
 
+  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PRODUCT_REVIEWS_WRITE);
+
   if (!tep_session_is_registered('customer_id')) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -50,6 +52,7 @@
 
       tep_db_query("insert into " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text) values ('" . (int)$insert_id . "', '" . (int)$languages_id . "', '" . tep_db_input($review) . "')");
 
+      $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
       tep_redirect(tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params(array('action'))));
     }
   }
@@ -65,8 +68,6 @@
   } else {
     $products_name = $product_info['products_name'];
   }
-
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PRODUCT_REVIEWS_WRITE);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params()));
 
