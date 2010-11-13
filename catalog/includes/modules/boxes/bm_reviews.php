@@ -55,7 +55,7 @@
         $reviews_box_contents .= '<table border="0" cellspacing="0" cellpadding="2" class="ui-widget-content infoBoxContents"><tr><td><a href="' . tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id=' . $HTTP_GET_VARS['products_id']) . '">' . tep_image(DIR_WS_IMAGES . 'box_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW) . '</a></td><td><a href="' . tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id=' . $HTTP_GET_VARS['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a></td></tr></table>';
       } else {
 // display 'no reviews' box
-        $reviews_box_contents .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_REVIEWS_BOX_REVIEWS_NO_REVIEWS . '</div>';
+        $reviews_box_contents .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</div>';
       }
 
       $data = '<div class="ui-widget infoBoxContainer">' .
