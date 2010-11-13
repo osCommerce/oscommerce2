@@ -1,7 +1,134 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2008 osCommerce
+Copyright (c) 2010 osCommerce
+
+------------------------------------------------------------------------------
+11/13/2010 osCommerce Online Merchant v2.3
+------------------------------------------------------------------------------
+
+* Payment module updates:
+  - 2Checkout
+  - PayPal Website Payments Pro - Direct Payments
+  - PayPal Website Payments Pro (Payflow Edition) - Direct Payments
+  - PayPal Website Payments Pro - Express Checkout
+  - PayPal Website Payments Pro (Payflow Edition) - Express Checkout
+  - Sage Pay Form, Server, and Direct
+  - iPayment
+  - RBS WorldPay Hosted
+  - Moneybookers
+  - InPay
+  - PayPoint.net SECPay
+
+* Shipping module updates:
+  - USPS
+
+* Allow new template group modules to be created to inject HTML content into
+  the page layout.
+
+* Update boxes to modules which can be installed, configured, and sorted.
+
+* Show only installed modules on the Administration Tool Modules page, and
+  link to a listing showing new and available modules.
+
+* Moderate product reviews.
+
+* Load either includes/local/configure.php or includes/configure.php, not
+  both.
+
+* Modularize Administration Tool Modules page.
+
+* Allow multiple large product images and HTML content (eg, Flash video) for
+  products.
+
+* Replace usage of SpiffyCal with jQuery UI DatePicker widgets.
+
+* Update layout to XHTML Transitional.
+
+* Integrate 960 Grid System CSS Framework into the layout.
+
+* Update buttons with jQuery UI Buttons.
+
+* Add jQuery, jQuery UI, Flot, bxGallery, Fancybox javascript libraries.
+
+* Introduce Administration Tool Dashboard modules.
+
+* Migrate customer and administrator passwords to phpass.
+
+* Introduce Social Bookmark modules for products.
+  - Facebook and Facebook Like
+  - Twitter and Twitter Button
+  - Google Buzz
+  - Digg
+
+* Introduce Store Logo for the Administration Tool.
+
+* Allow anonymous server statics to be sent from the Administration Tool
+  Server Information page.
+
+* Add a is_writable() compatibility function for Windows.
+
+* Introduce Header Tags modules.
+  - Google Analytics and E-Commerce Tracking
+  - MailChimp E-Commerce 360
+  - OpenSearch
+
+* Move HTML layout to template_top.php/template_bottom.php files.
+
+* Add new tep_get_version() function to retrieve the installed version.
+
+* Introduce Version Checker for the Administration Tool.
+
+* Set session.use_only_cookies to match SESSION_FORCE_COOKIE_USE.
+
+* Show list of pre-defined currencies when adding new currencies.
+
+* Example Credit Card payment module removed.
+
+* German and Spanish language definitions removed from the core. (To be
+  maintained as add-ons)
+
+* Remove File Manager from the Administration Tool.
+
+* Don't show languages or currencies box if only one language or currency is
+  defined.
+
+* Add API tag to modules.
+
+* Introduce Security Check modules for the Administration Tool.
+
+* Introduce Security Directory Permissions feature for the Administration
+  Tool.
+
+* PHP v3 compatibility code removed.
+
+* Recreate session IDs by default when customers login or create an account.
+
+* Introduce Action Recorder to log and limit actions.
+
+* Strengthen Administration Tool login routine.
+
+* Replace ereg functions with preg functions for PHP v5.3.
+
+* Fix timezone warning messages on PHP v5.3 servers.
+
+* Protect forms with a token ID that is assigned to the customers session.
+
+* Generate a new $cartID value when restoring shopping cart contents.
+
+* Calculate shipping fees only for shippable products and not virtual/download
+  products.
+
+* Parse Date of Birth values.
+
+* Escape the filename and parameters in tep_href_link().
+
+* Escape shell arguments in the checkdnsrr() compatibility function.
+
+* Apply magic_quotes to GET parameters when Search Engine Friendly URLs is
+  enabled.
+
+* Support automatic HTTP Authentication logins for the Administration Tool.
 
 ------------------------------------------------------------------------------
 01/30/2008 osCommerce Online Merchant 2.2 RC2a
