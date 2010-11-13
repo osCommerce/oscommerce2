@@ -42,6 +42,12 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
+<?php
+  if ($messageStack->size('product_reviews') > 0) {
+    echo $messageStack->output('product_reviews');
+  }
+?>
+
 <div>
   <h1 style="float: right;"><?php echo $products_price; ?></h1>
   <h1><?php echo $products_name; ?></h1>
