@@ -89,7 +89,7 @@
         }
       } else{
         $dir = dirname($file);
-        if (file_exists($dir) && is_dir($dir) && tep_is_writable($dir)) {
+        if (file_exists($dir) && is_dir($dir) && osc_is_writable($dir)) {
           return true;
         }
       }
