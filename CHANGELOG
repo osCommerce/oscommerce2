@@ -4,6 +4,22 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2010 osCommerce
 
 ------------------------------------------------------------------------------
+11/15/2010 osCommerce Online Merchant v2.3.1
+------------------------------------------------------------------------------
+
+ * Confirm new Product Reviews to the customer.
+
+ * Fix a PHP notice in Phpass.
+
+ * Fix Reviews Box language definition.
+
+ * Fix pre-defined Australian Dollar currency code.
+
+ * Label the HTML Content field for large product images.
+
+ * XHTML fixes for pop-up pages.
+
+------------------------------------------------------------------------------
 11/13/2010 osCommerce Online Merchant v2.3
 ------------------------------------------------------------------------------
 
