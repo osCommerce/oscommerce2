@@ -471,7 +471,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 
@@ -787,18 +787,27 @@
   }
 
 ////
+// Alias name for function for Store configuration values in the Administration Tool
+  function tep_localise_select($select){
+    $ValueIn = array('`^true$`i', '`^false$`i', '`^desc$`', '`^asc$`', '`^date_expected$`', '`^products_name$`');
+    $ValueOut = array(TEXT_TRUE_CONFIG, TEXT_FALSE_CONFIG, TEXT_DESC_CONFIG, TEXT_ASC_CONFIG, TEXT_DATE_EXPECTED_CONFIG, TEXT_PRODUCT_NAME_CONFIG);
+    return preg_replace($ValueIn, $ValueOut, htmlspecialchars($select) );
+  }
+
+////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '';
 
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = ((tep_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
+      $txt = tep_localise_select($select_array[$i]);
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
 
       if ($key_value == $select_array[$i]) $string .= ' checked="checked"';
 
-      $string .= ' /> ' . $select_array[$i];
+      $string .= ' /> ' .  $txt;
     }
 
     return $string;
