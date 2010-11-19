@@ -80,6 +80,7 @@ define('TEXT_PRODUCTS_MODEL', 'Products Model:');
 define('TEXT_PRODUCTS_IMAGE', 'Products Image:');
 define('TEXT_PRODUCTS_MAIN_IMAGE', 'Main Image');
 define('TEXT_PRODUCTS_LARGE_IMAGE', 'Large Image');
+define('TEXT_PRODUCTS_LARGE_IMAGE_HTML_CONTENT', 'HTML Content (for popup)');
 define('TEXT_PRODUCTS_ADD_LARGE_IMAGE', 'Add Large Image');
 define('TEXT_PRODUCTS_LARGE_IMAGE_DELETE_TITLE', 'Delete Large Product Image?');
 define('TEXT_PRODUCTS_LARGE_IMAGE_CONFIRM_DELETE', 'Please confirm the removal of the large product image.');
