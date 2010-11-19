@@ -15,7 +15,7 @@
 <html>
 
 <head>
-
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>osCommerce, Open Source E-Commerce Solutions</title>
 
 <meta name="robots" content="noindex,nofollow">
