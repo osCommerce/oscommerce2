@@ -1,3 +1,4 @@
 catalog/includes/local/configure.php
 catalog/admin/includes/local/configure.php
 catalog/includes/work/*
+catalog/admin/images/graphs/*.png
