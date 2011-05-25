@@ -622,8 +622,8 @@
     $objects = array();
     $tmpstring = '';
     $flag = '';
-
-    for ($k=0; $k<count($pieces); $k++) {
+    $n=count($pieces);
+    for ($k=0; $k<$n; $k++) {
       while (substr($pieces[$k], 0, 1) == '(') {
         $objects[] = '(';
         if (strlen($pieces[$k]) > 1) {
@@ -648,8 +648,8 @@
 
       if ( (substr($pieces[$k], -1) != '"') && (substr($pieces[$k], 0, 1) != '"') ) {
         $objects[] = trim($pieces[$k]);
-
-        for ($j=0; $j<count($post_objects); $j++) {
+        $n=count($post_objects);
+        for ($j=0; $j<$n; $j++) {
           $objects[] = $post_objects[$j];
         }
       } else {
@@ -667,8 +667,8 @@
           $flag = 'off';
 
           $objects[] = trim(preg_replace('/"/', ' ', $pieces[$k]));
-
-          for ($j=0; $j<count($post_objects); $j++) {
+          $n=count($post_objects);
+          for ($j=0; $j<$n; $j++) {
             $objects[] = $post_objects[$j];
           }
 
@@ -713,8 +713,8 @@
 
 // Push the $tmpstring onto the array of stuff to search for
             $objects[] = trim($tmpstring);
-
-            for ($j=0; $j<count($post_objects); $j++) {
+            $n=count($post_objects);
+            for ($j=0; $j<$n; $j++) {
               $objects[] = $post_objects[$j];
             }
 
@@ -729,7 +729,8 @@
 
 // add default logical operators if needed
     $temp = array();
-    for($i=0; $i<(count($objects)-1); $i++) {
+    $n=count($objects);
+    for($i=0; $i<($n-1); $i++) {
       $temp[] = $objects[$i];
       if ( ($objects[$i] != 'and') &&
            ($objects[$i] != 'or') &&
@@ -746,7 +747,8 @@
     $keyword_count = 0;
     $operator_count = 0;
     $balance = 0;
-    for($i=0; $i<count($objects); $i++) {
+    $n=count($objects);
+    for($i=0; $i<$n; $i++) {
       if ($objects[$i] == '(') $balance --;
       if ($objects[$i] == ')') $balance ++;
       if ( ($objects[$i] == 'and') || ($objects[$i] == 'or') ) {
