@@ -49,7 +49,8 @@
       }
 
       reset($params);
-      while (list($key, $value) = each($params)) {
+
+     foreach($params as $key => $value) {
         switch ($key) {
           case 'content_type':
             $headers['Content-Type'] = $value . (isset($charset) ? '; charset="' . $charset . '"' : '');
@@ -127,7 +128,8 @@
           $tmp = $_subparts->encode();
 
           reset($tmp['headers']);
-          while (list($key, $value) = each($tmp['headers'])) {
+
+foreach($tmp['headers'] as $key => $value) {
             $headers[] = $key . ': ' . $value;
           }
 
