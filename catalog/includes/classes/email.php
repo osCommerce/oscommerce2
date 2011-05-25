@@ -118,8 +118,8 @@
       }
 
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);
-
-      for ($i=0; $i<count($images[1]); $i++) {
+      $n=count($images[1]);
+      for ($i=0; $i<$n; $i++) {
         if (file_exists($images_dir . $images[1][$i])) {
           $html_images[] = $images[1][$i];
           $this->html = str_replace($images[1][$i], basename($images[1][$i]), $this->html);
@@ -130,8 +130,8 @@
 // If duplicate images are embedded, they may show up as attachments, so remove them.
         $html_images = array_unique($html_images);
         sort($html_images);
-
-        for ($i=0; $i<count($html_images); $i++) {
+        $n=count($html_images);
+        for ($i=0; $i<$n; $i++) {
           if ($image = $this->get_file($images_dir . $html_images[$i])) {
             $content_type = $this->image_types[substr($html_images[$i], strrpos($html_images[$i], '.') + 1)];
             $this->add_html_image($image, basename($html_images[$i]), $content_type);
@@ -351,8 +351,8 @@
 /* HPDL PHP3 */
 //          $message =& $this->add_mixed_part();
           $message = $this->add_mixed_part();
-
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n=count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -361,8 +361,8 @@
 //          $message =& $this->add_mixed_part();
           $message = $this->add_mixed_part();
           $this->add_text_part($message, $this->text);
-
-          for ($i=0; $i<count($this->attachments); $i++) {
+           $n=count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -396,8 +396,8 @@
             $related = $message;
           }
           $this->add_html_part($related);
-
-          for ($i=0; $i<count($this->html_images); $i++) {
+          $n=count($this->html_images);
+          for ($i=0; $i<$n; $i++) {
             $this->add_html_image_part($related, $this->html_images[$i]);
           }
           break;
@@ -414,8 +414,8 @@
           } else {
             $this->add_html_part($message);
           }
-
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n=count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -438,12 +438,12 @@
             $rel = $this->add_related_part($message);
           }
           $this->add_html_part($rel);
-
-          for ($i=0; $i<count($this->html_images); $i++) {
+          $n=count($this->html_images);
+          for ($i=0; $i<$n; $i++) {
             $this->add_html_image_part($rel, $this->html_images[$i]);
           }
-
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n=count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -497,10 +497,11 @@
       if (is_string($headers)) {
         $headers = explode($this->lf, trim($headers));
       }
-
-      for ($i=0; $i<count($headers); $i++) {
+       $n=count($headers);
+      for ($i=0; $i<$n; $i++) {
         if (is_array($headers[$i])) {
-          for ($j=0; $j<count($headers[$i]); $j++) {
+              $n=count($headers[$i]);
+          for ($j=0; $j<$n; $j++) {
             if ($headers[$i][$j] != '') {
               $xtra_headers[] = $headers[$i][$j];
             }
@@ -551,10 +552,11 @@
       if (is_string($headers)) {
         $headers = explode($this->lf, trim($headers));
       }
-
-      for ($i=0; $i<count($headers); $i++) {
+        $n=count($headers);
+      for ($i=0; $i<$n; $i++) {
         if (is_array($headers[$i])) {
-          for ($j=0; $j<count($headers[$i]); $j++) {
+         $n=count($headers[$i]);
+          for ($j=0; $j<$n; $j++) {
             if ($headers[$i][$j] != '') {
               $xtra_headers[] = $headers[$i][$j];
             }
