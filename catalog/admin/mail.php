@@ -44,7 +44,7 @@
     if (EMAIL_USE_HTML == 'true') {
       $mimemessage->add_html($message, $text);
     } else {
-      $mimemessage->add_text($message);
+      $mimemessage->add_text($text);
     }
 
     $mimemessage->build_message();
