@@ -42,6 +42,10 @@
       }
     }
 
+    if ( strpos($url, '&amp;') !== false ) {
+      $url = str_replace('&amp;', '&', $url);
+    }
+
     header('Location: ' . $url);
 
     tep_exit();
