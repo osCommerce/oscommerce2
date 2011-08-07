@@ -31,6 +31,9 @@
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
+    if ( strpos($url, '&amp;') !== false ) {
+      $url = str_replace('&amp;', '&', $url);
+    }
     header('Location: ' . $url);
 
     if (STORE_PAGE_PARSE_TIME == 'true') {
