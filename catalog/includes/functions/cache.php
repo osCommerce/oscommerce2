@@ -57,7 +57,7 @@
 // try to open file
     if ($fp = @fopen(gzinflate($filename, 'r'))) {
 // read in serialized data
-      $szdata = stream_get_contents($fp, filesize($filename));
+      $szdata = fread($fp, filesize($filename));
 
       fclose($fp);
 // unserialze the data
