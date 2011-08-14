@@ -105,8 +105,7 @@
 
       if (tep_not_null($cPath)) {
         $new_path = '';
-        reset($cPath_array);
-        while (list($key, $value) = each($cPath_array)) {
+		foreach($cPath_array as $key => $value) {
           unset($parent_id);
           unset($first_id);
           $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$value . "' and c.categories_id = cd.categories_id and cd.language_id='" . (int)$languages_id ."' order by sort_order, cd.categories_name");
