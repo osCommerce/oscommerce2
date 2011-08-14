@@ -26,8 +26,8 @@
     }
 
     $wo_session_id = tep_session_id();
-    $wo_ip_address = getenv('REMOTE_ADDR');
-    $wo_last_page_url = getenv('REQUEST_URI');
+    $wo_ip_address = $_SERVER["REMOTE_ADDR"];
+    $wo_last_page_url = $_SERVER["REQUEST_URI"];
 
     $current_time = time();
     $xx_mins_ago = ($current_time - 900);
