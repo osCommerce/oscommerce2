@@ -18,7 +18,7 @@
 <title><?php echo TITLE; ?></title>
 <base href="<?php echo HTTP_SERVER . DIR_WS_ADMIN; ?>" />
 <!--[if IE]><script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/flot/excanvas.min.js'); ?>"></script><![endif]-->
-<link rel="stylesheet" type="text/css" href="<?php echo tep_catalog_href_link('ext/jquery/ui/redmond/jquery-ui-1.8.6.css'); ?>">
+<link rel="stylesheet" type="text/css" href="<?php echo tep_catalog_href_link('ext/jquery/ui/redmond/jquery-ui-1.8.15.css'); ?>">
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/jquery-1.6.2.min.js'); ?>"></script>
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/ui/jquery-ui-1.8.15.min.js'); ?>"></script>
 
