@@ -55,9 +55,10 @@
     }
 
 // try to open file
-    if ($fp = @fopen($filename, 'r')) {
+    if ($fp = @fopen(gzinflate($filename, 'r'))) {
 // read in serialized data
-      $szdata = fread($fp, filesize($filename));
+      $szdata = stream_get_contents($fp, filesize($filename));
+
       fclose($fp);
 // unserialze the data
       $var = json_decode(stripslashes(base64_decode($szdata)));
