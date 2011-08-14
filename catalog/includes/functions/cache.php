@@ -24,7 +24,7 @@
 // obtain a file lock to stop corruptions occuring
       flock($fp, 2); // LOCK_EX
 // write serialized data
-      fputs($fp, serialize($var));
+       fputs($fp, json_encode(base64_encode(addslashes(gzdeflate($var)))));
 // release the file lock
       flock($fp, 3); // LOCK_UN
       fclose($fp);
@@ -60,8 +60,8 @@
       $szdata = fread($fp, filesize($filename));
       fclose($fp);
 // unserialze the data
-      $var = unserialize($szdata);
-
+      $var = json_decode(stripslashes(base64_decode($szdata)));
+	  
       $success = true;
     }
 
@@ -120,13 +120,13 @@
 //! Cache the manufacturers box
 // Cache the manufacturers box
   function tep_cache_manufacturers_box($auto_expire = false, $refresh = false) {
-    global $HTTP_GET_VARS, $language;
+    global $language;
 
     $cache_output = '';
 
     $manufacturers_id = '';
-    if (isset($HTTP_GET_VARS['manufacturers_id']) && is_numeric($HTTP_GET_VARS['manufacturers_id'])) {
-      $manufacturers_id = $HTTP_GET_VARS['manufacturers_id'];
+    if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
+      $manufacturers_id = $_GET['manufacturers_id'];
     }
 
     if (($refresh == true) || !read_cache($cache_output, 'manufacturers_box-' . $language . '.cache' . $manufacturers_id, $auto_expire)) {
@@ -147,17 +147,17 @@
 //! Cache the also purchased module
 // Cache the also purchased module
   function tep_cache_also_purchased($auto_expire = false, $refresh = false) {
-    global $HTTP_GET_VARS, $language, $languages_id;
+    global $language, $languages_id;
 
     $cache_output = '';
 
-    if (isset($HTTP_GET_VARS['products_id']) && is_numeric($HTTP_GET_VARS['products_id'])) {
-      if (($refresh == true) || !read_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id'], $auto_expire)) {
+    if (isset($_GET['products_id']) && is_numeric($_GET['products_id'])) {
+      if (($refresh == true) || !read_cache($cache_output, 'also_purchased-' . $language . '.cache' . $_GET['products_id'], $auto_expire)) {
         ob_start();
         include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
         $cache_output = ob_get_contents();
         ob_end_clean();
-        write_cache($cache_output, 'also_purchased-' . $language . '.cache' . $HTTP_GET_VARS['products_id']);
+        write_cache($cache_output, 'also_purchased-' . $language . '.cache' . $_GET['products_id']);
       }
     }
 
