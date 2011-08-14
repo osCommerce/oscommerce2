@@ -20,6 +20,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 
   if ($product_check['total'] < 1) {
+  header('HTTP/1.1 404 Not Found');
 ?>
 
 <div class="contentContainer">
