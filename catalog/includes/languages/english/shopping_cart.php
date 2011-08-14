@@ -25,4 +25,6 @@ define('OUT_OF_STOCK_CANT_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUC
 define('OUT_OF_STOCK_CAN_CHECKOUT', 'Products marked with ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' dont exist in desired quantity in our stock.<br />You can buy them anyway and check the quantity we have in stock for immediate deliver in the checkout process.');
 
 define('TEXT_ALTERNATIVE_CHECKOUT_METHODS', '- OR -');
+define('TEXT_OR', 'or ');
+define('TEXT_REMOVE', 'remove');
 ?>
