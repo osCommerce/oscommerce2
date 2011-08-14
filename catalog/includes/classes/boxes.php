@@ -24,8 +24,8 @@
       $tableBox_string = '<table border="' . tep_output_string($this->table_border) . '" width="' . tep_output_string($this->table_width) . '" cellspacing="' . tep_output_string($this->table_cellspacing) . '" cellpadding="' . tep_output_string($this->table_cellpadding) . '"';
       if (tep_not_null($this->table_parameters)) $tableBox_string .= ' ' . $this->table_parameters;
       $tableBox_string .= '>' . "\n";
-
-      for ($i=0, $n=sizeof($contents); $i<$n; $i++) {
+	$n=sizeof($contents);
+      for ($i=0; $i<$n; $i++) {
         if (isset($contents[$i]['form']) && tep_not_null($contents[$i]['form'])) $tableBox_string .= $contents[$i]['form'] . "\n";
         $tableBox_string .= '  <tr';
         if (tep_not_null($this->table_row_parameters)) $tableBox_string .= ' ' . $this->table_row_parameters;
@@ -33,7 +33,8 @@
         $tableBox_string .= '>' . "\n";
 
         if (isset($contents[$i][0]) && is_array($contents[$i][0])) {
-          for ($x=0, $n2=sizeof($contents[$i]); $x<$n2; $x++) {
+     $n2=sizeof($contents[$i]);
+          for ($x=0; $x<$n2; $x++) {
             if (isset($contents[$i][$x]['text']) && tep_not_null($contents[$i][$x]['text'])) {
               $tableBox_string .= '    <td';
               if (isset($contents[$i][$x]['align']) && tep_not_null($contents[$i][$x]['align'])) $tableBox_string .= ' align="' . tep_output_string($contents[$i][$x]['align']) . '"';
@@ -86,7 +87,8 @@
       $this->table_parameters = 'class="infoBoxContents"';
       $info_box_contents = array();
       $info_box_contents[] = array(array('text' => tep_draw_separator('pixel_trans.gif', '100%', '1')));
-      for ($i=0, $n=sizeof($contents); $i<$n; $i++) {
+      $n=sizeof($contents);
+      for ($i=0; $i<$n; $i++) {
         $info_box_contents[] = array(array('align' => (isset($contents[$i]['align']) ? $contents[$i]['align'] : ''),
                                            'form' => (isset($contents[$i]['form']) ? $contents[$i]['form'] : ''),
                                            'params' => 'class="boxText"',
