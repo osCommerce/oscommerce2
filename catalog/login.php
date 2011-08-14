@@ -20,9 +20,9 @@
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
 
   $error = false;
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    $email_address = tep_db_prepare_input($HTTP_POST_VARS['email_address']);
-    $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+    $email_address = tep_db_prepare_input($_POST['email_address']);
+    $password = tep_db_prepare_input($_POST['password']);
 
 // Check if email exists
     $check_customer_query = tep_db_query("select customers_id, customers_firstname, customers_password, customers_email_address, customers_default_address_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
