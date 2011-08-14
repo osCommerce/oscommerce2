@@ -26,7 +26,8 @@
       global $request_type, $cPath;
 
       $set = 'true';
-      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
+	  $n=sizeof($this->path); 
+      for ($i=0; $i<$n; $i++) {
         if ( ($this->path[$i]['page'] == basename($_SERVER['PHP_SELF'])) ) {
           if (isset($cPath)) {
             if (!isset($this->path[$i]['get']['cPath'])) {
@@ -39,8 +40,8 @@
               } else {
                 $old_cPath = explode('_', $this->path[$i]['get']['cPath']);
                 $new_cPath = explode('_', $cPath);
-
-                for ($j=0, $n2=sizeof($old_cPath); $j<$n2; $j++) {
+				$n2=sizeof($old_cPath);
+                for ($j=0; $j<$n2; $j++) {
                   if ($old_cPath[$j] != $new_cPath[$j]) {
                     array_splice($this->path, ($i));
                     $set = 'true';
@@ -102,7 +103,8 @@
     }
 
     function debug() {
-      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
+    	$n=sizeof($this->path); 
+      for ($i=0; $i<$n; $i++) {
         echo $this->path[$i]['page'] . '?';
 
         foreach($this->path[$i]['get'] as $key => $value) {
