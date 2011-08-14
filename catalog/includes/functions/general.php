@@ -173,8 +173,7 @@
 
     $get_url = '';
     if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
-      reset($HTTP_GET_VARS);
-
+    
     foreach($HTTP_GET_VARS as $key => $value) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
@@ -950,9 +949,7 @@
         $attributes_check = true;
         $attributes_ids = '';
 
-        reset($params);
-
-        foreach($params as $key => $option) {
+       foreach($params as $key => $option) {
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
