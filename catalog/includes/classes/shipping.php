@@ -31,8 +31,8 @@
             $include_modules[] = array('class' => $class, 'file' => $value);
           }
         }
-
-        for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
+		$n=sizeof($include_modules);
+        for ($i=0; $i<$n; $i++) {
           include(DIR_WS_LANGUAGES . $language . '/modules/shipping/' . $include_modules[$i]['file']);
           include(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
 
@@ -106,7 +106,8 @@
         }
 
         $cheapest = false;
-        for ($i=0, $n=sizeof($rates); $i<$n; $i++) {
+		$n=sizeof($rates);
+        for ($i=0; $i<$n; $i++) {
           if (is_array($cheapest)) {
             if ($rates[$i]['cost'] < $cheapest['cost']) {
               $cheapest = $rates[$i];
