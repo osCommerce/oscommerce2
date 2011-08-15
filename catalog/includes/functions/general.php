@@ -167,8 +167,7 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
-    global $_GET;
-
+   
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
@@ -260,9 +259,8 @@
 ////
 // Returns the clients browser
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
 
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'] , $component);
   }
 
 ////
@@ -888,7 +886,6 @@
 ////
 // Return table heading with sorting capabilities
   function tep_create_sort_heading($sortby, $colnum, $heading) {
-    global $PHP_SELF;
 
     $sort_prefix = '';
     $sort_suffix = '';
@@ -1277,8 +1274,7 @@ foreach($array as $key => $value) {
   }
 
   function tep_get_ip_address() {
-    global $_SERVER;
-
+    
     $ip_address = null;
     $ip_addresses = array();
 
