@@ -67,11 +67,11 @@
     <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>
 
 <?php
-  reset($HTTP_POST_VARS);
-  while (list($key, $value) = each($HTTP_POST_VARS)) {
+  foreach($_POST as $key => $value) {
     if (($key != 'x') && ($key != 'y')) {
       if (is_array($value)) {
-        for ($i=0, $n=sizeof($value); $i<$n; $i++) {
+      	$n=sizeof($value);
+        for ($i=0; $i<$n; $i++) {
           echo osc_draw_hidden_field($key . '[]', $value[$i]);
         }
       } else {
