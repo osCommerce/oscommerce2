@@ -1403,7 +1403,6 @@
   }
 
   function tep_get_ip_address() {
-    global $_SERVER;
 
     $ip_address = null;
     $ip_addresses = array();
