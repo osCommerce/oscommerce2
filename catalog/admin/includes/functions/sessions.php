@@ -69,8 +69,7 @@
   }
 
   function tep_session_start() {
-    global $_GET, $_POST, $_COOKIE;
-
+  
     $sane_session_id = true;
 
     if (isset($_GET[tep_session_name()])) {
