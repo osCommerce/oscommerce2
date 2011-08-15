@@ -35,7 +35,8 @@
                         '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingHeader">' .
                         '      <tr>';
 
-  for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
+  $n=sizeof($column_list);
+  for ($col=0; $col<$n; $col++) {
     $lc_align = '';
 
     switch ($column_list[$col]) {
@@ -95,8 +96,8 @@
       $rows++;
 
       $prod_list_contents .= '      <tr>';
-
-      for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
+      $n=sizeof($column_list);
+      for ($col=0; $col<$n; $col++) {
         switch ($column_list[$col]) {
           case 'PRODUCT_LIST_MODEL':
             $prod_list_contents .= '        <td>' . $listing['products_model'] . '</td>';

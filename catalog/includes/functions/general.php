@@ -167,15 +167,14 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
-    global $HTTP_GET_VARS;
+    global $_GET;
 
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
-      reset($HTTP_GET_VARS);
-
-    foreach($HTTP_GET_VARS as $key => $value) {
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+    
+    foreach($_GET as $key => $value) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
@@ -950,9 +949,7 @@
         $attributes_check = true;
         $attributes_ids = '';
 
-        reset($params);
-
-        foreach($params as $key => $option) {
+       foreach($params as $key => $option) {
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
@@ -1280,13 +1277,13 @@ foreach($array as $key => $value) {
   }
 
   function tep_get_ip_address() {
-    global $HTTP_SERVER_VARS;
+    global $_SERVER;
 
     $ip_address = null;
     $ip_addresses = array();
 
-    if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
-      foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+    if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
         $x_ip = trim($x_ip);
 
         if (tep_validate_ip_address($x_ip)) {
@@ -1295,19 +1292,19 @@ foreach($array as $key => $value) {
       }
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
+    if (isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
+    if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
+      $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
+    if (isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER'])) {
+      $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
     }
 
-    $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+    $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
 
     foreach ( $ip_addresses as $ip ) {
       if (!empty($ip) && tep_validate_ip_address($ip)) {

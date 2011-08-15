@@ -48,8 +48,6 @@
         $this->lf = "\n";
       }
 
-      reset($params);
-
      foreach($params as $key => $value) {
         switch ($key) {
           case 'content_type':
@@ -120,15 +118,15 @@
         $this->_headers['Content-Type'] .= ';' . $this->lf . chr(9) . 'boundary="' . $boundary . '"';
 
 // Add body parts to $subparts
-        for ($i=0; $i<count($this->_subparts); $i++) {
+       $n=count($this->_subparts); 
+        for ($i=0; $i<$n; $i++) {
           $headers = array();
 /* HPDL PHP3 */
 //          $tmp = $this->_subparts[$i]->encode();
           $_subparts = $this->_subparts[$i];
           $tmp = $_subparts->encode();
 
-          reset($tmp['headers']);
-
+       
 foreach($tmp['headers'] as $key => $value) {
             $headers[] = $key . ': ' . $value;
           }

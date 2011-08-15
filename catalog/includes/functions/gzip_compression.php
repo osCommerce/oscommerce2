@@ -11,12 +11,12 @@
 */
 
   function tep_check_gzip() {
-   
+
     if (headers_sent() || connection_aborted()) {
       return false;
     }
 
-    if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip') !== false) return 'x-gzip';
+    if (strpos($_SERVER['HTTP_ACCEPT_LANGUAGE'], 'x-gzip') !== false) return 'x-gzip';
 
     if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip') !== false) return 'gzip';
 

@@ -69,24 +69,24 @@
   }
 
   function tep_session_start() {
-    global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS;
+    global $_GET, $_POST, $_COOKIE;
 
     $sane_session_id = true;
 
-    if (isset($HTTP_GET_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) {
-        unset($HTTP_GET_VARS[tep_session_name()]);
+    if (isset($_GET[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_GET[tep_session_name()]) == false) {
+        unset($_GET[tep_session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_POST_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) {
-        unset($HTTP_POST_VARS[tep_session_name()]);
+    } elseif (isset($_POST[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_POST[tep_session_name()]) == false) {
+        unset($_POST[tep_session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_COOKIE_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false) {
+    } elseif (isset($_COOKIE[tep_session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_COOKIE[tep_session_name()]) == false) {
         $session_data = session_get_cookie_params();
 
         setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);

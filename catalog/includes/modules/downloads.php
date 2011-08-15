@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+  if (!strstr($_SERVER['PHP_SELF'], FILENAME_ACCOUNT_HISTORY_INFO)) {
 // Get last order id for checkout_success
     $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by orders_id desc limit 1");
     $orders = tep_db_fetch_array($orders_query);
@@ -58,7 +58,7 @@
     </table>
 
 <?php
-    if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+    if (!strstr($_SERVER['PHP_SELF'], FILENAME_ACCOUNT_HISTORY_INFO)) {
 ?>
 
     <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
