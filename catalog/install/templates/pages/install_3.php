@@ -89,7 +89,6 @@
     <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>
 
 <?php
-  reset($_POST);
   foreach($_POST as $key => $value) {
     if (($key != 'x') && ($key != 'y')) {
       if (is_array($value)) {
