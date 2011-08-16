@@ -71,15 +71,15 @@
   function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
     $image = '<img src="' . tep_output_string($src) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
-    if (isset($alt)) {
+    if (tep_not_null($alt)) {
       $image .= ' title=" ' . tep_output_string($alt) . ' "';
     }
 
-    if (isset($width) && isset($height)) {
+    if (tep_not_null($width) && tep_not_null($height)) {
       $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
     }
 
-    if (isset($parameters)) $image .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $image .= ' ' . $parameters;
 
     $image .= ' />';
 
@@ -94,9 +94,9 @@
 
     $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
-    if (isset($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
+    if (tep_not_null($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
 
-    if (isset($parameters)) $image_submit .= ' ' . $parameters;
+     if (tep_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
     $image_submit .= ' />';
 
@@ -158,13 +158,13 @@
 // Output a form
   function tep_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
     $form = '<form name="' . tep_output_string($name) . '" action="';
-    if (isset($parameters)) {
+    if (tep_not_null($parameters)) {
       $form .= tep_href_link($action, $parameters);
     } else {
       $form .= tep_href_link($action);
     }
     $form .= '" method="' . tep_output_string($method) . '"';
-    if (isset($params)) {
+    if (tep_not_null($params)) {
       $form .= ' ' . $params;
     }
     $form .= '>';
@@ -187,10 +187,10 @@
     }
 
     if (isset($value)) {
-      $field .= ' value="' . tep_output_string($value) . '"';
+       if (tep_not_null($value)) {
     }
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+   if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -221,9 +221,9 @@
   
     $selection = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
-    if (isset($value)) $selection .= ' value="' . tep_output_string($value) . '"';
+    if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
-    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) || (isset($compare) && ($value == $compare)) ) {
+     if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) || (tep_not_null($compare) && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
 
@@ -251,7 +251,7 @@
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -261,7 +261,7 @@
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
         $field .= tep_output_string_protected(stripslashes($_POST[$name]));
       }
-    } elseif (isset($text)) {
+    } elseif (tep_not_null($text)) {
       $field .= tep_output_string_protected($text);
     }
 
@@ -276,7 +276,7 @@
    
     $field = '<input type="hidden" name="' . tep_output_string($name) . '"';
 
-    if (isset($value)) {
+    if (tep_not_null($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
     } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
@@ -286,7 +286,7 @@
       }
     }
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+   if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -311,7 +311,7 @@
     
     $field = '<select name="' . tep_output_string($name) . '"';
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
