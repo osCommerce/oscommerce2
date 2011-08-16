@@ -18,7 +18,7 @@
     $page = tep_output_string($page);
 
     if (!tep_not_null($page)) {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
+     $page = basename($HTTP_SERVER_VARS['PHP_SELF']); 
     }
 
     if ($connection == 'NONSSL') {
