@@ -18,7 +18,10 @@
     $page = tep_output_string($page);
 
     if (!tep_not_null($page)) {
-     $page = basename($HTTP_SERVER_VARS['PHP_SELF']); 
+    $PHP_SELF = $_SERVER['PHP_SELF'];
+    if ( empty($PHP_SELF) )
+	$_SERVER['PHP_SELF'] = $PHP_SELF = preg_replace("/(\?.*)?$/",'',$_SERVER["REQUEST_URI"]);
+	$page = basename($_SERVER['PHP_SELF']);
     }
 
     if ($connection == 'NONSSL') {
