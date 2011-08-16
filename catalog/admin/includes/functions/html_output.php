@@ -71,15 +71,15 @@
   function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
     $image = '<img src="' . tep_output_string($src) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
-    if (tep_not_null($alt)) {
+    if (isset($alt)) {
       $image .= ' title=" ' . tep_output_string($alt) . ' "';
     }
 
-    if (tep_not_null($width) && tep_not_null($height)) {
+    if (isset($width) && isset($height)) {
       $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
     }
 
-    if (tep_not_null($parameters)) $image .= ' ' . $parameters;
+    if (isset($parameters)) $image .= ' ' . $parameters;
 
     $image .= ' />';
 
@@ -94,9 +94,9 @@
 
     $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
-    if (tep_not_null($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
+    if (isset($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
 
-    if (tep_not_null($parameters)) $image_submit .= ' ' . $parameters;
+    if (isset($parameters)) $image_submit .= ' ' . $parameters;
 
     $image_submit .= ' />';
 
@@ -158,13 +158,13 @@
 // Output a form
   function tep_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
     $form = '<form name="' . tep_output_string($name) . '" action="';
-    if (tep_not_null($parameters)) {
+    if (isset($parameters)) {
       $form .= tep_href_link($action, $parameters);
     } else {
       $form .= tep_href_link($action);
     }
     $form .= '" method="' . tep_output_string($method) . '"';
-    if (tep_not_null($params)) {
+    if (isset($params)) {
       $form .= ' ' . $params;
     }
     $form .= '>';
@@ -175,7 +175,6 @@
 ////
 // Output a form input field
   function tep_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
-    global $_GET, $_POST;
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
@@ -187,11 +186,11 @@
       }
     }
 
-    if (tep_not_null($value)) {
+    if (isset($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
     }
 
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    if (isset($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -219,13 +218,12 @@
 ////
 // Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
   function tep_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '') {
-    global $_GET, $_POST;
-
+  
     $selection = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
-    if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
+    if (isset($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
-    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) || (tep_not_null($compare) && ($value == $compare)) ) {
+    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) || (isset($compare) && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
 
@@ -250,11 +248,10 @@
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
   function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
-    global $_GET, $_POST;
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    if (isset($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -264,7 +261,7 @@
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
         $field .= tep_output_string_protected(stripslashes($_POST[$name]));
       }
-    } elseif (tep_not_null($text)) {
+    } elseif (isset($text)) {
       $field .= tep_output_string_protected($text);
     }
 
@@ -276,11 +273,10 @@
 ////
 // Output a form hidden field
   function tep_draw_hidden_field($name, $value = '', $parameters = '') {
-    global $_GET, $_POST;
-
+   
     $field = '<input type="hidden" name="' . tep_output_string($name) . '"';
 
-    if (tep_not_null($value)) {
+    if (isset($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
     } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
@@ -290,7 +286,7 @@
       }
     }
 
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    if (isset($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -312,11 +308,10 @@
 ////
 // Output a form pull down menu
   function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    global $_GET, $_POST;
-
+    
     $field = '<select name="' . tep_output_string($name) . '"';
 
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    if (isset($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
