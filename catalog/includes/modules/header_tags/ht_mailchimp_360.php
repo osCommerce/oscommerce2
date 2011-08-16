@@ -29,7 +29,6 @@
     }
 
     function execute() {
-      global $PHP_SELF;
 
       include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/MCAPI.class.php');
       include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/mc360.php');
@@ -37,7 +36,7 @@
       $mc360 = new mc360();
       $mc360->set_cookies();
 
-      if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) {
+      if (basename($_SERVER['PHP_SELF']) == FILENAME_CHECKOUT_SUCCESS) {
         $mc360->process();
       }
     }
