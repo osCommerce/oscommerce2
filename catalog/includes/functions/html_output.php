@@ -17,7 +17,7 @@
 
     $page = tep_output_string($page);
 
-    if (!isset($page)) {
+    if (!tep_not_null($page)) {
     $PHP_SELF = $_SERVER['PHP_SELF'];
     if ( empty($PHP_SELF) )
 	$_SERVER['PHP_SELF'] = $PHP_SELF = preg_replace("/(\?.*)?$/",'',$_SERVER["REQUEST_URI"]);
@@ -36,7 +36,7 @@
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
     }
 
-    if (isset($parameters)) {
+    if (tep_not_null($parameters)) {
       $link .= $page . '?' . tep_output_string($parameters);
       $separator = '&';
     } else {
@@ -48,7 +48,7 @@
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
     if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (isset($SID)) {
+      if (tep_not_null($SID)) {
         $_sid = $SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
         if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
@@ -85,16 +85,16 @@
 // the image filename as default
     $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
-    if (isset($alt)) {
+    if (tep_not_null($alt)) {
       $image .= ' title=" ' . tep_output_string($alt) . ' "';
     }
 
     if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
-        if (empty($width) && isset($height)) {
+        if (empty($width) && tep_not_null($height)) {
           $ratio = $height / $image_size[1];
           $width = (int)($image_size[0] * $ratio);
-        } elseif (isset($width) && empty($height)) {
+        } elseif (tep_not_null($width) && empty($height)) {
           $ratio = $width / $image_size[0];
           $height = (int)($image_size[1] * $ratio);
         } elseif (empty($width) && empty($height)) {
@@ -106,11 +106,11 @@
       }
     }
 
-    if (isset($width) && isset($height)) {
+    if (tep_not_null($width) && tep_not_null($height)) {
       $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
     }
 
-    if (isset($parameters)) $image .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $image .= ' ' . $parameters;
 
     $image .= ' />';
 
@@ -125,9 +125,9 @@
 
     $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" alt="' . tep_output_string($alt) . '"';
 
-    if (isset($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
+    if (tep_not_null($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
 
-    if (isset($parameters)) $image_submit .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
     $image_submit .= ' />';
 
@@ -155,7 +155,7 @@
 
     $form = '<form name="' . tep_output_string($name) . '" action="' . tep_output_string($action) . '" method="' . tep_output_string($method) . '"';
 
-    if (isset($parameters)) $form .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $form .= ' ' . $parameters;
 
     $form .= '>';
 
@@ -180,11 +180,11 @@
       }
     }
 
-    if (isset($value)) {
+    if (tep_not_null($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
     }
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -203,13 +203,13 @@
  
     $selection = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
-    if (isset($value)) $selection .= ' value="' . tep_output_string($value) . '"';
+    if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
     if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) ) {
       $selection .= ' checked="checked"';
     }
 
-    if (isset($parameters)) $selection .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $selection .= ' ' . $parameters;
 
     $selection .= ' />';
 
@@ -235,7 +235,7 @@
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
@@ -245,7 +245,7 @@
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
         $field .= tep_output_string_protected(stripslashes($_POST[$name]));
       }
-    } elseif (isset($text)) {
+    } elseif (tep_not_null($text)) {
       $field .= tep_output_string_protected($text);
     }
 
@@ -260,7 +260,7 @@
 
     $field = '<input type="hidden" name="' . tep_output_string($name) . '"';
 
-    if (isset($value)) {
+    if (tep_not_null($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
     } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
@@ -270,7 +270,7 @@
       }
     }
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= ' />';
 
@@ -282,7 +282,7 @@
   function tep_hide_session_id() {
     global $session_started, $SID;
 
-    if (($session_started == true) && isset($SID)) {
+    if (($session_started == true) && tep_not_null($SID)) {
       return tep_draw_hidden_field(tep_session_name(), tep_session_id());
     }
   }
@@ -293,7 +293,7 @@
  
     $field = '<select name="' . tep_output_string($name) . '"';
 
-    if (isset($parameters)) $field .= ' ' . $parameters;
+    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     $field .= '>';
 
