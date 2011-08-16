@@ -49,7 +49,7 @@
   $whos_online_query = tep_db_query("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from " . TABLE_WHOS_ONLINE);
   while ($whos_online = tep_db_fetch_array($whos_online_query)) {
     $time_online = (time() - $whos_online['time_entry']);
-    if ((!isset($HTTP_GET_VARS['info']) || (isset($HTTP_GET_VARS['info']) && ($HTTP_GET_VARS['info'] == $whos_online['session_id']))) && !isset($info)) {
+    if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info)) {
       $info = $whos_online['session_id'];
     }
 
@@ -127,7 +127,8 @@
 
       if (isset($cart) && is_object($cart)) {
         $products = $cart->get_products();
-        for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
+		$n = sizeof($products);
+        for ($i = 0; $i < $n; $i++) {
           $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
         }
 

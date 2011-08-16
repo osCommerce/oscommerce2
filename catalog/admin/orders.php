@@ -24,14 +24,14 @@
     $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
   }
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'update_order':
-        $oID = tep_db_prepare_input($HTTP_GET_VARS['oID']);
-        $status = tep_db_prepare_input($HTTP_POST_VARS['status']);
-        $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+        $oID = tep_db_prepare_input($_GET['oID']);
+        $status = tep_db_prepare_input($_POST['status']);
+        $comments = tep_db_prepare_input($_POST['comments']);
 
         $order_updated = false;
         $check_status_query = tep_db_query("select customers_name, customers_email_address, orders_status, date_purchased from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
@@ -41,9 +41,9 @@
           tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . tep_db_input($status) . "', last_modified = now() where orders_id = '" . (int)$oID . "'");
 
           $customer_notified = '0';
-          if (isset($HTTP_POST_VARS['notify']) && ($HTTP_POST_VARS['notify'] == 'on')) {
+          if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
             $notify_comments = '';
-            if (isset($HTTP_POST_VARS['notify_comments']) && ($HTTP_POST_VARS['notify_comments'] == 'on')) {
+            if (isset($_POST['notify_comments']) && ($_POST['notify_comments'] == 'on')) {
               $notify_comments = sprintf(EMAIL_TEXT_COMMENTS_UPDATE, $comments) . "\n\n";
             }
 
@@ -68,17 +68,17 @@
         tep_redirect(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'deleteconfirm':
-        $oID = tep_db_prepare_input($HTTP_GET_VARS['oID']);
+        $oID = tep_db_prepare_input($_GET['oID']);
 
-        tep_remove_order($oID, $HTTP_POST_VARS['restock']);
+        tep_remove_order($oID, $_POST['restock']);
 
         tep_redirect(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action'))));
         break;
     }
   }
 
-  if (($action == 'edit') && isset($HTTP_GET_VARS['oID'])) {
-    $oID = tep_db_prepare_input($HTTP_GET_VARS['oID']);
+  if (($action == 'edit') && isset($_GET['oID'])) {
+    $oID = tep_db_prepare_input($_GET['oID']);
 
     $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
     $order_exists = true;
@@ -103,7 +103,7 @@
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_ORDERS_INVOICE, 'document', tep_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $HTTP_GET_VARS['oID']), null, array('newwindow' => true)) . tep_draw_button(IMAGE_ORDERS_PACKINGSLIP, 'document', tep_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $HTTP_GET_VARS['oID']), null, array('newwindow' => true)) . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></td>
+            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_ORDERS_INVOICE, 'document', tep_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . tep_draw_button(IMAGE_ORDERS_PACKINGSLIP, 'document', tep_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -196,13 +196,15 @@
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></td>
           </tr>
 <?php
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+	$n=sizeof($order->products);
+    for ($i=0; $i<$n; $i++) {
       echo '          <tr class="dataTableRow">' . "\n" .
            '            <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '            <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-        for ($j = 0, $k = sizeof($order->products[$i]['attributes']); $j < $k; $j++) {
+        $k = sizeof($order->products[$i]['attributes']);	
+        for ($j = 0; $j < $k; $j++) {
           echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
           if ($order->products[$i]['attributes'][$j]['price'] != '0') echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
           echo '</i></small></nobr>';
@@ -222,7 +224,8 @@
           <tr>
             <td align="right" colspan="8"><table border="0" cellspacing="0" cellpadding="2">
 <?php
-    for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
+	$n = sizeof($order->totals);
+    for ($i = 0; $i < $n; $i++) {
       echo '              <tr>' . "\n" .
            '                <td align="right" class="smallText">' . $order->totals[$i]['title'] . '</td>' . "\n" .
            '                <td align="right" class="smallText">' . $order->totals[$i]['text'] . '</td>' . "\n" .
@@ -327,19 +330,19 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    if (isset($HTTP_GET_VARS['cID'])) {
-      $cID = tep_db_prepare_input($HTTP_GET_VARS['cID']);
+    if (isset($_GET['cID'])) {
+      $cID = tep_db_prepare_input($_GET['cID']);
       $orders_query_raw = "select o.orders_id, o.customers_name, o.customers_id, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.customers_id = '" . (int)$cID . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by orders_id DESC";
-    } elseif (isset($HTTP_GET_VARS['status']) && is_numeric($HTTP_GET_VARS['status']) && ($HTTP_GET_VARS['status'] > 0)) {
-      $status = tep_db_prepare_input($HTTP_GET_VARS['status']);
+    } elseif (isset($_GET['status']) && is_numeric($_GET['status']) && ($_GET['status'] > 0)) {
+      $status = tep_db_prepare_input($_GET['status']);
       $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and s.orders_status_id = '" . (int)$status . "' and ot.class = 'ot_total' order by o.orders_id DESC";
     } else {
       $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by o.orders_id DESC";
     }
-    $orders_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_query_raw, $orders_query_numrows);
+    $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_query_raw, $orders_query_numrows);
     $orders_query = tep_db_query($orders_query_raw);
     while ($orders = tep_db_fetch_array($orders_query)) {
-    if ((!isset($HTTP_GET_VARS['oID']) || (isset($HTTP_GET_VARS['oID']) && ($HTTP_GET_VARS['oID'] == $orders['orders_id']))) && !isset($oInfo)) {
+    if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders['orders_id']))) && !isset($oInfo)) {
         $oInfo = new objectInfo($orders);
       }
 
@@ -361,8 +364,8 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page'], tep_get_all_get_params(array('page', 'oID', 'action'))); ?></td>
+                    <td class="smallText" valign="top"><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], tep_get_all_get_params(array('page', 'oID', 'action'))); ?></td>
                   </tr>
                 </table></td>
               </tr>

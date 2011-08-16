@@ -15,7 +15,7 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
-  $oID = tep_db_prepare_input($HTTP_GET_VARS['oID']);
+  $oID = tep_db_prepare_input($_GET['oID']);
   $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
 
   include(DIR_WS_CLASSES . 'order.php');
@@ -94,13 +94,15 @@
         <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS_MODEL; ?></td>
       </tr>
 <?php
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+	$n=sizeof($order->products);
+    for ($i=0; $i<$n; $i++) {
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-        for ($j=0, $k=sizeof($order->products[$i]['attributes']); $j<$k; $j++) {
+        $k=sizeof($order->products[$i]['attributes']); 
+        for ($j=0; $j<$k; $j++) {
           echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
           echo '</i></small></nobr>';
         }
