@@ -15,7 +15,7 @@
   require('includes/application_top.php');
   require('includes/functions/password_funcs.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 // prepare to logout an active administrator if the login page is accessed again
   if (tep_session_is_registered('admin')) {
@@ -29,8 +29,8 @@
           $username = tep_db_prepare_input($redirect_origin['auth_user']);
           $password = tep_db_prepare_input($redirect_origin['auth_pw']);
         } else {
-          $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-          $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+          $username = tep_db_prepare_input($_POST['username']);
+          $password = tep_db_prepare_input($_POST['password']);
         }
 
         $actionRecorder = new actionRecorderAdmin('ar_admin_login', null, $username);
@@ -97,8 +97,8 @@
         $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " limit 1");
 
         if (tep_db_num_rows($check_query) == 0) {
-          $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-          $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+          $username = tep_db_prepare_input($_POST['username']);
+          $password = tep_db_prepare_input($_POST['password']);
 
           tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
         }
@@ -112,7 +112,8 @@
   $languages = tep_get_languages();
   $languages_array = array();
   $languages_selected = DEFAULT_LANGUAGE;
-  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+  $n = sizeof($languages);
+  for ($i = 0; $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
     if ($languages[$i]['directory'] == $language) {

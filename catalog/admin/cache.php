@@ -12,11 +12,11 @@
 
   require('includes/application_top.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     if ($action == 'reset') {
-      tep_reset_cache_block($HTTP_GET_VARS['block']);
+      tep_reset_cache_block($_GET['block']);
     }
 
     tep_redirect(tep_href_link(FILENAME_CACHE));
@@ -54,13 +54,15 @@
   if ($messageStack->size < 1) {
     $languages = tep_get_languages();
 
-    for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+    $n=sizeof($languages);
+    for ($i=0; $i<$n; $i++) {
       if ($languages[$i]['code'] == DEFAULT_LANGUAGE) {
         $language = $languages[$i]['directory'];
       }
     }
 
-    for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
+    $n=sizeof($cache_blocks);
+    for ($i=0; $i<$n; $i++) {
       $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
 
       if (file_exists(DIR_FS_CACHE . $cached_file)) {

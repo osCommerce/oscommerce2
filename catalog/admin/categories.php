@@ -109,8 +109,7 @@
             }
           }
 
-          reset($products);
-          while (list($key, $value) = each($products)) {
+		  foreach ($products as $key => $value) {
             $category_ids = '';
 
 			$n=sizeof($value['categories']);

@@ -14,7 +14,7 @@
 
   $htaccess_array = null;
   $htpasswd_array = null;
-  $is_iis = stripos($HTTP_SERVER_VARS['SERVER_SOFTWARE'], 'iis');
+  $is_iis = stripos($_SERVER['SERVER_SOFTWARE'], 'iis');
 
   $authuserfile_array = array('##### OSCOMMERCE ADMIN PROTECTION - BEGIN #####',
                               'AuthType Basic',
@@ -44,15 +44,15 @@
     }
   }
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
         require('includes/functions/password_funcs.php');
 
-        $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+        $username = tep_db_prepare_input($_POST['username']);
+        $password = tep_db_prepare_input($_POST['password']);
 
         $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "' limit 1");
 
@@ -60,7 +60,8 @@
           tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
 
           if (is_array($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+            $n=sizeof($htpasswd_array);
+            for ($i=0; $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
               if ($ht_username == $username) {
@@ -68,7 +69,7 @@
               }
             }
 
-            if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
+            if (isset($_POST['htaccess']) && ($_POST['htaccess'] == 'true')) {
               $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
             }
 
@@ -79,7 +80,8 @@
             if (!in_array('AuthUserFile ' . DIR_FS_ADMIN . '.htpasswd_oscommerce', $htaccess_array) && !empty($htpasswd_array)) {
               array_splice($htaccess_array, sizeof($htaccess_array), 0, $authuserfile_array);
             } elseif (empty($htpasswd_array)) {
-              for ($i=0, $n=sizeof($htaccess_array); $i<$n; $i++) {
+             $n=sizeof($htaccess_array);
+              for ($i=0; $i<$n; $i++) {
                 if (in_array($htaccess_array[$i], $authuserfile_array)) {
                   unset($htaccess_array[$i]);
                 }
@@ -99,10 +101,10 @@
       case 'save':
         require('includes/functions/password_funcs.php');
 
-        $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+        $username = tep_db_prepare_input($_POST['username']);
+        $password = tep_db_prepare_input($_POST['password']);
 
-        $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
+        $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$_GET['aID'] . "'");
         $check = tep_db_fetch_array($check_query);
 
 // update username in current session if changed
@@ -112,7 +114,8 @@
 
 // update username in htpasswd if changed
         if (is_array($htpasswd_array)) {
-          for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+        $n=sizeof($htpasswd_array);
+          for ($i=0; $i<$n; $i++) {
             list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
             if ( ($check['user_name'] == $ht_username) && ($check['user_name'] != $username) ) {
@@ -121,12 +124,13 @@
           }
         }
 
-        tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . tep_db_input($username) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
+        tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . tep_db_input($username) . "' where id = '" . (int)$_GET['aID'] . "'");
 
         if (tep_not_null($password)) {
 // update password in htpasswd
           if (is_array($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+          	$n=sizeof($htpasswd_array);
+            for ($i=0; $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
               if ($ht_username == $username) {
@@ -134,15 +138,16 @@
               }
             }
 
-            if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
+            if (isset($_POST['htaccess']) && ($_POST['htaccess'] == 'true')) {
               $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
             }
           }
 
-          tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
-        } elseif (!isset($HTTP_POST_VARS['htaccess']) || ($HTTP_POST_VARS['htaccess'] != 'true')) {
+          tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$_GET['aID'] . "'");
+        } elseif (!isset($_POST['htaccess']) || ($_POST['htaccess'] != 'true')) {
           if (is_array($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+          	$n=sizeof($htpasswd_array);
+            for ($i=0; $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
               if ($ht_username == $username) {
@@ -173,10 +178,10 @@
           fclose($fp);
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$HTTP_GET_VARS['aID']));
+        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
         break;
       case 'deleteconfirm':
-        $id = tep_db_prepare_input($HTTP_GET_VARS['aID']);
+        $id = tep_db_prepare_input($_GET['aID']);
 
         $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
         $check = tep_db_fetch_array($check_query);
@@ -188,7 +193,8 @@
         tep_db_query("delete from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
 
         if (is_array($htpasswd_array)) {
-          for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+        $n=sizeof($htpasswd_array);
+          for ($i=0; $i<$n; $i++) {
             list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
             if ($ht_username == $check['user_name']) {
@@ -201,7 +207,8 @@
           fclose($fp);
 
           if (empty($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htaccess_array); $i<$n; $i++) {
+          	$n=sizeof($htaccess_array);
+            for ($i=0; $i<$n; $i++) {
               if (in_array($htaccess_array[$i], $authuserfile_array)) {
                 unset($htaccess_array[$i]);
               }
@@ -261,7 +268,7 @@
 <?php
   $admins_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " order by user_name");
   while ($admins = tep_db_fetch_array($admins_query)) {
-    if ((!isset($HTTP_GET_VARS['aID']) || (isset($HTTP_GET_VARS['aID']) && ($HTTP_GET_VARS['aID'] == $admins['id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
+    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ($_GET['aID'] == $admins['id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
       $aInfo = new objectInfo($admins);
     }
 
@@ -273,7 +280,8 @@
     }
 
     if (is_array($htpasswd_array)) {
-      for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+    	$n=sizeof($htpasswd_array);
+      for ($i=0; $i<$n; $i++) {
         list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
         if ($ht_username == $admins['user_name']) {
@@ -330,7 +338,8 @@
       if (is_array($htpasswd_array)) {
         $default_flag = false;
 
-        for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+		$n=sizeof($htpasswd_array);
+        for ($i=0; $i<$n; $i++) {
           list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
           if ($ht_username == $aInfo->user_name) {

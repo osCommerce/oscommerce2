@@ -15,7 +15,7 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
-  $oID = tep_db_prepare_input($HTTP_GET_VARS['oID']);
+  $oID = tep_db_prepare_input($_GET['oID']);
   $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
 
   include(DIR_WS_CLASSES . 'order.php');
@@ -100,7 +100,8 @@
         <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></td>
       </tr>
 <?php
-    for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
+	$n = sizeof($order->products);
+    for ($i = 0; $i < $n; $i++) {
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
@@ -126,7 +127,8 @@
       <tr>
         <td align="right" colspan="8"><table border="0" cellspacing="0" cellpadding="2">
 <?php
-  for ($i = 0, $n = sizeof($order->totals); $i < $n; $i++) {
+  $n = sizeof($order->totals);
+  for ($i = 0; $i < $n; $i++) {
     echo '          <tr>' . "\n" .
          '            <td align="right" class="smallText">' . $order->totals[$i]['title'] . '</td>' . "\n" .
          '            <td align="right" class="smallText">' . $order->totals[$i]['text'] . '</td>' . "\n" .

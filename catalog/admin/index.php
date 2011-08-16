@@ -15,7 +15,8 @@
   $languages = tep_get_languages();
   $languages_array = array();
   $languages_selected = DEFAULT_LANGUAGE;
-  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+  $n = sizeof($languages);
+  for ($i = 0; $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
     if ($languages[$i]['directory'] == $language) {
@@ -53,7 +54,8 @@
 
     $col = 0;
 
-    for ( $i=0, $n=sizeof($adm_array); $i<$n; $i++ ) {
+	$n=sizeof($adm_array);
+    for ( $i=0; $i<$n; $i++ ) {
       $adm = $adm_array[$i];
 
       $class = substr($adm, 0, strrpos($adm, '.'));
