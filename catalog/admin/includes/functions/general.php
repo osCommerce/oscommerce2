@@ -117,14 +117,12 @@
   }
 
   function tep_get_all_get_params($exclude_array = '') {
-    global $_GET;
-
+    
     if ($exclude_array == '') $exclude_array = array();
 
     $get_url = '';
 
-    reset($_GET);
-    while (list($key, $value) = each($_GET)) {
+	foreach($_GET as $key => $value) {
       if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
@@ -334,9 +332,8 @@
   }
 
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
 
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
   function tep_tax_classes_pull_down($parameters, $selected = '') {
@@ -478,7 +475,7 @@
   function tep_get_uprid($prid, $params) {
     $uprid = $prid;
     if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-      while (list($option, $value) = each($params)) {
+      foreach ($params as $option => $value) {
         $uprid = $uprid . '{' . $option . '}' . $value;
       }
     }
@@ -790,8 +787,9 @@
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '';
-
-    for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
+    
+    $n=sizeof($select_array);
+    for ($i=0; $i<$n; $i++) {
       $name = ((tep_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
@@ -807,8 +805,7 @@
 ////
 // Alias function for module configuration keys
   function tep_mod_select_option($select_array, $key_name, $key_value) {
-    reset($select_array);
-    while (list($key, $value) = each($select_array)) {
+	foreach ($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' checked="checked"';
@@ -821,8 +818,7 @@
 ////
 // Retreive server information
   function tep_get_system_information() {
-    global $_SERVER;
-
+ 
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
@@ -901,8 +897,10 @@
   function tep_output_generated_category_path($id, $from = 'category') {
     $calculated_category_path_string = '';
     $calculated_category_path = tep_generate_category_path($id, $from);
-    for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
-      for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
+    $n=sizeof($calculated_category_path);
+    for ($i=0; $i<$n; $i++) {
+      $k=sizeof($calculated_category_path[$i]);	
+      for ($j=0; $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
       }
       $calculated_category_path_string = substr($calculated_category_path_string, 0, -16) . '<br />';
@@ -917,8 +915,10 @@
   function tep_get_generated_category_path_ids($id, $from = 'category') {
     $calculated_category_path_string = '';
     $calculated_category_path = tep_generate_category_path($id, $from);
-    for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
-      for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
+    $n=sizeof($calculated_category_path);
+    for ($i=0; $i<$n; $i++) {
+      $k=sizeof($calculated_category_path[$i]);
+      for ($j=0; $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['id'] . '_';
       }
       $calculated_category_path_string = substr($calculated_category_path_string, 0, -1) . '<br />';
@@ -1020,14 +1020,16 @@
   function tep_reset_cache_block($cache_block) {
     global $cache_blocks;
 
-    for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
+    $n=sizeof($cache_blocks);
+    for ($i=0; $i<$n; $i++) {
       if ($cache_blocks[$i]['code'] == $cache_block) {
         if ($cache_blocks[$i]['multiple']) {
           if ($dir = @opendir(DIR_FS_CACHE)) {
             while ($cache_file = readdir($dir)) {
               $cached_file = $cache_blocks[$i]['file'];
               $languages = tep_get_languages();
-              for ($j=0, $k=sizeof($languages); $j<$k; $j++) {
+			  $k=sizeof($languages);
+              for ($j=0; $j<$k; $j++) {
                 $cached_file_unlink = preg_replace('/-language/', '-' . $languages[$j]['directory'], $cached_file);
                 if (preg_match('/^' . $cached_file_unlink . '/', $cache_file)) {
                   @unlink(DIR_FS_CACHE . $cache_file);
@@ -1039,7 +1041,8 @@
         } else {
           $cached_file = $cache_blocks[$i]['file'];
           $languages = tep_get_languages();
-          for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+		  $n=sizeof($languages);
+          for ($i=0; $i<$n; $i++) {
             $cached_file = preg_replace('/-language/', '-' . $languages[$i]['directory'], $cached_file);
             @unlink(DIR_FS_CACHE . $cached_file);
           }
@@ -1408,8 +1411,7 @@
   }
 
   function tep_get_ip_address() {
-    global $_SERVER;
-
+   
     $ip_address = null;
     $ip_addresses = array();
 
