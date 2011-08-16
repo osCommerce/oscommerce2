@@ -117,12 +117,14 @@
   }
 
   function tep_get_all_get_params($exclude_array = '') {
-    
+    global $_GET;
+
     if ($exclude_array == '') $exclude_array = array();
 
     $get_url = '';
 
-	foreach($_GET as $key => $value) {
+    reset($_GET);
+    while (list($key, $value) = each($_GET)) {
       if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
@@ -332,8 +334,9 @@
   }
 
   function tep_browser_detect($component) {
-   
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
+    global $HTTP_USER_AGENT;
+
+    return stristr($HTTP_USER_AGENT, $component);
   }
 
   function tep_tax_classes_pull_down($parameters, $selected = '') {
@@ -475,7 +478,7 @@
   function tep_get_uprid($prid, $params) {
     $uprid = $prid;
     if ( (is_array($params)) && (!strstr($prid, '{')) ) {
-    foreach($params as $option => $value) {
+      while (list($option, $value) = each($params)) {
         $uprid = $uprid . '{' . $option . '}' . $value;
       }
     }
@@ -804,7 +807,8 @@
 ////
 // Alias function for module configuration keys
   function tep_mod_select_option($select_array, $key_name, $key_value) {
-	foreach($select_array as $key => $value) {
+    reset($select_array);
+    while (list($key, $value) = each($select_array)) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' checked="checked"';
@@ -817,7 +821,8 @@
 ////
 // Retreive server information
   function tep_get_system_information() {
-  
+    global $_SERVER;
+
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
@@ -1403,6 +1408,7 @@
   }
 
   function tep_get_ip_address() {
+    global $_SERVER;
 
     $ip_address = null;
     $ip_addresses = array();
