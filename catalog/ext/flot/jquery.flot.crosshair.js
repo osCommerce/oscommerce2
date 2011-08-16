@@ -1,5 +1,5 @@
 /*
-Flot plugin for showing a crosshair, thin lines, when the mouse hovers
+Flot plugin for showing crosshairs, thin lines, when the mouse hovers
 over the plot.
 
   crosshair: {
@@ -19,10 +19,11 @@ The plugin also adds four public methods:
   - setCrosshair(pos)
 
     Set the position of the crosshair. Note that this is cleared if
-    the user moves the mouse. "pos" should be on the form { x: xpos,
-    y: ypos } (or x2 and y2 if you're using the secondary axes), which
-    is coincidentally the same format as what you get from a "plothover"
-    event. If "pos" is null, the crosshair is cleared.
+    the user moves the mouse. "pos" is in coordinates of the plot and
+    should be on the form { x: xpos, y: ypos } (you can use x2/x3/...
+    if you're using multiple axes), which is coincidentally the same
+    format as what you get from a "plothover" event. If "pos" is null,
+    the crosshair is cleared.
 
   - clearCrosshair()
 
@@ -69,10 +70,9 @@ The plugin also adds four public methods:
             if (!pos)
                 crosshair.x = -1;
             else {
-                var axes = plot.getAxes();
-                
-                crosshair.x = Math.max(0, Math.min(pos.x != null ? axes.xaxis.p2c(pos.x) : axes.x2axis.p2c(pos.x2), plot.width()));
-                crosshair.y = Math.max(0, Math.min(pos.y != null ? axes.yaxis.p2c(pos.y) : axes.y2axis.p2c(pos.y2), plot.height()));
+                var o = plot.p2c(pos);
+                crosshair.x = Math.max(0, Math.min(o.left, plot.width()));
+                crosshair.y = Math.max(0, Math.min(o.top, plot.height()));
             }
             
             plot.triggerRedrawOverlay();
@@ -90,31 +90,37 @@ The plugin also adds four public methods:
             crosshair.locked = false;
         }
 
+        function onMouseOut(e) {
+            if (crosshair.locked)
+                return;
+
+            if (crosshair.x != -1) {
+                crosshair.x = -1;
+                plot.triggerRedrawOverlay();
+            }
+        }
+
+        function onMouseMove(e) {
+            if (crosshair.locked)
+                return;
+                
+            if (plot.getSelection && plot.getSelection()) {
+                crosshair.x = -1; // hide the crosshair while selecting
+                return;
+            }
+                
+            var offset = plot.offset();
+            crosshair.x = Math.max(0, Math.min(e.pageX - offset.left, plot.width()));
+            crosshair.y = Math.max(0, Math.min(e.pageY - offset.top, plot.height()));
+            plot.triggerRedrawOverlay();
+        }
+        
         plot.hooks.bindEvents.push(function (plot, eventHolder) {
             if (!plot.getOptions().crosshair.mode)
                 return;
 
-            eventHolder.mouseout(function () {
-                if (crosshair.x != -1) {
-                    crosshair.x = -1;
-                    plot.triggerRedrawOverlay();
-                }
-            });
-            
-            eventHolder.mousemove(function (e) {
-                if (plot.getSelection && plot.getSelection()) {
-                    crosshair.x = -1; // hide the crosshair while selecting
-                    return;
-                }
-                
-                if (crosshair.locked)
-                    return;
-                
-                var offset = plot.offset();
-                crosshair.x = Math.max(0, Math.min(e.pageX - offset.left, plot.width()));
-                crosshair.y = Math.max(0, Math.min(e.pageY - offset.top, plot.height()));
-                plot.triggerRedrawOverlay();
-            });
+            eventHolder.mouseout(onMouseOut);
+            eventHolder.mousemove(onMouseMove);
         });
 
         plot.hooks.drawOverlay.push(function (plot, ctx) {
@@ -144,6 +150,11 @@ The plugin also adds four public methods:
                 ctx.stroke();
             }
             ctx.restore();
+        });
+
+        plot.hooks.shutdown.push(function (plot, eventHolder) {
+            eventHolder.unbind("mouseout", onMouseOut);
+            eventHolder.unbind("mousemove", onMouseMove);
         });
     }
     
