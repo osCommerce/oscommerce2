@@ -450,7 +450,7 @@
     $address_format = tep_db_fetch_array($address_format_query);
 
     $company = tep_output_string_protected($address['company']);
-     if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
+    if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
       $firstname = tep_output_string_protected($address['firstname']);
       $lastname = tep_output_string_protected($address['lastname']);
     } elseif (isset($address['name']) && tep_not_null($address['name'])) {
@@ -467,10 +467,10 @@
     if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
       $country = tep_get_country_name($address['country_id']);
 
-       if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
+      if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
         $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
       }
-     } elseif (isset($address['country']) && isset($address['country'])) {
+    } elseif (isset($address['country']) && tep_not_null($address['country'])) {
       $country = tep_output_string_protected($address['country']['title']);
     } else {
       $country = '';
