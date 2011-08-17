@@ -38,7 +38,7 @@
   define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
 
 // set the type of request (secure or not)
-  $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
+  $request_type = ($_ENV['HTTPS'] == 'on') ? 'SSL' : 'NONSSL';
 
 // set php_self in the local scope
   $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($_SERVER['SCRIPT_NAME'])) ? basename($_SERVER['PHP_SELF']) : basename($_SERVER['SCRIPT_NAME']);
@@ -84,10 +84,10 @@
 
 // set the HTTP GET parameters manually if search_engine_friendly_urls is enabled
   if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
-    if (strlen(getenv('PATH_INFO')) > 1) {
+    if (strlen($_ENV['PATH_INFO']) > 1) {
       $GET_array = array();
       $PHP_SELF = str_replace($_ENV['PATH_INFO'], '', $_SERVER['PHP_SELF']);
-      $vars = explode('/', substr(getenv('PATH_INFO'), 1));
+      $vars = explode('/', substr($_ENV['PATH_INFO'], 1));
 	  $n=sizeof($vars);
       for ($i=0; $i<$n; $i++) {
         if (strpos($vars[$i], '[]')) {
@@ -158,13 +158,14 @@
       $session_started = true;
     }
   } elseif (SESSION_BLOCK_SPIDERS == 'True') {
-    $user_agent = strtolower(getenv('HTTP_USER_AGENT'));
+    $user_agent = strtolower($_ENV['HTTP_USER_AGENT']);
     $spider_flag = false;
 
     if (tep_not_null($user_agent)) {
       $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
 
-      for ($i=0, $n=sizeof($spiders); $i<$n; $i++) {
+	  $n=sizeof($spiders);
+      for ($i=0; $i<$n; $i++) {
         if (tep_not_null($spiders[$i])) {
           if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
             $spider_flag = true;
@@ -198,7 +199,7 @@
 
 // verify the ssl_session_id if the feature is enabled
   if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true) ) {
-    $ssl_session_id = getenv('SSL_SESSION_ID');
+    $ssl_session_id = $_ENV['SSL_SESSION_ID'];
     if (!tep_session_is_registered('SSL_SESSION_ID')) {
       $SESSION_SSL_ID = $ssl_session_id;
       tep_session_register('SESSION_SSL_ID');
@@ -212,7 +213,7 @@
 
 // verify the browser user agent if the feature is enabled
   if (SESSION_CHECK_USER_AGENT == 'True') {
-    $http_user_agent = getenv('HTTP_USER_AGENT');
+    $http_user_agent = $_ENV['HTTP_USER_AGENT'];
     if (!tep_session_is_registered('SESSION_USER_AGENT')) {
       $SESSION_USER_AGENT = $http_user_agent;
       tep_session_register('SESSION_USER_AGENT');
@@ -316,7 +317,8 @@
     }
     switch ($_GET['action']) {
       // customer wants to update the product quantity in their shopping cart
-      case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
+      case 'update_product' :   $n=sizeof($_POST['products_id']);
+      							for ($i=0; $i<$n; $i++) {
                                 if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
                                   $cart->remove($_POST['products_id'][$i]);
                                 } else {
@@ -360,7 +362,8 @@
                                   tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'notify'))));
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
-                                for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
+								$n=sizeof($notify);
+                                for ($i=0; $i<$n; $i++) {
                                   $check_query = tep_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . $notify[$i] . "' and customers_id = '" . $customer_id . "'");
                                   $check = tep_db_fetch_array($check_query);
                                   if ($check['count'] < 1) {
@@ -451,7 +454,8 @@
 
 // add category names or the manufacturer name to the breadcrumb trail
   if (isset($cPath_array)) {
-    for ($i=0, $n=sizeof($cPath_array); $i<$n; $i++) {
+  	$n=sizeof($cPath_array);
+    for ($i=0; $i<$n; $i++) {
       $categories_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$languages_id . "'");
       if (tep_db_num_rows($categories_query) > 0) {
         $categories = tep_db_fetch_array($categories_query);
