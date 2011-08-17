@@ -42,11 +42,11 @@
                       'type' => $_FILES[$this->file]['type'],
                       'size' => $_FILES[$this->file]['size'],
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      } elseif (isset($_POST[$this->file])) {
-        $file = array('name' => $_POST[$this->file]['name'],
-                      'type' => $_POST[$this->file]['type'],
-                      'size' => $_POST[$this->file]['size'],
-                      'tmp_name' => $_POST[$this->file]['tmp_name']);
+      } elseif (isset($_FILES[$this->file])) {
+        $file = array('name' => $_FILE[$this->file]['name'],
+                      'type' => $_FILES[$this->file]['type'],
+                      'size' => $_FILES[$this->file]['size'],
+                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
       }
 
       if ( tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
