@@ -86,10 +86,10 @@
   if (SEARCH_ENGINE_FRIENDLY_URLS == 'true') {
     if (strlen(getenv('PATH_INFO')) > 1) {
       $GET_array = array();
-      $PHP_SELF = str_replace(getenv('PATH_INFO'), '', $PHP_SELF);
+      $PHP_SELF = str_replace($_ENV['PATH_INFO'], '', $_SERVER['PHP_SELF']);
       $vars = explode('/', substr(getenv('PATH_INFO'), 1));
-      do_magic_quotes_gpc($vars);
-      for ($i=0, $n=sizeof($vars); $i<$n; $i++) {
+	  $n=sizeof($vars);
+      for ($i=0; $i<$n; $i++) {
         if (strpos($vars[$i], '[]')) {
           $GET_array[substr($vars[$i], 0, -2)][] = $vars[$i+1];
         } else {
