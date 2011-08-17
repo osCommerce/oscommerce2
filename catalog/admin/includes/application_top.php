@@ -31,9 +31,6 @@
 // Define the project version --- obsolete, now retrieved with tep_get_version()
   define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
 
-// some code to solve compatibility issues
-  require(DIR_WS_FUNCTIONS . 'compatibility.php');
-
 // set php_self in the local scope
   $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($_SERVER['SCRIPT_NAME'])) ? basename($_SERVER['PHP_SELF']) : basename($_SERVER['SCRIPT_NAME']);
 
