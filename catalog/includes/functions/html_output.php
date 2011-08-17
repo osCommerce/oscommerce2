@@ -18,10 +18,7 @@
     $page = tep_output_string($page);
 
     if (!tep_not_null($page)) {
-    $PHP_SELF = $_SERVER['PHP_SELF'];
-    if ( empty($PHP_SELF) )
-	$_SERVER['PHP_SELF'] = $PHP_SELF = preg_replace("/(\?.*)?$/",'',$_SERVER["REQUEST_URI"]);
-	$page = basename($_SERVER['PHP_SELF']);
+      die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>');
     }
 
     if ($connection == 'NONSSL') {

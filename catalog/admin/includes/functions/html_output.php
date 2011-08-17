@@ -16,11 +16,9 @@
     $page = tep_output_string($page);
 
     if ($page == '') {
-    $PHP_SELF = $_SERVER['PHP_SELF'];
-    if ( empty($PHP_SELF) )
-	$_SERVER['PHP_SELF'] = $PHP_SELF = preg_replace("/(\?.*)?$/",'',$_SERVER["REQUEST_URI"]);
-	$page = basename($_SERVER['PHP_SELF']);
+    die('</td></tr></table></td></tr></table><br><br><font color="#ff0000"><b>Error!</b></font><br><br><b>Unable to determine the page link!<br><br>');
     }
+  
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER . DIR_WS_ADMIN;
     } elseif ($connection == 'SSL') {
