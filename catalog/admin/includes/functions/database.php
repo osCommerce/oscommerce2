@@ -52,13 +52,15 @@
   }
 
   function tep_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
+    reset($data);
     if ($action == 'insert') {
       $query = 'insert into ' . $table . ' (';
-		foreach($data as $columns) {
+      while (list($columns, ) = each($data)) {
         $query .= $columns . ', ';
       }
       $query = substr($query, 0, -2) . ') values (';
-      foreach($data as $value) {
+      reset($data);
+      while (list(, $value) = each($data)) {
         switch ((string)$value) {
           case 'now()':
             $query .= 'now(), ';
@@ -74,7 +76,7 @@
       $query = substr($query, 0, -2) . ')';
     } elseif ($action == 'update') {
       $query = 'update ' . $table . ' set ';
-	  foreach($data as $columns => $value) {
+	  foreach ($data as $columns => $value ) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';
@@ -143,7 +145,7 @@
     if (is_string($string)) {
       return trim(stripslashes($string));
     } elseif (is_array($string)) {
-      foreach($string as $key => $value) {
+      foreach ($string as $key => $value) {
         $string[$key] = tep_db_prepare_input($value);
       }
       return $string;
