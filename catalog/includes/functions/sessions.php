@@ -74,19 +74,19 @@
     $sane_session_id = true;
 
     if (isset($_GET[tep_session_name()])) {
-      if (ctype_alnum($_GET[tep_session_name()]) == false) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_GET[tep_session_name()]) == false) {
         unset($_GET[tep_session_name()]);
 
         $sane_session_id = false;
       }
     } elseif (isset($_POST[tep_session_name()])) {
-      if (ctype_alnum($_POST[tep_session_name()]) == false) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_POST[tep_session_name()]) == false) {
         unset($_POST[tep_session_name()]);
 
         $sane_session_id = false;
       }
     } elseif (isset($_COOKIE[tep_session_name()])) {
-      if (ctype_alnum($_COOKIE[tep_session_name()]) == false) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_COOKIE[tep_session_name()]) == false) {
         $session_data = session_get_cookie_params();
 
         setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
