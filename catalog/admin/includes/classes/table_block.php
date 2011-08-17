@@ -33,14 +33,16 @@
       if (tep_not_null($this->table_parameters)) $tableBox_string .= ' ' . $this->table_parameters;
       $tableBox_string .= '>' . "\n";
 
-      for ($i=0, $n=sizeof($contents); $i<$n; $i++) {
+	  $n=sizeof($contents);
+      for ($i=0; $i<$n; $i++) {
         $tableBox_string .= '  <tr';
         if (tep_not_null($this->table_row_parameters)) $tableBox_string .= ' ' . $this->table_row_parameters;
         if (isset($contents[$i]['params']) && tep_not_null($contents[$i]['params'])) $tableBox_string .= ' ' . $contents[$i]['params'];
         $tableBox_string .= '>' . "\n";
 
         if (isset($contents[$i][0]) && is_array($contents[$i][0])) {
-          for ($x=0, $y=sizeof($contents[$i]); $x<$y; $x++) {
+          $y=sizeof($contents[$i]);	
+          for ($x=0; $x<$y; $x++) {
             if (isset($contents[$i][$x]['text']) && tep_not_null($contents[$i][$x]['text'])) {
               $tableBox_string .= '    <td';
               if (isset($contents[$i][$x]['align']) && tep_not_null($contents[$i][$x]['align'])) $tableBox_string .= ' align="' . $contents[$i][$x]['align'] . '"';
