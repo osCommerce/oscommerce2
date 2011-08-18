@@ -148,14 +148,14 @@
   asort($define_list);
 
   $column_list = array();
-  reset($define_list);
-  while (list($key, $value) = each($define_list)) {
+  foreach ($define_list as $key => $value) {
     if ($value > 0) $column_list[] = $key;
   }
 
   $select_column_list = '';
 
-  for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
+	$n=sizeof($column_list);
+  for ($i=0; $i<$n; $i++) {
     switch ($column_list[$i]) {
       case 'PRODUCT_LIST_MODEL':
         $select_column_list .= 'p.products_model, ';
@@ -202,7 +202,8 @@
 
       $where_str .= " and p2c.products_id = p.products_id and p2c.products_id = pd.products_id and (p2c.categories_id = '" . (int)$_GET['categories_id'] . "'";
 
-      for ($i=0, $n=sizeof($subcategories_array); $i<$n; $i++ ) {
+      $n=sizeof($subcategories_array);
+      for ($i=0; $i<$n; $i++ ) {
         $where_str .= " or p2c.categories_id = '" . (int)$subcategories_array[$i] . "'";
       }
 
@@ -218,7 +219,8 @@
 
   if (isset($search_keywords) && (sizeof($search_keywords) > 0)) {
     $where_str .= " and (";
-    for ($i=0, $n=sizeof($search_keywords); $i<$n; $i++ ) {
+	  $n=sizeof($search_keywords);
+    for ($i=0; $i<$n; $i++ ) {
       switch ($search_keywords[$i]) {
         case '(':
         case ')':
@@ -272,7 +274,8 @@
   }
 
   if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
-    for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
+    $n=sizeof($column_list);	
+    for ($i=0; $i<$n; $i++) {
       if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
         $_GET['sort'] = $i+1 . 'a';
         $order_str = " order by pd.products_name";
