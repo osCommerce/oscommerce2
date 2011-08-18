@@ -1,4 +1,4 @@
-# $Id$
+﻿# $Id$
 #
 # osCommerce, Open Source E-Commerce Solutions
 # http://www.oscommerce.com
@@ -114,7 +114,7 @@ CREATE TABLE categories (
 DROP TABLE IF EXISTS categories_description;
 CREATE TABLE categories_description (
    categories_id int DEFAULT '0' NOT NULL,
-   language_id int DEFAULT '1' NOT NULL,
+   language_id tinyint DEFAULT '1' NOT NULL,
    categories_name varchar(32) NOT NULL,
    PRIMARY KEY (categories_id, language_id),
    KEY idx_categories_name (categories_name)
@@ -350,7 +350,7 @@ CREATE TABLE orders_products (
 DROP TABLE IF EXISTS orders_status;
 CREATE TABLE orders_status (
    orders_status_id int DEFAULT '0' NOT NULL,
-   language_id int DEFAULT '1' NOT NULL,
+   language_id tinyint DEFAULT '1' NOT NULL,
    orders_status_name varchar(32) NOT NULL,
    public_flag int DEFAULT '1',
    downloads_flag int DEFAULT '0',
@@ -452,7 +452,7 @@ CREATE TABLE products_attributes_download (
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
   products_id int NOT NULL auto_increment,
-  language_id int NOT NULL default '1',
+  language_id tinyint NOT NULL default '1',
   products_name varchar(64) NOT NULL default '',
   products_description text,
   products_url varchar(255) default NULL,
@@ -483,7 +483,7 @@ CREATE TABLE products_notifications (
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id int NOT NULL default '0',
-  language_id int NOT NULL default '1',
+  language_id tinyint NOT NULL default '1',
   products_options_name varchar(32) NOT NULL default '',
   PRIMARY KEY  (products_options_id,language_id)
 );
@@ -491,7 +491,7 @@ CREATE TABLE products_options (
 DROP TABLE IF EXISTS products_options_values;
 CREATE TABLE products_options_values (
   products_options_values_id int NOT NULL default '0',
-  language_id int NOT NULL default '1',
+  language_id tinyint NOT NULL default '1',
   products_options_values_name varchar(64) NOT NULL default '',
   PRIMARY KEY  (products_options_values_id,language_id)
 );
