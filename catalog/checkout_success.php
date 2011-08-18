@@ -17,17 +17,18 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'update')) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'update')) {
     $notify_string = '';
 
-    if (isset($HTTP_POST_VARS['notify']) && !empty($HTTP_POST_VARS['notify'])) {
-      $notify = $HTTP_POST_VARS['notify'];
+    if (isset($_POST['notify']) && !empty($_POST['notify'])) {
+      $notify = $_POST['notify'];
 
       if (!is_array($notify)) {
         $notify = array($notify);
       }
 
-      for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
+	$n=sizeof($notify);
+      for ($i=0; $i<$n; $i++) {
         if (is_numeric($notify[$i])) {
           $notify_string .= 'notify[]=' . $notify[$i] . '&';
         }
@@ -80,7 +81,8 @@
     echo TEXT_NOTIFY_PRODUCTS . '<br /><p class="productsNotifications">';
 
     $products_displayed = array();
-    for ($i=0, $n=sizeof($products_array); $i<$n; $i++) {
+	$n=sizeof($products_array);
+    for ($i=0; $i<$n; $i++) {
       if (!in_array($products_array[$i]['id'], $products_displayed)) {
         echo tep_draw_checkbox_field('notify[]', $products_array[$i]['id']) . ' ' . $products_array[$i]['text'] . '<br />';
         $products_displayed[] = $products_array[$i]['id'];

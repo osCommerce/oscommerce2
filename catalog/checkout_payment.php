@@ -38,7 +38,8 @@
 // Stock Check
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $cart->get_products();
-    for ($i=0, $n=sizeof($products); $i<$n; $i++) {
+	  $n=sizeof($products);
+    for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
         break;
@@ -67,8 +68,8 @@
   $order = new order;
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
   $total_weight = $cart->show_weight();
@@ -127,7 +128,7 @@ function rowOutEffect(object) {
 <div class="contentContainer">
 
 <?php
-  if (isset($HTTP_GET_VARS['payment_error']) && is_object(${$HTTP_GET_VARS['payment_error']}) && ($error = ${$HTTP_GET_VARS['payment_error']}->get_error())) {
+  if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
 ?>
 
   <div class="contentText">
@@ -188,7 +189,8 @@ function rowOutEffect(object) {
 
 <?php
   $radio_buttons = 0;
-  for ($i=0, $n=sizeof($selection); $i<$n; $i++) {
+  $n=sizeof($selection);
+  for ($i=0; $i<$n; $i++) {
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -231,7 +233,8 @@ function rowOutEffect(object) {
         <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
 
 <?php
-      for ($j=0, $n2=sizeof($selection[$i]['fields']); $j<$n2; $j++) {
+	$n2=sizeof($selection[$i]['fields']);
+      for ($j=0; $j<$n2; $j++) {
 ?>
 
           <tr>

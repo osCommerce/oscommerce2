@@ -36,11 +36,11 @@
   }
 
   if (!tep_session_is_registered('payment')) tep_session_register('payment');
-  if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
+  if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module
@@ -71,7 +71,8 @@
 // Stock Check
   $any_out_of_stock = false;
   if (STOCK_CHECK == 'true') {
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+  	$n=sizeof($order->products);
+    for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
         $any_out_of_stock = true;
       }
@@ -164,7 +165,8 @@
 <?php
   }
 
-  for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+   $n=sizeof($order->products);	
+  for ($i=0; $i<$n; $i++) {
     echo '          <tr>' . "\n" .
          '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
          '            <td valign="top">' . $order->products[$i]['name'];
@@ -174,7 +176,8 @@
     }
 
     if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
-      for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+      	$n2=sizeof($order->products[$i]['attributes']);
+      for ($j=0; $j<$n2; $j++) {
         echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'] . '</i></small></nobr>';
       }
     }
@@ -239,7 +242,8 @@
       </tr>
 
 <?php
-      for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
+$n=sizeof($confirmation['fields']);
+      for ($i=0; $i<$n; $i++) {
 ?>
 
       <tr>
