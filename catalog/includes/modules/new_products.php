@@ -18,7 +18,7 @@
 
   $num_new_products = tep_db_num_rows($new_products_query);
 
-  if ($new_products_query > 0) {
+  if ($num_new_products > 0) {
     $counter = 0;
     $col = 0;
 
