@@ -69,7 +69,7 @@
     $image = '<img src="' . tep_output_string($src) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) {
-      $image .= ' title=" ' . tep_output_string($alt) . ' "';
+      $image .= ' title="' . tep_output_string($alt) . '"';
     }
 
     if (tep_not_null($width) && tep_not_null($height)) {
