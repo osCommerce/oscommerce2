@@ -25,7 +25,6 @@
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
   define('DIR_WS_INCLUDES', 'includes/');
-  define('DIR_WS_BOXES', DIR_WS_INCLUDES . 'boxes/');
   define('DIR_WS_FUNCTIONS', DIR_WS_INCLUDES . 'functions/');
   define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
   define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
