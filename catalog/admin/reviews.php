@@ -97,7 +97,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td><table witdh="100%" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo tep_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text); ?></td>
           </tr>
@@ -147,7 +147,7 @@
         </table>
       </tr>
       <tr>
-        <td><table witdh="100%" border="0" cellspacing="0" cellpadding="0">
+        <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
             <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(tep_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
           </tr>
