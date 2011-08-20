@@ -83,7 +83,7 @@
     $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) {
-      $image .= ' title=" ' . tep_output_string($alt) . ' "';
+      $image .= ' title="' . tep_output_string($alt) . '"';
     }
 
     if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
