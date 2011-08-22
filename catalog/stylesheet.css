@@ -50,6 +50,10 @@ body {
   padding-top: 5px;
 }
 
+.header, footer, aside, nav, article {  
+  display: block;  
+}  
+
 .infoBoxContainer { }
 
 .infoBoxHeading {
