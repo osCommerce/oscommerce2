@@ -12,11 +12,7 @@
 
 define('NAVBAR_TITLE', 'Cart Contents');
 define('HEADING_TITLE', 'What\'s In My Cart?');
-define('TABLE_HEADING_REMOVE', 'Remove');
-define('TABLE_HEADING_QUANTITY', 'Qty.');
-define('TABLE_HEADING_MODEL', 'Model');
 define('TABLE_HEADING_PRODUCTS', 'Product(s)');
-define('TABLE_HEADING_TOTAL', 'Total');
 define('TEXT_CART_EMPTY', 'Your Shopping Cart is empty!');
 define('SUB_TITLE_SUB_TOTAL', 'Sub-Total:');
 define('SUB_TITLE_TOTAL', 'Total:');
