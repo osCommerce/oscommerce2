@@ -89,7 +89,7 @@
   <div class="contentText">
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td width="30"><?php echo tep_draw_checkbox_field('product_global', '1', (($global['global_product_notifications'] == '1') ? true : false), 'onclick="checkBox(\'product_global\')"'); ?></td>
+        <td width="30"><?php echo tep_draw_checkbox_field('product_global', '1', (($global['global_product_notifications'] == '1') ? true : false)); ?></td>
         <td><strong><?php echo GLOBAL_NOTIFICATIONS_TITLE; ?></strong><br /><?php echo GLOBAL_NOTIFICATIONS_DESCRIPTION; ?></td>
       </tr>
     </table>
@@ -120,7 +120,7 @@
 ?>
 
       <tr>
-        <td width="30"><?php echo tep_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true, 'onclick="checkBox(\'products[' . $counter . ']\')"'); ?></td>
+        <td width="30"><?php echo tep_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true); ?></td>
         <td><strong><?php echo $products['products_name']; ?></strong></td>
       </tr>
 
