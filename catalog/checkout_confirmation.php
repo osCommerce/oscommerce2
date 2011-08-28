@@ -39,7 +39,7 @@
   if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (tep_not_null($HTTP_POST_VARS['comments'])) {
+  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
     $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
   }
 
@@ -239,6 +239,7 @@
       </tr>
 
 <?php
+    if (isset($confirmation['fields'])) {
       for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
 ?>
 
@@ -251,6 +252,7 @@
 
 <?php
       }
+    }  
 ?>
 
     </table>
