@@ -23,7 +23,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
 <head>
-<meta charset=<?php echo CHARSET; ?>" />
+<meta charset="<?php echo CHARSET; ?>" />
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <link rel="stylesheet" href="ext/jquery/ui/redmond/jquery-ui-1.8.16.css" />
