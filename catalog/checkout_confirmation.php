@@ -242,6 +242,7 @@
       </tr>
 
 <?php
+if (isset($confirmation['fields'])) {
 $n=sizeof($confirmation['fields']);
       for ($i=0; $i<$n; $i++) {
 ?>
@@ -255,11 +256,12 @@ $n=sizeof($confirmation['fields']);
 
 <?php
       }
+ }
 ?>
 
     </table>
   </div>
-
+  
 <?php
     }
   }
