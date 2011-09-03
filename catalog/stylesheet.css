@@ -79,6 +79,11 @@ body {
   padding-bottom: 5px;
 }
 
+.clear {
+  clear: both;
+  height: 0;
+}
+
 .contentText, .contentText table {
   padding: 5px 0 5px 0;
   font-size: 11px;
