@@ -143,10 +143,8 @@
 
   $data = '<div class="ui-widget infoBoxContainer">' .
               '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
-              '<nav>' .
               '  <div class="ui-widget-content infoBoxContents">' . $categories_string . '</div>' .
-              '</div>' .
-			  '</nav>';
+              '</div>' ;
 
       return $data;
     }
