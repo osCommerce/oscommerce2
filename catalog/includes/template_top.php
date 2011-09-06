@@ -28,7 +28,7 @@
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <link rel="stylesheet" href="ext/jquery/ui/redmond/jquery-ui-1.8.16.css" />
 <script src="ext/jquery/jquery-1.6.3.min.js"></script>
-<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.8.16.min.js"></script>
+<script src="ext/jquery/ui/jquery-ui-1.8.16.min.js"></script>
 
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
