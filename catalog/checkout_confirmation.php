@@ -39,7 +39,7 @@
   if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (tep_not_null($_POST['comments'])) {
+  if (isset($_POST['comments'])) {
     $comments = tep_db_prepare_input($_POST['comments']);
   }
 
