@@ -184,3 +184,5 @@ yodao
 zao/
 zippp
 zyborg
+....
+! spiders.txt Contribution version 2010-04-17  - Please read readme before editing http://addons.oscommerce.com/info/2455
