@@ -52,7 +52,7 @@
   $comment = '';
 
   if ($pw != MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT) {
-    $comment = 'ungültiges Benachrichtigung Passwort' . "\n";
+    $comment = 'ungï¿½ltiges Benachrichtigung Passwort' . "\n";
   }
 
   // check if order exists
@@ -74,9 +74,9 @@
       }
 
       if ((int)$betrag_integer == (int)$order_total_integer) {
-        $comment = 'Zahlung durch Sofortüberweisung Benachrichtigung bestätigt!';
+        $comment = 'Zahlung durch Sofortï¿½berweisung Benachrichtigung bestï¿½tigt!';
       } else {
-        $comment = "Sofortüberweisungs Transaktionscheck fehlgeschlagen. Bitte manuell überprüfen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
+        $comment = "Sofortï¿½berweisungs Transaktionscheck fehlgeschlagen. Bitte manuell ï¿½berprï¿½fen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
       }
 
       if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {

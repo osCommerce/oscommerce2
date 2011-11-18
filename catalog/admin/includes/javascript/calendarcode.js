@@ -1,7 +1,7 @@
 /*
- * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 © 2000 S. Ousta
+ * Bazillyo's Spiffy DHTML Popup Calendar v. 1.0 ï¿½ 2000 S. Ousta
  *   - freeware with this comment
- *   - for download size, you can strip all spaces & comments except the © notices
+ *   - for download size, you can strip all spaces & comments except the ï¿½ notices
  *   - Thanks to Chris for the domlay() function
  *   - this requires calendarcode.js, calendar.css, and calendarTest.htm
  *   - works in IE4.x, IE5.x, NS4.75 possibly 4.x, NS6 (with slight cosmetic issues)

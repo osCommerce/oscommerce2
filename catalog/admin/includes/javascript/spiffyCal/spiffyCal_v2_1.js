@@ -1,6 +1,6 @@
 /*
  * Bazillyo's Spiffy DHTML Popup Calendar Control - version 2.1
- * ©2001 S. Ousta 
+ * ï¿½2001 S. Ousta 
  * see the included readme.htm file for license information and release notes.
  * 
  * For more information see:
