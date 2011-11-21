@@ -88,13 +88,13 @@
 
     if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
-        if (empty($width) && tep_not_null($height)) {
+         if (!$width && $height) {
           $ratio = $height / $image_size[1];
           $width = (int)($image_size[0] * $ratio);
-        } elseif (tep_not_null($width) && empty($height)) {
+        } elseif ($width && !$height) {
           $ratio = $width / $image_size[0];
           $height = (int)($image_size[1] * $ratio);
-        } elseif (empty($width) && empty($height)) {
+        } elseif (!$width && !$height) {
           $width = $image_size[0];
           $height = $image_size[1];
         }
