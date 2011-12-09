@@ -77,7 +77,7 @@
       if (in_array($this->language,$this->catalog_languages)) {
 	header('HTTP/1.1 404 Not Found'); ?>
 			 <h1>404 Not Found</h1>
-    <?	exit; 	
+    <?	tep_exit(); 	
       }else{
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
       }
