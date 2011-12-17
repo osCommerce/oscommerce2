@@ -22,11 +22,11 @@
 // try to open the file
     if ($fp = @fopen($filename, 'w')) {
 // obtain a file lock to stop corruptions occuring
-      flock($fp, 2); // LOCK_EX
+      flock($fp, LOCK_EX);
 // write serialized data
-       fputs($fp, json_encode(base64_encode(addslashes(gzdeflate($var)))));
+      fputs($fp, json_encode(base64_encode(addslashes(gzdeflate($var)))));
 // release the file lock
-      flock($fp, 3); // LOCK_UN
+      flock($fp, LOCK_UN);
       fclose($fp);
       $success = true;
     }
@@ -54,16 +54,19 @@
       }
     }
 
+      if (!file_exists($filename)) {
+
 // read in serialized data
       $szdata = gzinflate(file_get_contents($filename));
-   
+
 // unserialze the data
       $var = json_decode(stripslashes(base64_decode($szdata)));
-	  
       $success = true;
     }
-
+    unset($var);
+	unset($szdata);
     return $success;
+  }
   
 ////
 //! Get data from the cache or the database.
