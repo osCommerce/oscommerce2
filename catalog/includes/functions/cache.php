@@ -54,7 +54,6 @@
       }
     }
 
-      if (!file_exists($filename)) {
 
 // read in serialized data
       $szdata = gzinflate(file_get_contents($filename));
@@ -66,7 +65,6 @@
     unset($var);
 	unset($szdata);
     return $success;
-  }
   
 ////
 //! Get data from the cache or the database.
