@@ -54,12 +54,9 @@
       }
     }
 
-// try to open file
-    if ($fp = @fopen(gzinflate($filename, 'r'))) {
 // read in serialized data
-      $szdata = fread($fp, filesize($filename));
-
-      fclose($fp);
+      $szdata = gzinflate(file_get_contents($filename));
+   
 // unserialze the data
       $var = json_decode(stripslashes(base64_decode($szdata)));
 	  
@@ -67,8 +64,7 @@
     }
 
     return $success;
-  }
-
+  
 ////
 //! Get data from the cache or the database.
 //  get_db_cache checks the cache for cached SQL data in $filename
