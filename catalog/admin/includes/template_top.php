@@ -19,7 +19,7 @@
 <base href="<?php echo HTTP_SERVER . DIR_WS_ADMIN; ?>" />
 <!--[if IE]><script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/flot/excanvas.min.js'); ?>"></script><![endif]-->
 <link rel="stylesheet" href="<?php echo tep_catalog_href_link('ext/jquery/ui/redmond/jquery-ui-1.8.16.css'); ?>">
-<script src="<?php echo tep_catalog_href_link('ext/jquery/jquery-1.7.min.js'); ?>"></script>
+<script src="<?php echo tep_catalog_href_link('ext/jquery/jquery-1.7.1.min.js'); ?>"></script>
 <script src="<?php echo tep_catalog_href_link('ext/jquery/ui/jquery-ui-1.8.16.min.js'); ?>"></script>
 
 <?php
