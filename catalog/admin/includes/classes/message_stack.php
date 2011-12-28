@@ -26,7 +26,7 @@
       $this->errors = array();
 
       if (tep_session_is_registered('messageToStack')) {
-        $n = sizeof($messageToStack);	
+        $n = sizeof($messageToStack);
         for ($i = 0; $i < $n; $i++) {
           $this->add($messageToStack[$i]['text'], $messageToStack[$i]['type']);
         }

@@ -27,7 +27,7 @@
         $notify = array($notify);
       }
 
-	$n=sizeof($notify);
+  $n=sizeof($notify);
       for ($i=0; $i<$n; $i++) {
         if (is_numeric($notify[$i])) {
           $notify_string .= 'notify[]=' . $notify[$i] . '&';
@@ -81,7 +81,7 @@
     echo TEXT_NOTIFY_PRODUCTS . '<br /><p class="productsNotifications">';
 
     $products_displayed = array();
-	$n=sizeof($products_array);
+  $n=sizeof($products_array);
     for ($i=0; $i<$n; $i++) {
       if (!in_array($products_array[$i]['id'], $products_displayed)) {
         echo tep_draw_checkbox_field('notify[]', $products_array[$i]['id']) . ' ' . $products_array[$i]['text'] . '<br />';

@@ -18,7 +18,7 @@
   function do_magic_quotes_gpc(&$ar) {
     if (!is_array($ar)) return false;
 
-	foreach ($ar as $key => $value) {
+  foreach ($ar as $key => $value) {
       if (is_array($ar[$key])) {
         do_magic_quotes_gpc($ar[$key]);
       } else {

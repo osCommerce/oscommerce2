@@ -112,9 +112,9 @@
             list($type, $cost) = each($uspsQuote[$i]);
 
 // echo "USPS $type @ $cost<br />";
-	    if (($method == '' && in_array($type, $this->types)) || $method == $type) {
-	       if (strpos($type, "Flat Rate")) $type_flat = $type . ', subject to verification';
-	       else $type_flat = $type;
+      if (($method == '' && in_array($type, $this->types)) || $method == $type) {
+         if (strpos($type, "Flat Rate")) $type_flat = $type . ', subject to verification';
+         else $type_flat = $type;
                $methods[] = array('id' => $type,
                                'title' => $type_flat,
                                'cost' => ($cost + MODULE_SHIPPING_USPS_HANDLING) * $shipping_num_boxes);
@@ -190,15 +190,15 @@
       if ($order->delivery['country']['id'] == SHIPPING_ORIGIN_COUNTRY) {
         $dest_zip = str_replace(' ', '', $order->delivery['postcode']);
         if ($order->delivery['country']['iso_code_2'] == 'US') $dest_zip = substr($dest_zip, 0, 5);
-	$request = '<RateV3Request USERID="' . MODULE_SHIPPING_USPS_USERID . '">' .
-	    '<Package ID="0">' .
-	      '<Service>' . 'ALL' . '</Service>' .
+  $request = '<RateV3Request USERID="' . MODULE_SHIPPING_USPS_USERID . '">' .
+      '<Package ID="0">' .
+        '<Service>' . 'ALL' . '</Service>' .
               '<ZipOrigination>' . SHIPPING_ORIGIN_ZIP . '</ZipOrigination>' .
               '<ZipDestination>' . $dest_zip . '</ZipDestination>' .
-	      '<Pounds>' . $this->pounds . '</Pounds>' .
-	      '<Ounces>' . $this->ounces . '</Ounces>' .
-	      '<Container/><Size>Regular</Size><Machinable>True</Machinable>' .
-	    '</Package></RateV3Request>';
+        '<Pounds>' . $this->pounds . '</Pounds>' .
+        '<Ounces>' . $this->ounces . '</Ounces>' .
+        '<Container/><Size>Regular</Size><Machinable>True</Machinable>' .
+      '</Package></RateV3Request>';
         $request = 'API=RateV3&XML=' . urlencode($request);
       } else {
         $request  = '<IntlRateRequest USERID="' . MODULE_SHIPPING_USPS_USERID . '">' .
@@ -206,11 +206,11 @@
                     '<Pounds>' . $this->pounds . '</Pounds>' .
                     '<Ounces>' . $this->ounces . '</Ounces>' .
                     '<MailType>Package</MailType>' .
-		    '<GXG>' .
-		    '<Length>12</Length><Width>12</Width><Height>12</Height>' .
-		    '<POBoxFlag>N</POBoxFlag><GiftFlag>N</GiftFlag>' .
-		    '</GXG>' .
-		    '<ValueOfContents>50</ValueOfContents>' .
+        '<GXG>' .
+        '<Length>12</Length><Width>12</Width><Height>12</Height>' .
+        '<POBoxFlag>N</POBoxFlag><GiftFlag>N</GiftFlag>' .
+        '</GXG>' .
+        '<ValueOfContents>50</ValueOfContents>' .
                     '<Country>' . $this->countries[$order->delivery['country']['iso_code_2']] . '</Country>' .
                     '</Package>' .
                     '</IntlRateRequest>';
@@ -261,19 +261,19 @@
 
         $n = sizeof($response);
         for ($i=0; $i<$n; $i++) {
-	  $resp = $response[$i];
-	  $pos = 0;
-	  while (1) {
-	    $pos = strpos($response[$i], '<Postage', $pos);
+    $resp = $response[$i];
+    $pos = 0;
+    while (1) {
+      $pos = strpos($response[$i], '<Postage', $pos);
             if ($pos === FALSE) break;
-	    $end = strpos($response[$i], '</Postage>', $pos);
-	    if ($end === FALSE) break;
-	    $resp = substr($response[$i], $pos, $end-$pos);
+      $end = strpos($response[$i], '</Postage>', $pos);
+      if ($end === FALSE) break;
+      $resp = substr($response[$i], $pos, $end-$pos);
             $service = preg_match('/<MailService>(.*)<\/MailService>/', $resp, $regs);
             $service = $regs[1];
             $postage = preg_match('/<Rate>(.*)<\/Rate>/', $resp, $regs);
             $postage = $regs[1];
-	    $pos = $end;
+      $pos = $end;
             $rates[] = array($service => $postage);
           }
         }

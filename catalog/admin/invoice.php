@@ -100,7 +100,7 @@
         <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></td>
       </tr>
 <?php
-	$n = sizeof($order->products);
+  $n = sizeof($order->products);
     for ($i = 0; $i < $n; $i++) {
       echo '      <tr class="dataTableRow">' . "\n" .
            '        <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .

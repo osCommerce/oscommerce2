@@ -88,7 +88,7 @@
       $GET_array = array();
       $PHP_SELF = str_replace($_ENV['PATH_INFO'], '', $_SERVER['PHP_SELF']);
       $vars = explode('/', substr($_ENV['PATH_INFO'], 1));
-	  $n=sizeof($vars);
+    $n=sizeof($vars);
       for ($i=0; $i<$n; $i++) {
         if (strpos($vars[$i], '[]')) {
           $GET_array[substr($vars[$i], 0, -2)][] = $vars[$i+1];
@@ -164,7 +164,7 @@
     if (tep_not_null($user_agent)) {
       $spiders = file(DIR_WS_INCLUDES . 'spiders.txt');
 
-	  $n=sizeof($spiders);
+    $n=sizeof($spiders);
       for ($i=0; $i<$n; $i++) {
         if (tep_not_null($spiders[$i])) {
           if (is_integer(strpos($user_agent, trim($spiders[$i])))) {
@@ -318,7 +318,7 @@
     switch ($_GET['action']) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' :   $n=sizeof($_POST['products_id']);
-      							for ($i=0; $i<$n; $i++) {
+                    for ($i=0; $i<$n; $i++) {
                                 if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
                                   $cart->remove($_POST['products_id'][$i]);
                                 } else {
@@ -362,7 +362,7 @@
                                   tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'notify'))));
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
-								$n=sizeof($notify);
+                $n=sizeof($notify);
                                 for ($i=0; $i<$n; $i++) {
                                   $check_query = tep_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . $notify[$i] . "' and customers_id = '" . $customer_id . "'");
                                   $check = tep_db_fetch_array($check_query);
@@ -454,7 +454,7 @@
 
 // add category names or the manufacturer name to the breadcrumb trail
   if (isset($cPath_array)) {
-  	$n=sizeof($cPath_array);
+    $n=sizeof($cPath_array);
     for ($i=0; $i<$n; $i++) {
       $categories_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$languages_id . "'");
       if (tep_db_num_rows($categories_query) > 0) {

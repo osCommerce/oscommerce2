@@ -129,7 +129,7 @@
         if (tep_not_null($password)) {
 // update password in htpasswd
           if (is_array($htpasswd_array)) {
-          	$n=sizeof($htpasswd_array);
+            $n=sizeof($htpasswd_array);
             for ($i=0; $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
@@ -146,7 +146,7 @@
           tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$_GET['aID'] . "'");
         } elseif (!isset($_POST['htaccess']) || ($_POST['htaccess'] != 'true')) {
           if (is_array($htpasswd_array)) {
-          	$n=sizeof($htpasswd_array);
+            $n=sizeof($htpasswd_array);
             for ($i=0; $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
@@ -207,7 +207,7 @@
           fclose($fp);
 
           if (empty($htpasswd_array)) {
-          	$n=sizeof($htaccess_array);
+            $n=sizeof($htaccess_array);
             for ($i=0; $i<$n; $i++) {
               if (in_array($htaccess_array[$i], $authuserfile_array)) {
                 unset($htaccess_array[$i]);
@@ -280,7 +280,7 @@
     }
 
     if (is_array($htpasswd_array)) {
-    	$n=sizeof($htpasswd_array);
+      $n=sizeof($htpasswd_array);
       for ($i=0; $i<$n; $i++) {
         list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
@@ -338,7 +338,7 @@
       if (is_array($htpasswd_array)) {
         $default_flag = false;
 
-		$n=sizeof($htpasswd_array);
+    $n=sizeof($htpasswd_array);
         for ($i=0; $i<$n; $i++) {
           list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 

@@ -82,7 +82,7 @@
                               'text' => $value);
       }
 
-      $today = getdate(); 
+      $today = getdate();
 
       $months_array = array();
       for ($i=1; $i<13; $i++) {
@@ -163,7 +163,7 @@
         $cc_issue = null;
         $cc_cvc = null;
 
-        $today = getdate(); 
+        $today = getdate();
 
         $months_array = array();
         for ($i=1; $i<13; $i++) {

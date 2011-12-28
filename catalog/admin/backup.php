@@ -80,7 +80,7 @@
             $index[$kname]['columns'][] = $keys['Column_name'];
           }
 
-		  foreach ($index as $kname => $info) {
+      foreach ($index as $kname => $info) {
             $schema .= ',' . "\n";
 
             $columns = implode($info['columns'], ', ');

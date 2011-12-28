@@ -132,9 +132,9 @@
       }
     } else {
       $shipping = false;
-                
+
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-    }    
+    }
   }
 
 // get all available shipping quotes
@@ -255,7 +255,7 @@ function rowOutEffect(object) {
 <?php
     } else {
       $radio_buttons = 0;
-	  $n=sizeof($quotes);
+    $n=sizeof($quotes);
       for ($i=0; $i<$n; $i++) {
 ?>
 
@@ -273,7 +273,7 @@ function rowOutEffect(object) {
 
 <?php
         } else {
-        	$n2=sizeof($quotes[$i]['methods']);
+          $n2=sizeof($quotes[$i]['methods']);
           for ($j=0; $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
             $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);

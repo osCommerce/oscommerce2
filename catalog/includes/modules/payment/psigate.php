@@ -79,7 +79,7 @@
           $expires_month[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B',mktime(0,0,0,$i,1,2000)));
         }
 
-        $today = getdate(); 
+        $today = getdate();
         for ($i=$today['year']; $i < $today['year']+10; $i++) {
           $expires_year[] = array('id' => strftime('%y',mktime(0,0,0,1,1,$i)), 'text' => strftime('%Y',mktime(0,0,0,1,1,$i)));
         }
@@ -101,7 +101,7 @@
     }
 
     function pre_confirmation_check() {
- 
+
       if (MODULE_PAYMENT_PSIGATE_INPUT_MODE == 'Local') {
         include(DIR_WS_CLASSES . 'cc_validation.php');
 
@@ -237,7 +237,7 @@
     }
 
     function get_error() {
-  
+
       if (isset($_GET['ErrMsg']) && tep_not_null($_GET['ErrMsg'])) {
         $error = stripslashes($_GET['ErrMsg']);
       } elseif (isset($_GET['Err']) && tep_not_null($_GET['Err'])) {

@@ -18,7 +18,7 @@
   if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']) && !is_numeric($_GET['id'])) ) {
     die;
   }
-  
+
 // Check that order_id, customer_id and filename match
   $downloads_query = tep_db_query("select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " opd, " . TABLE_ORDERS_STATUS . " os where o.customers_id = '" . $customer_id . "' and o.orders_id = '" . (int)$_GET['order'] . "' and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_download_id = '" . (int)$_GET['id'] . "' and opd.orders_products_filename != '' and o.orders_status = os.orders_status_id and os.downloads_flag = '1' and os.language_id = '" . (int)$languages_id . "'");
   if (!tep_db_num_rows($downloads_query)) die;
@@ -33,7 +33,7 @@
   if ($downloads['download_count'] <= 0) die;
 // Die if file is not there
   if (!file_exists(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'])) die;
-  
+
 // Now decrement counter
   tep_db_query("update " . TABLE_ORDERS_PRODUCTS_DOWNLOAD . " set download_count = download_count-1 where orders_products_download_id = '" . (int)$_GET['id'] . "'");
 
@@ -68,7 +68,7 @@ function tep_unlink_temp_dir($dir)
       if ($file == '.' || $file == '..') continue;
       @unlink($dir . $subdir . '/' . $file);
     }
-    closedir($h2); 
+    closedir($h2);
     @rmdir($dir . $subdir);
   }
   closedir($h1);

@@ -806,7 +806,7 @@ HTTP Header Injection
 
 Problem:
 
-By using malicious data it is possible to inject headers into HTTP requests. 
+By using malicious data it is possible to inject headers into HTTP requests.
 Solution:
 
 The following function must be replaced in catalog/includes/functions/general.php.
@@ -886,7 +886,7 @@ http://www.oscommerce.com/community/bugs,2488
 
 Problem:
 
-By using malicious data it is possible to inject headers into emails the online store sends. 
+By using malicious data it is possible to inject headers into emails the online store sends.
 
 Solution:
 
@@ -989,7 +989,7 @@ http://www.oscommerce.com/community/bugs,2422
 
 Problem:
 
-By using malicious data it is possible to inject HTML into the page. 
+By using malicious data it is possible to inject HTML into the page.
 
 Solution:
 

@@ -68,7 +68,7 @@
 
       $this->headers[] = 'MIME-Version: 1.0';
 
-	  foreach($headers as $value) {
+    foreach($headers as $value) {
         if (tep_not_null($value)) {
           $this->headers[] = $value;
         }
@@ -327,7 +327,7 @@
       }
 
       if (tep_not_null($this->html_images)) {
-		  foreach($this->html_images as $value) {
+      foreach($this->html_images as $value) {
           $this->html = str_replace($value['name'], 'cid:' . $value['cid'], $this->html);
         }
       }
@@ -451,7 +451,7 @@
         $this->output = $output['body'];
 
         reset($output['headers']);
-		foreach ($output['headers'] as $key => $value) {
+    foreach ($output['headers'] as $key => $value) {
           $headers[] = $key . ': ' . $value;
         }
 

@@ -116,7 +116,7 @@
       if ($order->content_type == 'mixed') {
         $order_total = 0;
 
-		$n=sizeof($order->products); 
+    $n=sizeof($order->products);
         for ($i=0; $i<$n; $i++) {
           $order_total += $currencies->calculate_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']);
 

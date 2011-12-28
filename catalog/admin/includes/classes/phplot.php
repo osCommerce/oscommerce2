@@ -900,7 +900,7 @@ class PHPlot
             $fonts = array('LiberationSans-Regular.ttf',  // For Linux with a correct GD font search path
                            'Verdana.ttf', 'Arial.ttf', 'Helvetica.ttf', // For Windows, maybe others
                            'ttf-liberation/LiberationSans-Regular.ttf', // For Debian, Ubuntu, and friends
-                           'benjamingothic.ttf',  // Original PHPlot default 
+                           'benjamingothic.ttf',  // Original PHPlot default
                           );
             foreach ($fonts as $font) {
                 // First try the font name alone, to see if GD can find and load it.
@@ -2890,7 +2890,7 @@ class PHPlot
         if ($this->GetCallback('debug_scale')) {
             $this->DoCallback('debug_scale', __FUNCTION__, array(
                 'min_x' => $this->min_x, 'min_y' => $this->min_y,
-                'max_x' => $this->max_x, 'max_y' => $this->max_y, 
+                'max_x' => $this->max_x, 'max_y' => $this->max_y,
                 'min_z' => isset($this->min_z) ? $this->min_z : '',
                 'max_z' => isset($this->max_z) ? $this->max_z : ''));
         }

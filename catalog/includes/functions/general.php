@@ -32,7 +32,7 @@
 ////
 // Redirect to another page or site
   function tep_redirect($url) {
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) { 
+    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
@@ -167,12 +167,12 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
-   
+
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
     if (is_array($_GET) && (sizeof($_GET) > 0)) {
-    
+
     foreach($_GET as $key => $value) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
@@ -1274,7 +1274,7 @@ foreach($array as $key => $value) {
   }
 
   function tep_get_ip_address() {
-    
+
     $ip_address = null;
     $ip_addresses = array();
 

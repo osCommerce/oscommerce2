@@ -63,9 +63,9 @@
       $success = true;
     }
     unset($var);
-	unset($szdata);
+  unset($szdata);
     return $success;
-  
+
 ////
 //! Get data from the cache or the database.
 //  get_db_cache checks the cache for cached SQL data in $filename

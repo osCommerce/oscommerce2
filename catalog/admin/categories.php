@@ -58,7 +58,7 @@
         }
 
         $languages = tep_get_languages();
-		$n=sizeof($languages);
+    $n=sizeof($languages);
         for ($i=0; $i<$n; $i++) {
           $categories_name_array = $_POST['categories_name'];
 
@@ -100,7 +100,7 @@
           $products = array();
           $products_delete = array();
 
-		  $n=sizeof($categories);
+      $n=sizeof($categories);
           for ($i=0; $i<$n; $i++) {
             $product_ids_query = tep_db_query("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$categories[$i]['id'] . "'");
 
@@ -109,10 +109,10 @@
             }
           }
 
-		  foreach ($products as $key => $value) {
+      foreach ($products as $key => $value) {
             $category_ids = '';
 
-			$n=sizeof($value['categories']);
+      $n=sizeof($value['categories']);
             for ($i=0; $i<$n; $i++) {
               $category_ids .= "'" . (int)$value['categories'][$i] . "', ";
             }
@@ -127,7 +127,7 @@
 
 // removing categories can be a lengthy process
           tep_set_time_limit(0);
-		  $n=sizeof($categories);
+      $n=sizeof($categories);
           for ($i=0; $i<$n; $i++) {
             tep_remove_category($categories[$i]['id']);
           }
@@ -150,7 +150,7 @@
           $product_id = tep_db_prepare_input($_POST['products_id']);
           $product_categories = $_POST['product_categories'];
 
-		  $n=sizeof($product_categories);
+      $n=sizeof($product_categories);
           for ($i=0; $i<$n; $i++) {
             tep_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "' and categories_id = '" . (int)$product_categories[$i] . "'");
           }
@@ -249,7 +249,7 @@
         }
 
         $languages = tep_get_languages();
-		$n=sizeof($languages);
+    $n=sizeof($languages);
         for ($i=0; $i<$n; $i++) {
           $language_id = $languages[$i]['id'];
 
@@ -451,7 +451,7 @@
 <script type="text/javascript"><!--
 var tax_rates = new Array();
 <?php
-	$n=sizeof($tax_class_array);
+  $n=sizeof($tax_class_array);
     for ($i=0; $i<$n; $i++) {
       if ($tax_class_array[$i]['id'] > 0) {
         echo 'tax_rates["' . $tax_class_array[$i]['id'] . '"] = ' . tep_get_tax_rate_value($tax_class_array[$i]['id']) . ';' . "\n";
@@ -533,7 +533,7 @@ function updateNet() {
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
 <?php
-	$n=sizeof($languages);
+  $n=sizeof($languages);
     for ($i=0; $i<$n; $i++) {
 ?>
           <tr>
@@ -565,7 +565,7 @@ function updateNet() {
 updateGross();
 //--></script>
 <?php
-	$n=sizeof($languages);
+  $n=sizeof($languages);
     for ($i=0; $i<$n; $i++) {
 ?>
           <tr>
@@ -669,7 +669,7 @@ function showPiDelConfirm(piId) {
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
 <?php
-	$n=sizeof($languages);
+  $n=sizeof($languages);
     for ($i=0; $i<$n; $i++) {
 ?>
           <tr>
@@ -712,7 +712,7 @@ $('#products_date_available').datepicker({
     $products_image_name = $pInfo->products_image;
 
     $languages = tep_get_languages();
-	$n=sizeof($languages);
+  $n=sizeof($languages);
     for ($i=0; $i<$n; $i++) {
       $pInfo->products_name = tep_get_products_name($pInfo->products_id, $languages[$i]['id']);
       $pInfo->products_description = tep_get_products_description($pInfo->products_id, $languages[$i]['id']);
@@ -911,7 +911,7 @@ $('#products_date_available').datepicker({
 
     $cPath_back = '';
     if (sizeof($cPath_array) > 0) {
-      $n=sizeof($cPath_array)-1;	
+      $n=sizeof($cPath_array)-1;
       for ($i=0; $i<$n; $i++) {
         if (empty($cPath_back)) {
           $cPath_back .= $cPath_array[$i];
@@ -944,7 +944,7 @@ $('#products_date_available').datepicker({
 
         $category_inputs_string = '';
         $languages = tep_get_languages();
-		$n = sizeof($languages);
+    $n = sizeof($languages);
         for ($i = 0; $i < $n; $i++) {
           $category_inputs_string .= '<br />' . tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . tep_draw_input_field('categories_name[' . $languages[$i]['id'] . ']');
         }
@@ -962,7 +962,7 @@ $('#products_date_available').datepicker({
 
         $category_inputs_string = '';
         $languages = tep_get_languages();
-		$n = sizeof($languages);
+    $n = sizeof($languages);
         for ($i = 0; $i < $n; $i++) {
           $category_inputs_string .= '<br />' . tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . tep_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
         }
@@ -1000,10 +1000,10 @@ $('#products_date_available').datepicker({
 
         $product_categories_string = '';
         $product_categories = tep_generate_category_path($pInfo->products_id, 'product');
-		$n = sizeof($product_categories);
+    $n = sizeof($product_categories);
         for ($i = 0; $i < $n; $i++) {
           $category_path = '';
-			$k = sizeof($product_categories[$i]); 
+      $k = sizeof($product_categories[$i]);
           for ($j = 0; $j < $k; $j++) {
             $category_path .= $product_categories[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
           }

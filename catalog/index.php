@@ -49,7 +49,7 @@
     if (isset($cPath) && strpos('_', $cPath)) {
 // check to see if there are deeper categories within the current category
       $category_links = array_reverse($cPath_array);
-	  $n=sizeof($category_links);
+    $n=sizeof($category_links);
       for($i=0;$i<$n; $i++) {
         $categories_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
         $categories = tep_db_fetch_array($categories_query);

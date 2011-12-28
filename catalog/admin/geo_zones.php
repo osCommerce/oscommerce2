@@ -100,7 +100,7 @@ function update_zone(theForm) {
   while(NumState > 0) {
     NumState--;
     theForm.zone_id.options[NumState] = null;
-  }         
+  }
 
   SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
 

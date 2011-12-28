@@ -12,17 +12,17 @@
 
   USAGE
   By default, the module comes with support for 1 zone.  This can be
-  easily changed by editing the line below in the zones constructor 
+  easily changed by editing the line below in the zones constructor
   that defines $this->num_zones.
 
   Next, you will want to activate the module by going to the Admin screen,
   clicking on Modules, then clicking on Shipping.  A list of all shipping
-  modules should appear.  Click on the green dot next to the one labeled 
+  modules should appear.  Click on the green dot next to the one labeled
   zones.php.  A list of settings will appear to the right.  Click on the
-  Edit button. 
+  Edit button.
 
-  PLEASE NOTE THAT YOU WILL LOSE YOUR CURRENT SHIPPING RATES AND OTHER 
-  SETTINGS IF YOU TURN OFF THIS SHIPPING METHOD.  Make sure you keep a 
+  PLEASE NOTE THAT YOU WILL LOSE YOUR CURRENT SHIPPING RATES AND OTHER
+  SETTINGS IF YOU TURN OFF THIS SHIPPING METHOD.  Make sure you keep a
   backup of your shipping settings somewhere at all times.
 
   If you want an additional handling charge applied to orders that use this
@@ -31,7 +31,7 @@
   Next, you will need to define which countries are in each zone.  Determining
   this might take some time and effort.  You should group a set of countries
   that has similar shipping charges for the same weight.  For instance, when
-  shipping from the US, the countries of Japan, Australia, New Zealand, and 
+  shipping from the US, the countries of Japan, Australia, New Zealand, and
   Singapore have similar shipping rates.  As an example, one of my customers
   is using this set of zones:
     1: USA
@@ -56,11 +56,11 @@
   some time and effort will go into setting the appropriate rates.  You
   will define a set of weight ranges and the shipping price for each
   range.  For instance, you might want an order than weighs more than 0
-  and less than or equal to 3 to cost 5.50 to ship to a certain zone.  
+  and less than or equal to 3 to cost 5.50 to ship to a certain zone.
   This would be defined by this:  3:5.5
 
   You should combine a bunch of these rates together in a comma delimited
-  list and enter them into the "Zone X Shipping Table" fields where "X" 
+  list and enter them into the "Zone X Shipping Table" fields where "X"
   is the zone number.  For example, this might be used for Zone 1:
     1:3.5,2:3.95,3:5.2,4:6.45,5:7.7,6:10.4,7:11.85, 8:13.3,9:14.75,10:16.2,11:17.65,
     12:19.1,13:20.55,14:22,15:23.45
@@ -73,24 +73,24 @@
   At this time, it does not deal with weights that are above the highest amount
   defined.  This will probably be the next area to be improved with the
   module.  For now, you could have one last very high range with a very
-  high shipping rate to discourage orders of that magnitude.  For 
+  high shipping rate to discourage orders of that magnitude.  For
   instance:  999:1000
 
-  If you want to be able to ship to any country in the world, you will 
+  If you want to be able to ship to any country in the world, you will
   need to enter every country code into the Country fields. For most
-  shops, you will not want to enter every country.  This is often 
+  shops, you will not want to enter every country.  This is often
   because of too much fraud from certain places. If a country is not
   listed, then the module will add a $0.00 shipping charge and will
-  indicate that shipping is not available to that destination.  
+  indicate that shipping is not available to that destination.
   PLEASE NOTE THAT THE ORDER CAN STILL BE COMPLETED AND PROCESSED!
 
-  It appears that the osC shipping system automatically rounds the 
+  It appears that the osC shipping system automatically rounds the
   shipping weight up to the nearest whole unit.  This makes it more
-  difficult to design precise shipping tables.  If you want to, you 
+  difficult to design precise shipping tables.  If you want to, you
   can hack the shipping.php file to get rid of the rounding.
 
   Lastly, there is a limit of 255 characters on each of the Zone
-  Shipping Tables and Zone Countries. 
+  Shipping Tables and Zone Countries.
 
 */
 

@@ -545,7 +545,7 @@ class inpay
         if ($update_status)
         {
             tep_mail($order->customer['firstname'].' '.$order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-			// send emails to other people
+      // send emails to other people
             if (SEND_EXTRA_ORDER_EMAILS_TO != '')
             {
                 tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
@@ -597,7 +597,7 @@ class inpay
             $status = tep_db_fetch_array($status_query);
             $status_id = $status['status_id']+1;
             $languages = tep_get_languages();
-			$flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+      $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
             if (tep_db_num_rows($flags_query) == 1) {
               foreach ($languages as $lang)
               {
@@ -607,10 +607,10 @@ class inpay
               foreach ($languages as $lang)
               {
                 tep_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."')");
-              }	
+              }
             }
-			
-            
+
+
         } else
         {
             $check = tep_db_fetch_array($check_query);
@@ -624,19 +624,19 @@ class inpay
         $sum_too_low_status_id = $this->set_order_status('Sum too low [inpay]', true);
         $completed_status_id = $this->set_order_status('Completed [inpay]', true);
 
-		$sort_order = 0;
+    $sort_order = 0;
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable inpay on your webshop?', 'MODULE_PAYMENT_INPAY_STATUS', 'False', '', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Gateway Server', 'MODULE_PAYMENT_INPAY_GATEWAY_SERVER', 'Production', 'Use the testing or production gateway server for transactions', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'Production\', \'Test\'), ', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your merchant id', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', '', 'Your merchant unique identifier (supplied by inpay)', '6', '".$sort_order++."', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your secret key', 'MODULE_PAYMENT_INPAY_SECRET_KEY', '', 'Your secret key (supplied by inpay)', '6', '".$sort_order++."', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Flow Layout', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'multi_page', 'Layout for the buyer flow', '6', '".$sort_order++."', now())");
-        
+
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Decrease stock on payment creation', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'False', 'Do you want to decrease stock upon payment creation?', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', '', 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.', '6', '".$sort_order++."', now())");
-        
-        
+
+
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_INPAY_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '".$sort_order++."', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-        
+
         //tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_INPAY_ID', '', 'The inpay seller e-mail address to accept payments for', '6', '4', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_INPAY_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '".$sort_order++."', now())");
 
@@ -658,7 +658,7 @@ class inpay
 
     function keys()
     {
-    	//'MODULE_PAYMENT_INPAY_ID', 
+      //'MODULE_PAYMENT_INPAY_ID',
         return array('MODULE_PAYMENT_INPAY_STATUS', 'MODULE_PAYMENT_INPAY_GATEWAY_SERVER', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', 'MODULE_PAYMENT_INPAY_SECRET_KEY', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', 'MODULE_PAYMENT_INPAY_ZONE', 'MODULE_PAYMENT_INPAY_SORT_ORDER', 'MODULE_PAYMENT_INPAY_CREATE_ORDER_STATUS_ID', 'MODULE_PAYMENT_INPAY_SUM_TOO_LOW_ORDER_STATUS_ID', 'MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID');
     }
 
@@ -684,7 +684,7 @@ class inpay
     //
     function calcInpayMd5Key($order)
     {
-    	
+
         $sk = MODULE_PAYMENT_INPAY_SECRET_KEY;
         $q = http_build_query( array ("merchant_id"=>$order['merchant_id'],
         "order_id"=>$order['order_id'],

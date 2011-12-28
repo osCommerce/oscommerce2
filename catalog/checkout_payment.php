@@ -38,7 +38,7 @@
 // Stock Check
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $cart->get_products();
-	  $n=sizeof($products);
+    $n=sizeof($products);
     for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
@@ -233,7 +233,7 @@ function rowOutEffect(object) {
         <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
 
 <?php
-	$n2=sizeof($selection[$i]['fields']);
+  $n2=sizeof($selection[$i]['fields']);
       for ($j=0; $j<$n2; $j++) {
 ?>
 

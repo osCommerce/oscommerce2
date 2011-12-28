@@ -75,18 +75,18 @@
         $this->language = $this->catalog_languages[$language];
       } else {
       if (in_array($this->language,$this->catalog_languages)) {
-	header('HTTP/1.1 404 Not Found'); ?>
-			 <h1>404 Not Found</h1>
-    <?	tep_exit(); 	
+  header('HTTP/1.1 404 Not Found'); ?>
+       <h1>404 Not Found</h1>
+    <?	tep_exit();
       }else{
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
       }
     }
-  }	  
+  }
 
     function get_browser_language() {
       $this->browser_languages = explode(',', $_SERVER["HTTP_ACCEPT_LANGUAGE"]);
-		$n=sizeof($this->browser_languages);
+    $n=sizeof($this->browser_languages);
       for ($i=0; $i<$n; $i++) {
        foreach($this->languages as $key => $value) {
           if (preg_match('/^(' . $value . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) {

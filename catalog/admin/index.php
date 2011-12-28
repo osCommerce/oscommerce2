@@ -54,7 +54,7 @@
 
     $col = 0;
 
-	$n=sizeof($adm_array);
+  $n=sizeof($adm_array);
     for ( $i=0; $i<$n; $i++ ) {
       $adm = $adm_array[$i];
 

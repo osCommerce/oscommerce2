@@ -143,9 +143,9 @@
       global $_POST, $order, $insert_id;
 
       if (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Test') {
-        $sql_data_array = array('orders_id' => (int)$insert_id, 
-                                'orders_status_id' => (int)$order->info['order_status'], 
-                                'date_added' => 'now()', 
+        $sql_data_array = array('orders_id' => (int)$insert_id,
+                                'orders_status_id' => (int)$order->info['order_status'],
+                                'date_added' => 'now()',
                                 'customer_notified' => '0',
                                 'comments' => MODULE_PAYMENT_2CHECKOUT_TEXT_WARNING_DEMO_MODE);
 
@@ -155,9 +155,9 @@
 // The KEY value returned from the gateway is intentionally broken for Test transactions so it is only checked in Production mode
       if (tep_not_null(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD) && (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Production')) {
         if (strtoupper(md5(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD . MODULE_PAYMENT_2CHECKOUT_LOGIN . $_POST['order_number'] . $this->order_format($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY))) != strtoupper($_POST['key'])) {
-          $sql_data_array = array('orders_id' => (int)$insert_id, 
-                                  'orders_status_id' => (int)$order->info['order_status'], 
-                                  'date_added' => 'now()', 
+          $sql_data_array = array('orders_id' => (int)$insert_id,
+                                  'orders_status_id' => (int)$order->info['order_status'],
+                                  'date_added' => 'now()',
                                   'customer_notified' => '0',
                                   'comments' => MODULE_PAYMENT_2CHECKOUT_TEXT_WARNING_TRANSACTION_ORDER);
 

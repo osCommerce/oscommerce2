@@ -26,7 +26,7 @@
       $this->messages = array();
 
       if (tep_session_is_registered('messageToStack')) {
-      	$n=sizeof($messageToStack);
+        $n=sizeof($messageToStack);
         for ($i=0; $i<$n; $i++) {
           $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
         }
@@ -66,7 +66,7 @@
       $this->table_data_parameters = 'class="messageBox"';
 
       $output = array();
-	  $n=sizeof($this->messages);
+    $n=sizeof($this->messages);
       for ($i=0; $i<$n; $i++) {
         if ($this->messages[$i]['class'] == $class) {
           $output[] = $this->messages[$i];
@@ -78,7 +78,7 @@
 
     function size($class) {
       $count = 0;
-	  $n=sizeof($this->messages);
+    $n=sizeof($this->messages);
       for ($i=0; $i<$n; $i++) {
         if ($this->messages[$i]['class'] == $class) {
           $count++;

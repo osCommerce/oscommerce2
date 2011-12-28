@@ -220,7 +220,7 @@
 
         $orders_status_inputs_string = '';
         $languages = tep_get_languages();
-		$n = sizeof($languages);
+    $n = sizeof($languages);
         for ($i = 0; $i < $n; $i++) {
           $orders_status_inputs_string .= '<br />' . tep_image(DIR_WS_CATALOG_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']);
         }

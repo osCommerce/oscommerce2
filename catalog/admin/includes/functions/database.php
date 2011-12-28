@@ -30,7 +30,7 @@
     return mysql_close($$link);
   }
 
-  function tep_db_error($query, $errno, $error) { 
+  function tep_db_error($query, $errno, $error) {
     die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[TEP STOP]</font></small><br /><br /></strong></font>');
   }
 
@@ -75,7 +75,7 @@
       $query = substr($query, 0, -2) . ')';
     } elseif ($action == 'update') {
       $query = 'update ' . $table . ' set ';
-	  foreach ($data as $columns => $value ) {
+    foreach ($data as $columns => $value ) {
         switch ((string)$value) {
           case 'now()':
             $query .= $columns . ' = now(), ';

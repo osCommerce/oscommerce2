@@ -419,7 +419,7 @@ Please review the update-20060817.txt file for the important changes made.
  * Fixed bug 1662; update of customers address through the My Account page
    resulted in the country value not being stored properly and affected tax
    rate values.
- 
+
 ------------------------------------------------------------------------------
 11/12/2005 osCommerce 2.2 Milestone 2 Update 051112
 ------------------------------------------------------------------------------
@@ -595,7 +595,7 @@ Please review the update-20060817.txt file for the important changes made.
 
  * All address information is now stored in the address_book table only. This
    change was made to reduce redundancy and allow more feautures in the
-   checkout part (e.g. selection of different BillTo and SendTo addresses)  
+   checkout part (e.g. selection of different BillTo and SendTo addresses)
 
 ------------------------------------------------------------------------------
 03/06/2001 The Exchange Project Preview Release 2.1

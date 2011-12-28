@@ -92,7 +92,7 @@
   foreach($_POST as $key => $value) {
     if (($key != 'x') && ($key != 'y')) {
       if (is_array($value)) {
-      	$n=sizeof($value);
+        $n=sizeof($value);
         for ($i=0; $i<$n; $i++) {
           echo osc_draw_hidden_field($key . '[]', $value[$i]);
         }

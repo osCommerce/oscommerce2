@@ -86,11 +86,11 @@
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_CURRENT; ?></td>
         <td class="fieldValue"><?php echo tep_draw_password_field('password_current') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>': ''); ?></td>
       </tr>
-      <tr> 
+      <tr>
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_NEW; ?></td>
         <td class="fieldValue"><?php echo tep_draw_password_field('password_new') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?></td>
       </tr>
-      <tr> 
+      <tr>
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
         <td class="fieldValue"><?php echo tep_draw_password_field('password_confirmation') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?></td>
       </tr>

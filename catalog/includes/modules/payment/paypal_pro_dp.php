@@ -77,7 +77,7 @@
         global $order;
 
         $types_array = array();
-		foreach ($this->cc_types as $key => $value) {
+    foreach ($this->cc_types as $key => $value) {
           if ($this->isCardAccepted($key)) {
             $types_array[] = array('id' => $key,
                                    'text' => $value);
@@ -125,7 +125,7 @@
 
     function pre_confirmation_check() {
       if (MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_INPUT_PAGE == 'Payment') {
-   
+
         if (!isset($_POST['cc_owner']) || empty($_POST['cc_owner']) || (strlen($_POST['cc_owner']) < CC_OWNER_MIN_LENGTH) || !isset($_POST['cc_type']) || !$this->isCardAccepted($_POST['cc_type']) || !isset($_POST['cc_number_nh-dns']) || empty($_POST['cc_number_nh-dns']) || (strlen($_POST['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner=' . urlencode($_POST['cc_owner']) . '&cc_starts_month=' . $_POST['cc_starts_month'] . '&cc_starts_year=' . $_POST['cc_starts_year'] . '&cc_expires_month=' . $_POST['cc_expires_month'] . '&cc_expires_year=' . $_POST['cc_expires_year'];
 
@@ -140,7 +140,7 @@
       $confirmation = array();
 
       if (MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_INPUT_PAGE == 'Payment') {
-       
+
         $confirmation['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER,
                                               'field' => $_POST['cc_owner']),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE,
@@ -212,7 +212,7 @@
 
     function process_button() {
       if (MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_INPUT_PAGE == 'Payment') {
-      
+
         $process_button_string = tep_draw_hidden_field('cc_owner', $_POST['cc_owner']) .
                                  tep_draw_hidden_field('cc_type', $_POST['cc_type']) .
                                  tep_draw_hidden_field('cc_number_nh-dns', $_POST['cc_number_nh-dns']) .
@@ -311,7 +311,7 @@
 
     function get_error() {
       if (MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_INPUT_PAGE == 'Payment') {
-     
+
         $error = array('error' => stripslashes(urldecode($_GET['error'])));
 
         return $error;

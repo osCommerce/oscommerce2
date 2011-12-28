@@ -2,13 +2,13 @@
 class mc360 {
     var $system = "osc";
     var $version = "1.1";
-    
+
     var $debug = false;
 
     var $apikey = '';
     var $key_valid = false;
     var $store_id = '';
-    
+
     function mc360() {
         $this->apikey = MODULE_HEADER_TAGS_MAILCHIMP_360_API_KEY;
         $this->store_id = MODULE_HEADER_TAGS_MAILCHIMP_360_STORE_ID;
@@ -20,7 +20,7 @@ class mc360 {
 
         $this->validate_cfg();
     }
-    
+
     function complain($msg){
             echo '<div style="position:absolute;left:0;top:0;width:100%;font-size:24px;text-align:center;background:#CCCCCC;color:#660000">MC360 Module: '.$msg.'</div><br />';
     }
@@ -31,7 +31,7 @@ class mc360 {
             $this->complain('You have not entered your API key. Please read the installation instructions.');
             return;
         }
-        
+
         if (!$this->key_valid){
             $GLOBALS["mc_api_key"] = $this->apikey;
             $api = new MCAPI('notused','notused');
@@ -42,14 +42,14 @@ class mc360 {
             } else {
                 $this->key_valid = true;
                 tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = 'true' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_KEY_VALID'");
-                
+
                 if (empty($this->store_id)){
                     $this->store_id = md5(uniqid(rand(), true));
                     tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $this->store_id . "' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_STORE_ID'");
                 }
             }
         }
-        
+
         if (empty($this->store_id)){
             $this->complain('Your Store ID has not been set. This is not good. Contact support.');
         } else {
@@ -67,9 +67,9 @@ class mc360 {
         if (isset($_REQUEST['mc_eid'])){
             setcookie('mailchimp_email_id',trim($_REQUEST['mc_eid']), $thirty_days);
         }
-        return;    
+        return;
     }
-    
+
     function process() {
         if (!$this->valid_cfg){
             return;
@@ -88,11 +88,11 @@ class mc360 {
                             '$_COOKIE =' . "\n" .
                             print_r($_COOKIE, true);
         }
-        
+
         if (!isset($_COOKIE['mailchimp_campaign_id']) || !isset($_COOKIE['mailchimp_email_id'])){
             return;
         }
-        
+
         if ($this->debug){
             $debug_email .= date('Y-m-d H:i:s') . ' current ids:' . "\n" .
                             date('Y-m-d H:i:s') . ' eid =' . $_COOKIE['mailchimp_email_id'] . "\n" .
@@ -109,7 +109,7 @@ class mc360 {
         while ($totals = tep_db_fetch_array($totals_query)) {
             $totals_array[$totals['class']] = $totals['value'];
         }
-        
+
         $products_array = array();
         $products_query = tep_db_query("select products_id, products_model, products_name, products_tax, products_quantity, final_price from " . TABLE_ORDERS_PRODUCTS . " where orders_id = " . (int)$orders['orders_id']);
         while ($products = tep_db_fetch_array($products_query)) {
@@ -148,11 +148,11 @@ class mc360 {
             $cat_qry = tep_db_query("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = " . (int)$product['id']." limit 1");
             $cats = tep_db_fetch_array($cat_qry);
             $cat_id = $cats['categories_id'];
-            
+
             $item['category_id'] = $cat_id;
             $cat_name == '';
-            $continue = true; 
-            while($continue){            
+            $continue = true;
+            while($continue){
             //now recurse up the categories tree...
                 $cat_qry = tep_db_query("select c.categories_id, c.parent_id, cd.categories_name from  " . TABLE_CATEGORIES . " c inner join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where c.categories_id =".$cat_id);
                 $cats = tep_db_fetch_array($cat_qry);
@@ -167,7 +167,7 @@ class mc360 {
                 }
             }
             $item['category_name'] = $cat_name;
-            
+
             $mcorder['items'][] = $item;
         }
 

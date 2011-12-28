@@ -50,7 +50,7 @@
   $admin_dir = basename(DIR_FS_ADMIN);
 
   if ($admin_dir != 'admin') {
-  	$n=sizeof($whitelist_array);
+    $n=sizeof($whitelist_array);
     for ($i=0; $i<$n; $i++) {
       if (substr($whitelist_array[$i], 0, 6) == 'admin/') {
         $whitelist_array[$i] = $admin_dir . substr($whitelist_array[$i], 5);

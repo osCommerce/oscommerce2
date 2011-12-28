@@ -112,10 +112,10 @@ if ($ok) {
     } else if (($invoice_status == "sum_too_low") && ($HTTP_POST_VARS["invoice_status"] == "sum_too_low")) {
         $ok = true;
     }
-	if (!$ok)
-	{
-		$result = "Bad invoice status:".$invoice_status;
-	}
+  if (!$ok)
+  {
+    $result = "Bad invoice status:".$invoice_status;
+  }
 }
 
 //
@@ -157,8 +157,8 @@ if ($result == 'VERIFIED')
     tep_db_query("update ".TABLE_ORDERS." set orders_status = '".$order_status_id."', last_modified = now() where orders_id = '".(int)$HTTP_POST_VARS['order_id']."'");
     if ($invoice_approved)
     {
-    	// for email
-		include(DIR_WS_LANGUAGES . $language . '/modules/payment/inpay.php');
+      // for email
+    include(DIR_WS_LANGUAGES . $language . '/modules/payment/inpay.php');
         // let's re-create the required arrays
         require (DIR_WS_CLASSES.'order.php');
         $order = new order($HTTP_POST_VARS['order_id']);
@@ -176,7 +176,7 @@ if ($result == 'VERIFIED')
             {
                 if (DOWNLOAD_ENABLED == 'true')
                 {
-                    $stock_query_raw = "SELECT products_quantity, pad.products_attributes_filename 
+                    $stock_query_raw = "SELECT products_quantity, pad.products_attributes_filename
                                     FROM ".TABLE_PRODUCTS." p
                                     LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa
                                     ON p.products_id=pa.products_id
@@ -283,10 +283,10 @@ if ($result == 'VERIFIED')
         if ($comments)
         {
             // do not add comments
-			// $email_order .= $comments."\n\n";
+      // $email_order .= $comments."\n\n";
         }
         // EOF order comment fix by AlexStudio
-        
+
         $email_order .= EMAIL_TEXT_PRODUCTS."\n".
         EMAIL_SEPARATOR."\n".
         $products_ordered.
@@ -365,9 +365,9 @@ if ($result == 'VERIFIED')
     {
         $check_query = tep_db_query("select orders_id from ".TABLE_ORDERS." where orders_id = '".$HTTP_POST_VARS['order_id']."'"); //TODO: fix custom "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
         $order_status_id = $order['orders_status'];
-		if (($order_status_id==null)||($order['orders_status']=='')){
-		  $order_status_id = DEFAULT_ORDERS_STATUS_ID;
-		}
+    if (($order_status_id==null)||($order['orders_status']=='')){
+      $order_status_id = DEFAULT_ORDERS_STATUS_ID;
+    }
         if (tep_db_num_rows($check_query) > 0)
         {
             $comment_status = $result;

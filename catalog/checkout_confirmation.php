@@ -71,7 +71,7 @@
 // Stock Check
   $any_out_of_stock = false;
   if (STOCK_CHECK == 'true') {
-  	$n=sizeof($order->products);
+    $n=sizeof($order->products);
     for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
         $any_out_of_stock = true;
@@ -165,7 +165,7 @@
 <?php
   }
 
-   $n=sizeof($order->products);	
+   $n=sizeof($order->products);
   for ($i=0; $i<$n; $i++) {
     echo '          <tr>' . "\n" .
          '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
@@ -176,7 +176,7 @@
     }
 
     if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
-      	$n2=sizeof($order->products[$i]['attributes']);
+        $n2=sizeof($order->products[$i]['attributes']);
       for ($j=0; $j<$n2; $j++) {
         echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'] . '</i></small></nobr>';
       }
@@ -261,7 +261,7 @@ $n=sizeof($confirmation['fields']);
 
     </table>
   </div>
-  
+
 <?php
     }
   }

@@ -117,12 +117,12 @@
   }
 
   function tep_get_all_get_params($exclude_array = '') {
-    
+
     if ($exclude_array == '') $exclude_array = array();
 
     $get_url = '';
 
-	foreach($_GET as $key => $value) {
+  foreach($_GET as $key => $value) {
       if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
@@ -468,7 +468,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 
@@ -787,7 +787,7 @@
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '';
-    
+
     $n=sizeof($select_array);
     for ($i=0; $i<$n; $i++) {
       $name = ((tep_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
@@ -805,7 +805,7 @@
 ////
 // Alias function for module configuration keys
   function tep_mod_select_option($select_array, $key_name, $key_value) {
-	foreach ($select_array as $key => $value) {
+  foreach ($select_array as $key => $value) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
       if ($key_value == $key) $string .= ' checked="checked"';
@@ -818,7 +818,7 @@
 ////
 // Retreive server information
   function tep_get_system_information() {
- 
+
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
@@ -899,7 +899,7 @@
     $calculated_category_path = tep_generate_category_path($id, $from);
     $n=sizeof($calculated_category_path);
     for ($i=0; $i<$n; $i++) {
-      $k=sizeof($calculated_category_path[$i]);	
+      $k=sizeof($calculated_category_path[$i]);
       for ($j=0; $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
       }
@@ -1028,7 +1028,7 @@
             while ($cache_file = readdir($dir)) {
               $cached_file = $cache_blocks[$i]['file'];
               $languages = tep_get_languages();
-			  $k=sizeof($languages);
+        $k=sizeof($languages);
               for ($j=0; $j<$k; $j++) {
                 $cached_file_unlink = preg_replace('/-language/', '-' . $languages[$j]['directory'], $cached_file);
                 if (preg_match('/^' . $cached_file_unlink . '/', $cache_file)) {
@@ -1041,7 +1041,7 @@
         } else {
           $cached_file = $cache_blocks[$i]['file'];
           $languages = tep_get_languages();
-		  $n=sizeof($languages);
+      $n=sizeof($languages);
           for ($i=0; $i<$n; $i++) {
             $cached_file = preg_replace('/-language/', '-' . $languages[$i]['directory'], $cached_file);
             @unlink(DIR_FS_CACHE . $cached_file);
@@ -1363,7 +1363,7 @@
   function tep_convert_linefeeds($from, $to, $string) {
      return str_replace($from, $to, $string);
     }
-  
+
 
   function tep_string_to_int($string) {
     return (int)$string;
@@ -1408,7 +1408,7 @@
   }
 
   function tep_get_ip_address() {
-   
+
     $ip_address = null;
     $ip_addresses = array();
 

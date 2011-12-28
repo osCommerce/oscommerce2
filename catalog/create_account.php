@@ -296,7 +296,7 @@
         <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
         <td class="fieldValue"><?php echo tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
       </tr>
-      <tr> 
+      <tr>
         <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
         <td class="fieldValue"><?php echo tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
       </tr>

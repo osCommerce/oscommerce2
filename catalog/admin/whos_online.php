@@ -127,7 +127,7 @@
 
       if (isset($cart) && is_object($cart)) {
         $products = $cart->get_products();
-		$n = sizeof($products);
+    $n = sizeof($products);
         for ($i = 0; $i < $n; $i++) {
           $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
         }

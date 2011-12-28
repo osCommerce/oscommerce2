@@ -83,7 +83,7 @@
 
       $n=sizeof($this->browser_languages);
       for ($i=0; $i<$n; $i++) {
-		foreach ($this->languages as $key => $value) {
+    foreach ($this->languages as $key => $value) {
           if (preg_match('/^(' . $value . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) {
             $this->language = $this->catalog_languages[$key];
             break 2;

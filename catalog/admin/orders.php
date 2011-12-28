@@ -196,14 +196,14 @@
             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_TOTAL_INCLUDING_TAX; ?></td>
           </tr>
 <?php
-	$n=sizeof($order->products);
+  $n=sizeof($order->products);
     for ($i=0; $i<$n; $i++) {
       echo '          <tr class="dataTableRow">' . "\n" .
            '            <td class="dataTableContent" valign="top" align="right">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
            '            <td class="dataTableContent" valign="top">' . $order->products[$i]['name'];
 
       if (isset($order->products[$i]['attributes']) && (sizeof($order->products[$i]['attributes']) > 0)) {
-        $k = sizeof($order->products[$i]['attributes']);	
+        $k = sizeof($order->products[$i]['attributes']);
         for ($j = 0; $j < $k; $j++) {
           echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
           if ($order->products[$i]['attributes'][$j]['price'] != '0') echo ' (' . $order->products[$i]['attributes'][$j]['prefix'] . $currencies->format($order->products[$i]['attributes'][$j]['price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . ')';
@@ -224,7 +224,7 @@
           <tr>
             <td align="right" colspan="8"><table border="0" cellspacing="0" cellpadding="2">
 <?php
-	$n = sizeof($order->totals);
+  $n = sizeof($order->totals);
     for ($i = 0; $i < $n; $i++) {
       echo '              <tr>' . "\n" .
            '                <td align="right" class="smallText">' . $order->totals[$i]['title'] . '</td>' . "\n" .

@@ -32,7 +32,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
-		foreach ($_POST['configuration'] as $key => $value) {
+    foreach ($_POST['configuration'] as $key => $value) {
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));

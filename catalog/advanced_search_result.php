@@ -154,7 +154,7 @@
 
   $select_column_list = '';
 
-	$n=sizeof($column_list);
+  $n=sizeof($column_list);
   for ($i=0; $i<$n; $i++) {
     switch ($column_list[$i]) {
       case 'PRODUCT_LIST_MODEL':
@@ -219,7 +219,7 @@
 
   if (isset($search_keywords) && (sizeof($search_keywords) > 0)) {
     $where_str .= " and (";
-	  $n=sizeof($search_keywords);
+    $n=sizeof($search_keywords);
     for ($i=0; $i<$n; $i++ ) {
       switch ($search_keywords[$i]) {
         case '(':
@@ -274,7 +274,7 @@
   }
 
   if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
-    $n=sizeof($column_list);	
+    $n=sizeof($column_list);
     for ($i=0; $i<$n; $i++) {
       if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
         $_GET['sort'] = $i+1 . 'a';

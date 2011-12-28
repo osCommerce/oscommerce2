@@ -24,7 +24,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Sets up the object.
  *
  * @param $body   - The body of the mime part if any.
@@ -98,7 +98,7 @@
 
 /**
  * encode()
- * 
+ *
  * Encodes and returns the email. Also stores
  * it in the encoded member variable
  *
@@ -126,7 +126,7 @@
           $_subparts = $this->_subparts[$i];
           $tmp = $_subparts->encode();
 
-		  foreach ($tmp['headers'] as $key => $value) {
+      foreach ($tmp['headers'] as $key => $value) {
             $headers[] = $key . ': ' . $value;
           }
 
@@ -148,7 +148,7 @@
 
 /**
  * &addSubPart()
- * 
+ *
  * Adds a subpart to current mime part and returns
  * a reference to it
  *
@@ -172,7 +172,7 @@
 
 /**
  * _getEncodedData()
- * 
+ *
  * Returns encoded data based upon encoding passed to it
  *
  * @param $data     The data to encode.
@@ -197,11 +197,11 @@
 
 /**
  * quoteadPrintableEncode()
- * 
+ *
  * Encodes data to quoted-printable standard.
  *
  * @param $input    The data to encode
- * @param $line_max Optional max line length. Should 
+ * @param $line_max Optional max line length. Should
  *                  not be more than 76 chars
  *
  * @access private

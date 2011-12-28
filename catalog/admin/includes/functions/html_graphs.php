@@ -36,7 +36,7 @@
     $html_graph_string .= end_graph();
 
 // Set the error level back to where it was.
-    error_reporting($er);  
+    error_reporting($er);
 
     return $html_graph_string;
   }
@@ -86,12 +86,12 @@
     if ( ($vals['vlabel']) || ($vals['hlabel']) ) {
       if ( ($vals['type'] == 0) || ($vals['type'] == 2) ) {
 // horizontal chart
-        $rowspan = sizeof($names) + 1; 
-        $colspan = 3; 
+        $rowspan = sizeof($names) + 1;
+        $colspan = 3;
       } elseif ( ($vals['type'] == 1) || ($vals['type'] == 3) ) {
 // vertical chart
         $rowspan = 3;
-        $colspan = sizeof($names) + 1; 
+        $colspan = sizeof($names) + 1;
       }
 
       $start_graph_string .= '  <tr>' . "\n" .
@@ -145,14 +145,14 @@
 // prints out the actual data for the horizontal chart
   function horizontal_graph($names, $values, $bars, $vals) {
     $horizontal_graph_string = '';
-    for($i = 0, $n = sizeof($values); $i < $n; $i++) { 
+    for($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $horizontal_graph_string .= '  <tr>' . "\n" .
                                   '    <td align="right"';
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
 
       $horizontal_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n" .
-                                  '    <td'; 
+                                  '    <td';
 
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
@@ -200,14 +200,14 @@
 
       $vertical_graph_string .= '<img src="' . $bars[$i] . '" width="5" height="';
 
-// values of zero are displayed wrong because a image height of zero 
-// gives a strange behavior in Netscape. For this reason the height 
+// values of zero are displayed wrong because a image height of zero
+// gives a strange behavior in Netscape. For this reason the height
 // is set at 1 pixel if the value is zero. - Jan Diepens
       if ($values[$i] != 0) {
         $vertical_graph_string .= $values[$i] * $vals['scale'];
       } else {
         $vertical_graph_string .= '1';
-      } 
+      }
 
       $vertical_graph_string .= '"></td>' . "\n";
     } // endfor
@@ -268,7 +268,7 @@
                                            '</table>';
       } else {
         $double_horizontal_graph_string .= '<img src="' . $bars[$i] . '" height="10" width="' . ($values[$i] * $vals['scale']) . '">';
-      }          
+      }
 
       if (!$vals['noshowvals']) {
         $double_horizontal_graph_string .= '<i><font size="-3" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i>';

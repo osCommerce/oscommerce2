@@ -37,8 +37,8 @@ $n=sizeof($this->_trail);
 
         if (($i+1) < $n) $trail_string .= $separator;
       }
-   
+
       return $trail_string;
     }
-  } 
+  }
 ?>
