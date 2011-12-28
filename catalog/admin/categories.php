@@ -861,7 +861,7 @@ $('#products_date_available').datepicker({
 ?>
 
 
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '"><span class="ui-icon ui-icon-folder-collapsed style=" float:left; display:inline;"></span></a>&nbsp;<strong>' . $categories['categories_name'] . '</strong>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '"><span class="ui-icon ui-icon-folder-collapsed style=" float:left; display:inline;"></span>&nbsp;<strong>' . $categories['categories_name'] . '</strong></a>'; ?></td>
                 <td class="dataTableContent" align="center">&nbsp;</td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) { echo '<span class="ui-icon ui-icon-play style="float:left; display:inline;"></span>'; } else { echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '"><span class="ui-icon ui-icon-info style="float:left; display:inline;"></span></a>'; } ?>&nbsp;</td>
               </tr>
