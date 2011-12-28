@@ -54,18 +54,19 @@
       }
     }
 
-
+// try to open file
+   if ($fp = @fopen(gzinflate($filename, 'r'))) {
 // read in serialized data
-      $szdata = gzinflate(file_get_contents($filename));
-
+   $szdata = fread($fp, filesize($filename));
+   fclose($fp);
 // unserialze the data
       $var = json_decode(stripslashes(base64_decode($szdata)));
       $success = true;
     }
-    unset($var);
-  unset($szdata);
-    return $success;
+    unset($var,$szdata);
 
+    return $success;
+  }
 ////
 //! Get data from the cache or the database.
 //  get_db_cache checks the cache for cached SQL data in $filename
