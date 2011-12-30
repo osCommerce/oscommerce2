@@ -102,34 +102,23 @@
   }
 
   function tep_session_register($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_register($variable);
-    } else {
       if (isset($GLOBALS[$variable])) {
         $_SESSION[$variable] =& $GLOBALS[$variable];
       } else {
         $_SESSION[$variable] = null;
       }
-    }
 
     return false;
   }
 
   function tep_session_is_registered($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_is_registered($variable);
-    } else {
-      return isset($_SESSION) && array_key_exists($variable, $_SESSION);
+       return isset($_SESSION) && array_key_exists($variable, $_SESSION);
     }
-  }
+
 
   function tep_session_unregister($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_unregister($variable);
-    } else {
       unset($_SESSION[$variable]);
     }
-  }
 
   function tep_session_id($sessid = '') {
     if ($sessid != '') {
