@@ -562,7 +562,7 @@
       $bna_passwort = (isset($HTTP_GET_VARS['bna_passwort']) && !empty($HTTP_GET_VARS['bna_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['bna_passwort']) : '';
       $cnt_passwort = (isset($HTTP_GET_VARS['cnt_passwort']) && !empty($HTTP_GET_VARS['cnt_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['cnt_passwort']) : '';
 
-      $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sofortï¿½berweisung Vorbereitung' limit 1");
+      $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sofortüberweisung Vorbereitung' limit 1");
 
       if (tep_db_num_rows($check_query) < 1) {
         $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
@@ -573,7 +573,7 @@
         $languages = tep_get_languages();
 
         for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofortï¿½berweisung Vorbereitung')");
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofortüberweisung Vorbereitung')");
         }
 
         $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
@@ -586,10 +586,10 @@
         $status_id = $check['orders_status_id'];
       }
 
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sofortï¿½berweisung direkter Modus aktivieren', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS', 'True', 'Bezahlung per Sofortï¿½berweisung acceptieren?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Kundennummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR', '" . (int)$kdnr . "', 'Ihre Kundennummer bei der Sofortï¿½berweisung', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Projektnummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT', '" . (int)$projekt . "', 'Die verantwortliche Projektnummer bei der Sofortï¿½berweisung, zu der die Zahlung gehï¿½rt', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Input-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_INPUT_PASSWORT', '" . tep_db_input($input_passwort) . "', 'Das Input-Passwort (unter Nicht ï¿½nderbare Parameter / Input-Passwort)', '6', '1', now());");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sofortüberweisung direkter Modus aktivieren', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS', 'True', 'Bezahlung per Sofortüberweisung acceptieren?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Kundennummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR', '" . (int)$kdnr . "', 'Ihre Kundennummer bei der Sofortüberweisung', '6', '1', now());");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Projektnummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT', '" . (int)$projekt . "', 'Die verantwortliche Projektnummer bei der Sofortüberweisung, zu der die Zahlung gehört', '6', '1', now());");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Input-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_INPUT_PASSWORT', '" . tep_db_input($input_passwort) . "', 'Das Input-Passwort (unter Nicht änderbare Parameter / Input-Passwort)', '6', '1', now());");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Benachrichtigung-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT', '" . tep_db_input($bna_passwort) . "', 'Das Benachrichtigung-Passwort (unter Benachrichtigungen festlegen)', '6', '1', now());");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Contentpasswort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT', '" . tep_db_input($cnt_passwort) . "', 'Das Contentpasswort (unter Content-Passwort)', '6', '1', now());");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
