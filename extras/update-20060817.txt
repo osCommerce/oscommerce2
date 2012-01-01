@@ -1,4 +1,4 @@
-﻿osCommerce 2.2 Milestone 2 Update 060817
+osCommerce 2.2 Milestone 2 Update 060817
 Update Package 17th August 2006
 
 ------------------------------------------------------------------------------
