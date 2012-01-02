@@ -74,10 +74,10 @@
       if ( (tep_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
         $this->language = $this->catalog_languages[$language];
       } else {
-      if (in_array($this->language,$this->catalog_languages)) {
-  header('HTTP/1.1 404 Not Found'); ?>
-       <h1>404 Not Found</h1>
-    <?	tep_exit();
+       if (in_array($this->language,$this->catalog_languages)) {
+  header('HTTP/1.1 404 Not Found');
+  echo   '<h1>404 Not Found</h1>';
+      tep_exit();
       }else{
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
       }
