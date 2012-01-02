@@ -226,7 +226,8 @@
           $attributes_exist = '0';
           if (isset($order->products[$i]['attributes'])) {
             $attributes_exist = '1';
-            for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+      $n2=sizeof($order->products[$i]['attributes']);
+            for ($j=0; $j<$n2; $j++) {
               if (DOWNLOAD_ENABLED == 'true') {
                 $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
                                      from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa

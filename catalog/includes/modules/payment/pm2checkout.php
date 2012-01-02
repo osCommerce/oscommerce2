@@ -100,7 +100,8 @@
                                tep_draw_hidden_field('ship_zip', $order->delivery['postcode']) .
                                tep_draw_hidden_field('ship_country', $order->delivery['country']['title']);
 
-      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      $n=sizeof($order->products);
+      for ($i=0; $i<$n; $i++) {
         $process_button_string .= tep_draw_hidden_field('c_prod_' . ($i+1), (int)$order->products[$i]['id'] . ',' . (int)$order->products[$i]['qty']) .
                                   tep_draw_hidden_field('c_name_' . ($i+1), $order->products[$i]['name']) .
                                   tep_draw_hidden_field('c_description_' . ($i+1), $order->products[$i]['name']) .

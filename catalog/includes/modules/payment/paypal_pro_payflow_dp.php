@@ -118,10 +118,9 @@
 
     function pre_confirmation_check() {
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        global $HTTP_POST_VARS;
 
-        if (!isset($HTTP_POST_VARS['cc_owner_firstname']) || empty($HTTP_POST_VARS['cc_owner_firstname']) || !isset($HTTP_POST_VARS['cc_owner_lastname']) || empty($HTTP_POST_VARS['cc_owner_lastname']) || (strlen($HTTP_POST_VARS['cc_owner_firstname'] . ' ' . $HTTP_POST_VARS['cc_owner_lastname']) < CC_OWNER_MIN_LENGTH) || !isset($HTTP_POST_VARS['cc_type']) || !isset($this->cc_types[$HTTP_POST_VARS['cc_type']]) || !isset($HTTP_POST_VARS['cc_number_nh-dns']) || empty($HTTP_POST_VARS['cc_number_nh-dns']) || (strlen($HTTP_POST_VARS['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
-          $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner_firstname=' . urlencode($HTTP_POST_VARS['cc_owner_firstname']) . '&cc_owner_lastname=' . urlencode($HTTP_POST_VARS['cc_owner_lastname']) . '&cc_starts_month=' . $HTTP_POST_VARS['cc_starts_month'] . '&cc_starts_year=' . $HTTP_POST_VARS['cc_starts_year'] . '&cc_expires_month=' . $HTTP_POST_VARS['cc_expires_month'] . '&cc_expires_year=' . $HTTP_POST_VARS['cc_expires_year'];
+        if (!isset($_POST['cc_owner_firstname']) || empty($_POST['cc_owner_firstname']) || !isset($_POST['cc_owner_lastname']) || empty($_POST['cc_owner_lastname']) || (strlen($_POST['cc_owner_firstname'] . ' ' . $_POST['cc_owner_lastname']) < CC_OWNER_MIN_LENGTH) || !isset($_POST['cc_type']) || !isset($this->cc_types[$_POST['cc_type']]) || !isset($_POST['cc_number_nh-dns']) || empty($_POST['cc_number_nh-dns']) || (strlen($_POST['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
+          $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner_firstname=' . urlencode($_POST['cc_owner_firstname']) . '&cc_owner_lastname=' . urlencode($_POST['cc_owner_lastname']) . '&cc_starts_month=' . $_POST['cc_starts_month'] . '&cc_starts_year=' . $_POST['cc_starts_year'] . '&cc_expires_month=' . $_POST['cc_expires_month'] . '&cc_expires_year=' . $_POST['cc_expires_year'];
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
         }
@@ -134,24 +133,23 @@
       $confirmation = array();
 
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        global $HTTP_POST_VARS;
 
         $confirmation['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_OWNER,
-                                              'field' => $HTTP_POST_VARS['cc_owner_firstname'] . ' ' . $HTTP_POST_VARS['cc_owner_lastname']),
+                                              'field' => $_POST['cc_owner_firstname'] . ' ' . $_POST['cc_owner_lastname']),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_TYPE,
-                                              'field' => $this->cc_types[$HTTP_POST_VARS['cc_type']]),
+                                              'field' => $this->cc_types[$_POST['cc_type']]),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_NUMBER,
-                                              'field' => str_repeat('X', strlen($HTTP_POST_VARS['cc_number_nh-dns']) - 4) . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4)),
+                                              'field' => str_repeat('X', strlen($_POST['cc_number_nh-dns']) - 4) . substr($_POST['cc_number_nh-dns'], -4)),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM,
-                                              'field' => $HTTP_POST_VARS['cc_starts_month'] . '/' . $HTTP_POST_VARS['cc_starts_year']),
+                                              'field' => $_POST['cc_starts_month'] . '/' . $_POST['cc_starts_year']),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_EXPIRES,
-                                              'field' => $HTTP_POST_VARS['cc_expires_month'] . '/' . $HTTP_POST_VARS['cc_expires_year']),
+                                              'field' => $_POST['cc_expires_month'] . '/' . $_POST['cc_expires_year']),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_CVC,
-                                              'field' => $HTTP_POST_VARS['cc_cvc_nh-dns']));
+                                              'field' => $_POST['cc_cvc_nh-dns']));
 
-        if (isset($HTTP_POST_VARS['cc_issue_nh-dns']) && !empty($HTTP_POST_VARS['cc_issue_nh-dns'])) {
+        if (isset($_POST['cc_issue_nh-dns']) && !empty($_POST['cc_issue_nh-dns'])) {
           $confirmation['fields'][] = array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER,
-                                            'field' => $HTTP_POST_VARS['cc_issue_nh-dns']);
+                                            'field' => $_POST['cc_issue_nh-dns']);
         }
       } else {
         global $order;
@@ -202,20 +200,19 @@
 
     function process_button() {
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        global $HTTP_POST_VARS;
 
-        $process_button_string = tep_draw_hidden_field('cc_owner_firstname', $HTTP_POST_VARS['cc_owner_firstname']) .
-                                 tep_draw_hidden_field('cc_owner_lastname', $HTTP_POST_VARS['cc_owner_lastname']) .
-                                 tep_draw_hidden_field('cc_type', $HTTP_POST_VARS['cc_type']) .
-                                 tep_draw_hidden_field('cc_number_nh-dns', $HTTP_POST_VARS['cc_number_nh-dns']) .
-                                 tep_draw_hidden_field('cc_starts_month', $HTTP_POST_VARS['cc_starts_month']) .
-                                 tep_draw_hidden_field('cc_starts_year', $HTTP_POST_VARS['cc_starts_year']) .
-                                 tep_draw_hidden_field('cc_expires_month', $HTTP_POST_VARS['cc_expires_month']) .
-                                 tep_draw_hidden_field('cc_expires_year', $HTTP_POST_VARS['cc_expires_year']) .
-                                 tep_draw_hidden_field('cc_cvc_nh-dns', $HTTP_POST_VARS['cc_cvc_nh-dns']);
+        $process_button_string = tep_draw_hidden_field('cc_owner_firstname', $_POST['cc_owner_firstname']) .
+                                 tep_draw_hidden_field('cc_owner_lastname', $_POST['cc_owner_lastname']) .
+                                 tep_draw_hidden_field('cc_type', $_POST['cc_type']) .
+                                 tep_draw_hidden_field('cc_number_nh-dns', $_POST['cc_number_nh-dns']) .
+                                 tep_draw_hidden_field('cc_starts_month', $_POST['cc_starts_month']) .
+                                 tep_draw_hidden_field('cc_starts_year', $_POST['cc_starts_year']) .
+                                 tep_draw_hidden_field('cc_expires_month', $_POST['cc_expires_month']) .
+                                 tep_draw_hidden_field('cc_expires_year', $_POST['cc_expires_year']) .
+                                 tep_draw_hidden_field('cc_cvc_nh-dns', $_POST['cc_cvc_nh-dns']);
 
-        if (isset($HTTP_POST_VARS['cc_issue_nh-dns']) && !empty($HTTP_POST_VARS['cc_issue_nh-dns'])) {
-          $process_button_string .= tep_draw_hidden_field('cc_issue_nh-dns', $HTTP_POST_VARS['cc_issue_nh-dns']);
+        if (isset($_POST['cc_issue_nh-dns']) && !empty($_POST['cc_issue_nh-dns'])) {
+          $process_button_string .= tep_draw_hidden_field('cc_issue_nh-dns', $_POST['cc_issue_nh-dns']);
         }
 
         return $process_button_string;
@@ -225,16 +222,16 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order, $sendto;
+      global $order, $sendto;
 
-      if (isset($HTTP_POST_VARS['cc_owner_firstname']) && !empty($HTTP_POST_VARS['cc_owner_firstname']) && isset($HTTP_POST_VARS['cc_owner_lastname']) && !empty($HTTP_POST_VARS['cc_owner_lastname']) && isset($HTTP_POST_VARS['cc_type']) && isset($this->cc_types[$HTTP_POST_VARS['cc_type']]) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
+      if (isset($_POST['cc_owner_firstname']) && !empty($_POST['cc_owner_firstname']) && isset($_POST['cc_owner_lastname']) && !empty($_POST['cc_owner_lastname']) && isset($_POST['cc_type']) && isset($this->cc_types[$_POST['cc_type']]) && isset($_POST['cc_number_nh-dns']) && !empty($_POST['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_SERVER == 'Live') {
           $api_url = 'https://payflowpro.verisign.com/transaction';
         } else {
           $api_url = 'https://pilot-payflowpro.verisign.com/transaction';
         }
 
-        $name = explode(' ', $HTTP_POST_VARS['cc_owner'], 2);
+        $name = explode(' ', $_POST['cc_owner'], 2);
 
         $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR),
                         'VENDOR' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR,
@@ -244,8 +241,8 @@
                         'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                         'AMT' => $this->format_raw($order->info['total']),
                         'CURRENCY' => $order->info['currency'],
-                        'FIRSTNAME' => $HTTP_POST_VARS['cc_owner_firstname'],
-                        'LASTNAME' => $HTTP_POST_VARS['cc_owner_lastname'],
+                        'FIRSTNAME' => $_POST['cc_owner_firstname'],
+                        'LASTNAME' => $_POST['cc_owner_lastname'],
                         'STREET' => $order->billing['street_address'],
                         'CITY' => $order->billing['city'],
                         'STATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
@@ -253,15 +250,15 @@
                         'ZIP' => $order->billing['postcode'],
                         'CLIENTIP' => tep_get_ip_address(),
                         'EMAIL' => $order->customer['email_address'],
-                        'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
-                        'ACCTTYPE' => $HTTP_POST_VARS['cc_type'],
-                        'CARDSTART' => $HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'],
-                        'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns'],
+                        'ACCT' => $_POST['cc_number_nh-dns'],
+                        'ACCTTYPE' => $_POST['cc_type'],
+                        'CARDSTART' => $_POST['cc_starts_month'] . $_POST['cc_starts_year'],
+                        'EXPDATE' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
+                        'CVV2' => $_POST['cc_cvc_nh-dns'],
                         'BUTTONSOURCE' => 'osCommerce22_Default_PRO2DP');
 
-        if ( ($HTTP_POST_VARS['cc_type'] == '9') || ($HTTP_POST_VARS['cc_type'] == 'S') ) {
-          $params['CARDISSUE'] = $HTTP_POST_VARS['cc_issue_nh-dns'];
+        if ( ($_POST['cc_type'] == '9') || ($_POST['cc_type'] == 'S') ) {
+          $params['CARDISSUE'] = $_POST['cc_issue_nh-dns'];
         }
 
         if (is_numeric($sendto) && ($sendto > 0)) {
@@ -324,9 +321,8 @@
 
     function get_error() {
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        global $HTTP_GET_VARS;
 
-        $error = array('error' => stripslashes(urldecode($HTTP_GET_VARS['error'])));
+        $error = array('error' => stripslashes(urldecode($_GET['error'])));
 
         return $error;
       }

@@ -139,7 +139,8 @@
             while (list(, $value) = each($order_total_modules->modules)) {
               $class = substr($value, 0, strrpos($value, '.'));
               if ($GLOBALS[$class]->enabled) {
-                for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
+                $n=sizeof($GLOBALS[$class]->output);
+                for ($i=0; $i<$n; $i++) {
                   if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
                     $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                             'title' => $GLOBALS[$class]->output[$i]['title'],
@@ -196,7 +197,8 @@
 
           $insert_id = tep_db_insert_id();
 
-          for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+          $n=sizeof($order_totals);
+          for ($i=0; $i<$n; $i++) {
             $sql_data_array = array('orders_id' => $insert_id,
                                     'title' => $order_totals[$i]['title'],
                                     'text' => $order_totals[$i]['text'],
@@ -207,7 +209,8 @@
             tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
           }
 
-          for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+          $n=sizeof($order->products);
+          for ($i=0; $i<$n; $i++) {
             $sql_data_array = array('orders_id' => $insert_id,
                                     'products_id' => tep_get_prid($order->products[$i]['id']),
                                     'products_model' => $order->products[$i]['model'],
@@ -224,7 +227,8 @@
             $attributes_exist = '0';
             if (isset($order->products[$i]['attributes'])) {
               $attributes_exist = '1';
-              for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+      $n2=sizeof($order->products[$i]['attributes']);
+              for ($j=0; $j<$n2; $j++) {
                 if (DOWNLOAD_ENABLED == 'true') {
                   $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
                                        from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -424,7 +428,8 @@
       $subtotal = 0;
       $total_tax = 0;
 
-      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      $n=sizeof($order->products);
+      for ($i=0; $i<$n; $i++) {
 // Stock Update - Joao Correia
         if (STOCK_LIMITED == 'true') {
           if (DOWNLOAD_ENABLED == 'true') {
@@ -468,7 +473,8 @@
         $products_ordered_attributes = '';
         if (isset($order->products[$i]['attributes'])) {
           $attributes_exist = '1';
-          for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+     $n2=sizeof($order->products[$i]['attributes']);
+          for ($j=0; $j<$n2; $j++) {
             if (DOWNLOAD_ENABLED == 'true') {
               $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
                                    from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -512,7 +518,8 @@
                       $products_ordered .
                       EMAIL_SEPARATOR . "\n";
 
-      for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+      $n=sizeof($order_totals);
+      for ($i=0; $i<$n; $i++) {
         $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
       }
 
