@@ -68,7 +68,8 @@
 // Stock Check
   $any_out_of_stock = false;
   if (STOCK_CHECK == 'true') {
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+  	$n=sizeof($order->products);
+    for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
         $any_out_of_stock = true;
       }

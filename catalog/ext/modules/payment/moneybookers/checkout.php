@@ -68,7 +68,8 @@
 // Stock Check
   $any_out_of_stock = false;
   if (STOCK_CHECK == 'true') {
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+  	$n=sizeof($order->products);
+    for ($i=0; $i<$n; $i++) {
       if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
         $any_out_of_stock = true;
       }
@@ -84,7 +85,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $HTTP_POST_VARS['sid'];
+  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $_POST['sid'];
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
