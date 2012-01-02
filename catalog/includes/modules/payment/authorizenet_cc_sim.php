@@ -126,15 +126,14 @@
       if (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE == 'Test') {
         $process_button_string .= tep_draw_hidden_field('x_test_request', 'TRUE');
       }
-
-      for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      $n=sizeof($order->products);
+      for ($i=0; $i<$n; $i++) {
         $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
       $tax_value = 0;
 
-      reset($order->info['tax_groups']);
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+    foreach ($order->info['tax_groups'] as $key => $value) {
         if ($value > 0) {
           $tax_value += $this->format_raw($value);
         }
@@ -151,17 +150,17 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order;
+      global $order;
 
       $error = false;
 
-      if ($HTTP_POST_VARS['x_response_code'] == '1') {
-        if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($HTTP_POST_VARS['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $HTTP_POST_VARS['x_trans_id'] . $this->format_raw($order->info['total']))))) {
+      if ($_POST['x_response_code'] == '1') {
+        if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($_POST['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) {
           $error = 'verification';
-        } elseif ($HTTP_POST_VARS['x_amount'] != $this->format_raw($order->info['total'])) {
+        } elseif ($_POST['x_amount'] != $this->format_raw($order->info['total'])) {
           $error = 'verification';
         }
-      } elseif ($HTTP_POST_VARS['x_response_code'] == '2') {
+      } elseif ($_POST['x_response_code'] == '2') {
         $error = 'declined';
       } else {
         $error = 'general';
@@ -177,11 +176,10 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
 
       $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ERROR_GENERAL;
 
-      switch ($HTTP_GET_VARS['error']) {
+      switch ($_GET['error']) {
         case 'verification':
           $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ERROR_VERIFICATION;
           break;

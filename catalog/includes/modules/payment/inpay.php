@@ -158,13 +158,13 @@ class inpay
                 $order_totals = array ();
                 if (is_array($order_total_modules->modules))
                 {
-                    reset($order_total_modules->modules);
-                    while ( list (, $value) = each($order_total_modules->modules))
+          foreach ($order_total_modules->modules as $value)
                     {
                         $class = substr($value, 0, strrpos($value, '.'));
                         if ($GLOBALS[$class]->enabled)
                         {
-                            for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i++)
+                          $n = sizeof($GLOBALS[$class]->output);
+                            for ($i = 0; $i < $n; $i++)
                             {
                                 if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text']))
                                 {
@@ -223,7 +223,8 @@ class inpay
 
                 $insert_id = tep_db_insert_id();
 
-                for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++)
+                $n = sizeof($order_totals);
+                for ($i = 0; $i < $n; $i++)
                 {
                     $sql_data_array = array ('orders_id'=>$insert_id,
                     'title'=>$order_totals[$i]['title'],
@@ -235,7 +236,8 @@ class inpay
                     tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
                 }
 
-                for ($i = 0, $n = sizeof($order->products); $i < $n; $i++)
+                $n = sizeof($order->products);
+                for ($i = 0; $i < $n; $i++)
                 {
                     $sql_data_array = array ('orders_id'=>$insert_id,
                     'products_id'=>tep_get_prid($order->products[$i]['id']),
@@ -254,7 +256,8 @@ class inpay
                     if ( isset ($order->products[$i]['attributes']))
                     {
                         $attributes_exist = '1';
-                        for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++)
+            $n2 = sizeof($order->products[$i]['attributes']);
+                        for ($j = 0;  $j < $n2; $j++)
                         {
                             if (DOWNLOAD_ENABLED == 'true')
                             {
@@ -356,7 +359,8 @@ class inpay
         // pruduct(s) info
         //
         $products_info = '';
-        for ($i = 0, $n = sizeof($order->products); $i < $n; $i++)
+    $n = sizeof($order->products);
+        for ($i = 0; $i < $n; $i++)
         {
             $products_info = $products_info.$order->products[$i]['qty']."x".
             $order->products[$i]['model'].' '.$order->products[$i]['name'].";";
@@ -366,8 +370,7 @@ class inpay
         // calc Md5 sum
         //
         $parameters['checksum'] = $this->calcInpayMd5Key($parameters);
-        reset($parameters);
-        while ( list ($key, $value) = each($parameters))
+    foreach ($$parameters as $key => $value)
         {
             $process_button_string .= tep_draw_hidden_field($key, $value);
         }
@@ -379,7 +382,7 @@ class inpay
         global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_inpay_Standard_ID;
         global $$payment;
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
-        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
         $delivered_status = 3;
         $update_status = true;
@@ -410,7 +413,8 @@ class inpay
         $subtotal = 0;
         $total_tax = 0;
 
-        for ($i = 0, $n = sizeof($order->products); $i < $n; $i++)
+        $n = sizeof($order->products);
+        for ($i = 0; $i < $n; $i++)
         {
             // Stock Update - Joao Correia
             if ((MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION == 'True') && (STOCK_LIMITED == 'true'))
@@ -464,7 +468,8 @@ class inpay
             if ( isset ($order->products[$i]['attributes']))
             {
                 $attributes_exist = '1';
-                for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++)
+        $n2 = sizeof($order->products[$i]['attributes']);
+                for ($j = 0; $j < $n2; $j++)
                 {
                     if (DOWNLOAD_ENABLED == 'true')
                     {
@@ -512,7 +517,8 @@ class inpay
         $products_ordered.
         EMAIL_SEPARATOR."\n";
 
-        for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++)
+        $n = sizeof($order_totals);
+        for ($i = 0; $i < $n; $i++)
         {
             $email_order .= strip_tags($order_totals[$i]['title']).' '.strip_tags($order_totals[$i]['text'])."\n";
         }

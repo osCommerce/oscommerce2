@@ -131,11 +131,11 @@
         if ($insert_order == true) {
           $order_totals = array();
           if (is_array($order_total_modules->modules)) {
-            reset($order_total_modules->modules);
-            while (list(, $value) = each($order_total_modules->modules)) {
+      foreach ($order_total_modules->modules as $value) {
               $class = substr($value, 0, strrpos($value, '.'));
               if ($GLOBALS[$class]->enabled) {
-                for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
+               $n=sizeof($GLOBALS[$class]->output);
+                for ($i=0; $i<$n; $i++) {
                   if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
                     $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                             'title' => $GLOBALS[$class]->output[$i]['title'],
