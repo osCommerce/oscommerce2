@@ -52,7 +52,7 @@
   $comment = '';
 
   if ($pw != MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT) {
-    $comment = 'ung�ltiges Benachrichtigung Passwort' . "\n";
+    $comment = 'ungültiges Benachrichtigung Passwort' . "\n";
   }
 
   // check if order exists
