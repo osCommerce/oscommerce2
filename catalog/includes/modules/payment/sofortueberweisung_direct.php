@@ -279,9 +279,9 @@
       $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
       $parameter= array();
-      $parameter['kdnr']	= MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR;  // Reprï¿½sentiert Ihre Kundennummer bei der Sofortï¿½berweisung
-      $parameter['projekt'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT;  // Die verantwortliche Projektnummer bei der Sofortï¿½berweisung, zu der die Zahlung gehï¿½rt
-      $parameter['betrag'] = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');  // Beziffert den Zahlungsbetrag, der an Sie ï¿½bermittelt werden soll
+      $parameter['kdnr']	= MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR;  // Repräsentiert Ihre Kundennummer bei der Sofortüberweisung
+      $parameter['projekt'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT;  // Die verantwortliche Projektnummer bei der Sofortüberweisung, zu der die Zahlung gehört
+      $parameter['betrag'] = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','');  // Beziffert den Zahlungsbetrag, der an Sie übermittelt werden soll
       $vzweck1 = str_replace('{{orderid}}', $order_id, MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_V_ZWECK_1);
       $vzweck2 = str_replace('{{orderid}}', $order_id, MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_V_ZWECK_2);
 
@@ -300,7 +300,7 @@
       $vzweck1 = str_replace('{{customer_email}}', $order->customer['email_address'], $vzweck1);
       $vzweck2 = str_replace('{{customer_email}}', $order->customer['email_address'], $vzweck2);
 
-      // Kï¿½rzen auf 27 Zeichen
+      // Kürzen auf 27 Zeichen
       $vzweck1 = substr($vzweck1, 0, 27);
       $vzweck2 = substr($vzweck2, 0, 27);
 
@@ -346,7 +346,7 @@
       global $$payment;
 
       $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
-      // Statusupdate nur wenn keine Cartï¿½nderung vorgenommen
+      // Statusupdate nur wenn keine Cartänderung vorgenommen
       $order_total_integer = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','')*100;
       if ($order_total_integer < 1) {
         $order_total_integer = '000';
