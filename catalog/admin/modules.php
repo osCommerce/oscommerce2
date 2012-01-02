@@ -225,8 +225,7 @@
   switch ($action) {
     case 'edit':
       $keys = '';
-      reset($mInfo->keys);
-      while (list($key, $value) = each($mInfo->keys)) {
+    foreach ($mInfo->keys as $key => $value) {
         $keys .= '<strong>' . $value['title'] . '</strong><br />' . $value['description'] . '<br />';
 
         if ($value['set_function']) {
@@ -249,8 +248,7 @@
 
       if ($mInfo->status == '1') {
         $keys = '';
-        reset($mInfo->keys);
-        while (list(, $value) = each($mInfo->keys)) {
+    foreach ($mInfo->keys as $value) {
           $keys .= '<strong>' . $value['title'] . '</strong><br />';
           if ($value['use_function']) {
             $use_function = $value['use_function'];
