@@ -141,11 +141,11 @@
       if ($insert_order == true) {
         $order_totals = array();
         if (is_array($order_total_modules->modules)) {
-          reset($order_total_modules->modules);
-          while (list(, $value) = each($order_total_modules->modules)) {
+       foreach ($order_total_modules->modules as  $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             if ($GLOBALS[$class]->enabled) {
-              for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
+             $n=sizeof($GLOBALS[$class]->output);
+              for ($i=0; $i<$n; $i++) {
                 if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
                   $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                           'title' => $GLOBALS[$class]->output[$i]['title'],
@@ -202,7 +202,8 @@
 
         $insert_id = tep_db_insert_id();
 
-        for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+      $n=sizeof($order_totals);
+        for ($i=0; $i<$n; $i++) {
           $sql_data_array = array('orders_id' => $insert_id,
                                   'title' => $order_totals[$i]['title'],
                                   'text' => $order_totals[$i]['text'],
@@ -213,7 +214,8 @@
           tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
         }
 
-        for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+       $n=sizeof($order->products);
+        for ($i=0; $i<$n; $i++) {
           $sql_data_array = array('orders_id' => $insert_id,
                                   'products_id' => tep_get_prid($order->products[$i]['id']),
                                   'products_model' => $order->products[$i]['model'],
@@ -323,8 +325,7 @@
 
         $params_string = '';
 
-        reset($parameters);
-        while (list($key, $value) = each($parameters)) {
+    foreach ($parameters as $key => $value) {
           $params_string .= $key . '=' . urlencode($value) . '&';
         }
 
@@ -349,18 +350,18 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart;
       global $$payment;
 
       $pass = false;
 
-      if (isset($HTTP_GET_VARS['transaction_id']) && isset($HTTP_GET_VARS['msid'])) {
-        if ($HTTP_GET_VARS['transaction_id'] == substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1)) {
-          if ($HTTP_GET_VARS['msid'] == strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID . $HTTP_GET_VARS['transaction_id'] . strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD))))) {
+      if (isset($_GET['transaction_id']) && isset($_GET['msid'])) {
+        if ($_GET['transaction_id'] == substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1)) {
+          if ($_GET['msid'] == strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID . $_GET['transaction_id'] . strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD))))) {
             $pass = true;
           }
         }
-      } elseif (isset($HTTP_GET_VARS['osig']) && ($HTTP_GET_VARS['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]))) {
+      } elseif (isset($_GET['osig']) && ($_GET['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]))) {
         $pass = true;
       }
 
@@ -397,7 +398,8 @@
         $subtotal = 0;
         $total_tax = 0;
 
-        for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+      $n=sizeof($order->products);
+        for ($i=0; $i<$n; $i++) {
 // Stock Update - Joao Correia
           if (STOCK_LIMITED == 'true') {
             if (DOWNLOAD_ENABLED == 'true') {
@@ -441,7 +443,8 @@
           $products_ordered_attributes = '';
           if (isset($order->products[$i]['attributes'])) {
             $attributes_exist = '1';
-            for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+     $n2=sizeof($order->products[$i]['attributes']);
+            for ($j=0; $j<$n2; $j++) {
               if (DOWNLOAD_ENABLED == 'true') {
                 $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
                                      from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -485,7 +488,8 @@
                         $products_ordered .
                         EMAIL_SEPARATOR . "\n";
 
-        for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
+       $n=sizeof($order_totals);
+        for ($i=0; $i<$n; $i++) {
           $email_order .= strip_tags($order_totals[$i]['title']) . ' ' . strip_tags($order_totals[$i]['text']) . "\n";
         }
 
@@ -553,9 +557,8 @@
     }
 
     function install() {
-      global $HTTP_GET_VARS;
 
-      if ( !isset($HTTP_GET_VARS['active']) || ($HTTP_GET_VARS['active'] != 'true') ) {
+      if ( !isset($_GET['active']) || ($_GET['active'] != 'true') ) {
         tep_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'selected_box=modules&set=payment'));
       }
 
@@ -610,8 +613,8 @@
       }
 
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Moneybookers eWallet', 'MODULE_PAYMENT_MONEYBOOKERS_STATUS', 'False', 'Do you want to accept Moneybookers eWallet payments?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_MONEYBOOKERS_PAY_TO', '" . (isset($HTTP_GET_VARS['email']) ? $HTTP_GET_VARS['email'] : '') . "', 'The Moneybookers seller e-mail address to accept payments for', '6', '4', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Merchant ID', 'MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID', '" . (isset($HTTP_GET_VARS['custid']) ? $HTTP_GET_VARS['custid'] : '') . "', 'The Moneybookers merchant ID assigned to the seller e-mail address', '6', '4', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_MONEYBOOKERS_PAY_TO', '" . (isset($_GET['email']) ? $_GET['email'] : '') . "', 'The Moneybookers seller e-mail address to accept payments for', '6', '4', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Merchant ID', 'MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID', '" . (isset($_GET['custid']) ? $_GET['custid'] : '') . "', 'The Moneybookers merchant ID assigned to the seller e-mail address', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD', '', 'The secret word to verify transactions with', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Store Logo Image', 'MODULE_PAYMENT_MONEYBOOKERS_STORE_IMAGE', '" . tep_catalog_href_link('images/store_logo.png', '', 'SSL') . "', 'The URL of the store logo image to display on the gateway transaction page. This must be served through HTTPS otherwise it will not be shown.', '6', '4', now())");
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('iFrame Presentation', 'MODULE_PAYMENT_MONEYBOOKERS_IFRAME', 'True', 'Show the Moneybookers payment pages through an iFrame?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
