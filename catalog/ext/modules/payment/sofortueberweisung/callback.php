@@ -74,9 +74,9 @@
       }
 
       if ((int)$betrag_integer == (int)$order_total_integer) {
-        $comment = 'Zahlung durch Sofort�berweisung Benachrichtigung best�tigt!';
+        $comment = 'Zahlung durch Sofortüberweisung Benachrichtigung bestätigt!';
       } else {
-        $comment = "Sofort�berweisungs Transaktionscheck fehlgeschlagen. Bitte manuell �berpr�fen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
+        $comment = "Sofortüberweisungs Transaktionscheck fehlgeschlagen. Bitte manuell überprüfen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
       }
 
       if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
