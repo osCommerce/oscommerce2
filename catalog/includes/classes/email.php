@@ -450,8 +450,7 @@
         $output = $message->encode();
         $this->output = $output['body'];
 
-        reset($output['headers']);
-    foreach ($output['headers'] as $key => $value) {
+        foreach ($output['headers'] as $key => $value) {
           $headers[] = $key . ': ' . $value;
         }
 
