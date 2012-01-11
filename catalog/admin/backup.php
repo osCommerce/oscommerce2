@@ -105,8 +105,7 @@
             while ($rows = tep_db_fetch_array($rows_query)) {
               $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
 
-              reset($table_list);
-              while (list(,$i) = each($table_list)) {
+        foreach ($table_list as $i) {
                 if (!isset($rows[$i])) {
                   $schema .= 'NULL, ';
                 } elseif (tep_not_null($rows[$i])) {
@@ -260,7 +259,8 @@
 
           tep_db_query('drop table if exists ' . implode(', ', $drop_table_names));
 
-          for ($i=0, $n=sizeof($sql_array); $i<$n; $i++) {
+          $n=sizeof($sql_array);
+          for ($i=0; $i<$n; $i++) {
             tep_db_query($sql_array[$i]);
           }
 
@@ -359,7 +359,8 @@
     }
     sort($contents);
 
-    for ($i=0, $n=sizeof($contents); $i<$n; $i++) {
+    $n=sizeof($contents);
+    for ($i=0; $i<$n; $i++) {
       $entry = $contents[$i];
 
       $check = 0;
