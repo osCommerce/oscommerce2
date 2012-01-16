@@ -14,9 +14,9 @@
     var $_modules = array();
 
     function cfg_modules() {
-      global $PHP_SELF, $language;
+      global $language;
 
-      $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+      $file_extension = substr($_SERVER['PHP_SELF'], strrpos($_SERVER['PHP_SELF'], '.'));
       $directory = DIR_WS_MODULES . 'cfg_modules';
 
       if ($dir = @dir($directory)) {
