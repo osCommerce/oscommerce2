@@ -68,8 +68,7 @@
 
       $this->headers[] = 'MIME-Version: 1.0';
 
-      reset($headers);
-      while (list(,$value) = each($headers)) {
+    foreach ($headers as $value) {
         if (tep_not_null($value)) {
           $this->headers[] = $value;
         }
@@ -119,7 +118,8 @@
 
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);
 
-      for ($i=0; $i<count($images[1]); $i++) {
+      $n = count($images[1]);
+      for ($i=0; $i<$n; $i++) {
         if (file_exists($images_dir . $images[1][$i])) {
           $html_images[] = $images[1][$i];
           $this->html = str_replace($images[1][$i], basename($images[1][$i]), $this->html);
@@ -131,7 +131,8 @@
         $html_images = array_unique($html_images);
         sort($html_images);
 
-        for ($i=0; $i<count($html_images); $i++) {
+        $n = count($html_images);
+        for ($i=0; $i<$n; $i++) {
           if ($image = $this->get_file($images_dir . $html_images[$i])) {
             $content_type = $this->image_types[substr($html_images[$i], strrpos($html_images[$i], '.') + 1)];
             $this->add_html_image($image, basename($html_images[$i]), $content_type);
@@ -322,15 +323,13 @@
       if ($params == '') $params = array();
 
       if (count($params) > 0) {
-        reset($params);
-        while(list($key, $value) = each($params)) {
+    foreach ($params as $key => $value) {
           $this->build_params[$key] = $value;
         }
       }
 
       if (tep_not_null($this->html_images)) {
-        reset($this->html_images);
-        while (list(,$value) = each($this->html_images)) {
+        foreach ($this->html_images as $value) {
           $this->html = str_replace($value['name'], 'cid:' . $value['cid'], $this->html);
         }
       }
@@ -352,7 +351,8 @@
 //          $message =& $this->add_mixed_part();
           $message = $this->add_mixed_part();
 
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n = count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -362,7 +362,8 @@
           $message = $this->add_mixed_part();
           $this->add_text_part($message, $this->text);
 
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n = count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -397,7 +398,8 @@
           }
           $this->add_html_part($related);
 
-          for ($i=0; $i<count($this->html_images); $i++) {
+          $n = count($this->html_images);
+          for ($i=0; $i<$n; $i++) {
             $this->add_html_image_part($related, $this->html_images[$i]);
           }
           break;
@@ -415,7 +417,8 @@
             $this->add_html_part($message);
           }
 
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n = count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -439,11 +442,13 @@
           }
           $this->add_html_part($rel);
 
-          for ($i=0; $i<count($this->html_images); $i++) {
+          $n = count($this->html_images);
+          for ($i=0; $i<$n; $i++) {
             $this->add_html_image_part($rel, $this->html_images[$i]);
           }
 
-          for ($i=0; $i<count($this->attachments); $i++) {
+          $n = count($this->attachments);
+          for ($i=0; $i<$n; $i++) {
             $this->add_attachment_part($message, $this->attachments[$i]);
           }
           break;
@@ -453,8 +458,7 @@
         $output = $message->encode();
         $this->output = $output['body'];
 
-        reset($output['headers']);
-        while (list($key, $value) = each($output['headers'])) {
+    foreach ($output['headers'] as $key => $value) {
           $headers[] = $key . ': ' . $value;
         }
 
@@ -498,9 +502,11 @@
         $headers = explode($this->lf, trim($headers));
       }
 
-      for ($i=0; $i<count($headers); $i++) {
+     $n = count($headers);
+      for ($i=0; $i<$n; $i++) {
         if (is_array($headers[$i])) {
-          for ($j=0; $j<count($headers[$i]); $j++) {
+         $k = count($headers[$i]);
+          for ($j=0; $j<$k; $j++) {
             if ($headers[$i][$j] != '') {
               $xtra_headers[] = $headers[$i][$j];
             }
@@ -552,9 +558,11 @@
         $headers = explode($this->lf, trim($headers));
       }
 
-      for ($i=0; $i<count($headers); $i++) {
+     $n = count($headers);
+      for ($i=0; $i<$n; $i++) {
         if (is_array($headers[$i])) {
-          for ($j=0; $j<count($headers[$i]); $j++) {
+         $k = count($headers[$i]);
+          for ($j=0; $j<$k; $j++) {
             if ($headers[$i][$j] != '') {
               $xtra_headers[] = $headers[$i][$j];
             }
