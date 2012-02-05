@@ -53,12 +53,18 @@ $('#adminAppMenu').accordion({
     foreach ($cl_box_groups as $groups) {
       foreach ($groups['apps'] as $app) {
         if ($app['code'] == $PHP_SELF) {
-          echo ',active: ' . $counter;
+          $active_value = $counter;
           break;
         }
       }
 
       $counter++;
+    }
+
+    if (isset($active_value)) {
+      echo ',active: ' . $active_value;
+    } else {
+      echo ',active: ' . $counter;
     }
 ?>
 
