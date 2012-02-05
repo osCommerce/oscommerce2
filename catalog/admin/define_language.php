@@ -59,7 +59,7 @@
   if (isset($HTTP_GET_VARS['filename'])) {
     $file_edit = realpath(DIR_FS_CATALOG_LANGUAGES . $HTTP_GET_VARS['filename']);
 
-    if (substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES)) != DIR_FS_CATALOG_LANGUAGES) {
+    if (str_replace('\\','/',substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES))) != DIR_FS_CATALOG_LANGUAGES) {
       tep_redirect(tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir']));
     }
   }
