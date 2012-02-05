@@ -123,6 +123,7 @@
               </tr>
 <?php
   $installed_modules = array();
+  $pre_installed_modules = array();
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
@@ -133,10 +134,10 @@
     if (tep_class_exists($class)) {
       $module = new $class;
       if ($module->check() > 0) {
-        if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
-          $installed_modules[$module->sort_order] = $file;
+        if (($module->sort_order > 0) && !isset($pre_installed_modules[$module->sort_order])) {
+          $pre_installed_modules[$file] = $module->sort_order;
         } else {
-          $installed_modules[] = $file;
+          $pre_installed_modules[$file] = 0;
         }
       }
 
@@ -186,7 +187,10 @@
   }
 
   if (!isset($HTTP_GET_VARS['list'])) {
-    ksort($installed_modules);
+    asort($pre_installed_modules);
+    foreach ($pre_installed_modules as $key => $value) {
+      $installed_modules[] = $key;
+    }
     $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
     if (tep_db_num_rows($check_query)) {
       $check = tep_db_fetch_array($check_query);
