@@ -123,7 +123,7 @@
                 <td class="main"><strong><?php echo $HTTP_GET_VARS['filename']; ?></strong></td>
               </tr>
               <tr>
-                <td class="main"><?php echo tep_draw_textarea_field('file_contents', 'soft', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
+                <td class="main"><?php echo tep_draw_textarea_field('file_contents', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

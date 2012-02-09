@@ -99,7 +99,7 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo tep_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo tep_draw_textarea_field('reviews_text', '60', '15', $rInfo->reviews_text); ?></td>
           </tr>
           <tr>
             <td class="smallText" align="right"><?php echo ENTRY_REVIEW_TEXT; ?></td>

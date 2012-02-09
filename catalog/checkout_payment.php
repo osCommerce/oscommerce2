@@ -262,7 +262,7 @@ function rowOutEffect(object) {
   <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $comments); ?>
+    <?php echo tep_draw_textarea_field('comments', '60', '5', $comments); ?>
   </div>
 
   <div class="contentText">
