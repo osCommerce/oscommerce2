@@ -346,6 +346,14 @@
 
     $types = array('submit', 'button', 'reset');
 
+    $events = '';
+    if ( isset($params['events']) ) {
+      $events .= PHP_EOL;
+      foreach ($params['events'] as $key => $value) {
+        $events .= '$("#tdb' . $button_counter . '").' . $key . '(' . $value . ');' . PHP_EOL;
+      }
+    }
+
     if ( !isset($params['type']) ) {
       $params['type'] = 'submit';
     }
@@ -410,7 +418,7 @@
       $button .= '{' . implode(',', $args) . '}';
     }
 
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");' . $events . '</script>';
 
     $button_counter++;
 
