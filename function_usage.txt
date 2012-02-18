@@ -1,0 +1,17 @@
+The first solution for tep_draw_button function only
+
+
+ Events example with params:
+
+ $params['events']['click'] => "function(){ var $total_value = $('#total_orders_full').val() $('#cash_flow_test').val($total_value);
+ }");
+
+ Usage in php code:
+ echo tep_draw_button(IMAGE_GET, 'arrowthickstop-1-w', null, null,
+                            array('type' => 'button',
+                                            'events' => array('click' =>  'function(){' . PHP_EOL .
+                                                                          '   var $it_value = $("#total_incomes_full").val();' . PHP_EOL .
+                                                                          '   $("#costs").val($it_value);' . PHP_EOL .
+                                                                          '   updatesum();' . PHP_EOL .
+                                                                          '}'
+                                                                          )));
