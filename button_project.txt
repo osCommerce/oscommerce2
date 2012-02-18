@@ -1,0 +1,62 @@
+Hi all,
+
+the main problem is we can't do ui-button events in 
+osCommerce v2.3.x. I tried rewrite some contribution but make
+conflicts with this problem and have to do hard coded buttons. 
+:-(
+
+Why?
+
+The tep_draw_button function do unique id-s for buttons, but we
+can't reach ids outside of html output function.
+
+Look at an example:
+
+Store owners install contributions which use buttons. On the page
+generates some buttons with unique "id"-s.
+The id values depends on button numbers which generates on the
+current page.
+
+How can we do button events when use tep_draw_buton function with
+non stabil id's value if buttons generated dinamicaly or hide or
+isplayed with chechbox functions for example order conditions or
+something else?
+
+One possibility if not use tep_draw_button function but this could be 
+conflict other contributions. The best way is use ui button id value.
+
+
+HTML code with jQuery:
+
+<td class="infoBoxContent" align="center">
+  <span class="">
+    <button id="tdb1" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary ui-priority-primary" type="submit" role="button" aria-disabled="false" style="display: inline-block;">
+    <span class="ui-button-icon-primary ui-icon ui-icon-disk"></span>
+    <span class="ui-button-text">SAVE</span>
+    </button>
+  </span>
+  <script type="text/javascript">
+  $("#tdb1").button({icons:{primary:"ui-icon-disk"}}).addClass("ui-priority-primary").parent().removeClass("tdbLink");
+  </script>
+  <span class="">
+    <a id="tdb2" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-icon-primary ui-priority-secondary" href="http://gumisarok.hu/adminoscom/worksheets_view.php?page=1&wID=92" role="button">
+      <span class="ui-button-icon-primary ui-icon ui-icon-close"></span>
+      <span class="ui-button-text">Cancel</span>
+    </a>
+  </span>
+  <script type="text/javascript">
+  $("#tdb2").button({icons:{primary:"ui-icon-close"}}).addClass("ui-priority-secondary").parent().removeClass("tdbLink");
+  </script>
+</td>
+
+This example show save button if user select at least one check value
+from a checklist.
+
+osCommerce V3 use to draw button from class so we can reach class value
+easy, but oscommerce v2.3.x use function only.
+
+There are two solution. 
+First do a new tep_draw_button class or extend tep_draw_button function
+with new action event handler.
+
+This branch do it.
