@@ -23,7 +23,8 @@
         $db = array('DB_SERVER' => trim(rawurldecode($HTTP_GET_VARS['server'])),
                     'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
                     'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
-                    'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name']))
+                    'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name'])),
+                    'DB_DATABASE_CHARSET' => trim(rawurldecode($HTTP_GET_VARS['charset']))
                    );
 
         $db_error = false;
@@ -32,6 +33,11 @@
         if ($db_error == false) {
           if (!@osc_db_select_db($db['DB_DATABASE'])) {
             $db_error = mysql_error();
+          }
+          if ($db_error == false) {
+            if (!@osc_db_query('SET CHARACTER SET "' . $db['DB_DATABASE_CHARSET'] . '"')) {
+              $db_error = mysql_error();
+            }
           }
         }
 
@@ -49,9 +55,11 @@
                     'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
                     'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
                     'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name'])),
+                    'DB_DATABASE_CHARSET' => trim(rawurldecode($HTTP_GET_VARS['charset']))
                    );
 
         osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
+        osc_db_query('SET CHARACTER SET "' . $db['DB_DATABASE_CHARSET'] . '"');
 
         $db_error = false;
         $sql_file = $dir_fs_www_root . '/oscommerce.sql';

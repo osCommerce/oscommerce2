@@ -19,6 +19,7 @@
   var dbUsername;
   var dbPassword;
   var dbName;
+  var dbCharset;
 
   var formSubmited = false;
 
@@ -50,7 +51,7 @@
         if (result[0] == '1') {
           document.getElementById('mBoxContents').innerHTML = '<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" border="0" />The database structure is now being imported. Please be patient during this procedure.</p>';
 
-          loadXMLDoc("rpc.php?action=dbImport&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName), handleHttpResponse_DoImport);
+          loadXMLDoc("rpc.php?action=dbImport&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse_DoImport);
         } else {
           document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
           formSubmited = false;
@@ -77,7 +78,7 @@
     dbPassword = document.getElementById("DB_SERVER_PASSWORD").value;
     dbName = document.getElementById("DB_DATABASE").value;
 
-    loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName), handleHttpResponse);
+    loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse);
   }
 
 //-->
@@ -134,6 +135,10 @@
       <tr>
         <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?></td>
         <td class="inputDescription">The name of the database to hold the data in.</td>
+      </tr>
+      <tr>
+        <td class="inputField"><?php echo 'Database Charset<br />' . osc_draw_input_field('DB_DATABASE_CHARSET', null, 'class="text"'); ?></td>
+        <td class="inputDescription">The charset of the database.</td>
       </tr>
     </table>
 
