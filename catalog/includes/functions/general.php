@@ -147,8 +147,8 @@
   function tep_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
+    for ($i=0, $n=mb_strlen($string, CHARSET); $i<$n; $i++) {
+      $char = mb_substr($string, $i, 1, CHARSET);
       if ($char != ' ') {
         $l++;
       } else {
@@ -618,7 +618,7 @@
 ////
 // Parse search string into indivual objects
   function tep_parse_search_string($search_str = '', &$objects) {
-    $search_str = trim(strtolower($search_str));
+    $search_str = trim(mb_strtolower($search_str));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
     $pieces = preg_split('/[[:space:]]+/', $search_str);
@@ -627,10 +627,10 @@
     $flag = '';
 
     for ($k=0; $k<count($pieces); $k++) {
-      while (substr($pieces[$k], 0, 1) == '(') {
+      while (mb_substr($pieces[$k], 0, 1) == '(') {
         $objects[] = '(';
-        if (strlen($pieces[$k]) > 1) {
-          $pieces[$k] = substr($pieces[$k], 1);
+        if (mb_strlen($pieces[$k]) > 1) {
+          $pieces[$k] = mb_substr($pieces[$k], 1);
         } else {
           $pieces[$k] = '';
         }
@@ -638,10 +638,10 @@
 
       $post_objects = array();
 
-      while (substr($pieces[$k], -1) == ')')  {
+      while (mb_substr($pieces[$k], -1) == ')')  {
         $post_objects[] = ')';
-        if (strlen($pieces[$k]) > 1) {
-          $pieces[$k] = substr($pieces[$k], 0, -1);
+        if (mb_strlen($pieces[$k]) > 1) {
+          $pieces[$k] = mb_substr($pieces[$k], 0, -1);
         } else {
           $pieces[$k] = '';
         }
@@ -649,7 +649,7 @@
 
 // Check individual words
 
-      if ( (substr($pieces[$k], -1) != '"') && (substr($pieces[$k], 0, 1) != '"') ) {
+      if ( (mb_substr($pieces[$k], -1) != '"') && (mb_substr($pieces[$k], 0, 1) != '"') ) {
         $objects[] = trim($pieces[$k]);
 
         for ($j=0; $j<count($post_objects); $j++) {
@@ -665,7 +665,7 @@
         $tmpstring = trim(preg_replace('/"/', ' ', $pieces[$k]));
 
 // Check for one possible exception to the rule. That there is a single quoted word.
-        if (substr($pieces[$k], -1 ) == '"') {
+        if (mb_substr($pieces[$k], -1 ) == '"') {
 // Turn the flag off for future iterations
           $flag = 'off';
 
@@ -690,17 +690,17 @@
 // Keep reading until the end of the string as long as the $flag is on
 
         while ( ($flag == 'on') && ($k < count($pieces)) ) {
-          while (substr($pieces[$k], -1) == ')') {
+          while (mb_substr($pieces[$k], -1) == ')') {
             $post_objects[] = ')';
-            if (strlen($pieces[$k]) > 1) {
-              $pieces[$k] = substr($pieces[$k], 0, -1);
+            if (mb_strlen($pieces[$k]) > 1) {
+              $pieces[$k] = mb_substr($pieces[$k], 0, -1);
             } else {
               $pieces[$k] = '';
             }
           }
 
 // If the word doesn't end in double quotes, append it to the $tmpstring.
-          if (substr($pieces[$k], -1) != '"') {
+          if (mb_substr($pieces[$k], -1) != '"') {
 // Tack this word onto the current string entity
             $tmpstring .= ' ' . $pieces[$k];
 
