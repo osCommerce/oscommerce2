@@ -56,7 +56,9 @@
                                  'tiff' => 'image/tiff',
                                  'swf' => 'application/x-shockwave-flash');
 
-      $this->build_params['html_encoding'] = 'quoted-printable';
+/* Gergely utf-8 charset compatibility 2012 */
+//      $this->build_params['html_encoding'] = 'quoted-printable';
+      $this->build_params['html_encoding'] = 'base64';
       $this->build_params['text_encoding'] = '7bit';
       $this->build_params['html_charset'] = constant('CHARSET');
       $this->build_params['text_charset'] = constant('CHARSET');
@@ -491,8 +493,14 @@
         return false;
       }
 
-      $to = (($to_name != '') ? '"' . $to_name . '" <' . $to_addr . '>' : $to_addr);
-      $from = (($from_name != '') ? '"' . $from_name . '" <' . $from_addr . '>' : $from_addr);
+/* Gergely utf-8 compatibility 2012 */
+/*      $to = (($to_name != '') ? '"' . $to_name . '" <' . $to_addr . '>' : $to_addr);
+      $from = (($from_name != '') ? '"' . $from_name . '" <' . $from_addr . '>' : $from_addr); */
+
+      $to = (($to_name != '') ? '"' . '=?' . CHARSET . '?B?' . base64_encode($to_name) . '?=" <' . $to_addr . '>' : $to_addr);
+      $from = (($from_name != '') ? '"' . '=?' . CHARSET . '?B?' . base64_encode($from_name) . '?=" <' . $from_addr . '>' : $from_addr);
+      $subject = '=?'  . CHARSET . '?B?' . base64_encode($subject) . '?=';
+/* default charset encoding */
 
       if (is_string($headers)) {
         $headers = explode($this->lf, trim($headers));
