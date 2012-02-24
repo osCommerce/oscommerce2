@@ -77,6 +77,7 @@
     dbUsername = document.getElementById("DB_SERVER_USERNAME").value;
     dbPassword = document.getElementById("DB_SERVER_PASSWORD").value;
     dbName = document.getElementById("DB_DATABASE").value;
+    dbCharset = document.getElementById("DB_DATABASE_CHARSET").value;
 
     loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse);
   }
