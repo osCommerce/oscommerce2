@@ -39,6 +39,34 @@
               $db_error = mysql_error();
             }
           }
+          if ($db_error == false) {
+            $test_string = iconv('ISO-8859-2', "'" . $db['DB_DATABASE_CHARSET'] ."'", 'ˆ¸Ûı˙È·˚Ì÷‹”’⁄…¡€Õ');
+            $test_string_lenght = mb_strlen($test_string);
+            @osc_db_query('DROP TABLE IF EXISTS oscommerce_test_table');
+            @osc_db_query('CREATE TABLE oscommerce_test_table ( table_id INT NOT NULL ,
+                                                                text VARCHAR(45) NULL ,
+                                                                PRIMARY KEY (table_id) )');
+
+            @osc_db_query("INSERT INTO oscommerce_test_table (table_id, text) VALUES ('1', '" . $test_string ."')");
+            $result_query = osc_db_query('SHOW CREATE TABLE `oscommerce_test_table`');
+            $result = osc_db_fetch_array($result_query);
+            $charset_test_query = osc_db_query('SELECT * FROM `oscommerce_test_table`');
+            $charset_result = osc_db_fetch_array($charset_test_query);
+
+            if ($test_string == $charset_result['text'] && $test_string_lenght == 36) {
+            // Write-read test passed
+            } else {
+              $db_error = 'Character Errors in write-read process<br />';
+              $db_error .= '<br />WRITE: ' . $test_string . '<br />READ:  ' . $charset_result['text'];
+              $pos =  strpos($result['Create Table'], 'DEFAULT CHARSET=' . $db['DB_DATABASE_CHARSET'] . '');
+
+              if ($pos === false) {
+                $db_error .= '<br /><br />' . $result['Create Table'];
+                $db_error .= '<br /><br />' . 'Charset is not compatible! Look at create database tool in extras.';
+                $db_error .= '<br /><br />' . 'Recommended SQL command : "ALTER DATABASE ' . $db['DB_DATABASE'] . ' DEFAULT CHARACTER SET ' . $db['DB_DATABASE_CHARSET'] . '"';
+              }
+            }
+          }
         }
 
         if ($db_error != false) {

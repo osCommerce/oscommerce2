@@ -39,6 +39,10 @@
     return mysql_num_rows($db_query);
   }
 
+  function osc_db_fetch_array($db_query) {
+    return mysql_fetch_array($db_query, MYSQL_ASSOC);
+  }
+
   function osc_db_install($database, $sql_file) {
     global $db_error;
 
