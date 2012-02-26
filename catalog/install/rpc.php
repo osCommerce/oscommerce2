@@ -40,31 +40,28 @@
             }
           }
           if ($db_error == false) {
-            $test_string = iconv('ISO-8859-2', "'" . $db['DB_DATABASE_CHARSET'] ."'", 'ˆ¸Ûı˙È·˚Ì÷‹”’⁄…¡€Õ');
-            $test_string_lenght = mb_strlen($test_string);
-            @osc_db_query('DROP TABLE IF EXISTS oscommerce_test_table');
-            @osc_db_query('CREATE TABLE oscommerce_test_table ( table_id INT NOT NULL ,
-                                                                text VARCHAR(45) NULL ,
-                                                                PRIMARY KEY (table_id) )');
-
-            @osc_db_query("INSERT INTO oscommerce_test_table (table_id, text) VALUES ('1', '" . $test_string ."')");
+            if (!@osc_db_query('DROP TABLE IF EXISTS oscommerce_test_table')) {
+              $db_error = mysql_error();
+            }
+          }
+          if ($db_error == false ) {
+            if (!@osc_db_query('CREATE TABLE oscommerce_test_table ( table_id INT NOT NULL ,
+                                                                     text VARCHAR(45) NULL ,
+                                                                     PRIMARY KEY (table_id) )')) {
+              $db_error = mysql_error();
+            }
+          }
+          if ($db_error == false ) {
+            // well done, the user has all privileges to setup database
             $result_query = osc_db_query('SHOW CREATE TABLE `oscommerce_test_table`');
             $result = osc_db_fetch_array($result_query);
-            $charset_test_query = osc_db_query('SELECT * FROM `oscommerce_test_table`');
-            $charset_result = osc_db_fetch_array($charset_test_query);
 
-            if ($test_string == $charset_result['text'] && $test_string_lenght == 36) {
-            // Write-read test passed
-            } else {
-              $db_error = 'Character Errors in write-read process<br />';
-              $db_error .= '<br />WRITE: ' . $test_string . '<br />READ:  ' . $charset_result['text'];
-              $pos =  strpos($result['Create Table'], 'DEFAULT CHARSET=' . $db['DB_DATABASE_CHARSET'] . '');
+            $pos =  strpos($result['Create Table'], 'DEFAULT CHARSET=' . $db['DB_DATABASE_CHARSET'] . '');
 
-              if ($pos === false) {
-                $db_error .= '<br /><br />' . $result['Create Table'];
-                $db_error .= '<br /><br />' . 'Charset is not compatible! Look at create database tool in extras.';
-                $db_error .= '<br /><br />' . 'Recommended SQL command : "ALTER DATABASE ' . $db['DB_DATABASE'] . ' DEFAULT CHARACTER SET ' . $db['DB_DATABASE_CHARSET'] . '"';
-              }
+            if ($pos === false) {
+              $db_error = $result['Create Table'];
+              $db_error .= '<br /><br />' . 'Charset is not compatible! Look at create database tool in extras.';
+              $db_error .= '<br /><br />' . 'Recommended SQL command :<br />ALTER DATABASE ' . $db['DB_DATABASE'] . ' DEFAULT CHARACTER SET ' . $db['DB_DATABASE_CHARSET'] . ';';
             }
           }
         }
@@ -77,7 +74,65 @@
 
         exit;
         break;
+      case 'dbCreate':
+        $db = array('DB_SERVER' => trim(rawurldecode($HTTP_GET_VARS['server'])),
+                    'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
+                    'DB_SERVER_PASSWORD' => trim(rawurldecode($HTTP_GET_VARS['password'])),
+                    'DB_DATABASE' => trim(rawurldecode($HTTP_GET_VARS['name'])),
+                    'DB_DATABASE_CHARSET' => trim(rawurldecode($HTTP_GET_VARS['charset']))
+                   );
 
+        $db_error = false;
+        osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
+
+        if (!@osc_db_select_db($db[DB_DATABASE])) {
+          if (@osc_db_query('create database ' . $db[DB_DATABASE] . ' default character set ' . $db[DB_DATABASE_CHARSET])) {
+            osc_db_select_db($database);
+          } else {
+            $db_error = mysql_error();
+          }
+        } else {
+          // Recreate database is not allowed in install process. Use 'ALTER' instead.
+          if ($db_error == false) {
+            if (!@osc_db_query('SET CHARACTER SET "' . $db['DB_DATABASE_CHARSET'] . '"')) {
+              $db_error = mysql_error();
+            }
+          }
+          if ($db_error == false) {
+            if (!@osc_db_query('DROP TABLE IF EXISTS oscommerce_test_table')) {
+              $db_error = mysql_error();
+            }
+          }
+          if ($db_error == false ) {
+            if (!@osc_db_query('CREATE TABLE oscommerce_test_table ( table_id INT NOT NULL ,
+                                                                     text VARCHAR(45) NULL ,
+                                                                     PRIMARY KEY (table_id) )')) {
+              $db_error = mysql_error();
+            }
+          }
+          if ($db_error == false ) {
+            // well done, the user has all privileges to setup database
+            $result_query = osc_db_query('SHOW CREATE TABLE `oscommerce_test_table`');
+            $result = osc_db_fetch_array($result_query);
+
+            $pos =  strpos($result['Create Table'], 'DEFAULT CHARSET=' . $db['DB_DATABASE_CHARSET'] . '');
+
+            if ($pos === false) {
+              $db_error = $result['Create Table'];
+              $db_error .= '<br /><br />' . 'Charset is not compatible! Look at create database tool in extras.';
+              $db_error .= '<br /><br />' . 'Recommended SQL command :<br />ALTER DATABASE ' . $db['DB_DATABASE'] . ' DEFAULT CHARACTER SET ' . $db['DB_DATABASE_CHARSET'] . ';';
+            }
+          }
+        }
+
+        if ($db_error != false) {
+          echo '[[0|' . $db_error . ']]';
+        } else {
+          echo '[[1]]';
+        }
+
+        exit;
+        break;
       case 'dbImport':
         $db = array('DB_SERVER' => trim(rawurldecode($HTTP_GET_VARS['server'])),
                     'DB_SERVER_USERNAME' => trim(rawurldecode($HTTP_GET_VARS['username'])),
@@ -93,7 +148,7 @@
         $sql_file = $dir_fs_www_root . '/oscommerce.sql';
 
         osc_set_time_limit(0);
-        osc_db_install($db['DB_DATABASE'], $sql_file);
+        osc_db_install($db['DB_DATABASE'], $db['DB_DATABASE_CHARSET'], $sql_file);
 
         if ($db_error != false) {
           echo '[[0|' . $db_error . ']]';

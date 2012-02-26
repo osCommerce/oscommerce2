@@ -43,13 +43,13 @@
     return mysql_fetch_array($db_query, MYSQL_ASSOC);
   }
 
-  function osc_db_install($database, $sql_file) {
+  function osc_db_install($database, $charset, $sql_file) {
     global $db_error;
 
     $db_error = false;
 
     if (!@osc_db_select_db($database)) {
-      if (@osc_db_query('create database ' . $database)) {
+      if (@osc_db_query('create database ' . $database . ' default character set ' . $charset)) {
         osc_db_select_db($database);
       } else {
         $db_error = mysql_error();

@@ -42,6 +42,25 @@
     }
   }
 
+  function handleHttpResponse_CreateDB() {
+    if (http.readyState == 4) {
+      if (http.status == 200) {
+        var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(http.responseText);
+        result.shift();
+
+        if (result[0] == '1') {
+          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/success.gif" align="right" hspace="5" vspace="5" border="0" />Database created successfully.</p>';
+
+          setTimeout("document.getElementById('installForm').submit();", 2000);
+        } else {
+          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem creating the database. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
+        }
+      }
+
+      formSubmited = false;
+    }
+  }
+
   function handleHttpResponse() {
     if (http.readyState == 4) {
       if (http.status == 200) {
@@ -53,8 +72,17 @@
 
           loadXMLDoc("rpc.php?action=dbImport&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse_DoImport);
         } else {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
-          formSubmited = false;
+          exist_error = false;
+          exist_error = handleStrpos(result, 'Unknown database', 1);
+         if (exist_error == false) {
+            document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
+            formSubmited = false;
+          } else {
+            document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />The database does not exist in the schema. Do you want to create a new one?</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
+            formSubmited = false;
+            document.getElementById('createTable').innerHTML = '<p><input type="checkbox" name="createnew" id="createnewdb"/>Create New Database</p>';
+          }
+
         }
       } else {
         formSubmited = false;
@@ -79,7 +107,16 @@
     dbName = document.getElementById("DB_DATABASE").value;
     dbCharset = document.getElementById("DB_DATABASE_CHARSET").value;
 
-    loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse);
+    if (document.getElementById('createnewdb') != null && document.getElementById('createnewdb').checked) {
+      loadXMLDoc("rpc.php?action=dbCreate&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse);
+    } else {
+      loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName) + "&charset=" + urlEncode(dbCharset), handleHttpResponse);
+    }
+  }
+
+  function handleStrpos (haystack, needle, offset) {
+    var i = (haystack+'').indexOf(needle, (offset || 0));
+    return i === -1 ? false : i;
   }
 
 //-->
@@ -134,11 +171,11 @@
         <td class="inputDescription">The password that is used together with the username to connect to the database server.</td>
       </tr>
       <tr>
-        <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?></td>
-        <td class="inputDescription">The name of the database to hold the data in.</td>
+        <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?><span id='createTable'></span></td>
+        <td class="inputDescription">The name of the database to hold the data in.<br />(The install process will overwrite the all data tables if exist.)</td>
       </tr>
       <tr>
-        <td class="inputField"><?php echo 'Database Charset<br />' . osc_draw_input_field('DB_DATABASE_CHARSET', null, 'class="text"'); ?></td>
+        <td class="inputField"><?php echo 'Database Charset<br />' . osc_draw_input_field('DB_DATABASE_CHARSET', 'utf8', 'class="text"'); ?></td>
         <td class="inputDescription">The charset of the database.</td>
       </tr>
     </table>
