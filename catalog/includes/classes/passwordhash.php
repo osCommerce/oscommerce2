@@ -3,7 +3,9 @@
 # Portable PHP password hashing framework.
 #
 # Version 0.3 / genuine.
-# Version 0.3 / osCommerce (silenced @is_readable('/dev/urandom'))
+# Version 0.3 / osCommerce:
+#   * Silenced @is_readable('/dev/urandom'))
+#		* Added openssl_random_pseudo_bytes() to get_random_bytes()
 #
 # Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
 # the public domain.  Revised in subsequent years, still public domain.
@@ -53,6 +55,8 @@ class PasswordHash {
 		    ($fh = @fopen('/dev/urandom', 'rb'))) {
 			$output = fread($fh, $count);
 			fclose($fh);
+		} elseif ( function_exists('openssl_random_pseudo_bytes') ) {
+			$output = openssl_random_pseudo_bytes($count);
 		}
 
 		if (strlen($output) < $count) {
