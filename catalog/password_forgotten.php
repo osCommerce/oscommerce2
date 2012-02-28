@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -21,7 +21,7 @@
     if (tep_db_num_rows($check_customer_query)) {
       $check_customer = tep_db_fetch_array($check_customer_query);
 
-      $new_password = tep_create_random_value(ENTRY_PASSWORD_MIN_LENGTH);
+      $new_password = tep_generate_password(12);
       $crypted_password = tep_encrypt_password($new_password);
 
       tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_db_input($crypted_password) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
