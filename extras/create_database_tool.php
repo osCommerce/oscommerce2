@@ -14,6 +14,14 @@
   // Usage: edit mysql_connect parameters first!
   // Note: default sets works on basic local installations only
 
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+
+<body>
+
+<?php
 
   $db_server          = 'localhost';
   $db_server_username = 'root';
@@ -68,3 +76,7 @@
     }
   echo '</table>';
 ?>
+
+</body>
+
+</html>
