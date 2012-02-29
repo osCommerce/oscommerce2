@@ -44,6 +44,7 @@
   define('DB_SERVER_USERNAME', 'mysql');
   define('DB_SERVER_PASSWORD', '');
   define('DB_DATABASE', 'osCommerce');
+  define('DB_DATABASE_CHARSET', '');
   define('USE_PCONNECT', 'false');
   define('STORE_SESSIONS', '');
 ?>

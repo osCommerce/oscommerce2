@@ -21,6 +21,10 @@
 
     if ($$link) mysql_select_db($database);
 
+    if (defined('DB_DATABASE_CHARSET') && DB_DATABASE_CHARSET !== '') {
+      mysql_query('SET CHARACTER SET ' . DB_DATABASE_CHARSET . '');
+    }
+
     return $$link;
   }
 

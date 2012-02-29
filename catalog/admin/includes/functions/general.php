@@ -279,8 +279,8 @@
   function tep_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
+    for ($i=0, $n=mb_strlen($string, CHARSET); $i<$n; $i++) {
+      $char = mb_substr($string, $i, 1, CHARSET);
       if ($char != ' ') {
         $l++;
       } else {

@@ -46,6 +46,9 @@ define('HTML_PARAMS', 'dir="ltr" lang="en"');
 // charset for web pages and emails
 define('CHARSET', 'utf-8');
 
+// set global internal character encoding
+mb_internal_encoding(CHARSET);
+
 // page title
 define('TITLE', STORE_NAME);
 
