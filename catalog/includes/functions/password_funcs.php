@@ -99,6 +99,6 @@
 
     $hasher = new PasswordHash(10, true);
 
-    return substr(bin2hex($hasher->get_random_bytes($length*2)), 0, $length);
+    return substr(base64_encode($hasher->get_random_bytes($length*2)), 0, $length);
   }
 ?>
