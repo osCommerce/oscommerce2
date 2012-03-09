@@ -96,7 +96,7 @@
   }
 
   function tep_db_fetch_array($db_query) {
-    return mysql_fetch_array($db_query, MYSQL_ASSOC);
+    return mysql_fetch_assoc($db_query);
   }
 
   function tep_db_num_rows($db_query) {
