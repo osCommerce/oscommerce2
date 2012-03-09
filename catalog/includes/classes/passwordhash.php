@@ -5,6 +5,7 @@
 # Version 0.3 / genuine.
 # Version 0.3 / osCommerce:
 #   * Silenced @is_readable('/dev/urandom'))
+#   * Added stream_set_read_buffer() when reading from /dev/urandom
 #		* Added openssl_random_pseudo_bytes() to get_random_bytes()
 #
 # Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
@@ -53,6 +54,9 @@ class PasswordHash {
 		$output = '';
 		if (@is_readable('/dev/urandom') &&
 		    ($fh = @fopen('/dev/urandom', 'rb'))) {
+			if (function_exists('stream_set_read_buffer')) {
+				stream_set_read_buffer($fh, 0);
+			}
 			$output = fread($fh, $count);
 			fclose($fh);
 		} elseif ( function_exists('openssl_random_pseudo_bytes') ) {
