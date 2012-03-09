@@ -1234,8 +1234,11 @@ foreach($array as $key => $value) {
     static $seeded;
 
     if (!isset($seeded)) {
-      mt_srand((double)microtime()*1000000);
       $seeded = true;
+
+      if ( (PHP_VERSION < '4.2.0') ) {
+        mt_srand((double)microtime()*1000000);
+      }
     }
 
     if (isset($min) && isset($max)) {
