@@ -49,6 +49,8 @@ define('HEADER_TITLE_TOP', 'Administration');
 define('HEADER_TITLE_SUPPORT_SITE', 'Support Site');
 define('HEADER_TITLE_ONLINE_CATALOG', 'Online Catalog');
 define('HEADER_TITLE_ADMINISTRATION', 'Administration');
+define('HEADER_TITLE_LOGIN', 'Logged in as:');
+define('HEADER_TITLE_LOGOUT', 'Logoff');
 
 // text for gender
 define('MALE', 'Male');
