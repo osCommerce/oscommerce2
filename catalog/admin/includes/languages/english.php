@@ -302,5 +302,11 @@ define('TEXT_ASC_CONFIG', 'Ascending');
 define('TEXT_DESC_CONFIG', 'Descending');
 define('TEXT_DATE_EXPECTED_CONFIG', 'By Date expected');
 define('TEXT_PRODUCT_NAME_CONFIG', 'By product name');
-
+define('TEXT_LEFT_COLUMN_CONFIG', 'Left Column');
+define('TEXT_RIGHT_COLUMN_CONFIG', 'Right Column');
+define('TEXT_WEIGHT_CONFIG', 'Weight');
+define('TEXT_PRICE_CONFIG', 'Price');
+define('TEXT_NATIONAL', 'National');
+define('TEXT_INTERNATIONAL', 'International');
+define('TEXT_BOTH', 'Both');
 ?>

@@ -789,8 +789,8 @@
 ////
 // Alias name for function for Store configuration values in the Administration Tool
   function tep_localise_select($select){
-    $ValueIn = array('`^true$`i', '`^false$`i', '`^desc$`', '`^asc$`', '`^date_expected$`', '`^products_name$`');
-    $ValueOut = array(TEXT_TRUE_CONFIG, TEXT_FALSE_CONFIG, TEXT_DESC_CONFIG, TEXT_ASC_CONFIG, TEXT_DATE_EXPECTED_CONFIG, TEXT_PRODUCT_NAME_CONFIG);
+    $ValueIn = array('`^true$`i', '`^false$`i', '`^desc$`', '`^asc$`', '`^date_expected$`', '`^products_name$`', '`^Left Column$`i', '`^Right Column$`i', '`^weight$`i', '`^price$`i', '`^national$`i', '`^international$`i', '`^both$`i');
+    $ValueOut = array(TEXT_TRUE_CONFIG, TEXT_FALSE_CONFIG, TEXT_DESC_CONFIG, TEXT_ASC_CONFIG, TEXT_DATE_EXPECTED_CONFIG, TEXT_PRODUCT_NAME_CONFIG, TEXT_LEFT_COLUMN_CONFIG, TEXT_RIGHT_COLUMN_CONFIG, TEXT_WEIGHT_CONFIG, TEXT_PRICE_CONFIG, TEXT_NATIONAL, TEXT_INTERNATIONAL, TEXT_BOTH);
     return preg_replace($ValueIn, $ValueOut, htmlspecialchars($select) );
   }
 
