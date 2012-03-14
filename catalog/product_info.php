@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  if (!isset($HTTP_GET_VARS['products_id']) || !is_numeric($HTTP_GET_VARS['products_id'])) {
+  if (!isset($HTTP_GET_VARS['products_id'])) {
     tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
