@@ -1252,8 +1252,8 @@ foreach($array as $key => $value) {
     }
   }
 
-  function tep_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
-    setcookie($name, $value, $expire, $path, (tep_not_null($domain) ? $domain : ''), $secure);
+  function tep_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0, $httponly = true) {
+    setcookie($name, $value, $expire, $path, (tep_not_null($domain) ? $domain : ''), $secure, $httponly);
   }
 
   function tep_validate_ip_address($ip_address) {
