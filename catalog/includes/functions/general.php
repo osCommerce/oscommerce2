@@ -168,10 +168,10 @@
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
 
-    if (!is_array($exclude_array)) $exclude_array = array();
+    if (!isset($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+    if (isset($_GET) && (sizeof($_GET) > 0)) {
 
     foreach($_GET as $key => $value) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
@@ -517,7 +517,7 @@
 // Return a formatted address
 // TABLES: customers, address_book
   function tep_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n") {
-    if (is_array($address_id) && !empty($address_id)) {
+    if (isset($address_id) && !empty($address_id)) {
       return tep_address_format($address_id['address_format_id'], $address_id, $html, $boln, $eoln);
     }
 
@@ -538,7 +538,7 @@
   function tep_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
     global $languages_id;
 
-    if (!is_array($categories_array)) $categories_array = array();
+    if (!isset($categories_array)) $categories_array = array();
 
     $categories_query = tep_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where parent_id = '" . (int)$parent_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' order by sort_order, cd.categories_name");
     while ($categories = tep_db_fetch_array($categories_query)) {
@@ -554,7 +554,7 @@
   }
 
   function tep_get_manufacturers($manufacturers_array = '') {
-    if (!is_array($manufacturers_array)) $manufacturers_array = array();
+    if (!isset($manufacturers_array)) $manufacturers_array = array();
 
     $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
     while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
@@ -942,7 +942,7 @@
     if (is_numeric($prid)) {
       $uprid = (int)$prid;
 
-      if (is_array($params) && (sizeof($params) > 0)) {
+      if (isset($params) && (sizeof($params) > 0)) {
         $attributes_check = true;
         $attributes_ids = '';
 
@@ -1124,7 +1124,7 @@
   }
 
   function tep_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
-    if (!is_array($exclude)) $exclude = array();
+    if (!isset($exclude)) $exclude = array();
 
     $get_string = '';
     if (sizeof($array) > 0) {
@@ -1142,7 +1142,7 @@ foreach($array as $key => $value) {
   }
 
   function tep_not_null($value) {
-    if (is_array($value)) {
+    if (is_array($value) && (is_array($value))) {
       if (sizeof($value) > 0) {
         return true;
       } else {
