@@ -1142,20 +1142,20 @@ foreach($array as $key => $value) {
   }
 
   function tep_not_null($value) {
-    if (is_array($value) && (is_array($value))) {
-      if (sizeof($value) > 0) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
+     if (is_array($value)) {
+     if (count($value) > 0) {
+       return true;
+     } else {
+       return false;
+     }
+   } else {
+     if (!empty($value) && !is_null($value) && (strlen(trim($value)) > 0)) {
+       return true;
+     } else {
+       return false;
+     }
+   }
+ }
 
 ////
 // Output the tax percentage with optional padded decimals
