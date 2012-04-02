@@ -57,10 +57,10 @@
       $this->number_of_rows = $count['total'];
 
       $this->number_of_pages = ceil($this->number_of_rows / $this->number_of_rows_per_page);
-
-      if ($this->current_page_number > $this->number_of_pages) {
-        $this->current_page_number = $this->number_of_pages;
-      }
+  
+      if ($this->current_page_number > $this->number_of_pages) {
+        tep_redirect(tep_href_link(FILENAME_DEFAULT));
+      }
 
       $offset = ($this->number_of_rows_per_page * ($this->current_page_number - 1));
 
