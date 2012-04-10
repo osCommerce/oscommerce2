@@ -44,11 +44,6 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
-// register a random ID in the session to check throughout the checkout procedure
-// against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
-
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
