@@ -98,15 +98,7 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
-
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
-      }
-
-      if (!tep_session_is_registered('cartID')) {
-        tep_session_register('cartID');
-      }
+      return false;
     }
 
     function _prepareOrder() {
@@ -115,12 +107,12 @@
       $insert_order = false;
 
       if (tep_session_is_registered($this->_mbcartID)) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+        list($cart_string, $order_id) = explode($GLOBALS[$this->_mbcartID], '-', 2);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($GLOBALS[$this->_mbcartID], 0, strlen($cartID))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($cart_string != $cart->as_string()) ) {
           $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -271,7 +263,7 @@
           }
         }
 
-        $GLOBALS[$this->_mbcartID] = $cartID . '-' . $insert_id;
+        $GLOBALS[$this->_mbcartID] = $cart->as_string() . '-' . $insert_id;
         tep_session_register($this->_mbcartID);
       }
     }

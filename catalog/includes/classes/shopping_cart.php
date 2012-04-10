@@ -367,8 +367,12 @@
       return $this->weight;
     }
 
-    function generate_cart_id($length = 5) {
-      return tep_create_random_value($length, 'digits');
+    function as_string() {
+      $s = array();
+      foreach ($this->contents as $products_id => $products_info) {
+        $s[] = $products_id . ':' . $products_info['qty'];
+      }
+      return implode(',', $s);
     }
 
     function get_content_type() {

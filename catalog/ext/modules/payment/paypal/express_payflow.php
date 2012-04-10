@@ -57,11 +57,6 @@
     $billto = $customer_default_address_id;
   }
 
-// register a random ID in the session to check throughout the checkout procedure
-// against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
-
   $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR),
                   'VENDOR' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR,
                   'PARTNER' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PARTNER,
@@ -82,7 +77,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5(tep_session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -283,7 +278,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5(tep_session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
