@@ -616,7 +616,7 @@
 ////
 // Parse search string into indivual objects
   function tep_parse_search_string($search_str = '', &$objects) {
-    $search_str = trim(strtolower($search_str));
+    $search_str = trim(strtolower(preg_replace('/\s*\([^)]*\)/', '',$search_str)));
 
 // Break up $search_str on whitespace; quoted string will be reconstructed later
     $pieces = preg_split('/[[:space:]]+/', $search_str);
