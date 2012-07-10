@@ -233,6 +233,8 @@ CREATE TABLE customers_info (
   customers_info_date_account_created datetime,
   customers_info_date_account_last_modified datetime,
   global_product_notifications int(1) DEFAULT '0',
+  password_reset_key char(40),
+  password_reset_date datetime,
   PRIMARY KEY (customers_info_id)
 );
 

@@ -14,23 +14,28 @@
 
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PASSWORD_FORGOTTEN);
 
+  $password_reset_initiated = false;
+
   if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
     $email_address = tep_db_prepare_input($HTTP_POST_VARS['email_address']);
 
-    $check_customer_query = tep_db_query("select customers_firstname, customers_lastname, customers_password, customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
+    $check_customer_query = tep_db_query("select customers_firstname, customers_lastname, customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
     if (tep_db_num_rows($check_customer_query)) {
       $check_customer = tep_db_fetch_array($check_customer_query);
 
-      $new_password = tep_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 12));
-      $crypted_password = tep_encrypt_password($new_password);
+      $reset_key = tep_create_random_value(40);
 
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_db_input($crypted_password) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
+      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set password_reset_key = '" . tep_db_input($reset_key) . "', password_reset_date = now() where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
 
-      tep_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_REMINDER_SUBJECT, sprintf(EMAIL_PASSWORD_REMINDER_BODY, $new_password), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+      $reset_key_url = tep_href_link(FILENAME_PASSWORD_RESET, 'account=' . urlencode($email_address) . '&key=' . $reset_key, 'SSL', false);
 
-      $messageStack->add_session('login', SUCCESS_PASSWORD_SENT, 'success');
+      if ( strpos($reset_key_url, '&amp;') !== false ) {
+        $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
+      }
 
-      tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+      tep_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+
+      $password_reset_initiated = true;
     } else {
       $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
     }
@@ -48,6 +53,18 @@
   if ($messageStack->size('password_forgotten') > 0) {
     echo $messageStack->output('password_forgotten');
   }
+
+  if ($password_reset_initiated == true) {
+?>
+
+<div class="contentContainer">
+  <div class="contentText">
+    <?php echo TEXT_PASSWORD_RESET_INITIATED; ?>
+  </div>
+</div>
+
+<?php
+  } else {
 ?>
 
 <?php echo tep_draw_form('password_forgotten', tep_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=process', 'SSL'), 'post', '', true); ?>
@@ -74,6 +91,8 @@
 </form>
 
 <?php
+  }
+
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>
