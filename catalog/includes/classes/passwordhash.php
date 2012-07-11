@@ -6,7 +6,7 @@
 # Version 0.3 / osCommerce:
 #   * Silenced @is_readable('/dev/urandom'))
 #   * Added stream_set_read_buffer() when reading from /dev/urandom
-#		* Added openssl_random_pseudo_bytes() and mcrypt_create_iv() to
+#   * Added openssl_random_pseudo_bytes() and mcrypt_create_iv() to
 #     get_random_bytes()
 #
 # Written by Solar Designer <solar at openwall.com> in 2004-2006 and placed in
