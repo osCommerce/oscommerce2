@@ -23,4 +23,6 @@ define('TEXT_NO_EMAIL_ADDRESS_FOUND', 'Error: The E-Mail Address was not found i
 
 define('EMAIL_PASSWORD_RESET_SUBJECT', STORE_NAME . ' - New Password');
 define('EMAIL_PASSWORD_RESET_BODY', 'A new password has been requested for your account at ' . STORE_NAME . '.' . "\n\n" . 'Please follow this personal link to securely change your password:' . "\n\n" . '%s' . "\n\n" . 'This link will be automatically discarded after 24 hours or after your password has been changed.' . "\n\n" . 'For help with any of our online services, please email the store-owner: ' . STORE_OWNER_EMAIL_ADDRESS . '.' . "\n\n");
+
+define('ERROR_ACTION_RECORDER', 'Error: A password reset link has already been sent. Please try again in %s minutes.');
 ?>

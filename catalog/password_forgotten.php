@@ -23,19 +23,29 @@
     if (tep_db_num_rows($check_customer_query)) {
       $check_customer = tep_db_fetch_array($check_customer_query);
 
-      $reset_key = tep_create_random_value(40);
+      $actionRecorder = new actionRecorder('ar_reset_password', $check_customer['customers_id'], $email_address);
 
-      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set password_reset_key = '" . tep_db_input($reset_key) . "', password_reset_date = now() where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
+      if ($actionRecorder->canPerform()) {
+        $actionRecorder->record();
 
-      $reset_key_url = tep_href_link(FILENAME_PASSWORD_RESET, 'account=' . urlencode($email_address) . '&key=' . $reset_key, 'SSL', false);
+        $reset_key = tep_create_random_value(40);
 
-      if ( strpos($reset_key_url, '&amp;') !== false ) {
-        $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
+        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set password_reset_key = '" . tep_db_input($reset_key) . "', password_reset_date = now() where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
+
+        $reset_key_url = tep_href_link(FILENAME_PASSWORD_RESET, 'account=' . urlencode($email_address) . '&key=' . $reset_key, 'SSL', false);
+
+        if ( strpos($reset_key_url, '&amp;') !== false ) {
+          $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
+        }
+
+        tep_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+
+        $password_reset_initiated = true;
+      } else {
+        $actionRecorder->record(false);
+
+        $messageStack->add('password_forgotten', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
       }
-
-      tep_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-
-      $password_reset_initiated = true;
     } else {
       $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
     }
