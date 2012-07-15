@@ -1,7 +1,33 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2010 osCommerce
+Copyright (c) 2012 osCommerce
+
+------------------------------------------------------------------------------
+xx/xx/2012 osCommerce Online Merchant v2.3.2
+------------------------------------------------------------------------------
+
+ * Changed customer password forgotten feature to e-mail a personal link to
+   the customer where they can change their password up to 24 hours, instead
+   of directly changing the password to a random string and e-mailing it to
+   the customer.
+
+   Added new password_reset.php page to manage personal password reset links.
+
+   Added new ar_password_reset.php Action Recorder module to log and limit
+   the request of personal password reset links to once every 5 minutes.
+
+ * Improve logic of tep_create_random_value() by using Phpass' random number
+   generator.
+
+   If function parameter $type is not 'mixed', 'chars', or
+   'digits', return a 'mixed' string instead of false.
+
+ * Add openssl_random_pseudo_bytes() and mcrypt_create_iv() to Phpass'
+   get_random_bytes() class method. These are used if /dev/urandom is not
+   available.
+
+ * Only seed the random number generator if PHP < 4.2 is used.
 
 ------------------------------------------------------------------------------
 11/15/2010 osCommerce Online Merchant v2.3.1
