@@ -1300,6 +1300,7 @@ INSERT INTO sec_directory_whitelist values (null, 'images/gt_interactive');
 INSERT INTO sec_directory_whitelist values (null, 'images/hewlett_packard');
 INSERT INTO sec_directory_whitelist values (null, 'images/matrox');
 INSERT INTO sec_directory_whitelist values (null, 'images/microsoft');
+INSERT INTO sec_directory_whitelist values (null, 'images/samsung');
 INSERT INTO sec_directory_whitelist values (null, 'images/sierra');
 INSERT INTO sec_directory_whitelist values (null, 'includes/work');
 INSERT INTO sec_directory_whitelist values (null, 'pub');
