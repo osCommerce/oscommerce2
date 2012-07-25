@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -66,12 +66,8 @@
     function update_status() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module])) {
-          if (function_exists('method_exists')) {
-            if (method_exists($GLOBALS[$this->selected_module], 'update_status')) {
-              $GLOBALS[$this->selected_module]->update_status();
-            }
-          } else { // PHP3 compatibility
-            @call_user_method('update_status', $GLOBALS[$this->selected_module]);
+          if (method_exists($GLOBALS[$this->selected_module], 'update_status')) {
+            $GLOBALS[$this->selected_module]->update_status();
           }
         }
       }
