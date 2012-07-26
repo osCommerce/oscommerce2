@@ -76,13 +76,13 @@
       if (PHP_VERSION < '5.4' || PHP_VERSION > '5.4.5') { // see PHP bug 55544
         if (PHP_VERSION >= '4.0.4') {
           ob_start('ob_gzhandler');
-        } else {
+        } elseif (PHP_VERSION >= '4.0.1') {
           include(DIR_WS_FUNCTIONS . 'gzip_compression.php');
           ob_start();
           ob_implicit_flush();
         }
       }
-    } else {
+    } elseif (function_exists('ini_set')) {
       ini_set('zlib.output_compression_level', GZIP_LEVEL);
     }
   }
