@@ -82,6 +82,15 @@
       </tr>
 <?php
   }
+
+  if (PHP_VERSION >= '5.2') {
+?>
+      <tr>
+        <td class="inputField"><?php echo 'Time Zone<br />' . osc_draw_time_zone_select_menu('CFG_TIME_ZONE'); ?></td>
+        <td class="inputDescription">The time zone to base the date and time on.</td>
+      </tr>
+<?php
+  }
 ?>
 
     </table>
