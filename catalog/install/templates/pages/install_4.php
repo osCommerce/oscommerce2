@@ -135,8 +135,13 @@
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
                    '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
-                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n" .
-                   '?>';
+                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n";
+
+  if (isset($HTTP_POST_VARS['CFG_TIME_ZONE'])) {
+    $file_contents .= '  define(\'CFG_TIME_ZONE\', \'' . trim($HTTP_POST_VARS['CFG_TIME_ZONE']) . '\');' . "\n";
+  }
+
+  $file_contents .= '?>';
 
   $fp = fopen($dir_fs_document_root . 'includes/configure.php', 'w');
   fputs($fp, $file_contents);
@@ -175,8 +180,13 @@
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
                    '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
-                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n" .
-                   '?>';
+                   '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n";
+
+  if (isset($HTTP_POST_VARS['CFG_TIME_ZONE'])) {
+    $file_contents .= '  define(\'CFG_TIME_ZONE\', \'' . trim($HTTP_POST_VARS['CFG_TIME_ZONE']) . '\');' . "\n";
+  }
+
+  $file_contents .= '?>';
 
   $fp = fopen($dir_fs_document_root . 'admin/includes/configure.php', 'w');
   fputs($fp, $file_contents);
