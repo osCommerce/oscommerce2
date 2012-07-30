@@ -39,11 +39,6 @@
     $billto = $customer_default_address_id;
   }
 
-// register a random ID in the session to check throughout the checkout procedure
-// against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
-
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'cancel':
       tep_session_unregister('ppe_token');

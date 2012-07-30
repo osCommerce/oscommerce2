@@ -32,13 +32,6 @@
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
  }
 
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
-    if ($cart->cartID != $cartID) {
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-    }
-  }
-
   include(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
 
 // load selected payment module

@@ -11,7 +11,7 @@
 */
 
   class shoppingCart {
-    var $contents, $total, $weight, $cartID, $content_type;
+    var $contents, $total, $weight, $content_type;
 
     function shoppingCart() {
       $this->reset();
@@ -42,7 +42,7 @@
         }
       }
 
-// reset per-session cart contents, but not the database contents
+// reset per-session cart contents, but not the database contents (this also resets the checkout)
       $this->reset(false);
 
       $products_query = tep_db_query("select products_id, customers_basket_quantity from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "'");
@@ -56,14 +56,12 @@
       }
 
       $this->cleanup();
-
-// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
-      $this->cartID = $this->generate_cart_id();
     }
 
     function reset($reset_database = false) {
       global $customer_id;
 
+      $this->reset_checkout();
       $this->contents = array();
       $this->total = 0;
       $this->weight = 0;
@@ -73,9 +71,15 @@
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "'");
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customer_id . "'");
       }
+    }
 
-      unset($this->cartID);
-      if (tep_session_is_registered('cartID')) tep_session_unregister('cartID');
+// resets checkout data, should be used after any cart modification to prevent wrong shipping / payment costs
+    function reset_checkout() {
+      global $shipping, $payment;
+      $shipping = null;
+      $payment = null;
+      if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
+      if (tep_session_is_registered('payment')) tep_session_unregister('payment');
     }
 
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
@@ -121,6 +125,7 @@
           if ($this->in_cart($products_id_string)) {
             $this->update_quantity($products_id_string, $qty, $attributes);
           } else {
+            $this->reset_checkout();
             $this->contents[$products_id_string] = array('qty' => (int)$qty);
 // insert into database
             if (tep_session_is_registered('customer_id')) tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id_string) . "', '" . (int)$qty . "', '" . date('Ymd') . "')");
@@ -136,9 +141,6 @@
           }
 
           $this->cleanup();
-
-// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
-          $this->cartID = $this->generate_cart_id();
         }
       }
     }
@@ -166,6 +168,7 @@
       }
 
       if (is_numeric($products_id) && isset($this->contents[$products_id_string]) && is_numeric($quantity) && ($attributes_pass_check == true)) {
+        $this->reset_checkout();
         $this->contents[$products_id_string] = array('qty' => (int)$quantity);
 // update database
         if (tep_session_is_registered('customer_id')) tep_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . (int)$quantity . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id_string) . "'");
@@ -228,15 +231,13 @@
     function remove($products_id) {
       global $customer_id;
 
+      $this->reset_checkout();
       unset($this->contents[$products_id]);
 // remove from database
       if (tep_session_is_registered('customer_id')) {
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "'");
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "'");
       }
-
-// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
-      $this->cartID = $this->generate_cart_id();
     }
 
     function remove_all() {
@@ -366,8 +367,12 @@
       return $this->weight;
     }
 
-    function generate_cart_id($length = 5) {
-      return tep_create_random_value($length, 'digits');
+    function as_string() {
+      $s = array();
+      foreach ($this->contents as $products_id => $products_info) {
+        $s[] = $products_id . ':' . $products_info['qty'];
+      }
+      return implode(',', $s);
     }
 
     function get_content_type() {
