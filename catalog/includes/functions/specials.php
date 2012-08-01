@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,7 +13,7 @@
 ////
 // Sets the status of a special product
   function tep_set_specials_status($specials_id, $status) {
-    return tep_db_query("update " . TABLE_SPECIALS . " set status = '" . $status . "', date_status_change = now() where specials_id = '" . (int)$specials_id . "'");
+    return tep_db_query("update " . TABLE_SPECIALS . " set status = '" . (int)$status . "', date_status_change = now() where specials_id = '" . (int)$specials_id . "'");
   }
 
 ////
