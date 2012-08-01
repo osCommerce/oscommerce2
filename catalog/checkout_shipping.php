@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -46,8 +46,13 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
+  if (!tep_session_is_registered('cartID')) {
+    tep_session_register('cartID');
+  } elseif (($cartID != $cart->cartID) && tep_session_is_registered('shipping')) {
+    tep_session_unregister('shipping');
+  }
+
+  $cartID = $cart->cartID = $cart->generate_cart_id();
 
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
