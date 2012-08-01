@@ -49,18 +49,20 @@
       $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
     }
 
+    $products_name = '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product_info['products_id']) . '" itemprop="url"><span itemprop="name">' . $product_info['products_name'] . '</span></a>';
+
     if (tep_not_null($product_info['products_model'])) {
-      $products_name = $product_info['products_name'] . '<br /><span class="smallText">[' . $product_info['products_model'] . ']</span>';
-    } else {
-      $products_name = $product_info['products_name'];
+      $products_name .= '<br /><span class="smallText">[<span itemprop="model">' . $product_info['products_model'] . '</span>]</span>';
     }
 ?>
 
 <?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
 
+<div itemscope itemtype="http://schema.org/Product">
+
 <div>
-  <h1 style="float: right;"><?php echo $products_price; ?></h1>
-  <h1><?php echo $products_name; ?></h1>
+  <h1 style="float: right;" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><span itemprop="price"><?php echo $products_price; ?></span></h1>
+  <h1 ><?php echo $products_name; ?></h1>
 </div>
 
 <div class="contentContainer">
@@ -89,7 +91,7 @@
             $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image'], '', 'NONSSL', false);
           }
 
-          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a>';
+          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', ($pi_counter ==1) ? 'itemprop="image"' : '') . '</a>';
 
           if (tep_not_null($pi['htmlcontent'])) {
             $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
@@ -119,7 +121,7 @@ $('#piGal ul').bxGallery({
 ?>
 
     <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
     </div>
 
 <?php
@@ -136,7 +138,9 @@ $("#piGal a[rel^='fancybox']").fancybox({
     }
 ?>
 
-<?php echo ($product_info['products_description']; ?>
+<div itemprop="description">
+  <?php echo $product_info['products_description']; ?>
+</div>
 
 <?php
     $products_attributes_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'");
@@ -190,8 +194,12 @@ $("#piGal a[rel^='fancybox']").fancybox({
   </div>
 
 <?php
-    $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.products_id = '" . (int)$_GET['products_id'] . "' and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and reviews_status = 1");
+    $reviews_query = tep_db_query("select count(*) as count, avg(reviews_rating) as avgrating from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.products_id = '" . (int)$_GET['products_id'] . "' and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and reviews_status = 1");
     $reviews = tep_db_fetch_array($reviews_query);
+
+    if ($reviews['count'] > 0) {
+      echo '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;"><span itemprop="ratingValue">' . $reviews['avgrating'] . '</span><span itemprop="ratingCount">' . $reviews['count'] . '</span></div>';
+    }
 ?>
 
   <div class="buttonSet">
@@ -206,7 +214,17 @@ $("#piGal a[rel^='fancybox']").fancybox({
     } else {
       include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
     }
+
+    if ($product_info['manufacturers_id'] > 0) {
+      $manufacturer_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$product_info['manufacturers_id'] . "'");
+      if (tep_db_num_rows($manufacturer_query)) {
+        $manufacturer = tep_db_fetch_array($manufacturer_query);
+        echo '<div itemscope itemtype="http://schema.org/Organization" style="display: none;"><span itemprop="name">' . $manufacturer['manufacturers_name'] . '</span></div>';
+      }
+    }
 ?>
+
+</div>
 
 </div>
 
