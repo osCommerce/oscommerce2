@@ -100,4 +100,22 @@ define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: Can not link products in th
 define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . DIR_FS_CATALOG_IMAGES);
 define('ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Catalog images directory does not exist: ' . DIR_FS_CATALOG_IMAGES);
 define('ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT', 'Error: Category cannot be moved into child category.');
+
+// seo
+define('TEXT_PRODUCTS_SEO_TITLE', 'Title Tag (SEO):<br><small>if this is left blank, title will default to the products name</small>');
+define('TEXT_PRODUCTS_SEO_DESCRIPTION', 'Meta Description (SEO):');
+define('TEXT_PRODUCTS_SEO_KEYWORDS', 'Meta Keywords (SEO):<br><small>comma separated</small>');
+
+define('TEXT_CATEGORIES_SEO_TITLE', 'Title Tag (SEO):<br><em>if this is left blank, title will default to the category name</em>');
+define('TEXT_EDIT_CATEGORIES_SEO_TITLE', 'Edit the Title Tag (SEO):<br><em>if this is left blank, title will default to the category name</em>');
+
+define('TEXT_CATEGORIES_SEO_DESCRIPTION', 'Meta Description (SEO):');
+define('TEXT_EDIT_CATEGORIES_SEO_DESCRIPTION', 'Edit the Meta Description (SEO)');
+
+define('TEXT_CATEGORIES_SEO_KEYWORDS', 'Meta Keywords (SEO):<br><em>comma separated</em>');
+define('TEXT_EDIT_CATEGORIES_SEO_KEYWORDS', 'Edit The Meta Keywords (SEO):<br><em>comma separated</em>');
+
+define('TEXT_CATEGORIES_DESCRIPTION', 'Category Description:');
+define('TEXT_EDIT_CATEGORIES_DESCRIPTION', 'Edit The Category Description:');
+
 ?>

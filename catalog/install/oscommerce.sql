@@ -1611,3 +1611,19 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 # Template Block Groups
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', 'boxes;header_tags', 'This is automatically updated. No need to edit.', '6', '0', now());
+
+# seo
+ALTER TABLE  `categories_description`
+ADD  `categories_seo_title` TEXT NULL ,
+ADD  `categories_seo_description` TEXT NULL ,
+ADD  `categories_seo_keywords` TEXT NULL ;
+
+ALTER TABLE  `products_description`
+ADD  `products_seo_title` TEXT NULL ,
+ADD  `products_seo_description` TEXT NULL ,
+ADD  `products_seo_keywords` TEXT NULL ;
+
+ALTER TABLE  `manufacturers_info`
+ADD  `manufacturers_seo_title` TEXT NULL ,
+ADD  `manufacturers_seo_description` TEXT NULL ,
+ADD  `manufacturers_seo_keywords` TEXT NULL ;

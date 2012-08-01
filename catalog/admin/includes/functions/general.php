@@ -1481,4 +1481,77 @@
       return is_writable($file);
     }
   }
+  
+  // seo
+function tep_get_products_seo_title($product_id, $language_id) {
+	$product_query = tep_db_query("select products_seo_title from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
+	$product = tep_db_fetch_array($product_query);
+
+	return $product['products_seo_title'];
+}
+
+function tep_get_products_seo_description($product_id, $language_id) {
+	$product_query = tep_db_query("select products_seo_description from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
+	$product = tep_db_fetch_array($product_query);
+
+	return $product['products_seo_description'];
+}
+
+function tep_get_products_seo_keywords($product_id, $language_id) {
+	$product_query = tep_db_query("select products_seo_keywords from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
+	$product = tep_db_fetch_array($product_query);
+
+	return $product['products_seo_keywords'];
+}
+
+function tep_get_category_seo_title($category_id, $language_id) {
+  $category_query = tep_db_query("select categories_seo_title from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
+  $category = tep_db_fetch_array($category_query);
+
+  return $category['categories_seo_title'];
+}
+
+function tep_get_category_seo_description($category_id, $language_id) {
+  $category_query = tep_db_query("select categories_seo_description from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
+  $category = tep_db_fetch_array($category_query);
+
+  return $category['categories_seo_description'];
+}
+
+function tep_get_category_seo_keywords($category_id, $language_id) {
+  $category_query = tep_db_query("select categories_seo_keywords from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
+  $category = tep_db_fetch_array($category_query);
+
+  return $category['categories_seo_keywords'];
+}
+
+function tep_get_category_description($category_id, $language_id) {
+  $category_query = tep_db_query("select categories_description from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
+  $category = tep_db_fetch_array($category_query);
+
+  return $category['categories_description'];
+}
+
+
+function tep_get_manufacturer_seo_title($manufacturers_id, $language_id) {
+  $manufacturer_query = tep_db_query("select manufacturers_seo_title from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturers_id . "' and languages_id = '" . (int)$language_id . "'");
+  $manufacturer = tep_db_fetch_array($manufacturer_query);
+
+  return $manufacturer['manufacturers_seo_title'];
+}
+
+function tep_get_manufacturer_seo_description($manufacturers_id, $language_id) {
+  $manufacturer_query = tep_db_query("select manufacturers_seo_description from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturers_id . "' and languages_id = '" . (int)$language_id . "'");
+  $manufacturer = tep_db_fetch_array($manufacturer_query);
+
+  return $manufacturer['manufacturers_seo_description'];
+}
+
+function tep_get_manufacturer_seo_keywords($manufacturers_id, $language_id) {
+  $manufacturer_query = tep_db_query("select manufacturers_seo_keywords from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturers_id . "' and languages_id = '" . (int)$language_id . "'");
+  $manufacturer = tep_db_fetch_array($manufacturer_query);
+
+  return $manufacturer['manufacturers_seo_keywords'];
+}
+
 ?>

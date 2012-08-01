@@ -5,8 +5,9 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
-
+  Copyright (c) 2012 osCommerce
+  Copyright (c) 2012 Club osCommerce clubosc.com
+  
   Released under the GNU General Public License
 */
 
@@ -33,16 +34,15 @@
 
       if (basename($PHP_SELF) == FILENAME_DEFAULT) {
         if (isset($HTTP_GET_VARS['manufacturers_id']) && is_numeric($HTTP_GET_VARS['manufacturers_id'])) {
-// $manufacturers is set in application_top.php to add the manufacturer to the breadcrumb
-          if (isset($manufacturers) && (sizeof($manufacturers) == 1) && isset($manufacturers['manufacturers_name'])) {
-            $oscTemplate->setTitle($manufacturers['manufacturers_name'] . ', ' . $oscTemplate->getTitle());
-          } else {
-// $manufacturers is not set so a database query is needed
-            $manufacturers_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "'");
-            if (tep_db_num_rows($manufacturers_query)) {
-              $manufacturers = tep_db_fetch_array($manufacturers_query);
+          $manufacturers_query = tep_db_query("select manufacturers_name, manufacturers_seo_title from " . TABLE_MANUFACTURERS . " m, " . TABLE_MANUFACTURERS_INFO . " mi where m.manufacturers_id = '" . (int)$HTTP_GET_VARS['manufacturers_id'] . "' and m.manufacturers_id = mi.manufacturers_id and languages_id = '" . (int)$languages_id . "'");
+          if (tep_db_num_rows($manufacturers_query)) {
+            $manufacturers = tep_db_fetch_array($manufacturers_query);
 
-              $oscTemplate->setTitle($manufacturers['manufacturers_name'] . ', ' . $oscTemplate->getTitle());
+            if (tep_not_null($manufacturers['manufacturers_seo_title'])) {
+              $oscTemplate->setTitle($manufacturers['manufacturers_seo_title']);
+            }
+            else {
+              $oscTemplate->setTitle($manufacturers['manufacturers_name']);
             }
           }
         }

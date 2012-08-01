@@ -39,4 +39,10 @@ define('TEXT_DELETE_WARNING_PRODUCTS', '<strong>WARNING:</strong> There are %s p
 
 define('ERROR_DIRECTORY_NOT_WRITEABLE', 'Error: I can not write to this directory. Please set the right user permissions on: %s');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'Error: Directory does not exist: %s');
+
+// seo
+define('TEXT_MANUFACTURERS_SEO_TITLE', 'Title Tag (SEO):<br><em>if this is left blank, title will default to the manufacturer name</em>');
+define('TEXT_MANUFACTURERS_SEO_DESCRIPTION', 'Meta Description (SEO):');
+define('TEXT_MANUFACTURERS_SEO_KEYWORDS', 'Meta Keywords (SEO):<br><em>comma separated</em>');
+
 ?>
