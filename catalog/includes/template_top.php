@@ -47,6 +47,15 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 <link rel="stylesheet" type="text/css" href="ext/960gs/<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? 'rtl_' : ''); ?>960_24_col.css" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
+
+<noscript>
+  <div class="no-script">
+    <div class="no-script-inner">
+      <?php echo NO_SCRIPT_TEXT; ?>
+    </div>
+  </div>
+</noscript>
+
 </head>
 <body>
 
