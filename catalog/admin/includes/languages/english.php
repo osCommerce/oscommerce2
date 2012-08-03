@@ -237,6 +237,8 @@ define('IMAGE_UNLOCK', 'Unlock');
 define('IMAGE_UPDATE', 'Update');
 define('IMAGE_UPDATE_CURRENCIES', 'Update Exchange Rate');
 define('IMAGE_UPLOAD', 'Upload');
+// admin - add review
+define('IMAGE_BUTTON_ADD_REVIEW', 'Add A New Review');
 
 define('ICON_CROSS', 'False');
 define('ICON_CURRENT_FOLDER', 'Current Folder');

@@ -44,6 +44,21 @@
 
         tep_redirect(tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page']));
         break;
+        
+      // admin - add review
+      case 'addnew':
+        $products_id = tep_db_prepare_input($HTTP_POST_VARS['products_id']) ;
+        $customers_id = tep_db_prepare_input($HTTP_POST_VARS['customer_id']);
+        $review = tep_db_prepare_input($HTTP_POST_VARS['reviews_text']);
+        $rating = tep_db_prepare_input($HTTP_POST_VARS['rating']);
+
+        tep_db_query("insert into " . TABLE_REVIEWS . " (products_id, customers_id, customers_name, reviews_rating, date_added, reviews_status) values ('" . (int)$products_id . "', '" . (int)$customers_id . "', '" . tep_customers_name($customers_id) . "', '" . (int)$rating . "', now(), 1)");
+        $insert_id = tep_db_insert_id();
+        tep_db_query("insert into " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text) values ('" . (int)$insert_id . "', '" . (int)$languages_id . "', '" . $review . "')");
+
+        tep_redirect(tep_href_link(FILENAME_REVIEWS, tep_get_all_get_params(array('action'))));
+        break;
+        
     }
   }
 
@@ -187,7 +202,49 @@
       </tr>
 <?php
     }
-  } else {
+  }   elseif ($action == 'new') {
+    ?>
+      <tr><?php echo tep_draw_form('review', FILENAME_REVIEWS, 'action=addnew'); ?>
+        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="main" valign="top" width="140"><strong><?php echo ENTRY_PRODUCT; ?></strong></td>
+            <td><?php echo tep_draw_products('products_id', 'style="font-size:10px"'); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main" valign="top" width="140"><strong><?php echo ENTRY_FROM; ?></strong></td>
+            <td><?php echo tep_draw_customers('customer_id', 'style="font-size:10px"'); ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+          <tr>
+            <td class="main" valign="top" width="140"><strong><?php echo ENTRY_RATING; ?></strong></td>
+            <td class="main"><?php echo TEXT_BAD . ' ' . tep_draw_radio_field('rating', '1') . ' ' . tep_draw_radio_field('rating', '2') . ' ' . tep_draw_radio_field('rating', '3') . ' ' . tep_draw_radio_field('rating', '4') . ' ' . tep_draw_radio_field('rating', '5') . ' ' . TEXT_GOOD; ?></td>
+          </tr>
+          <tr>
+            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+          </tr>
+        </table></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+        <td class="main" valign="top"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo tep_draw_textarea_field('reviews_text', 'soft', '60', '15', $rInfo->reviews_text); ?></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
+      </tr>
+      </form>
+       <?php
+     }
+     else {
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -246,10 +303,13 @@
     }
 ?>
               <tr>
-                <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText" valign="top"><?php echo $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
                     <td class="smallText" align="right"><?php echo $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page']); ?></td>
+                  </tr>
+                  <tr>
+                    <td colspan="2" class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_ADD_REVIEW, 'triangle-1-e', tep_href_link(FILENAME_REVIEWS, 'action=new')); ?></td>
                   </tr>
                 </table></td>
               </tr>

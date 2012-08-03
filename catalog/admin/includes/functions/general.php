@@ -1554,4 +1554,49 @@ function tep_get_manufacturer_seo_keywords($manufacturers_id, $language_id) {
   return $manufacturer['manufacturers_seo_keywords'];
 }
 
+// admin - add reviews
+// www.clubosc.com
+
+  function tep_draw_products($name, $parameters = '', $exclude = '') {
+    global $languages_id;
+
+    if ($exclude == '') {
+      $exclude = array();
+    }
+
+    $select_string = '<select name="' . $name . '"';
+
+    if ($parameters) {
+      $select_string .= ' ' . $parameters;
+    }
+
+    $select_string .= '>';
+
+    $products_query = tep_db_query("select p.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by products_name");
+    while ($products = tep_db_fetch_array($products_query)) {
+      if (!in_array($products['products_id'], $exclude)) {
+        $select_string .= '<option value="' . $products['products_id'] . '">' . $products['products_name'] . '</option>';
+      }
+    }
+
+    $select_string .= '</select>';
+
+    return $select_string;
+  }
+
+
+  function tep_draw_customers($name) {
+
+    $select_string = '<select name="' . $name . '">';
+
+    $customers_query = tep_db_query("select customers_id, customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " order by customers_lastname");
+    while ($customers = tep_db_fetch_array($customers_query)) {
+        $select_string .= '<option value="' . $customers['customers_id'] . '">' . $customers['customers_lastname'] . ', ' . $customers['customers_firstname'] . '</option>';
+    }
+
+    $select_string .= '</select>';
+
+    return $select_string;
+  }
+
 ?>
