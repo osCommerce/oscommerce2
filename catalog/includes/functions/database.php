@@ -150,4 +150,10 @@
       return $string;
     }
   }
+  
+  
+  function tep_db_fetch_assoc($db_query) {
+    return mysql_fetch_assoc($db_query);
+  }
+  
 ?>
