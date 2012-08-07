@@ -25,6 +25,9 @@
       $this->public_title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_DESCRIPTION;
       $this->sort_order = MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER;
+      
+      $this->icon = 'express.png'; // MAX 750 x MAX 90 pixels
+      
       $this->enabled = ((MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS == 'True') ? true : false);
 
       if ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID > 0) {
@@ -368,6 +371,7 @@
         $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
         $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
         $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
+        $params['HDRIMG'] = DIR_WS_IMAGES . $this->icon;
       } else {
         $params['SUBJECT'] = MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT;
       }
