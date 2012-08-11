@@ -5,14 +5,14 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
 
   require('includes/application_top.php');
 
-  if (!isset($HTTP_GET_VARS['products_id']) || !is_numeric($HTTP_GET_VARS['products_id'])) {
+  if (!isset($HTTP_GET_VARS['products_id'])) {
     tep_redirect(tep_href_link(FILENAME_REVIEWS));
   }
 
