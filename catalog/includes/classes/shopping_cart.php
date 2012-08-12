@@ -178,6 +178,9 @@
             if (tep_session_is_registered('customer_id')) tep_db_query("update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " set products_options_value_id = '" . (int)$value . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id_string) . "' and products_options_id = '" . (int)$option . "'");
           }
         }
+
+// assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure
+        $this->cartID = $this->generate_cart_id();
       }
     }
 
