@@ -111,6 +111,12 @@ Copyright (c) 2012 osCommerce
  * New Pinterest Social Bookmark Module
    Adds Pinterest share button to the product information page.
 
+ * Libraries Update
+   - 960gs updated to latest version.
+   - jQuery 1.4.2 to 1.8.0.
+   - jQuery UI 1.8.6 to 1.8.22.
+   - bxGallery compatibility changes for jQuery 1.8.0.
+
 ------------------------------------------------------------------------------
 07/17/2012 osCommerce Online Merchant v2.3.2
 ------------------------------------------------------------------------------
