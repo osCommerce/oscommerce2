@@ -33,7 +33,7 @@
       
       switch (basename($PHP_SELF)) {
         case FILENAME_PRODUCT_INFO:
-        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$HTTP_GET_VARS['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         break;
         case FILENAME_DEFAULT:
         if (isset($cPath) && tep_not_null($cPath)) {
@@ -42,6 +42,9 @@
         if (isset($HTTP_GET_VARS['manufacturers_id']) && tep_not_null($HTTP_GET_VARS['manufacturers_id'])) {
           $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $HTTP_GET_VARS['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         }
+        break;
+        case FILENAME_ADVANCED_SEARCH_RESULT:
+        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords=' . $HTTP_GET_VARS['keywords'], 'NONSSL', false) . '" />' . "\n", $this->group);
         break;
       }
     }
