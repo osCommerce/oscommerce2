@@ -26,14 +26,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
-<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.8.22.css" />
+<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.10.4.min.css" />
 <script type="text/javascript" src="ext/jquery/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.8.22.min.js"></script>
-
-<script type="text/javascript">
-// fix jQuery 1.8.0 and jQuery UI 1.8.22 bug with dialog buttons; http://bugs.jqueryui.com/ticket/8484
-if ( $.attrFn ) { $.attrFn.text = true; }
-</script>
+<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.10.4.min.js"></script>
 
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
