@@ -71,7 +71,7 @@
         $response = array('code' => $h->getResponseCode(),
                           'headers' => $headers,
                           'body' => $body);
-      } catch ( \Exception $e ) {
+      } catch ( Exception $e ) {
         if ( isset($e->innerException) ) {
           trigger_error($e->innerException->getMessage());
         } else {
