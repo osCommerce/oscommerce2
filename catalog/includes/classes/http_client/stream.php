@@ -37,7 +37,10 @@
         $parameters['header'] = array();
       }
 
-      $parameters['header'][] = 'Content-type: application/x-www-form-urlencoded';
+      if ($parameters['method'] == 'post') {
+        $parameters['header'][] = 'Content-Type: application/x-www-form-urlencoded';
+        $parameters['header'][] = 'Content-Length: ' . strlen($parameters['parameters']);
+      }
 
       $options['http']['header'] = implode("\r\n", $parameters['header']);
 
@@ -72,6 +75,10 @@
       $context = stream_context_create($options);
 
       $result = file_get_contents($url, false, $context);
+
+      if ($result === false) {
+        return false;
+      }
 
       $response = array('code' => null,
                         'headers' => implode("\n", $http_response_header), // $http_response_header is automatically set by PHP
