@@ -11,7 +11,7 @@
 */
 
   class httpClient {
-    var $drivers = array('curl', 'stream');
+    var $drivers = array('curl', 'stream', 'socket');
     var $driver;
     var $url; // array containg scheme, host, port, user, pass, path, query, fragment (from parse_url())
     var $proxyHost, $proxyPort;
