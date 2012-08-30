@@ -36,9 +36,25 @@
     function connect($host, $port = null) {
       $this->url = parse_url($host);
 
+      if (!isset($this->url['scheme'])) {
+        $this->url['scheme'] = 'http';
+        $this->url['host'] = $this->url['path'];
+        unset($this->url['path']);
+      }
+
       if (isset($port)) {
         $this->url['port'] = $port;
+
+        if (($port == '443') && ($this->url['scheme'] != 'https')) {
+          $this->url['scheme'] = 'https';
+        }
+      } elseif ($this->url['scheme'] == 'http') {
+        $this->url['port'] = '80';
+      } elseif ($this->url['scheme'] == 'https') {
+        $this->url['port'] = '443';
       }
+
+      return true;
     }
 
     function setProxy($proxyHost, $proxyPort) {
@@ -311,8 +327,6 @@
     }
 
 // Deprecated
-    function disconnect() {
-      trigger_error('httpClient::disconnect is deprecated.');
-    }
+    function disconnect() { }
   }
 ?>
