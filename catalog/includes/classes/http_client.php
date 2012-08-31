@@ -177,13 +177,17 @@
 
       $uri = $this->makeUri($uri);
 
-      if (isset($query_params) && is_array($query_params)) {
-        $postArray = array();
-        foreach ($query_params as $k => $v) {
-          $postArray[] = urlencode($k) . '=' . urlencode($v);
-        }
+      if (isset($query_params)) {
+        if (is_array($query_params)) {
+          $postArray = array();
+          foreach ($query_params as $k => $v) {
+            $postArray[] = urlencode($k) . '=' . urlencode($v);
+          }
 
-        $this->requestBody = implode('&', $postArray);
+          $this->requestBody = implode('&', $postArray);
+        } else {
+          $this->requestBody = $query_params;
+        }
       }
 
       $this->params['server'] = $this->url;
