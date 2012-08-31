@@ -82,13 +82,33 @@
 
       $result = '';
 
-      while ( !feof($agro) ) {
-        $result .= fgets($agro, 1024);
-      }
+      $counter = 0;
+
+      do {
+        $status = socket_get_status($agro);
+        if ($status['eof'] == 1) {
+          break;
+        }
+
+        if ($status['unread_bytes'] > 0) {
+          $buffer = fread($agro, $status['unread_bytes']);
+          $counter = 0;
+        } else {
+          $buffer = fread($agro, 128);
+          $counter++;
+          usleep(2);
+        }
+
+        $result .= $buffer;
+      } while ( ($status['unread_bytes'] > 0) || ($counter++ < 10) );
 
       fclose($agro);
 
       list($headers, $body) = explode("\r\n\r\n", $result, 2);
+
+      if (strpos(strtolower($headers), 'transfer-encoding: chunked') !== false) {
+        $body = http_chunked_decode($body);
+      }
 
       $response = array('code' => null,
                         'headers' => $headers,
@@ -103,6 +123,19 @@
 
     function can_use() {
       return true;
+    }
+  }
+
+  if (!function_exists('http_chunked_decode')) {
+    function http_chunked_decode($str) {
+      for ($res = ''; !empty($str); $str = trim($str)) {
+        $pos = strpos($str, "\r\n");
+        $len = hexdec(substr($str, 0, $pos));
+        $res .= substr($str, $pos + 2, $len);
+        $str = substr($str, $pos + 2 + $len);
+      }
+
+      return $res;
     }
   }
 ?>
