@@ -242,7 +242,7 @@
     }
 
     function processBody() {
-      return $this->response['body'];
+      return trim($this->response['body']);
     }
 
     function getHeaders() {
