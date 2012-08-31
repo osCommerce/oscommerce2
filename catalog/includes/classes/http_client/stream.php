@@ -20,8 +20,11 @@
                                        'protocol_version' => '1.1',
                                        'request_fulluri' => true,
                                        'follow_location' => true,
-                                       'max_redirects' => 5,
-                                       'content' => $parameters['parameters']));
+                                       'max_redirects' => 5));
+
+      if (isset($parameters['parameters'])) {
+        $options['http']['content'] = $parameters['parameters'];
+      }
 
       if ($parameters['method'] == 'post') {
         $options['http']['method'] = 'POST';
@@ -39,7 +42,29 @@
 
       if ($parameters['method'] == 'post') {
         $parameters['header'][] = 'Content-Type: application/x-www-form-urlencoded';
+      }
+
+      if (isset($parameters['parameters'])) {
         $parameters['header'][] = 'Content-Length: ' . strlen($parameters['parameters']);
+      }
+
+      $add_host = true;
+      $add_connection = true;
+
+      foreach ($parameters['header'] as $h) {
+        if (strtolower(substr($h, 0, 5)) == 'host:') {
+          $add_host = false;
+        } elseif (strtolower(substr($h, 0, 11)) == 'Connection:') {
+          $add_connection = false;
+        }
+      }
+
+      if ($add_host === true) {
+        $parameters['header'][] = 'Host: ' . $parameters['server']['host'] . ':' . $parameters['server']['port'];
+      }
+
+      if ($add_connection === true) {
+        $parameters['header'][] = 'Connection: Close';
       }
 
       $options['http']['header'] = implode("\r\n", $parameters['header']);

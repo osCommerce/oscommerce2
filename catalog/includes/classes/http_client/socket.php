@@ -35,6 +35,7 @@
       $command = strtoupper($parameters['method']) . ' ' . $request_url . ' HTTP/' . $protocol_version . "\r\n";
 
       $add_host = true;
+      $add_connection = true;
       $headers = '';
 
       if (!empty($parameters['header'])) {
@@ -43,6 +44,8 @@
 
           if (strtolower(substr($h, 0, 5)) == 'host:') {
             $add_host = false;
+          } elseif (strtolower(substr($h, 0, 11)) == 'Connection:') {
+            $add_connection = false;
           }
         }
       }
@@ -57,6 +60,10 @@
 
       if ($parameters['method'] == 'post') {
         $command .= 'Content-Type: application/x-www-form-urlencoded' . "\r\n";
+      }
+
+      if ($add_connection === true) {
+        $command .= 'Connection: Close' . "\r\n";
       }
 
       $command .= $headers . "\r\n";
