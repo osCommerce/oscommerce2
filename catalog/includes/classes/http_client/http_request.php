@@ -64,7 +64,7 @@
       try {
         $h->send();
 
-        $result = $h->getRawResponseMessage();
+        $result = $h->getResponseMessage()->toString();
 
         list($headers, $body) = explode("\r\n\r\n", $result, 2);
 
