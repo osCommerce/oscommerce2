@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,67 +17,30 @@
     exit;
   }
 
-  $parameters = 'cmd=_notify-validate';
-
-  reset($HTTP_POST_VARS);
-  while (list($key, $value) = each($HTTP_POST_VARS)) {
-    $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
+  if (!class_exists('httpClient')) {
+    include('includes/classes/http_client.php');
   }
 
-  if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
-    $server = 'www.paypal.com';
-  } else {
-    $server = 'www.sandbox.paypal.com';
-  }
-
-  $fsocket = false;
-  $curl = false;
   $result = false;
 
-  if ( (PHP_VERSION >= 4.3) && ($fp = @fsockopen('ssl://' . $server, 443, $errno, $errstr, 30)) ) {
-    $fsocket = true;
-  } elseif (function_exists('curl_exec')) {
-    $curl = true;
-  } elseif ($fp = @fsockopen($server, 80, $errno, $errstr, 30)) {
-    $fsocket = true;
-  }
-
-  if ($fsocket == true) {
-    $header = 'POST /cgi-bin/webscr HTTP/1.0' . "\r\n" .
-              'Host: ' . $server . "\r\n" .
-              'Content-Type: application/x-www-form-urlencoded' . "\r\n" .
-              'Content-Length: ' . strlen($parameters) . "\r\n" .
-              'Connection: close' . "\r\n\r\n";
-
-    @fputs($fp, $header . $parameters);
-
-    $string = '';
-    while (!@feof($fp)) {
-      $res = @fgets($fp, 1024);
-      $string .= $res;
-
-      if ( ($res == 'VERIFIED') || ($res == 'INVALID') ) {
-        $result = $res;
-
-        break;
-      }
+  if ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) {
+    if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
+      $server = 'www.paypal.com';
+    } else {
+      $server = 'www.sandbox.paypal.com';
     }
 
-    @fclose($fp);
-  } elseif ($curl == true) {
-    $ch = curl_init();
+    $parameters = 'cmd=_notify-validate';
 
-    curl_setopt($ch, CURLOPT_URL, 'https://' . $server . '/cgi-bin/webscr');
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    foreach ($HTTP_POST_VARS as $key => $value) {
+      $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
+    }
 
-    $result = curl_exec($ch);
+    $http = new httpClient($server, 443);
 
-    curl_close($ch);
+    if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
+      $result = $http->getBody();
+    }
   }
 
   if ($result == 'VERIFIED') {
@@ -86,17 +49,18 @@
       if (tep_db_num_rows($order_query) > 0) {
         $order = tep_db_fetch_array($order_query);
 
+        $new_order_status = DEFAULT_ORDERS_STATUS_ID;
+
         if ($order['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
           $sql_data_array = array('orders_id' => $HTTP_POST_VARS['invoice'],
                                   'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
-                                  'comments' => '');
+                                  'comments' => 'PayPal IPN Verified');
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-
-
-          tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "'");
+        } else {
+          $new_order_status = $order['orders_status'];
         }
 
         $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $HTTP_POST_VARS['invoice'] . "' and class = 'ot_total' limit 1");
@@ -112,10 +76,14 @@
 
         if ($HTTP_POST_VARS['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency']))) {
           $comment_status .= '; PayPal transaction value (' . tep_output_string_protected($HTTP_POST_VARS['mc_gross']) . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+        } elseif ($HTTP_POST_VARS['payment_status'] == 'Completed') {
+          $new_order_status = (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : $new_order_status);
         }
 
+        tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (int)$new_order_status . "', last_modified = now() where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "'");
+
         $sql_data_array = array('orders_id' => $HTTP_POST_VARS['invoice'],
-                                'orders_status_id' => (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
+                                'orders_status_id' => (int)$new_order_status,
                                 'date_added' => 'now()',
                                 'customer_notified' => '0',
                                 'comments' => 'PayPal IPN Verified [' . $comment_status . ']');
