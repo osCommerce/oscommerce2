@@ -23,7 +23,7 @@
 
   $result = false;
 
-  if ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) {
+  if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
     if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
       $server = 'www.paypal.com';
     } else {
@@ -37,6 +37,17 @@
     }
 
     $http = new httpClient($server, 443);
+
+    if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PROXY') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY)) {
+      $proxy_server = MODULE_PAYMENT_PAYPAL_STANDARD_PROXY;
+      $proxy_port = null;
+
+      if (strpos(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, ':') !== false) {
+        list($proxy_server, $proxy_port) = explode(':', MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, 2);
+      }
+
+      $http->setProxy($proxy_server, $proxy_port);
+    }
 
     if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
       $result = $http->getBody();
