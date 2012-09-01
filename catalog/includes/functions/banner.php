@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -58,10 +58,10 @@
 // Display a banner from the specified group or banner id ($identifier)
   function tep_display_banner($action, $identifier) {
     if ($action == 'dynamic') {
-      $banners_query = tep_db_query("select count(*) as count from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . $identifier . "'");
+      $banners_query = tep_db_query("select count(*) as count from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . tep_db_input($identifier) . "'");
       $banners = tep_db_fetch_array($banners_query);
       if ($banners['count'] > 0) {
-        $banner = tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . $identifier . "'");
+        $banner = tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . tep_db_input($identifier) . "'");
       } else {
         return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> No banners with group \'' . $identifier . '\' found!</strong>';
       }
@@ -95,7 +95,7 @@
 // Check to see if a banner exists
   function tep_banner_exists($action, $identifier) {
     if ($action == 'dynamic') {
-      return tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . $identifier . "'");
+      return tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . tep_db_input($identifier) . "'");
     } elseif ($action == 'static') {
       $banner_query = tep_db_query("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_id = '" . (int)$identifier . "'");
       return tep_db_fetch_array($banner_query);

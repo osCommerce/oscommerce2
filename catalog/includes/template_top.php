@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,9 +26,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
-<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.8.6.css" />
-<script type="text/javascript" src="ext/jquery/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.8.6.min.js"></script>
+<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.8.23.css" />
+<script type="text/javascript" src="ext/jquery/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.8.23.min.js"></script>
 
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {

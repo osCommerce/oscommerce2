@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -34,6 +34,7 @@
     if ( strpos($url, '&amp;') !== false ) {
       $url = str_replace('&amp;', '&', $url);
     }
+
     header('Location: ' . $url);
 
     if (STORE_PAGE_PARSE_TIME == 'true') {

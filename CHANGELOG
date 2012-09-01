@@ -1,7 +1,147 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2010 osCommerce
+Copyright (c) 2012 osCommerce
+
+------------------------------------------------------------------------------
+08/15/2012 osCommerce Online Merchant v2.3.3
+------------------------------------------------------------------------------
+
+ * Administration Tool -> Tools -> Send E-Mail
+   Convert HTML e-mail to plain-text if HTML E-Mails is disabled.
+
+ * tep_redirect()
+   Fix URL encoding by replacing '&amp;' with '&'.
+
+ * Administration Tool -> Tools -> Define Languages
+   Keep the selected language in the language selection pull down menu.
+
+ * Checkout Process
+   Improve checking of shopping cart product attributes.
+
+ * Shopping Cart
+   Replace hardcoded text with new TEXT_OR and TEXT_REMOVE language
+   definitions.
+
+ * Product Info
+   Redirect to store index if no product ID exists in the request URL.
+
+ * Administration Tool Dashboard Modules
+   Properly close HTML links.
+
+ * New Products Module
+   Fix check on new products existing.
+
+ * Administration Tool -> Catalog -> Reviews
+   Fix typo in table width.
+
+ * tep_image()
+   Remove extra space in image title.
+
+ * Administration Tool -> Tools -> Action Recorder
+   Fix paging of action recorder listing.
+
+ * Administration Tool -> Catalog -> Categories/Products
+   Fix casing of onkeyup HTML attribute.
+
+ * Administration Tool -> Catalog -> Categories/Products
+   Remove legacy product preview code.
+
+ * Checkout Confirmation
+   Improve checking of order comments.
+
+ * Shopping Cart
+   Remove legacy TABLE_HEADING_REMOVE, TABLE_HEADING_QUANTITY,
+   TABLE_HEADING_MODEL, and TABLE_HEADING_TOTAL language definitions.
+
+ * Manufacturers
+   Improve filtering of manufacturers.
+
+ * Product Information
+   Fix the total number of product reviews to count only the reviews in the
+   selected language.
+
+ * Sessions - tep_session_register()
+   Also reference and keep track of null variables in the session. This
+   general bug fix also addresses a compatibility issue with PHP 5.4.0.
+
+ * Sessions - tep_session_recreate()
+   Replace internal logic to use session_regenerate_id() for PHP 5.1+ servers.
+   If $SID is defined, also update its value with the new session ID.
+
+ * Product Information
+   Prevent the session ID being added to product images.
+
+ * Payment Class
+   Remove legacy PHP 3 code.
+
+ * GZIP Compression
+   Automatically disable if PHP 5.4.0 to PHP 5.4.5 is used due to PHP bug
+   #55544.
+
+ * Checkout Shipping
+   Improve checking of the shopping cart ID.
+
+ * Time Zone Compatibility
+   Improve PHP 5.2 Time Zone compatibility by setting the time zone to
+   CFG_TIME_ZONE or to the default time zone if it is not defined.
+
+ * General
+   Typecast remaining variables used in SQL queries.
+
+ * Administration Tool -> Modules
+   Fix edit button link containing the module code.
+
+ * Administration Tool -> Tools -> Banner Manager
+   Properly delete banner image when the banner is being deleted.
+
+ * Social Bookmark Modules
+   Replace hardcoded 'images/' path with DIR_WS_IMAGES.
+
+ * New Robot NoIndex Header Tag Module
+   Adds a noindex meta tag to specified pages.
+
+ * New Google+ +1 Button and Google+ Share Social Bookmark Modules
+   Adds Google+ +1 and Google+ Share buttons to the product information page.
+
+ * New Canonical Header Tag Module
+   Adds canonical meta links to the product information and category listing
+   pages.
+
+ * New Pinterest Social Bookmark Module
+   Adds Pinterest share button to the product information page.
+
+ * Libraries Update
+   - 960gs updated to latest version.
+   - jQuery 1.4.2 to 1.8.0.
+   - jQuery UI 1.8.6 to 1.8.22.
+   - bxGallery compatibility changes for jQuery 1.8.0.
+
+------------------------------------------------------------------------------
+07/17/2012 osCommerce Online Merchant v2.3.2
+------------------------------------------------------------------------------
+
+ * Changed customer password forgotten feature to e-mail a personal link to
+   the customer where they can change their password up to 24 hours, instead
+   of directly changing the password to a random string and e-mailing it to
+   the customer.
+
+   Added new password_reset.php page to manage personal password reset links.
+
+   Added new ar_password_reset.php Action Recorder module to log and limit
+   the request of personal password reset links to once every 5 minutes.
+
+ * Improve logic of tep_create_random_value() by using Phpass' random number
+   generator.
+
+   If function parameter $type is not 'mixed', 'chars', or
+   'digits', return a 'mixed' string instead of false.
+
+ * Add openssl_random_pseudo_bytes() and mcrypt_create_iv() to Phpass'
+   get_random_bytes() class method. These are used if /dev/urandom is not
+   available.
+
+ * Only seed the random number generator if PHP < 4.2 is used.
 
 ------------------------------------------------------------------------------
 11/15/2010 osCommerce Online Merchant v2.3.1

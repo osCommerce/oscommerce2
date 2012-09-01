@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2010 osCommerce
 
   Released under the GNU General Public License
 */
@@ -88,17 +88,5 @@
     }
 
     return 'phpass';
-  }
-
-////
-// This function generates a random password
-  function tep_generate_password($length) {
-    if (!class_exists('PasswordHash')) {
-      include(DIR_WS_CLASSES . 'passwordhash.php');
-    }
-
-    $hasher = new PasswordHash(10, true);
-
-    return substr(base64_encode($hasher->get_random_bytes($length*2)), 0, $length);
   }
 ?>
