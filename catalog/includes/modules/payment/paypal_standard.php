@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,7 @@
     function paypal_standard() {
       global $order;
 
-      $this->signature = 'paypal|paypal_standard|1.0|2.2';
+      $this->signature = 'paypal|paypal_standard|1.1|2.2';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
@@ -135,8 +135,7 @@
         if ($insert_order == true) {
           $order_totals = array();
           if (is_array($order_total_modules->modules)) {
-            reset($order_total_modules->modules);
-            while (list(, $value) = each($order_total_modules->modules)) {
+            foreach ($order_total_modules->modules as $value) {
               $class = substr($value, 0, strrpos($value, '.'));
               if ($GLOBALS[$class]->enabled) {
                 for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
@@ -323,8 +322,7 @@
         $random_string = rand(100000, 999999) . '-' . $customer_id . '-';
 
         $data = '';
-        reset($parameters);
-        while (list($key, $value) = each($parameters)) {
+        foreach ($parameters as $key => $value) {
           $data .= $key . '=' . $value . "\n";
         }
 
@@ -379,8 +377,7 @@
 
         unset($data);
       } else {
-        reset($parameters);
-        while (list($key, $value) = each($parameters)) {
+        foreach ($parameters as $key => $value) {
           $process_button_string .= tep_draw_hidden_field($key, $value);
         }
       }
@@ -395,24 +392,35 @@
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-      if (tep_db_num_rows($check_query)) {
-        $check = tep_db_fetch_array($check_query);
 
-        if ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
-          $sql_data_array = array('orders_id' => $order_id,
-                                  'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID,
-                                  'date_added' => 'now()',
-                                  'customer_notified' => '0',
-                                  'comments' => '');
-
-          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        }
+      if (!tep_db_num_rows($check_query)) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
-      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+      $check = tep_db_fetch_array($check_query);
+
+      $new_order_status = DEFAULT_ORDERS_STATUS_ID;
+
+      if ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
+        $sql_data_array = array('orders_id' => $order_id,
+                                'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID,
+                                'date_added' => 'now()',
+                                'customer_notified' => '0',
+                                'comments' => '');
+
+        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      } else {
+        $new_order_status = $check['orders_status'];
+      }
+
+      if ( (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0) && ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID) ) {
+        $new_order_status = MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID;
+      }
+
+      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (int)$new_order_status . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
 
       $sql_data_array = array('orders_id' => $order_id,
-                              'orders_status_id' => (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
+                              'orders_status_id' => (int)$new_order_status,
                               'date_added' => 'now()',
                               'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                               'comments' => $order->info['comments']);
