@@ -287,10 +287,15 @@
                           'custom' => $customer_id,
                           'no_note' => '1',
                           'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
+                          'rm' => '2',
                           'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                           'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                           'bn' => 'osCommerce22_Default_ST',
                           'paymentaction' => ((MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
+
+      if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) <= 60)) {
+        $parameters['cbt'] = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON;
+      }
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $parameters['address_override'] = '1';
@@ -386,8 +391,68 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID;
-      global $$payment;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $HTTP_GET_VARS, $HTTP_POST_VARS, $messageStack;
+
+      if (!class_exists('httpClient')) {
+        include('includes/classes/http_client.php');
+      }
+
+      $result = false;
+
+      if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
+        if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
+          $server = 'www.paypal.com';
+        } else {
+          $server = 'www.sandbox.paypal.com';
+        }
+
+        $parameters = 'cmd=_notify-validate';
+
+        foreach ($HTTP_POST_VARS as $key => $value) {
+          $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
+        }
+
+        $http = new httpClient($server, 443);
+
+        if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PROXY') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY)) {
+          $proxy_server = MODULE_PAYMENT_PAYPAL_STANDARD_PROXY;
+          $proxy_port = null;
+
+          if (strpos(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, ':') !== false) {
+            list($proxy_server, $proxy_port) = explode(':', MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, 2);
+          }
+
+          $http->setProxy($proxy_server, $proxy_port);
+        }
+
+        if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
+          $result = $http->getBody();
+        }
+      }
+
+      if ($result != 'VERIFIED') {
+        if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION')) {
+          $messageStack->add_session('header', MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION);
+        }
+
+        if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
+          $email_body = '$HTTP_POST_VARS:' . "\n\n";
+
+          foreach ($HTTP_POST_VARS as $key => $value) {
+            $email_body .= $key . '=' . $value . "\n";
+          }
+
+          $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
+
+          foreach ($HTTP_GET_VARS as $key => $value) {
+            $email_body .= $key . '=' . $value . "\n";
+          }
+
+          tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Invalid Transaction', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
+
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      }
 
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
