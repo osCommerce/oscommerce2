@@ -330,7 +330,7 @@
     }
 
     function savePublicCertificate($server = null, $port = null) {
-      if ((PHP_VERSION >= 5) && is_writable(DIR_FS_CACHE)) {
+      if ((PHP_VERSION >= 5) && extension_loaded('openssl') && is_writable(DIR_FS_CACHE)) {
         if (!isset($server)) {
           $server = $this->url['host'];
         }
