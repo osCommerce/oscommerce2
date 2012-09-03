@@ -325,6 +325,38 @@
       return $this->reply;
     }
 
+    function addParameter($key, $value) {
+      $this->params[$key] = $value;
+    }
+
+    function savePublicCertificate($server = null, $port = null) {
+      if ((PHP_VERSION >= 5) && is_writable(DIR_FS_CACHE)) {
+        if (!isset($server)) {
+          $server = $this->url['host'];
+        }
+
+        if (!isset($port)) {
+          $port = $this->url['port'];
+        }
+
+        $public_cert = null;
+
+        $context = stream_context_create(array('ssl' => array('capture_peer_cert' => true)));
+
+        $socket = stream_socket_client('ssl://' . $server . ':' . $port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+
+        $options = stream_context_get_options($socket);
+
+        openssl_x509_export($options['ssl']['peer_certificate'], $public_cert);
+
+        if (!empty($public_cert)) {
+          return file_put_contents(DIR_FS_CACHE . $server . '.crt', $public_cert);
+        }
+      }
+
+      return false;
+    }
+
 // Deprecated
     function sendCommand($command) {
       trigger_error('httpClient::sendCommand is deprecated.');
