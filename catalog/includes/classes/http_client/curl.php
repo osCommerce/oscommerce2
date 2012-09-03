@@ -131,8 +131,8 @@
       return $response;
     }
 
-    function can_use() {
-      return function_exists('curl_init');
+    function can_use($with_ssl = false) {
+      return function_exists('curl_init') && (($with_ssl === false) || defined('CURL_VERSION_SSL'));
     }
   }
 

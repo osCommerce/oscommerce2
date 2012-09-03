@@ -116,8 +116,8 @@
       return $response;
     }
 
-    function can_use() {
-      return (PHP_VERSION >= 5) && extension_loaded('openssl') && ((bool)ini_get('allow_url_fopen') === true);
+    function can_use($with_ssl = false) {
+      return (PHP_VERSION >= 5) && ((bool)ini_get('allow_url_fopen') === true) && (($with_ssl === false) || extension_loaded('openssl'));
     }
   }
 ?>

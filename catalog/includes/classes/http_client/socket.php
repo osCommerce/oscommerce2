@@ -121,8 +121,8 @@
       return $response;
     }
 
-    function can_use() {
-      return true;
+    function can_use($with_ssl = false) {
+      return ($with_ssl === false) || extension_loaded('openssl');
     }
   }
 

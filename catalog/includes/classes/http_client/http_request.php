@@ -82,8 +82,8 @@
       return $response;
     }
 
-    function can_use() {
-      return class_exists('HttpRequest');
+    function can_use($with_ssl = false) {
+      return class_exists('HttpRequest') && (($with_ssl === false) || (defined('HTTP_SUPPORT_SSLREQUESTS') && function_exists('http_support') && http_support(HTTP_SUPPORT_SSLREQUESTS)));
     }
   }
 ?>
