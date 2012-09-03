@@ -109,7 +109,7 @@
             $class_name = 'httpClient_' . $d;
             $ecce_homo_fresco = new $class_name();
 
-            if ($ecce_homo_fresco->can_use() === true) {
+            if ($ecce_homo_fresco->can_use(($this->url['scheme'] == 'https')) === true) {
               $this->driver = $ecce_homo_fresco;
               break;
             }
@@ -126,7 +126,7 @@
           $class_name = 'httpClient_' . $driver;
           $ecce_homo_fresco = new $class_name();
 
-          if ($ecce_homo_fresco->can_use() === true) {
+          if ($ecce_homo_fresco->can_use(($this->url['scheme'] == 'https')) === true) {
             $this->driver = $ecce_homo_fresco;
           } else {
             trigger_error('httpClient() cannot use manually set "' . $driver . '"');
