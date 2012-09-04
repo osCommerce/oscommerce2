@@ -136,7 +136,49 @@ $("#piGal a[rel^='fancybox']").fancybox({
     }
 ?>
 
-<?php echo stripslashes($product_info['products_description']); ?>
+<div class="clear"></div>
+<div class="contentContainer">
+  <div class="contentText">
+    <!-- begin tab pane //-->
+    <?php
+    $product_description_string = stripslashes($product_info['products_description']);
+    $tab_array = preg_match_all ("|<newtab>(.*)</newtab>|Us", $product_description_string, $matches, PREG_SET_ORDER);
+
+    if ($tab_array){
+      ?>
+      <div id="tabs">
+        <ul>
+          <?php
+          for ($i=0, $n=sizeof($matches); $i<$n; $i++) {
+            $this_tab_name = preg_match_all ("|<tabname>(.*)</tabname>|Us", $matches[$i][1], $tabname, PREG_SET_ORDER);
+            if ($this_tab_name){
+              echo '<li><a href="#fragment-' . $i . '"><span>' . $tabname[0][1] . '</span></a></li>';
+            }
+          }
+          ?>
+        </ul>
+        <?php
+        for ($i=0, $n=sizeof($matches); $i<$n; $i++) {
+          echo '<div id="fragment-' . $i . '">';
+          if (preg_match_all ("|<tabpage>(.*)</tabpage>|Us", $matches[$i][1], $tabpage, PREG_SET_ORDER)){
+            require($tabpage[0][1]);
+          }
+          elseif (preg_match_all ("|<tabtext>(.*)</tabtext>|Us", $matches[$i][1], $tabtext, PREG_SET_ORDER)){
+            echo '<p class="main">' . $tabtext[0][1] . '</p>';
+          }
+          echo '</div>';
+        }
+        ?>
+      </div>
+      <?php
+    }
+    else {
+      echo stripslashes($product_info['products_description']);
+    }
+    ?>
+  </div>
+  <div class="clear"></div>
+</div>
 
 <?php
     $products_attributes_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$HTTP_GET_VARS['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "'");
