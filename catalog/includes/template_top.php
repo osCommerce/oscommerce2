@@ -64,14 +64,6 @@ $(document).ready(function() {
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
 
-<noscript>
-  <div class="no-script">
-    <div class="no-script-inner">
-      <?php echo NO_SCRIPT_TEXT; ?>
-    </div>
-  </div>
-</noscript>
-
 </head>
 <body>
 
