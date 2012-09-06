@@ -1,0 +1,16 @@
+<?php
+/*
+  $Id$
+
+  osCommerce, Open Source E-Commerce Solutions
+  http://www.oscommerce.com
+
+  Copyright (c) 2010 osCommerce
+
+  Released under the GNU General Public License
+*/
+
+  define('MODULE_HEADER_TAGS_NOSCRIPT_TITLE', 'No Script Message');
+  define('MODULE_HEADER_TAGS_NOSCRIPT_DESCRIPTION', 'Shows a message to the user if they are browsing with javascript off.');
+  define('MODULE_HEADER_TAGS_NOSCRIPT_TEXT', '<p><strong>JavaScript seems to be disabled in your browser.</strong></p><p>You must have JavaScript enabled in your browser to utilize the functionality of this website.</p>');
+?>
