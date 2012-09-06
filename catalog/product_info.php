@@ -229,6 +229,16 @@ $("#piGal a[rel^='fancybox']").fancybox({
     }
 ?>
 
+<?php
+     if (tep_not_null($product_info['products_url'])) {
+?>
+
+     <p style="text-align: center;"><?php echo sprintf(TEXT_MORE_INFORMATION, tep_href_link(FILENAME_REDIRECT, 'action=url&goto=' . urlencode($product_info['products_url']), 'NONSSL', true, false)); ?></p>
+
+<?php
+     }
+?>
+
   </div>
 
 <?php
