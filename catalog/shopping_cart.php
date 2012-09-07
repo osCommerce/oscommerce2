@@ -132,6 +132,14 @@
 
   <div class="buttonSet">
     <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary'); ?></span>
+
+    <?php
+    $back = sizeof($navigation->path)-2;
+    if (isset($navigation->path[$back])) {
+      echo tep_draw_button(IMAGE_BUTTON_CONTINUE_SHOPPING, 'triangle-1-w', tep_href_link($navigation->path[$back]['page'], tep_array_to_string($navigation->path[$back]['get'], array('action')), $navigation->path[$back]['mode']));
+    }
+    ?>
+
   </div>
 
 <?php
