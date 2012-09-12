@@ -154,27 +154,6 @@
             <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
             <td class="main"><?php echo $order->info['payment_method']; ?></td>
           </tr>
-<?php
-    if (tep_not_null($order->info['cc_type']) || tep_not_null($order->info['cc_owner']) || tep_not_null($order->info['cc_number'])) {
-?>
-          <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
-            <td class="main"><?php echo $order->info['cc_type']; ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
-            <td class="main"><?php echo $order->info['cc_owner']; ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-            <td class="main"><?php echo $order->info['cc_number']; ?></td>
-          </tr>
-<?php
-    }
-?>
         </table></td>
       </tr>
       <tr>
