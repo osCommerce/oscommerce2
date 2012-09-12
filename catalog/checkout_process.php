@@ -45,12 +45,12 @@
   require(DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($payment);
 
+  require(DIR_WS_CLASSES . 'order.php');
+  $order = new order;
+
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
   $shipping_modules = new shipping($shipping);
-
-  require(DIR_WS_CLASSES . 'order.php');
-  $order = new order;
 
 // Stock Check
   $any_out_of_stock = false;
