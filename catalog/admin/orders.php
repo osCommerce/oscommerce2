@@ -172,10 +172,6 @@
             <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
             <td class="main"><?php echo $order->info['cc_number']; ?></td>
           </tr>
-          <tr>
-            <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
-            <td class="main"><?php echo $order->info['cc_expires']; ?></td>
-          </tr>
 <?php
     }
 ?>
