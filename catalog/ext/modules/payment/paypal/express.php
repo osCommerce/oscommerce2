@@ -195,7 +195,7 @@
           $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
           $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+          $params['L_SHIPPINGOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
           $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
@@ -630,7 +630,7 @@
         $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
         $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+        $params['L_SHIPPINGOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
         $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
