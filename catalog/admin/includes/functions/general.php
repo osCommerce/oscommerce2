@@ -829,6 +829,18 @@
   }
 
 ////
+// Get from php ini settings exist or not
+  function tep_get_php_ini_functions($mod_name, $parameter = 'disable_functions') {
+    $php_ini = ini_get($parameter);
+    $find = strstr($php_ini, $mod_name);
+
+    if ( !$find ) {
+      return false;
+    }
+    return true;
+  }
+
+////
 // Retreive server information
   function tep_get_system_information() {
     global $HTTP_SERVER_VARS;
@@ -836,7 +848,12 @@
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
-    @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
+    $kernel = "---";
+    $uptime = "---";
+    if (!tep_get_php_ini_functions("exec")) {
+      @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
+      $uptime = @exec('uptime');
+    }
 
     $data = array();
 
@@ -845,7 +862,7 @@
     $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,
                             'kernel' => $kernel,
-                            'uptime' => @exec('uptime'),
+                            'uptime' => $uptime,
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
     $data['mysql']  = array('version' => (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
