@@ -14,6 +14,10 @@ define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_SEARCH', 'Search:');
 define('HEADING_TITLE_GOTO', 'Go To:');
 
+define('TAB_TITLE_BASIC', 'Product Basic Data');
+define('TAB_TITLE_DESCRIPTIONS', 'Product Information');
+define('TAB_TITLE_IMAGES', 'Product Images');
+
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');
 define('TABLE_HEADING_ACTION', 'Action');
