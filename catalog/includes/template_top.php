@@ -50,6 +50,8 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 </head>
 <body>
 
+<?php echo $oscTemplate->getBlocks('noscript_tag'); ?>
+
 <div id="bodyWrapper" class="container_<?php echo $oscTemplate->getGridContainerWidth(); ?>">
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>

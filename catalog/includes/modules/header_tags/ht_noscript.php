@@ -32,8 +32,8 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<noscript><div class="no-script"><div class="no-script-inner">' . tep_output_string(MODULE_HEADER_TAGS_NOSCRIPT_TEXT) . '</div></div></noscript>', $this->group);
-      $oscTemplate->addBlock('<style>.no-script { border: 1px solid #ddd; border-width: 0 0 1px; background: #ffff90; font: 14px verdana; line-height: 1.25; text-align: center; color: #2f2f2f; } .no-script .no-script-inner { width: 950px; margin: 0 auto; padding: 5px; } .no-script p { margin: 0; }</style>', $this->group);
+      $oscTemplate->addBlock('<noscript><div class="no-script"><div class="no-script-inner">' . tep_output_string(MODULE_HEADER_TAGS_NOSCRIPT_TEXT) . '</div></div></noscript>', 'noscript_tag');
+      $oscTemplate->addBlock('<link rel="stylesheet" type="text/css" href="ext/modules/noscript/noscript.css" media="screen" />', $this->group);
     }
 
     function isEnabled() {
