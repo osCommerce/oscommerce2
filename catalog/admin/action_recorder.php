@@ -137,7 +137,7 @@
   }
 
   $actions_query_raw = "select * from " . TABLE_ACTION_RECORDER . (!empty($filter) ? " where " . implode(" and ", $filter) : "") . " order by date_added desc";
-  $actions_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
+  $actions_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS_ADMIN, $actions_query_raw, $actions_query_numrows);
   $actions_query = tep_db_query($actions_query_raw);
   while ($actions = tep_db_fetch_array($actions_query)) {
     $module = $actions['module'];
@@ -173,8 +173,8 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $actions_split->display_count($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $actions_split->display_links($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page'], (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) && is_object(${$HTTP_GET_VARS['module']}) ? 'module=' . $HTTP_GET_VARS['module'] : null) . '&' . (isset($HTTP_GET_VARS['search']) && !empty($HTTP_GET_VARS['search']) ? 'search=' . $HTTP_GET_VARS['search'] : null)); ?></td>
+                    <td class="smallText" valign="top"><?php echo $actions_split->display_count($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ADMIN, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
+                    <td class="smallText" align="right"><?php echo $actions_split->display_links($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ADMIN, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page'], (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) && is_object(${$HTTP_GET_VARS['module']}) ? 'module=' . $HTTP_GET_VARS['module'] : null) . '&' . (isset($HTTP_GET_VARS['search']) && !empty($HTTP_GET_VARS['search']) ? 'search=' . $HTTP_GET_VARS['search'] : null)); ?></td>
                   </tr>
                 </table></td>
               </tr>

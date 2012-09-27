@@ -259,7 +259,7 @@
               </tr>
 <?php
     $reviews_query_raw = "select reviews_id, products_id, date_added, last_modified, reviews_rating, reviews_status from " . TABLE_REVIEWS . " order by date_added DESC";
-    $reviews_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
+    $reviews_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS_ADMIN, $reviews_query_raw, $reviews_query_numrows);
     $reviews_query = tep_db_query($reviews_query_raw);
     while ($reviews = tep_db_fetch_array($reviews_query)) {
       if ((!isset($HTTP_GET_VARS['rID']) || (isset($HTTP_GET_VARS['rID']) && ($HTTP_GET_VARS['rID'] == $reviews['reviews_id']))) && !isset($rInfo)) {
@@ -305,8 +305,8 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
-                    <td class="smallText" align="right"><?php echo $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ADMIN, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
+                    <td class="smallText" align="right"><?php echo $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS_ADMIN, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page']); ?></td>
                   </tr>
                   <tr>
                     <td colspan="2" class="smallText" align="right"><?php echo tep_draw_button(IMAGE_BUTTON_ADD_REVIEW, 'triangle-1-e', tep_href_link(FILENAME_REVIEWS, 'action=new')); ?></td>
