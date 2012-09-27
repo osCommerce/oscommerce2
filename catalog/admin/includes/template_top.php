@@ -35,9 +35,16 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/flot/jquery.flot.js'); ?>"></script>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_CATALOG; ?>ext/modules/noscript/noscript.css">
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body>
+
+<noscript>
+  <div class="no-script">
+    <div class="no-script-inner"><?php echo NO_SCRIPT_TEXT; ?></div>
+  </div>
+</noscript>
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 
