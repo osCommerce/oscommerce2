@@ -54,15 +54,17 @@
       }
     }
 
+    if ( file_exists($filename) ) {
 // try to open file
-    if ($fp = @fopen($filename, 'r')) {
+      if ($fp = @fopen($filename, 'r')) {
 // read in serialized data
-      $szdata = fread($fp, filesize($filename));
-      fclose($fp);
+        $szdata = fread($fp, filesize($filename));
+        fclose($fp);
 // unserialze the data
-      $var = unserialize($szdata);
+        $var = unserialize($szdata);
 
-      $success = true;
+        $success = true;
+      }
     }
 
     return $success;
