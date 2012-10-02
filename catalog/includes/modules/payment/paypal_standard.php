@@ -17,7 +17,7 @@
     function paypal_standard() {
       global $order;
 
-      $this->signature = 'paypal|paypal_standard|1.1|2.2';
+      $this->signature = 'paypal|paypal_standard|2.0|2.2';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
@@ -460,9 +460,9 @@
 
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
-      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query)) {
+      if (!tep_db_num_rows($check_query) || ($order_id != $HTTP_POST_VARS['invoice']) || ($customer_id != $HTTP_POST_VARS['custom'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
