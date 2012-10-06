@@ -40,9 +40,14 @@
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
 
-        $tables_query = tep_db_query('show tables');
+        $tables_query = tep_db_query('show full tables where Table_type = "BASE TABLE"');
         while ($tables = tep_db_fetch_array($tables_query)) {
-          list(,$table) = each($tables);
+
+          foreach ($tables as $tables_in_database) {
+            if ($tables_in_database != 'BASE TABLE') {
+              $table = $tables_in_database;
+            }
+          }
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
