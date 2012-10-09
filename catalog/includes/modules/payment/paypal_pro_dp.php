@@ -23,10 +23,10 @@
       $this->title = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_PAYPAL_PRO_DP_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS == 'True') ? true : false);
+      $this->sort_order = ( defined('MODULE_PAYMENT_PAYPAL_PRO_DP_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_PRO_DP_SORT_ORDER : 0 );
+      $this->enabled = ( (defined('MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS') && (MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS == 'True') ? true : false) );
 
-      if ((int)MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID > 0) {
+      if ( defined('MODULE_PAYMENT_PAYPAL_PRO_DP_PREPARE_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PAYPAL_PRO_DP_PREPARE_ORDER_STATUS_ID > 0 ) {
         $this->order_status = MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID;
       }
 

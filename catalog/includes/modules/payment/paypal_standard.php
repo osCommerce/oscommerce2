@@ -23,19 +23,21 @@
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false);
+      $this->sort_order = ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER : 0 );
+      $this->enabled = ( (defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') && (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false) );
 
-      if ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
-      }
+      if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID') && defined('MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER')) {
+        if ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) {
+          $this->order_status = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
+        }
 
-      if (is_object($order)) $this->update_status();
+        if (is_object($order)) $this->update_status();
 
-      if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
-        $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
-      } else {
-        $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+        if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
+          $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
+        } else {
+          $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+        }
       }
     }
 

@@ -20,10 +20,10 @@
       $this->code = 'psigate';
       $this->title = MODULE_PAYMENT_PSIGATE_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_PSIGATE_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_PSIGATE_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_PSIGATE_STATUS == 'True') ? true : false);
+      $this->sort_order = ( defined('MODULE_PAYMENT_PSIGATE_SORT_ORDER') ? MODULE_PAYMENT_PSIGATE_SORT_ORDER : 0 );
+      $this->enabled = ( (defined('MODULE_PAYMENT_PSIGATE_STATUS') && (MODULE_PAYMENT_PSIGATE_STATUS == 'True') ? true : false) );
 
-      if ((int)MODULE_PAYMENT_PSIGATE_ORDER_STATUS_ID > 0) {
+      if ( defined('MODULE_PAYMENT_PSIGATE_PREPARE_ORDER_STATUS_ID') && (int)MODULE_PAYMENT_PSIGATE_PREPARE_ORDER_STATUS_ID > 0 ) {
         $this->order_status = MODULE_PAYMENT_PSIGATE_ORDER_STATUS_ID;
       }
 

@@ -27,27 +27,29 @@
       $this->title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_SAGE_PAY_FORM_STATUS == 'True') ? true : false);
+      $this->sort_order = ( defined('MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER : 0 );
+      $this->enabled = ( (defined('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS') && (MODULE_PAYMENT_SAGE_PAY_FORM_STATUS == 'True') ? true : false) );
 
-      if ((int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID;
-      }
+      if (defined('MODULE_PAYMENT_SAGE_PAY_FORM_PREPARE_ORDER_STATUS_ID') && defined('MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER')) {
+        if ((int)MODULE_PAYMENT_SAGE_PAY_FORM_PREPARE_ORDER_STATUS_ID > 0) {
+          $this->order_status = MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID;
+        }
 
-      if (is_object($order)) $this->update_status();
+        if (is_object($order)) $this->update_status();
 
-      switch (MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER) {
-        case 'Live':
-          $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
-          break;
+        switch (MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER) {
+          case 'Live':
+            $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
+            break;
 
-        case 'Test':
-          $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
-          break;
+          case 'Test':
+            $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
+            break;
 
-        default:
-          $this->form_action_url = 'https://test.sagepay.com/Simulator/VSPFormGateway.asp';
-          break;
+          default:
+            $this->form_action_url = 'https://test.sagepay.com/Simulator/VSPFormGateway.asp';
+            break;
+        }
       }
     }
 
