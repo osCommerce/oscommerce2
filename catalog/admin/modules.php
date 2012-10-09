@@ -43,6 +43,7 @@
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($HTTP_GET_VARS['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
+          include($module_language_directory . $language . '/modules/' . $module_type . '/' . $class . $file_extension);
           include($module_directory . $class . $file_extension);
           $module = new $class;
           if ($action == 'install') {
@@ -248,46 +249,46 @@
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $HTTP_GET_VARS['module'])));
       break;
     default:
-      $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
+      if (isset($mInfo) && is_object($mInfo)) {
+        $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
-      if ($mInfo->status == '1') {
-        $keys = '';
-        reset($mInfo->keys);
-        while (list(, $value) = each($mInfo->keys)) {
-          $keys .= '<strong>' . $value['title'] . '</strong><br />';
-          if ($value['use_function']) {
-            $use_function = $value['use_function'];
-            if (preg_match('/->/', $use_function)) {
-              $class_method = explode('->', $use_function);
-              if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
-                include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                ${$class_method[0]} = new $class_method[0]();
+        if ($mInfo->status == '1') {
+          $keys = '';
+          reset($mInfo->keys);
+          while (list(, $value) = each($mInfo->keys)) {
+            $keys .= '<strong>' . $value['title'] . '</strong><br />';
+            if ($value['use_function']) {
+              $use_function = $value['use_function'];
+              if (preg_match('/->/', $use_function)) {
+                $class_method = explode('->', $use_function);
+                if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
+                  include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                  ${$class_method[0]} = new $class_method[0]();
+                }
+                $keys .= tep_call_function($class_method[1], $value['value'], ${$class_method[0]});
+              } else {
+                $keys .= tep_call_function($use_function, $value['value']);
               }
-              $keys .= tep_call_function($class_method[1], $value['value'], ${$class_method[0]});
             } else {
-              $keys .= tep_call_function($use_function, $value['value']);
+              $keys .= $value['value'];
             }
-          } else {
-            $keys .= $value['value'];
+            $keys .= '<br /><br />';
           }
-          $keys .= '<br /><br />';
-        }
-        $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+          $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . tep_draw_button(IMAGE_MODULE_REMOVE, 'minus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
+          $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . tep_draw_button(IMAGE_MODULE_REMOVE, 'minus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
 
-        if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-          $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
-        }
+          if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
+            $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+          }
 
-        if (isset($mInfo->api_version)) {
-          $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
-        }
+          if (isset($mInfo->api_version)) {
+            $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+          }
 
-        $contents[] = array('text' => '<br />' . $mInfo->description);
-        $contents[] = array('text' => '<br />' . $keys);
-      } elseif (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] == 'new')) {
-        if (isset($mInfo)) {
+          $contents[] = array('text' => '<br />' . $mInfo->description);
+          $contents[] = array('text' => '<br />' . $keys);
+        } elseif (isset($HTTP_GET_VARS['list']) && ($HTTP_GET_VARS['list'] == 'new')) {
           $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
