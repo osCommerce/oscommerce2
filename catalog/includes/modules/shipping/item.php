@@ -20,10 +20,10 @@
       $this->code = 'item';
       $this->title = MODULE_SHIPPING_ITEM_TEXT_TITLE;
       $this->description = MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_SHIPPING_ITEM_SORT_ORDER;
+      $this->sort_order = (defined('MODULE_SHIPPING_ITEM_SORT_ORDER') ? MODULE_SHIPPING_ITEM_SORT_ORDER : 0);
       $this->icon = '';
-      $this->tax_class = MODULE_SHIPPING_ITEM_TAX_CLASS;
-      $this->enabled = ((MODULE_SHIPPING_ITEM_STATUS == 'True') ? true : false);
+      $this->tax_class = (defined('MODULE_SHIPPING_ITEM_TAX_CLASS') ? MODULE_SHIPPING_ITEM_TAX_CLASS : Null);
+      $this->enabled = ((defined('MODULE_SHIPPING_ITEM_STATUS') && (MODULE_SHIPPING_ITEM_STATUS == 'True')) ? true : false);
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_ITEM_ZONE > 0) ) {
         $check_flag = false;
