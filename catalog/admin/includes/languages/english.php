@@ -298,6 +298,7 @@ define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
 
+define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_TRUE_CONFIG', 'Yes');
 define('TEXT_FALSE_CONFIG', 'No');
 define('TEXT_ASC_CONFIG', 'Ascending');
