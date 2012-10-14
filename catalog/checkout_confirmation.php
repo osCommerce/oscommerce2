@@ -43,6 +43,11 @@
     $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
   }
 
+// prevent access confirmation when no set payment method
+  if (!isset($payment) || !tep_not_null($payment)) {
+    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+  }
+
 // load the selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($payment);

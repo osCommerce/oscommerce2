@@ -95,6 +95,7 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please select a payment method 
 define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press Ok and wait for this process to be completed.');
 
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please select a payment method for your order.');
+define('ERROR_NO_PAYMENT_MODULE_CONFIGURED', 'We are sorry but there is no set payment method in the store.');
 
 define('CATEGORY_COMPANY', 'Company Details');
 define('CATEGORY_PERSONAL', 'Your Personal Details');

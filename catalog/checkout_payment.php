@@ -77,6 +77,12 @@
 // load all enabled payment modules
   require(DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment;
+  $selection = $payment_modules->selection();
+
+  if (sizeof($selection) < 1) {
+    if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_CONFIGURED), 'SSL'));
+  }
 
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PAYMENT);
 
@@ -159,8 +165,6 @@ function rowOutEffect(object) {
   <h2><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h2>
 
 <?php
-  $selection = $payment_modules->selection();
-
   if (sizeof($selection) > 1) {
 ?>
 
@@ -173,7 +177,7 @@ function rowOutEffect(object) {
   </div>
 
 <?php
-    } elseif ($free_shipping == false) {
+    } else {
 ?>
 
   <div class="contentText">
