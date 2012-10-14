@@ -291,12 +291,13 @@ define('TEXT_CACHE_ALSO_PURCHASED', 'Also Purchased Module');
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
 
-define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist.');
-define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable.');
+define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination %s does not exist.');
+define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination %s not writeable.');
 define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
+define('WARNING_DESTINATION_FILE_OVERWRITTEN', 'Warning: %s existing file is overwritten.');
 
 define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_TRUE_CONFIG', 'Yes');

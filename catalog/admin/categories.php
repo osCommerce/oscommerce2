@@ -79,6 +79,7 @@
 
         $categories_image = new upload('categories_image');
         $categories_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $categories_image->set_output_messages('session');
 
         if ($categories_image->parse() && $categories_image->save()) {
           tep_db_query("update " . TABLE_CATEGORIES . " set categories_image = '" . tep_db_input($categories_image->filename) . "' where categories_id = '" . (int)$categories_id . "'");
@@ -223,6 +224,7 @@
 
         $products_image = new upload('products_image');
         $products_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $products_image->set_output_messages('session');
         if ($products_image->parse() && $products_image->save()) {
           $sql_data_array['products_image'] = tep_db_prepare_input($products_image->filename);
         }
@@ -277,6 +279,7 @@
 
             $t = new upload($key);
             $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            $t->set_output_messages('session');
             if ($t->parse() && $t->save()) {
               $sql_data_array['image'] = tep_db_prepare_input($t->filename);
             }
@@ -291,6 +294,7 @@
 
             $t = new upload($key);
             $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            $t->set_output_messages('session');
             if ($t->parse() && $t->save()) {
               $pi_sort_order++;
 
