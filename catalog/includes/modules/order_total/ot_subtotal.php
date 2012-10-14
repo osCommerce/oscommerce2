@@ -18,7 +18,7 @@
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_TITLE;
       $this->description = MODULE_ORDER_TOTAL_SUBTOTAL_DESCRIPTION;
       $this->enabled = ((defined('MODULE_ORDER_TOTAL_SUBTOTAL_STATUS') && (MODULE_ORDER_TOTAL_SUBTOTAL_STATUS == 'true')) ? true : false);
-      $this->sort_order = (defined('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER') && MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER : 0);
+      $this->sort_order = (defined('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER') ? MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER : 0);
 
       $this->output = array();
     }
