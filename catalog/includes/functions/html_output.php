@@ -368,7 +368,7 @@
     $button = '<span class="tdbLink">';
 
     if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+      $button .= '<a style="margin-right: 0px;" id="tdb' . $button_counter . '" href="' . $link . '"';
 
       if ( isset($params['newwindow']) ) {
         $button .= ' target="_blank"';
