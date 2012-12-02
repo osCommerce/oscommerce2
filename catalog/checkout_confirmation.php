@@ -39,8 +39,11 @@
   if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (isset($HTTP_POST_VARS['comments'])) {
+    $comments = '';
+    if (tep_not_null($HTTP_POST_VARS['comments'])) {
+      $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+    }
   }
 
 // prevent access confirmation when no set payment method
