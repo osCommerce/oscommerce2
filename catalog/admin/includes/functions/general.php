@@ -42,6 +42,8 @@
       $logger->timer_stop();
     }
 
+    tep_session_close();
+
     exit;
   }
 
