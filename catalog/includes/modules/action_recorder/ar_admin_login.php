@@ -47,7 +47,7 @@
 
       tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . $this->code . "' and date_added < date_sub(now(), interval " . (int)$this->minutes  . " minute)");
 
-      return mysql_affected_rows($db_link);
+      return tep_db_affected_rows($db_link);
     }
 
     function check() {
