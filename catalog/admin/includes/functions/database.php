@@ -208,7 +208,7 @@
     }
 
     function mysqli_data_seek($query, $offset) {
-      return mysql_data_seek($query, $offsetr);
+      return mysql_data_seek($query, $offset);
     }
 
     function mysqli_insert_id($link) {
