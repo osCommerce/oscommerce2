@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -839,7 +839,7 @@
                             'uptime' => @exec('uptime'),
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
-    $data['mysql']  = array('version' => (function_exists('mysql_get_server_info') ? mysql_get_server_info() : ''),
+    $data['mysql']  = array('version' => tep_db_get_server_info(),
                             'date' => $db['datetime']);
 
     $data['php']    = array('version' => PHP_VERSION,

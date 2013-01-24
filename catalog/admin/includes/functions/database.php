@@ -154,6 +154,18 @@
     }
   }
 
+  function tep_db_affected_rows($link = 'db_link') {
+    global $$link;
+
+    return mysqli_affected_rows($$link);
+  }
+
+  function tep_db_get_server_info($link = 'db_link') {
+    global $$link;
+
+    return mysqli_get_server_info($$link);
+  }
+
   if ( !function_exists('mysqli_connect') ) {
     define('MYSQLI_ASSOC', MYSQL_ASSOC);
 
@@ -219,6 +231,14 @@
       }
 
       return addslashes($string);
+    }
+
+    function mysqli_affected_rows($link) {
+      return mysql_affected_rows($link);
+    }
+
+    function mysqli_get_server_info($link) {
+      return mysql_get_server_info($link);
     }
   }
 ?>
