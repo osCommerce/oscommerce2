@@ -53,7 +53,11 @@
           $shipping_tax_description = tep_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
           $order->info['tax'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-          $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          if (isset($order->info['tax_groups']["$shipping_tax_description"])) {
+            $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          } else {
+            $order->info['tax_groups']["$shipping_tax_description"] = tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          }
           $order->info['total'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
 
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
