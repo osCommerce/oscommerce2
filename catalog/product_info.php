@@ -258,6 +258,8 @@ $("#piGal a[rel^='fancybox']").fancybox({
     } else {
       include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
     }
+    
+    include(DIR_WS_MODULES . FILENAME_LIKE_PRODUCTS);
 ?>
 
 </div>

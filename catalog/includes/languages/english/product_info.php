@@ -18,4 +18,6 @@ define('TEXT_DATE_AVAILABLE', '<font color="#ff0000">This product will be in sto
 define('TEXT_ALSO_PURCHASED_PRODUCTS', 'Customers who bought this product also purchased');
 define('TEXT_PRODUCT_OPTIONS', 'Available Options:');
 define('TEXT_CLICK_TO_ENLARGE', 'Click to enlarge');
+
+define('TABLE_HEADING_LIKE_PRODUCTS', 'Other products you might like');
 ?>
