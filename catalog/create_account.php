@@ -35,12 +35,11 @@
     if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($HTTP_POST_VARS['suburb']);
     $postcode = tep_db_prepare_input($HTTP_POST_VARS['postcode']);
     $city = tep_db_prepare_input($HTTP_POST_VARS['city']);
+    $zone_id = false;
     if (ACCOUNT_STATE == 'true') {
       $state = tep_db_prepare_input($HTTP_POST_VARS['state']);
       if (isset($HTTP_POST_VARS['zone_id'])) {
         $zone_id = tep_db_prepare_input($HTTP_POST_VARS['zone_id']);
-      } else {
-        $zone_id = false;
       }
     }
     $country = tep_db_prepare_input($HTTP_POST_VARS['country']);
