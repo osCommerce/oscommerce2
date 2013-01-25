@@ -136,7 +136,7 @@
       return mysql_query($query, $link);
     }
 
-    function mysqli_error($link) {
+    function mysqli_error($link = null) {
       return mysql_error($link);
     }
 

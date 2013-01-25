@@ -191,11 +191,11 @@
       return mysql_query($query, $link);
     }
 
-    function mysqli_errno($link) {
+    function mysqli_errno($link = null) {
       return mysql_errno($link);
     }
 
-    function mysqli_error($link) {
+    function mysqli_error($link = null) {
       return mysql_error($link);
     }
 
