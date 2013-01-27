@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-define('HEADING_TITLE', 'PHP Error Messages');
+define('HEADING_TITLE', 'Error Messages');
 
 define('ERROR_DIRECTORY_NOT_WRITEABLE', 'ERROR: error directory not writable');
 define('ERROR_DIRECTORY_DOES_NOT_EXIST', 'ERROR: the error file path not exist');
@@ -22,7 +22,7 @@ define('INFO_HEADING_DATE_CREATED', 'Create date');
 define('INFO_LAST_DATE_MODIFIED', 'Last error:');
 define('INFO_NO_ERRORS_IN_FILE', 'No error messages');
 
-define('TEXT_ERROR_DIRECTORY', 'Error file path: ');
+define('TEXT_ERROR_DIRECTORY', 'Error log file path: ');
 define('ERROR_FILE_NOT_DELETED', 'ERROR: error file %s can not delete.');
 define('EMPTY_FILE', 'Clear error logs');
 ?>

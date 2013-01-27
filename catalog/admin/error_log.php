@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  if (!defined('STORE_PHP_ERROR_LOG')) {
+  if (!defined('STORE_ERROR_LOG_FILE')) {
     tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
@@ -23,11 +23,11 @@
 
   if (tep_not_null($action)) {
     if ($action == 'delete') {
-      $error = unlink(STORE_PHP_ERROR_LOG);
+      $error = unlink(STORE_ERROR_LOG_FILE);
       if (!$error) {
-        $messageStack->add_session(sprintf(ERROR_FILE_NOT_DELETED, STORE_PHP_ERROR_LOG), 'error');
+        $messageStack->add_session(sprintf(ERROR_FILE_NOT_DELETED, STORE_ERROR_LOG_FILE), 'error');
       } else {
-        $fh = fopen(STORE_PHP_ERROR_LOG, 'a');
+        $fh = fopen(STORE_ERROR_LOG_FILE, 'a');
         fclose($fh);
       }
       tep_redirect(tep_href_link(FILENAME_ERROR_LOG));
@@ -35,8 +35,8 @@
   }
 
 // check if the error file exists
-  if (is_file(STORE_PHP_ERROR_LOG)) {
-    if (!tep_is_writable(dirname(STORE_PHP_ERROR_LOG))) {
+  if (is_file(STORE_ERROR_LOG_FILE)) {
+    if (!tep_is_writable(dirname(STORE_ERROR_LOG_FILE))) {
       $messageStack->add(ERROR_DIRECTORY_NOT_WRITEABLE, 'error');
     }
   } else {
@@ -60,12 +60,22 @@
           <tr>
             <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr class="dataTableHeadingRow">
+<?php
+    if (STORE_ERROR_LOG_CUT_DATE == 'True') {
+?>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ERROR_DATE; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ERROR_TEXT; ?></td>
+<?php
+    } else {
+?>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ERROR_TEXT; ?></td>
+<?php
+    }
+?>
               </tr>
 <?php
-  if ( file_exists(STORE_PHP_ERROR_LOG) ) {
-    $messages = array_reverse(file(STORE_PHP_ERROR_LOG));
+  if ( file_exists(STORE_ERROR_LOG_FILE) ) {
+    $messages = array_reverse(file(STORE_ERROR_LOG_FILE));
   }
 
   $page = (isset($_GET['page']) ? $_GET['page'] : 1);
@@ -74,27 +84,33 @@
                   'total' => sizeof($messages)+1);
 
   if ( $page !== -1 ) {
-   $messages = array_slice($messages, (MAX_DISPLAY_SEARCH_RESULTS * ($page - 1))*MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES, MAX_DISPLAY_SEARCH_RESULTS*MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES);
+   $messages = array_slice($messages, (MAX_DISPLAY_SEARCH_RESULTS * ($page - 1)), MAX_DISPLAY_SEARCH_RESULTS);
   }
 
   foreach ( $messages as $key => $message ) {
-    $result['entries'][$key] = array( 'date' => substr($message, 1, 20),
-                                      'message' => substr($message, 27));
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><?php echo $result['entries'][$key]['date'];
-                ?></td>
-                <td class="dataTableContent"><?php echo $result['entries'][$key]['message'];
-                ?></td>
+<?php
+    if (STORE_ERROR_LOG_CUT_DATE == 'True') {
+?>
+                <td class="dataTableContent"><?php echo substr($message, 1, 20); ?></td>
+                <td class="dataTableContent"><?php echo substr($message, 27); ?></td>
+<?php
+    } else {
+?>
+                <td class="dataTableContent"><?php echo $message; ?></td>
+<?php
+    }
+?>
               </tr>
 <?php
   }
 ?>
               <tr>
-                <td class="smallText" colspan="3"><?php echo TEXT_ERROR_DIRECTORY . ' ' . STORE_PHP_ERROR_LOG; ?>
+                <td class="smallText" colspan="3"><?php echo TEXT_ERROR_DIRECTORY . ' ' . STORE_ERROR_LOG_FILE; ?>
                 </td>
               </tr>
-                <td class="smallText" colspan="3" align="right"><?php echo 'Total: ' . ( ( $result['total'] > 1 ) ? (($result['total']-1)/MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES) : INFO_NO_ERRORS_IN_FILE ) . '&nbsp;' . tep_draw_button(EMPTY_FILE, 'trash', tep_href_link(FILENAME_ERROR_LOG, 'action=delete')); ?></td>
+                <td class="smallText" colspan="3" align="right"><?php echo 'Total: ' . ( ( $result['total'] > 1 ) ? (($result['total']-1)) : INFO_NO_ERRORS_IN_FILE ) . '&nbsp;' . tep_draw_button(EMPTY_FILE, 'trash', tep_href_link(FILENAME_ERROR_LOG, 'action=delete')); ?></td>
           </tr>
               <tr>
                 <td class="smallText" colspan="3">
@@ -104,8 +120,8 @@
                 } else {
                   echo '|>';
                 }
-                echo $page . '/' . ceil(($result['total']-1)/MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES/MAX_DISPLAY_SEARCH_RESULTS);
-                if ( ($page < (($result['total']-1)/(MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES*MAX_DISPLAY_SEARCH_RESULTS))) && ((($result['total']-1)/(MODULE_ADMIN_DASHBOARD_LATEST_ERRORS_LINES*MAX_DISPLAY_SEARCH_RESULTS)) != 1) ) {
+                echo $page . '/' . ceil(($result['total']-1)/MAX_DISPLAY_SEARCH_RESULTS);
+                if ( ($page < (($result['total']-1)/MAX_DISPLAY_SEARCH_RESULTS)) && ((($result['total']-1)/MAX_DISPLAY_SEARCH_RESULTS) != 1) ) {
                   echo '<a href="' . tep_href_link(FILENAME_ERROR_LOG, tep_get_all_get_params(array('page', 'action')) . 'page=' . ($page+1)) . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
                 } else {
                   echo '<|';
