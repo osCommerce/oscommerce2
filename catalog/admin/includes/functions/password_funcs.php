@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -136,6 +136,7 @@
       $bin = pack('H32', md5($new));
     }
 
+    $tmp = '';
     for ($i=0; $i<5; $i++) {
       $k = $i + 6;
       $j = $i + 12;

@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,6 +26,7 @@ define('TEXT_INFO_PASSWORD', 'Password:');
 define('TEXT_INFO_PROTECT_WITH_HTPASSWD', 'Protect With htaccess/htpasswd');
 
 define('ERROR_ADMINISTRATOR_EXISTS', 'Error: Administrator already exists.');
+define('ERROR_PASSWORD_CHARACTERS', 'Error: Use english a-z, A-Z and 0-9 characters only!');
 
 define('HTPASSWD_INFO', '<strong>Additional Protection With htaccess/htpasswd</strong><p>This osCommerce Online Merchant Administration Tool installation is not additionally secured through htaccess/htpasswd means.</p><p>Enabling the htaccess/htpasswd security layer will automatically store administrator username and passwords in a htpasswd file when updating administrator password records.</p><p><strong>Please note</strong>, if this additional security layer is enabled and you can no longer access the Administration Tool, please make the following changes and consult your hosting provider to enable htaccess/htpasswd protection:</p><p><u><strong>1. Edit this file:</strong></u><br /><br />' . DIR_FS_ADMIN . '.htaccess</p><p>Remove the following lines if they exist:</p><p><i>%s</i></p><p><u><strong>2. Delete this file:</strong></u><br /><br />' . DIR_FS_ADMIN . '.htpasswd_oscommerce</p>');
 define('HTPASSWD_SECURED', '<strong>Additional Protection With htaccess/htpasswd</strong><p>This osCommerce Online Merchant Administration Tool installation is additionally secured through htaccess/htpasswd means.</p>');
