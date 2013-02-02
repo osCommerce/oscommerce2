@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -99,7 +99,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $customer_id, $order, $sendto, $currency;
+      global $customer_id, $order, $sendto, $currency;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -125,9 +125,9 @@
                       'x_currency_code' => substr($currency, 0, 3),
                       'x_method' => 'CC',
                       'x_type' => ((MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'),
-                      'x_card_num' => substr($HTTP_POST_VARS['cc_number_nh-dns'], 0, 22),
-                      'x_exp_date' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                      'x_card_code' => substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4));
+                      'x_card_num' => substr($_POST['cc_number_nh-dns'], 0, 22),
+                      'x_exp_date' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
+                      'x_card_code' => substr($_POST['cc_cvc_nh-dns'], 0, 4));
 
       if (is_numeric($sendto) && ($sendto > 0)) {
         $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
@@ -236,11 +236,9 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_GENERAL;
 
-      switch ($HTTP_GET_VARS['error']) {
+      switch ($_GET['error']) {
         case 'invalid_expiration_date':
           $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_INVALID_EXP_DATE;
           break;

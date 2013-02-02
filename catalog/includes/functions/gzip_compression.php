@@ -5,21 +5,19 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 
   function tep_check_gzip() {
-    global $HTTP_ACCEPT_ENCODING;
-
     if (headers_sent() || connection_aborted()) {
       return false;
     }
 
-    if (strpos($HTTP_ACCEPT_ENCODING, 'x-gzip') !== false) return 'x-gzip';
+    if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'x-gzip') !== false) return 'x-gzip';
 
-    if (strpos($HTTP_ACCEPT_ENCODING,'gzip') !== false) return 'gzip';
+    if (strpos($_SERVER['HTTP_ACCEPT_ENCODING'],'gzip') !== false) return 'gzip';
 
     return false;
   }

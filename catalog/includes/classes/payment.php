@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -43,7 +43,7 @@
 
 // if there is only one payment method, select it as default because in
 // checkout_confirmation.php the $payment variable is being assigned the
-// $HTTP_POST_VARS['payment'] value which will be empty (no radio button selection possible)
+// $_POST['payment'] value which will be empty (no radio button selection possible)
         if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$payment]) || (isset($GLOBALS[$payment]) && !is_object($GLOBALS[$payment]))) ) {
           $payment = $include_modules[0]['class'];
         }
