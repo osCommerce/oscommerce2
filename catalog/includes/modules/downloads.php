@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,7 +16,7 @@
     $orders = tep_db_fetch_array($orders_query);
     $last_order = $orders['orders_id'];
   } else {
-    $last_order = $HTTP_GET_VARS['order_id'];
+    $last_order = $_GET['order_id'];
   }
 
 // Now get all downloadable products in that order
