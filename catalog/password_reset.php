@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,15 +16,15 @@
 
   $error = false;
 
-  if ( !isset($HTTP_GET_VARS['account']) || !isset($HTTP_GET_VARS['key']) ) {
+  if ( !isset($_GET['account']) || !isset($_GET['key']) ) {
     $error = true;
 
     $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
   }
 
   if ($error == false) {
-    $email_address = tep_db_prepare_input($HTTP_GET_VARS['account']);
-    $password_key = tep_db_prepare_input($HTTP_GET_VARS['key']);
+    $email_address = tep_db_prepare_input($_GET['account']);
+    $password_key = tep_db_prepare_input($_GET['key']);
 
     if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
       $error = true;
@@ -56,9 +56,9 @@
     tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
   }
 
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    $password_new = tep_db_prepare_input($HTTP_POST_VARS['password']);
-    $password_confirmation = tep_db_prepare_input($HTTP_POST_VARS['confirmation']);
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+    $password_new = tep_db_prepare_input($_POST['password']);
+    $password_confirmation = tep_db_prepare_input($_POST['confirmation']);
 
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;

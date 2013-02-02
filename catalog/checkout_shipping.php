@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -100,17 +100,17 @@
   }
 
 // process the selected shipping method
-  if ( isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken) ) {
+  if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken) ) {
     if (!tep_session_is_registered('comments')) tep_session_register('comments');
-    if (tep_not_null($HTTP_POST_VARS['comments'])) {
-      $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+    if (tep_not_null($_POST['comments'])) {
+      $comments = tep_db_prepare_input($_POST['comments']);
     }
 
     if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
 
     if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
-      if ( (isset($HTTP_POST_VARS['shipping'])) && (strpos($HTTP_POST_VARS['shipping'], '_')) ) {
-        $shipping = $HTTP_POST_VARS['shipping'];
+      if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
+        $shipping = $_POST['shipping'];
 
         list($module, $method) = explode('_', $shipping);
         if ( is_object($$module) || ($shipping == 'free_free') ) {
