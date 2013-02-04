@@ -201,13 +201,12 @@
 
 // verify the ssl_session_id if the feature is enabled
   if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true) ) {
-    $ssl_session_id = getenv('SSL_SESSION_ID');
-    if (!tep_session_is_registered('SSL_SESSION_ID')) {
-      $SESSION_SSL_ID = $ssl_session_id;
-      tep_session_register('SESSION_SSL_ID');
+    $ssl_session_id = $_SERVER['SSL_SESSION_ID'];
+    if (!isset($_SESSION['SSL_SESSION_ID'])) {
+      $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
     }
 
-    if ($SESSION_SSL_ID != $ssl_session_id) {
+    if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
       tep_session_destroy();
       tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
     }
