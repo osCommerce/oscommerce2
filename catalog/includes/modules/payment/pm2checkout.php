@@ -78,7 +78,7 @@
     }
 
     function process_button() {
-      global $customer_id, $currencies, $currency, $order, $cartID;
+      global $customer_id, $currencies, $order, $cartID;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
@@ -201,10 +201,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

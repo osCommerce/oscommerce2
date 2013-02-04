@@ -272,7 +272,7 @@
     }
 
     function process_button() {
-      global $order, $currency, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
@@ -282,7 +282,7 @@
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
                                tep_draw_hidden_field('cartId', $order_id) .
                                tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
-                               tep_draw_hidden_field('currency', $currency) .
+                               tep_draw_hidden_field('currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('address', $order->billing['street_address']) .
                                tep_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
                                tep_draw_hidden_field('desc', STORE_NAME) .
@@ -294,7 +294,7 @@
                                tep_draw_hidden_field('hideCurrency', 'true') .
                                tep_draw_hidden_field('lang', strtoupper($lang['code'])) .
                                tep_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $currency . ':' . $order_id)) .
+                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
                                tep_draw_hidden_field('MC_callback', substr(tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'NONSSL', false, false), strpos(tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'NONSSL', false, false), '://')+3));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
@@ -564,10 +564,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

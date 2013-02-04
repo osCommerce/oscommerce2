@@ -110,7 +110,7 @@
     }
 
     function _prepareOrder() {
-      global $cartID, $customer_id, $order, $order_total_modules, $currency;
+      global $cartID, $customer_id, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -277,7 +277,7 @@
     }
 
     function confirmation() {
-      global $customer_id, $order, $currency;
+      global $customer_id, $order;
 
       if (tep_session_is_registered('cartID')) {
         $this->_prepareOrder();
@@ -303,7 +303,7 @@
                             'state' => $order->billing['state'],
                             'country' => $order->billing['country']['iso_code_3'],
                             'amount' => $this->format_raw($order->info['total']),
-                            'currency' => $currency,
+                            'currency' => $_SESSION['currency'],
                             'hide_login' => '1',
                             'merchant_fields' => 'osc_custid,referring_platform',
                             'osc_custid' => $customer_id,
@@ -632,10 +632,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

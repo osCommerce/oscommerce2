@@ -79,7 +79,7 @@
     }
 
     function process_button() {
-      global $order, $currency;
+      global $order;
 
       $zone_code = '';
 
@@ -97,7 +97,7 @@
                                tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_PP_USER_ID) .
                                tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_PP_PASSWORD) .
                                tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
-                               tep_draw_hidden_field('trx_currency', $currency) .
+                               tep_draw_hidden_field('trx_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
                                tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_PP_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
                                tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
@@ -114,14 +114,14 @@
                                tep_draw_hidden_field('client_version', $this->signature);
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
-        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . MODULE_PAYMENT_IPAYMENT_PP_PASSWORD . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD));
+        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . MODULE_PAYMENT_IPAYMENT_PP_PASSWORD . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD));
       }
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $order, $currency;
+      global $order;
 
       if ($_GET['ret_errorcode'] != '0') {
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
@@ -131,7 +131,7 @@
         $pass = true;
 
 // verify ret_param_checksum
-        if ($_GET['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . $_GET['ret_authcode'] . $_GET['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
+        if ($_GET['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . $_GET['ret_authcode'] . $_GET['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
           $pass = false;
         }
 
@@ -192,10 +192,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

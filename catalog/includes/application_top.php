@@ -269,13 +269,11 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
 
 // currency
-  if (!tep_session_is_registered('currency') || isset($_GET['currency']) || ( (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $currency) ) ) {
-    if (!tep_session_is_registered('currency')) tep_session_register('currency');
-
+  if (!isset($_SESSION['currency']) || isset($_GET['currency']) || ( (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency']) ) ) {
     if (isset($_GET['currency']) && $currencies->is_set($_GET['currency'])) {
-      $currency = $_GET['currency'];
+      $_SESSION['currency'] = $_GET['currency'];
     } else {
-      $currency = ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && $currencies->is_set(LANGUAGE_CURRENCY)) ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
+      $_SESSION['currency'] = ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && $currencies->is_set(LANGUAGE_CURRENCY)) ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
     }
   }
 
