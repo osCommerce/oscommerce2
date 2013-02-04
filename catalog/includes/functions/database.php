@@ -131,7 +131,7 @@
 
   function tep_db_prepare_input($string) {
     if (is_string($string)) {
-      return trim(tep_sanitize_string(stripslashes($string)));
+      return trim(tep_sanitize_string($string));
     } elseif (is_array($string)) {
       reset($string);
       while (list($key, $value) = each($string)) {

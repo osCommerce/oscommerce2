@@ -176,7 +176,7 @@
 
     function get_error() {
       $error = array('title' => MODULE_PAYMENT_IPAYMENT_CC_ERROR_HEADING,
-                     'error' => ((isset($_GET['error'])) ? stripslashes(urldecode($_GET['error'])) : MODULE_PAYMENT_IPAYMENT_CC_ERROR_MESSAGE));
+                     'error' => ((isset($_GET['error'])) ? urldecode($_GET['error']) : MODULE_PAYMENT_IPAYMENT_CC_ERROR_MESSAGE));
 
       return $error;
     }

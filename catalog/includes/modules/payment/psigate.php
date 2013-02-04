@@ -237,11 +237,11 @@
 
     function get_error() {
       if (isset($_GET['ErrMsg']) && tep_not_null($_GET['ErrMsg'])) {
-        $error = stripslashes(urldecode($_GET['ErrMsg']));
+        $error = urldecode($_GET['ErrMsg']);
       } elseif (isset($_GET['Err']) && tep_not_null($_GET['Err'])) {
-        $error = stripslashes(urldecode($_GET['Err']));
+        $error = urldecode($_GET['Err']);
       } elseif (isset($_GET['error']) && tep_not_null($_GET['error'])) {
-        $error = stripslashes(urldecode($_GET['error']));
+        $error = urldecode($_GET['error']);
       } else {
         $error = MODULE_PAYMENT_PSIGATE_TEXT_ERROR_MESSAGE;
       }

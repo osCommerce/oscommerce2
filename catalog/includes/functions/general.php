@@ -175,7 +175,7 @@
       reset($_GET);
       while (list($key, $value) = each($_GET)) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
-          $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
+          $get_url .= $key . '=' . rawurlencode($value) . '&';
         }
       }
     }

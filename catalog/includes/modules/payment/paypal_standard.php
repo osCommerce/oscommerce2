@@ -409,7 +409,7 @@
         $parameters = 'cmd=_notify-validate';
 
         foreach ($_POST as $key => $value) {
-          $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
+          $parameters .= '&' . $key . '=' . urlencode($value);
         }
 
         $http = new httpClient($server, 443);
