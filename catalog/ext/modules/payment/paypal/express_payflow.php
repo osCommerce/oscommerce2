@@ -20,7 +20,7 @@
                       'get' => $_GET,
                       'post' => $_POST);
 
-    $navigation->set_snapshot($snapshot);
+    $_SESSION['navigation']->set_snapshot($snapshot);
 
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }

@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $navigation->remove_current_page();
+  $_SESSION['navigation']->remove_current_page();
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADVANCED_SEARCH);
 ?>

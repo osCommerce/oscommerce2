@@ -278,11 +278,10 @@
   }
 
 // navigation history
-  if (!tep_session_is_registered('navigation') || !is_object($navigation)) {
-    tep_session_register('navigation');
-    $navigation = new navigationHistory;
+  if (!isset($_SESSION['navigation']) || !is_object($_SESSION['navigation'])) {
+    $_SESSION['navigation'] = new navigationHistory;
   }
-  $navigation->add_current_page();
+  $_SESSION['navigation']->add_current_page();
 
 // action recorder
   include('includes/classes/action_recorder.php');
@@ -360,7 +359,7 @@
                                 }
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'notify'))));
                               } else {
-                                $navigation->set_snapshot();
+                                $_SESSION['navigation']->set_snapshot();
                                 tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
                               }
                               break;
@@ -372,7 +371,7 @@
                                 }
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action'))));
                               } else {
-                                $navigation->set_snapshot();
+                                $_SESSION['navigation']->set_snapshot();
                                 tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
                               }
                               break;

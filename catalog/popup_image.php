@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $navigation->remove_current_page();
+  $_SESSION['navigation']->remove_current_page();
 
   $products_query = tep_db_query("select pd.products_name, p.products_image from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where p.products_status = '1' and p.products_id = '" . (int)$_GET['pID'] . "' and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
   $products = tep_db_fetch_array($products_query);
