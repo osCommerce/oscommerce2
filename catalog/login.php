@@ -46,18 +46,17 @@
         $check_country_query = tep_db_query("select entry_country_id, entry_zone_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$check_customer['customers_id'] . "' and address_book_id = '" . (int)$check_customer['customers_default_address_id'] . "'");
         $check_country = tep_db_fetch_array($check_country_query);
 
-        $customer_id = $check_customer['customers_id'];
+        $_SESSION['customer_id'] = $check_customer['customers_id'];
         $customer_default_address_id = $check_customer['customers_default_address_id'];
         $customer_first_name = $check_customer['customers_firstname'];
         $customer_country_id = $check_country['entry_country_id'];
         $customer_zone_id = $check_country['entry_zone_id'];
-        tep_session_register('customer_id');
         tep_session_register('customer_default_address_id');
         tep_session_register('customer_first_name');
         tep_session_register('customer_country_id');
         tep_session_register('customer_zone_id');
 
-        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
+        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$_SESSION['customer_id'] . "'");
 
 // reset session token
         $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());

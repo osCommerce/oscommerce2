@@ -132,7 +132,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $cartID;
+      global $order, $order_totals, $cartID;
 
       $error = null;
 
@@ -237,7 +237,7 @@
         $params = array('VPSProtocol' => '2.23',
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $cartID, 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),

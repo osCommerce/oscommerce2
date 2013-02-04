@@ -119,7 +119,7 @@ class inpay
 
     function confirmation()
     {
-        global $cartID, $cart_inpay_Standard_ID, $customer_id, $order, $order_total_modules;
+        global $cartID, $cart_inpay_Standard_ID, $order, $order_total_modules;
 
         if (tep_session_is_registered('cartID'))
         {
@@ -179,7 +179,7 @@ class inpay
                     }
                 }
 
-                $sql_data_array = array ('customers_id'=>$customer_id,
+                $sql_data_array = array ('customers_id'=>$_SESSION['customer_id'],
                 'customers_name'=>$order->customer['firstname'].' '.$order->customer['lastname'],
                 'customers_company'=>$order->customer['company'],
                 'customers_street_address'=>$order->customer['street_address'],
@@ -309,7 +309,7 @@ class inpay
 
     function process_button()
     {
-        global $customer_id, $order, $sendto, $cart_inpay_Standard_ID, $shipping;
+        global $order, $sendto, $cart_inpay_Standard_ID, $shipping;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -320,7 +320,7 @@ class inpay
         'amount'=>$this->format_raw($order->info['total']), //TODO: we do not calculate tax+shipping only gross total -$order->info['shipping_cost']-$order->info['tax']),
         'currency'=>$_SESSION['currency'],
         'order_id'=>substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1),
-        'custom'=>$customer_id,
+        'custom'=>$_SESSION['customer_id'],
         'no_note'=>'1',
         'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
         'return_url'=>tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
@@ -376,7 +376,7 @@ class inpay
 
     function before_process()
     {
-        global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_inpay_Standard_ID;
+        global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_inpay_Standard_ID;
         global $$payment;
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
@@ -521,12 +521,12 @@ class inpay
         {
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_label($customer_id, $sendto, 0, '', "\n")."\n";
+            tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_label($customer_id, $billto, 0, '', "\n")."\n\n";
+        tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n")."\n\n";
 
         if (is_object($$payment))
         {

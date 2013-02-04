@@ -181,9 +181,9 @@
 
       tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-      $customer_id = tep_db_insert_id();
+      $_SESSION['customer_id'] = tep_db_insert_id();
 
-      $sql_data_array = array('customers_id' => $customer_id,
+      $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                               'entry_firstname' => $firstname,
                               'entry_lastname' => $lastname,
                               'entry_street_address' => $street_address,
@@ -208,9 +208,9 @@
 
       $address_id = tep_db_insert_id();
 
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
 
-      tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+      tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
 
       if (SESSION_RECREATE == 'True') {
         tep_session_recreate();
@@ -220,7 +220,6 @@
       $customer_default_address_id = $address_id;
       $customer_country_id = $country;
       $customer_zone_id = $zone_id;
-      tep_session_register('customer_id');
       tep_session_register('customer_first_name');
       tep_session_register('customer_default_address_id');
       tep_session_register('customer_country_id');

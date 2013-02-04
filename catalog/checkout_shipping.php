@@ -14,7 +14,7 @@
   require('includes/classes/http_client.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -31,7 +31,7 @@
   } else {
 // verify the selected shipping address
     if ( (is_array($sendto) && empty($sendto)) || is_numeric($sendto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
+      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$sendto . "'");
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] != '1') {
@@ -204,7 +204,7 @@ function rowOutEffect(object) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($customer_id, $sendto, true, ' ', '<br />'); ?>
+        <?php echo tep_address_label($_SESSION['customer_id'], $sendto, true, ' ', '<br />'); ?>
       </div>
     </div>
 

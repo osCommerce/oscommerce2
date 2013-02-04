@@ -103,7 +103,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $order, $order_total_modules;
+      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -151,7 +151,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -272,7 +272,7 @@
     }
 
     function process_button() {
-      global $order, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $cart_RBS_Worldpay_Hosted_ID;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
@@ -306,15 +306,15 @@
       }
 
       $process_button_string .= tep_draw_hidden_field('M_sid', tep_session_id()) .
-                                tep_draw_hidden_field('M_cid', $customer_id) .
+                                tep_draw_hidden_field('M_cid', $_SESSION['customer_id']) .
                                 tep_draw_hidden_field('M_lang', $_SESSION['language']) .
-                                tep_draw_hidden_field('M_hash', md5(tep_session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                                tep_draw_hidden_field('M_hash', md5(tep_session_id() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
@@ -326,7 +326,7 @@
         if ($check['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
           $hash_result = false;
 
-          if (isset($_GET['hash']) && !empty($_GET['hash']) && ($_GET['hash'] == md5(tep_session_name() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
+          if (isset($_GET['hash']) && !empty($_GET['hash']) && ($_GET['hash'] == md5(tep_session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
             $hash_result = true;
           }
 
@@ -460,12 +460,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

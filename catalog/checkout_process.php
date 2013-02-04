@@ -13,7 +13,7 @@
   include('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -80,7 +80,7 @@
 // load the before_process function from the payment modules
   $payment_modules->before_process();
 
-  $sql_data_array = array('customers_id' => $customer_id,
+  $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                           'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                           'customers_company' => $order->customer['company'],
                           'customers_street_address' => $order->customer['street_address'],
@@ -260,12 +260,12 @@
   if ($order->content_type != 'virtual') {
     $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
                     EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                    tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
   }
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
-                  tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                  tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
   if (is_object($$payment)) {
     $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" . 
                     EMAIL_SEPARATOR . "\n";
