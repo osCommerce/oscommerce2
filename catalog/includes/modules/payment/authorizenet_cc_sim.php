@@ -85,9 +85,9 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency;
+      global $customer_id, $order, $sendto;
 
-      $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $currency);
+      $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $_SESSION['currency']);
 
       $process_button_string .= tep_draw_hidden_field('x_login', substr(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, 0, 20)) .
                                 tep_draw_hidden_field('x_version', '3.1') .
@@ -108,7 +108,7 @@
                                 tep_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
                                 tep_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .
                                 tep_draw_hidden_field('x_amount', substr($this->format_raw($order->info['total']), 0, 15)) .
-                                tep_draw_hidden_field('x_currency_code', substr($currency, 0, 3)) .
+                                tep_draw_hidden_field('x_currency_code', substr($_SESSION['currency'], 0, 3)) .
                                 tep_draw_hidden_field('x_method', 'CC') .
                                 tep_draw_hidden_field('x_type', ((MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'));
 
@@ -264,10 +264,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

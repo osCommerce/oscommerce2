@@ -246,8 +246,8 @@
   }
 
   if (tep_not_null($pfrom)) {
-    if ($currencies->is_set($currency)) {
-      $rate = $currencies->get_value($currency);
+    if ($currencies->is_set($_SESSION['currency'])) {
+      $rate = $currencies->get_value($_SESSION['currency']);
 
       $pfrom = $pfrom / $rate;
     }
