@@ -153,7 +153,7 @@
 // reregister session variables
           if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $customer_default_address_id) ) {
             $customer_first_name = $firstname;
-            $customer_country_id = $country;
+            $_SESSION['customer_country_id'] = $country;
             $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
             $customer_default_address_id = (int)$_GET['edit'];
 
@@ -178,7 +178,7 @@
 // reregister session variables
           if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
             $customer_first_name = $firstname;
-            $customer_country_id = $country;
+            $_SESSION['customer_country_id'] = $country;
             $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
             if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $customer_default_address_id = $new_address_book_id;
 

@@ -357,10 +357,9 @@
         }
 
         if ($force_login == true) {
-          $customer_country_id = $ship_country_id;
+          $_SESSION['customer_country_id'] = $ship_country_id;
           $customer_zone_id = $ship_zone_id;
           tep_session_register('customer_default_address_id');
-          tep_session_register('customer_country_id');
           tep_session_register('customer_zone_id');
 
           $billto = $sendto;
