@@ -57,10 +57,8 @@
     }
 
     function checkout_initialization_method() {
-      global $language;
-
-      if (file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif')) {
-        $image = 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif';
+      if (file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/images/btn_express_' . basename($_SESSION['language']) . '.gif')) {
+        $image = 'ext/modules/payment/paypal/images/btn_express_' . basename($_SESSION['language']) . '.gif';
       } else {
         $image = 'ext/modules/payment/paypal/images/btn_express.gif';
       }

@@ -68,8 +68,6 @@
     }
 
     function buildBlocks() {
-      global $language;
-
       if ( defined('TEMPLATE_BLOCK_GROUPS') && tep_not_null(TEMPLATE_BLOCK_GROUPS) ) {
         $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
 
@@ -83,7 +81,7 @@
               $class = substr($module, 0, strrpos($module, '.'));
 
               if ( !class_exists($class) ) {
-                include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
+                include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
                 include(DIR_WS_MODULES . $group . '/' . $class . '.php');
               }
 

@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
 
   $process = false;
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -230,7 +230,7 @@
       $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-      $cart->restore_contents();
+      $_SESSION['cart']->restore_contents();
 
 // build the message content
       $name = $firstname . ' ' . $lastname;

@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CONTACT_US);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CONTACT_US);
 
   if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;

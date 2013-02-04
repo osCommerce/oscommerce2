@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PASSWORD_FORGOTTEN);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PASSWORD_FORGOTTEN);
 
   $password_reset_initiated = false;
 

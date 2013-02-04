@@ -19,7 +19,7 @@
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -33,13 +33,13 @@
  }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
-    if ($cart->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && tep_session_is_registered('cartID')) {
+    if ($_SESSION['cart']->cartID != $cartID) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
-  include(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
+  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_PROCESS);
 
 // load selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
@@ -208,11 +208,11 @@
                                 and pa.options_id = popt.products_options_id 
                                 and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' 
                                 and pa.options_values_id = poval.products_options_values_id 
-                                and popt.language_id = '" . (int)$languages_id . "' 
-                                and poval.language_id = '" . (int)$languages_id . "'";
+                                and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' 
+                                and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
           $attributes = tep_db_query($attributes_query);
         } else {
-          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$languages_id . "' and poval.language_id = '" . (int)$languages_id . "'");
+          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
         }
         $attributes_values = tep_db_fetch_array($attributes);
 
@@ -285,7 +285,7 @@
 // load the after_process function from the payment modules
   $payment_modules->after_process();
 
-  $cart->reset(true);
+  $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
   tep_session_unregister('sendto');

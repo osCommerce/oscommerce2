@@ -14,7 +14,7 @@
 
   $navigation->remove_current_page();
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_INFO_SHOPPING_CART);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_INFO_SHOPPING_CART);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html <?php echo HTML_PARAMS; ?>>

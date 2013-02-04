@@ -20,7 +20,7 @@
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -48,11 +48,11 @@
 // against alterations in the shopping cart contents
   if (!tep_session_is_registered('cartID')) {
     tep_session_register('cartID');
-  } elseif (($cartID != $cart->cartID) && tep_session_is_registered('shipping')) {
+  } elseif (($cartID != $_SESSION['cart']->cartID) && tep_session_is_registered('shipping')) {
     tep_session_unregister('shipping');
   }
 
-  $cartID = $cart->cartID = $cart->generate_cart_id();
+  $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
 
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
@@ -63,8 +63,8 @@
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
-  $total_weight = $cart->show_weight();
-  $total_count = $cart->count_contents();
+  $total_weight = $_SESSION['cart']->show_weight();
+  $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
   require(DIR_WS_CLASSES . 'shipping.php');
@@ -93,7 +93,7 @@
     if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
 
-      include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
     }
   } else {
     $free_shipping = false;
@@ -151,7 +151,7 @@
 // method if more than one module is now enabled
   if ( !tep_session_is_registered('shipping') || ( tep_session_is_registered('shipping') && ($shipping == false) && (tep_count_shipping_modules() > 1) ) ) $shipping = $shipping_modules->cheapest();
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_SHIPPING);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING);
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

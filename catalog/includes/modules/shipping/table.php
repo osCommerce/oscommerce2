@@ -109,9 +109,9 @@
     }
 
     function getShippableTotal() {
-      global $order, $cart, $currencies;
+      global $order, $currencies;
 
-      $order_total = $cart->show_total();
+      $order_total = $_SESSION['cart']->show_total();
 
       if ($order->content_type == 'mixed') {
         $order_total = 0;

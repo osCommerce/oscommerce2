@@ -13,8 +13,8 @@
   chdir('../../../../');
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
 
 // initialize variables if the customer is not logged in
   if (!tep_session_is_registered('customer_id')) {
@@ -42,7 +42,7 @@
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
+  $cartID = $_SESSION['cart']->cartID;
 
   switch ($_GET['osC_Action']) {
     case 'cancel':
@@ -57,7 +57,7 @@
 
         while (true) {
           if (isset($_POST['L_NUMBER' . $counter])) {
-            $cart->add_cart($_POST['L_NUMBER' . $counter], $_POST['L_QTY' . $counter]);
+            $_SESSION['cart']->add_cart($_POST['L_NUMBER' . $counter], $_POST['L_QTY' . $counter]);
           } else {
             break;
           }
@@ -66,7 +66,7 @@
         }
 
 // exit if there is nothing in the shopping cart
-        if ($cart->count_contents() < 1) {
+        if ($_SESSION['cart']->count_contents() < 1) {
           exit;
         }
 
@@ -112,11 +112,11 @@
 
         include(DIR_WS_CLASSES . 'order.php');
 
-        if ($cart->get_content_type() != 'virtual') {
+        if ($_SESSION['cart']->get_content_type() != 'virtual') {
           $order = new order;
 
-          $total_weight = $cart->show_weight();
-          $total_count = $cart->count_contents();
+          $total_weight = $_SESSION['cart']->show_weight();
+          $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
           include(DIR_WS_CLASSES . 'shipping.php');
@@ -148,7 +148,7 @@
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
             }
           }
 
@@ -226,7 +226,7 @@
       break;
     case 'retrieve':
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-      if ($cart->count_contents() < 1) {
+      if ($_SESSION['cart']->count_contents() < 1) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
@@ -369,11 +369,11 @@
 
         include(DIR_WS_CLASSES . 'order.php');
 
-        if ($cart->get_content_type() != 'virtual') {
+        if ($_SESSION['cart']->get_content_type() != 'virtual') {
           $order = new order;
 
-          $total_weight = $cart->show_weight();
-          $total_count = $cart->count_contents();
+          $total_weight = $_SESSION['cart']->show_weight();
+          $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
           include(DIR_WS_CLASSES . 'shipping.php');
@@ -405,7 +405,7 @@
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
             }
           }
 
@@ -501,7 +501,7 @@
 
     default:
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-      if ($cart->count_contents() < 1) {
+      if ($_SESSION['cart']->count_contents() < 1) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
@@ -556,9 +556,9 @@
 
       $quotes_array = array();
 
-      if ($cart->get_content_type() != 'virtual') {
-        $total_weight = $cart->show_weight();
-        $total_count = $cart->count_contents();
+      if ($_SESSION['cart']->get_content_type() != 'virtual') {
+        $total_weight = $_SESSION['cart']->show_weight();
+        $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
         include(DIR_WS_CLASSES . 'shipping.php');
@@ -590,7 +590,7 @@
           if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
             $free_shipping = true;
 
-            include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
           }
         }
 

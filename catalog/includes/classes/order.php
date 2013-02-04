@@ -28,8 +28,6 @@
     }
 
     function query($order_id) {
-      global $languages_id;
-
       $order_id = tep_db_prepare_input($order_id);
 
       $order_query = tep_db_query("select customers_id, customers_name, customers_company, customers_street_address, customers_suburb, customers_city, customers_postcode, customers_state, customers_country, customers_telephone, customers_email_address, customers_address_format_id, delivery_name, delivery_company, delivery_street_address, delivery_suburb, delivery_city, delivery_postcode, delivery_state, delivery_country, delivery_address_format_id, billing_name, billing_company, billing_street_address, billing_suburb, billing_city, billing_postcode, billing_state, billing_country, billing_address_format_id, payment_method, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value, date_purchased, orders_status, last_modified from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
@@ -47,7 +45,7 @@
       $shipping_method_query = tep_db_query("select title from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "' and class = 'ot_shipping'");
       $shipping_method = tep_db_fetch_array($shipping_method_query);
 
-      $order_status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . $order['orders_status'] . "' and language_id = '" . (int)$languages_id . "'");
+      $order_status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . $order['orders_status'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
       $order_status = tep_db_fetch_array($order_status_query);
 
       $this->info = array('currency' => $order['currency'],
@@ -131,9 +129,9 @@
     }
 
     function cart() {
-      global $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
+      global $customer_id, $sendto, $billto, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
 
-      $this->content_type = $cart->get_content_type();
+      $this->content_type = $_SESSION['cart']->get_content_type();
 
       if ( ($this->content_type != 'virtual') && ($sendto == false) ) {
         $sendto = $customer_default_address_id;
@@ -279,7 +277,7 @@
                              'format_id' => $billing_address['address_format_id']);
 
       $index = 0;
-      $products = $cart->get_products();
+      $products = $_SESSION['cart']->get_products();
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                         'name' => $products[$i]['name'],
@@ -287,7 +285,7 @@
                                         'tax' => tep_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'tax_description' => tep_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'price' => $products[$i]['price'],
-                                        'final_price' => $products[$i]['price'] + $cart->attributes_price($products[$i]['id']),
+                                        'final_price' => $products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']),
                                         'weight' => $products[$i]['weight'],
                                         'id' => $products[$i]['id']);
 
@@ -295,7 +293,7 @@
           $subindex = 0;
           reset($products[$i]['attributes']);
           while (list($option, $value) = each($products[$i]['attributes'])) {
-            $attributes_query = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$products[$i]['id'] . "' and pa.options_id = '" . (int)$option . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$value . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$languages_id . "' and poval.language_id = '" . (int)$languages_id . "'");
+            $attributes_query = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$products[$i]['id'] . "' and pa.options_id = '" . (int)$option . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$value . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
             $attributes = tep_db_fetch_array($attributes_query);
 
             $this->products[$index]['attributes'][$subindex] = array('option' => $attributes['products_options_name'],
