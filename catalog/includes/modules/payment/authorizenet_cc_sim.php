@@ -85,7 +85,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto;
+      global $order, $sendto;
 
       $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $_SESSION['currency']);
 
@@ -103,7 +103,7 @@
                                 tep_draw_hidden_field('x_zip', substr($order->billing['postcode'], 0, 20)) .
                                 tep_draw_hidden_field('x_country', substr($order->billing['country']['title'], 0, 60)) .
                                 tep_draw_hidden_field('x_phone', substr($order->customer['telephone'], 0, 25)) .
-                                tep_draw_hidden_field('x_cust_id', substr($customer_id, 0, 20)) .
+                                tep_draw_hidden_field('x_cust_id', substr($_SESSION['customer_id'], 0, 20)) .
                                 tep_draw_hidden_field('x_customer_ip', tep_get_ip_address()) .
                                 tep_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
                                 tep_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .

@@ -102,7 +102,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_Sofortueberweisung_Direct_ID, $customer_id, $order, $order_total_modules;
+      global $cartID, $cart_Sofortueberweisung_Direct_ID, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -150,7 +150,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -271,7 +271,7 @@
     }
 
     function process_button() {
-      global $order, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
+      global $order, $currencies, $cart_Sofortueberweisung_Direct_ID;
 
       $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
@@ -285,8 +285,8 @@
       $vzweck1 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck1);
       $vzweck2 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck2);
 
-      $vzweck1 = str_replace('{{customer_id}}', $customer_id, $vzweck1);
-      $vzweck2 = str_replace('{{customer_id}}', $customer_id, $vzweck2);
+      $vzweck1 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck1);
+      $vzweck2 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck2);
 
       $vzweck1 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck1);
       $vzweck2 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck2);
@@ -305,7 +305,7 @@
       $parameter['v_zweck_2'] = tep_output_string($vzweck2);  // Definieren Sie hier Ihre Verwendungszwecke
 
       $parameter['kunden_var_0'] = tep_output_string($order_id);  // Eindeutige Identifikation der Zahlung, z.B. Session ID oder Auftragsnummer.
-      $parameter['kunden_var_1'] = tep_output_string($customer_id);
+      $parameter['kunden_var_1'] = tep_output_string($_SESSION['customer_id']);
       $parameter['kunden_var_2'] = tep_output_string(tep_session_id());
       $parameter['kunden_var_3'] = tep_output_string($_SESSION['cart']->cartID);
       $parameter['kunden_var_4'] = '';
@@ -339,7 +339,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_Sofortueberweisung_Direct_ID;
+      global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_Sofortueberweisung_Direct_ID;
       global $$payment;
 
       $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
@@ -490,12 +490,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

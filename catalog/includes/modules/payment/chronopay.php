@@ -99,7 +99,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_ChronoPay_ID, $customer_id, $order, $order_total_modules;
+      global $cartID, $cart_ChronoPay_ID, $order, $order_total_modules;
 
       if (tep_session_is_registered('cartID')) {
         $insert_order = false;
@@ -148,7 +148,7 @@
             }
           }
 
-          $sql_data_array = array('customers_id' => $customer_id,
+          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                   'customers_company' => $order->customer['company'],
                                   'customers_street_address' => $order->customer['street_address'],
@@ -270,7 +270,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currencies, $cart_ChronoPay_ID;
+      global $order, $currencies, $cart_ChronoPay_ID;
 
       switch ($order->billing['country']['iso_code_3']) {
         case 'USA':
@@ -321,15 +321,15 @@
                                tep_draw_hidden_field('country', $order->billing['country']['iso_code_3']) .
                                tep_draw_hidden_field('phone', $order->customer['telephone']) .
                                tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('cs1', $customer_id) .
+                               tep_draw_hidden_field('cs1', $_SESSION['customer_id']) .
                                tep_draw_hidden_field('cs2', $order_id) .
-                               tep_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $customer_id . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
+                               tep_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $_SESSION['customer_id'] . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_ChronoPay_ID;
+      global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_ChronoPay_ID;
       global $$payment;
 
       $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
@@ -459,12 +459,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

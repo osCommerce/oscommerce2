@@ -147,7 +147,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $comments, $response_array;
+      global $order, $sendto, $ppe_token, $ppe_payerid, $comments, $response_array;
 
       if (empty($comments)) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {

@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $snapshot = array('page' => 'ext/modules/payment/paypal/express_payflow.php',
                       'mode' => $request_type,
                       'get' => $_GET,

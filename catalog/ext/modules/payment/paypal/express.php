@@ -17,8 +17,8 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
 
 // initialize variables if the customer is not logged in
-  if (!tep_session_is_registered('customer_id')) {
-    $customer_id = 0;
+  if (!isset($_SESSION['customer_id'])) {
+    $_SESSION['customer_id'] = 0;
     $customer_default_address_id = 0;
   }
 
@@ -236,7 +236,7 @@
         $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
-        if (!tep_session_is_registered('customer_id')) {
+        if (!isset($_SESSION['customer_id'])) {
           $force_login = true;
 
           $email_address = tep_db_prepare_input($response_array['EMAIL']);
@@ -245,7 +245,7 @@
           if (tep_db_num_rows($check_query)) {
             $check = tep_db_fetch_array($check_query);
 
-            $customer_id = $check['customers_id'];
+            $_SESSION['customer_id'] = $check['customers_id'];
             $customers_firstname = $check['customers_firstname'];
             $customer_default_address_id = $check['customers_default_address_id'];
           } else {
@@ -270,9 +270,9 @@
 
             tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-            $customer_id = tep_db_insert_id();
+            $_SESSION['customer_id'] = tep_db_insert_id();
 
-            tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+            tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
 
 // build the message content
             $name = $customers_firstname . ' ' . $customers_lastname;
@@ -285,7 +285,6 @@
           }
 
           $customer_first_name = $customers_firstname;
-          tep_session_register('customer_id');
           tep_session_register('customer_first_name');
 
 // reset session token
@@ -321,13 +320,13 @@
           }
         }
 
-        $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+        $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
         if (tep_db_num_rows($check_query)) {
           $check = tep_db_fetch_array($check_query);
 
           $sendto = $check['address_book_id'];
         } else {
-          $sql_data_array = array('customers_id' => $customer_id,
+          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'entry_firstname' => $ship_firstname,
                                   'entry_lastname' => $ship_lastname,
                                   'entry_street_address' => $ship_address,
@@ -352,7 +351,7 @@
           $sendto = $address_id;
 
           if ($customer_default_address_id < 1) {
-            tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+            tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
             $customer_default_address_id = $address_id;
           }
         }

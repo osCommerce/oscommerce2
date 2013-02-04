@@ -103,7 +103,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_PayPal_Standard_ID, $customer_id, $order, $order_total_modules;
+      global $cartID, $cart_PayPal_Standard_ID, $order, $order_total_modules;
 
       if (tep_session_is_registered('cartID')) {
         $insert_order = false;
@@ -151,7 +151,7 @@
             }
           }
 
-          $sql_data_array = array('customers_id' => $customer_id,
+          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                   'customers_company' => $order->customer['company'],
                                   'customers_street_address' => $order->customer['street_address'],
@@ -273,7 +273,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $cart_PayPal_Standard_ID, $shipping;
+      global $order, $sendto, $cart_PayPal_Standard_ID, $shipping;
 
       $process_button_string = '';
       $parameters = array('cmd' => '_xclick',
@@ -284,7 +284,7 @@
                           'amount' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
                           'currency_code' => $_SESSION['currency'],
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
-                          'custom' => $customer_id,
+                          'custom' => $_SESSION['customer_id'],
                           'no_note' => '1',
                           'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
                           'rm' => '2',
@@ -324,7 +324,7 @@
       if (MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS == 'True') {
         $parameters['cert_id'] = MODULE_PAYMENT_PAYPAL_STANDARD_EWP_CERT_ID;
 
-        $random_string = rand(100000, 999999) . '-' . $customer_id . '-';
+        $random_string = rand(100000, 999999) . '-' . $_SESSION['customer_id'] . '-';
 
         $data = '';
         foreach ($parameters as $key => $value) {
@@ -391,7 +391,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_PayPal_Standard_ID, $$payment, $messageStack;
+      global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_PayPal_Standard_ID, $$payment, $messageStack;
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -596,12 +596,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

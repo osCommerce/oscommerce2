@@ -110,7 +110,7 @@
     }
 
     function _prepareOrder() {
-      global $cartID, $customer_id, $order, $order_total_modules;
+      global $cartID, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -158,7 +158,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -277,7 +277,7 @@
     }
 
     function confirmation() {
-      global $customer_id, $order;
+      global $order;
 
       if (tep_session_is_registered('cartID')) {
         $this->_prepareOrder();
@@ -306,7 +306,7 @@
                             'currency' => $_SESSION['currency'],
                             'hide_login' => '1',
                             'merchant_fields' => 'osc_custid,referring_platform',
-                            'osc_custid' => $customer_id,
+                            'osc_custid' => $_SESSION['customer_id'],
                             'referring_platform' => 'osCommerce|' . $this->signature);
 
         if (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'False') {
@@ -349,7 +349,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies;
+      global $order, $order_totals, $sendto, $billto, $payment, $currencies;
       global $$payment;
 
       $pass = false;
@@ -492,12 +492,12 @@
         if ($order->content_type != 'virtual') {
           $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                           EMAIL_SEPARATOR . "\n" .
-                          tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                          tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
         }
 
         $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                        tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
         if (is_object($$payment)) {
           $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

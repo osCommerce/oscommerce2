@@ -99,7 +99,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto;
+      global $order, $sendto;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -117,7 +117,7 @@
                       'x_zip' => substr($order->billing['postcode'], 0, 20),
                       'x_country' => substr($order->billing['country']['title'], 0, 60),
                       'x_phone' => substr($order->customer['telephone'], 0, 25),
-                      'x_cust_id' => substr($customer_id, 0, 20),
+                      'x_cust_id' => substr($_SESSION['customer_id'], 0, 20),
                       'x_customer_ip' => tep_get_ip_address(),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
