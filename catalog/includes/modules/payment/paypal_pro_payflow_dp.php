@@ -318,7 +318,7 @@
 
     function get_error() {
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        $error = array('error' => stripslashes(urldecode($_GET['error'])));
+        $error = array('error' => urldecode($_GET['error']));
 
         return $error;
       }

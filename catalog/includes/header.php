@@ -44,7 +44,7 @@
 ?>
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr class="headerError">
-    <td class="headerError"><?php echo htmlspecialchars(stripslashes(urldecode($_GET['error_message']))); ?></td>
+    <td class="headerError"><?php echo htmlspecialchars(urldecode($_GET['error_message'])); ?></td>
   </tr>
 </table>
 <?php
@@ -54,7 +54,7 @@
 ?>
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr class="headerInfo">
-    <td class="headerInfo"><?php echo htmlspecialchars(stripslashes(urldecode($_GET['info_message']))); ?></td>
+    <td class="headerInfo"><?php echo htmlspecialchars(urldecode($_GET['info_message'])); ?></td>
   </tr>
 </table>
 <?php
