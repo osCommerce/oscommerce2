@@ -119,7 +119,7 @@ $('#piGal ul').bxGallery({
 ?>
 
     <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
     </div>
 
 <?php
@@ -136,7 +136,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
     }
 ?>
 
-<?php echo stripslashes($product_info['products_description']); ?>
+<?php echo ($product_info['products_description']; ?>
 
 <?php
     $products_attributes_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "'");
