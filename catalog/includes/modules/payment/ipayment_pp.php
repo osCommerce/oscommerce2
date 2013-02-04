@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -121,24 +121,24 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_SERVER_VARS, $order, $currency;
+      global $order, $currency;
 
-      if ($HTTP_GET_VARS['ret_errorcode'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($HTTP_GET_VARS['ret_errormsg'])));
+      if ($_GET['ret_errorcode'] != '0') {
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
       }
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
         $pass = true;
 
 // verify ret_param_checksum
-        if ($HTTP_GET_VARS['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . $HTTP_GET_VARS['ret_authcode'] . $HTTP_GET_VARS['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
+        if ($_GET['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_PP_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . $_GET['ret_authcode'] . $_GET['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
           $pass = false;
         }
 
 // verify ret_url_checksum
-        $url= 'http' . (ENABLE_SSL == true ? 's' : '') . '://' . $HTTP_SERVER_VARS['SERVER_NAME'] . $HTTP_SERVER_VARS['REQUEST_URI'];
+        $url= 'http' . (ENABLE_SSL == true ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
         $url_without_checksum = substr($url, 0, strpos($url, '&ret_url_checksum')+1);
-        if ($HTTP_GET_VARS['ret_url_checksum'] != md5($url_without_checksum . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
+        if ($_GET['ret_url_checksum'] != md5($url_without_checksum . MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
           $pass = false;
         }
 
@@ -155,10 +155,8 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error = array('title' => MODULE_PAYMENT_IPAYMENT_PP_ERROR_HEADING,
-                     'error' => ((isset($HTTP_GET_VARS['error'])) ? stripslashes(urldecode($HTTP_GET_VARS['error'])) : MODULE_PAYMENT_IPAYMENT_PP_ERROR_MESSAGE));
+                     'error' => ((isset($_GET['error'])) ? stripslashes(urldecode($_GET['error'])) : MODULE_PAYMENT_IPAYMENT_PP_ERROR_MESSAGE));
 
       return $error;
     }
@@ -208,8 +206,6 @@
     }
 
     function sendDebugEmail($checksum_match = 0) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_PP_DEBUG_EMAIL)) {
         $email_body = 'iPayment (Prepaid) Transaction' . "\n\n" .
                       'Date: ' . strftime(DATE_TIME_FORMAT) . "\n" .
@@ -233,8 +229,8 @@
         $email_body .= "\n\n" .
                        'POST REQUEST:' . "\n\n";
 
-        if (!empty($HTTP_POST_VARS)) {
-          foreach ($HTTP_POST_VARS as $key => $value) {
+        if (!empty($_POST)) {
+          foreach ($_POST as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
         } else {
@@ -243,8 +239,8 @@
 
         $email_body .= "\n" . 'GET REQUEST:' . "\n\n";
 
-        if (!empty($HTTP_GET_VARS)) {
-          foreach ($HTTP_GET_VARS as $key => $value) {
+        if (!empty($_GET)) {
+          foreach ($_GET as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
         } else {

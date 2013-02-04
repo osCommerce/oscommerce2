@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -200,10 +200,10 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $order;
+      global $order;
 
-      if (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+      if (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->simpleXor($this->base64Decode($_GET['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
@@ -234,14 +234,12 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $message = MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
 
-      if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-        $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
-      } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+      if ( isset($_GET['error']) && is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
+        $message = $this->getErrorMessage($_GET['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+      } elseif (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->simpleXor($this->base64Decode($_GET['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);

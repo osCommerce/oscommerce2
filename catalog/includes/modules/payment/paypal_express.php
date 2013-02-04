@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -100,13 +100,13 @@
     }
 
     function pre_confirmation_check() {
-      global $HTTP_GET_VARS, $order, $ppe_token;
+      global $order, $ppe_token;
 
       if (!tep_session_is_registered('ppe_token')) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      if (!isset($HTTP_GET_VARS['do'])) {
+      if (!isset($_GET['do'])) {
         $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
         if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
@@ -149,11 +149,11 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments, $response_array;
+      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $comments, $response_array;
 
       if (empty($comments)) {
-        if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
-          $comments = tep_db_prepare_input($HTTP_POST_VARS['ppecomments']);
+        if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
+          $comments = tep_db_prepare_input($_POST['ppecomments']);
 
           $order->info['comments'] = $comments;
         }
@@ -481,18 +481,16 @@
     }
 
     function sendDebugEmail() {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
-        $email_body = '$HTTP_POST_VARS:' . "\n\n";
+        $email_body = '$_POST:' . "\n\n";
 
-        foreach ($HTTP_POST_VARS as $key => $value) {
+        foreach ($_POST as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 
-        $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
+        $email_body .= "\n" . '$_GET:' . "\n\n";
 
-        foreach ($HTTP_GET_VARS as $key => $value) {
+        foreach ($_GET as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 

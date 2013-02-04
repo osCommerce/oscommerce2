@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,8 +17,8 @@
   if (!tep_session_is_registered('customer_id')) {
     $snapshot = array('page' => 'ext/modules/payment/paypal/express_payflow.php',
                       'mode' => $request_type,
-                      'get' => $HTTP_GET_VARS,
-                      'post' => $HTTP_POST_VARS);
+                      'get' => $_GET,
+                      'post' => $_POST);
 
     $navigation->set_snapshot($snapshot);
 
@@ -69,10 +69,10 @@
                   'TENDER' => 'P',
                   'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'));
 
-  switch ($HTTP_GET_VARS['osC_Action']) {
+  switch ($_GET['osC_Action']) {
     case 'retrieve':
       $params['ACTION'] = 'G';
-      $params['TOKEN'] = $HTTP_GET_VARS['token'];
+      $params['TOKEN'] = $_GET['token'];
 
       $post_string = '';
 

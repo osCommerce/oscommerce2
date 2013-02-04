@@ -6,7 +6,7 @@
   http://www.oscommerce.com
 
   Copyright (c) 2006 - 2007 Henri Schmidhuber (http://www.in-solution.de)
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -339,10 +339,10 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
       global $$payment;
 
-      $md5var4 = md5($HTTP_GET_VARS['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
+      $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
       // Statusupdate nur wenn keine Cartänderung vorgenommen
       $order_total_integer = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','')*100;
       if ($order_total_integer < 1) {
@@ -366,14 +366,14 @@
                                   'customer_notified' => '0',
                                   'comments' => '');
 
-          if (($md5var4 == $HTTP_GET_VARS['sovar4']) && ((int)$HTTP_GET_VARS['betrag_integer'] == (int)$order_total_integer)) {
+          if (($md5var4 == $_GET['sovar4']) && ((int)$_GET['betrag_integer'] == (int)$order_total_integer)) {
             $sql_data_array['comments'] = 'Zahlung durch Sofortüberweisung Weiter-Button/Weiterleitung bestätigt!';
           } else {
-            $sql_data_array['comments'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($HTTP_GET_VARS['betrag_integer']/100) . '!=' . ($order_total_integer/100);
+            $sql_data_array['comments'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($_GET['betrag_integer']/100) . '!=' . ($order_total_integer/100);
           }
 
           if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
-            $sql_data_array['comments'] = (!empty($sql_data_array['comments']) ? $sql_data_array['comments'] . "\n\n" : '') . serialize($HTTP_GET_VARS) . "\n" . serialize($HTTP_POST_VARS);
+            $sql_data_array['comments'] = (!empty($sql_data_array['comments']) ? $sql_data_array['comments'] . "\n\n" : '') . serialize($_GET) . "\n" . serialize($_POST);
           }
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
@@ -536,8 +536,6 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error = array('title' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_ERROR_HEADING,
                      'error' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_ERROR_MESSAGE);
 
@@ -554,13 +552,11 @@
     }
 
     function install() {
-      global $HTTP_GET_VARS;
-
-      $kdnr = (isset($HTTP_GET_VARS['kdnr']) && !empty($HTTP_GET_VARS['kdnr'])) ? tep_db_prepare_input($HTTP_GET_VARS['kdnr']) : '10000';
-      $projekt = (isset($HTTP_GET_VARS['projekt']) && !empty($HTTP_GET_VARS['projekt'])) ? tep_db_prepare_input($HTTP_GET_VARS['projekt']) : '500000';
-      $input_passwort = (isset($HTTP_GET_VARS['input_passwort']) && !empty($HTTP_GET_VARS['input_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['input_passwort']) : '';
-      $bna_passwort = (isset($HTTP_GET_VARS['bna_passwort']) && !empty($HTTP_GET_VARS['bna_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['bna_passwort']) : '';
-      $cnt_passwort = (isset($HTTP_GET_VARS['cnt_passwort']) && !empty($HTTP_GET_VARS['cnt_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['cnt_passwort']) : '';
+      $kdnr = (isset($_GET['kdnr']) && !empty($_GET['kdnr'])) ? tep_db_prepare_input($_GET['kdnr']) : '10000';
+      $projekt = (isset($_GET['projekt']) && !empty($_GET['projekt'])) ? tep_db_prepare_input($_GET['projekt']) : '500000';
+      $input_passwort = (isset($_GET['input_passwort']) && !empty($_GET['input_passwort'])) ? tep_db_prepare_input($_GET['input_passwort']) : '';
+      $bna_passwort = (isset($_GET['bna_passwort']) && !empty($_GET['bna_passwort'])) ? tep_db_prepare_input($_GET['bna_passwort']) : '';
+      $cnt_passwort = (isset($_GET['cnt_passwort']) && !empty($_GET['cnt_passwort'])) ? tep_db_prepare_input($_GET['cnt_passwort']) : '';
 
       $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sofortüberweisung Vorbereitung' limit 1");
 

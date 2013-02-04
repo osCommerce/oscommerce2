@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -84,7 +84,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $HTTP_POST_VARS['sid'];
+  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $_POST['sid'];
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
