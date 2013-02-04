@@ -214,12 +214,11 @@
 
 // verify the browser user agent if the feature is enabled
   if (SESSION_CHECK_USER_AGENT == 'True') {
-    if (!tep_session_is_registered('SESSION_USER_AGENT')) {
-      $SESSION_USER_AGENT = $_SERVER['HTTP_USER_AGENT'];
-      tep_session_register('SESSION_USER_AGENT');
+    if (!isset($_SESSION['SESSION_USER_AGENT'])) {
+      $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
     }
 
-    if ($SESSION_USER_AGENT != $_SERVER['HTTP_USER_AGENT']) {
+    if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
       tep_session_destroy();
       tep_redirect(tep_href_link(FILENAME_LOGIN));
     }
