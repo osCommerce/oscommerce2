@@ -33,7 +33,7 @@
 
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_TELL_A_FRIEND);
 
-  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
     $to_email_address = tep_db_prepare_input($_POST['to_email_address']);

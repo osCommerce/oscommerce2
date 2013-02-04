@@ -289,7 +289,7 @@
           tep_session_register('customer_first_name');
 
 // reset session token
-          $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+          $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
         }
 
 // check if paypal shipping address exists in the address book

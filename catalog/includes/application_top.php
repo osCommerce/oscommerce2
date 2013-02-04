@@ -192,9 +192,8 @@
   }
 
 // initialize a session token
-  if (!tep_session_is_registered('sessiontoken')) {
-    $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
-    tep_session_register('sessiontoken');
+  if (!isset($_SESSION['sessiontoken'])) {
+    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
   }
 
 // set SID once, even if empty
