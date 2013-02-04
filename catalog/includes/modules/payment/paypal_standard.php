@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -391,7 +391,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $HTTP_GET_VARS, $HTTP_POST_VARS, $messageStack;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $messageStack;
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -399,7 +399,7 @@
 
       $result = false;
 
-      if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
+      if ( ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
         if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
           $server = 'www.paypal.com';
         } else {
@@ -408,7 +408,7 @@
 
         $parameters = 'cmd=_notify-validate';
 
-        foreach ($HTTP_POST_VARS as $key => $value) {
+        foreach ($_POST as $key => $value) {
           $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
         }
 
@@ -440,15 +440,15 @@
         }
 
         if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-          $email_body = '$HTTP_POST_VARS:' . "\n\n";
+          $email_body = '$_POST:' . "\n\n";
 
-          foreach ($HTTP_POST_VARS as $key => $value) {
+          foreach ($_POST as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
 
-          $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
+          $email_body .= "\n" . '$_GET:' . "\n\n";
 
-          foreach ($HTTP_GET_VARS as $key => $value) {
+          foreach ($_GET as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
 
