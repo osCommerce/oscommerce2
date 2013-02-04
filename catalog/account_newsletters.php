@@ -23,7 +23,7 @@
   $newsletter_query = tep_db_query("select customers_newsletter from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
   $newsletter = tep_db_fetch_array($newsletter_query);
 
-  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     if (isset($_POST['newsletter_general']) && is_numeric($_POST['newsletter_general'])) {
       $newsletter_general = tep_db_prepare_input($_POST['newsletter_general']);
     } else {
