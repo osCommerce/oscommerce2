@@ -131,7 +131,7 @@ $('#piGal ul').bxGallery({
 ?>
 
     <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
+      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
     </div>
 
 <?php
@@ -149,7 +149,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
 ?>
 
 <div itemprop="description">
-  <?php echo stripslashes($product_info['products_description']); ?>
+  <?php echo $product_info['products_description']; ?>
 </div>
 
 <?php
