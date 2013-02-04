@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $customer_id, $languages_id, $PHP_SELF, $oscTemplate;
+      global $customer_id, $PHP_SELF, $oscTemplate;
 
       if (tep_session_is_registered('customer_id')) {
 // retreive the last x products purchased
@@ -44,7 +44,7 @@
           $product_ids = substr($product_ids, 0, -1);
 
           $customer_orders_string = '<table border="0" width="100%" cellspacing="0" cellpadding="1" class="ui-widget-content infoBoxContents">';
-          $products_query = tep_db_query("select products_id, products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id in (" . $product_ids . ") and language_id = '" . (int)$languages_id . "' order by products_name");
+          $products_query = tep_db_query("select products_id, products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id in (" . $product_ids . ") and language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_name");
           while ($products = tep_db_fetch_array($products_query)) {
             $customer_orders_string .= '  <tr>' .
                                        '    <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></td>' .

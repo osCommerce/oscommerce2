@@ -26,11 +26,11 @@
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_pro_payflow_ec.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_payflow_ec.php');
   require('includes/modules/payment/paypal_pro_payflow_ec.php');
 
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
@@ -60,7 +60,7 @@
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $cart->cartID;
+  $cartID = $_SESSION['cart']->cartID;
 
   $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR),
                   'VENDOR' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR,
@@ -89,7 +89,7 @@
       if ($response_array['RESULT'] == '0') {
         include(DIR_WS_CLASSES . 'order.php');
 
-        if ($cart->get_content_type() != 'virtual') {
+        if ($_SESSION['cart']->get_content_type() != 'virtual') {
           $country_iso_code_2 = tep_db_prepare_input($response_array['SHIPTOCOUNTRY']);
           $zone_code = tep_db_prepare_input($response_array['SHIPTOSTATE']);
 
@@ -126,8 +126,8 @@
 
           $order = new order;
 
-          $total_weight = $cart->show_weight();
-          $total_count = $cart->count_contents();
+          $total_weight = $_SESSION['cart']->show_weight();
+          $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
           include(DIR_WS_CLASSES . 'shipping.php');
@@ -159,7 +159,7 @@
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
             }
           }
 

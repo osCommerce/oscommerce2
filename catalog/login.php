@@ -17,7 +17,7 @@
     tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_LOGIN);
 
   $error = false;
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -63,7 +63,7 @@
         $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-        $cart->restore_contents();
+        $_SESSION['cart']->restore_contents();
 
         if (sizeof($navigation->snapshot) > 0) {
           $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);

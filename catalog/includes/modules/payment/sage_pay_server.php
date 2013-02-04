@@ -298,9 +298,7 @@
     }
 
     function after_process() {
-      global $cart;
-
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
       tep_session_unregister('sendto');

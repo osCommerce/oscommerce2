@@ -13,7 +13,7 @@
   chdir('../../../../');
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/ipayment_pp.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/ipayment_pp.php');
   require('includes/modules/payment/ipayment_pp.php');
   $ipayment_pp = new ipayment_pp();
 

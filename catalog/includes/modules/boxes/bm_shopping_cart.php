@@ -31,13 +31,13 @@
     }
 
     function execute() {
-      global $cart, $new_products_id_in_cart, $currencies, $oscTemplate;
+      global $new_products_id_in_cart, $currencies, $oscTemplate;
 
       $cart_contents_string = '';
 
-      if ($cart->count_contents() > 0) {
+      if ($_SESSION['cart']->count_contents() > 0) {
         $cart_contents_string = '<table border="0" width="100%" cellspacing="0" cellpadding="0" class="ui-widget-content infoBoxContents">';
-        $products = $cart->get_products();
+        $products = $_SESSION['cart']->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
           $cart_contents_string .= '<tr><td align="right" valign="top">';
 
@@ -71,7 +71,7 @@
         }
 
         $cart_contents_string .= '<tr><td colspan="2" style="padding-top: 5px; padding-bottom: 2px;">' . tep_draw_separator() . '</td></tr>' .
-                                 '<tr><td colspan="2" align="right">' . $currencies->format($cart->show_total()) . '</td></tr>' .
+                                 '<tr><td colspan="2" align="right">' . $currencies->format($_SESSION['cart']->show_total()) . '</td></tr>' .
                                  '</table>';
       } else {
         $cart_contents_string .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</div>';
