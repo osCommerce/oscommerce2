@@ -227,12 +227,11 @@
 // verify the IP address if the feature is enabled
   if (SESSION_CHECK_IP_ADDRESS == 'True') {
     $ip_address = tep_get_ip_address();
-    if (!tep_session_is_registered('SESSION_IP_ADDRESS')) {
-      $SESSION_IP_ADDRESS = $ip_address;
-      tep_session_register('SESSION_IP_ADDRESS');
+    if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
+      $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
     }
 
-    if ($SESSION_IP_ADDRESS != $ip_address) {
+    if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
       tep_session_destroy();
       tep_redirect(tep_href_link(FILENAME_LOGIN));
     }
