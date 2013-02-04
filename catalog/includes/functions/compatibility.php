@@ -15,20 +15,6 @@
     date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
   }
 
-  if (!function_exists('checkdnsrr')) {
-    function checkdnsrr($host, $type) {
-      if(tep_not_null($host) && tep_not_null($type)) {
-        @exec("nslookup -type=" . escapeshellarg($type) . " " . escapeshellarg($host), $output);
-        while(list($k, $line) = each($output)) {
-          if(preg_match("/^$host/i", $line)) {
-            return true;
-          }
-        }
-      }
-      return false;
-    }
-  }
-
 /*
  * stripos() natively supported from PHP 5.0
  * From Pear::PHP_Compat
