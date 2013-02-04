@@ -65,9 +65,9 @@
 // restore cart contents
         $_SESSION['cart']->restore_contents();
 
-        if (sizeof($navigation->snapshot) > 0) {
-          $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
-          $navigation->clear_snapshot();
+        if (sizeof($_SESSION['navigation']->snapshot) > 0) {
+          $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(tep_session_name())), $_SESSION['navigation']->snapshot['mode']);
+          $_SESSION['navigation']->clear_snapshot();
           tep_redirect($origin_href);
         } else {
           tep_redirect(tep_href_link(FILENAME_DEFAULT));
