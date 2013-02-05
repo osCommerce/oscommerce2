@@ -18,14 +18,14 @@
     }
 
     function pass() {
-      return ((STORE_SESSIONS != '') || (is_dir(tep_session_save_path()) && tep_is_writable(tep_session_save_path())));
+      return ((STORE_SESSIONS != '') || (is_dir(session_save_path()) && tep_is_writable(session_save_path())));
     }
 
     function getMessage() {
       if (STORE_SESSIONS == '') {
-        if (!is_dir(tep_session_save_path())) {
+        if (!is_dir(session_save_path())) {
           return WARNING_SESSION_DIRECTORY_NON_EXISTENT;
-        } elseif (!tep_is_writable(tep_session_save_path())) {
+        } elseif (!tep_is_writable(session_save_path())) {
           return WARNING_SESSION_DIRECTORY_NOT_WRITEABLE;
         }
       }

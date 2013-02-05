@@ -42,7 +42,7 @@
       $logger->timer_stop();
     }
 
-    tep_session_close();
+    session_write_close();
 
     exit;
   }
@@ -125,7 +125,7 @@
     $get_url = '';
 
     foreach ($_GET as $key => $value) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+      if (($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
     return $get_url;
