@@ -48,7 +48,7 @@ function get_invoice_status($pars) {
         $server = 'test-secure.inpay.com';
     }
     
-    if ((PHP_VERSION >= 4.3) && ($fp = @fsockopen('ssl://'.$server, 443, $errno, $errstr, 30))) {
+    if ($fp = @fsockopen('ssl://'.$server, 443, $errno, $errstr, 30)) {
         $fsocket = true;
     } elseif (function_exists('curl_exec')) {
         $curl = true;

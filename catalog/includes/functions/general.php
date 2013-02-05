@@ -1243,16 +1243,6 @@
 ////
 // Return a random value
   function tep_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!isset($seeded)) {
-      $seeded = true;
-
-      if ( (PHP_VERSION < '4.2.0') ) {
-        mt_srand((double)microtime()*1000000);
-      }
-    }
-
     if (isset($min) && isset($max)) {
       if ($min >= $max) {
         return $min;
@@ -1370,10 +1360,6 @@
 
 // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   function tep_convert_linefeeds($from, $to, $string) {
-    if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return preg_replace('/(' . implode('|', $from) . ')/', $to, $string);
-    } else {
-      return str_replace($from, $to, $string);
-    }
+    return str_replace($from, $to, $string);
   }
 ?>

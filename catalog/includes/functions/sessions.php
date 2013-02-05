@@ -98,12 +98,10 @@
   function tep_session_recreate() {
     global $SID;
 
-    if (PHP_VERSION >= 5.1) {
-      session_regenerate_id(true);
+    session_regenerate_id(true);
 
-      if (!empty($SID)) {
-        $SID = session_name() . '=' . session_id();
-      }
+    if (!empty($SID)) {
+      $SID = session_name() . '=' . session_id();
     }
   }
 ?>
