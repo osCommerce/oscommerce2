@@ -12,7 +12,7 @@
 
   function osc_draw_input_field($name, $value = null, $parameters = null, $override = true, $type = 'text') {
     $field = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '" id="' . osc_output_string($name) . '"';
-    if ( ($key = $GLOBALS[$name]) || ($key = $GLOBALS['HTTP_GET_VARS'][$name]) || ($key = $GLOBALS['HTTP_POST_VARS'][$name]) || ($key = $GLOBALS['HTTP_SESSION_VARS'][$name]) && ($override) ) {
+    if ( ($key = $GLOBALS[$name]) || ($key = $_GET[$name]) || ($key = $_POST[$name]) || ($key = $_SESSION[$name]) && ($override) ) {
       $field .= ' value="' . osc_output_string($key) . '"';
     } elseif ($value != '') {
       $field .= ' value="' . osc_output_string($value) . '"';
@@ -32,14 +32,12 @@
   }
 
   function osc_draw_select_menu($name, $values, $default = null, $parameters = null) {
-    global $HTTP_GET_VARS, $HTTP_POST_VARS;
-
     $group = false;
 
-    if ( isset($HTTP_GET_VARS[$name]) ) {
-      $default = $HTTP_GET_VARS[$name];
-    } elseif ( isset($HTTP_POST_VARS[$name]) ) {
-      $default = $HTTP_POST_VARS[$name];
+    if ( isset($_GET[$name]) ) {
+      $default = $_GET[$name];
+    } elseif ( isset($_POST[$name]) ) {
+      $default = $_POST[$name];
     }
 
     $field = '<select name="' . osc_output_string($name) . '"';

@@ -9,12 +9,6 @@
 
   Released under the GNU General Public License
 */
-
-  $compat_register_globals = true;
-
-  if (function_exists('ini_get') && (PHP_VERSION < 4.3) && ((int)ini_get('register_globals') == 0)) {
-    $compat_register_globals = false;
-  }
 ?>
 
 <div class="mainBlock">
@@ -33,7 +27,7 @@
         <tr>
           <td><strong>PHP Version</strong></td>
           <td align="right"><?php echo PHP_VERSION; ?></td>
-          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 5.3) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
       </table>
 
@@ -52,7 +46,7 @@
         <tr>
           <td>register_globals</td>
           <td align="right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (($compat_register_globals == true) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (((int)ini_get('register_globals') == 0) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
         <tr>
           <td>magic_quotes</td>
@@ -84,8 +78,8 @@
           <td align="right" width="25"></td>
         </tr>
         <tr>
-          <td>MySQL</td>
-          <td align="right"><img src="images/<?php echo (extension_loaded('mysql') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td>MySQLi</td>
+          <td align="right"><img src="images/<?php echo (extension_loaded('mysqli') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
         </tr>
       </table>
 
@@ -141,14 +135,8 @@
 
   $warning_array = array();
 
-  if (function_exists('ini_get')) {
-    if ($compat_register_globals == false) {
-      $warning_array['register_globals'] = 'Compatibility with register_globals is supported from PHP 4.3+. This setting <u>must be enabled</u> due to an older PHP version being used.';
-    }
-  }
-
-  if (!extension_loaded('mysql')) {
-    $warning_array['mysql'] = 'The MySQL extension is required but is not installed. Please enable it to continue installation.';
+  if (!extension_loaded('mysqli')) {
+    $warning_array['mysqli'] = 'The MySQLi extension is required but is not installed. Please enable it to continue installation.';
   }
 
   if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {

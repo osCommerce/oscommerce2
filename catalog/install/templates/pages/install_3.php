@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  $dir_fs_document_root = $HTTP_POST_VARS['DIR_FS_DOCUMENT_ROOT'];
+  $dir_fs_document_root = $_POST['DIR_FS_DOCUMENT_ROOT'];
   if ((substr($dir_fs_document_root, -1) != '\\') && (substr($dir_fs_document_root, -1) != '/')) {
     if (strrpos($dir_fs_document_root, '\\') !== false) {
       $dir_fs_document_root .= '\\';
@@ -98,8 +98,7 @@
     <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>
 
 <?php
-  reset($HTTP_POST_VARS);
-  while (list($key, $value) = each($HTTP_POST_VARS)) {
+  foreach ($_POST as $key => $value) {
     if (($key != 'x') && ($key != 'y')) {
       if (is_array($value)) {
         for ($i=0, $n=sizeof($value); $i<$n; $i++) {
