@@ -25,17 +25,16 @@
   }
 
 // if no shipping destination address was selected, use the customers own address as default
-  if (!tep_session_is_registered('sendto')) {
-    tep_session_register('sendto');
-    $sendto = $customer_default_address_id;
+  if (!isset($_SESSION['sendto'])) {
+    $_SESSION['sendto'] = $customer_default_address_id;
   } else {
 // verify the selected shipping address
-    if ( (is_array($sendto) && empty($sendto)) || is_numeric($sendto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$sendto . "'");
+    if ( (is_array($_SESSION['sendto']) && empty($_SESSION['sendto'])) || is_numeric($_SESSION['sendto']) ) {
+      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$_SESSION['sendto'] . "'");
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] != '1') {
-        $sendto = $customer_default_address_id;
+        $_SESSION['sendto'] = $customer_default_address_id;
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
     }
@@ -56,7 +55,7 @@
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
-    $sendto = false;
+    $_SESSION['sendto'] = false;
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
@@ -198,7 +197,7 @@ function rowOutEffect(object) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $sendto, true, ' ', '<br />'); ?>
+        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 

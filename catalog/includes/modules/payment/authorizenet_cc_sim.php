@@ -85,7 +85,7 @@
     }
 
     function process_button() {
-      global $order, $sendto;
+      global $order;
 
       $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $_SESSION['currency']);
 
@@ -112,7 +112,7 @@
                                 tep_draw_hidden_field('x_method', 'CC') .
                                 tep_draw_hidden_field('x_type', ((MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'));
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $process_button_string .= tep_draw_hidden_field('x_ship_to_first_name', substr($order->delivery['firstname'], 0, 50)) .
                                   tep_draw_hidden_field('x_ship_to_last_name', substr($order->delivery['lastname'], 0, 50)) .
                                   tep_draw_hidden_field('x_ship_to_company', substr($order->delivery['company'], 0, 50)) .

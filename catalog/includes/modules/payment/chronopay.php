@@ -323,7 +323,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $sendto, $currencies, $cart_ChronoPay_ID;
+      global $order, $order_totals, $currencies, $cart_ChronoPay_ID;
       global $$_SESSION['payment'];
 
       $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
@@ -453,7 +453,7 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
@@ -483,7 +483,7 @@
       $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
+      unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
       unset($_SESSION['shipping']);
       unset($_SESSION['payment']);

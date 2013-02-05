@@ -230,7 +230,7 @@
     }
 
     function before_process() {
-      global $order, $sendto;
+      global $order;
 
       if (isset($_POST['cc_owner']) && !empty($_POST['cc_owner']) && isset($_POST['cc_type']) && $this->isCardAccepted($_POST['cc_type']) && isset($_POST['cc_number_nh-dns']) && !empty($_POST['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER == 'Live') {
@@ -273,7 +273,7 @@
           $params['ISSUENUMBER'] = $_POST['cc_issue_nh-dns'];
         }
 
-        if (is_numeric($sendto) && ($sendto > 0)) {
+        if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
           $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];
           $params['SHIPTOCITY'] = $order->delivery['city'];

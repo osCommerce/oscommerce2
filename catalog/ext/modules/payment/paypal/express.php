@@ -29,9 +29,8 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  if (!tep_session_is_registered('sendto')) {
-    tep_session_register('sendto');
-    $sendto = $customer_default_address_id;
+  if (!isset($_SESSION['sendto'])) {
+    $_SESSION['sendto'] = $customer_default_address_id;
   }
 
   if (!isset($_SESSION['billto'])) {
@@ -68,43 +67,43 @@
           exit;
         }
 
-        $sendto = array('firstname' => '',
-                        'lastname' => '',
-                        'company' => '',
-                        'street_address' => '',
-                        'suburb' => '',
-                        'postcode' => $_POST['SHIPTOZIP'],
-                        'city' => $_POST['SHIPTOCITY'],
-                        'zone_id' => '',
-                        'zone_name' => $_POST['SHIPTOSTATE'],
-                        'country_id' => '',
-                        'country_name' => $_POST['SHIPTOCOUNTRY'],
-                        'country_iso_code_2' => '',
-                        'country_iso_code_3' => '',
-                        'address_format_id' => '');
+        $_SESSION['sendto'] = array('firstname' => '',
+                                    'lastname' => '',
+                                    'company' => '',
+                                    'street_address' => '',
+                                    'suburb' => '',
+                                    'postcode' => $_POST['SHIPTOZIP'],
+                                    'city' => $_POST['SHIPTOCITY'],
+                                    'zone_id' => '',
+                                    'zone_name' => $_POST['SHIPTOSTATE'],
+                                    'country_id' => '',
+                                    'country_name' => $_POST['SHIPTOCOUNTRY'],
+                                    'country_iso_code_2' => '',
+                                    'country_iso_code_3' => '',
+                                    'address_format_id' => '');
 
-        $country_query = tep_db_query("select * from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($sendto['country_name']) . "' limit 1");
+        $country_query = tep_db_query("select * from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($_SESSION['sendto']['country_name']) . "' limit 1");
         if (tep_db_num_rows($country_query)) {
           $country = tep_db_fetch_array($country_query);
 
-          $sendto['country_id'] = $country['countries_id'];
-          $sendto['country_name'] = $country['countries_name'];
-          $sendto['country_iso_code_2'] = $country['countries_iso_code_2'];
-          $sendto['country_iso_code_3'] = $country['countries_iso_code_3'];
-          $sendto['address_format_id'] = $country['address_format_id'];
+          $_SESSION['sendto']['country_id'] = $country['countries_id'];
+          $_SESSION['sendto']['country_name'] = $country['countries_name'];
+          $_SESSION['sendto']['country_iso_code_2'] = $country['countries_iso_code_2'];
+          $_SESSION['sendto']['country_iso_code_3'] = $country['countries_iso_code_3'];
+          $_SESSION['sendto']['address_format_id'] = $country['address_format_id'];
         }
 
-        if ($sendto['country_id'] > 0) {
-          $zone_query = tep_db_query("select * from " . TABLE_ZONES . " where zone_country_id = '" . (int)$sendto['country_id'] . "' and (zone_name = '" . tep_db_input($sendto['zone_name']) . "' or zone_code = '" . tep_db_input($sendto['zone_name']) . "') limit 1");
+        if ($_SESSION['sendto']['country_id'] > 0) {
+          $zone_query = tep_db_query("select * from " . TABLE_ZONES . " where zone_country_id = '" . (int)$_SESSION['sendto']['country_id'] . "' and (zone_name = '" . tep_db_input($_SESSION['sendto']['zone_name']) . "' or zone_code = '" . tep_db_input($_SESSION['sendto']['zone_name']) . "') limit 1");
           if (tep_db_num_rows($zone_query)) {
             $zone = tep_db_fetch_array($zone_query);
 
-            $sendto['zone_id'] = $zone['zone_id'];
-            $sendto['zone_name'] = $zone['zone_name'];
+            $_SESSION['sendto']['zone_id'] = $zone['zone_id'];
+            $_SESSION['sendto']['zone_name'] = $zone['zone_name'];
           }
         }
 
-        $_SESSION['billto'] = $sendto;
+        $_SESSION['billto'] = $_SESSION['sendto'];
 
         $quotes_array = array();
 
@@ -322,7 +321,7 @@
         if (tep_db_num_rows($check_query)) {
           $check = tep_db_fetch_array($check_query);
 
-          $sendto = $check['address_book_id'];
+          $_SESSION['sendto'] = $check['address_book_id'];
         } else {
           $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'entry_firstname' => $ship_firstname,
@@ -346,7 +345,7 @@
 
           $address_id = tep_db_insert_id();
 
-          $sendto = $address_id;
+          $_SESSION['sendto'] = $address_id;
 
           if ($customer_default_address_id < 1) {
             tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
@@ -360,7 +359,7 @@
           tep_session_register('customer_default_address_id');
           tep_session_register('customer_zone_id');
 
-          $_SESSION['billto'] = $sendto;
+          $_SESSION['billto'] = $_SESSION['sendto'];
         }
 
         include(DIR_WS_CLASSES . 'order.php');
@@ -468,7 +467,7 @@
         } else {
           $_SESSION['shipping'] = false;
 
-          $sendto = false;
+          $_SESSION['sendto'] = false;
         }
 
         $_SESSION['payment'] = $paypal_express->code;

@@ -24,7 +24,7 @@
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!isset($_SESSION['shipping']) || !tep_session_is_registered('sendto')) {
+  if (!isset($_SESSION['shipping']) || !isset($_SESSION['sendto'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
@@ -260,7 +260,7 @@
   if ($order->content_type != 'virtual') {
     $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
                     EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
+                    tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
   }
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
@@ -288,7 +288,7 @@
   $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-  tep_session_unregister('sendto');
+  unset($_SESSION['sendto']);
   unset($_SESSION['billto']);
   unset($_SESSION['shipping']);
   unset($_SESSION['payment']);

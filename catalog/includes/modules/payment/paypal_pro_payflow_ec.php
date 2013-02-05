@@ -103,7 +103,7 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppeuk_token, $ppeuk_payerid;
+      global $order, $ppeuk_token, $ppeuk_payerid;
 
       if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
@@ -133,7 +133,7 @@
                       'CURRENCY' => $order->info['currency'],
                       'BUTTONSOURCE' => 'osCommerce22_Default_PRO2EC');
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
         $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);

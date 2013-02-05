@@ -219,7 +219,7 @@
     }
 
     function before_process() {
-      global $order, $sendto;
+      global $order;
 
       if (isset($_POST['cc_owner_firstname']) && !empty($_POST['cc_owner_firstname']) && isset($_POST['cc_owner_lastname']) && !empty($_POST['cc_owner_lastname']) && isset($_POST['cc_type']) && isset($this->cc_types[$_POST['cc_type']]) && isset($_POST['cc_number_nh-dns']) && !empty($_POST['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_SERVER == 'Live') {
@@ -258,7 +258,7 @@
           $params['CARDISSUE'] = $_POST['cc_issue_nh-dns'];
         }
 
-        if (is_numeric($sendto) && ($sendto > 0)) {
+        if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
           $params['SHIPTOFIRSTNAME'] = $order->delivery['firstname'];
           $params['SHIPTOLASTNAME'] = $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];

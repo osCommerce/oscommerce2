@@ -99,7 +99,7 @@
     }
 
     function before_process() {
-      global $order, $sendto;
+      global $order;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -129,7 +129,7 @@
                       'x_exp_date' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
                       'x_card_code' => substr($_POST['cc_cvc_nh-dns'], 0, 4));
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
         $params['x_ship_to_last_name'] = substr($order->delivery['lastname'], 0, 50);
         $params['x_ship_to_company'] = substr($order->delivery['company'], 0, 50);
