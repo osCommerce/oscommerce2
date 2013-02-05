@@ -100,10 +100,6 @@
     return session_start();
   }
 
-  function tep_session_destroy() {
-    return session_destroy();
-  }
-
   function tep_session_save_path($path = '') {
     if (!empty($path)) {
       return session_save_path($path);
