@@ -351,15 +351,11 @@
       }
 
       if ($return['Status'] == '3DAUTH') {
-        global $sage_pay_direct_pareq, $sage_pay_direct_md;
-
         $_SESSION['sage_pay_direct_acsurl'] = $return['ACSURL'];
 
-        tep_session_register('sage_pay_direct_pareq');
-        $sage_pay_direct_pareq = $return['PAReq'];
+        $_SESSION['sage_pay_direct_pareq'] = $return['PAReq'];
 
-        tep_session_register('sage_pay_direct_md');
-        $sage_pay_direct_md = $return['MD'];
+        $_SESSION['sage_pay_direct_md'] = $return['MD'];
 
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
       }
@@ -378,8 +374,8 @@
     function after_process() {
       if (isset($_SESSION['sage_pay_direct_acsurl'])) {
         unset($_SESSION['sage_pay_direct_acsurl']);
-        tep_session_unregister('sage_pay_direct_pareq');
-        tep_session_unregister('sage_pay_direct_md');
+        unset($_SESSION['sage_pay_direct_pareq']);
+        unset($_SESSION['sage_pay_direct_md']);
       }
     }
 

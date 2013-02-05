@@ -40,9 +40,9 @@
 </head>
 <body>
 <FORM name="form" action="<?php echo $_SESSION['sage_pay_direct_acsurl']; ?>" method="POST">
-<input type="hidden" name="PaReq" value="<?php echo $sage_pay_direct_pareq; ?>" />
+<input type="hidden" name="PaReq" value="<?php echo $_SESSION['sage_pay_direct_pareq']; ?>" />
 <input type="hidden" name="TermUrl" value="<?php echo tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'); ?>" />
-<input type="hidden" name="MD" value="<?php echo $sage_pay_direct_md; ?>" />
+<input type="hidden" name="MD" value="<?php echo $_SESSION['sage_pay_direct_md']; ?>" />
 <NOSCRIPT>
 <?php echo '<center><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_INFO . '</p><p><input type="submit" value="' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_BUTTON . '"/></p></center>'; ?>
 </NOSCRIPT>
