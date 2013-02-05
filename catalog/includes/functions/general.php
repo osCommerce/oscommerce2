@@ -320,7 +320,6 @@
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
   function tep_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
-    global $customer_zone_id;
     static $tax_rates = array();
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
@@ -329,7 +328,7 @@
         $zone_id = STORE_ZONE;
       } else {
         $country_id = $_SESSION['customer_country_id'];
-        $zone_id = $customer_zone_id;
+        $zone_id = $_SESSION['customer_zone_id'];
       }
     }
 
