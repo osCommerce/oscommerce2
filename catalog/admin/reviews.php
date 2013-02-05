@@ -167,7 +167,7 @@
     if (tep_not_null($_POST)) {
 /* Re-Post all POST'ed variables */
       foreach ($_POST as $key => $value) {
-        echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
+        echo tep_draw_hidden_field($key, htmlspecialchars($value));
       }
 ?>
       <tr>

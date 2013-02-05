@@ -176,9 +176,9 @@
 
     if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $value = stripslashes($_GET[$name]);
+        $value = $_GET[$name];
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $value = stripslashes($_POST[$name]);
+        $value = $_POST[$name];
       }
     }
 
@@ -218,7 +218,7 @@
 
     if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
 
-    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) || (tep_not_null($compare) && ($value == $compare)) ) {
+    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || ($_GET[$name] == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || ($_POST[$name] == $value))) || (tep_not_null($compare) && ($value == $compare)) ) {
       $selection .= ' checked="checked"';
     }
 
@@ -251,9 +251,9 @@
 
     if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $field .= tep_output_string_protected(stripslashes($_GET[$name]));
+        $field .= tep_output_string_protected($_GET[$name]);
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $field .= tep_output_string_protected(stripslashes($_POST[$name]));
+        $field .= tep_output_string_protected($_POST[$name]);
       }
     } elseif (tep_not_null($text)) {
       $field .= tep_output_string_protected($text);
@@ -273,9 +273,9 @@
       $field .= ' value="' . tep_output_string($value) . '"';
     } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
-        $field .= ' value="' . tep_output_string(stripslashes($_GET[$name])) . '"';
+        $field .= ' value="' . tep_output_string($_GET[$name]) . '"';
       } elseif ( (isset($_POST[$name]) && is_string($_POST[$name])) ) {
-        $field .= ' value="' . tep_output_string(stripslashes($_POST[$name])) . '"';
+        $field .= ' value="' . tep_output_string($_POST[$name]) . '"';
       }
     }
 
@@ -309,9 +309,9 @@
 
     if (empty($default) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $default = stripslashes($_GET[$name]);
+        $default = $_GET[$name];
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $default = stripslashes($_POST[$name]);
+        $default = $_POST[$name];
       }
     }
 
