@@ -66,9 +66,8 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
-  if (!tep_session_is_registered('comments')) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $_SESSION['comments'] = tep_db_prepare_input($_POST['comments']);
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -262,7 +261,7 @@ function rowOutEffect(object) {
   <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $comments); ?>
+    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $_SESSION['comments']); ?>
   </div>
 
   <div class="contentText">

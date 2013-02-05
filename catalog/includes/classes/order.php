@@ -129,7 +129,7 @@
     }
 
     function cart() {
-      global $sendto, $billto, $currencies, $comments, $customer_default_address_id;
+      global $sendto, $billto, $currencies, $customer_default_address_id;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -222,7 +222,7 @@
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
-                          'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
+                          'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
       if (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
         if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {

@@ -37,9 +37,8 @@
 
   if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
 
-  if (!tep_session_is_registered('comments')) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $_SESSION['comments'] = tep_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module
