@@ -162,27 +162,26 @@
             }
           }
 
-          if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-          $shipping = false;
+          $_SESSION['shipping'] = false;
 
           if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
-              $shipping = 'free_free';
+              $_SESSION['shipping'] = 'free_free';
             } else {
 // get all available shipping quotes
               $quotes = $shipping_modules->quote();
 
 // select cheapest shipping method
-              $shipping = $shipping_modules->cheapest();
-              $shipping = $shipping['id'];
+              $_SESSION['shipping'] = $shipping_modules->cheapest();
+              $_SESSION['shipping'] = $_SESSION['shipping']['id'];
             }
           }
 
-          if (strpos($shipping, '_')) {
-            list($module, $method) = explode('_', $shipping);
+          if (strpos($_SESSION['shipping'], '_')) {
+            list($module, $method) = explode('_', $_SESSION['shipping']);
 
-            if ( is_object($$module) || ($shipping == 'free_free') ) {
-              if ($shipping == 'free_free') {
+            if ( is_object($$module) || ($_SESSION['shipping'] == 'free_free') ) {
+              if ($_SESSION['shipping'] == 'free_free') {
                 $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
                 $quote[0]['methods'][0]['cost'] = '0';
               } else {
@@ -190,14 +189,14 @@
               }
 
               if (isset($quote['error'])) {
-                tep_session_unregister('shipping');
+                unset($_SESSION['shipping']);
 
                 tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
-                  $shipping = array('id' => $shipping,
-                                    'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
-                                    'cost' => $quote[0]['methods'][0]['cost']);
+                  $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
+                                                'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
+                                                'cost' => $quote[0]['methods'][0]['cost']);
                 }
               }
             }
@@ -214,8 +213,7 @@
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         } else {
-          if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-          $shipping = false;
+          $_SESSION['shipping'] = false;
 
           $sendto = false;
 

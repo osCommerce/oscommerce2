@@ -485,7 +485,7 @@
 // unregister session variables used during checkout
       tep_session_unregister('sendto');
       tep_session_unregister('billto');
-      tep_session_unregister('shipping');
+      unset($_SESSION['shipping']);
       tep_session_unregister('payment');
       tep_session_unregister('comments');
 

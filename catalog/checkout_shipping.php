@@ -36,7 +36,7 @@
 
       if ($check_address['total'] != '1') {
         $sendto = $customer_default_address_id;
-        if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
     }
   }
@@ -46,8 +46,8 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (isset($_SESSION['cartID']) && ($_SESSION['cartID'] != $_SESSION['cart']->cartID) && tep_session_is_registered('shipping')) {
-    tep_session_unregister('shipping');
+  if (isset($_SESSION['cartID']) && ($_SESSION['cartID'] != $_SESSION['cart']->cartID) && isset($_SESSION['shipping'])) {
+    unset($_SESSION['shipping']);
   }
 
   $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
@@ -55,8 +55,7 @@
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-    $shipping = false;
+    $_SESSION['shipping'] = false;
     $sendto = false;
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
@@ -104,37 +103,35 @@
       $comments = tep_db_prepare_input($_POST['comments']);
     }
 
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-
     if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
       if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
-        $shipping = $_POST['shipping'];
+        $_SESSION['shipping'] = $_POST['shipping'];
 
-        list($module, $method) = explode('_', $shipping);
-        if ( is_object($$module) || ($shipping == 'free_free') ) {
-          if ($shipping == 'free_free') {
+        list($module, $method) = explode('_', $_SESSION['shipping']);
+        if ( is_object($$module) || ($_SESSION['shipping'] == 'free_free') ) {
+          if ($_SESSION['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
           } else {
             $quote = $shipping_modules->quote($method, $module);
           }
           if (isset($quote['error'])) {
-            tep_session_unregister('shipping');
+            unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
-              $shipping = array('id' => $shipping,
-                                'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
-                                'cost' => $quote[0]['methods'][0]['cost']);
+              $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
+                                            'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
+                                            'cost' => $quote[0]['methods'][0]['cost']);
 
               tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
             }
           }
         } else {
-          tep_session_unregister('shipping');
+          unset($_SESSION['shipping']);
         }
       }
     } else {
-      $shipping = false;
+      $_SESSION['shipping'] = false;
                 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }    
@@ -147,7 +144,7 @@
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-  if ( !tep_session_is_registered('shipping') || ( tep_session_is_registered('shipping') && ($shipping == false) && (tep_count_shipping_modules() > 1) ) ) $shipping = $shipping_modules->cheapest();
+  if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (tep_count_shipping_modules() > 1) ) ) $_SESSION['shipping'] = $shipping_modules->cheapest();
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING);
 
@@ -277,7 +274,7 @@ function rowOutEffect(object) {
         } else {
           for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
-            $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);
+            $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
 
             if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {
               echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";

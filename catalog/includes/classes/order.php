@@ -129,7 +129,7 @@
     }
 
     function cart() {
-      global $sendto, $billto, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
+      global $sendto, $billto, $currencies, $payment, $comments, $customer_default_address_id;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -217,8 +217,8 @@
                           'cc_owner' => '',
                           'cc_number' => '',
                           'cc_expires' => '',
-                          'shipping_method' => $shipping['title'],
-                          'shipping_cost' => $shipping['cost'],
+                          'shipping_method' => $_SESSION['shipping']['title'],
+                          'shipping_cost' => $_SESSION['shipping']['cost'],
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
