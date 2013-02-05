@@ -18,16 +18,16 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 // prepare to logout an active administrator if the login page is accessed again
-  if (tep_session_is_registered('admin')) {
+  if (isset($_SESSION['admin'])) {
     $action = 'logoff';
   }
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'process':
-        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user'])) {
-          $username = tep_db_prepare_input($redirect_origin['auth_user']);
-          $password = tep_db_prepare_input($redirect_origin['auth_pw']);
+        if (isset($_SESSION['redirect_origin']) && isset($_SESSION['redirect_origin']['auth_user'])) {
+          $username = tep_db_prepare_input($_SESSION['redirect_origin']['auth_user']);
+          $password = tep_db_prepare_input($_SESSION['redirect_origin']['auth_pw']);
         } else {
           $username = tep_db_prepare_input($_POST['username']);
           $password = tep_db_prepare_input($_POST['password']);
@@ -47,23 +47,17 @@
                 tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
               }
 
-              tep_session_register('admin');
+              $_SESSION['admin'] = array('id' => $check['id'],
+                                         'username' => $check['user_name']);
 
-              $admin = array('id' => $check['id'],
-                             'username' => $check['user_name']);
-
-              $actionRecorder->_user_id = $admin['id'];
+              $actionRecorder->_user_id = $_SESSION['admin']['id'];
               $actionRecorder->record();
 
-              if (tep_session_is_registered('redirect_origin')) {
-                $page = $redirect_origin['page'];
-                $get_string = '';
+              if (isset($_SESSION['redirect_origin'])) {
+                $page = $_SESSION['redirect_origin']['page'];
+                $get_string = http_build_query($_SESSION['redirect_origin']['get']);
 
-                if (function_exists('http_build_query')) {
-                  $get_string = http_build_query($redirect_origin['get']);
-                }
-
-                tep_session_unregister('redirect_origin');
+                unset($_SESSION['redirect_origin']);
 
                 tep_redirect(tep_href_link($page, $get_string));
               } else {
@@ -82,11 +76,10 @@
         break;
 
       case 'logoff':
-        tep_session_unregister('admin');
+        unset($_SESSION['admin']);
 
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-          tep_session_register('auth_ignore');
-          $auth_ignore = true;
+          $_SESSION['auth_ignore'] = true;
         }
 
         tep_redirect(tep_href_link(FILENAME_DEFAULT));
@@ -115,7 +108,7 @@
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $language) {
+    if ($languages[$i]['directory'] == $_SESSION['language']) {
       $languages_selected = $languages[$i]['code'];
     }
   }

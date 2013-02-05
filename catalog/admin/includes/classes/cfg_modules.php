@@ -14,7 +14,7 @@
     var $_modules = array();
 
     function cfg_modules() {
-      global $PHP_SELF, $language;
+      global $PHP_SELF;
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $directory = DIR_WS_MODULES . 'cfg_modules';
@@ -25,7 +25,7 @@
             if (substr($file, strrpos($file, '.')) == $file_extension) {
               $class = substr($file, 0, strrpos($file, '.'));
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/cfg_modules/' . $file);
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/cfg_modules/' . $file);
               include(DIR_WS_MODULES . 'cfg_modules/' . $class . '.php');
 
               $m = new $class();

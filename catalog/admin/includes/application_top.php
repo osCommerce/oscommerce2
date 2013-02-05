@@ -101,12 +101,7 @@
   }
 
 // set the language
-  if (!tep_session_is_registered('language') || isset($_GET['language'])) {
-    if (!tep_session_is_registered('language')) {
-      tep_session_register('language');
-      tep_session_register('languages_id');
-    }
-
+  if (!isset($_SESSION['language']) || isset($_GET['language'])) {
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
@@ -116,36 +111,34 @@
       $lng->get_browser_language();
     }
 
-    $language = $lng->language['directory'];
-    $languages_id = $lng->language['id'];
+    $_SESSION['language'] = $lng->language['directory'];
+    $_SESSION['languages_id'] = $lng->language['id'];
   }
 
 // redirect to login page if administrator is not yet logged in
-  if (!tep_session_is_registered('admin')) {
+  if (!isset($_SESSION['admin'])) {
     $redirect = false;
 
     $current_page = basename($PHP_SELF);
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
-    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
+    if ( ($current_page == FILENAME_LOGIN) && !isset($_SESSION['redirect_origin']) ) {
       $current_page = FILENAME_DEFAULT;
       $_GET = array();
     }
 
     if ($current_page != FILENAME_LOGIN) {
-      if (!tep_session_is_registered('redirect_origin')) {
-        tep_session_register('redirect_origin');
-
-        $redirect_origin = array('page' => $current_page,
-                                 'get' => $_GET);
+      if (!isset($_SESSION['redirect_origin'])) {
+        $_SESSION['redirect_origin'] = array('page' => $current_page,
+                                             'get' => $_GET);
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
-      if (!tep_session_is_registered('auth_ignore')) {
+      if (!isset($_SESSION['auth_ignore'])) {
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-          $redirect_origin['auth_user'] = $_SERVER['PHP_AUTH_USER'];
-          $redirect_origin['auth_pw'] = $_SERVER['PHP_AUTH_PW'];
+          $_SESSION['redirect_origin']['auth_user'] = $_SERVER['PHP_AUTH_USER'];
+          $_SESSION['redirect_origin']['auth_pw'] = $_SERVER['PHP_AUTH_PW'];
         }
       }
 
@@ -157,17 +150,17 @@
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
   }
 
 // include the language translations
-  require(DIR_WS_LANGUAGES . $language . '.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
   $current_page = basename($PHP_SELF);
-  if (file_exists(DIR_WS_LANGUAGES . $language . '/' . $current_page)) {
-    include(DIR_WS_LANGUAGES . $language . '/' . $current_page);
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
+    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
 
 // define our localization functions

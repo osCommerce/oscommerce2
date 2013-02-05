@@ -42,7 +42,7 @@
     return $result;
   }
 
-  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $language;
+  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $_SESSION['language'];
 
   $languages_array = array();
   $languages = tep_get_languages();
@@ -54,7 +54,7 @@
                                'text' => $languages[$i]['name']);
   }
 
-  if (!$lng_exists) $_GET['lngdir'] = $language;
+  if (!$lng_exists) $_GET['lngdir'] = $_SESSION['language'];
 
   if (isset($_GET['filename'])) {
     $file_edit = realpath(DIR_FS_CATALOG_LANGUAGES . $_GET['filename']);

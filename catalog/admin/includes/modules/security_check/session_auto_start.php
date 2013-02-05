@@ -14,9 +14,7 @@
     var $type = 'warning';
 
     function securityCheck_session_auto_start() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/session_auto_start.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/session_auto_start.php');
     }
 
     function pass() {

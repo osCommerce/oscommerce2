@@ -106,8 +106,8 @@
         $check = tep_db_fetch_array($check_query);
 
 // update username in current session if changed
-        if ( ($check['id'] == $admin['id']) && ($check['user_name'] != $admin['username']) ) {
-          $admin['username'] = $username;
+        if ( ($check['id'] == $_SESSION['admin']['id']) && ($check['user_name'] != $_SESSION['admin']['username']) ) {
+          $_SESSION['admin']['username'] = $username;
         }
 
 // update username in htpasswd if changed
@@ -181,8 +181,8 @@
         $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
         $check = tep_db_fetch_array($check_query);
 
-        if ($admin['id'] == $check['id']) {
-          tep_session_unregister('admin');
+        if ($_SESSION['admin']['id'] == $check['id']) {
+          unset($_SESSION['admin']);
         }
 
         tep_db_query("delete from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");

@@ -87,9 +87,7 @@
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
   function tep_image_submit($image, $alt = '', $parameters = '') {
-    global $language;
-
-    $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" border="0" alt="' . tep_output_string($alt) . '"';
+    $image_submit = '<input type="image" src="' . tep_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" border="0" alt="' . tep_output_string($alt) . '"';
 
     if (tep_not_null($alt)) $image_submit .= ' title=" ' . tep_output_string($alt) . ' "';
 
@@ -115,9 +113,7 @@
 ////
 // Output a function button in the selected language
   function tep_image_button($image, $alt = '', $params = '') {
-    global $language;
-
-    return tep_image(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image, $alt, '', '', $params);
+    return tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $params);
   }
 
 ////

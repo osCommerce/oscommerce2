@@ -14,9 +14,7 @@
     var $type = 'warning';
 
     function securityCheck_file_uploads() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/file_uploads.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/file_uploads.php');
     }
 
     function pass() {
