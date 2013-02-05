@@ -472,8 +472,7 @@
           $sendto = false;
         }
 
-        if (!tep_session_is_registered('payment')) tep_session_register('payment');
-        $payment = $paypal_express->code;
+        $_SESSION['payment'] = $paypal_express->code;
 
         if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
         $ppe_token = $response_array['TOKEN'];

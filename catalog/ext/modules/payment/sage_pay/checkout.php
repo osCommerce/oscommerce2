@@ -36,20 +36,20 @@
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('payment') || (($payment != 'sage_pay_direct') && ($payment != 'sage_pay_server'))) {
+  if (!isset($_SESSION['payment']) || (($_SESSION['payment'] != 'sage_pay_direct') && ($_SESSION['payment'] != 'sage_pay_server'))) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
 // load the selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($payment);
+  $payment_modules = new payment($_SESSION['payment']);
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
   $payment_modules->update_status();
 
-  if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+  if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
@@ -84,7 +84,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  if ($payment == 'sage_pay_direct') {
+  if ($_SESSION['payment'] == 'sage_pay_direct') {
     $iframe_url = tep_href_link('ext/modules/payment/sage_pay/direct_3dauth.php', '', 'SSL');
   } else {
     $iframe_url = $sage_pay_server_nexturl;

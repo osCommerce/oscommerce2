@@ -202,8 +202,7 @@
             }
           }
 
-          if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_pro_payflow_ec->code;
+          $_SESSION['payment'] = $paypal_pro_payflow_ec->code;
 
           if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
           $ppeuk_token = $response_array['TOKEN'];
@@ -217,8 +216,7 @@
 
           $sendto = false;
 
-          if (!tep_session_is_registered('payment')) tep_session_register('payment');
-          $payment = $paypal_pro_payflow_ec->code;
+          $_SESSION['payment'] = $paypal_pro_payflow_ec->code;
 
           if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
           $ppeuk_token = $response_array['TOKEN'];

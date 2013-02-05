@@ -129,7 +129,7 @@
     }
 
     function cart() {
-      global $sendto, $billto, $currencies, $payment, $comments, $customer_default_address_id;
+      global $sendto, $billto, $currencies, $comments, $customer_default_address_id;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -212,7 +212,7 @@
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                           'currency' => $_SESSION['currency'],
                           'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
-                          'payment_method' => $payment,
+                          'payment_method' => $_SESSION['payment'],
                           'cc_type' => '',
                           'cc_owner' => '',
                           'cc_number' => '',
@@ -224,15 +224,15 @@
                           'tax_groups' => array(),
                           'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
 
-      if (isset($GLOBALS[$payment]) && is_object($GLOBALS[$payment])) {
-        if (isset($GLOBALS[$payment]->public_title)) {
-          $this->info['payment_method'] = $GLOBALS[$payment]->public_title;
+      if (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+        if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
+          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
         } else {
-          $this->info['payment_method'] = $GLOBALS[$payment]->title;
+          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->title;
         }
 
-        if ( isset($GLOBALS[$payment]->order_status) && is_numeric($GLOBALS[$payment]->order_status) && ($GLOBALS[$payment]->order_status > 0) ) {
-          $this->info['order_status'] = $GLOBALS[$payment]->order_status;
+        if ( isset($GLOBALS[$_SESSION['payment']]->order_status) && is_numeric($GLOBALS[$_SESSION['payment']]->order_status) && ($GLOBALS[$_SESSION['payment']]->order_status > 0) ) {
+          $this->info['order_status'] = $GLOBALS[$_SESSION['payment']]->order_status;
         }
       }
 

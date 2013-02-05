@@ -343,8 +343,8 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $sendto, $billto, $payment, $currencies;
-      global $$payment;
+      global $order, $order_totals, $sendto, $billto, $currencies;
+      global $$_SESSION['payment'];
 
       $pass = false;
 
@@ -493,10 +493,10 @@
                         EMAIL_SEPARATOR . "\n" .
                         tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
 
-        if (is_object($$payment)) {
+        if (is_object($$_SESSION['payment'])) {
           $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                           EMAIL_SEPARATOR . "\n";
-          $payment_class = $$payment;
+          $payment_class = $$_SESSION['payment'];
           $email_order .= $payment_class->title . "\n\n";
           if ($payment_class->email_footer) {
             $email_order .= $payment_class->email_footer . "\n\n";
@@ -519,7 +519,7 @@
         tep_session_unregister('sendto');
         tep_session_unregister('billto');
         unset($_SESSION['shipping']);
-        tep_session_unregister('payment');
+        unset($_SESSION['payment']);
         tep_session_unregister('comments');
 
         tep_session_unregister($this->_mbcartID);
