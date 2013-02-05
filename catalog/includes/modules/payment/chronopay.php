@@ -63,10 +63,8 @@
     }
 
     function selection() {
-      global $cart_ChronoPay_ID;
-
-      if (tep_session_is_registered('cart_ChronoPay_ID')) {
-        $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      if (isset($_SESSION['cart_ChronoPay_ID'])) {
+        $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -78,7 +76,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_ChronoPay_ID');
+          unset($_SESSION['cart_ChronoPay_ID']);
         }
       }
 
@@ -93,18 +91,18 @@
     }
 
     function confirmation() {
-      global $cart_ChronoPay_ID, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
       if (isset($_SESSION['cartID'])) {
         $insert_order = false;
 
-        if (tep_session_is_registered('cart_ChronoPay_ID')) {
-          $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+        if (isset($_SESSION['cart_ChronoPay_ID'])) {
+          $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
           $curr = tep_db_fetch_array($curr_check);
 
-          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($cart_ChronoPay_ID, 0, strlen($_SESSION['cartID']))) ) {
+          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_ChronoPay_ID'], 0, strlen($_SESSION['cartID']))) ) {
             $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
             if (tep_db_num_rows($check_query) < 1) {
@@ -255,8 +253,7 @@
             }
           }
 
-          $cart_ChronoPay_ID = $_SESSION['cartID'] . '-' . $insert_id;
-          tep_session_register('cart_ChronoPay_ID');
+          $_SESSION['cart_ChronoPay_ID'] = $_SESSION['cartID'] . '-' . $insert_id;
         }
       }
 
@@ -264,7 +261,7 @@
     }
 
     function process_button() {
-      global $order, $currencies, $cart_ChronoPay_ID;
+      global $order, $currencies;
 
       switch ($order->billing['country']['iso_code_3']) {
         case 'USA':
@@ -296,7 +293,7 @@
       }
 
       $total_price = number_format($order->info['total'] * $currencies->get_value('USD'), $currencies->currencies['USD']['decimal_places'], '.', '');
-      $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
       $process_button_string = tep_draw_hidden_field('product_id', MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID) .
                                tep_draw_hidden_field('product_name', STORE_NAME) .
@@ -323,10 +320,10 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $currencies, $cart_ChronoPay_ID;
+      global $order, $order_totals, $currencies;
       global $$_SESSION['payment'];
 
-      $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
@@ -489,7 +486,7 @@
       unset($_SESSION['payment']);
       unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_ChronoPay_ID');
+      unset($_SESSION['cart_ChronoPay_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
