@@ -98,14 +98,14 @@
     }
 
     function pre_confirmation_check() {
-      global $order, $ppe_token;
+      global $order;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
       if (!isset($_GET['do'])) {
-        $response_array = $this->getExpressCheckoutDetails($ppe_token);
+        $response_array = $this->getExpressCheckoutDetails($_SESSION['ppe_token']);
 
         if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
 // load the selected shipping module
@@ -145,7 +145,7 @@
     }
 
     function before_process() {
-      global $order, $ppe_token, $ppe_payerid, $response_array;
+      global $order, $response_array;
 
       if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
@@ -155,8 +155,8 @@
         }
       }
 
-      $params = array('TOKEN' => $ppe_token,
-                      'PAYERID' => $ppe_payerid,
+      $params = array('TOKEN' => $_SESSION['ppe_token'],
+                      'PAYERID' => $_SESSION['ppe_payerid'],
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCYCODE' => $order->info['currency']);
 
@@ -177,10 +177,10 @@
     }
 
     function after_process() {
-      global $response_array, $insert_id, $order, $ppe_payerstatus, $ppe_addressstatus;
+      global $response_array, $insert_id, $order;
 
-      $pp_result = 'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
+      $pp_result = 'Payer Status: ' . tep_output_string_protected($_SESSION['ppe_payerstatus']) . "\n" .
+                   'Address Status: ' . tep_output_string_protected($_SESSION['ppe_addressstatus']) . "\n\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTTYPE']) . "\n" .
                    'Pending Reason: ' . tep_output_string_protected($response_array['PENDINGREASON']) . "\n" .
@@ -194,10 +194,10 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppe_token');
-      tep_session_unregister('ppe_payerid');
-      tep_session_unregister('ppe_payerstatus');
-      tep_session_unregister('ppe_addressstatus');
+      unset($_SESSION['ppe_token']);
+      unset($_SESSION['ppe_payerid']);
+      unset($_SESSION['ppe_payerstatus']);
+      unset($_SESSION['ppe_addressstatus']);
     }
 
     function get_error() {
