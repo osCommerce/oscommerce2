@@ -100,14 +100,6 @@
     return session_start();
   }
 
-  function tep_session_save_path($path = '') {
-    if (!empty($path)) {
-      return session_save_path($path);
-    } else {
-      return session_save_path();
-    }
-  }
-
   function tep_session_recreate() {
     global $SID;
 
