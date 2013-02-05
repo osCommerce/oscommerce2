@@ -47,11 +47,10 @@
         $check_country = tep_db_fetch_array($check_country_query);
 
         $_SESSION['customer_id'] = $check_customer['customers_id'];
-        $customer_default_address_id = $check_customer['customers_default_address_id'];
+        $_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
         $_SESSION['customer_first_name'] = $check_customer['customers_firstname'];
         $_SESSION['customer_country_id'] = $check_country['entry_country_id'];
         $customer_zone_id = $check_country['entry_zone_id'];
-        tep_session_register('customer_default_address_id');
         tep_session_register('customer_zone_id');
 
         tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$_SESSION['customer_id'] . "'");

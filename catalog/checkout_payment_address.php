@@ -173,7 +173,7 @@
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      $_SESSION['billto'] = $customer_default_address_id;
+      $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
@@ -181,7 +181,7 @@
 
 // if no billing destination address was selected, use their own address as default
   if (!isset($_SESSION['billto'])) {
-    $_SESSION['billto'] = $customer_default_address_id;
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

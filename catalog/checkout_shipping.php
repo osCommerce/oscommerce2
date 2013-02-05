@@ -26,7 +26,7 @@
 
 // if no shipping destination address was selected, use the customers own address as default
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $customer_default_address_id;
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected shipping address
     if ( (is_array($_SESSION['sendto']) && empty($_SESSION['sendto'])) || is_numeric($_SESSION['sendto']) ) {
@@ -34,7 +34,7 @@
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] != '1') {
-        $_SESSION['sendto'] = $customer_default_address_id;
+        $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
     }

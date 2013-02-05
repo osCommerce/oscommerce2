@@ -21,7 +21,7 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADDRESS_BOOK_PROCESS);
 
   if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_GET['delete']) && is_numeric($_GET['delete']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
-    if ((int)$_GET['delete'] == $customer_default_address_id) {
+    if ((int)$_GET['delete'] == $_SESSION['customer_default_address_id']) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
     } else {
       tep_db_query("delete from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . (int)$_GET['delete'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
@@ -151,11 +151,11 @@
           tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "address_book_id = '" . (int)$_GET['edit'] . "' and customers_id ='" . (int)$_SESSION['customer_id'] . "'");
 
 // reregister session variables
-          if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $customer_default_address_id) ) {
+          if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id']) ) {
             $_SESSION['customer_first_name'] = $firstname;
             $_SESSION['customer_country_id'] = $country;
             $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
-            $customer_default_address_id = (int)$_GET['edit'];
+            $_SESSION['customer_default_address_id'] = (int)$_GET['edit'];
 
             $sql_data_array = array('customers_firstname' => $firstname,
                                     'customers_lastname' => $lastname,
@@ -180,7 +180,7 @@
             $_SESSION['customer_first_name'] = $firstname;
             $_SESSION['customer_country_id'] = $country;
             $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
-            if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $customer_default_address_id = $new_address_book_id;
+            if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $_SESSION['customer_default_address_id'] = $new_address_book_id;
 
             $sql_data_array = array('customers_firstname' => $firstname,
                                     'customers_lastname' => $lastname);
@@ -210,7 +210,7 @@
 
     $entry = tep_db_fetch_array($entry_query);
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    if ($_GET['delete'] == $customer_default_address_id) {
+    if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
       tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));

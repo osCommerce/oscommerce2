@@ -183,7 +183,7 @@
         unset($_SESSION['sendto']);
       }
     } else {
-      $_SESSION['sendto'] = $customer_default_address_id;
+      $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
@@ -191,7 +191,7 @@
 
 // if no shipping destination address was selected, use their own address as default
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $customer_default_address_id;
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
