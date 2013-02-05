@@ -67,10 +67,8 @@
     }
 
     function selection() {
-      global $cart_PayPal_Standard_ID;
-
-      if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
-        $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+      if (isset($_SESSION['cart_PayPal_Standard_ID'])) {
+        $order_id = substr($_SESSION['cart_PayPal_Standard_ID'], strpos($_SESSION['cart_PayPal_Standard_ID'], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -82,7 +80,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_PayPal_Standard_ID');
+          unset($_SESSION['cart_PayPal_Standard_ID']);
         }
       }
 
@@ -97,18 +95,18 @@
     }
 
     function confirmation() {
-      global $cart_PayPal_Standard_ID, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
       if (isset($_SESSION['cartID'])) {
         $insert_order = false;
 
-        if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
-          $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+        if (isset($_SESSION['cart_PayPal_Standard_ID'])) {
+          $order_id = substr($_SESSION['cart_PayPal_Standard_ID'], strpos($_SESSION['cart_PayPal_Standard_ID'], '-')+1);
 
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
           $curr = tep_db_fetch_array($curr_check);
 
-          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($cart_PayPal_Standard_ID, 0, strlen($_SESSION['cartID']))) ) {
+          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_PayPal_Standard_ID'], 0, strlen($_SESSION['cartID']))) ) {
             $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
             if (tep_db_num_rows($check_query) < 1) {
@@ -258,8 +256,7 @@
             }
           }
 
-          $cart_PayPal_Standard_ID = $_SESSION['cartID'] . '-' . $insert_id;
-          tep_session_register('cart_PayPal_Standard_ID');
+          $_SESSION['cart_PayPal_Standard_ID'] = $_SESSION['cartID'] . '-' . $insert_id;
         }
       }
 
@@ -267,7 +264,7 @@
     }
 
     function process_button() {
-      global $order, $cart_PayPal_Standard_ID;
+      global $order;
 
       $process_button_string = '';
       $parameters = array('cmd' => '_xclick',
@@ -277,7 +274,7 @@
                           'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
                           'amount' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
                           'currency_code' => $_SESSION['currency'],
-                          'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
+                          'invoice' => substr($_SESSION['cart_PayPal_Standard_ID'], strpos($_SESSION['cart_PayPal_Standard_ID'], '-')+1),
                           'custom' => $_SESSION['customer_id'],
                           'no_note' => '1',
                           'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
@@ -385,7 +382,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $currencies, $cart_PayPal_Standard_ID, $$_SESSION['payment'], $messageStack;
+      global $order, $order_totals, $currencies, $$_SESSION['payment'], $messageStack;
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -452,7 +449,7 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
-      $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_PayPal_Standard_ID'], strpos($_SESSION['cart_PayPal_Standard_ID'], '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
 
@@ -626,7 +623,7 @@
       unset($_SESSION['payment']);
       unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_PayPal_Standard_ID');
+      unset($_SESSION['cart_PayPal_Standard_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
