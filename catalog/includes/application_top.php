@@ -131,7 +131,7 @@
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
 // set the session name and save path
-  tep_session_name('osCsid');
+  session_name('osCsid');
   tep_session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
@@ -146,10 +146,10 @@
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // set the session ID if it exists
-   if (isset($_POST[tep_session_name()])) {
-     session_id($_POST[tep_session_name()]);
-   } elseif ( ($request_type == 'SSL') && isset($_GET[tep_session_name()]) ) {
-     session_id($_GET[tep_session_name()]);
+   if (isset($_POST[session_name()])) {
+     session_id($_POST[session_name()]);
+   } elseif ( ($request_type == 'SSL') && isset($_GET[session_name()]) ) {
+     session_id($_GET[session_name()]);
    }
 
 // start the session
