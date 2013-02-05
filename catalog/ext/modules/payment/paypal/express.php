@@ -43,7 +43,7 @@
 
   switch ($_GET['osC_Action']) {
     case 'cancel':
-      tep_session_unregister('ppe_token');
+      unset($_SESSION['ppe_token']);
 
       tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 
@@ -472,17 +472,13 @@
 
         $_SESSION['payment'] = $paypal_express->code;
 
-        if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
-        $ppe_token = $response_array['TOKEN'];
+        $_SESSION['ppe_token'] = $response_array['TOKEN'];
 
-        if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
-        $ppe_payerid = $response_array['PAYERID'];
+        $_SESSION['ppe_payerid'] = $response_array['PAYERID'];
 
-        if (!tep_session_is_registered('ppe_payerstatus')) tep_session_register('ppe_payerstatus');
-        $ppe_payerstatus = $response_array['PAYERSTATUS'];
+        $_SESSION['ppe_payerstatus'] = $response_array['PAYERSTATUS'];
 
-        if (!tep_session_is_registered('ppe_addressstatus')) tep_session_register('ppe_addressstatus');
-        $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
+        $_SESSION['ppe_addressstatus'] = $response_array['ADDRESSSTATUS'];
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
