@@ -11,7 +11,5 @@
 */
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-  if (PHP_VERSION >= '5.2') {
-    date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
-  }
+  date_default_timezone_set(CFG_TIME_ZONE);
 ?>
