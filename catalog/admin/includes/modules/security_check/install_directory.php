@@ -14,9 +14,7 @@
     var $type = 'warning';
 
     function securityCheck_install_directory() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/install_directory.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/install_directory.php');
     }
 
     function pass() {

@@ -12,7 +12,7 @@
 
   chdir('../../../../');
   require('includes/application_top.php');
-  require('../includes/languages/' . $language . '/modules/payment/moneybookers.php');
+  require('../includes/languages/' . $_SESSION['language'] . '/modules/payment/moneybookers.php');
   require('../includes/modules/payment/moneybookers.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -32,7 +32,7 @@
                       'Moneybookers E-Mail Address: ' . $_POST['mb_email'] . "\n" .
                       'Moneybookers Customer ID: ' . $result[1] . "\n" .
                       'Store URL: ' . tep_catalog_href_link() . "\n" .
-                      'Language: ' . $language . "\n";
+                      'Language: ' . $_SESSION['language'] . "\n";
 
         tep_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
       }

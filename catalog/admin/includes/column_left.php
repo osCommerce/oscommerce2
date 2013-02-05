@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (tep_session_is_registered('admin')) {
+  if (isset($_SESSION['admin'])) {
     $cl_box_groups = array();
 
     include(DIR_WS_BOXES . 'configuration.php');
