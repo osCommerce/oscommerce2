@@ -19,7 +19,7 @@
 // initialize variables if the customer is not logged in
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['customer_id'] = 0;
-    $customer_default_address_id = 0;
+    $_SESSION['customer_default_address_id'] = 0;
   }
 
   require('includes/modules/payment/paypal_express.php');
@@ -30,11 +30,11 @@
   }
 
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $customer_default_address_id;
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
   if (!isset($_SESSION['billto'])) {
-    $_SESSION['billto'] = $customer_default_address_id;
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -244,7 +244,7 @@
 
             $_SESSION['customer_id'] = $check['customers_id'];
             $customers_firstname = $check['customers_firstname'];
-            $customer_default_address_id = $check['customers_default_address_id'];
+            $_SESSION['customer_default_address_id'] = $check['customers_default_address_id'];
           } else {
             $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
             $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
@@ -346,16 +346,15 @@
 
           $_SESSION['sendto'] = $address_id;
 
-          if ($customer_default_address_id < 1) {
+          if ($_SESSION['customer_default_address_id'] < 1) {
             tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-            $customer_default_address_id = $address_id;
+            $_SESSION['customer_default_address_id'] = $address_id;
           }
         }
 
         if ($force_login == true) {
           $_SESSION['customer_country_id'] = $ship_country_id;
           $customer_zone_id = $ship_zone_id;
-          tep_session_register('customer_default_address_id');
           tep_session_register('customer_zone_id');
 
           $_SESSION['billto'] = $_SESSION['sendto'];

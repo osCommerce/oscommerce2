@@ -48,11 +48,11 @@
   }
 
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $customer_default_address_id;
+    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
   if (!isset($_SESSION['billto'])) {
-    $_SESSION['billto'] = $customer_default_address_id;
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
 // register a random ID in the session to check throughout the checkout procedure
