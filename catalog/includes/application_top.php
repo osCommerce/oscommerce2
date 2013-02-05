@@ -207,7 +207,7 @@
     }
 
     if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-      tep_session_destroy();
+      session_destroy();
       tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
     }
   }
@@ -219,7 +219,7 @@
     }
 
     if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
-      tep_session_destroy();
+      session_destroy();
       tep_redirect(tep_href_link(FILENAME_LOGIN));
     }
   }
@@ -232,7 +232,7 @@
     }
 
     if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-      tep_session_destroy();
+      session_destroy();
       tep_redirect(tep_href_link(FILENAME_LOGIN));
     }
   }
