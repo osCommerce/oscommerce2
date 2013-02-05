@@ -308,11 +308,11 @@ if ($result == 'VERIFIED')
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
         tep_address_format($order->billing['format_id'], $order->billing, 0, '', "\n")."\n\n";
-        if (is_object($$payment))
+        if (is_object($$_SESSION['payment']))
         {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD."\n".
             EMAIL_SEPARATOR."\n";
-            $payment_class = $$payment;
+            $payment_class = $$_SESSION['payment'];
             $email_order .= $payment_class->title."\n\n";
             if ($payment_class->email_footer)
             {

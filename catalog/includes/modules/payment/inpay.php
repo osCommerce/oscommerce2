@@ -369,8 +369,8 @@ class inpay
 
     function before_process()
     {
-        global $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_inpay_Standard_ID;
-        global $$payment;
+        global $order, $order_totals, $sendto, $billto, $currencies, $cart_inpay_Standard_ID;
+        global $$_SESSION['payment'];
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
@@ -521,11 +521,11 @@ class inpay
         EMAIL_SEPARATOR."\n".
         tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n")."\n\n";
 
-        if (is_object($$payment))
+        if (is_object($$_SESSION['payment']))
         {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD."\n".
             EMAIL_SEPARATOR."\n";
-            $payment_class = $$payment;
+            $payment_class = $$_SESSION['payment'];
             $email_order .= $payment_class->title."\n\n";
             if ($payment_class->email_footer)
             {
@@ -553,7 +553,7 @@ class inpay
         tep_session_unregister('sendto');
         tep_session_unregister('billto');
         unset($_SESSION['shipping']);
-        tep_session_unregister('payment');
+        unset($_SESSION['payment']);
         tep_session_unregister('comments');
 
         tep_session_unregister('cart_inpay_Standard_ID');

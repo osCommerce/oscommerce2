@@ -147,7 +147,7 @@
 
         $billto = tep_db_insert_id();
 
-        if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
@@ -156,7 +156,7 @@
       $reset_payment = false;
       if (tep_session_is_registered('billto')) {
         if ($billto != $_POST['address']) {
-          if (tep_session_is_registered('payment')) {
+          if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
@@ -170,7 +170,7 @@
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
-        if ($reset_payment == true) tep_session_unregister('payment');
+        if ($reset_payment == true) unset($_SESSION['payment']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       } else {
         tep_session_unregister('billto');

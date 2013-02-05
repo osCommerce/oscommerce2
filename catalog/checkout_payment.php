@@ -58,7 +58,7 @@
 
       if ($check_address['total'] != '1') {
         $billto = $customer_default_address_id;
-        if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
       }
     }
   }
@@ -194,7 +194,7 @@ function rowOutEffect(object) {
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
 
 <?php
-    if ( ($selection[$i]['id'] == $payment) || ($n == 1) ) {
+    if ( ($selection[$i]['id'] == $_SESSION['payment']) || ($n == 1) ) {
       echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
     } else {
       echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
@@ -206,7 +206,7 @@ function rowOutEffect(object) {
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $payment));
+      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $_SESSION['payment']));
     } else {
       echo tep_draw_hidden_field('payment', $selection[$i]['id']);
     }

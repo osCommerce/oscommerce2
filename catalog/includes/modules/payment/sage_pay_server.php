@@ -304,7 +304,7 @@
       tep_session_unregister('sendto');
       tep_session_unregister('billto');
       unset($_SESSION['shipping']);
-      tep_session_unregister('payment');
+      unset($_SESSION['payment']);
       tep_session_unregister('comments');
 
       tep_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));

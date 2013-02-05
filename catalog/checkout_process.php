@@ -28,7 +28,7 @@
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!tep_session_is_registered('payment')) ) {
+  if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset($_SESSION['payment'])) ) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
  }
 
@@ -43,7 +43,7 @@
 
 // load selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($payment);
+  $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
@@ -68,7 +68,7 @@
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $payment) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
@@ -266,10 +266,10 @@
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
                   tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n") . "\n\n";
-  if (is_object($$payment)) {
+  if (is_object($$_SESSION['payment'])) {
     $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" . 
                     EMAIL_SEPARATOR . "\n";
-    $payment_class = $$payment;
+    $payment_class = $$_SESSION['payment'];
     $email_order .= $order->info['payment_method'] . "\n\n";
     if (isset($payment_class->email_footer)) {
       $email_order .= $payment_class->email_footer . "\n\n";
@@ -291,7 +291,7 @@
   tep_session_unregister('sendto');
   tep_session_unregister('billto');
   unset($_SESSION['shipping']);
-  tep_session_unregister('payment');
+  unset($_SESSION['payment']);
   tep_session_unregister('comments');
 
   tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
