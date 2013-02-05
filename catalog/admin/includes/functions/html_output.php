@@ -288,7 +288,7 @@
     $string = '';
 
     if (defined('SID') && tep_not_null(SID)) {
-      $string = tep_draw_hidden_field(tep_session_name(), tep_session_id());
+      $string = tep_draw_hidden_field(session_name(), session_id());
     }
 
     return $string;
