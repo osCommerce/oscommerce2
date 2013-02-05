@@ -141,11 +141,9 @@
           }
         }
 
-        if (!tep_session_is_registered('billto')) tep_session_register('billto');
-
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-        $billto = tep_db_insert_id();
+        $_SESSION['billto'] = tep_db_insert_id();
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
@@ -154,39 +152,36 @@
 // process the selected billing destination
     } elseif (isset($_POST['address'])) {
       $reset_payment = false;
-      if (tep_session_is_registered('billto')) {
-        if ($billto != $_POST['address']) {
+      if (isset($_SESSION['billto'])) {
+        if ($_SESSION['billto'] != $_POST['address']) {
           if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
-      } else {
-        tep_session_register('billto');
       }
 
-      $billto = $_POST['address'];
+      $_SESSION['billto'] = $_POST['address'];
 
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$billto . "'");
+      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$_SESSION['billto'] . "'");
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
         if ($reset_payment == true) unset($_SESSION['payment']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       } else {
-        tep_session_unregister('billto');
+        unset($_SESSION['billto']);
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      if (!tep_session_is_registered('billto')) tep_session_register('billto');
-      $billto = $customer_default_address_id;
+      $_SESSION['billto'] = $customer_default_address_id;
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
   }
 
 // if no billing destination address was selected, use their own address as default
-  if (!tep_session_is_registered('billto')) {
-    $billto = $customer_default_address_id;
+  if (!isset($_SESSION['billto'])) {
+    $_SESSION['billto'] = $customer_default_address_id;
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -268,7 +263,7 @@ function check_form_optional(form_name) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_PAYMENT_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $billto, true, ' ', '<br />'); ?>
+        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
@@ -301,7 +296,7 @@ function check_form_optional(form_name) {
       while ($addresses = tep_db_fetch_array($addresses_query)) {
         $format_id = tep_get_address_format_id($addresses['country_id']);
 
-       if ($addresses['address_book_id'] == $billto) {
+       if ($addresses['address_book_id'] == $_SESSION['billto']) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
         } else {
           echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
@@ -309,7 +304,7 @@ function check_form_optional(form_name) {
 ?>
 
         <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $billto)); ?></td>
+        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $_SESSION['billto'])); ?></td>
       </tr>
       <tr>
         <td colspan="2" style="padding-left: 15px;"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></td>

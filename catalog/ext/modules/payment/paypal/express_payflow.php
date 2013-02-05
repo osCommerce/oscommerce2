@@ -52,9 +52,8 @@
     $sendto = $customer_default_address_id;
   }
 
-  if (!tep_session_is_registered('billto')) {
-    tep_session_register('billto');
-    $billto = $customer_default_address_id;
+  if (!isset($_SESSION['billto'])) {
+    $_SESSION['billto'] = $customer_default_address_id;
   }
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -121,7 +120,7 @@
                           'country_iso_code_3' => $country['countries_iso_code_3'],
                           'address_format_id' => ($country['address_format_id'] > 0 ? $country['address_format_id'] : '1'));
 
-          $billto = $sendto;
+          $_SESSION['billto'] = $sendto;
 
           $order = new order;
 
