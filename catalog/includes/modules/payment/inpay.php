@@ -369,7 +369,7 @@ class inpay
 
     function before_process()
     {
-        global $order, $order_totals, $sendto, $billto, $currencies, $cart_inpay_Standard_ID;
+        global $order, $order_totals, $sendto, $currencies, $cart_inpay_Standard_ID;
         global $$_SESSION['payment'];
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
@@ -519,7 +519,7 @@ class inpay
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_label($_SESSION['customer_id'], $billto, 0, '', "\n")."\n\n";
+        tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n")."\n\n";
 
         if (is_object($$_SESSION['payment']))
         {
@@ -551,7 +551,7 @@ class inpay
 
         // unregister session variables used during checkout
         tep_session_unregister('sendto');
-        tep_session_unregister('billto');
+        unset($_SESSION['billto']);
         unset($_SESSION['shipping']);
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);

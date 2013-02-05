@@ -129,7 +129,7 @@
     }
 
     function cart() {
-      global $sendto, $billto, $currencies, $customer_default_address_id;
+      global $sendto, $currencies, $customer_default_address_id;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -179,25 +179,25 @@
                                   'entry_state' => null);
       }
 
-      if (is_array($billto) && !empty($billto)) {
-        $billing_address = array('entry_firstname' => $billto['firstname'],
-                                 'entry_lastname' => $billto['lastname'],
-                                 'entry_company' => $billto['company'],
-                                 'entry_street_address' => $billto['street_address'],
-                                 'entry_suburb' => $billto['suburb'],
-                                 'entry_postcode' => $billto['postcode'],
-                                 'entry_city' => $billto['city'],
-                                 'entry_zone_id' => $billto['zone_id'],
-                                 'zone_name' => $billto['zone_name'],
-                                 'entry_country_id' => $billto['country_id'],
-                                 'countries_id' => $billto['country_id'],
-                                 'countries_name' => $billto['country_name'],
-                                 'countries_iso_code_2' => $billto['country_iso_code_2'],
-                                 'countries_iso_code_3' => $billto['country_iso_code_3'],
-                                 'address_format_id' => $billto['address_format_id'],
-                                 'entry_state' => $billto['zone_name']);
+      if (is_array($_SESSION['billto']) && !empty($_SESSION['billto'])) {
+        $billing_address = array('entry_firstname' => $_SESSION['billto']['firstname'],
+                                 'entry_lastname' => $_SESSION['billto']['lastname'],
+                                 'entry_company' => $_SESSION['billto']['company'],
+                                 'entry_street_address' => $_SESSION['billto']['street_address'],
+                                 'entry_suburb' => $_SESSION['billto']['suburb'],
+                                 'entry_postcode' => $_SESSION['billto']['postcode'],
+                                 'entry_city' => $_SESSION['billto']['city'],
+                                 'entry_zone_id' => $_SESSION['billto']['zone_id'],
+                                 'zone_name' => $_SESSION['billto']['zone_name'],
+                                 'entry_country_id' => $_SESSION['billto']['country_id'],
+                                 'countries_id' => $_SESSION['billto']['country_id'],
+                                 'countries_name' => $_SESSION['billto']['country_name'],
+                                 'countries_iso_code_2' => $_SESSION['billto']['country_iso_code_2'],
+                                 'countries_iso_code_3' => $_SESSION['billto']['country_iso_code_3'],
+                                 'address_format_id' => $_SESSION['billto']['address_format_id'],
+                                 'entry_state' => $_SESSION['billto']['zone_name']);
       } else {
-        $billing_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$billto . "'");
+        $billing_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'");
         $billing_address = tep_db_fetch_array($billing_address_query);
       }
 
