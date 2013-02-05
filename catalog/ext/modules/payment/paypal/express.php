@@ -41,8 +41,7 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
-  $cartID = $_SESSION['cart']->cartID;
+  $_SESSION['cartID'] = $_SESSION['cart']->cartID;
 
   switch ($_GET['osC_Action']) {
     case 'cancel':

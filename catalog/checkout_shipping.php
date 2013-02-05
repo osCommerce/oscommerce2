@@ -46,13 +46,11 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) {
-    tep_session_register('cartID');
-  } elseif (($cartID != $_SESSION['cart']->cartID) && tep_session_is_registered('shipping')) {
+  if (isset($_SESSION['cartID']) && ($_SESSION['cartID'] != $_SESSION['cart']->cartID) && tep_session_is_registered('shipping')) {
     tep_session_unregister('shipping');
   }
 
-  $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
+  $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
 
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed

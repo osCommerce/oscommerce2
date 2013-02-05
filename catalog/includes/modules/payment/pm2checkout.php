@@ -78,11 +78,11 @@
     }
 
     function process_button() {
-      global $currencies, $order, $cartID;
+      global $currencies, $order;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
-                               tep_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $cartID) .
+                               tep_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID']) .
                                tep_draw_hidden_field('fixed', 'Y') .
                                tep_draw_hidden_field('first_name', $order->billing['firstname']) .
                                tep_draw_hidden_field('last_name', $order->billing['lastname']) .
