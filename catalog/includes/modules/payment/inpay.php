@@ -77,11 +77,9 @@ class inpay
 
     function selection()
     {
-        global $cart_inpay_Standard_ID;
-
-        if (tep_session_is_registered('cart_inpay_Standard_ID'))
+        if (isset($_SESSION['cart_inpay_Standard_ID']))
         {
-            $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
+            $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
             $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
@@ -94,7 +92,7 @@ class inpay
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
 
-                tep_session_unregister('cart_inpay_Standard_ID');
+                unset($_SESSION['cart_inpay_Standard_ID']);
             }
         }
 
@@ -112,20 +110,20 @@ class inpay
 
     function confirmation()
     {
-        global $cart_inpay_Standard_ID, $order, $order_total_modules;
+        global $order, $order_total_modules;
 
         if (isset($_SESSION['cartID']))
         {
             $insert_order = false;
 
-            if (tep_session_is_registered('cart_inpay_Standard_ID'))
+            if (isset($_SESSION['cart_inpay_Standard_ID']))
             {
-                $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
+                $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
                 $curr_check = tep_db_query("select currency from ".TABLE_ORDERS." where orders_id = '".(int)$order_id."'");
                 $curr = tep_db_fetch_array($curr_check);
 
-                if (($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($cart_inpay_Standard_ID, 0, strlen($_SESSION['cartID']))))
+                if (($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_inpay_Standard_ID'], 0, strlen($_SESSION['cartID']))))
                 {
                     $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
@@ -292,8 +290,7 @@ class inpay
                     }
                 }
 
-                $cart_inpay_Standard_ID = $_SESSION['cartID'].'-'.$insert_id;
-                tep_session_register('cart_inpay_Standard_ID');
+                $_SESSION['cart_inpay_Standard_ID'] = $_SESSION['cartID'].'-'.$insert_id;
             }
         }
 
@@ -302,7 +299,7 @@ class inpay
 
     function process_button()
     {
-        global $order, $cart_inpay_Standard_ID;
+        global $order;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -312,7 +309,7 @@ class inpay
         //'business'=>MODULE_PAYMENT_INPAY_ID,
         'amount'=>$this->format_raw($order->info['total']), //TODO: we do not calculate tax+shipping only gross total -$order->info['shipping_cost']-$order->info['tax']),
         'currency'=>$_SESSION['currency'],
-        'order_id'=>substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1),
+        'order_id'=>substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1),
         'custom'=>$_SESSION['customer_id'],
         'no_note'=>'1',
         'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
@@ -369,9 +366,9 @@ class inpay
 
     function before_process()
     {
-        global $order, $order_totals, $currencies, $cart_inpay_Standard_ID;
+        global $order, $order_totals, $currencies;
         global $$_SESSION['payment'];
-        $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
+        $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
         $delivered_status = 3;
@@ -556,7 +553,7 @@ class inpay
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        tep_session_unregister('cart_inpay_Standard_ID');
+        unset($_SESSION['cart_inpay_Standard_ID']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
