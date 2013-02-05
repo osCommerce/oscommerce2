@@ -105,7 +105,7 @@
       tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$customer_default_address_id . "'");
 
 // reset the session variables
-      $customer_first_name = $firstname;
+      $_SESSION['customer_first_name'] = $firstname;
 
       $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
