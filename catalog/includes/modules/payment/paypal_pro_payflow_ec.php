@@ -78,7 +78,7 @@
     }
 
     function pre_confirmation_check() {
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
     }
@@ -103,7 +103,7 @@
     }
 
     function before_process() {
-      global $order, $ppeuk_token, $ppeuk_payerid;
+      global $order;
 
       if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
@@ -126,9 +126,9 @@
                       'TENDER' => 'P',
                       'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                       'EMAIL' => $order->customer['email_address'],
-                      'TOKEN' => $ppeuk_token,
+                      'TOKEN' => $_SESSION['ppeuk_token'],
                       'ACTION' => 'D',
-                      'PAYERID' => $ppeuk_payerid,
+                      'PAYERID' => $_SESSION['ppeuk_payerid'],
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCY' => $order->info['currency'],
                       'BUTTONSOURCE' => 'osCommerce22_Default_PRO2EC');
@@ -182,8 +182,8 @@
     }
 
     function after_process() {
-      tep_session_unregister('ppeuk_token');
-      tep_session_unregister('ppeuk_payerid');
+      unset($_SESSION['ppeuk_token']);
+      unset($_SESSION['ppeuk_payerid']);
     }
 
     function get_error() {

@@ -202,11 +202,9 @@
 
           $_SESSION['payment'] = $paypal_pro_payflow_ec->code;
 
-          if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
-          $ppeuk_token = $response_array['TOKEN'];
+          $_SESSION['ppeuk_token'] = $response_array['TOKEN'];
 
-          if (!tep_session_is_registered('ppeuk_payerid')) tep_session_register('ppeuk_payerid');
-          $ppeuk_payerid = $response_array['PAYERID'];
+          $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         } else {
@@ -216,11 +214,9 @@
 
           $_SESSION['payment'] = $paypal_pro_payflow_ec->code;
 
-          if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
-          $ppeuk_token = $response_array['TOKEN'];
+          $_SESSION['ppeuk_token'] = $response_array['TOKEN'];
 
-          if (!tep_session_is_registered('ppeuk_payerid')) tep_session_register('ppeuk_payerid');
-          $ppeuk_payerid = $response_array['PAYERID'];
+          $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
