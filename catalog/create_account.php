@@ -216,11 +216,10 @@
         tep_session_recreate();
       }
 
-      $customer_first_name = $firstname;
+      $_SESSION['customer_first_name'] = $firstname;
       $customer_default_address_id = $address_id;
       $_SESSION['customer_country_id'] = $country;
       $customer_zone_id = $zone_id;
-      tep_session_register('customer_first_name');
       tep_session_register('customer_default_address_id');
       tep_session_register('customer_zone_id');
 

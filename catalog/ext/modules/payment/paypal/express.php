@@ -281,8 +281,7 @@
             tep_session_recreate();
           }
 
-          $customer_first_name = $customers_firstname;
-          tep_session_register('customer_first_name');
+          $_SESSION['customer_first_name'] = $customers_firstname;
 
 // reset session token
           $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
