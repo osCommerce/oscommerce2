@@ -354,8 +354,7 @@
 
         if ($force_login == true) {
           $_SESSION['customer_country_id'] = $ship_country_id;
-          $customer_zone_id = $ship_zone_id;
-          tep_session_register('customer_zone_id');
+          $_SESSION['customer_zone_id'] = $ship_zone_id;
 
           $_SESSION['billto'] = $_SESSION['sendto'];
         }
