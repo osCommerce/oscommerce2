@@ -118,14 +118,6 @@
     return false;
   }
 
-  function tep_session_is_registered($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_is_registered($variable);
-    } else {
-      return isset($_SESSION) && array_key_exists($variable, $_SESSION);
-    }
-  }
-
   function tep_session_unregister($variable) {
     if (PHP_VERSION < 4.3) {
       return session_unregister($variable);
