@@ -100,14 +100,6 @@
     return session_start();
   }
 
-  function tep_session_unregister($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_unregister($variable);
-    } else {
-      unset($_SESSION[$variable]);
-    }
-  }
-
   function tep_session_id($sessid = '') {
     if (!empty($sessid)) {
       return session_id($sessid);
