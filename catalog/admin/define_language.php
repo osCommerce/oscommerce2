@@ -74,7 +74,7 @@
 
           if (file_exists($file) && tep_is_writable($file)) {
             $new_file = fopen($file, 'w');
-            $file_contents = stripslashes($_POST['file_contents']);
+            $file_contents = $_POST['file_contents'];
             fwrite($new_file, $file_contents, strlen($file_contents));
             fclose($new_file);
           }
