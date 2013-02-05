@@ -31,7 +31,7 @@
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!tep_session_is_registered('shipping')) {
+  if (!isset($_SESSION['shipping'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
@@ -62,7 +62,7 @@
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($shipping);
+  $shipping_modules = new shipping($_SESSION['shipping']);
 
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;

@@ -32,8 +32,7 @@
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
-    $shipping = false;
+    $_SESSION['shipping'] = false;
     if (!tep_session_is_registered('sendto')) tep_session_register('sendto');
     $sendto = false;
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -160,7 +159,7 @@
 
         $sendto = tep_db_insert_id();
 
-        if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }
@@ -169,7 +168,7 @@
       $reset_shipping = false;
       if (tep_session_is_registered('sendto')) {
         if ($sendto != $_POST['address']) {
-          if (tep_session_is_registered('shipping')) {
+          if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;
           }
         }
@@ -183,7 +182,7 @@
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
-        if ($reset_shipping == true) tep_session_unregister('shipping');
+        if ($reset_shipping == true) unset($_SESSION['shipping']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       } else {
         tep_session_unregister('sendto');

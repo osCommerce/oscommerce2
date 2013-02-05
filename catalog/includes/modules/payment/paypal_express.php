@@ -110,7 +110,7 @@
         if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
 // load the selected shipping module
           include(DIR_WS_CLASSES . 'shipping.php');
-          $shipping_modules = new shipping($shipping);
+          $shipping_modules = new shipping($_SESSION['shipping']);
 
           include(DIR_WS_CLASSES . 'order_total.php');
           $order_total_modules = new order_total;

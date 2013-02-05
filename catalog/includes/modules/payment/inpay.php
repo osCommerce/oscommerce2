@@ -302,7 +302,7 @@ class inpay
 
     function process_button()
     {
-        global $order, $sendto, $cart_inpay_Standard_ID, $shipping;
+        global $order, $sendto, $cart_inpay_Standard_ID;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -552,7 +552,7 @@ class inpay
         // unregister session variables used during checkout
         tep_session_unregister('sendto');
         tep_session_unregister('billto');
-        tep_session_unregister('shipping');
+        unset($_SESSION['shipping']);
         tep_session_unregister('payment');
         tep_session_unregister('comments');
 
