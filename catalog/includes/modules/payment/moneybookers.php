@@ -72,8 +72,8 @@
     }
 
     function _deletePreparing() {
-      if (tep_session_is_registered($this->_mbcartID)) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+      if (isset($_SESSION[$this->_mbcartID]) {
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -85,7 +85,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister($this->_mbcartID);
+          unset($_SESSION[$this->_mbcartID]);
         }
       }
     }
@@ -108,13 +108,13 @@
 
       $insert_order = false;
 
-      if (tep_session_is_registered($this->_mbcartID)) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+      if (isset($_SESSION[$this->_mbcartID])) {
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($GLOBALS[$this->_mbcartID], 0, strlen($_SESSION['cartID']))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION[$this->_mbcartID], 0, strlen($_SESSION['cartID']))) ) {
           $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -265,8 +265,7 @@
           }
         }
 
-        $GLOBALS[$this->_mbcartID] = $_SESSION['cartID'] . '-' . $insert_id;
-        tep_session_register($this->_mbcartID);
+        $_SESSION[$this->_mbcartID] = $_SESSION['cartID'] . '-' . $insert_id;
       }
     }
 
@@ -278,8 +277,8 @@
 
         $parameters = array('pay_to_email' => MODULE_PAYMENT_MONEYBOOKERS_PAY_TO,
                             'recipient_description' => STORE_NAME,
-                            'transaction_id' => substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1),
-                            'return_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]), 'SSL'),
+                            'transaction_id' => substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1),
+                            'return_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $_SESSION[$this->_mbcartID]), 'SSL'),
                             'return_url_text' => MODULE_PAYMENT_MONEYBOOKERS_RETURN_TEXT,
                             'return_url_target' => 1,
                             'cancel_url' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
@@ -349,17 +348,17 @@
       $pass = false;
 
       if (isset($_GET['transaction_id']) && isset($_GET['msid'])) {
-        if ($_GET['transaction_id'] == substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1)) {
+        if ($_GET['transaction_id'] == substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1)) {
           if ($_GET['msid'] == strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID . $_GET['transaction_id'] . strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD))))) {
             $pass = true;
           }
         }
-      } elseif (isset($_GET['osig']) && ($_GET['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]))) {
+      } elseif (isset($_GET['osig']) && ($_GET['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $_SESSION[$this->_mbcartID]))) {
         $pass = true;
       }
 
       if ($pass == true) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
         if (tep_db_num_rows($check_query)) {
@@ -522,7 +521,7 @@
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        tep_session_unregister($this->_mbcartID);
+        unset($_SESSION[$this->_mbcartID]);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
       } else {
