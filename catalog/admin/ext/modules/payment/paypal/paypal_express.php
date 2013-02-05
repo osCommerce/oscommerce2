@@ -14,7 +14,7 @@
   require('includes/application_top.php');
   require('../includes/modules/payment/paypal_express.php');
 
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'test')) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'test')) {
     if (defined(MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS)) {
       $paypal_express = new paypal_express();
 
