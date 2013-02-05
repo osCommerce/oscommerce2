@@ -129,36 +129,36 @@
     }
 
     function cart() {
-      global $sendto, $currencies, $customer_default_address_id;
+      global $currencies, $customer_default_address_id;
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
-      if ( ($this->content_type != 'virtual') && ($sendto == false) ) {
-        $sendto = $customer_default_address_id;
+      if ( ($this->content_type != 'virtual') && ($_SESSION['sendto'] == false) ) {
+        $_SESSION['sendto'] = $customer_default_address_id;
       }
 
       $customer_address_query = tep_db_query("select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from " . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " co on (ab.entry_country_id = co.countries_id) where c.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and c.customers_default_address_id = ab.address_book_id");
       $customer_address = tep_db_fetch_array($customer_address_query);
 
-      if (is_array($sendto) && !empty($sendto)) {
-        $shipping_address = array('entry_firstname' => $sendto['firstname'],
-                                  'entry_lastname' => $sendto['lastname'],
-                                  'entry_company' => $sendto['company'],
-                                  'entry_street_address' => $sendto['street_address'],
-                                  'entry_suburb' => $sendto['suburb'],
-                                  'entry_postcode' => $sendto['postcode'],
-                                  'entry_city' => $sendto['city'],
-                                  'entry_zone_id' => $sendto['zone_id'],
-                                  'zone_name' => $sendto['zone_name'],
-                                  'entry_country_id' => $sendto['country_id'],
-                                  'countries_id' => $sendto['country_id'],
-                                  'countries_name' => $sendto['country_name'],
-                                  'countries_iso_code_2' => $sendto['country_iso_code_2'],
-                                  'countries_iso_code_3' => $sendto['country_iso_code_3'],
-                                  'address_format_id' => $sendto['address_format_id'],
-                                  'entry_state' => $sendto['zone_name']);
-      } elseif (is_numeric($sendto)) {
-        $shipping_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$sendto . "'");
+      if (is_array($_SESSION['sendto']) && !empty($_SESSION['sendto'])) {
+        $shipping_address = array('entry_firstname' => $_SESSION['sendto']['firstname'],
+                                  'entry_lastname' => $_SESSION['sendto']['lastname'],
+                                  'entry_company' => $_SESSION['sendto']['company'],
+                                  'entry_street_address' => $_SESSION['sendto']['street_address'],
+                                  'entry_suburb' => $_SESSION['sendto']['suburb'],
+                                  'entry_postcode' => $_SESSION['sendto']['postcode'],
+                                  'entry_city' => $_SESSION['sendto']['city'],
+                                  'entry_zone_id' => $_SESSION['sendto']['zone_id'],
+                                  'zone_name' => $_SESSION['sendto']['zone_name'],
+                                  'entry_country_id' => $_SESSION['sendto']['country_id'],
+                                  'countries_id' => $_SESSION['sendto']['country_id'],
+                                  'countries_name' => $_SESSION['sendto']['country_name'],
+                                  'countries_iso_code_2' => $_SESSION['sendto']['country_iso_code_2'],
+                                  'countries_iso_code_3' => $_SESSION['sendto']['country_iso_code_3'],
+                                  'address_format_id' => $_SESSION['sendto']['address_format_id'],
+                                  'entry_state' => $_SESSION['sendto']['zone_name']);
+      } elseif (is_numeric($_SESSION['sendto'])) {
+        $shipping_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$_SESSION['sendto'] . "'");
         $shipping_address = tep_db_fetch_array($shipping_address_query);
       } else {
         $shipping_address = array('entry_firstname' => null,

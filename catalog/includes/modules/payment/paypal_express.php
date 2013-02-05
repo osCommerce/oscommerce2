@@ -145,7 +145,7 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppe_token, $ppe_payerid, $response_array;
+      global $order, $ppe_token, $ppe_payerid, $response_array;
 
       if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
@@ -160,7 +160,7 @@
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCYCODE' => $order->info['currency']);
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];

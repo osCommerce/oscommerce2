@@ -267,7 +267,7 @@
     }
 
     function process_button() {
-      global $order, $sendto, $cart_PayPal_Standard_ID;
+      global $order, $cart_PayPal_Standard_ID;
 
       $process_button_string = '';
       $parameters = array('cmd' => '_xclick',
@@ -291,7 +291,7 @@
         $parameters['cbt'] = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON;
       }
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $parameters['address_override'] = '1';
         $parameters['first_name'] = $order->delivery['firstname'];
         $parameters['last_name'] = $order->delivery['lastname'];
@@ -385,7 +385,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $sendto, $currencies, $cart_PayPal_Standard_ID, $$_SESSION['payment'], $messageStack;
+      global $order, $order_totals, $currencies, $cart_PayPal_Standard_ID, $$_SESSION['payment'], $messageStack;
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -590,7 +590,7 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
@@ -620,7 +620,7 @@
       $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
+      unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
       unset($_SESSION['shipping']);
       unset($_SESSION['payment']);

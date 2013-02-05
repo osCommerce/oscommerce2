@@ -47,9 +47,8 @@
     $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
   }
 
-  if (!tep_session_is_registered('sendto')) {
-    tep_session_register('sendto');
-    $sendto = $customer_default_address_id;
+  if (!isset($_SESSION['sendto'])) {
+    $_SESSION['sendto'] = $customer_default_address_id;
   }
 
   if (!isset($_SESSION['billto'])) {
@@ -105,22 +104,22 @@
             $zone_id = $zone['zone_id'];
           }
 
-          $sendto = array('firstname' => $response_array['FIRSTNAME'],
-                          'lastname' => $response_array['LASTNAME'],
-                          'company' => '',
-                          'street_address' => $response_array['SHIPTOSTREET'],
-                          'suburb' => '',
-                          'postcode' => $response_array['SHIPTOZIP'],
-                          'city' => $response_array['SHIPTOCITY'],
-                          'zone_id' => $zone_id,
-                          'zone_name' => $zone_name,
-                          'country_id' => $country['countries_id'],
-                          'country_name' => $country['countries_name'],
-                          'country_iso_code_2' => $country['countries_iso_code_2'],
-                          'country_iso_code_3' => $country['countries_iso_code_3'],
-                          'address_format_id' => ($country['address_format_id'] > 0 ? $country['address_format_id'] : '1'));
+          $_SESSION['sendto'] = array('firstname' => $response_array['FIRSTNAME'],
+                                      'lastname' => $response_array['LASTNAME'],
+                                      'company' => '',
+                                      'street_address' => $response_array['SHIPTOSTREET'],
+                                      'suburb' => '',
+                                      'postcode' => $response_array['SHIPTOZIP'],
+                                      'city' => $response_array['SHIPTOCITY'],
+                                      'zone_id' => $zone_id,
+                                      'zone_name' => $zone_name,
+                                      'country_id' => $country['countries_id'],
+                                      'country_name' => $country['countries_name'],
+                                      'country_iso_code_2' => $country['countries_iso_code_2'],
+                                      'country_iso_code_3' => $country['countries_iso_code_3'],
+                                      'address_format_id' => ($country['address_format_id'] > 0 ? $country['address_format_id'] : '1'));
 
-          $_SESSION['billto'] = $sendto;
+          $_SESSION['billto'] = $_SESSION['sendto'];
 
           $order = new order;
 
@@ -213,7 +212,7 @@
         } else {
           $_SESSION['shipping'] = false;
 
-          $sendto = false;
+          $_SESSION['sendto'] = false;
 
           $_SESSION['payment'] = $paypal_pro_payflow_ec->code;
 

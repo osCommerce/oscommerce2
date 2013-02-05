@@ -108,7 +108,7 @@
       <tr>
 
 <?php
-  if ($sendto != false) {
+  if ($_SESSION['sendto'] != false) {
 ?>
 
         <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -139,7 +139,7 @@
   }
 ?>
 
-        <td width="<?php echo (($sendto != false) ? '70%' : '100%'); ?>" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+        <td width="<?php echo (($_SESSION['sendto'] != false) ? '70%' : '100%'); ?>" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
 
 <?php
   if (sizeof($order->info['tax_groups']) > 1) {

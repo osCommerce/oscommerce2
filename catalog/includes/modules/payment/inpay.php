@@ -302,7 +302,7 @@ class inpay
 
     function process_button()
     {
-        global $order, $sendto, $cart_inpay_Standard_ID;
+        global $order, $cart_inpay_Standard_ID;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -324,7 +324,7 @@ class inpay
         'flow_layout'=>MODULE_PAYMENT_INPAY_FLOW_LAYOUT,
         'paymentaction'=>'Sale');
 
-        if (is_numeric($sendto) && ($sendto > 0))
+        if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0))
         {
             $address = '';
             $address = $order->delivery['street_address'].' '.$order->delivery['city'].' '.
@@ -369,7 +369,7 @@ class inpay
 
     function before_process()
     {
-        global $order, $order_totals, $sendto, $currencies, $cart_inpay_Standard_ID;
+        global $order, $order_totals, $currencies, $cart_inpay_Standard_ID;
         global $$_SESSION['payment'];
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
@@ -514,7 +514,7 @@ class inpay
         {
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_label($_SESSION['customer_id'], $sendto, 0, '', "\n")."\n";
+            tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
@@ -550,7 +550,7 @@ class inpay
         $_SESSION['cart']->reset(true);
 
         // unregister session variables used during checkout
-        tep_session_unregister('sendto');
+        unset($_SESSION['sendto']);
         unset($_SESSION['billto']);
         unset($_SESSION['shipping']);
         unset($_SESSION['payment']);
