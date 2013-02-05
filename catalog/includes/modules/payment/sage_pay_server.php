@@ -79,7 +79,7 @@
     }
 
     function before_process() {
-      global $sage_pay_server_securitykey, $sage_pay_server_nexturl, $order, $order_totals;
+      global $order, $order_totals;
 
       $error = null;
 
@@ -96,7 +96,7 @@
           $sig .= $_POST['AVSCV2'];
         }
 
-        $sig .= $sage_pay_server_securitykey;
+        $sig .= $_SESSION['sage_pay_server_securitykey'];
 
         if ( ($_POST['Status'] != 'AUTHENTICATED') && ($_POST['Status'] != 'REGISTERED') ) {
           $sig .= $_POST['AddressResult'] . $_POST['PostCodeResult'] . $_POST['CV2Result'];
@@ -124,8 +124,8 @@
 
         if (isset($_POST['VPSSignature']) && ($_POST['VPSSignature'] == strtoupper(md5($sig)))) {
           if ( ($_POST['Status'] != 'OK') && ($_POST['Status'] != 'AUTHENTICATED') && ($_POST['Status'] != 'REGISTERED') ) {
-            tep_session_unregister('sage_pay_server_securitykey');
-            tep_session_unregister('sage_pay_server_nexturl');
+            unset($_SESSION['sage_pay_server_securitykey']);
+            unset($_SESSION['sage_pay_server_nexturl']);
 
             $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
@@ -139,11 +139,11 @@
                       'RedirectURL=' . $this->formatURL($error_url);
           } else {
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($sage_pay_server_securitykey) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false));
+                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false));
           }
         } else {
-          tep_session_unregister('sage_pay_server_securitykey');
-          tep_session_unregister('sage_pay_server_nexturl');
+          unset($_SESSION['sage_pay_server_securitykey']);
+          unset($_SESSION['sage_pay_server_nexturl']);
 
           $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
@@ -160,9 +160,9 @@
         echo $result;
         exit;
       } elseif (isset($_GET['check']) && ($_GET['check'] == 'PROCESS')) {
-        if ($_GET['key'] == md5($sage_pay_server_securitykey)) {
-          tep_session_unregister('sage_pay_server_securitykey');
-          tep_session_unregister('sage_pay_server_nexturl');
+        if ($_GET['key'] == md5($_SESSION['sage_pay_server_securitykey'])) {
+          unset($_SESSION['sage_pay_server_securitykey']);
+          unset($_SESSION['sage_pay_server_nexturl']);
 
           if ( isset($_GET['VPSTxId']) ) {
             $order->info['comments'] = 'Sage Pay Reference ID: ' . $_GET['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
@@ -275,11 +275,9 @@
         }
 
         if ($return['Status'] == 'OK') {
-          tep_session_register('sage_pay_server_securitykey');
-          $sage_pay_server_securitykey = $return['SecurityKey'];
+          $_SESSION['sage_pay_server_securitykey'] = $return['SecurityKey'];
 
-          tep_session_register('sage_pay_server_nexturl');
-          $sage_pay_server_nexturl = $return['NextURL'];
+          $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
             tep_redirect($return['NextURL']);
@@ -291,8 +289,8 @@
         }
       }
 
-      tep_session_unregister('sage_pay_server_securitykey');
-      tep_session_unregister('sage_pay_server_nexturl');
+      unset($_SESSION['sage_pay_server_securitykey']);
+      unset($_SESSION['sage_pay_server_nexturl']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
