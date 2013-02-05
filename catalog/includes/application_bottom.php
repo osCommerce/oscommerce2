@@ -11,7 +11,7 @@
 */
 
 // close session (store variables)
-  tep_session_close();
+  session_write_close();
 
   if (STORE_PAGE_PARSE_TIME == 'true') {
     $time_start = explode(' ', PAGE_PARSE_START_TIME);

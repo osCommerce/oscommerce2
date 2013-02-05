@@ -25,7 +25,7 @@
 ////
 // Stop from parsing any further PHP code
   function tep_exit() {
-   tep_session_close();
+   session_write_close();
    exit();
   }
 
