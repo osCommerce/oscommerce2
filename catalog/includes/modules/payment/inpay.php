@@ -554,7 +554,7 @@ class inpay
         tep_session_unregister('billto');
         unset($_SESSION['shipping']);
         unset($_SESSION['payment']);
-        tep_session_unregister('comments');
+        unset($_SESSION['comments']);
 
         tep_session_unregister('cart_inpay_Standard_ID');
 

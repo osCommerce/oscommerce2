@@ -98,9 +98,8 @@
 
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
-    if (!tep_session_is_registered('comments')) tep_session_register('comments');
     if (tep_not_null($_POST['comments'])) {
-      $comments = tep_db_prepare_input($_POST['comments']);
+      $_SESSION['comments'] = tep_db_prepare_input($_POST['comments']);
     }
 
     if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {

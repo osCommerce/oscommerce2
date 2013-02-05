@@ -126,17 +126,15 @@
     }
 
     function confirmation() {
-      global $comments;
-
-      if (!isset($comments)) {
-        $comments = null;
+      if (!isset($_SESSION['comments'])) {
+        $_SESSION['comments'] = null;
       }
 
       $confirmation = false;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $_SESSION['comments']))));
       }
 
       return $confirmation;
@@ -147,13 +145,13 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppe_token, $ppe_payerid, $comments, $response_array;
+      global $order, $sendto, $ppe_token, $ppe_payerid, $response_array;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
-          $comments = tep_db_prepare_input($_POST['ppecomments']);
+          $_SESSION['comments'] = tep_db_prepare_input($_POST['ppecomments']);
 
-          $order->info['comments'] = $comments;
+          $order->info['comments'] = $_SESSION['comments'];
         }
       }
 
