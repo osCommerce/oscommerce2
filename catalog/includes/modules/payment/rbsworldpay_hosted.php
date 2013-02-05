@@ -296,10 +296,10 @@
         $process_button_string .= tep_draw_hidden_field('testMode', '100');
       }
 
-      $process_button_string .= tep_draw_hidden_field('M_sid', tep_session_id()) .
+      $process_button_string .= tep_draw_hidden_field('M_sid', session_id()) .
                                 tep_draw_hidden_field('M_cid', $_SESSION['customer_id']) .
                                 tep_draw_hidden_field('M_lang', $_SESSION['language']) .
-                                tep_draw_hidden_field('M_hash', md5(tep_session_id() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                                tep_draw_hidden_field('M_hash', md5(session_id() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       return $process_button_string;
     }
