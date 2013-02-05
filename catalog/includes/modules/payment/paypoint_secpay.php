@@ -137,7 +137,7 @@
                                tep_draw_hidden_field('ship_country', $order->delivery['country']['title']) .
                                tep_draw_hidden_field('currency', $sec_currency) .
                                tep_draw_hidden_field('callback', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false) . ';' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', false)) .
-                               tep_draw_hidden_field(tep_session_name(), tep_session_id()) .
+                               tep_draw_hidden_field(tep_session_name(), session_id()) .
                                tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . tep_session_name()) .
                                tep_draw_hidden_field('digest', $digest);
 

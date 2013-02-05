@@ -100,14 +100,6 @@
     return session_start();
   }
 
-  function tep_session_id($sessid = '') {
-    if (!empty($sessid)) {
-      return session_id($sessid);
-    } else {
-      return session_id();
-    }
-  }
-
   function tep_session_name($name = '') {
     if (!empty($name)) {
       return session_name($name);
@@ -143,7 +135,7 @@
       session_regenerate_id(true);
 
       if (!empty($SID)) {
-        $SID = tep_session_name() . '=' . tep_session_id();
+        $SID = tep_session_name() . '=' . session_id();
       }
     }
   }

@@ -147,9 +147,9 @@
 
 // set the session ID if it exists
    if (isset($_POST[tep_session_name()])) {
-     tep_session_id($_POST[tep_session_name()]);
+     session_id($_POST[tep_session_name()]);
    } elseif ( ($request_type == 'SSL') && isset($_GET[tep_session_name()]) ) {
-     tep_session_id($_GET[tep_session_name()]);
+     session_id($_GET[tep_session_name()]);
    }
 
 // start the session

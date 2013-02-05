@@ -297,7 +297,7 @@
 
       $parameter['kunden_var_0'] = tep_output_string($order_id);  // Eindeutige Identifikation der Zahlung, z.B. Session ID oder Auftragsnummer.
       $parameter['kunden_var_1'] = tep_output_string($_SESSION['customer_id']);
-      $parameter['kunden_var_2'] = tep_output_string(tep_session_id());
+      $parameter['kunden_var_2'] = tep_output_string(session_id());
       $parameter['kunden_var_3'] = tep_output_string($_SESSION['cart']->cartID);
       $parameter['kunden_var_4'] = '';
       $parameter['kunden_var_5'] = '';

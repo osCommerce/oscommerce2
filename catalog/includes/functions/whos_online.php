@@ -23,7 +23,7 @@
       $wo_full_name = 'Guest';
     }
 
-    $wo_session_id = tep_session_id();
+    $wo_session_id = session_id();
     $wo_ip_address = getenv('REMOTE_ADDR');
     $wo_last_page_url = getenv('REQUEST_URI');
 

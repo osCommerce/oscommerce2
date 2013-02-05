@@ -79,7 +79,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($_SESSION['cartID'] . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($_SESSION['cartID'] . session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -272,7 +272,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($_SESSION['cartID'] . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($_SESSION['cartID'] . session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
