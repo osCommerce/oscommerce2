@@ -137,23 +137,23 @@
                                tep_draw_hidden_field('ship_country', $order->delivery['country']['title']) .
                                tep_draw_hidden_field('currency', $sec_currency) .
                                tep_draw_hidden_field('callback', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false) . ';' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', false)) .
-                               tep_draw_hidden_field(tep_session_name(), session_id()) .
-                               tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . tep_session_name()) .
+                               tep_draw_hidden_field(session_name(), session_id()) .
+                               tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . session_name()) .
                                tep_draw_hidden_field('digest', $digest);
 
       return $process_button_string;
     }
 
     function before_process() {
-      if ( ($_GET['valid'] == 'true') && ($_GET['code'] == 'A') && !empty($_GET['auth_code']) && empty($_GET['resp_code']) && !empty($_GET[tep_session_name()]) ) {
+      if ( ($_GET['valid'] == 'true') && ($_GET['code'] == 'A') && !empty($_GET['auth_code']) && empty($_GET['resp_code']) && !empty($_GET[session_name()]) ) {
         $DIGEST_PASSWORD = MODULE_PAYMENT_PAYPOINT_SECPAY_READERS_DIGEST;
         list($REQUEST_URI, $CHECK_SUM) = split('hash=', $_SERVER['REQUEST_URI']);
 
         if ($_GET['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $_GET[tep_session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $_GET[tep_session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
       }
     }
 

@@ -120,7 +120,7 @@
       if (sizeof($this->snapshot) > 0) {
         echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br />';
+        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
       }
     }
 

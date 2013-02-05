@@ -145,7 +145,7 @@
       }
 
       $process_button_string .= tep_draw_hidden_field('x_freight', $this->format_raw($order->info['shipping_cost'])) .
-                                tep_draw_hidden_field(tep_session_name(), session_id());
+                                tep_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }

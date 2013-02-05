@@ -82,7 +82,7 @@
 
 <p class="main" align="center"><?php echo MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION; ?></p>
 
-<form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['hash'], 'SSL', false); ?>" method="post"><p align="center"><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p></form>
+<form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['hash'], 'SSL', false); ?>" method="post"><p align="center"><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p></form>
 
 <p>&nbsp;</p>
 
