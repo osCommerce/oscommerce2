@@ -11,7 +11,7 @@
 */
 
   class shoppingCart {
-    var $contents, $total, $weight, $cartID, $content_type;
+    var $contents, $total, $weight, $content_type;
 
     function shoppingCart() {
       $this->reset();
@@ -71,7 +71,7 @@
       }
 
       unset($this->cartID);
-      if (tep_session_is_registered('cartID')) tep_session_unregister('cartID');
+      if (isset($_SESSION['cartID'])) unset($_SESSION['cartID']);
     }
 
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {

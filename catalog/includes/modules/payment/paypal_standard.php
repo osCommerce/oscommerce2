@@ -91,21 +91,15 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID;
-
       if (empty($_SESSION['cart']->cartID)) {
-        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-      }
-
-      if (!tep_session_is_registered('cartID')) {
-        tep_session_register('cartID');
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
     }
 
     function confirmation() {
-      global $cartID, $cart_PayPal_Standard_ID, $order, $order_total_modules;
+      global $cart_PayPal_Standard_ID, $order, $order_total_modules;
 
-      if (tep_session_is_registered('cartID')) {
+      if (isset($_SESSION['cartID'])) {
         $insert_order = false;
 
         if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
@@ -114,7 +108,7 @@
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
           $curr = tep_db_fetch_array($curr_check);
 
-          if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_PayPal_Standard_ID, 0, strlen($cartID))) ) {
+          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($cart_PayPal_Standard_ID, 0, strlen($_SESSION['cartID']))) ) {
             $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
             if (tep_db_num_rows($check_query) < 1) {
@@ -264,7 +258,7 @@
             }
           }
 
-          $cart_PayPal_Standard_ID = $cartID . '-' . $insert_id;
+          $cart_PayPal_Standard_ID = $_SESSION['cartID'] . '-' . $insert_id;
           tep_session_register('cart_PayPal_Standard_ID');
         }
       }

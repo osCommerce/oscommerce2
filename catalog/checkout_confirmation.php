@@ -24,8 +24,8 @@
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($_SESSION['cart']->cartID) && tep_session_is_registered('cartID')) {
-    if ($_SESSION['cart']->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
