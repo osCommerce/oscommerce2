@@ -116,32 +116,4 @@
       return false;
     }
   }
-
-  if ( !function_exists('mysqli_connect') ) {
-    function mysqli_connect($server, $username, $password) {
-      if ( substr($server, 0, 2) == 'p:' ) {
-        $link = mysql_pconnect(substr($server, 2), $username, $password);
-      } else {
-        $link = mysql_connect($server, $username, $password);
-      }
-
-      return $link;
-    }
-
-    function mysqli_select_db($link, $database) {
-      return mysql_select_db($database, $link);
-    }
-
-    function mysqli_query($link, $query) {
-      return mysql_query($query, $link);
-    }
-
-    function mysqli_error($link = null) {
-      return mysql_error($link);
-    }
-
-    function mysqli_num_rows($query) {
-      return mysql_num_rows($query);
-    }
-  }
 ?>

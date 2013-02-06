@@ -79,12 +79,7 @@
   session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
-   if (function_exists('session_set_cookie_params')) {
-    session_set_cookie_params(0, DIR_WS_ADMIN);
-  } elseif (function_exists('ini_set')) {
-    ini_set('session.cookie_lifetime', '0');
-    ini_set('session.cookie_path', DIR_WS_ADMIN);
-  }
+  session_set_cookie_params(0, DIR_WS_ADMIN);
 
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 

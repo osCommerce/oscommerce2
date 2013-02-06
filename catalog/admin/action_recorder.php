@@ -36,7 +36,7 @@
     include(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
+    if (class_exists($class)) {
       ${$class} = new $class;
     }
   }
