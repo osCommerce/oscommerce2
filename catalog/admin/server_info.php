@@ -177,9 +177,6 @@
       </tr>
       <tr>
         <td>
-<?php
-  if (function_exists('ob_start')) {
-?>
 <style type="text/css">
 body, td, th {font-family: sans-serif; font-size: 10px;}
 .p {text-align: left;}
@@ -190,21 +187,18 @@ i {color: #666666;}
 hr {display: none;}
 </style>
 <?php
-    ob_start();
-    phpinfo();
-    $phpinfo = ob_get_contents();
-    ob_end_clean();
+  ob_start();
+  phpinfo();
+  $phpinfo = ob_get_contents();
+  ob_end_clean();
 
-    $phpinfo = str_replace('border: 1px', '', $phpinfo);
-    preg_match('/<body>(.*)<\/body>/is', $phpinfo, $regs);
-    echo '<table border="1" cellpadding="3" width="600" style="border: 0px; border-color: #000000;">' .
-         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . tep_get_version() . '" /></a><h1 class="p">osCommerce Online Merchant v' . tep_get_version() . '</h1></td>' .
-         '  </tr>' .
-         '</table>';
-    echo $regs[1];
-  } else {
-    phpinfo();
-  }
+  $phpinfo = str_replace('border: 1px', '', $phpinfo);
+  preg_match('/<body>(.*)<\/body>/is', $phpinfo, $regs);
+  echo '<table border="1" cellpadding="3" width="600" style="border: 0px; border-color: #000000;">' .
+       '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . tep_get_version() . '" /></a><h1 class="p">osCommerce Online Merchant v' . tep_get_version() . '</h1></td>' .
+       '  </tr>' .
+       '</table>';
+  echo $regs[1];
 ?>
         </td>
       </tr>

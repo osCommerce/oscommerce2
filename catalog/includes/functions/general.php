@@ -1259,23 +1259,7 @@
   }
 
   function tep_validate_ip_address($ip_address) {
-    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
-      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-    }
-
-    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
-      $parts = explode('.', $ip_address);
-
-      foreach ($parts as $ip_parts) {
-        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
-          return false; // number is not within 0-255
-        }
-      }
-
-      return true;
-    }
-
-    return false;
+    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
   }
 
   function tep_get_ip_address() {

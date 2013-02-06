@@ -556,17 +556,6 @@
   }
 
 ////
-// Wrapper for class_exists() function
-// This function is not available in all PHP versions so we test it before using it.
-  function tep_class_exists($class_name) {
-    if (function_exists('class_exists')) {
-      return class_exists($class_name);
-    } else {
-      return true;
-    }
-  }
-
-////
 // Count how many products exist in a category
 // TABLES: products, products_to_categories, categories
   function tep_products_in_category_count($categories_id, $include_deactivated = false) {
@@ -1348,23 +1337,7 @@
   }
 
   function tep_validate_ip_address($ip_address) {
-    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
-      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-    }
-
-    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
-      $parts = explode('.', $ip_address);
-
-      foreach ($parts as $ip_parts) {
-        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
-          return false; // number is not within 0-255
-        }
-      }
-
-      return true;
-    }
-
-    return false;
+    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
   }
 
   function tep_get_ip_address() {
