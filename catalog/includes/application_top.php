@@ -449,11 +449,11 @@
   }
 
 // add the products model to the breadcrumb trail
-  if (isset($HTTP_GET_VARS['products_id'])) {
-    $model_query = tep_db_query("select products_model from " . TABLE_PRODUCTS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "'");
+  if (isset($_GET['products_id'])) {
+    $model_query = tep_db_query("select products_model from " . TABLE_PRODUCTS . " where products_id = '" . (int)$_GET['products_id'] . "'");
     if (tep_db_num_rows($model_query)) {
       $model = tep_db_fetch_array($model_query);
-      $breadcrumb->add($model['products_model'], tep_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $HTTP_GET_VARS['products_id']));
+      $breadcrumb->add($model['products_model'], tep_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $_GET['products_id']));
     }
   }
 
