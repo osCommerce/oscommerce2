@@ -42,8 +42,6 @@
       $logger->timer_stop();
     }
 
-    session_write_close();
-
     exit;
   }
 
