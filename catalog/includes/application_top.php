@@ -14,7 +14,9 @@
   define('PAGE_PARSE_START_TIME', microtime());
 
 // set the level of error reporting
-  error_reporting(E_ALL & ~E_NOTICE);
+  error_reporting(E_ALL | E_STRICT);
+
+  ini_set('display_errors', true);
 
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
@@ -53,16 +55,29 @@
 // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
+// define general functions used application-wide
+  require(DIR_WS_FUNCTIONS . 'general.php');
+  require(DIR_WS_FUNCTIONS . 'html_output.php');
+
 // include the database functions
   require(DIR_WS_FUNCTIONS . 'database.php');
 
 // make a connection to the database... now
   tep_db_connect() or die('Unable to connect to database server!');
 
+  require(DIR_WS_CLASSES . 'cache.php');
+  $OSCOM_Cache = new cache();
+
+  require(DIR_WS_CLASSES . 'db.php');
+  $OSCOM_PDO = db::initialize();
+
 // set the application parameters
-  $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey'], $configuration['cfgValue']);
+  $Qcfg = $OSCOM_PDO->query('select configuration_key as cfgKey, configuration_value as cfgValue from :table_configuration');
+  $Qcfg->setCache('configuration');
+  $Qcfg->execute();
+
+  while ( $Qcfg->fetch() ) {
+    define($Qcfg->value('cfgKey'), $Qcfg->value('cfgValue'));
   }
 
 // if gzip_compression is enabled, start to buffer the output
@@ -98,10 +113,6 @@
       }
     }
   }
-
-// define general functions used application-wide
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
 
 // set the cookie domain
   $cookie_domain = (($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN);

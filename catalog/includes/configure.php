@@ -40,6 +40,10 @@
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
   define('DB_DATABASE', 'osCommerce');
+  define('DB_TABLE_PREFIX', '');
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', ''); // leave empty '' for default handler or set to 'mysql'
+
+  define('DIR_FS_CACHE2', DIR_FS_CATALOG . 'includes/work/');
+  define('CFG_TIME_ZONE', 'Europe/Berlin');
 ?>
