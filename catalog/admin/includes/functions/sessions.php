@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -91,6 +91,8 @@
     if ($sane_session_id == false) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
+
+    register_shutdown_function('session_write_close');
 
     return session_start();
   }
