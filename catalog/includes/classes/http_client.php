@@ -5,360 +5,85 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
-
-  Copyright 2001 Leo West <west_leo@yahoo-REMOVE-.com> Net_HTTP_Client v0.6
-
-  Minimal Example:
-
-  $http = new httpClient();
-  $http->Connect("somehost", 80) or die("Connect problem");
-  $status = $http->Get("/index.html");
-  if ($status != 200) {
-    die("Problem : " . $http->getStatusMessage());
-  } else {
-    echo $http->getBody();
-  }
-  $http->Disconnect();
-
-  Persistent Example:
-
-  $http = new httpClient("dir.yahoo.com", 80);
-  $http->addHeader("Host", "dir.yahoo.com");
-  $http->addHeader("Connection", "keep-alive");
-
-  if ($http->Get("/Reference/Libraries/") == 200) $page1 = $http->getBody();
-  if ($http->Get("/News_and_Media/") == 200 ) $page2 = $http->getBody();
-  $http->disconnect();
 */
 
   class httpClient {
-    var $url; // array containg server URL, similar to parseurl() returned array
+    var $drivers = array('curl', 'stream', 'socket');
+    var $driver;
+    var $url; // array containg scheme, host, port, user, pass, path, query, fragment (from parse_url())
+    var $proxyHost, $proxyPort;
+    var $protocolVersion;
+    var $requestHeaders, $requestBody;
     var $reply; // response code
     var $replyString; // full response
-    var $protocolVersion = '1.1';
-    var $requestHeaders, $requestBody;
-    var $socket = false;
-// proxy stuff
-    var $useProxy = false;
-    var $proxyHost, $proxyPort;
 
-/**
- * httpClient constructor
- * Note: when host and port are defined, the connection is immediate
- * @seeAlso connect
- **/
-    function httpClient($host = '', $port = '') {
-      if (tep_not_null($host)) {
+    var $params = array();
+    var $response = array();
+
+    function httpClient($host = null, $port = null) {
+      if (PHP_VERSION >= 5) {
+        array_unshift($this->drivers, 'http_request');
+      }
+
+      if (isset($host)) {
         $this->connect($host, $port);
       }
     }
 
-/**
- * turn on proxy support
- * @param proxyHost proxy host address eg "proxy.mycorp.com"
- * @param proxyPort proxy port usually 80 or 8080
- **/
-    function setProxy($proxyHost, $proxyPort) {
-      $this->useProxy = true;
-      $this->proxyHost = $proxyHost;
-      $this->proxyPort = $proxyPort;
-    }
+    function connect($host, $port = null) {
+      $this->url = parse_url($host);
 
-/**
- * setProtocolVersion
- * define the HTTP protocol version to use
- * @param version string the version number with one decimal: "0.9", "1.0", "1.1"
- * when using 1.1, you MUST set the mandatory headers "Host"
- * @return boolean false if the version number is bad, true if ok
- **/
-    function setProtocolVersion($version) {
-      if ( ($version > 0) && ($version <= 1.1) ) {
-        $this->protocolVersion = $version;
-        return true;
-      } else {
-        return false;
+      if (!isset($this->url['scheme'])) {
+        $this->url['scheme'] = 'http';
+        $this->url['host'] = $this->url['path'];
+        unset($this->url['path']);
       }
-    }
 
-/**
- * set a username and password to access a protected resource
- * Only "Basic" authentication scheme is supported yet
- * @param username string - identifier
- * @param password string - clear password
- **/
-    function setCredentials($username, $password) {
-      $this->addHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $password));
-     }
+      if (isset($port)) {
+        $this->url['port'] = $port;
 
-/**
- * define a set of HTTP headers to be sent to the server
- * header names are lowercased to avoid duplicated headers
- * @param headers hash array containing the headers as headerName => headerValue pairs
- **/
-    function setHeaders($headers) {
-      if (is_array($headers)) {
-        reset($headers);
-        while (list($name, $value) = each($headers)) {
-          $this->requestHeaders[$name] = $value;
+        if (($port == '443') && ($this->url['scheme'] != 'https')) {
+          $this->url['scheme'] = 'https';
         }
+      } elseif ($this->url['scheme'] == 'http') {
+        $this->url['port'] = '80';
+      } elseif ($this->url['scheme'] == 'https') {
+        $this->url['port'] = '443';
       }
-    }
-
-/**
- * addHeader
- * set a unique request header
- * @param headerName the header name
- * @param headerValue the header value, ( unencoded)
- **/
-    function addHeader($headerName, $headerValue) {
-      $this->requestHeaders[$headerName] = $headerValue;
-    }
-
-/**
- * removeHeader
- * unset a request header
- * @param headerName the header name
- **/
-    function removeHeader($headerName) {
-      unset($this->requestHeaders[$headerName]);
-    }
-
-/**
- * Connect
- * open the connection to the server
- * @param host string server address (or IP)
- * @param port string server listening port - defaults to 80
- * @return boolean false is connection failed, true otherwise
- **/
-    function Connect($host, $port = '') {
-      $this->url['scheme'] = 'http';
-      $this->url['host'] = $host;
-      if (tep_not_null($port)) $this->url['port'] = $port;
 
       return true;
     }
 
-/**
- * Disconnect
- * close the connection to the  server
- **/
-    function Disconnect() {
-      if ($this->socket) fclose($this->socket);
+    function setProxy($proxyHost, $proxyPort) {
+      $this->proxyHost = $proxyHost;
+      $this->proxyPort = $proxyPort;
     }
 
-/**
- * head
- * issue a HEAD request
- * @param uri string URI of the document
- * @return string response status code (200 if ok)
- * @seeAlso getHeaders()
- **/
-    function Head($uri) {
-      $this->responseHeaders = $this->responseBody = '';
+    function makeUri($uri) {
+      $a = parse_url($uri);
 
-      $uri = $this->makeUri($uri);
-
-      if ($this->sendCommand('HEAD ' . $uri . ' HTTP/' . $this->protocolVersion)) {
-        $this->processReply();
+      if ( (isset($a['scheme'])) && (isset($a['host'])) ) {
+        $this->url = $a;
+      } else {
+        unset($this->url['query']);
+        unset($this->url['fragment']);
+        $this->url = array_merge($this->url, $a);
       }
 
-      return $this->reply;
-    }
-
-/**
- * get
- * issue a GET http request
- * @param uri URI (path on server) or full URL of the document
- * @return string response status code (200 if ok)
- * @seeAlso getHeaders(), getBody()
- **/
-    function Get($url) {
-      $this->responseHeaders = $this->responseBody = '';
-
-      $uri = $this->makeUri($url);
-
-      if ($this->sendCommand('GET ' . $uri . ' HTTP/' . $this->protocolVersion)) {
-        $this->processReply();
+      if (isset($this->proxyHost)) {
+        $requesturi = 'http://' . $this->url['host'] . (empty($this->url['port']) ? '' : ':' . $this->url['port']) . $this->url['path'] . (empty($this->url['query']) ? '' : '?' . $this->url['query']);
+      } else {
+        $requesturi = $this->url['path'] . (empty($this->url['query']) ? '' : '?' . $this->url['query']);
       }
 
-      return $this->reply;
-    }
-
-/**
- * Post
- * issue a POST http request
- * @param uri string URI of the document
- * @param query_params array parameters to send in the form "parameter name" => value
- * @return string response status code (200 if ok)
- * @example 
- * $params = array( "login" => "tiger", "password" => "secret" );
- * $http->post( "/login.php", $params );
- **/
-    function Post($uri, $query_params = '') {
-      $uri = $this->makeUri($uri);
-
-      if (is_array($query_params)) {
-        $postArray = array();
-        reset($query_params);
-        while (list($k, $v) = each($query_params)) {
-          $postArray[] = urlencode($k) . '=' . urlencode($v);
-        }
-
-        $this->requestBody = implode('&', $postArray);
-      }
-
-// set the content type for post parameters
-      $this->addHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-      if ($this->sendCommand('POST ' . $uri . ' HTTP/' . $this->protocolVersion)) {
-        $this->processReply();
-      }
-
-      $this->removeHeader('Content-Type');
-      $this->removeHeader('Content-Length');
-      $this->requestBody = '';
-
-      return $this->reply;
-    }
-
-/**
- * Put
- * Send a PUT request
- * PUT is the method to sending a file on the server. it is *not* widely supported
- * @param uri the location of the file on the server. dont forget the heading "/"
- * @param filecontent the content of the file. binary content accepted
- * @return string response status code 201 (Created) if ok
- * @see RFC2518 "HTTP Extensions for Distributed Authoring WEBDAV"
- **/
-    function Put($uri, $filecontent) {
-      $uri = $this->makeUri($uri);
-      $this->requestBody = $filecontent;
-
-      if ($this->sendCommand('PUT ' . $uri . ' HTTP/' . $this->protocolVersion)) {
-        $this->processReply();
-      }
-
-      return $this->reply;
-    }
-
-/**
- * getHeaders
- * return the response headers
- * to be called after a Get() or Head() call
- * @return array headers received from server in the form headername => value
- * @seeAlso get, head
- **/
-    function getHeaders() {
-      return $this->responseHeaders;
-    }
-
-/**
- * getHeader
- * return the response header "headername"
- * @param headername the name of the header
- * @return header value or NULL if no such header is defined
- **/
-    function getHeader($headername) {
-      return $this->responseHeaders[$headername];
-    }
-
-/**
- * getBody
- * return the response body
- * invoke it after a Get() call for instance, to retrieve the response
- * @return string body content
- * @seeAlso get, head
- **/
-    function getBody() {
-      return $this->responseBody;
-    }
-
-/**
- * getStatus return the server response's status code
- * @return string a status code
- * code are divided in classes (where x is a digit)
- *  - 20x : request processed OK
- *  - 30x : document moved
- *  - 40x : client error ( bad url, document not found, etc...)
- *  - 50x : server error 
- * @see RFC2616 "Hypertext Transfer Protocol -- HTTP/1.1"
- **/
-    function getStatus() {
-      return $this->reply;
-    }
-
-/** 
- * getStatusMessage return the full response status, of the form "CODE Message"
- * eg. "404 Document not found"
- * @return string the message 
- **/
-    function getStatusMessage() {
-      return $this->replyString;
-    }
-
-/**
- * @scope only protected or private methods below
- **/
-
-/** 
- * send a request
- * data sent are in order
- * a) the command
- * b) the request headers if they are defined
- * c) the request body if defined
- * @return string the server repsonse status code
- **/
-    function sendCommand($command) {
-      $this->responseHeaders = array();
-      $this->responseBody = '';
-
-// connect if necessary
-      if ( ($this->socket == false) || (feof($this->socket)) ) {
-        if ($this->useProxy) {
-          $host = $this->proxyHost;
-          $port = $this->proxyPort;
-        } else {
-          $host = $this->url['host'];
-          $port = $this->url['port'];
-        }
-
-        if (!tep_not_null($port)) $port = 80;
-
-        if (!$this->socket = fsockopen($host, $port, $this->reply, $this->replyString)) {
-          return false;
-        }
-
-        if (tep_not_null($this->requestBody)) {
-          $this->addHeader('Content-Length', strlen($this->requestBody));
-        }
-
-        $this->request = $command;
-        $cmd = $command . "\r\n";
-        if (is_array($this->requestHeaders)) {
-          reset($this->requestHeaders);
-          while (list($k, $v) = each($this->requestHeaders)) {
-            $cmd .= $k . ': ' . $v . "\r\n";
-          }
-        }
-
-        if (tep_not_null($this->requestBody)) {
-          $cmd .= "\r\n" . $this->requestBody;
-        }
-
-// unset body (in case of successive requests)
-        $this->requestBody = '';
-
-        fputs($this->socket, $cmd . "\r\n");
-
-        return true;
-      }
+      return $requesturi;
     }
 
     function processReply() {
-      $this->replyString = trim(fgets($this->socket, 1024));
+      $this->replyString = trim(substr($this->response['headers'], 0, strpos($this->response['headers'], "\n")));
 
       if (preg_match('|^HTTP/\S+ (\d+) |i', $this->replyString, $a )) {
         $this->reply = $a[1];
@@ -373,87 +98,271 @@
       return $this->reply;
     }
 
-/**
- * processHeader() reads header lines from socket until the line equals $lastLine
- * @scope protected
- * @return array of headers with header names as keys and header content as values
- **/
-    function processHeader($lastLine = "\r\n") {
-      $headers = array();
-      $finished = false;
+    function setDriver($driver = null) {
+      if (empty($driver)) {
+        foreach ($this->drivers as $d) {
+          if (file_exists(DIR_FS_CATALOG . 'includes/classes/http_client/' . $d . '.php')) {
+            if (!class_exists('httpClient_' . $d)) {
+              include(DIR_FS_CATALOG . 'includes/classes/http_client/' . $d . '.php');
+            }
 
-      while ( (!$finished) && (!feof($this->socket)) ) {
-        $str = fgets($this->socket, 1024);
-        $finished = ($str == $lastLine);
-        if (!$finished) {
-          list($hdr, $value) = explode(': ', $str, 2);
-// nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME 
-          if (isset($headers[$hdr])) {
-            $headers[$hdr] .= '; ' . trim($value);
-          } else {
-            $headers[$hdr] = trim($value);
+            $class_name = 'httpClient_' . $d;
+            $ecce_homo_fresco = new $class_name();
+
+            if ($ecce_homo_fresco->can_use(($this->url['scheme'] == 'https')) === true) {
+              $this->driver = $ecce_homo_fresco;
+              break;
+            }
           }
+        }
+      } else {
+        $driver = basename($driver);
+
+        if (in_array($driver, $this->drivers) && file_exists(DIR_FS_CATALOG . 'includes/classes/http_client/' . $driver . '.php')) {
+          if (!class_exists('httpClient_' . $driver)) {
+            include(DIR_FS_CATALOG . 'includes/classes/http_client/' . $driver . '.php');
+          }
+
+          $class_name = 'httpClient_' . $driver;
+          $ecce_homo_fresco = new $class_name();
+
+          if ($ecce_homo_fresco->can_use(($this->url['scheme'] == 'https')) === true) {
+            $this->driver = $ecce_homo_fresco;
+          } else {
+            trigger_error('httpClient() cannot use manually set "' . $driver . '"');
+          }
+        } else {
+          trigger_error('httpClient() manually set "' . $driver . '" driver does not exist');
+        }
+      }
+    }
+
+    function get($url) {
+      if (!isset($this->driver)) {
+        $this->setDriver();
+      }
+
+      $uri = $this->makeUri($url);
+
+      $this->params['server'] = $this->url;
+      $this->params['method'] = 'get';
+      $this->params['header'] = array();
+      $this->params['version'] = $this->protocolVersion;
+
+      if (isset($this->proxyHost)) {
+        $this->params['proxy'] = $this->proxyHost . (!empty($this->proxyPort) ? ':' . $this->proxyPort : '');
+      }
+
+      if (isset($this->requestHeaders) && is_array($this->requestHeaders)) {
+        foreach ($this->requestHeaders as $k => $v) {
+          $this->params['header'][] = $k . ': ' . $v;
+        }
+      }
+
+      $this->responseHeaders = $this->responseBody = '';
+
+      $this->response = $this->driver->execute($this->params);
+
+      if (is_array($this->response) && isset($this->response['code'])) {
+        $this->processReply();
+      }
+
+      return $this->reply;
+    }
+
+    function post($uri, $query_params = null) {
+      if (!isset($this->driver)) {
+        $this->setDriver();
+      }
+
+      $uri = $this->makeUri($uri);
+
+      if (isset($query_params)) {
+        if (is_array($query_params)) {
+          $postArray = array();
+          foreach ($query_params as $k => $v) {
+            $postArray[] = urlencode($k) . '=' . urlencode($v);
+          }
+
+          $this->requestBody = implode('&', $postArray);
+        } else {
+          $this->requestBody = $query_params;
+        }
+      }
+
+      $this->params['server'] = $this->url;
+      $this->params['method'] = 'post';
+      $this->params['header'] = array();
+      $this->params['version'] = $this->protocolVersion;
+      $this->params['parameters'] = '';
+
+      if (isset($this->proxyHost)) {
+        $this->params['proxy'] = $this->proxyHost . (!empty($this->proxyPort) ? ':' . $this->proxyPort : '');
+      }
+
+      if (!empty($this->requestBody)) {
+        $this->params['parameters'] = $this->requestBody;
+      }
+
+      if (isset($this->requestHeaders) && is_array($this->requestHeaders)) {
+        foreach ($this->requestHeaders as $k => $v) {
+          $this->params['header'][] = $k . ': ' . $v;
+        }
+      }
+
+      $this->responseHeaders = $this->responseBody = '';
+
+      $this->response = $this->driver->execute($this->params);
+
+      if (is_array($this->response) && isset($this->response['code'])) {
+        $this->processReply();
+      }
+
+      return $this->reply;
+    }
+
+    function head($uri) {
+      return $this->get($uri);
+    }
+
+    function processHeader() {
+      $headers = array();
+
+      foreach (explode("\n", $this->response['headers']) as $h) {
+        list($hdr, $value) = explode(': ', $h, 2);
+// nasty workaround broken multiple same headers (eg. Set-Cookie headers)
+        if (isset($headers[$hdr])) {
+          $headers[$hdr] .= '; ' . trim($value);
+        } else {
+          $headers[$hdr] = trim($value);
         }
       }
 
       return $headers;
     }
 
-/**
- * processBody() reads the body from the socket
- * the body is the "real" content of the reply
- * @return string body content 
- * @scope private
- **/
     function processBody() {
-      $data = '';
-      $counter = 0;
-
-      do {
-        $status = socket_get_status($this->socket);
-        if ($status['eof'] == 1) {
-          break;
-        }
-
-        if ($status['unread_bytes'] > 0) {
-          $buffer = fread($this->socket, $status['unread_bytes']);
-          $counter = 0;
-        } else {
-          $buffer = fread($this->socket, 128);
-          $counter++;
-          usleep(2);
-        }
-
-        $data .= $buffer;
-      } while ( ($status['unread_bytes'] > 0) || ($counter++ < 10) );
-
-      return $data;
+      return trim($this->response['body']);
     }
 
-/**
- * Calculate and return the URI to be sent ( proxy purpose )
- * @param the local URI
- * @return URI to be used in the HTTP request
- * @scope private
- **/
-    function makeUri($uri) {
-      $a = parse_url($uri);
-
-      if ( (isset($a['scheme'])) && (isset($a['host'])) ) {
-        $this->url = $a;
-      } else {
-        unset($this->url['query']);
-        unset($this->url['fragment']);
-        $this->url = array_merge($this->url, $a);
-      }
-
-      if ($this->useProxy) {
-        $requesturi = 'http://' . $this->url['host'] . (empty($this->url['port']) ? '' : ':' . $this->url['port']) . $this->url['path'] . (empty($this->url['query']) ? '' : '?' . $this->url['query']);
-      } else {
-        $requesturi = $this->url['path'] . (empty($this->url['query']) ? '' : '?' . $this->url['query']);
-      }
-
-      return $requesturi;
+    function getHeaders() {
+      return $this->responseHeaders;
     }
+
+    function getHeader($headername) {
+      return $this->responseHeaders[$headername];
+    }
+
+    function getBody() {
+      return $this->responseBody;
+    }
+
+    function getStatus() {
+      return $this->reply;
+    }
+
+    function getStatusMessage() {
+      return $this->replyString;
+    }
+
+    function setCredentials($username, $password) {
+      $this->addHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $password));
+    }
+
+    function setHeaders($headers) {
+      if (is_array($headers)) {
+        foreach ($headers as $name => $value) {
+          $this->requestHeaders[$name] = $value;
+        }
+      }
+    }
+
+    function addHeader($headerName, $headerValue) {
+      $this->requestHeaders[$headerName] = $headerValue;
+    }
+
+    function removeHeader($headerName) {
+      if (isset($this->requestHeaders[$headerName])) {
+        unset($this->requestHeaders[$headerName]);
+      }
+    }
+
+    function setProtocolVersion($version) {
+      $this->protocolVersion = $version;
+    }
+
+    function put($uri, $filecontent) {
+      if (!isset($this->driver)) {
+        $this->setDriver();
+      }
+
+      $uri = $this->makeUri($uri);
+
+      $this->params['server'] = $this->url;
+      $this->params['method'] = 'put';
+      $this->params['header'] = array();
+      $this->params['version'] = $this->protocolVersion;
+      $this->params['parameters'] = $filecontent;
+
+      if (isset($this->proxyHost)) {
+        $this->params['proxy'] = $this->proxyHost . (!empty($this->proxyPort) ? ':' . $this->proxyPort : '');
+      }
+
+      if (isset($this->requestHeaders) && is_array($this->requestHeaders)) {
+        foreach ($this->requestHeaders as $k => $v) {
+          $this->params['header'][] = $k . ': ' . $v;
+        }
+      }
+
+      $this->responseHeaders = $this->responseBody = '';
+
+      $this->response = $this->driver->execute($this->params);
+
+      if (is_array($this->response) && isset($this->response['code'])) {
+        $this->processReply();
+      }
+
+      return $this->reply;
+    }
+
+    function addParameter($key, $value) {
+      $this->params[$key] = $value;
+    }
+
+    function savePublicCertificate($server = null, $port = null) {
+      if ((PHP_VERSION >= 5) && extension_loaded('openssl') && is_writable(DIR_FS_CACHE)) {
+        if (!isset($server)) {
+          $server = $this->url['host'];
+        }
+
+        if (!isset($port)) {
+          $port = $this->url['port'];
+        }
+
+        $public_cert = null;
+
+        $context = stream_context_create(array('ssl' => array('capture_peer_cert' => true)));
+
+        $socket = stream_socket_client('ssl://' . $server . ':' . $port, $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $context);
+
+        $options = stream_context_get_options($socket);
+
+        openssl_x509_export($options['ssl']['peer_certificate'], $public_cert);
+
+        if (!empty($public_cert)) {
+          return file_put_contents(DIR_FS_CACHE . $server . '.crt', $public_cert);
+        }
+      }
+
+      return false;
+    }
+
+// Deprecated
+    function sendCommand($command) {
+      trigger_error('httpClient::sendCommand is deprecated.');
+    }
+
+// Deprecated
+    function disconnect() { }
   }
 ?>

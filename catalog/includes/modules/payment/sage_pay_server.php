@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,8 @@
     function sage_pay_server() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_server|1.0|2.3';
+      $this->signature = 'sage_pay|sage_pay_server|1.1|2.3';
+      $this->api_version = '2.23';
 
       $this->code = 'sage_pay_server';
       $this->title = MODULE_PAYMENT_SAGE_PAY_SERVER_TEXT_TITLE;
@@ -135,10 +136,10 @@
             }
 
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . $error_url;
+                      'RedirectURL=' . $this->formatURL($error_url);
           } else {
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($sage_pay_server_securitykey) . '&VPSTxId=' . $HTTP_POST_VARS['VPSTxId'] . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false);
+                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($sage_pay_server_securitykey) . '&VPSTxId=' . $HTTP_POST_VARS['VPSTxId'] . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false));
           }
         } else {
           tep_session_unregister('sage_pay_server_securitykey');
@@ -153,7 +154,7 @@
           }
 
           $result = 'Status=INVALID' . chr(13) . chr(10) .
-                    'RedirectURL=' . $error_url;
+                    'RedirectURL=' . $this->formatURL($error_url);
         }
 
         echo $result;
@@ -170,14 +171,14 @@
           return true;
         }
       } else {
-        $params = array('VPSProtocol' => '2.23',
+        $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME, 0, 15),
                         'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $currency,
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false),
+                        'NotificationURL' => $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -448,6 +449,10 @@
       }
 
       return (is_numeric($number) && isset($this->_error_messages[$number]));
+    }
+
+    function formatURL($url) {
+      return str_replace('&amp;', '&', $url);
     }
   }
 ?>
