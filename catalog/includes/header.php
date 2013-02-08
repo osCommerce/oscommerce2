@@ -11,11 +11,11 @@
 */
 
   if ($messageStack->size('header') > 0) {
-    echo '<div class="grid_24">' . $messageStack->output('header') . '</div>';
+    echo '<div class="row-fluid">' . $messageStack->output('header') . '</div>';
   }
 ?>
 
-<div id="header" class="grid_24">
+<div id="header" class="row-fluid">
   <div id="storeLogo"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
   <div id="headerShortcuts">
@@ -35,7 +35,7 @@
 </script>
 </div>
 
-<div class="grid_24 ui-widget infoBoxContainer">
+<div class="row-fluid ui-widget infoBoxContainer">
   <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
 </div>
 
