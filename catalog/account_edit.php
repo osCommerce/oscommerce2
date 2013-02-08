@@ -21,13 +21,13 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_EDIT);
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
-    $firstname = tep_db_prepare_input($_POST['firstname']);
-    $lastname = tep_db_prepare_input($_POST['lastname']);
-    if (ACCOUNT_DOB == 'true') $dob = tep_db_prepare_input($_POST['dob']);
-    $email_address = tep_db_prepare_input($_POST['email_address']);
-    $telephone = tep_db_prepare_input($_POST['telephone']);
-    $fax = tep_db_prepare_input($_POST['fax']);
+    if (ACCOUNT_GENDER == 'true') $gender = isset($_POST['gender']) ? trim($_POST['gender']) : null;
+    $firstname = isset($_POST['firstname']) ? trim($_POST['firstname']) : null;
+    $lastname = isset($_POST['lastname']) ? trim($_POST['lastname']) : null;
+    if (ACCOUNT_DOB == 'true') $dob = isset($_POST['dob']) ? trim($_POST['dob']) : null;
+    $email_address = isset($_POST['email_address']) ? trim($_POST['email_address']) : null;
+    $telephone = isset($_POST['telephone']) ? trim($_POST['telephone']) : null;
+    $fax = isset($_POST['fax']) ? trim($_POST['fax']) : null;
 
     $error = false;
 
@@ -71,9 +71,12 @@
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
 
-    $check_email_query = tep_db_query("select count(*) as total from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' and customers_id != '" . (int)$_SESSION['customer_id'] . "'");
-    $check_email = tep_db_fetch_array($check_email_query);
-    if ($check_email['total'] > 0) {
+    $Qcheck = $OSCOM_PDO->prepare('select customers_id from :table_customers where customers_email_address = :customers_email_address and customers_id != :customers_id limit 1');
+    $Qcheck->bindValue(':customers_email_address', $email_address);
+    $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+    $Qcheck->execute();
+
+    if ( $Qcheck->fetch() !== false ) {
       $error = true;
 
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
@@ -95,14 +98,8 @@
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
 
-      tep_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-
-      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$_SESSION['customer_id'] . "'");
-
-      $sql_data_array = array('entry_firstname' => $firstname,
-                              'entry_lastname' => $lastname);
-
-      tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$_SESSION['customer_default_address_id'] . "'");
+      $OSCOM_PDO->perform('customers', $sql_data_array, array('customers_id' => $_SESSION['customer_id']));
+      $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $_SESSION['customer_id']));
 
 // reset the session variables
       $_SESSION['customer_first_name'] = $firstname;
@@ -113,8 +110,11 @@
     }
   }
 
-  $account_query = tep_db_query("select customers_gender, customers_firstname, customers_lastname, customers_dob, customers_email_address, customers_telephone, customers_fax from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-  $account = tep_db_fetch_array($account_query);
+  $Qaccount = $OSCOM_PDO->prepare('select customers_gender, customers_firstname, customers_lastname, customers_dob, customers_email_address, customers_telephone, customers_fax from :table_customers where customers_id = :customers_id');
+  $Qaccount->bindInt(':customers_id', $_SESSION['customer_id']);
+  $Qaccount->execute();
+
+  $account = $Qaccount->fetch();
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'));
