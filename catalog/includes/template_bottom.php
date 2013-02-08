@@ -14,26 +14,18 @@
 </div> <!-- bodyContent //-->
 
 <?php
-  if ($oscTemplate->hasBlocks('boxes_column_left')) {
-?>
-
-<div id="columnLeft" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?> pull_<?php echo $oscTemplate->getGridContentWidth(); ?>">
-  <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
-</div>
-
-<?php
-  }
-
   if ($oscTemplate->hasBlocks('boxes_column_right')) {
 ?>
 
-<div id="columnRight" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+<div id="columnRight" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
   <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
 </div>
 
 <?php
   }
 ?>
+
+</div>
 
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
