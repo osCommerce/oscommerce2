@@ -8,6 +8,8 @@
 
   class app {
     protected $_content_file = 'main.php';
+    protected $_current_action;
+    protected $_ignored_actions = array();
 
     public static function initialize() {
       $app = 'index';
@@ -41,6 +43,63 @@
       }
 
       return $this->_content_file;
+    }
+
+    public function setContentFile($filename) {
+      $this->_content_file = $filename;
+    }
+
+    public function runActions() {
+      if ( !in_array(session_name(), $this->_ignored_actions) ) {
+        $this->_ignored_actions[] = session_name();
+      }
+
+      $action = null;
+      $action_index = 1;
+
+      if ( count($_GET) > 1 ) {
+        $requested_action = tep_sanitize_string(basename(key(array_slice($_GET, 1, 1, true))));
+
+        if ( preg_match('/^[A-Za-z0-9-_]*$/', $requested_action) && !in_array($requested_action, $this->_ignored_actions) && file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . $requested_action . '.php') ) {
+          $this->_current_action = $action = $requested_action;
+        }
+      }
+
+      if ( isset($action) ) {
+        include(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . $action . '.php');
+
+        call_user_func(array('app_' . $this->getCode() . '_action_' . $action, 'execute'), $this);
+
+        $action_index++;
+
+        if ( $action_index < count($_GET) ) {
+          $action = array($action);
+
+          for ( $i = $action_index, $n = count($_GET); $i < $n; $i++ ) {
+            $subaction = tep_sanitize_string(basename(key(array_slice($_GET, $i, 1, true))));
+
+            if ( preg_match('/^[A-Za-z0-9-_]*$/', $subaction) && !in_array($subaction, $this->_ignored_actions) && file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . implode('/', $action) . '/' . $subaction . '.php') ) {
+              include(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . implode('/', $action) . '/' . $subaction . '.php');
+
+              call_user_func(array('app_' . $this->getCode() . '_action_' . implode('_', $action) . '_' . $subaction, 'execute'), $this);
+
+              $action[] = $subaction;
+
+              $this->_current_action = $subaction;
+            } else {
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    public function getCurrentAction() {
+      return $this->_current_action;
+    }
+
+    public function ignoreAction($key) {
+      $this->_ignored_actions[] = $key;
     }
   }
 ?>
