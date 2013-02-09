@@ -41,13 +41,17 @@
     return mysqli_num_rows($db_query);
   }
 
-  function osc_db_install($database, $sql_file) {
+  function osc_db_fetch_array($db_query) {
+    return mysqli_fetch_array($db_query, MYSQLI_ASSOC);
+  }
+
+  function osc_db_install($database, $charset, $sql_file) {
     global $db_error;
 
     $db_error = false;
 
     if (!@osc_db_select_db($database)) {
-      if (@osc_db_query('create database ' . $database)) {
+      if (@osc_db_query('create database ' . $database . ' default character set ' . $charset)) {
         osc_db_select_db($database);
       } else {
         $db_error = mysqli_error();
@@ -109,6 +113,8 @@
 
       osc_db_query("drop table if exists action_recorder, address_book, address_format, administrators, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, geo_zones, languages, manufacturers, manufacturers_info, newsletters, orders, orders_products, orders_products_attributes, orders_products_download, orders_status, orders_status_history, orders_total, products, products_attributes, products_attributes_download, products_description, products_images, products_notifications, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sec_directory_whitelist, sessions, specials, tax_class, tax_rates, whos_online, zones, zones_to_geo_zones");
 
+      osc_db_query('SET CHARACTER SET ' . $charset . '');
+
       for ($i=0; $i<sizeof($sql_array); $i++) {
         osc_db_query($sql_array[$i]);
       }
@@ -118,6 +124,8 @@
   }
 
   if ( !function_exists('mysqli_connect') ) {
+    define('MYSQLI_ASSOC', MYSQL_ASSOC);
+
     function mysqli_connect($server, $username, $password) {
       if ( substr($server, 0, 2) == 'p:' ) {
         $link = mysql_pconnect(substr($server, 2), $username, $password);
@@ -142,6 +150,10 @@
 
     function mysqli_num_rows($query) {
       return mysql_num_rows($query);
+    }
+
+    function mysqli_fetch_array($query, $type) {
+      return mysql_fetch_array($query, $type);
     }
   }
 ?>

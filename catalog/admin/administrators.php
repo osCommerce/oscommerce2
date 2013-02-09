@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -54,24 +54,111 @@
         $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
         $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
 
-        $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "' limit 1");
+        if (ctype_alnum($password)) {
+          $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+          if (tep_db_num_rows($check_query) < 1) {
+            tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
 
+            if (is_array($htpasswd_array)) {
+              for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+                list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
+
+                if ($ht_username == $username) {
+                  unset($htpasswd_array[$i]);
+                }
+              }
+
+              if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
+                $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
+              }
+
+              $fp = fopen(DIR_FS_ADMIN . '.htpasswd_oscommerce', 'w');
+              fwrite($fp, implode("\n", $htpasswd_array));
+              fclose($fp);
+
+              if (!in_array('AuthUserFile ' . DIR_FS_ADMIN . '.htpasswd_oscommerce', $htaccess_array) && !empty($htpasswd_array)) {
+                array_splice($htaccess_array, sizeof($htaccess_array), 0, $authuserfile_array);
+              } elseif (empty($htpasswd_array)) {
+                for ($i=0, $n=sizeof($htaccess_array); $i<$n; $i++) {
+                  if (in_array($htaccess_array[$i], $authuserfile_array)) {
+                    unset($htaccess_array[$i]);
+                  }
+                }
+              }
+
+              $fp = fopen(DIR_FS_ADMIN . '.htaccess', 'w');
+              fwrite($fp, implode("\n", $htaccess_array));
+              fclose($fp);
+            }
+          } else {
+            $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
+          }
+        } else {
+          $messageStack->add_session(ERROR_PASSWORD_CHARACTERS, 'error');
+        }
+
+        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
+        break;
+      case 'save':
+        require('includes/functions/password_funcs.php');
+
+        $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
+        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+
+        if (ctype_alnum($password)) {
+          $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
+          $check = tep_db_fetch_array($check_query);
+
+  // update username in current session if changed
+          if ( ($check['id'] == $admin['id']) && ($check['user_name'] != $admin['username']) ) {
+            $admin['username'] = $username;
+          }
+
+  // update username in htpasswd if changed
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
               list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
-              if ($ht_username == $username) {
-                unset($htpasswd_array[$i]);
+              if ( ($check['user_name'] == $ht_username) && ($check['user_name'] != $username) ) {
+                $htpasswd_array[$i] = $username . ':' . $ht_password;
+              }
+            }
+          }
+
+          tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . tep_db_input($username) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
+
+          if (tep_not_null($password)) {
+  // update password in htpasswd
+            if (is_array($htpasswd_array)) {
+              for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+                list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
+
+                if ($ht_username == $username) {
+                  unset($htpasswd_array[$i]);
+                }
+              }
+
+              if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
+                $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
               }
             }
 
-            if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
-              $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
-            }
+            tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
+          } elseif (!isset($HTTP_POST_VARS['htaccess']) || ($HTTP_POST_VARS['htaccess'] != 'true')) {
+            if (is_array($htpasswd_array)) {
+              for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
+                list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
+                if ($ht_username == $username) {
+                  unset($htpasswd_array[$i]);
+                }
+              }
+            }
+          }
+
+  // write new htpasswd file
+          if (is_array($htpasswd_array)) {
             $fp = fopen(DIR_FS_ADMIN . '.htpasswd_oscommerce', 'w');
             fwrite($fp, implode("\n", $htpasswd_array));
             fclose($fp);
@@ -91,86 +178,7 @@
             fclose($fp);
           }
         } else {
-          $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
-        }
-
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
-        break;
-      case 'save':
-        require('includes/functions/password_funcs.php');
-
-        $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
-        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
-
-        $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
-        $check = tep_db_fetch_array($check_query);
-
-// update username in current session if changed
-        if ( ($check['id'] == $admin['id']) && ($check['user_name'] != $admin['username']) ) {
-          $admin['username'] = $username;
-        }
-
-// update username in htpasswd if changed
-        if (is_array($htpasswd_array)) {
-          for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
-            list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
-
-            if ( ($check['user_name'] == $ht_username) && ($check['user_name'] != $username) ) {
-              $htpasswd_array[$i] = $username . ':' . $ht_password;
-            }
-          }
-        }
-
-        tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . tep_db_input($username) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
-
-        if (tep_not_null($password)) {
-// update password in htpasswd
-          if (is_array($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
-              list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
-
-              if ($ht_username == $username) {
-                unset($htpasswd_array[$i]);
-              }
-            }
-
-            if (isset($HTTP_POST_VARS['htaccess']) && ($HTTP_POST_VARS['htaccess'] == 'true')) {
-              $htpasswd_array[] = $username . ':' . tep_crypt_apr_md5($password);
-            }
-          }
-
-          tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$HTTP_GET_VARS['aID'] . "'");
-        } elseif (!isset($HTTP_POST_VARS['htaccess']) || ($HTTP_POST_VARS['htaccess'] != 'true')) {
-          if (is_array($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
-              list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
-
-              if ($ht_username == $username) {
-                unset($htpasswd_array[$i]);
-              }
-            }
-          }
-        }
-
-// write new htpasswd file
-        if (is_array($htpasswd_array)) {
-          $fp = fopen(DIR_FS_ADMIN . '.htpasswd_oscommerce', 'w');
-          fwrite($fp, implode("\n", $htpasswd_array));
-          fclose($fp);
-
-          if (!in_array('AuthUserFile ' . DIR_FS_ADMIN . '.htpasswd_oscommerce', $htaccess_array) && !empty($htpasswd_array)) {
-            array_splice($htaccess_array, sizeof($htaccess_array), 0, $authuserfile_array);
-          } elseif (empty($htpasswd_array)) {
-            for ($i=0, $n=sizeof($htaccess_array); $i<$n; $i++) {
-              if (in_array($htaccess_array[$i], $authuserfile_array)) {
-                unset($htaccess_array[$i]);
-              }
-            }
-          }
-
-          $fp = fopen(DIR_FS_ADMIN . '.htaccess', 'w');
-          fwrite($fp, implode("\n", $htaccess_array));
-          fclose($fp);
+          $messageStack->add_session(ERROR_PASSWORD_CHARACTERS, 'error');
         }
 
         tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$HTTP_GET_VARS['aID']));

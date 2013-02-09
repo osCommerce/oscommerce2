@@ -17,8 +17,8 @@
       $this->code = 'ot_shipping';
       $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
       $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER;
+      $this->enabled = ((defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS') && (MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true')) ? true : false);
+      $this->sort_order = (defined(MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER) ? MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : 0);
 
       $this->output = array();
     }
@@ -53,7 +53,11 @@
           $shipping_tax_description = tep_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
           $order->info['tax'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-          $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          if (isset($order->info['tax_groups']["$shipping_tax_description"])) {
+            $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          } else {
+            $order->info['tax_groups']["$shipping_tax_description"] = tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          }
           $order->info['total'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
 
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);

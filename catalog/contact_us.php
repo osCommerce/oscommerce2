@@ -89,7 +89,7 @@
       </tr>
       <tr>
         <td class="fieldKey" valign="top"><?php echo ENTRY_ENQUIRY; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('enquiry', 'soft', 50, 15); ?></td>
+        <td class="fieldValue"><?php echo tep_draw_textarea_field('enquiry', 50, 15); ?></td>
       </tr>
     </table>
   </div>

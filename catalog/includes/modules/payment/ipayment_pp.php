@@ -24,18 +24,21 @@
       $this->title = MODULE_PAYMENT_IPAYMENT_PP_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_IPAYMENT_PP_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_IPAYMENT_PP_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_IPAYMENT_PP_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_IPAYMENT_PP_STATUS == 'True') ? true : false);
+      $this->sort_order = ( defined('MODULE_PAYMENT_IPAYMENT_PP_SORT_ORDER') ? MODULE_PAYMENT_IPAYMENT_PP_SORT_ORDER : 0 );
+      $this->enabled = ( (defined('MODULE_PAYMENT_IPAYMENT_PP_STATUS') && (MODULE_PAYMENT_IPAYMENT_PP_STATUS == 'True')) ? true : false );
 
-      if ((int)MODULE_PAYMENT_IPAYMENT_PP_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_IPAYMENT_PP_ORDER_STATUS_ID;
+      if (defined('MODULE_PAYMENT_IPAYMENT_PP_ORDER_STATUS_ID') && defined('MODULE_PAYMENT_IPAYMENT_PP_ID')) {
+
+        if ((int)MODULE_PAYMENT_IPAYMENT_PP_ORDER_STATUS_ID > 0) {
+          $this->order_status = MODULE_PAYMENT_IPAYMENT_PP_ORDER_STATUS_ID;
+        }
+
+        $this->gateway_addresses = array('212.227.34.218', '212.227.34.219', '212.227.34.220');
+
+        if (is_object($order)) $this->update_status();
+
+        $this->form_action_url = 'https://ipayment.de/merchant/' . MODULE_PAYMENT_IPAYMENT_PP_ID . '/processor/2.0/';
       }
-
-      $this->gateway_addresses = array('212.227.34.218', '212.227.34.219', '212.227.34.220');
-
-      if (is_object($order)) $this->update_status();
-
-      $this->form_action_url = 'https://ipayment.de/merchant/' . MODULE_PAYMENT_IPAYMENT_PP_ID . '/processor/2.0/';
     }
 
 // class methods

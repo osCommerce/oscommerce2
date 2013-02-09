@@ -89,7 +89,7 @@ function showTooltip(x, y, contents) {
     position: 'absolute',
     display: 'none',
     top: y + 5,
-    left: x + 5,
+    left: x - 80,
     border: '1px solid #fdd',
     padding: '2px',
     backgroundColor: '#fee',

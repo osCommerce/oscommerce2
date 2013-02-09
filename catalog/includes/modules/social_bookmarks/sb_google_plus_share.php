@@ -30,7 +30,18 @@
     }
 
     function getOutput() {
-      global $HTTP_GET_VARS;
+      global $HTTP_GET_VARS, $lng, $languages_id;
+
+      if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+        include(DIR_WS_CLASSES . 'language.php');
+        $lng = new language;
+      }
+
+      foreach ($lng->catalog_languages as $lkey => $lvalue) {
+        if ($lvalue['id'] == $languages_id) {
+          $language_code = $lkey;
+        }
+      }
 
       $button_height = (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_HEIGHT;
 
@@ -47,6 +58,9 @@
       $output .= ' data-height="' . $button_height . '" data-align="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ALIGN) . '"></div>';
 
       $output .= '<script type="text/javascript">
+  window.___gcfg = {
+    lang: "' . $language_code . '"
+  };
   (function() {
     var po = document.createElement(\'script\'); po.type = \'text/javascript\'; po.async = true;
     po.src = \'https://apis.google.com/js/plusone.js\';

@@ -131,7 +131,11 @@
 
               $last_id = $row['categories_id'];
             }
-            $tree[$last_id]['next_id'] = $tree[$value]['next_id'];
+
+            if (isset($tree[$value]['next_id'])) {
+              $tree[$last_id]['next_id'] = $tree[$value]['next_id'];
+            }
+
             $tree[$value]['next_id'] = $first_id;
             $new_path .= '_';
           } else {

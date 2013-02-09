@@ -49,6 +49,8 @@ define('HEADER_TITLE_TOP', 'Administration');
 define('HEADER_TITLE_SUPPORT_SITE', 'Support Site');
 define('HEADER_TITLE_ONLINE_CATALOG', 'Online Catalog');
 define('HEADER_TITLE_ADMINISTRATION', 'Administration');
+define('HEADER_TITLE_LOGIN', 'Logged in as:');
+define('HEADER_TITLE_LOGOUT', 'Logoff');
 
 // text for gender
 define('MALE', 'Male');
@@ -289,10 +291,28 @@ define('TEXT_CACHE_ALSO_PURCHASED', 'Also Purchased Module');
 define('TEXT_NONE', '--none--');
 define('TEXT_TOP', 'Top');
 
-define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination does not exist.');
-define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination not writeable.');
+define('ERROR_DESTINATION_DOES_NOT_EXIST', 'Error: Destination %s does not exist.');
+define('ERROR_DESTINATION_NOT_WRITEABLE', 'Error: Destination %s not writeable.');
 define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warning: No file uploaded.');
+define('WARNING_DESTINATION_FILE_OVERWRITTEN', 'Warning: %s existing file is overwritten.');
+
+define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
+define('TEXT_TRUE_CONFIG', 'Yes');
+define('TEXT_FALSE_CONFIG', 'No');
+define('TEXT_ASC_CONFIG', 'Ascending');
+define('TEXT_DESC_CONFIG', 'Descending');
+define('TEXT_DATE_EXPECTED_CONFIG', 'By Date expected');
+define('TEXT_PRODUCT_NAME_CONFIG', 'By product name');
+define('TEXT_LEFT_COLUMN_CONFIG', 'Left Column');
+define('TEXT_RIGHT_COLUMN_CONFIG', 'Right Column');
+define('TEXT_WEIGHT_CONFIG', 'Weight');
+define('TEXT_PRICE_CONFIG', 'Price');
+define('TEXT_NATIONAL', 'National');
+define('TEXT_INTERNATIONAL', 'International');
+define('TEXT_BOTH', 'Both');
+
+define('NO_SCRIPT_TEXT', "<p><strong>JavaScript seems to be disabled in your browser.</strong></p><p>You must have JavaScript enabled in your browser to utilize the functionality of this website. <a href='http://www.enable-javascript.com/' target='_blank' rel='nofollow'>Click here for instructions on enabling javascript in your browser</a>.</p>");
 ?>

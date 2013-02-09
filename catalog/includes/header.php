@@ -11,14 +11,14 @@
 */
 
   if ($messageStack->size('header') > 0) {
-    echo '<div class="grid_24">' . $messageStack->output('header') . '</div>';
+    echo '<div class="grid_' . $oscTemplate->getGridContainerWidth() . '">' . $messageStack->output('header') . '</div>';
   }
 ?>
 
-<div id="header" class="grid_24">
+<div id="header" class="grid_<?php echo $oscTemplate->getGridContainerWidth(); ?>">
   <div id="storeLogo"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
-  <div id="headerShortcuts">
+  <div id="headerShortcuts" style="margin-right: 0px;">
 <?php
   echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($cart->count_contents() > 0 ? ' (' . $cart->count_contents() . ')' : ''), 'cart', tep_href_link(FILENAME_SHOPPING_CART)) .
        tep_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL')) .
@@ -35,7 +35,7 @@
 </script>
 </div>
 
-<div class="grid_24 ui-widget infoBoxContainer">
+<div class="grid_<?php echo $oscTemplate->getGridContainerWidth(); ?> ui-widget infoBoxContainer">
   <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
 </div>
 

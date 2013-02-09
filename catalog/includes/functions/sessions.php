@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -44,6 +44,10 @@
 
       $expiry = time() + $SESS_LIFE;
       $value = $val;
+
+      if (strlen(tep_db_input($value)) > 65535) {
+        tep_db_error("SQL SESSION ERROR", "<p>Warning: #1265, #1046 Data truncated for column 'value' in last session and not saved for keeping stability", strlen(tep_db_input($value)) . " characters would be truncated to 65535" . '</p><p><font color="#ff0000">Sorry for the inconvenience but ' . STORE_NAME . ' online shopping system has reached its limit of. Probably too many items in cart. We recommend that you remove some products from the basket, and instead do one more after this order.</font></p><br /><p>&nbsp;<a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '">' . IMAGE_BUTTON_CONTINUE . '</a><br /><br />&nbsp;<a href="' . tep_href_link(FILENAME_CONTACT_US) . '">' . 'Contact' . '</a></p>' );
+      }
 
       $check_query = tep_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
       $check = tep_db_fetch_array($check_query);

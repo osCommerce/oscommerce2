@@ -14,6 +14,10 @@ define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_SEARCH', 'Search:');
 define('HEADING_TITLE_GOTO', 'Go To:');
 
+define('TAB_TITLE_BASIC', 'Product Basic Data');
+define('TAB_TITLE_DESCRIPTIONS', 'Product Information');
+define('TAB_TITLE_IMAGES', 'Product Images');
+
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');
 define('TABLE_HEADING_ACTION', 'Action');
@@ -30,7 +34,6 @@ define('TEXT_PRODUCTS_QUANTITY_INFO', 'Quantity:');
 define('TEXT_DATE_ADDED', 'Date Added:');
 define('TEXT_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_LAST_MODIFIED', 'Last Modified:');
-define('TEXT_IMAGE_NONEXISTENT', 'IMAGE DOES NOT EXIST');
 define('TEXT_NO_CHILD_CATEGORIES_OR_PRODUCTS', 'Please insert a new category or product in this level.');
 define('TEXT_PRODUCT_MORE_INFORMATION', 'For more information, please visit this products <a href="http://%s" target="blank"><u>webpage</u></a>.');
 define('TEXT_PRODUCT_DATE_ADDED', 'This product was added to our catalog on %s.');

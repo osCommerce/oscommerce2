@@ -1,0 +1,91 @@
+
+
+DATABASE INSTALLATION
+- focus on charsets (multibytes)
+
+
+
+  A FIRST INSTALLATION
+     when creates new database the SQL default install code for some reason is no influence.
+
+     **************************************************
+     * CREATE DATABASE `oscommerce_example_database`; *
+     **************************************************
+
+    * if hosting not set utf8 to default charset need to use
+
+     *****************************************************************************
+     * CREATE DATABASE `oscommerce_example_database` DEFAULT CHARACTER SET utf8; *
+     *****************************************************************************
+
+      SQL command.
+
+      Need inform before!
+
+      For informing yourself about charsets use SQL engine checking tools. osCommerce package
+      has a simple tool for checking.
+
+       Path: extras/create_database_tool.php
+       Note: need edit mysql_connect parameters before run this php script
+       The script give all create database alternative commands before installation.
+       (The default asked charset is "utf8" but allowed to change
+           $default_charset = 'utf8'; )
+
+       THE CHARSET PARAMETER NEED IN OSCOMMERCE SETUP PROCEDURE LATER!!!
+
+       Useage:
+       1. Copy create_database_tool.php to webserver
+       2. Edit create_database_tool.php file with a txt editor and give user password, database name
+          and host server name for sql commands. The dafault parameters good for local testing only.
+
+            $db_server          = 'localhost';
+            $db_server_username = 'root';
+            $db_server_password = '';
+
+       3. Save file after changes and run
+       4. Green SQL commands are recommended
+       5. Select one best choice to Create oscommerce database
+       6. Change `oscommerce_example_database` name in SQL script you want
+       7. Run the new SQL created sript in SQL engine
+       8. Delete create_database_tool.php from webserver because this is a security risk!!!
+
+
+
+  B UPDATES
+    * if you already have non utf8 COLLATED EMPTY DATABASE
+      use alter database like this:
+
+      ****************************************************************************************************
+      * ALTER DATABASE `oscommerce_example_database` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci; *
+      ****************************************************************************************************
+
+    * if already use non utf8 COLLATED DATABASE
+      Need alter the all table with SQL commands for each table which are exist!
+
+    * After core updates need to edit configure.php-s
+      add new line in
+      catalog/admin/includes/configure.php
+
+        define('DB_DATABASE_CHARSET', '');
+
+      and
+      catalog/includes/configure.php
+
+        define('DB_DATABASE_CHARSET', '');
+
+      Don't forget to set the charset value in changes!!
+
+  C INSTALLING OSCOMMERCE INTO COMMON USED DATABASE
+    oscommerce v2 is not use table prefixes, not recommended
+
+
+
+  D CHARSET PACKAGE SOLVE OTHER PROBLEMS
+
+    1. Default database charset of the core
+
+    2. Multibyte string problem in wordwrap
+
+    3. Search issues
+
+    4. Email issues

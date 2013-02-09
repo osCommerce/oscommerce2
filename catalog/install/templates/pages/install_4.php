@@ -14,6 +14,7 @@
 
   osc_db_connect(trim($HTTP_POST_VARS['DB_SERVER']), trim($HTTP_POST_VARS['DB_SERVER_USERNAME']), trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']));
   osc_db_select_db(trim($HTTP_POST_VARS['DB_DATABASE']));
+  osc_db_query('SET CHARACTER SET "' . $HTTP_POST_VARS['DB_DATABASE_CHARSET'] . '"');
 
   osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . trim($HTTP_POST_VARS['CFG_STORE_NAME']) . '" where configuration_key = "STORE_NAME"');
   osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . trim($HTTP_POST_VARS['CFG_STORE_OWNER_NAME']) . '" where configuration_key = "STORE_OWNER"');
@@ -134,6 +135,7 @@
                    '  define(\'DB_SERVER_USERNAME\', \'' . trim($HTTP_POST_VARS['DB_SERVER_USERNAME']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
+                   '  define(\'DB_DATABASE_CHARSET\', \'' . trim($HTTP_POST_VARS['DB_DATABASE_CHARSET']) . '\');' . "\n" .
                    '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
                    '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n";
 
@@ -178,6 +180,7 @@
                    '  define(\'DB_SERVER\', \'' . trim($HTTP_POST_VARS['DB_SERVER']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_USERNAME\', \'' . trim($HTTP_POST_VARS['DB_SERVER_USERNAME']) . '\');' . "\n" .
                    '  define(\'DB_SERVER_PASSWORD\', \'' . trim($HTTP_POST_VARS['DB_SERVER_PASSWORD']) . '\');' . "\n" .
+                   '  define(\'DB_DATABASE_CHARSET\', \'' . trim($HTTP_POST_VARS['DB_DATABASE_CHARSET']) . '\');' . "\n" .
                    '  define(\'DB_DATABASE\', \'' . trim($HTTP_POST_VARS['DB_DATABASE']) . '\');' . "\n" .
                    '  define(\'USE_PCONNECT\', \'false\');' . "\n" .
                    '  define(\'STORE_SESSIONS\', \'mysql\');' . "\n";

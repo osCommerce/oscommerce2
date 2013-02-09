@@ -142,7 +142,7 @@ function checkForm() {
       </tr>
       <tr>
         <td class="fieldKey" valign="top"><?php echo SUB_TITLE_REVIEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('review', 'soft', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_textarea_field('review', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo SUB_TITLE_RATING; ?></td>

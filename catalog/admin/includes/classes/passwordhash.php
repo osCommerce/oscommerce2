@@ -53,14 +53,7 @@ class PasswordHash {
 	function get_random_bytes($count)
 	{
 		$output = '';
-		if (@is_readable('/dev/urandom') &&
-		    ($fh = @fopen('/dev/urandom', 'rb'))) {
-			if (function_exists('stream_set_read_buffer')) {
-				stream_set_read_buffer($fh, 0);
-			}
-			$output = fread($fh, $count);
-			fclose($fh);
-		} elseif ( function_exists('openssl_random_pseudo_bytes') ) {
+		if ( function_exists('openssl_random_pseudo_bytes') ) {
 			$output = openssl_random_pseudo_bytes($count, $orpb_secure);
 
 			if ( $orpb_secure != true ) {

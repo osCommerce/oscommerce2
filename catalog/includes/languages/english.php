@@ -46,6 +46,9 @@ define('HTML_PARAMS', 'dir="ltr" lang="en"');
 // charset for web pages and emails
 define('CHARSET', 'utf-8');
 
+// set global internal character encoding
+mb_internal_encoding(CHARSET);
+
 // page title
 define('TITLE', STORE_NAME);
 
@@ -92,6 +95,7 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please select a payment method 
 define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press Ok and wait for this process to be completed.');
 
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please select a payment method for your order.');
+define('ERROR_NO_PAYMENT_MODULE_CONFIGURED', 'We are sorry but there is no set payment method in the store.');
 
 define('CATEGORY_COMPANY', 'Company Details');
 define('CATEGORY_PERSONAL', 'Your Personal Details');

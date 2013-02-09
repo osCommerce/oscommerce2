@@ -282,8 +282,8 @@
   function tep_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
+    for ($i=0, $n=mb_strlen($string, CHARSET); $i<$n; $i++) {
+      $char = mb_substr($string, $i, 1, CHARSET);
       if ($char != ' ') {
         $l++;
       } else {
@@ -474,7 +474,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 
@@ -718,7 +718,7 @@
 ////
 // Function to read in text area in admin
  function tep_cfg_textarea($text) {
-    return tep_draw_textarea_field('configuration_value', false, 35, 5, $text);
+    return tep_draw_textarea_field('configuration_value', 35, 5, $text);
   }
 
   function tep_cfg_get_zone_name($zone_id) {
@@ -790,18 +790,27 @@
   }
 
 ////
+// Alias name for function for Store configuration values in the Administration Tool
+  function tep_localise_select($select){
+    $ValueIn = array('`^true$`i', '`^false$`i', '`^desc$`', '`^asc$`', '`^date_expected$`', '`^products_name$`', '`^Left Column$`i', '`^Right Column$`i', '`^weight$`i', '`^price$`i', '`^national$`i', '`^international$`i', '`^both$`i');
+    $ValueOut = array(TEXT_TRUE_CONFIG, TEXT_FALSE_CONFIG, TEXT_DESC_CONFIG, TEXT_ASC_CONFIG, TEXT_DATE_EXPECTED_CONFIG, TEXT_PRODUCT_NAME_CONFIG, TEXT_LEFT_COLUMN_CONFIG, TEXT_RIGHT_COLUMN_CONFIG, TEXT_WEIGHT_CONFIG, TEXT_PRICE_CONFIG, TEXT_NATIONAL, TEXT_INTERNATIONAL, TEXT_BOTH);
+    return preg_replace($ValueIn, $ValueOut, htmlspecialchars($select) );
+  }
+
+////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '';
 
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
       $name = ((tep_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
+      $txt = tep_localise_select($select_array[$i]);
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
 
       if ($key_value == $select_array[$i]) $string .= ' checked="checked"';
 
-      $string .= ' /> ' . $select_array[$i];
+      $string .= ' /> ' .  $txt;
     }
 
     return $string;
@@ -822,6 +831,18 @@
   }
 
 ////
+// Get from php ini settings exist or not
+  function tep_get_php_ini_functions($mod_name, $parameter = 'disable_functions') {
+    $php_ini = ini_get($parameter);
+    $find = strstr($php_ini, $mod_name);
+
+    if ( !$find ) {
+      return false;
+    }
+    return true;
+  }
+
+////
 // Retreive server information
   function tep_get_system_information() {
     global $HTTP_SERVER_VARS;
@@ -829,7 +850,12 @@
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
 
-    @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
+    $kernel = "---";
+    $uptime = "---";
+    if (!tep_get_php_ini_functions("exec")) {
+      @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
+      $uptime = @exec('uptime');
+    }
 
     $data = array();
 
@@ -838,7 +864,7 @@
     $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,
                             'kernel' => $kernel,
-                            'uptime' => @exec('uptime'),
+                            'uptime' => $uptime,
                             'http_server' => $HTTP_SERVER_VARS['SERVER_SOFTWARE']);
 
     $data['mysql']  = array('version' => tep_db_get_server_info(),

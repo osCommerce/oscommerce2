@@ -245,8 +245,7 @@
 
 ////
 // Output a form textarea field
-// The $wrap parameter is no longer used in the core xhtml template
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
+  function tep_draw_textarea_field($name, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
@@ -347,6 +346,14 @@
 
     $types = array('submit', 'button', 'reset');
 
+    $events = '';
+    if ( isset($params['events']) ) {
+      $events .= PHP_EOL;
+      foreach ($params['events'] as $key => $value) {
+        $events .= '$("#tdb' . $button_counter . '").' . $key . '(' . $value . ');' . PHP_EOL;
+      }
+    }
+
     if ( !isset($params['type']) ) {
       $params['type'] = 'submit';
     }
@@ -411,7 +418,7 @@
       $button .= '{' . implode(',', $args) . '}';
     }
 
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");' . $events . '</script>';
 
     $button_counter++;
 

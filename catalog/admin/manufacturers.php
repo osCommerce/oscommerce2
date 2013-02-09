@@ -40,6 +40,7 @@
 
         $manufacturers_image = new upload('manufacturers_image');
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $manufacturers_image->set_output_messages('session');
 
         if ($manufacturers_image->parse() && $manufacturers_image->save()) {
           tep_db_query("update " . TABLE_MANUFACTURERS . " set manufacturers_image = '" . tep_db_input($manufacturers_image->filename) . "' where manufacturers_id = '" . (int)$manufacturers_id . "'");

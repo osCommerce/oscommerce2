@@ -229,8 +229,7 @@
 
 ////
 // Output a form textarea field
-// The $wrap parameter is no longer used in the core xhtml template
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
+  function tep_draw_textarea_field($name, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
@@ -346,6 +345,14 @@
       $params['type'] = 'submit';
     }
 
+    $events = '';
+    if ( isset($params['events']) ) {
+      $events .= PHP_EOL;
+      foreach ($params['events'] as $key => $value) {
+        $events .= '$("#tdb' . $button_counter . '").' . $key . '(' . $value . ');' . PHP_EOL;
+      }
+    }
+
     if ( !in_array($params['type'], $types) ) {
       $params['type'] = 'submit';
     }
@@ -361,7 +368,7 @@
     $button = '<span class="tdbLink">';
 
     if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+      $button .= '<a style="margin-right: 0px;" id="tdb' . $button_counter . '" href="' . $link . '"';
 
       if ( isset($params['newwindow']) ) {
         $button .= ' target="_blank"';
@@ -406,7 +413,7 @@
       $button .= '{' . implode(',', $args) . '}';
     }
 
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");' . $events . '</script>';
 
     $button_counter++;
 
