@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
@@ -402,9 +398,6 @@
   require(DIR_WS_FUNCTIONS . 'specials.php');
   tep_expire_specials();
 
-  require(DIR_WS_CLASSES . 'osc_template.php');
-  $oscTemplate = new oscTemplate();
-
 // calculate category path
   if (isset($_GET['cPath'])) {
     $cPath = $_GET['cPath'];
@@ -421,6 +414,12 @@
   } else {
     $current_category_id = 0;
   }
+
+  require(DIR_WS_CLASSES . 'app.php');
+  $OSCOM_APP = app::initialize();
+
+  require(DIR_WS_CLASSES . 'osc_template.php');
+  $oscTemplate = new oscTemplate();
 
 // include the breadcrumb class and start the breadcrumb trail
   require(DIR_WS_CLASSES . 'breadcrumb.php');
