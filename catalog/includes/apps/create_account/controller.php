@@ -210,10 +210,6 @@
                                                       'customers_info_number_of_logons' => '0',
                                                       'customers_info_date_account_created' => 'now()'));
 
-          if ( SESSION_RECREATE == 'True' ) {
-            tep_session_recreate();
-          }
-
           $_SESSION['customer_first_name'] = $firstname;
           $_SESSION['customer_default_address_id'] = $address_id;
           $_SESSION['customer_country_id'] = $country;
@@ -224,6 +220,10 @@
 
 // restore cart contents
           $_SESSION['cart']->restore_contents();
+
+          if ( SESSION_RECREATE == 'True' ) {
+            tep_session_recreate();
+          }
 
 // build the message content
           $name = $firstname . ' ' . $lastname;
