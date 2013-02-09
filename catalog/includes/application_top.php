@@ -73,7 +73,7 @@
 
 // set the application parameters
   $Qcfg = $OSCOM_PDO->query('select configuration_key as cfgKey, configuration_value as cfgValue from :table_configuration');
-  $Qcfg->setCache('configuration');
+//  $Qcfg->setCache('configuration');
   $Qcfg->execute();
 
   while ( $Qcfg->fetch() ) {
