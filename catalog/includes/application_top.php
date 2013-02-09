@@ -447,6 +447,7 @@
 
   require(DIR_WS_CLASSES . 'app.php');
   $OSCOM_APP = app::initialize();
+  $OSCOM_APP->runActions();
 
   require(DIR_WS_CLASSES . 'osc_template.php');
   $oscTemplate = new oscTemplate();
