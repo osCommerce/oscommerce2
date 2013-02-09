@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
   class oscTemplate {
     var $_title;
@@ -94,6 +90,10 @@
           }
         }
       }
+    }
+
+    public function getTemplateFilename() {
+      return DIR_WS_MODULES . 'templates/gosling/content/template_top.php';
     }
   }
 ?>

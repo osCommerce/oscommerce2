@@ -1,14 +1,10 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2012 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
   $oscTemplate->buildBlocks();
 
@@ -64,26 +60,127 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 <link rel="stylesheet" type="text/css" href="ext/jquery/fancybox/jquery.fancybox-1.3.4.css" />
 <script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 
-<?php echo $oscTemplate->getBlocks('header_tags'); ?>
+<?php
+  echo $oscTemplate->getBlocks('header_tags');
+?>
+
 </head>
 <body>
 
 <div id="bodyWrapper" class="container-fluid">
 
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-
-<div class="row-fluid">
-
 <?php
-  if ($oscTemplate->hasBlocks('boxes_column_left')) {
+  if ($messageStack->size('header') > 0) {
+    echo '<div class="row-fluid">' . $messageStack->output('header') . '</div>';
+  }
 ?>
 
-<div id="columnLeft" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
-  <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
-</div>
+  <div id="header" class="row-fluid">
+    <div id="storeLogo"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
+
+    <div id="headerShortcuts">
+<?php
+  echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'cart', tep_href_link(FILENAME_SHOPPING_CART)) .
+       tep_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL')) .
+       tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+
+  if (isset($_SESSION['customer_id'])) {
+    echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link(FILENAME_LOGOFF, '', 'SSL'));
+  }
+?>
+    </div>
+  </div>
+
+<script>
+$('#headerShortcuts').buttonset();
+</script>
+
+  <div class="row-fluid ui-widget infoBoxContainer">
+    <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
+  </div>
+
+<?php
+  if (isset($_GET['error_message']) && tep_not_null($_GET['error_message'])) {
+?>
+
+  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <tr class="headerError">
+      <td class="headerError"><?php echo htmlspecialchars(urldecode($_GET['error_message'])); ?></td>
+    </tr>
+  </table>
+
+<?php
+  }
+
+  if (isset($_GET['info_message']) && tep_not_null($_GET['info_message'])) {
+?>
+
+  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <tr class="headerInfo">
+      <td class="headerInfo"><?php echo htmlspecialchars(urldecode($_GET['info_message'])); ?></td>
+    </tr>
+  </table>
 
 <?php
   }
 ?>
 
-<div id="bodyContent" class="span<?php echo $oscTemplate->getGridContentWidth(); ?>">
+  <div class="row-fluid">
+
+<?php
+  if ( $oscTemplate->hasBlocks('boxes_column_left') ) {
+?>
+
+    <div id="columnLeft" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+      <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+    </div>
+
+<?php
+  }
+?>
+
+    <div id="bodyContent" class="span<?php echo $oscTemplate->getGridContentWidth(); ?>">
+      <?php require($OSCOM_APP->getContentFile(true)); ?>
+    </div>
+
+<?php
+  if ( $oscTemplate->hasBlocks('boxes_column_right') ) {
+?>
+
+    <div id="columnRight" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+      <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
+    </div>
+
+<?php
+  }
+?>
+
+    <div class="footer span12">
+      <p align="center"><?php echo FOOTER_TEXT_BODY; ?></p>
+    </div>
+
+<?php
+  if ($banner = tep_banner_exists('dynamic', '468x50')) {
+?>
+
+    <div class="span12" style="text-align: center; padding-bottom: 20px;">
+      <?php echo tep_display_banner('static', $banner); ?>
+    </div>
+
+<?php
+  }
+?>
+
+  </div>
+</div>
+
+<script>
+$('.productListTable tr:nth-child(even)').addClass('alt');
+</script>
+
+<?php
+  echo $oscTemplate->getBlocks('footer_scripts');
+?>
+
+</body>
+</html>
