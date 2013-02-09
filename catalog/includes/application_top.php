@@ -415,12 +415,6 @@
     $current_category_id = 0;
   }
 
-  require(DIR_WS_CLASSES . 'app.php');
-  $OSCOM_APP = app::initialize();
-
-  require(DIR_WS_CLASSES . 'osc_template.php');
-  $oscTemplate = new oscTemplate();
-
 // include the breadcrumb class and start the breadcrumb trail
   require(DIR_WS_CLASSES . 'breadcrumb.php');
   $breadcrumb = new breadcrumb;
@@ -450,4 +444,10 @@
 // initialize the message stack for output messages
   require(DIR_WS_CLASSES . 'message_stack.php');
   $messageStack = new messageStack;
+
+  require(DIR_WS_CLASSES . 'app.php');
+  $OSCOM_APP = app::initialize();
+
+  require(DIR_WS_CLASSES . 'osc_template.php');
+  $oscTemplate = new oscTemplate();
 ?>
