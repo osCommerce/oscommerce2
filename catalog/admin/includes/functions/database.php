@@ -20,7 +20,7 @@
     $$link = mysqli_connect($server, $username, $password, $database);
 
     if (defined('DB_DATABASE_CHARSET') && DB_DATABASE_CHARSET !== '') {
-      mysql_query('SET CHARACTER SET ' . DB_DATABASE_CHARSET . '');
+      mysqli_query($$link, 'SET CHARACTER SET ' . DB_DATABASE_CHARSET . '');
     }
 
     return $$link;
@@ -182,6 +182,10 @@
 
       if ( $link ) {
         mysql_select_db($database, $link);
+      }
+
+      if (defined('DB_DATABASE_CHARSET') && DB_DATABASE_CHARSET !== '') {
+        mysql_query('SET CHARACTER SET ' . DB_DATABASE_CHARSET . '', $link);
       }
 
       return $link;

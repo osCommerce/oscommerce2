@@ -42,7 +42,7 @@
   }
 
   function osc_db_fetch_array($db_query) {
-    return mysql_fetch_array($db_query, MYSQL_ASSOC);
+    return mysqli_fetch_array($db_query, MYSQLI_ASSOC);
   }
 
   function osc_db_install($database, $charset, $sql_file) {
@@ -124,6 +124,8 @@
   }
 
   if ( !function_exists('mysqli_connect') ) {
+    define('MYSQLI_ASSOC', MYSQL_ASSOC);
+
     function mysqli_connect($server, $username, $password) {
       if ( substr($server, 0, 2) == 'p:' ) {
         $link = mysql_pconnect(substr($server, 2), $username, $password);
@@ -148,6 +150,10 @@
 
     function mysqli_num_rows($query) {
       return mysql_num_rows($query);
+    }
+
+    function mysqli_fetch_array($query, $type) {
+      return mysql_fetch_array($query, $type);
     }
   }
 ?>
