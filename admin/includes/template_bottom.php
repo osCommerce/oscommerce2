@@ -11,11 +11,11 @@
 */
 ?>
 
-</div>
+		</section> <!-- bodyContent //-->
 
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+		<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
-<br />
-
+	</div>
+</div> <!-- .container-fluid //-->
 </body>
 </html>
