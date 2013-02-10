@@ -17,7 +17,7 @@
   if ($messageStack->size > 0) echo $messageStack->output();
 */
 
-  class messageStack extends tableBlock {
+  class messageStack extends alertBlock {
     var $size = 0;
 
     function messageStack() {
@@ -33,13 +33,13 @@
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => osc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="alert alert-error"', 'text' => $message);
       } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => osc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="alert alert-block"', 'text' => '<p>' . $message . '</p>');
       } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => osc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="alert alert-success"', 'text' => '<p>' . $message . '</p>');
       } else {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => $message);
+        $this->errors[] = array('params' => 'class="alert alert-info"', 'text' => '<p>' . $message . '</p>');
       }
 
       $this->size++;
@@ -59,8 +59,8 @@
     }
 
     function output() {
-      $this->table_data_parameters = 'class="messageBox"';
-      return $this->tableBlock($this->errors);
+     // $this->table_data_parameters = 'class="messageBox"';
+      return $this->alertBlock($this->errors);
     }
   }
 ?>
