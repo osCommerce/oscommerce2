@@ -193,10 +193,8 @@
 
 ////
 // Output a form password field
-  function osc_draw_password_field($name, $value = '', $required = false) {
-    $field = osc_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
-
-    return $field;
+  function osc_draw_password_field($name, $value = '', $parameters = '', $required = false) {
+    return osc_draw_input_field($name, $value, $parameters . ' maxlength="40"', $required, 'password', false);
   }
 
 ////
