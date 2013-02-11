@@ -212,19 +212,19 @@
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                           'currency' => $_SESSION['currency'],
                           'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
-                          'payment_method' => $_SESSION['payment'],
+                          'payment_method' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
                           'cc_type' => '',
                           'cc_owner' => '',
                           'cc_number' => '',
                           'cc_expires' => '',
-                          'shipping_method' => $_SESSION['shipping']['title'],
-                          'shipping_cost' => $_SESSION['shipping']['cost'],
+                          'shipping_method' => isset($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
+                          'shipping_cost' => isset($_SESSION['shipping']) ? $_SESSION['shipping']['cost'] : 0,
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
                           'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
-      if (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+      if (isset($_SESSION['payment']) && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
         if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
           $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
         } else {
