@@ -1,315 +1,139 @@
 <?php
-/*
-  $Id$
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'http_client.php');
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'order.php');
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'order_total.php');
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'payment.php');
+  require(DIR_FS_CATALOG . DIR_WS_CLASSES . 'shipping.php');
 
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
-
-  require('includes/application_top.php');
+  class app_checkout extends app {
+    public function __construct() {
+      global $OSCOM_PDO, $order, $breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
 
 // if the customer is not logged on, redirect them to the login page
-  if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
+      if ( !isset($_SESSION['customer_id']) ) {
+        $_SESSION['navigation']->set_snapshot();
+
+        tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+      }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
-  }
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
-    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-    }
-  }
-
-// if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!isset($_SESSION['shipping'])) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  }
-
-  if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
-
-  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $_SESSION['comments'] = tep_db_prepare_input($_POST['comments']);
-  }
-
-// load the selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($_SESSION['payment']);
-
-  require(DIR_WS_CLASSES . 'order.php');
-  $order = new order;
-
-  $payment_modules->update_status();
-
-  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
-  }
-
-  if (is_array($payment_modules->modules)) {
-    $payment_modules->pre_confirmation_check();
-  }
-
-// load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($_SESSION['shipping']);
-
-  require(DIR_WS_CLASSES . 'order_total.php');
-  $order_total_modules = new order_total;
-  $order_total_modules->process();
-
-// Stock Check
-  $any_out_of_stock = false;
-  if (STOCK_CHECK == 'true') {
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-      if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
-        $any_out_of_stock = true;
+      if ( $_SESSION['cart']->count_contents() < 1 ) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
-    }
-    // Out of Stock
-    if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
-    }
-  }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+// if no shipping destination address was selected, use the customers own address as default
+      if ( !isset($_SESSION['sendto']) ) {
+        $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+      } else {
+// verify the selected shipping address
+        if ( (is_array($_SESSION['sendto']) && empty($_SESSION['sendto'])) || is_numeric($_SESSION['sendto']) ) {
+          $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+          $Qcheck->bindInt(':address_book_id', $_SESSION['sendto']);
+          $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qcheck->execute();
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2);
+          if ( $Qcheck->fetch() === false ) {
+            $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
-?>
-
-<h1><?php echo HEADING_TITLE; ?></h1>
-
-<?php
-  if (isset($$_SESSION['payment']->form_action_url)) {
-    $form_action_url = $$_SESSION['payment']->form_action_url;
-  } else {
-    $form_action_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
-  }
-
-  echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');
-?>
-
-<div class="contentContainer">
-  <h2><?php echo HEADING_SHIPPING_INFORMATION; ?></h2>
-
-  <div class="contentText">
-    <table border="0" width="100%" cellspacing="1" cellpadding="2">
-      <tr>
-
-<?php
-  if ($_SESSION['sendto'] != false) {
-?>
-
-        <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
-          </tr>
-
-<?php
-    if ($order->info['shipping_method']) {
-?>
-
-          <tr>
-            <td><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $order->info['shipping_method']; ?></td>
-          </tr>
-<?php
-    }
-?>
-
-        </table></td>
-
-<?php
-  }
-?>
-
-        <td width="<?php echo (($_SESSION['sendto'] != false) ? '70%' : '100%'); ?>" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-
-<?php
-  if (sizeof($order->info['tax_groups']) > 1) {
-?>
-
-          <tr>
-            <td colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-            <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
-          </tr>
-
-<?php
-  } else {
-?>
-
-          <tr>
-            <td colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-          </tr>
-
-<?php
-  }
-
-  for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-    echo '          <tr>' . "\n" .
-         '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
-         '            <td valign="top">' . $order->products[$i]['name'];
-
-    if (STOCK_CHECK == 'true') {
-      echo tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
-    }
-
-    if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
-      for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-        echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'] . '</i></small></nobr>';
-      }
-    }
-
-    echo '</td>' . "\n";
-
-    if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
-
-    echo '            <td align="right" valign="top">' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . '</td>' . "\n" .
-         '          </tr>' . "\n";
-  }
-?>
-
-        </table></td>
-      </tr>
-    </table>
-  </div>
-
-  <h2><?php echo HEADING_BILLING_INFORMATION; ?></h2>
-
-  <div class="contentText">
-    <table border="0" width="100%" cellspacing="1" cellpadding="2">
-      <tr>
-        <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
-          </tr>
-          <tr>
-            <td><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
-          </tr>
-          <tr>
-            <td><?php echo $order->info['payment_method']; ?></td>
-          </tr>
-        </table></td>
-        <td width="70%" valign="top" align="right"><table border="0" cellspacing="0" cellpadding="2">
-
-<?php
-  if (MODULE_ORDER_TOTAL_INSTALLED) {
-    echo $order_total_modules->output();
-  }
-?>
-
-        </table></td>
-      </tr>
-    </table>
-  </div>
-
-<?php
-  if (is_array($payment_modules->modules)) {
-    if ($confirmation = $payment_modules->confirmation()) {
-?>
-
-  <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
-
-  <div class="contentText">
-    <table border="0" cellspacing="0" cellpadding="2">
-      <tr>
-        <td colspan="4"><?php echo $confirmation['title']; ?></td>
-      </tr>
-
-<?php
-      if (isset($confirmation['fields'])) {
-        for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
-?>
-
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-        <td class="main"><?php echo $confirmation['fields'][$i]['title']; ?></td>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
-        <td class="main"><?php echo $confirmation['fields'][$i]['field']; ?></td>
-      </tr>
-
-<?php
+            if ( isset($_SESSION['shipping']) ) {
+              unset($_SESSION['shipping']);
+            }
+          }
         }
       }
-?>
 
-    </table>
-  </div>
+// if no billing destination address was selected, use the customers own address as default
+      if ( !isset($_SESSION['billto']) ) {
+        $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+      } else {
+// verify the selected billing address
+        if ( (is_array($_SESSION['billto']) && empty($_SESSION['billto'])) || is_numeric($_SESSION['billto']) ) {
+          $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+          $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
+          $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qcheck->execute();
 
-<?php
+          if ( $Qcheck->fetch() === false ) {
+            $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+
+            if ( isset($_SESSION['payment']) ) {
+              unset($_SESSION['payment']);
+            }
+          }
+        }
+      }
+
+// avoid hack attempts during the checkout procedure by checking the internal cartID
+      if ( !isset($_GET['shipping']) && isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID']) ) {
+        if ( $_SESSION['cart']->cartID != $_SESSION['cartID'] ) {
+          tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+        }
+      }
+
+// if no shipping method has been selected, redirect the customer to the shipping method selection page
+      if ( !isset($_GET['shipping']) && !isset($_SESSION['shipping']) ) {
+        tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+      }
+
+// if no shipping method has been selected, redirect the customer to the shipping method selection page
+      if ( !isset($_GET['payment']) && isset($_SESSION['shipping']) && !isset($_SESSION['payment']) ) {
+        tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
+      }
+
+      $order = new order();
+
+      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('checkout', '', 'SSL'));
+
+      if ( isset($_SESSION['shipping']) && isset($_SESSION['payment']) ) {
+// load the selected payment module
+        $payment_modules = new payment($_SESSION['payment']);
+
+        $order->cart();
+
+        $payment_modules->update_status();
+
+        if ( (is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($GLOBALS[$_SESSION['payment']])) || (is_object($GLOBALS[$_SESSION['payment']]) && ($GLOBALS[$_SESSION['payment']]->enabled == false)) ) {
+          unset($_SESSION['payment']);
+
+          tep_redirect(tep_href_link('checkout', 'payment&error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+        }
+
+        if ( is_array($payment_modules->modules) ) {
+          $payment_modules->pre_confirmation_check();
+        }
+
+// load the selected shipping module
+        $shipping_modules = new shipping($_SESSION['shipping']);
+
+        $order_total_modules = new order_total;
+        $order_totals = $order_total_modules->process();
+
+// Stock Check
+        $any_out_of_stock = false;
+
+        if ( STOCK_CHECK == 'true' ) {
+          foreach ( $order->products as $p ) {
+            if ( tep_check_stock($p['id'], $p['qty']) ) {
+              $any_out_of_stock = true;
+              break;
+            }
+          }
+
+// Out of Stock
+          if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
+            tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+          }
+        }
+
+        $breadcrumb->add(NAVBAR_TITLE_CONFIRMATION);
+      }
     }
   }
-
-  if (tep_not_null($order->info['comments'])) {
-?>
-
-  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> <a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></h2>
-
-  <div class="contentText">
-    <?php echo nl2br(tep_output_string_protected($order->info['comments'])) . tep_draw_hidden_field('comments', $order->info['comments']); ?>
-  </div>
-
-<?php
-  }
-?>
-
-  <div class="contentText">
-    <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
-
-      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-        <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
-        </tr>
-      </table>
-    </div>
-
-    <div style="float: right;">
-
-<?php
-  if (is_array($payment_modules->modules)) {
-    echo $payment_modules->process_button();
-  }
-
-  echo tep_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'primary');
-?>
-
-    </div>
-  </div>
-
-</div>
-
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 100
-});
-</script>
-
-</form>
-
-<?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

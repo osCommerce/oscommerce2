@@ -17,6 +17,10 @@
       unset($_SESSION['customer_first_name']);
       unset($_SESSION['customer_country_id']);
       unset($_SESSION['customer_zone_id']);
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
       unset($_SESSION['comments']);
 
       $_SESSION['cart']->reset();
