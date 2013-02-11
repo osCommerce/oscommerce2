@@ -22,7 +22,7 @@
 
 <head>
 
-<meta charset=<?php echo CHARSET; ?>" />
+<meta charset="<?php echo CHARSET; ?>" />
 
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 
