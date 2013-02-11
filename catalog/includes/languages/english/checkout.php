@@ -10,12 +10,14 @@
  define('NAVBAR_TITLE_SHIPPING', 'Shipping Method');
  define('NAVBAR_TITLE_SHIPPING_ADDRESS', 'Change Shipping Address');
  define('NAVBAR_TITLE_PAYMENT', 'Payment Method');
+ define('NAVBAR_TITLE_PAYMENT_ADDRESS', 'Change Billing Address');
  define('NAVBAR_TITLE_CONFIRMATION', 'Confirmation');
  define('NAVBAR_TITLE_SUCCESS', 'Success');
 
  define('HEADING_TITLE_SHIPPING', 'Delivery Information');
  define('HEADING_TITLE_SHIPPING_ADDRESS', 'Delivery Information');
  define('HEADING_TITLE_PAYMENT', 'Payment Information');
+ define('HEADING_TITLE_PAYMENT_ADDRESS', 'Payment Information');
  define('HEADING_TITLE_CONFIRMATION', 'Order Confirmation');
  define('HEADING_TITLE_SUCCESS', 'Your Order Has Been Processed!');
 
@@ -86,4 +88,13 @@
 
  define('TABLE_HEADING_NEW_SHIPPING_ADDRESS', 'New Shipping Address');
  define('TEXT_CREATE_NEW_SHIPPING_ADDRESS', 'Please use the following form to create a new shipping address to use for this order.');
+
+ define('TABLE_HEADING_PAYMENT_ADDRESS', 'Billing Address');
+ define('TEXT_SELECTED_PAYMENT_DESTINATION', 'This is the currently selected billing address where the invoice to this order will be delivered to.');
+ define('TITLE_PAYMENT_ADDRESS', 'Billing Address:');
+
+ define('TEXT_SELECT_OTHER_PAYMENT_DESTINATION', 'Please select the preferred billing address if the invoice to this order is to be delivered elsewhere.');
+
+ define('TABLE_HEADING_NEW_PAYMENT_ADDRESS', 'New Billing Address');
+ define('TEXT_CREATE_NEW_PAYMENT_ADDRESS', 'Please use the following form to create a new billing address to use for this order.');
 ?>
