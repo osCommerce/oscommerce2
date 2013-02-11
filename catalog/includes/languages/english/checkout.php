@@ -8,18 +8,16 @@
 
  define('NAVBAR_TITLE', 'Checkout');
  define('NAVBAR_TITLE_SHIPPING', 'Shipping Method');
+ define('NAVBAR_TITLE_SHIPPING_ADDRESS', 'Change Shipping Address');
  define('NAVBAR_TITLE_PAYMENT', 'Payment Method');
  define('NAVBAR_TITLE_CONFIRMATION', 'Confirmation');
  define('NAVBAR_TITLE_SUCCESS', 'Success');
 
  define('HEADING_TITLE_SHIPPING', 'Delivery Information');
+ define('HEADING_TITLE_SHIPPING_ADDRESS', 'Delivery Information');
  define('HEADING_TITLE_PAYMENT', 'Payment Information');
  define('HEADING_TITLE_CONFIRMATION', 'Order Confirmation');
  define('HEADING_TITLE_SUCCESS', 'Your Order Has Been Processed!');
-
- define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', 'Continue Checkout Procedure');
- define('TEXT_CONTINUE_CHECKOUT_PROCEDURE_SHIPPING', 'to select the preferred payment method.');
- define('TEXT_CONTINUE_CHECKOUT_PROCEDURE_PAYMENT', 'to confirm this order.');
 
  define('TITLE_PLEASE_SELECT', 'Please Select');
  define('TABLE_HEADING_COMMENTS', 'Add Comments About Your Order');
@@ -80,4 +78,12 @@
  define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
  define('HEADING_DOWNLOAD', 'Download your products here:');
  define('FOOTER_DOWNLOAD', 'You can also download your products at a later time at \'%s\'');
+
+ define('TEXT_SELECTED_SHIPPING_DESTINATION', 'This is the currently selected shipping address where the items in this order will be delivered to.');
+
+ define('TABLE_HEADING_ADDRESS_BOOK_ENTRIES', 'Address Book Entries');
+ define('TEXT_SELECT_OTHER_SHIPPING_DESTINATION', 'Please select the preferred shipping address if the items in this order are to be delivered elsewhere.');
+
+ define('TABLE_HEADING_NEW_SHIPPING_ADDRESS', 'New Shipping Address');
+ define('TEXT_CREATE_NEW_SHIPPING_ADDRESS', 'Please use the following form to create a new shipping address to use for this order.');
 ?>
