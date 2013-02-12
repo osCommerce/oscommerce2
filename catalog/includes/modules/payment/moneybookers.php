@@ -72,7 +72,7 @@
     }
 
     function _deletePreparing() {
-      if (isset($_SESSION[$this->_mbcartID]) {
+      if (isset($_SESSION[$this->_mbcartID])) {
         $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
