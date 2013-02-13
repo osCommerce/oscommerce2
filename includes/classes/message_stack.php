@@ -17,7 +17,7 @@
   if ($messageStack->size('general') > 0) echo $messageStack->output('general');
 */
 
-  class messageStack extends tableBox {
+  class messageStack extends alertBlock {
 
 // class constructor
     function messageStack() {
@@ -34,13 +34,13 @@
 // class methods
     function add($class, $message, $type = 'error') {
       if ($type == 'error') {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => osc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-error span8 offset2"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'warning') {
-        $this->messages[] = array('params' => 'class="messageStackWarning"', 'class' => $class, 'text' => osc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-warning span8 offset2"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'success') {
-        $this->messages[] = array('params' => 'class="messageStackSuccess"', 'class' => $class, 'text' => osc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-success span8 offset2"', 'class' => $class, 'text' => $message);
       } else {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-error span8 offset2"', 'class' => $class, 'text' => $message);
       }
     }
 
@@ -57,8 +57,6 @@
     }
 
     function output($class) {
-      $this->table_data_parameters = 'class="messageBox"';
-
       $output = array();
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
         if ($this->messages[$i]['class'] == $class) {
@@ -66,7 +64,7 @@
         }
       }
 
-      return $this->tableBox($output);
+      return $this->alertBlock($output);
     }
 
     function size($class) {
