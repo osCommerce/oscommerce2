@@ -8,7 +8,7 @@
 
   class app_checkout_action_shipping_address_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack, $process, $entry_state_has_zones;
+      global $OSCOM_PDO, $messageStack, $process, $entry_state_has_zones, $country;
 
       $error = false;
       $process = false;
