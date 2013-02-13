@@ -168,13 +168,16 @@
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
 
+    $exclude_array[] = session_name();
+    $exclude_array[] = 'error';
+    $exclude_array[] = 'x';
+    $exclude_array[] = 'y';
+
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
-        if ( is_string($value) && (strlen($value) > 0) && ($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
-          $get_url .= $key . '=' . rawurlencode($value) . '&';
-        }
+
+    foreach ( $_GET as $k => $v ) {
+      if ( !in_array($k, $exclude_array) ) {
+        $get_url .= $k . '=' . rawurlencode($v) . '&';
       }
     }
 
