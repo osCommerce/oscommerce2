@@ -12,6 +12,7 @@ define('NAVBAR_TITLE_ADDRESS_BOOK', 'Address Book');
 define('NAVBAR_TITLE_ADDRESS_BOOK_NEW', 'New Entry');
 define('NAVBAR_TITLE_ADDRESS_BOOK_EDIT', 'Update Entry');
 define('NAVBAR_TITLE_ADDRESS_BOOK_DELETE', 'Delete Entry');
+define('NAVBAR_TITLE_PASSWORD', 'Password');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -19,6 +20,7 @@ define('HEADING_TITLE_ADDRESS_BOOK', 'My Personal Address Book');
 define('HEADING_TITLE_ADDRESS_BOOK_NEW', 'New Address Book Entry');
 define('HEADING_TITLE_ADDRESS_BOOK_EDIT', 'Update Address Book Entry');
 define('HEADING_TITLE_ADDRESS_BOOK_DELETE', 'Delete Address Book Entry');
+define('HEADING_TITLE_PASSWORD', 'Change Password');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -65,4 +67,9 @@ define('WARNING_PRIMARY_ADDRESS_DELETION', 'The primary address cannot be delete
 
 define('ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY', 'The address book entry does not exist.');
 define('ERROR_ADDRESS_BOOK_FULL', 'Your address book is full. Please delete an unneeded address to save a new one.');
+
+define('MY_PASSWORD_TITLE', 'My Password');
+
+define('SUCCESS_PASSWORD_UPDATED', 'Your password has been successfully updated.');
+define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'Your Current Password did not match the password in our records. Please try again.');
 ?>
