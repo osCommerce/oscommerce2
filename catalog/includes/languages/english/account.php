@@ -13,6 +13,8 @@ define('NAVBAR_TITLE_ADDRESS_BOOK_NEW', 'New Entry');
 define('NAVBAR_TITLE_ADDRESS_BOOK_EDIT', 'Update Entry');
 define('NAVBAR_TITLE_ADDRESS_BOOK_DELETE', 'Delete Entry');
 define('NAVBAR_TITLE_PASSWORD', 'Password');
+define('NAVBAR_TITLE_ORDERS', 'Orders');
+define('NAVBAR_TITLE_ORDERS_INFO', 'Order #%s');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -21,6 +23,8 @@ define('HEADING_TITLE_ADDRESS_BOOK_NEW', 'New Address Book Entry');
 define('HEADING_TITLE_ADDRESS_BOOK_EDIT', 'Update Address Book Entry');
 define('HEADING_TITLE_ADDRESS_BOOK_DELETE', 'Delete Address Book Entry');
 define('HEADING_TITLE_PASSWORD', 'Change Password');
+define('HEADING_TITLE_ORDERS', 'My Orders');
+define('HEADING_TITLE_ORDERS_INFO', 'Order Information');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -72,4 +76,38 @@ define('MY_PASSWORD_TITLE', 'My Password');
 
 define('SUCCESS_PASSWORD_UPDATED', 'Your password has been successfully updated.');
 define('ERROR_CURRENT_PASSWORD_NOT_MATCHING', 'Your Current Password did not match the password in our records. Please try again.');
+
+define('TEXT_ORDER_NUMBER', 'Order Number:');
+define('TEXT_ORDER_STATUS', 'Order Status:');
+define('TEXT_ORDER_DATE', 'Order Date:');
+define('TEXT_ORDER_SHIPPED_TO', 'Shipped To:');
+define('TEXT_ORDER_BILLED_TO', 'Billed To:');
+define('TEXT_ORDER_PRODUCTS', 'Products:');
+define('TEXT_ORDER_COST', 'Order Cost:');
+define('TEXT_VIEW_ORDER', 'View Order');
+
+define('TEXT_NO_PURCHASES', 'You have not yet made any purchases.');
+
+define('HEADING_ORDER_NUMBER', 'Order #%s');
+define('HEADING_ORDER_DATE', 'Order Date:');
+define('HEADING_ORDER_TOTAL', 'Order Total:');
+
+define('HEADING_DELIVERY_ADDRESS', 'Delivery Address');
+define('HEADING_SHIPPING_METHOD', 'Shipping Method');
+
+define('HEADING_PRODUCTS', 'Products');
+define('HEADING_TAX', 'Tax');
+define('HEADING_TOTAL', 'Total');
+
+define('HEADING_BILLING_INFORMATION', 'Billing Information');
+define('HEADING_BILLING_ADDRESS', 'Billing Address');
+define('HEADING_PAYMENT_METHOD', 'Payment Method');
+
+define('HEADING_ORDER_HISTORY', 'Order History');
+define('HEADING_COMMENT', 'Comments');
+define('TEXT_NO_COMMENTS_AVAILABLE', 'No comments available.');
+
+define('TABLE_HEADING_DOWNLOAD_DATE', 'Link expires: ');
+define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
+define('HEADING_DOWNLOAD', 'Download links');
 ?>
