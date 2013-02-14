@@ -22,7 +22,7 @@
   define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process');
   define('FILENAME_ADVANCED_SEARCH', 'advanced_search');
   define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result');
-  define('FILENAME_ALSO_PURCHASED_PRODUCTS', 'also_purchased_products');
+  define('FILENAME_ALSO_PURCHASED_PRODUCTS', 'also_purchased_products.php');
   define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation');
   define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment');
   define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address');

@@ -1,43 +1,13 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
-
-  require('includes/application_top.php');
-
-  if (!isset($_GET['products_id'])) {
-    tep_redirect(tep_href_link(FILENAME_DEFAULT));
-  }
-
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCT_INFO);
-
-  $product_check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-  $product_check = tep_db_fetch_array($product_check_query);
-
-  require(DIR_WS_INCLUDES . 'template_top.php');
-
-  if ($product_check['total'] < 1) {
+/**
+ * osCommerce Online Merchant
+ *
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 ?>
 
-<div class="contentContainer">
-  <div class="contentText">
-    <?php echo TEXT_PRODUCT_NOT_FOUND; ?>
-  </div>
-
-  <div style="float: right;">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?>
-  </div>
-</div>
-
 <?php
-  } else {
     $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_model, p.products_quantity, p.products_image, pd.products_url, p.products_price, p.products_tax_class_id, p.products_date_added, p.products_date_available, p.manufacturers_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
     $product_info = tep_db_fetch_array($product_info_query);
 
@@ -98,10 +68,10 @@
           if (tep_not_null($pi['htmlcontent'])) {
             $pi_entry .= '#piGalimg_' . $pi_counter;
           } else {
-            $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image'], '', 'NONSSL', false);
+            $pi_entry .= HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $pi['image'];
           }
 
-          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image'], '', '225px', '200px', ($pi_counter ==1) ? 'itemprop="image"' : '') . '</a>';
+          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', ($pi_counter ==1) ? 'itemprop="image"' : '') . '</a>';
 
           if (tep_not_null($pi['htmlcontent'])) {
             $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
@@ -112,11 +82,10 @@
           echo $pi_entry;
         }
 ?>
-
       </ul>
     </div>
 
-<script type="text/javascript">
+<script>
 $('#piGal ul').bxGallery({
   maxwidth: 300,
   maxheight: 200,
@@ -131,14 +100,14 @@ $('#piGal ul').bxGallery({
 ?>
 
     <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
+      <?php echo '<a href="' . HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $product_info['products_image'] . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
     </div>
 
 <?php
       }
 ?>
 
-<script type="text/javascript">
+<script>
 $("#piGal a[rel^='fancybox']").fancybox({
   cyclic: true
 });
@@ -239,10 +208,3 @@ $("#piGal a[rel^='fancybox']").fancybox({
 </div>
 
 </form>
-
-<?php
-  }
-
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
-?>
