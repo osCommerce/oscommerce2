@@ -36,10 +36,10 @@
       $data = '<div class="ui-widget infoBoxContainer">' .
               '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_INFORMATION_BOX_TITLE . '</div>' .
               '  <div class="ui-widget-content infoBoxContents">' .
-              '    <a href="' . tep_href_link(FILENAME_SHIPPING) . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a><br />' .
-              '    <a href="' . tep_href_link(FILENAME_PRIVACY) . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a><br />' .
-              '    <a href="' . tep_href_link(FILENAME_CONDITIONS) . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a><br />' .
-              '    <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a>' .
+              '    <a href="' . tep_href_link('info', 'shipping') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a><br />' .
+              '    <a href="' . tep_href_link('info', 'privacy') . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a><br />' .
+              '    <a href="' . tep_href_link('info', 'conditions') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a><br />' .
+              '    <a href="' . tep_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a>' .
               '  </div>' .
               '</div>';
 

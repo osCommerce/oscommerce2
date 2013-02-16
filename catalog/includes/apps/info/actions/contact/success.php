@@ -6,13 +6,9 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class app_info_action_conditions {
+  class app_info_action_contact_success {
     public static function execute(app $app) {
-      global $breadcrumb;
-
-      $app->setContentFile('conditions.php');
-
-      $breadcrumb->add(NAVBAR_TITLE_CONDITIONS, tep_href_link('info', 'conditions'));
+      $app->setContentFile('contact_success.php');
     }
   }
 ?>

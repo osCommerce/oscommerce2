@@ -6,13 +6,11 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class app_info_action_conditions {
-    public static function execute(app $app) {
+  class app_info extends app {
+    public function __construct() {
       global $breadcrumb;
 
-      $app->setContentFile('conditions.php');
-
-      $breadcrumb->add(NAVBAR_TITLE_CONDITIONS, tep_href_link('info', 'conditions'));
+      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('info'));
     }
   }
 ?>
