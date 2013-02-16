@@ -16,6 +16,7 @@ define('NAVBAR_TITLE_PASSWORD', 'Password');
 define('NAVBAR_TITLE_ORDERS', 'Orders');
 define('NAVBAR_TITLE_ORDERS_INFO', 'Order #%s');
 define('NAVBAR_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
+define('NAVBAR_TITLE_NOTIFICATIONS', 'Product Notifications');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -27,6 +28,7 @@ define('HEADING_TITLE_PASSWORD', 'Change Password');
 define('HEADING_TITLE_ORDERS', 'My Orders');
 define('HEADING_TITLE_ORDERS_INFO', 'Order Information');
 define('HEADING_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
+define('HEADING_TITLE_NOTIFICATIONS', 'Product Notifications');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -118,4 +120,16 @@ define('MY_NEWSLETTERS_GENERAL_NEWSLETTER', 'General Newsletter');
 define('MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION', 'Including store news, new products, special offers, and other promotional announcements.');
 
 define('SUCCESS_NEWSLETTER_UPDATED', 'Your newsletter subscriptions have been successfully updated.');
+
+define('MY_NOTIFICATIONS_TITLE', 'My Product Notifications');
+define('MY_NOTIFICATIONS_DESCRIPTION', 'The product notification list allows you to stay up to date on products you find of interest.<br /><br />To be up to date on all product changes, select <strong>Global Product Notifications</strong>.');
+
+define('GLOBAL_NOTIFICATIONS_TITLE', 'Global Product Notifications');
+define('GLOBAL_NOTIFICATIONS_DESCRIPTION', 'Recieve notifications on all available products.');
+
+define('NOTIFICATIONS_TITLE', 'Product Notifications');
+define('NOTIFICATIONS_DESCRIPTION', 'To remove a product notification, clear the products checkbox and click on Continue.');
+define('NOTIFICATIONS_NON_EXISTING', 'There are currently no products marked to be notified on.<br /><br />To add products to your product notification list, click on the notification link available on the detailed product information page.');
+
+define('SUCCESS_NOTIFICATIONS_UPDATED', 'Your product notifications have been successfully updated.');
 ?>
