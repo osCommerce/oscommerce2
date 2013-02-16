@@ -15,6 +15,7 @@ define('NAVBAR_TITLE_ADDRESS_BOOK_DELETE', 'Delete Entry');
 define('NAVBAR_TITLE_PASSWORD', 'Password');
 define('NAVBAR_TITLE_ORDERS', 'Orders');
 define('NAVBAR_TITLE_ORDERS_INFO', 'Order #%s');
+define('NAVBAR_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -25,6 +26,7 @@ define('HEADING_TITLE_ADDRESS_BOOK_DELETE', 'Delete Address Book Entry');
 define('HEADING_TITLE_PASSWORD', 'Change Password');
 define('HEADING_TITLE_ORDERS', 'My Orders');
 define('HEADING_TITLE_ORDERS_INFO', 'Order Information');
+define('HEADING_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -110,4 +112,10 @@ define('TEXT_NO_COMMENTS_AVAILABLE', 'No comments available.');
 define('TABLE_HEADING_DOWNLOAD_DATE', 'Link expires: ');
 define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
 define('HEADING_DOWNLOAD', 'Download links');
+
+define('MY_NEWSLETTERS_TITLE', 'My Newsletter Subscriptions');
+define('MY_NEWSLETTERS_GENERAL_NEWSLETTER', 'General Newsletter');
+define('MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION', 'Including store news, new products, special offers, and other promotional announcements.');
+
+define('SUCCESS_NEWSLETTER_UPDATED', 'Your newsletter subscriptions have been successfully updated.');
 ?>
