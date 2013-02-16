@@ -132,8 +132,8 @@
 
 #fancybox-left, #fancybox-right {
 	position: absolute;
-	bottom: 0px;
-	height: 100%;
+	top: 50px;
+	bottom: 60px;
 	width: 35%;
 	cursor: pointer;
 	outline: none;
