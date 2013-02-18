@@ -9,7 +9,7 @@
 
 <h1><?php echo HEADING_TITLE; ?></h1>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('cart', 'action=update_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link('cart', 'update'), 'post', null, true); ?>
 
 <div class="contentContainer">
   <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
