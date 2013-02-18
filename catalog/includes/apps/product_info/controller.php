@@ -10,6 +10,10 @@
     public function __construct() {
       global $OSCOM_PDO, $cPath, $languages_id, $product_check, $breadcrumb;
 
+      if ( !isset($_GET['products_id']) ) {
+        tep_redirect(tep_href_link('index'));
+      }
+
 //product check query
       $Qpc = $OSCOM_PDO->prepare('select count(*) as total from :table_products p, :table_products_description pd where p.products_status = 1 and p.products_id = :products_id and pd.products_id = p.products_id and pd.language_id = :languages_id');
       $Qpc->bindInt(':products_id', $_GET['products_id']);
