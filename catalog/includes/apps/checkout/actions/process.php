@@ -12,7 +12,7 @@
 
       if ( isset($GLOBALS[$_SESSION['payment']]->form_action_url) ) {
         if ( !isset($_POST['formid']) || ($_POST['formid'] != $_SESSION['sessiontoken']) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+          tep_redirect(tep_href_link('cart'));
         }
       }
 

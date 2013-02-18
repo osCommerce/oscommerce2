@@ -295,7 +295,7 @@
         parse_str($response, $response_array);
 
         if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+          tep_redirect(tep_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));

@@ -16,7 +16,7 @@
       if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
         foreach ( $_SESSION['cart']->get_products() as $p ) {
           if ( tep_check_stock($p['id'], $p['quantity']) ) {
-            tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+            tep_redirect(tep_href_link('cart'));
           }
         }
       }

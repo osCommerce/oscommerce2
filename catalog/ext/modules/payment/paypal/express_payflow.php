@@ -27,7 +27,7 @@
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('cart'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_payflow_ec.php');
@@ -36,7 +36,7 @@
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
   if (!$paypal_pro_payflow_ec->check() || !$paypal_pro_payflow_ec->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('cart'));
   }
 
   if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Live') {
@@ -244,7 +244,7 @@
             break;
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
+        tep_redirect(tep_href_link('cart', 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
@@ -258,7 +258,7 @@
       $params['EMAIL'] = $order->customer['email_address'];
       $params['AMT'] = $paypal_pro_payflow_ec->format_raw($order->info['total']);
       $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL', true, false);
-      $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false);
+      $params['CANCELURL'] = tep_href_link('cart', '', 'SSL', true, false);
 
       if ($order->content_type == 'virtual') {
         $params['NOSHIPPING'] = '1';
@@ -294,13 +294,13 @@
             break;
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
+        tep_redirect(tep_href_link('cart', 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
   }
 
-  tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  tep_redirect(tep_href_link('cart', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>
