@@ -29,11 +29,11 @@
     }
 
     function execute() {
-      global $PHP_SELF, $cPath, $oscTemplate;
+      global $cPath, $OSCOM_APP, $oscTemplate;
 
-      if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
-        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
-      } elseif (basename($PHP_SELF) == FILENAME_DEFAULT) {
+      if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) ) {
+        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+      } elseif ( $OSCOM_APP->getCode() == 'index' ) {
         if (isset($cPath) && tep_not_null($cPath)) {
           $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
         } elseif (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {

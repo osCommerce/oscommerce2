@@ -27,7 +27,7 @@
           $also_pur_prods_content .= '<tr>';
         }
 
-        $also_pur_prods_content .= '<td width="33%" valign="top" align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . $orders['products_name'] . '</a></td>';
+        $also_pur_prods_content .= '<td width="33%" valign="top" align="center"><a href="' . tep_href_link('products', 'id=' . $orders['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link('products', 'id=' . $orders['products_id']) . '">' . $orders['products_name'] . '</a></td>';
 
         $col ++;
 
