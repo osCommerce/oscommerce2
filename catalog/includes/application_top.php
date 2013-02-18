@@ -298,12 +298,6 @@
                               }
                               tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
                               break;
-      // customer removes a product from their shopping cart
-      case 'remove_product' : if (isset($_GET['products_id'])) {
-                                $_SESSION['cart']->remove($_GET['products_id']);
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
       // performed by the 'buy now' button in product listings and review page
       case 'buy_now' :        if (isset($_GET['products_id'])) {
                                 if (tep_has_product_attributes($_GET['products_id'])) {
