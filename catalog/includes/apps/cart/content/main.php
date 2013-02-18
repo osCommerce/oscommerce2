@@ -9,7 +9,7 @@
 
 <h1><?php echo HEADING_TITLE; ?></h1>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link('cart', 'action=update_product')); ?>
 
 <div class="contentContainer">
   <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
@@ -72,7 +72,7 @@
       }
     }
 
-    $products_name .= '<br /><br />' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'refresh') . '&nbsp;&nbsp;&nbsp;' . TEXT_OR . '<a href="' . tep_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product') . '">' . TEXT_REMOVE . '</a>';
+    $products_name .= '<br /><br />' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'refresh') . '&nbsp;&nbsp;&nbsp;' . TEXT_OR . '<a href="' . tep_href_link('cart', 'products_id=' . $products[$i]['id'] . '&action=remove_product') . '">' . TEXT_REMOVE . '</a>';
 
     $products_name .= '    </td>' .
                       '  </tr>' .

@@ -525,7 +525,7 @@
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('cart'));
       }
     }
 

@@ -177,7 +177,7 @@
             break;
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
+        tep_redirect(tep_href_link('cart', 'error_message=' . urlencode($error_message), 'SSL'));
       }
     }
 

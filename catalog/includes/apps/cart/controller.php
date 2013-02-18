@@ -6,7 +6,7 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class app_shopping_cart extends app {
+  class app_cart extends app {
     public function __construct() {
       global $payment_modules, $breadcrumb;
 
@@ -15,7 +15,7 @@
         $payment_modules = new payment();
       }
 
-      $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHOPPING_CART));
+      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('cart'));
 
       if ( $_SESSION['cart']->count_contents() < 1 ) {
         $this->_content_file = 'empty.php';

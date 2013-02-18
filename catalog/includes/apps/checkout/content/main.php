@@ -63,7 +63,7 @@
 ?>
 
           <tr>
-            <td colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
             <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
             <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
@@ -73,7 +73,7 @@
 ?>
 
           <tr>
-            <td colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
 
 <?php
