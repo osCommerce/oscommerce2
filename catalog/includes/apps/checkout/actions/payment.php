@@ -12,15 +12,6 @@
 
       $app->setContentFile('payment.php');
 
-// Stock Check
-      if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
-        foreach ( $_SESSION['cart']->get_products() as $p ) {
-          if ( tep_check_stock($p['id'], $p['quantity']) ) {
-            tep_redirect(tep_href_link('cart'));
-          }
-        }
-      }
-
       $total_weight = $_SESSION['cart']->show_weight();
       $total_count = $_SESSION['cart']->count_contents();
 

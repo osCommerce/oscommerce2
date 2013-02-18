@@ -28,6 +28,23 @@
         tep_redirect(tep_href_link('cart'));
       }
 
+// Stock Check
+      $any_out_of_stock = false;
+
+      if ( STOCK_CHECK == 'true' ) {
+        foreach ( $_SESSION['cart']->get_products() as $p ) {
+          if ( tep_check_stock($p['id'], $p['quantity']) ) {
+            $any_out_of_stock = true;
+            break;
+          }
+        }
+
+// Out of Stock
+        if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
+          tep_redirect(tep_href_link('cart'));
+        }
+      }
+
 // if no shipping destination address was selected, use the customers own address as default
       if ( !isset($_SESSION['sendto']) ) {
         $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
@@ -91,7 +108,7 @@
 
       $breadcrumb->add(NAVBAR_TITLE, tep_href_link('checkout', '', 'SSL'));
 
-      if ( isset($_SESSION['shipping']) && isset($_SESSION['payment']) ) {
+      if ( !isset($_GET['shipping']) && !isset($_GET['payment']) && isset($_SESSION['shipping']) && isset($_SESSION['payment']) ) {
 // load the selected payment module
         $payment_modules = new payment($_SESSION['payment']);
 
@@ -114,23 +131,6 @@
 
         $order_total_modules = new order_total;
         $order_totals = $order_total_modules->process();
-
-// Stock Check
-        $any_out_of_stock = false;
-
-        if ( STOCK_CHECK == 'true' ) {
-          foreach ( $order->products as $p ) {
-            if ( tep_check_stock($p['id'], $p['qty']) ) {
-              $any_out_of_stock = true;
-              break;
-            }
-          }
-
-// Out of Stock
-          if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-            tep_redirect(tep_href_link('cart'));
-          }
-        }
 
         $breadcrumb->add(NAVBAR_TITLE_CONFIRMATION);
       }
