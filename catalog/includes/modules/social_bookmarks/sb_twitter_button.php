@@ -30,7 +30,7 @@
     }
 
     function getOutput() {
-      $params = array('url=' . urlencode(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false)));
+      $params = array('url=' . urlencode(tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false)));
 
       if ( strlen(MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_ACCOUNT) > 0 ) {
         $params[] = 'via=' . urlencode(MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_ACCOUNT);

@@ -29,16 +29,14 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $product_check;
+      global $OSCOM_APP, $oscTemplate, $product_exists;
 
-      if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
-        if (isset($_GET['products_id'])) {
-          if ($product_check['total'] > 0) {
-            $product_info_query = tep_db_query("select pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-            $product_info = tep_db_fetch_array($product_info_query);
+      if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) ) {
+        if ( $product_exists === true ) {
+          $product_info_query = tep_db_query("select pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+          $product_info = tep_db_fetch_array($product_info_query);
 
-            $oscTemplate->setTitle($product_info['products_name'] . ', ' . $oscTemplate->getTitle());
-          }
+          $oscTemplate->setTitle($product_info['products_name'] . ', ' . $oscTemplate->getTitle());
         }
       }
     }

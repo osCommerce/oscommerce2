@@ -25,7 +25,7 @@
 <?php
     while ($expected = tep_db_fetch_array($expected_query)) {
       echo '        <tr>' . "\n" .
-           '          <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $expected['products_id']) . '">' . $expected['products_name'] . '</a></td>' . "\n" .
+           '          <td><a href="' . tep_href_link('products', 'id=' . $expected['products_id']) . '">' . $expected['products_name'] . '</a></td>' . "\n" .
            '          <td align="right">' . tep_date_short($expected['date_expected']) . '</td>' . "\n" .
            '        </tr>' . "\n";
     }

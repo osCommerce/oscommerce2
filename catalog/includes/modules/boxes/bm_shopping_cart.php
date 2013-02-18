@@ -51,7 +51,7 @@
             $cart_contents_string .= '</span>';
           }
 
-          $cart_contents_string .= '</td><td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">';
+          $cart_contents_string .= '</td><td valign="top"><a href="' . tep_href_link('products', 'id=' . $products[$i]['id']) . '">';
 
           if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
             $cart_contents_string .= '<span class="newItemInCart">';
