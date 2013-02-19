@@ -291,13 +291,6 @@
       }
     }
     switch ($_GET['action']) {
-      // customer adds a product from the products page
-      case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
-                                $attributes = isset($_POST['id']) ? $_POST['id'] : '';
-                                $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
       // performed by the 'buy now' button in product listings and review page
       case 'buy_now' :        if (isset($_GET['products_id'])) {
                                 if (tep_has_product_attributes($_GET['products_id'])) {
