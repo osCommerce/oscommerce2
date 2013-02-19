@@ -17,6 +17,7 @@ define('NAVBAR_TITLE_ORDERS', 'Orders');
 define('NAVBAR_TITLE_ORDERS_INFO', 'Order #%s');
 define('NAVBAR_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 define('NAVBAR_TITLE_NOTIFICATIONS', 'Product Notifications');
+define('NAVBAR_TITLE_LOGIN', 'Login');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -29,6 +30,7 @@ define('HEADING_TITLE_ORDERS', 'My Orders');
 define('HEADING_TITLE_ORDERS_INFO', 'Order Information');
 define('HEADING_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 define('HEADING_TITLE_NOTIFICATIONS', 'Product Notifications');
+define('HEADING_TITLE_LOGIN', 'Welcome, Please Sign In');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -132,4 +134,16 @@ define('NOTIFICATIONS_DESCRIPTION', 'To remove a product notification, clear the
 define('NOTIFICATIONS_NON_EXISTING', 'There are currently no products marked to be notified on.<br /><br />To add products to your product notification list, click on the notification link available on the detailed product information page.');
 
 define('SUCCESS_NOTIFICATIONS_UPDATED', 'Your product notifications have been successfully updated.');
+
+define('HEADING_NEW_CUSTOMER', 'New Customer');
+define('TEXT_NEW_CUSTOMER', 'I am a new customer.');
+define('TEXT_NEW_CUSTOMER_INTRODUCTION', 'By creating an account at ' . STORE_NAME . ' you will be able to shop faster, be up to date on an orders status, and keep track of the orders you have previously made.');
+
+define('HEADING_RETURNING_CUSTOMER', 'Returning Customer');
+define('TEXT_RETURNING_CUSTOMER', 'I am a returning customer.');
+
+define('TEXT_PASSWORD_FORGOTTEN', 'Password forgotten? Click here.');
+
+define('TEXT_LOGIN_ERROR', 'Error: No match for E-Mail Address and/or Password.');
+define('TEXT_VISITORS_CART', '<font color="#ff0000"><strong>Note:</strong></font> Your &quot;Visitors Cart&quot; contents will be merged with your &quot;Members Cart&quot; contents once you have logged on. <a href="javascript:session_win();">[More Info]</a>');
 ?>
