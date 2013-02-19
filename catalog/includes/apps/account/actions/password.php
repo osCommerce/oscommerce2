@@ -13,7 +13,7 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+        tep_redirect(tep_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('password.php');

@@ -206,7 +206,7 @@
 
     if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link('account', 'login', 'SSL'));
     }
   }
 
@@ -219,7 +219,7 @@
 
     if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link('account', 'login', 'SSL'));
     }
   }
 
@@ -322,7 +322,7 @@
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'notify'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                tep_redirect(tep_href_link('account', 'login', 'SSL'));
                               }
                               break;
       case 'notify_remove' :  if (isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -334,7 +334,7 @@
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                tep_redirect(tep_href_link('account', 'login', 'SSL'));
                               }
                               break;
     }

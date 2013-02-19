@@ -17,7 +17,7 @@
   }
 ?>
 
-<p><?php echo sprintf(TEXT_ORIGIN_LOGIN, tep_href_link(FILENAME_LOGIN, tep_get_all_get_params(), 'SSL')); ?></p>
+<p><?php echo sprintf(TEXT_ORIGIN_LOGIN, tep_href_link('account', 'login', 'SSL')); ?></p>
 
 <?php echo tep_draw_form('create_account', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post', 'onsubmit="return check_form(create_account);"', true) . tep_draw_hidden_field('action', 'process'); ?>
 

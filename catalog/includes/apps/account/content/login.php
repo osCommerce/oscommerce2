@@ -7,7 +7,7 @@
  */
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+<h1><?php echo HEADING_TITLE_LOGIN; ?></h1>
 
 <?php
   if ($messageStack->size('login') > 0) {
@@ -32,7 +32,7 @@
   <div class="contentText">
     <p><?php echo TEXT_RETURNING_CUSTOMER; ?></p>
 
-    <?php echo tep_draw_form('login', tep_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', '', true); ?>
+    <?php echo tep_draw_form('login', tep_href_link('account', 'login&process', 'SSL'), 'post', '', true); ?>
 
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr>
