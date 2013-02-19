@@ -10,6 +10,12 @@
     public static function execute(app $app) {
       global $OSCOM_PDO, $newsletter, $breadcrumb;
 
+      if ( !isset($_SESSION['customer_id']) ) {
+        $_SESSION['navigation']->set_snapshot();
+
+        tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+      }
+
       $app->setContentFile('newsletters.php');
 
       $Qnewsletter = $OSCOM_PDO->prepare('select customers_newsletter from :table_customers where customers_id = :customers_id');

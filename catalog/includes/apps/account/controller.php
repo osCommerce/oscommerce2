@@ -10,12 +10,6 @@
     public function __construct() {
       global $breadcrumb;
 
-      if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
-
-        tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
-      }
-
       $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   }

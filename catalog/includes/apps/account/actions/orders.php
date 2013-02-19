@@ -10,6 +10,12 @@
     public static function execute(app $app) {
       global $breadcrumb;
 
+      if ( !isset($_SESSION['customer_id']) ) {
+        $_SESSION['navigation']->set_snapshot();
+
+        tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+      }
+
       $app->setContentFile('orders.php');
 
       $breadcrumb->add(NAVBAR_TITLE_ORDERS, tep_href_link('account', 'orders', 'SSL'));
