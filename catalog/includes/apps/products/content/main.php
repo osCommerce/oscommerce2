@@ -36,7 +36,7 @@
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('products', tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link('cart', 'add&cPath=' . $cPath), 'post', null, true); ?>
 
 <div itemscope itemtype="http://schema.org/Product">
 
