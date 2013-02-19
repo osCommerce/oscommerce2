@@ -16,17 +16,27 @@
 
           $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
         }
-      }
 
-      if ( DISPLAY_CART == 'true' ) {
-        $goto =  'cart';
-        $params = null;
-      } else {
-        $goto = 'products';
-        $params = 'cPath=' . $cPath . '&id=' . $_POST['products_id'];
-      }
+        if ( DISPLAY_CART == 'true' ) {
+          $goto =  'cart';
+          $params = null;
+        } else {
+          $goto = 'products';
+          $params = 'cPath=' . $cPath . '&id=' . $_POST['products_id'];
+        }
 
-      tep_redirect(tep_href_link($goto, $params));
+        tep_redirect(tep_href_link($goto, $params));
+      } elseif ( isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken'])) ) {
+        if ( isset($_GET['id']) && is_numeric($_GET['id']) ) {
+          if ( tep_has_product_attributes($_GET['id']) ) {
+            tep_redirect(tep_href_link('products', 'id=' . $_GET['id']));
+          } else {
+            $_SESSION['cart']->add_cart($_GET['id'], $_SESSION['cart']->get_quantity($_GET['id'])+1);
+          }
+        }
+
+        tep_redirect(tep_href_link('cart'));
+      }
     }
   }
 ?>
