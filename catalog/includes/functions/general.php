@@ -1008,7 +1008,7 @@
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
       $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link(FILENAME_PRODUCTS_NEW));
     } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('account', 'login', 'SSL'), tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+      $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('account', 'login', 'SSL'), tep_href_link('account', 'create', 'SSL'));
     }
 
     return $greeting_string;

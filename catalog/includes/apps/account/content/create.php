@@ -9,7 +9,7 @@
   require(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'form_check.js.php');
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+<h1><?php echo HEADING_TITLE_CREATE; ?></h1>
 
 <?php
   if ($messageStack->size('create_account') > 0) {
@@ -19,7 +19,7 @@
 
 <p><?php echo sprintf(TEXT_ORIGIN_LOGIN, tep_href_link('account', 'login', 'SSL')); ?></p>
 
-<?php echo tep_draw_form('create_account', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post', 'onsubmit="return check_form(create_account);"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('create_account', tep_href_link('account', 'create&process', 'SSL'), 'post', 'onsubmit="return check_form(create_account);"', true); ?>
 
 <div class="contentContainer">
   <div>

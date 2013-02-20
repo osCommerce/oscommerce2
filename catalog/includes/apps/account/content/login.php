@@ -22,7 +22,7 @@
     <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
     <p><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?></p>
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link('account', 'create', 'SSL')); ?></p>
   </div>
 </div>
 
