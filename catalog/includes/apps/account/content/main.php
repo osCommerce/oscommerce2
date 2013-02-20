@@ -22,7 +22,7 @@
     <ul class="accountLinkList">
       <li><span class="ui-icon ui-icon-person accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link('account', 'edit', 'SSL') . '">' . MY_ACCOUNT_INFORMATION . '</a>'; ?></li>
       <li><span class="ui-icon ui-icon-home accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link('account', 'address_book', 'SSL') . '">' . MY_ACCOUNT_ADDRESS_BOOK . '</a>'; ?></li>
-      <li><span class="ui-icon ui-icon-key accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link('account', 'password', 'SSL') . '">' . MY_ACCOUNT_PASSWORD . '</a>'; ?></li>
+      <li><span class="ui-icon ui-icon-key accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link('account', 'password&change', 'SSL') . '">' . MY_ACCOUNT_PASSWORD . '</a>'; ?></li>
     </ul>
   </div>
 

@@ -6,7 +6,7 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class app_account_action_password_process {
+  class app_account_action_password_change_process {
     public static function execute(app $app) {
       global $OSCOM_PDO, $messageStack;
 
@@ -20,11 +20,11 @@
         if ( strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);
+          $messageStack->add_session('account_password', ENTRY_PASSWORD_NEW_ERROR);
         } elseif ( $password_new != $password_confirmation ) {
           $error = true;
 
-          $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
+          $messageStack->add_session('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
         }
 
         if ( $error === false ) {
@@ -43,10 +43,12 @@
           } else {
             $error = true;
 
-            $messageStack->add('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
+            $messageStack->add_session('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
           }
         }
       }
+
+      tep_redirect(tep_href_link('account', 'password&change', 'SSL'));
     }
   }
 ?>
