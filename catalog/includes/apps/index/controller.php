@@ -9,6 +9,7 @@
   class app_index extends app {
     public function __construct() {
       global $OSCOM_PDO, $cPath, $current_category_id;
+      global $breadcrumb;
 
       $category_depth = 'top';
 
@@ -29,6 +30,12 @@
       } elseif ( ($category_depth == 'products') || (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) ) {
         $this->_content_file = 'products.php';
       }
+
+      if (isset($_GET['specials'])) {
+        $this->_content_file = 'specials.php';
+        $breadcrumb->add(NAVBAR_TITLE_SPECIALS);
+      }
+
     }
   }
 ?>
