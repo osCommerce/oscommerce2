@@ -21,6 +21,8 @@ define('NAVBAR_TITLE_LOGIN', 'Login');
 define('NAVBAR_TITLE_CREATE', 'Create an Account');
 define('NAVBAR_TITLE_CREATE_SUCCESS', 'Success');
 define('NAVBAR_TITLE_LOGOFF', 'Log Off');
+define('NAVBAR_TITLE_PASSWORD_FORGOTTEN', 'Password Forgotten');
+define('NAVBAR_TITLE_PASSWORD_RESET', 'Password Reset');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -37,6 +39,8 @@ define('HEADING_TITLE_LOGIN', 'Welcome, Please Sign In');
 define('HEADING_TITLE_CREATE', 'My Account Information');
 define('HEADING_TITLE_CREATE_SUCCESS', 'Your Account Has Been Created!');
 define('HEADING_TITLE_LOGOFF', 'Log Off');
+define('HEADING_TITLE_PASSWORD_FORGOTTEN', 'I\'ve Forgotten My Password!');
+define('HEADING_TITLE_PASSWORD_RESET', 'Password Reset');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -167,4 +171,21 @@ define('EMAIL_WARNING', '<strong>Note:</strong> This email address was given to 
 define('SUCCESS_TEXT_ACCOUNT_CREATED', 'Congratulations! Your new account has been successfully created! You can now take advantage of member priviledges to enhance your online shopping experience with us. If you have <small><strong>ANY</strong></small> questions about the operation of this online shop, please email the <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">store owner</a>.<br /><br />A confirmation has been sent to the provided email address. If you have not received it within the hour, please <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">contact us</a>.');
 
 define('TEXT_MAIN_LOGOFF', 'You have been logged off your account. It is now safe to leave the computer.<br /><br />Your shopping cart has been saved, the items inside it will be restored whenever you log back into your account.');
+
+define('TEXT_MAIN_PASSWORD_FORGOTTEN', 'If you\'ve forgotten your password, enter your e-mail address below and we\'ll send you instructions on how to securely change your password.');
+
+define('TEXT_PASSWORD_RESET_INITIATED', 'Please check your e-mail for instructions on how to change your password. The instructions contain a link that is valid only for 24 hours or until your password has been updated.');
+
+define('TEXT_NO_EMAIL_ADDRESS_FOUND', 'Error: The E-Mail Address was not found in our records, please try again.');
+
+define('EMAIL_PASSWORD_RESET_SUBJECT', STORE_NAME . ' - New Password');
+define('EMAIL_PASSWORD_RESET_BODY', 'A new password has been requested for your account at ' . STORE_NAME . '.' . "\n\n" . 'Please follow this personal link to securely change your password:' . "\n\n" . '%s' . "\n\n" . 'This link will be automatically discarded after 24 hours or after your password has been changed.' . "\n\n" . 'For help with any of our online services, please email the store-owner: ' . STORE_OWNER_EMAIL_ADDRESS . '.' . "\n\n");
+
+define('ERROR_ACTION_RECORDER', 'Error: A password reset link has already been sent. Please try again in %s minutes.');
+
+define('TEXT_MAIN_PASSWORD_RESET', 'Please enter a new password for your account.');
+
+define('TEXT_NO_RESET_LINK_FOUND', 'Error: The password reset link was not found in our records, please try again by generating a new link.');
+
+define('SUCCESS_PASSWORD_RESET', 'Your password has been successfully updated. Please login with your new password.');
 ?>
