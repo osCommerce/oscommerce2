@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
 
 // initialize variables if the customer is not logged in
   if (!isset($_SESSION['customer_id'])) {

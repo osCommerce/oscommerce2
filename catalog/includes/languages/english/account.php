@@ -18,6 +18,8 @@ define('NAVBAR_TITLE_ORDERS_INFO', 'Order #%s');
 define('NAVBAR_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 define('NAVBAR_TITLE_NOTIFICATIONS', 'Product Notifications');
 define('NAVBAR_TITLE_LOGIN', 'Login');
+define('NAVBAR_TITLE_CREATE', 'Create an Account');
+define('NAVBAR_TITLE_CREATE_SUCCESS', 'Success');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -31,6 +33,8 @@ define('HEADING_TITLE_ORDERS_INFO', 'Order Information');
 define('HEADING_TITLE_NEWSLETTERS', 'Newsletter Subscriptions');
 define('HEADING_TITLE_NOTIFICATIONS', 'Product Notifications');
 define('HEADING_TITLE_LOGIN', 'Welcome, Please Sign In');
+define('HEADING_TITLE_CREATE', 'My Account Information');
+define('HEADING_TITLE_CREATE_SUCCESS', 'Your Account Has Been Created!');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -146,4 +150,17 @@ define('TEXT_PASSWORD_FORGOTTEN', 'Password forgotten? Click here.');
 
 define('TEXT_LOGIN_ERROR', 'Error: No match for E-Mail Address and/or Password.');
 define('TEXT_VISITORS_CART', '<font color="#ff0000"><strong>Note:</strong></font> Your &quot;Visitors Cart&quot; contents will be merged with your &quot;Members Cart&quot; contents once you have logged on. <a href="javascript:session_win();">[More Info]</a>');
+
+define('TEXT_ORIGIN_LOGIN', '<font color="#FF0000"><small><strong>NOTE:</strong></small></font> If you already have an account with us, please login at the <a href="%s"><u>login page</u></a>.');
+
+define('EMAIL_SUBJECT', 'Welcome to ' . STORE_NAME);
+define('EMAIL_GREET_MR', 'Dear Mr. %s,' . "\n\n");
+define('EMAIL_GREET_MS', 'Dear Ms. %s,' . "\n\n");
+define('EMAIL_GREET_NONE', 'Dear %s' . "\n\n");
+define('EMAIL_WELCOME', 'We welcome you to <strong>' . STORE_NAME . '</strong>.' . "\n\n");
+define('EMAIL_TEXT', 'You can now take part in the <strong>various services</strong> we have to offer you. Some of these services include:' . "\n\n" . '<li><strong>Permanent Cart</strong> - Any products added to your online cart remain there until you remove them, or check them out.' . "\n" . '<li><strong>Address Book</strong> - We can now deliver your products to another address other than yours! This is perfect to send birthday gifts direct to the birthday-person themselves.' . "\n" . '<li><strong>Order History</strong> - View your history of purchases that you have made with us.' . "\n" . '<li><strong>Products Reviews</strong> - Share your opinions on products with our other customers.' . "\n\n");
+define('EMAIL_CONTACT', 'For help with any of our online services, please email the store-owner: ' . STORE_OWNER_EMAIL_ADDRESS . '.' . "\n\n");
+define('EMAIL_WARNING', '<strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to ' . STORE_OWNER_EMAIL_ADDRESS . '.' . "\n");
+
+define('SUCCESS_TEXT_ACCOUNT_CREATED', 'Congratulations! Your new account has been successfully created! You can now take advantage of member priviledges to enhance your online shopping experience with us. If you have <small><strong>ANY</strong></small> questions about the operation of this online shop, please email the <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">store owner</a>.<br /><br />A confirmation has been sent to the provided email address. If you have not received it within the hour, please <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">contact us</a>.');
 ?>

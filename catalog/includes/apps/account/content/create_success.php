@@ -7,7 +7,7 @@
  */
 ?>
 
-<h1><?php echo SUCCESS_HEADING_TITLE; ?></h1>
+<h1><?php echo HEADING_TITLE_CREATE_SUCCESS; ?></h1>
 
 <div class="contentContainer">
   <div class="contentText">
