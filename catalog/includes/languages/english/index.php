@@ -30,4 +30,7 @@ define('TEXT_BUY', 'Buy 1 \'');
 define('TEXT_NOW', '\' now');
 define('TEXT_ALL_CATEGORIES', 'All Categories');
 define('TEXT_ALL_MANUFACTURERS', 'All Manufacturers');
+
+define('NAVBAR_TITLE_SPECIALS', 'Specials');
+define('HEADING_TITLE_SPECIALS', 'Get Them While They\'re Hot!');
 ?>

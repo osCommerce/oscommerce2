@@ -56,7 +56,7 @@
   define('FILENAME_REVIEWS', 'reviews');
   define('FILENAME_SHIPPING', 'shipping');
   define('FILENAME_SHOPPING_CART', 'shopping_cart');
-  define('FILENAME_SPECIALS', 'specials');
+
   define('FILENAME_SSL_CHECK', 'ssl_check');
   define('FILENAME_TELL_A_FRIEND', 'tell_a_friend');
   define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
