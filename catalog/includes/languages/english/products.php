@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+define('NAVBAR_TITLE_SPECIALS', 'Specials');
+
+define('HEADING_TITLE_SPECIALS', 'Get Them While They\'re Hot!');
+
 define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
 define('TEXT_CURRENT_REVIEWS', 'Current Reviews:');
 define('TEXT_MORE_INFORMATION', 'For more information, please visit this products <a href="%s" target="_blank"><u>webpage</u></a>.');

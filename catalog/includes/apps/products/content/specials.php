@@ -1,3 +1,12 @@
+<?php
+/**
+ * osCommerce Online Merchant
+ *
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
+?>
+
 <h1><?php echo HEADING_TITLE_SPECIALS; ?></h1>
 
 <div class="contentContainer">

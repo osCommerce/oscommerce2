@@ -31,7 +31,7 @@
     function execute() {
       global $cPath, $OSCOM_APP, $oscTemplate;
 
-      if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) ) {
+      if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) && isset($_GET['id']) ) {
         $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false) . '" />' . "\n", $this->group);
       } elseif ( $OSCOM_APP->getCode() == 'index' ) {
         if (isset($cPath) && tep_not_null($cPath)) {
