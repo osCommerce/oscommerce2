@@ -7,11 +7,11 @@
  */
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+<h1><?php echo HEADING_TITLE_LOGOFF; ?></h1>
 
 <div class="contentContainer">
   <div class="contentText">
-    <?php echo TEXT_MAIN; ?>
+    <?php echo TEXT_MAIN_LOGOFF; ?>
   </div>
 
   <div class="buttonSet">

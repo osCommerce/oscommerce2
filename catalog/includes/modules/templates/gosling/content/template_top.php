@@ -85,7 +85,7 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
        tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 
   if (isset($_SESSION['customer_id'])) {
-    echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link(FILENAME_LOGOFF, '', 'SSL'));
+    echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link('account', 'logoff', 'SSL'));
   }
 ?>
     </div>

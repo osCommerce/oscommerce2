@@ -6,11 +6,9 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class app_logoff extends app {
-    public function __construct() {
+  class app_account_action_logoff {
+    public static function execute(app $app) {
       global $breadcrumb;
-
-      $breadcrumb->add(NAVBAR_TITLE);
 
       unset($_SESSION['customer_id']);
       unset($_SESSION['customer_default_address_id']);
@@ -28,6 +26,10 @@
       if ( SESSION_RECREATE == 'True' ) {
         tep_session_recreate();
       }
+
+      $app->setContentFile('logoff.php');
+
+      $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
     }
   }
 ?>
