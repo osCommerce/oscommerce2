@@ -20,6 +20,7 @@ define('NAVBAR_TITLE_NOTIFICATIONS', 'Product Notifications');
 define('NAVBAR_TITLE_LOGIN', 'Login');
 define('NAVBAR_TITLE_CREATE', 'Create an Account');
 define('NAVBAR_TITLE_CREATE_SUCCESS', 'Success');
+define('NAVBAR_TITLE_LOGOFF', 'Log Off');
 
 define('HEADING_TITLE', 'My Account Information');
 define('HEADING_TITLE_EDIT', 'My Account Information');
@@ -35,6 +36,7 @@ define('HEADING_TITLE_NOTIFICATIONS', 'Product Notifications');
 define('HEADING_TITLE_LOGIN', 'Welcome, Please Sign In');
 define('HEADING_TITLE_CREATE', 'My Account Information');
 define('HEADING_TITLE_CREATE_SUCCESS', 'Your Account Has Been Created!');
+define('HEADING_TITLE_LOGOFF', 'Log Off');
 
 define('OVERVIEW_TITLE', 'Overview');
 define('OVERVIEW_SHOW_ALL_ORDERS', '(show all orders)');
@@ -163,4 +165,6 @@ define('EMAIL_CONTACT', 'For help with any of our online services, please email 
 define('EMAIL_WARNING', '<strong>Note:</strong> This email address was given to us by one of our customers. If you did not signup to be a member, please send an email to ' . STORE_OWNER_EMAIL_ADDRESS . '.' . "\n");
 
 define('SUCCESS_TEXT_ACCOUNT_CREATED', 'Congratulations! Your new account has been successfully created! You can now take advantage of member priviledges to enhance your online shopping experience with us. If you have <small><strong>ANY</strong></small> questions about the operation of this online shop, please email the <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">store owner</a>.<br /><br />A confirmation has been sent to the provided email address. If you have not received it within the hour, please <a href="' . tep_href_link(FILENAME_CONTACT_US) . '">contact us</a>.');
+
+define('TEXT_MAIN_LOGOFF', 'You have been logged off your account. It is now safe to leave the computer.<br /><br />Your shopping cart has been saved, the items inside it will be restored whenever you log back into your account.');
 ?>
