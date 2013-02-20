@@ -17,7 +17,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('account', 'password&process', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true); ?>
+<?php echo tep_draw_form('account_password', tep_href_link('account', 'password&change&process', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true); ?>
 
 <div class="contentContainer">
   <div>
