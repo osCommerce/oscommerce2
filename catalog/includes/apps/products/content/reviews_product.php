@@ -27,7 +27,7 @@
   <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
     <?php echo '<a href="' . tep_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-    <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
+    <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link('cart', 'add&id=' . $Qp->valueInt('products_id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
   </div>
 
 <?php
