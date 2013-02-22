@@ -281,23 +281,9 @@
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = basename($PHP_SELF);
-      if ($_GET['action'] == 'buy_now') {
-        $parameters = array('action', 'pid', 'products_id');
-      } else {
-        $parameters = array('action', 'pid');
-      }
+      $parameters = array('action', 'pid');
     }
     switch ($_GET['action']) {
-      // performed by the 'buy now' button in product listings and review page
-      case 'buy_now' :        if (isset($_GET['products_id'])) {
-                                if (tep_has_product_attributes($_GET['products_id'])) {
-                                  tep_redirect(tep_href_link('products', 'id=' . $_GET['products_id']));
-                                } else {
-                                  $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
-                                }
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
       case 'notify' :         if (isset($_SESSION['customer_id'])) {
                                 if (isset($_GET['products_id'])) {
                                   $notify = $_GET['products_id'];
