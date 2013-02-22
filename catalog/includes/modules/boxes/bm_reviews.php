@@ -59,7 +59,7 @@
       }
 
       $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_REVIEWS) . '">' . MODULE_BOXES_REVIEWS_BOX_TITLE . '</a></div>' .
+              '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link('products', 'reviews') . '">' . MODULE_BOXES_REVIEWS_BOX_TITLE . '</a></div>' .
               '  ' . $reviews_box_contents .
               '</div>';
 

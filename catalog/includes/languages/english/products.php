@@ -12,9 +12,11 @@
 
 define('NAVBAR_TITLE_SPECIALS', 'Specials');
 define('NAVBAR_TITLE_NEW', 'New Products');
+define('NAVBAR_TITLE_REVIEWS', 'Reviews');
 
 define('HEADING_TITLE_SPECIALS', 'Get Them While They\'re Hot!');
 define('HEADING_TITLE_NEW', 'New Products');
+define('HEADING_TITLE_REVIEWS', 'Read What Others Are Saying');
 
 define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
 define('TEXT_CURRENT_REVIEWS', 'Current Reviews:');
@@ -53,4 +55,6 @@ define('ERROR_TO_ADDRESS', 'Error: Your friends e-mail address must be a valid e
 define('ERROR_FROM_NAME', 'Error: Your name must not be empty.');
 define('ERROR_FROM_ADDRESS', 'Error: Your e-mail address must be a valid e-mail address.');
 define('ERROR_ACTION_RECORDER', 'Error: An e-mail has already been sent. Please try again in %s minutes.');
+
+define('TEXT_OF_5_STARS', '%s of 5 Stars!');
 ?>
