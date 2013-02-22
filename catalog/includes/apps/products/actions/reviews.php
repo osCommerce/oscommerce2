@@ -10,7 +10,7 @@
     public static function execute(app $app) {
       global $breadcrumb;
 
-      $app->setContentFile('reviews.php');
+      $app->setContentFile('reviews_all.php');
 
       $breadcrumb->add(NAVBAR_TITLE_REVIEWS, tep_href_link('products', 'reviews'));
     }
