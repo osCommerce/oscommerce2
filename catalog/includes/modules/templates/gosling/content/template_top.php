@@ -76,13 +76,13 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 ?>
 
   <div id="header" class="row-fluid">
-    <div id="storeLogo"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
+    <div id="storeLogo"><?php echo '<a href="' . tep_href_link() . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
     <div id="headerShortcuts">
 <?php
   echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'cart', tep_href_link('cart')) .
        tep_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', tep_href_link('checkout', '', 'SSL')) .
-       tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+       tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', tep_href_link('account', '', 'SSL'));
 
   if (isset($_SESSION['customer_id'])) {
     echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link('account', 'logoff', 'SSL'));

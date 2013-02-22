@@ -189,7 +189,7 @@
               if (isset($quote['error'])) {
                 unset($_SESSION['shipping']);
 
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
@@ -206,7 +206,7 @@
 
           $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          tep_redirect(tep_href_link('checkout', '', 'SSL'));
         } else {
           $_SESSION['shipping'] = false;
 
@@ -218,7 +218,7 @@
 
           $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          tep_redirect(tep_href_link('checkout', '', 'SSL'));
         }
       } else {
         switch ($response_array['RESULT']) {

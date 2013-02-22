@@ -93,7 +93,7 @@
                                 tep_draw_hidden_field('x_version', '3.1') .
                                 tep_draw_hidden_field('x_show_form', 'PAYMENT_FORM') .
                                 tep_draw_hidden_field('x_relay_response', 'TRUE') .
-                                tep_draw_hidden_field('x_relay_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false)) .
+                                tep_draw_hidden_field('x_relay_url', tep_href_link('checkout', 'process', 'SSL', false)) .
                                 tep_draw_hidden_field('x_first_name', substr($order->billing['firstname'], 0, 50)) .
                                 tep_draw_hidden_field('x_last_name', substr($order->billing['lastname'], 0, 50)) .
                                 tep_draw_hidden_field('x_company', substr($order->billing['company'], 0, 50)) .
@@ -168,7 +168,7 @@
       }
 
       if ($error != false) {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL', true, false));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=' . $error, 'SSL', true, false));
       }
     }
 

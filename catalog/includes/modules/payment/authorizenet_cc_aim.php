@@ -227,7 +227,7 @@
       }
 
       if ($error != false) {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
     }
 

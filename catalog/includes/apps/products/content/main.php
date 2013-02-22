@@ -191,7 +191,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
     if ((USE_CACHE == 'true') && empty($SID)) {
       echo tep_cache_also_purchased(3600);
     } else {
-      include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
+      include(DIR_WS_MODULES . 'also_purchased_products.php');
     }
 
     if ($product_info['manufacturers_id'] > 0) {

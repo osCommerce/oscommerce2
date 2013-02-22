@@ -24,7 +24,7 @@
 
 <h1><?php echo HEADING_TITLE_SUCCESS; ?></h1>
 
-<?php echo tep_draw_form('order', tep_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL')); ?>
+<?php echo tep_draw_form('order', tep_href_link('checkout', 'success&process', 'SSL')); ?>
 
 <div class="contentContainer">
   <div class="contentText">

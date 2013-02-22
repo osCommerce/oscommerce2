@@ -15,19 +15,19 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
+    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'get' => 'checkout&payment'));
     tep_redirect(tep_href_link('account', 'login', 'SSL'));
   }
 
   if (!isset($_SESSION['sage_pay_direct_acsurl'])) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
   }
 
   if (!isset($_SESSION['payment']) || ($_SESSION['payment'] != 'sage_pay_direct')) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout.php');
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

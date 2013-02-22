@@ -121,7 +121,7 @@
         if (!isset($_POST['cc_owner_firstname']) || empty($_POST['cc_owner_firstname']) || !isset($_POST['cc_owner_lastname']) || empty($_POST['cc_owner_lastname']) || (strlen($_POST['cc_owner_firstname'] . ' ' . $_POST['cc_owner_lastname']) < CC_OWNER_MIN_LENGTH) || !isset($_POST['cc_type']) || !isset($this->cc_types[$_POST['cc_type']]) || !isset($_POST['cc_number_nh-dns']) || empty($_POST['cc_number_nh-dns']) || (strlen($_POST['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner_firstname=' . urlencode($_POST['cc_owner_firstname']) . '&cc_owner_lastname=' . urlencode($_POST['cc_owner_lastname']) . '&cc_starts_month=' . $_POST['cc_starts_month'] . '&cc_starts_year=' . $_POST['cc_starts_year'] . '&cc_expires_month=' . $_POST['cc_expires_month'] . '&cc_expires_year=' . $_POST['cc_expires_year'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
+          tep_redirect(tep_href_link('checkout', 'payment&' . $payment_error_return, 'SSL', true, false));
         }
       }
 
@@ -305,10 +305,10 @@
               break;
           }
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . urlencode($error_message), 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'error_message=' . urlencode($error_message), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        tep_redirect(tep_href_link('checkout', 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
       }
     }
 

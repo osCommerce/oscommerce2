@@ -117,9 +117,9 @@
           $order_total_modules->process();
 
           if ($response_array['AMT'] == $this->format_raw($order->info['total'])) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'process', 'SSL'));
           } else {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'do=confirm', 'SSL'));
           }
         }
       }

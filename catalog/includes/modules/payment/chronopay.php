@@ -301,7 +301,7 @@
                                tep_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('cb_url', urlencode(tep_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
                                tep_draw_hidden_field('cb_type', 'P') .
-                               tep_draw_hidden_field('decline_url', urlencode(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .
+                               tep_draw_hidden_field('decline_url', urlencode(tep_href_link('checkout', 'payment', 'SSL'))) .
                                tep_draw_hidden_field('language', $language_code) .
                                tep_draw_hidden_field('f_name', $order->billing['firstname']) .
                                tep_draw_hidden_field('s_name', $order->billing['lastname']) .
@@ -433,7 +433,7 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link('account', 'orders&id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= tep_db_output($order->info['comments']) . "\n\n";
@@ -488,7 +488,7 @@
 
       unset($_SESSION['cart_ChronoPay_ID']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      tep_redirect(tep_href_link('checkout', 'success', 'SSL'));
     }
 
     function after_process() {

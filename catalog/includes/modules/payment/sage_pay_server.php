@@ -130,7 +130,7 @@
             $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
             if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-              $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+              $error_url = tep_href_link('checkout', 'payment&payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             } else {
               $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             }
@@ -139,7 +139,7 @@
                       'RedirectURL=' . $this->formatURL($error_url);
           } else {
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . session_name() . '=' . session_id(), 'SSL', false));
+                      'RedirectURL=' . $this->formatURL(tep_href_link('checkout', 'process&check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . session_name() . '=' . session_id(), 'SSL', false));
           }
         } else {
           unset($_SESSION['sage_pay_server_securitykey']);
@@ -148,7 +148,7 @@
           $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+            $error_url = tep_href_link('checkout', 'payment&payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           } else {
             $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           }
@@ -178,7 +178,7 @@
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . session_name() . '=' . session_id(), 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(tep_href_link('checkout', 'process&check=SERVER&' . session_name() . '=' . session_id(), 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -292,7 +292,7 @@
       unset($_SESSION['sage_pay_server_securitykey']);
       unset($_SESSION['sage_pay_server_nexturl']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+      tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
 
     function after_process() {

@@ -61,7 +61,7 @@
     if ( $OSCOM_APP->getCode() != 'account' ) {
 ?>
 
-    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
+    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link('account', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 
 <?php
     }

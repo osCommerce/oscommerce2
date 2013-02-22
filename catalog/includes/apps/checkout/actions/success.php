@@ -47,7 +47,7 @@
       }
     }
 
-    tep_redirect(tep_href_link(FILENAME_DEFAULT, $notify_string));
+    tep_redirect(tep_href_link(null, $notify_string));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
