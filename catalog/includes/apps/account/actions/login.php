@@ -12,7 +12,7 @@
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
       if ( $session_started === false ) {
-        tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+        tep_redirect(tep_href_link('info', 'cookie_usage'));
       }
 
       $app->setContentFile('login.php');

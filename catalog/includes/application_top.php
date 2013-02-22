@@ -194,7 +194,7 @@
 
     if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
+      tep_redirect(tep_href_link('info', 'ssl_check'));
     }
   }
 
@@ -276,7 +276,7 @@
   if (isset($_GET['action'])) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
     if ($session_started == false) {
-      tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+      tep_redirect(tep_href_link('info', 'cookie_usage'));
     }
 
     if (DISPLAY_CART == 'true') {
