@@ -13,6 +13,6 @@
   <div class="contentText">
     <?php echo TEXT_CART_EMPTY; ?>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?></p>
+    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link()); ?></p>
   </div>
 </div>

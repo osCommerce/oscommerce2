@@ -45,7 +45,7 @@
         $cPath_new = 'cPath=' . $tree[$counter]['path'];
       }
 
-      $categories_string .= tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">';
+      $categories_string .= tep_href_link(null, $cPath_new) . '">';
 
       if (isset($cPath_array) && in_array($counter, $cPath_array)) {
         $categories_string .= '<strong>';

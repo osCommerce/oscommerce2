@@ -10,7 +10,7 @@
     public function __construct() {
       global $breadcrumb;
 
-      $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('account', '', 'SSL'));
     }
   }
 ?>

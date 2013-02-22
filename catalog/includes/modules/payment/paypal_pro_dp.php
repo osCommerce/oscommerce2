@@ -128,7 +128,7 @@
         if (!isset($_POST['cc_owner']) || empty($_POST['cc_owner']) || (strlen($_POST['cc_owner']) < CC_OWNER_MIN_LENGTH) || !isset($_POST['cc_type']) || !$this->isCardAccepted($_POST['cc_type']) || !isset($_POST['cc_number_nh-dns']) || empty($_POST['cc_number_nh-dns']) || (strlen($_POST['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner=' . urlencode($_POST['cc_owner']) . '&cc_starts_month=' . $_POST['cc_starts_month'] . '&cc_starts_year=' . $_POST['cc_starts_year'] . '&cc_expires_month=' . $_POST['cc_expires_month'] . '&cc_expires_year=' . $_POST['cc_expires_year'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
+          tep_redirect(tep_href_link('checkout', 'payment&' . $payment_error_return, 'SSL', true, false));
         }
       }
 
@@ -298,7 +298,7 @@
           tep_redirect(tep_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        tep_redirect(tep_href_link('checkout', 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
       }
     }
 

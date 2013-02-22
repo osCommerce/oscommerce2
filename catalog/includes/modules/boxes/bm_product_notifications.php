@@ -52,7 +52,7 @@
         }
 
         $data = '<div class="ui-widget infoBoxContainer">' .
-                '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
+                '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link('account', 'notifications', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
                 '  ' . $notif_contents .
                 '</div>';
 

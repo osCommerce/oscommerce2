@@ -181,39 +181,39 @@
         }
 
         if ( (isset($_POST['cc_type']) == false) || ($this->isCard($cc_type) == false) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardtype', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardtype', 'SSL'));
         }
 
         if ( (isset($_POST['cc_owner']) == false) || empty($cc_owner) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardowner', 'SSL'));
         }
 
         if ( (isset($_POST['cc_number_nh-dns']) == false) || (is_numeric($cc_number) == false) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
         }
 
         if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
           if ( in_array($_POST['cc_starts_month'], $months_array) == false ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardstart', 'SSL'));
           }
 
           if ( in_array($_POST['cc_starts_year'], $year_valid_from_array) == false ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardstart', 'SSL'));
           }
 
           $cc_start = substr($_POST['cc_starts_month'] . $_POST['cc_starts_year'], 0, 4);
         }
 
         if ( in_array($_POST['cc_expires_month'], $months_array) == false ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( in_array($_POST['cc_expires_year'], $year_valid_to_array) == false ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( ($_POST['cc_expires_year'] == date('y')) && ($_POST['cc_expires_month'] < date('m')) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         $cc_expires = substr($_POST['cc_expires_month'] . $_POST['cc_expires_year'], 0, 4);
@@ -222,7 +222,7 @@
           $cc_issue = substr($_POST['cc_issue_nh-dns'], 0, 2);
 
           if ( (isset($_POST['cc_issue_nh-dns']) == false) || empty($cc_issue) ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardissue', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardissue', 'SSL'));
           }
         }
 
@@ -230,7 +230,7 @@
           $cc_cvc = substr($_POST['cc_cvc_nh-dns'], 0, 4);
 
           if ( (isset($_POST['cc_cvc_nh-dns']) == false) || empty($cc_cvc) ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvc', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=cardcvc', 'SSL'));
           }
         }
 
@@ -363,7 +363,7 @@
       if ( ($return['Status'] != 'OK') && ($return['Status'] != 'AUTHENTICATED') && ($return['Status'] != 'REGISTERED') ) {
         $error = $this->getErrorMessageNumber($return['StatusDetail']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
       }
 
       if ( isset($return['VPSTxId']) ) {

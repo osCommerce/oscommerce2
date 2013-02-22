@@ -33,7 +33,7 @@
 // Redirect to another page or site
   function tep_redirect($url) {
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) { 
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      tep_redirect(tep_href_link(null, '', 'NONSSL', false));
     }
 
     if ( (ENABLE_SSL == true) && (getenv('HTTPS') == 'on') ) { // We are loading an SSL page

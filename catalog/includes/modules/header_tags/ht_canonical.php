@@ -35,9 +35,9 @@
         $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false) . '" />' . "\n", $this->group);
       } elseif ( $OSCOM_APP->getCode() == 'index' ) {
         if (isset($cPath) && tep_not_null($cPath)) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(null, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
         } elseif (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         }
       }
     }

@@ -451,7 +451,7 @@
               if (isset($quote['error'])) {
                 unset($_SESSION['shipping']);
 
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
@@ -477,7 +477,7 @@
 
         $_SESSION['ppe_addressstatus'] = $response_array['ADDRESSSTATUS'];
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout', '', 'SSL'));
       } else {
         tep_redirect(tep_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }

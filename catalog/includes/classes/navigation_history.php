@@ -78,7 +78,7 @@
       global $PHP_SELF, $request_type;
 
       if (is_array($page)) {
-        $this->snapshot = array('page' => $page['page'],
+        $this->snapshot = array('page' => isset($page['page']) ? $page['page'] : null,
                                 'mode' => $page['mode'],
                                 'get' => $this->filter_parameters($page['get']),
                                 'post' => $this->filter_parameters($page['post']));
