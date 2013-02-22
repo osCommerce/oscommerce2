@@ -31,9 +31,9 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $OSCOM_APP, $oscTemplate;
 
-      if ( isset($_GET['products_id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && tep_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
+      if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && tep_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
         $sbm_array = explode(';', MODULE_SOCIAL_BOOKMARKS_INSTALLED);
 
         $social_bookmarks = array();
