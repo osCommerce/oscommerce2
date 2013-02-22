@@ -59,7 +59,13 @@
             $email_body .= $message . "\n\n";
           }
 
-          $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false)) . "\n\n" .
+          $product_link = tep_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false);
+
+          if ( strpos($product_link, '&amp;') !== false ) {
+            $product_link = str_replace('&amp;', '&', $product_link);
+          }
+
+          $email_body .= sprintf(TEXT_EMAIL_LINK, $product_link) . "\n\n" .
                          sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . HTTP_SERVER . DIR_WS_CATALOG . "\n");
 
           tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
