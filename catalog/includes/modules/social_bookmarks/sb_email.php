@@ -30,7 +30,7 @@
     }
 
     function getOutput() {
-      return '<a href="' . tep_href_link('products', 'id=' . $_GET['id'] . '&tell_a_friend') . '"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '" /></a>';
+      return '<a href="' . tep_href_link('products', 'tell_a_friend&id=' . $_GET['id']) . '"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '" /></a>';
     }
 
     function isEnabled() {
