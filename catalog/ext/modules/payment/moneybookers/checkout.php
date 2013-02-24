@@ -15,29 +15,29 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'get' => 'checkout&payment'));
+    tep_redirect(tep_href_link('account', 'login', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('cart'));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
   }
 
   if (!isset($_SESSION['payment']) || (substr($_SESSION['payment'], 0, 12) != 'moneybookers')) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
   }
 
 // load the selected payment module
@@ -50,7 +50,7 @@
   $payment_modules->update_status();
 
   if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+    tep_redirect(tep_href_link('checkout', 'payment&error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
   if (is_array($payment_modules->modules)) {
@@ -75,13 +75,13 @@
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      tep_redirect(tep_href_link('cart'));
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout', 'shipping', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $_POST['sid'];

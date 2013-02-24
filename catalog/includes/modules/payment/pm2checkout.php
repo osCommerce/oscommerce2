@@ -114,7 +114,7 @@
         $process_button_string .= tep_draw_hidden_field('demo', 'Y');
       }
 
-      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
+      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link('cart'));
 
       $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
@@ -133,7 +133,7 @@
 
     function before_process() {
       if ( ($_POST['credit_card_processed'] != 'Y') && ($_POST['credit_card_processed'] != 'K') ){
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code, 'SSL', true, false));
       }
     }
 

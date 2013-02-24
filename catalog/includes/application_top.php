@@ -45,9 +45,6 @@
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
   }
 
-// include the list of project filenames
-  require(DIR_WS_INCLUDES . 'filenames.php');
-
 // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
@@ -194,7 +191,7 @@
 
     if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
+      tep_redirect(tep_href_link('info', 'ssl_check'));
     }
   }
 
@@ -206,7 +203,7 @@
 
     if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link('account', 'login', 'SSL'));
     }
   }
 
@@ -219,7 +216,7 @@
 
     if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
       session_destroy();
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link('account', 'login', 'SSL'));
     }
   }
 
@@ -276,55 +273,17 @@
   if (isset($_GET['action'])) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
     if ($session_started == false) {
-      tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+      tep_redirect(tep_href_link('info', 'cookie_usage'));
     }
 
     if (DISPLAY_CART == 'true') {
-      $goto =  FILENAME_SHOPPING_CART;
+      $goto =  'cart';
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = basename($PHP_SELF);
-      if ($_GET['action'] == 'buy_now') {
-        $parameters = array('action', 'pid', 'products_id');
-      } else {
-        $parameters = array('action', 'pid');
-      }
+      $parameters = array('action', 'pid');
     }
     switch ($_GET['action']) {
-      // customer wants to update the product quantity in their shopping cart
-      case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
-                                if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
-                                  $_SESSION['cart']->remove($_POST['products_id'][$i]);
-                                } else {
-                                  $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
-                                  $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
-                                }
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
-      // customer adds a product from the products page
-      case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
-                                $attributes = isset($_POST['id']) ? $_POST['id'] : '';
-                                $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
-      // customer removes a product from their shopping cart
-      case 'remove_product' : if (isset($_GET['products_id'])) {
-                                $_SESSION['cart']->remove($_GET['products_id']);
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
-      // performed by the 'buy now' button in product listings and review page
-      case 'buy_now' :        if (isset($_GET['products_id'])) {
-                                if (tep_has_product_attributes($_GET['products_id'])) {
-                                  tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id']));
-                                } else {
-                                  $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
-                                }
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
-                              break;
       case 'notify' :         if (isset($_SESSION['customer_id'])) {
                                 if (isset($_GET['products_id'])) {
                                   $notify = $_GET['products_id'];
@@ -346,7 +305,7 @@
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'notify'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                tep_redirect(tep_href_link('account', 'login', 'SSL'));
                               }
                               break;
       case 'notify_remove' :  if (isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -358,17 +317,8 @@
                                 tep_redirect(tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                tep_redirect(tep_href_link('account', 'login', 'SSL'));
                               }
-                              break;
-      case 'cust_order' :     if (isset($_SESSION['customer_id']) && isset($_GET['pid'])) {
-                                if (tep_has_product_attributes($_GET['pid'])) {
-                                  tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['pid']));
-                                } else {
-                                  $_SESSION['cart']->add_cart($_GET['pid'], $_SESSION['cart']->get_quantity($_GET['pid'])+1);
-                                }
-                              }
-                              tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
                               break;
     }
   }
@@ -420,7 +370,7 @@
   $breadcrumb = new breadcrumb;
 
   $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
-  $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link(FILENAME_DEFAULT));
+  $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link());
 
 // add category names or the manufacturer name to the breadcrumb trail
   if (isset($cPath_array)) {
@@ -428,7 +378,7 @@
       $categories_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
       if (tep_db_num_rows($categories_query) > 0) {
         $categories = tep_db_fetch_array($categories_query);
-        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+        $breadcrumb->add($categories['categories_name'], tep_href_link(null, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
       } else {
         break;
       }
@@ -437,7 +387,7 @@
     $manufacturers_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
     if (tep_db_num_rows($manufacturers_query)) {
       $manufacturers = tep_db_fetch_array($manufacturers_query);
-      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id']));
+      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
 

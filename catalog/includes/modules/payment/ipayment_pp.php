@@ -107,8 +107,8 @@
                                tep_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
                                tep_draw_hidden_field('addr_state', $zone_code) .
                                tep_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
-                               tep_draw_hidden_field('redirect_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
-                               tep_draw_hidden_field('silent_error_url', tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true)) .
+                               tep_draw_hidden_field('redirect_url', tep_href_link('checkout', 'process', 'SSL', true)) .
+                               tep_draw_hidden_field('silent_error_url', tep_href_link('checkout', 'payment&payment_error=' . $this->code, 'SSL', true)) .
                                tep_draw_hidden_field('hidden_trigger_url', tep_href_link('ext/modules/payment/ipayment/callback_pp.php', '', 'SSL', false)) .
                                tep_draw_hidden_field('client_name', 'oscommerce') .
                                tep_draw_hidden_field('client_version', $this->signature);
@@ -124,7 +124,7 @@
       global $order;
 
       if ($_GET['ret_errorcode'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
       }
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_PP_SECRET_HASH_PASSWORD)) {
@@ -143,7 +143,7 @@
         }
 
         if ($pass != true) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code));
         }
       }
 

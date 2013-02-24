@@ -112,8 +112,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . session_id(), 'SSL', false),
-                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&' . session_name() . '=' . session_id(), 'SSL', false),
+                     'SuccessURL' => tep_href_link('checkout', 'process&' . session_name() . '=' . session_id(), 'SSL', false),
+                     'FailureURL' => tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&' . session_name() . '=' . session_id(), 'SSL', false),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -218,14 +218,14 @@
         if ( ($return['Status'] != 'OK') && ($return['Status'] != 'AUTHENTICATED') && ($return['Status'] != 'REGISTERED') ) {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+          tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
         }
 
         if ( isset($return['VPSTxId']) ) {
           $order->info['comments'] = 'Sage Pay Reference ID: ' . $return['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code, 'SSL'));
       }
     }
 

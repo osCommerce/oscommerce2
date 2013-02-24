@@ -1,21 +1,17 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2013 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
   if (!isset($process)) $process = false;
 ?>
 
   <div>
     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo NEW_ADDRESS_TITLE; ?></h2>
+    <h2><?php echo ADDRESS_BOOK_ENTRY; ?></h2>
   </div>
 
   <div class="contentText">
@@ -125,11 +121,11 @@
 
       <tr>
         <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
-        <td class="fieldValue"><?php echo tep_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : STORE_COUNTRY)) . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
+        <td class="fieldValue"><?php echo tep_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : (!isset($_POST['country']) ? STORE_COUNTRY : null))) . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
       </tr>
 
 <?php
-  if ((isset($_GET['edit']) && ($_SESSION['customer_default_address_id'] != $_GET['edit'])) || (isset($_GET['edit']) == false) ) {
+  if ( (isset($_GET['id']) && ($_SESSION['customer_default_address_id'] != $_GET['id'])) || !isset($_GET['id']) ) {
 ?>
 
       <tr>

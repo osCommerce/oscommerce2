@@ -117,9 +117,9 @@
           $order_total_modules->process();
 
           if ($response_array['AMT'] == $this->format_raw($order->info['total'])) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'process', 'SSL'));
           } else {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL'));
+            tep_redirect(tep_href_link('checkout', 'do=confirm', 'SSL'));
           }
         }
       }
@@ -172,7 +172,7 @@
       $response_array = $this->doExpressCheckoutPayment($params);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
     }
 

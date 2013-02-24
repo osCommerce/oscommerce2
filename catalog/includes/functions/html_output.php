@@ -31,7 +31,7 @@
       $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
     }
 
-    $link = 'index.php';
+    $link .= 'index.php';
 
     if ( isset($page) ) {
       $link .= '?' . $page;

@@ -29,7 +29,7 @@
     }
 
     function execute() {
-      global $PHP_SELF;
+      global $OSCOM_APP;
 
       include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/MCAPI.class.php');
       include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/mc360.php');
@@ -37,7 +37,7 @@
       $mc360 = new mc360();
       $mc360->set_cookies();
 
-      if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) {
+      if ( ($OSCOM_APP->getCode() == 'checkout') && ($OSCOM_APP->getCurrentAction() == 'success') ) {
         $mc360->process();
       }
     }

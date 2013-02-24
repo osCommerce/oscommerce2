@@ -132,7 +132,7 @@
     }
     $filterlist_query = tep_db_query($filterlist_sql);
     if (tep_db_num_rows($filterlist_query) > 1) {
-      echo '<div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+      echo '<div>' . tep_draw_form('filter', tep_href_link(null, null, 'NONSSL', false), 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
       if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
         echo tep_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
         $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -149,7 +149,7 @@
     }
   }
 
-  include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
+  include(DIR_WS_MODULES . 'product_listing.php');
 ?>
 
 </div>

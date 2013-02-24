@@ -33,7 +33,7 @@
 // Redirect to another page or site
   function tep_redirect($url) {
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) { 
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      tep_redirect(tep_href_link(null, '', 'NONSSL', false));
     }
 
     if ( (ENABLE_SSL == true) && (getenv('HTTPS') == 'on') ) { // We are loading an SSL page
@@ -168,13 +168,16 @@
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
 
+    $exclude_array[] = session_name();
+    $exclude_array[] = 'error';
+    $exclude_array[] = 'x';
+    $exclude_array[] = 'y';
+
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
-        if ( is_string($value) && (strlen($value) > 0) && ($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
-          $get_url .= $key . '=' . rawurlencode($value) . '&';
-        }
+
+    foreach ( $_GET as $k => $v ) {
+      if ( !in_array($k, $exclude_array) ) {
+        $get_url .= $k . '=' . rawurlencode($v) . '&';
       }
     }
 
@@ -1003,9 +1006,9 @@
 // Return a customer greeting
   function tep_customer_greeting() {
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link(FILENAME_PRODUCTS_NEW));
+      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link('products', 'new'));
     } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link(FILENAME_LOGIN, '', 'SSL'), tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+      $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('account', 'login', 'SSL'), tep_href_link('account', 'create', 'SSL'));
     }
 
     return $greeting_string;
