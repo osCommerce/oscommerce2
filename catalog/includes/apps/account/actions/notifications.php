@@ -13,7 +13,7 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('notifications.php');
@@ -24,7 +24,7 @@
 
       $global = $Qglobal->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_NOTIFICATIONS, tep_href_link('account', 'notifications', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_NOTIFICATIONS, osc_href_link('account', 'notifications', 'SSL'));
     }
   }
 ?>

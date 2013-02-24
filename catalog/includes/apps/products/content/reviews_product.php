@@ -21,13 +21,13 @@
 <div class="contentContainer">
 
 <?php
-  if (tep_not_null($Qp->value('products_image'))) {
+  if (osc_not_null($Qp->value('products_image'))) {
 ?>
 
   <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
-    <?php echo '<a href="' . tep_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+    <?php echo '<a href="' . osc_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . osc_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-    <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link('cart', 'add&id=' . $Qp->valueInt('products_id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
+    <p><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'cart', osc_href_link('cart', 'add&id=' . $Qp->valueInt('products_id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
   </div>
 
 <?php
@@ -41,7 +41,7 @@
 ?>
 
   <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info'))); ?></p>
 
     <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
   </div>
@@ -51,17 +51,17 @@
 <?php
     }
 
-    $reviews_query = tep_db_query($reviews_split->sql_query);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
+    $reviews_query = osc_db_query($reviews_split->sql_query);
+    while ($reviews = osc_db_fetch_array($reviews_query)) {
 ?>
 
   <div>
-    <span style="float: right;"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, tep_date_long($reviews['date_added'])); ?></span>
-    <h2><?php echo '<a href="' . tep_href_link('products', 'reviews=' . $reviews['reviews_id'] . '&id=' . $Qp->valueInt('products_id')) . '">' . sprintf(TEXT_REVIEW_BY, tep_output_string_protected($reviews['customers_name'])) . '</a>'; ?></h2>
+    <span style="float: right;"><?php echo sprintf(TEXT_REVIEW_DATE_ADDED, osc_date_long($reviews['date_added'])); ?></span>
+    <h2><?php echo '<a href="' . osc_href_link('products', 'reviews=' . $reviews['reviews_id'] . '&id=' . $Qp->valueInt('products_id')) . '">' . sprintf(TEXT_REVIEW_BY, osc_output_string_protected($reviews['customers_name'])) . '</a>'; ?></h2>
   </div>
 
   <div class="contentText">
-    <?php echo tep_break_string(tep_output_string_protected($reviews['reviews_text']), 60, '-<br />') . ((strlen($reviews['reviews_text']) >= 100) ? '..' : '') . '<br /><br /><i>' . sprintf(TEXT_REVIEW_RATING, tep_image(DIR_WS_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])) . '</i>'; ?>
+    <?php echo osc_break_string(osc_output_string_protected($reviews['reviews_text']), 60, '-<br />') . ((strlen($reviews['reviews_text']) >= 100) ? '..' : '') . '<br /><br /><i>' . sprintf(TEXT_REVIEW_RATING, osc_image(DIR_WS_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])), sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])) . '</i>'; ?>
   </div>
 
 <?php
@@ -80,7 +80,7 @@
 ?>
 
   <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info'))); ?></p>
 
     <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
   </div>
@@ -92,8 +92,8 @@
   <br />
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'comment', tep_href_link('products', 'reviews&new&id=' . $_GET['id']), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'comment', osc_href_link('products', 'reviews&new&id=' . $_GET['id']), 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('products', 'id=' . $_GET['id'])); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('products', 'id=' . $_GET['id'])); ?>
   </div>
 </div>

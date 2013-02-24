@@ -29,7 +29,7 @@
         }
 
         if ($error == false) {
-          $sql_data_array = array('products_id' => tep_get_prid($_GET['id']),
+          $sql_data_array = array('products_id' => osc_get_prid($_GET['id']),
                                   'customers_id' => $_SESSION['customer_id'],
                                   'customers_name' => $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'),
                                   'reviews_rating' => $rating,
@@ -43,7 +43,7 @@
 
           $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
 
-          tep_redirect(tep_href_link('products', 'reviews&id=' . $_GET['id']));
+          osc_redirect(osc_href_link('products', 'reviews&id=' . $_GET['id']));
         }
       }
     }

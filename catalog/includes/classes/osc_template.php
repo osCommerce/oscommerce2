@@ -64,13 +64,13 @@
     }
 
     function buildBlocks() {
-      if ( defined('TEMPLATE_BLOCK_GROUPS') && tep_not_null(TEMPLATE_BLOCK_GROUPS) ) {
+      if ( defined('TEMPLATE_BLOCK_GROUPS') && osc_not_null(TEMPLATE_BLOCK_GROUPS) ) {
         $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
 
         foreach ($tbgroups_array as $group) {
           $module_key = 'MODULE_' . strtoupper($group) . '_INSTALLED';
 
-          if ( defined($module_key) && tep_not_null(constant($module_key)) ) {
+          if ( defined($module_key) && osc_not_null(constant($module_key)) ) {
             $modules_array = explode(';', constant($module_key));
 
             foreach ( $modules_array as $module ) {

@@ -15,10 +15,10 @@
       $breadcrumb->add(NAVBAR_TITLE_CREATE_SUCCESS);
 
       if ( sizeof($_SESSION['navigation']->snapshot) > 0 ) {
-        $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+        $origin_href = osc_href_link($_SESSION['navigation']->snapshot['page'], osc_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
         $_SESSION['navigation']->clear_snapshot();
       } else {
-        $origin_href = tep_href_link();
+        $origin_href = osc_href_link();
       }
     }
   }

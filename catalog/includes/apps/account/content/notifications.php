@@ -9,7 +9,7 @@
 
 <h1><?php echo HEADING_TITLE_NOTIFICATIONS; ?></h1>
 
-<?php echo tep_draw_form('account_notifications', tep_href_link('account', 'notifications&process', 'SSL'), 'post', '', true); ?>
+<?php echo osc_draw_form('account_notifications', osc_href_link('account', 'notifications&process', 'SSL'), 'post', '', true); ?>
 
 <div class="contentContainer">
   <h2><?php echo MY_NOTIFICATIONS_TITLE; ?></h2>
@@ -23,7 +23,7 @@
   <div class="contentText">
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
-        <td width="30"><?php echo tep_draw_checkbox_field('product_global', '1', (($global['global_product_notifications'] == '1') ? true : false), 'onclick="checkBox(\'product_global\')"'); ?></td>
+        <td width="30"><?php echo osc_draw_checkbox_field('product_global', '1', (($global['global_product_notifications'] == '1') ? true : false), 'onclick="checkBox(\'product_global\')"'); ?></td>
         <td><strong><?php echo GLOBAL_NOTIFICATIONS_TITLE; ?></strong><br /><?php echo GLOBAL_NOTIFICATIONS_DESCRIPTION; ?></td>
       </tr>
     </table>
@@ -38,8 +38,8 @@
   <div class="contentText">
 
 <?php
-    $products_check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-    $products_check = tep_db_fetch_array($products_check_query);
+    $products_check_query = osc_db_query("select count(*) as total from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+    $products_check = osc_db_fetch_array($products_check_query);
     if ($products_check['total'] > 0) {
 ?>
 
@@ -49,12 +49,12 @@
 
 <?php
       $counter = 0;
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$_SESSION['customer_id'] . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
-      while ($products = tep_db_fetch_array($products_query)) {
+      $products_query = osc_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$_SESSION['customer_id'] . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
+      while ($products = osc_db_fetch_array($products_query)) {
 ?>
 
       <tr>
-        <td width="30"><?php echo tep_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true, 'onclick="checkBox(\'products[' . $counter . ']\')"'); ?></td>
+        <td width="30"><?php echo osc_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true, 'onclick="checkBox(\'products[' . $counter . ']\')"'); ?></td>
         <td><strong><?php echo $products['products_name']; ?></strong></td>
       </tr>
 
@@ -84,9 +84,9 @@
 ?>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', '', 'SSL')); ?>
   </div>
 </div>
 

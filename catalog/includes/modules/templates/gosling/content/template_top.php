@@ -24,7 +24,7 @@
 
 <meta charset="<?php echo CHARSET; ?>" />
 
-<title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
+<title><?php echo osc_output_string_protected($oscTemplate->getTitle()); ?></title>
 
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 
@@ -46,7 +46,7 @@
 <script src="ext/jquery/ui/jquery-ui-1.8.23.min.js"></script>
 
 <?php
-  if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
+  if (osc_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
 ?>
 <script src="ext/jquery/ui/i18n/jquery.ui.datepicker-<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>.js"></script>
 <script>
@@ -76,16 +76,16 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 ?>
 
   <div id="header" class="row-fluid">
-    <div id="storeLogo"><?php echo '<a href="' . tep_href_link() . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
+    <div id="storeLogo"><?php echo '<a href="' . osc_href_link() . '">' . osc_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
     <div id="headerShortcuts">
 <?php
-  echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'cart', tep_href_link('cart')) .
-       tep_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', tep_href_link('checkout', '', 'SSL')) .
-       tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', tep_href_link('account', '', 'SSL'));
+  echo osc_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'cart', osc_href_link('cart')) .
+       osc_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', osc_href_link('checkout', '', 'SSL')) .
+       osc_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', osc_href_link('account', '', 'SSL'));
 
   if (isset($_SESSION['customer_id'])) {
-    echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link('account', 'logoff', 'SSL'));
+    echo osc_draw_button(HEADER_TITLE_LOGOFF, null, osc_href_link('account', 'logoff', 'SSL'));
   }
 ?>
     </div>
@@ -100,7 +100,7 @@ $('#headerShortcuts').buttonset();
   </div>
 
 <?php
-  if (isset($_GET['error_message']) && tep_not_null($_GET['error_message'])) {
+  if (isset($_GET['error_message']) && osc_not_null($_GET['error_message'])) {
 ?>
 
   <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -112,7 +112,7 @@ $('#headerShortcuts').buttonset();
 <?php
   }
 
-  if (isset($_GET['info_message']) && tep_not_null($_GET['info_message'])) {
+  if (isset($_GET['info_message']) && osc_not_null($_GET['info_message'])) {
 ?>
 
   <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -160,11 +160,11 @@ $('#headerShortcuts').buttonset();
     </div>
 
 <?php
-  if ($banner = tep_banner_exists('dynamic', '468x50')) {
+  if ($banner = osc_banner_exists('dynamic', '468x50')) {
 ?>
 
     <div class="span12" style="text-align: center; padding-bottom: 20px;">
-      <?php echo tep_display_banner('static', $banner); ?>
+      <?php echo osc_display_banner('static', $banner); ?>
     </div>
 
 <?php

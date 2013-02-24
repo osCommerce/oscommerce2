@@ -16,12 +16,12 @@
       array(
         'code' => FILENAME_CUSTOMERS,
         'title' => BOX_CUSTOMERS_CUSTOMERS,
-        'link' => tep_href_link(FILENAME_CUSTOMERS)
+        'link' => osc_href_link(FILENAME_CUSTOMERS)
       ),
       array(
         'code' => FILENAME_ORDERS,
         'title' => BOX_CUSTOMERS_ORDERS,
-        'link' => tep_href_link(FILENAME_ORDERS)
+        'link' => osc_href_link(FILENAME_ORDERS)
       )
     )
   );

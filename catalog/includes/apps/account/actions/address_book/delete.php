@@ -16,7 +16,7 @@
         if ( $_GET['id'] == $_SESSION['customer_default_address_id'] ) {
           $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
-          tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+          osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
         }
 
         $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
@@ -32,12 +32,12 @@
       if ( $exists === false ) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-        tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+        osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }
 
       $app->setContentFile('address_book_delete.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_DELETE, tep_href_link('account', 'address_book&delete&id=' . $_GET['id'], 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_DELETE, osc_href_link('account', 'address_book&delete&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

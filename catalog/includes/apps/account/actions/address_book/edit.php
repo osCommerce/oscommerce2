@@ -28,12 +28,12 @@
       if ( $exists === false ) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-        tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+        osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }
 
       $app->setContentFile('address_book_process.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_EDIT, tep_href_link('account', 'address_book&edit&id=' . $_GET['id'], 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_EDIT, osc_href_link('account', 'address_book&edit&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

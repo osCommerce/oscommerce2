@@ -45,18 +45,18 @@ function checkForm() {
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link('products', 'reviews&new&process&id=' . $_GET['id']), 'post', 'onsubmit="return checkForm();"', true); ?>
+<?php echo osc_draw_form('product_reviews_write', osc_href_link('products', 'reviews&new&process&id=' . $_GET['id']), 'post', 'onsubmit="return checkForm();"', true); ?>
 
 <div class="contentContainer">
 
 <?php
-  if (tep_not_null($Qp->value('products_image'))) {
+  if (osc_not_null($Qp->value('products_image'))) {
 ?>
 
   <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
-    <?php echo '<a href="' . tep_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+    <?php echo '<a href="' . osc_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . osc_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-    <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link('cart', 'add&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
+    <p><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'cart', osc_href_link('cart', 'add&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
   </div>
 
 <?php
@@ -71,19 +71,19 @@ function checkForm() {
       </tr>
       <tr>
         <td class="fieldKey" valign="top"><?php echo SUB_TITLE_REVIEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('review', 'soft', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
+        <td class="fieldValue"><?php echo osc_draw_textarea_field('review', 'soft', 60, 15) . '<br /><span style="float: right;">' . TEXT_NO_HTML . '</span>'; ?></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo SUB_TITLE_RATING; ?></td>
-        <td class="fieldValue"><?php echo TEXT_BAD . ' ' . tep_draw_radio_field('rating', '1') . ' ' . tep_draw_radio_field('rating', '2') . ' ' . tep_draw_radio_field('rating', '3') . ' ' . tep_draw_radio_field('rating', '4') . ' ' . tep_draw_radio_field('rating', '5') . ' ' . TEXT_GOOD; ?></td>
+        <td class="fieldValue"><?php echo TEXT_BAD . ' ' . osc_draw_radio_field('rating', '1') . ' ' . osc_draw_radio_field('rating', '2') . ' ' . osc_draw_radio_field('rating', '3') . ' ' . osc_draw_radio_field('rating', '4') . ' ' . osc_draw_radio_field('rating', '5') . ' ' . TEXT_GOOD; ?></td>
       </tr>
     </table>
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('products', 'reviews&id=' . $_GET['id'])); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('products', 'reviews&id=' . $_GET['id'])); ?>
   </div>
 </div>
 

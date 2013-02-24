@@ -70,7 +70,7 @@
 
       reset($headers);
       while (list(,$value) = each($headers)) {
-        if (tep_not_null($value)) {
+        if (osc_not_null($value)) {
           $this->headers[] = $value;
         }
       }
@@ -126,7 +126,7 @@
         }
       }
 
-      if (tep_not_null($html_images)) {
+      if (osc_not_null($html_images)) {
 // If duplicate images are embedded, they may show up as attachments, so remove them.
         $html_images = array_unique($html_images);
         sort($html_images);
@@ -146,7 +146,7 @@
  */
 
     function add_text($text = '') {
-      $this->text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
+      $this->text = osc_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
     }
 
 /**
@@ -156,8 +156,8 @@
  */
 
     function add_html($html, $text = NULL, $images_dir = NULL) {
-      $this->html = tep_convert_linefeeds(array("\r\n", "\n", "\r"), '<br />', $html);
-      $this->html_text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
+      $this->html = osc_convert_linefeeds(array("\r\n", "\n", "\r"), '<br />', $html);
+      $this->html_text = osc_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
 
       if (isset($images_dir)) $this->find_html_images($images_dir);
     }
@@ -328,7 +328,7 @@
         }
       }
 
-      if (tep_not_null($this->html_images)) {
+      if (osc_not_null($this->html_images)) {
         reset($this->html_images);
         while (list(,$value) = each($this->html_images)) {
           $this->html = str_replace($value['name'], 'cid:' . $value['cid'], $this->html);
@@ -336,10 +336,10 @@
       }
 
       $null = NULL;
-      $attachments = ((tep_not_null($this->attachments)) ? true : false);
-      $html_images = ((tep_not_null($this->html_images)) ? true : false);
-      $html = ((tep_not_null($this->html)) ? true : false);
-      $text = ((tep_not_null($this->text)) ? true : false);
+      $attachments = ((osc_not_null($this->attachments)) ? true : false);
+      $html_images = ((osc_not_null($this->html_images)) ? true : false);
+      $html = ((osc_not_null($this->html)) ? true : false);
+      $text = ((osc_not_null($this->text)) ? true : false);
 
       switch (true) {
         case (($text == true) && ($attachments == false)):
@@ -367,7 +367,7 @@
           }
           break;
         case (($html == true) && ($attachments == false) && ($html_images == false)):
-          if (tep_not_null($this->html_text)) {
+          if (osc_not_null($this->html_text)) {
 /* HPDL PHP3 */
 //            $message =& $this->add_alternative_part($null);
             $message = $this->add_alternative_part($null);
@@ -380,7 +380,7 @@
           }
           break;
         case (($html == true) && ($attachments == false) && ($html_images == true)):
-          if (tep_not_null($this->html_text)) {
+          if (osc_not_null($this->html_text)) {
 /* HPDL PHP3 */
 //            $message =& $this->add_alternative_part($null);
             $message = $this->add_alternative_part($null);
@@ -405,7 +405,7 @@
 /* HPDL PHP3 */
 //          $message =& $this->add_mixed_part();
           $message = $this->add_mixed_part();
-          if (tep_not_null($this->html_text)) {
+          if (osc_not_null($this->html_text)) {
 /* HPDL PHP3 */
 //            $alt =& $this->add_alternative_part($message);
             $alt = $this->add_alternative_part($message);
@@ -424,7 +424,7 @@
 //          $message =& $this->add_mixed_part();
           $message = $this->add_mixed_part();
 
-          if (tep_not_null($this->html_text)) {
+          if (osc_not_null($this->html_text)) {
 /* HPDL PHP3 */
 //            $alt =& $this->add_alternative_part($message);
             $alt = $this->add_alternative_part($message);

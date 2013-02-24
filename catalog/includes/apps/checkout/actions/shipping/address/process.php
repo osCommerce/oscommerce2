@@ -142,7 +142,7 @@
               unset($_SESSION['shipping']);
             }
 
-            tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+            osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
           }
 // process the selected shipping destination
         } elseif ( isset($_POST['address']) ) {
@@ -168,14 +168,14 @@
               unset($_SESSION['shipping']);
             }
 
-            tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+            osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
           } else {
             unset($_SESSION['sendto']);
           }
         } else {
           $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-          tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+          osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
         }
       }
     }

@@ -18,13 +18,13 @@
 
         if ( $Qmanufacturer->fetch() !== false ) {
 // url exists in selected language
-          if (tep_not_null($Qmanufacturer->value('manufacturers_url'))) {
+          if (osc_not_null($Qmanufacturer->value('manufacturers_url'))) {
             $Qupdate = $OSCOM_PDO->prepare('update :table_manufactuers_info set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
             $Qupdate->bindInt(':manufacturers_id', $_GET['manufacturer']);
             $Qupdate->bindInt(':languages_id', $_SESSION['languages_id']);
             $Qupdate->execute();
 
-            tep_redirect($Qmanufacturer->value('manufacturers_url'));
+            osc_redirect($Qmanufacturer->value('manufacturers_url'));
           }
         } else {
 // no url exists for the selected language, lets use the default language then
@@ -34,13 +34,13 @@
           $Qmanufacturer->execute();
 
           if ( $Qmanufacturer->fetch() !== false ) {
-            if (tep_not_null($Qmanufacturer->value('manufacturers_url'))) {
+            if (osc_not_null($Qmanufacturer->value('manufacturers_url'))) {
               $Qupdate = $OSCOM_PDO->prepare('update :table_manufactuers_info set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
               $Qupdate->bindInt(':manufacturers_id', $_GET['manufacturer']);
               $Qupdate->bindInt(':languages_id', $Qmanufacturer->valueInt(':languages_id'));
               $Qupdate->execute();
 
-              tep_redirect($Qmanufacturer->value('manufacturers_url'));
+              osc_redirect($Qmanufacturer->value('manufacturers_url'));
             }
           }
         }

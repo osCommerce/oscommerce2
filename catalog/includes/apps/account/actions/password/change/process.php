@@ -32,14 +32,14 @@
           $Qpw->bindInt(':customers_id', $_SESSION['customer_id']);
           $Qpw->execute();
 
-          if ( tep_validate_password($password_current, $Qpw->value('customers_password')) ) {
-            $OSCOM_PDO->perform('customers', array('customers_password' => tep_encrypt_password($password_new)), array('customers_id' => $_SESSION['customer_id']));
+          if ( osc_validate_password($password_current, $Qpw->value('customers_password')) ) {
+            $OSCOM_PDO->perform('customers', array('customers_password' => osc_encrypt_password($password_new)), array('customers_id' => $_SESSION['customer_id']));
 
             $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $_SESSION['customer_id']));
 
             $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 
-            tep_redirect(tep_href_link('account', '', 'SSL'));
+            osc_redirect(osc_href_link('account', '', 'SSL'));
           } else {
             $error = true;
 
@@ -48,7 +48,7 @@
         }
       }
 
-      tep_redirect(tep_href_link('account', 'password&change', 'SSL'));
+      osc_redirect(osc_href_link('account', 'password&change', 'SSL'));
     }
   }
 ?>

@@ -42,7 +42,7 @@ function rowOutEffect(object) {
 
 <h1><?php echo HEADING_TITLE_SHIPPING; ?></h1>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link('checkout', 'shipping&process', 'SSL'), 'post', '', true); ?>
+<?php echo osc_draw_form('checkout_address', osc_href_link('checkout', 'shipping&process', 'SSL'), 'post', '', true); ?>
 
 <div class="contentContainer">
   <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
@@ -52,17 +52,17 @@ function rowOutEffect(object) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
+        <?php echo osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
-    <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', tep_href_link('checkout', 'shipping&address', 'SSL')); ?>
+    <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?><br /><br /><?php echo osc_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', osc_href_link('checkout', 'shipping&address', 'SSL')); ?>
   </div>
 
   <div style="clear: both;"></div>
 
 <?php
-  if (tep_count_shipping_modules() > 0) {
+  if (osc_count_shipping_modules() > 0) {
 ?>
 
   <h2><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
@@ -102,7 +102,7 @@ function rowOutEffect(object) {
         <td><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></td>
       </tr>
       <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, 0)">
-        <td style="padding-left: 15px;"><?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . tep_draw_hidden_field('shipping', 'free_free'); ?></td>
+        <td style="padding-left: 15px;"><?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . osc_draw_hidden_field('shipping', 'free_free'); ?></td>
       </tr>
 
 <?php
@@ -112,7 +112,7 @@ function rowOutEffect(object) {
 ?>
 
       <tr>
-        <td colspan="3"><strong><?php echo $quotes[$i]['module']; ?></strong>&nbsp;<?php if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></td>
+        <td colspan="3"><strong><?php echo $quotes[$i]['module']; ?></strong>&nbsp;<?php if (isset($quotes[$i]['icon']) && osc_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></td>
       </tr>
 
 <?php
@@ -142,14 +142,14 @@ function rowOutEffect(object) {
             if ( ($n > 1) || ($n2 > 1) ) {
 ?>
 
-        <td><?php echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?></td>
-        <td align="right"><?php echo tep_draw_radio_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked); ?></td>
+        <td><?php echo $currencies->format(osc_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?></td>
+        <td align="right"><?php echo osc_draw_radio_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked); ?></td>
 
 <?php
             } else {
 ?>
 
-        <td align="right" colspan="2"><?php echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))) . tep_draw_hidden_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id']); ?></td>
+        <td align="right" colspan="2"><?php echo $currencies->format(osc_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))) . osc_draw_hidden_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id']); ?></td>
 
 <?php
             }
@@ -175,7 +175,7 @@ function rowOutEffect(object) {
   <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments']) ? $_SESSION['comments'] : ''); ?>
+    <?php echo osc_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments']) ? $_SESSION['comments'] : ''); ?>
   </div>
 
   <div class="contentText">
@@ -191,7 +191,7 @@ function rowOutEffect(object) {
       </table>
     </div>
 
-    <div style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
   </div>
 </div>
 

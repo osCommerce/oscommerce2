@@ -12,9 +12,9 @@
 
       $app->setContentFile('payment_address.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PAYMENT_ADDRESS, tep_href_link('checkout', 'payment&address', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_PAYMENT_ADDRESS, osc_href_link('checkout', 'payment&address', 'SSL'));
 
-      $addresses_count = tep_count_customer_address_book_entries();
+      $addresses_count = osc_count_customer_address_book_entries();
 
       $process = false;
     }

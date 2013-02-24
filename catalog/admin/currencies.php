@@ -17,19 +17,19 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['cID'])) $currency_id = tep_db_prepare_input($_GET['cID']);
-        $title = tep_db_prepare_input($_POST['title']);
-        $code = tep_db_prepare_input($_POST['code']);
-        $symbol_left = tep_db_prepare_input($_POST['symbol_left']);
-        $symbol_right = tep_db_prepare_input($_POST['symbol_right']);
-        $decimal_point = tep_db_prepare_input($_POST['decimal_point']);
-        $thousands_point = tep_db_prepare_input($_POST['thousands_point']);
-        $decimal_places = tep_db_prepare_input($_POST['decimal_places']);
-        $value = tep_db_prepare_input($_POST['value']);
+        if (isset($_GET['cID'])) $currency_id = osc_db_prepare_input($_GET['cID']);
+        $title = osc_db_prepare_input($_POST['title']);
+        $code = osc_db_prepare_input($_POST['code']);
+        $symbol_left = osc_db_prepare_input($_POST['symbol_left']);
+        $symbol_right = osc_db_prepare_input($_POST['symbol_right']);
+        $decimal_point = osc_db_prepare_input($_POST['decimal_point']);
+        $thousands_point = osc_db_prepare_input($_POST['thousands_point']);
+        $decimal_places = osc_db_prepare_input($_POST['decimal_places']);
+        $value = osc_db_prepare_input($_POST['value']);
 
         $sql_data_array = array('title' => $title,
                                 'code' => $code,
@@ -41,41 +41,41 @@
                                 'value' => $value);
 
         if ($action == 'insert') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array);
-          $currency_id = tep_db_insert_id();
+          osc_db_perform(TABLE_CURRENCIES, $sql_data_array);
+          $currency_id = osc_db_insert_id();
         } elseif ($action == 'save') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+          osc_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . osc_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
         }
 
-        tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
+        osc_redirect(osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
         break;
       case 'deleteconfirm':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = osc_db_prepare_input($_GET['cID']);
 
-        $currency_query = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $currency_query = osc_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
+        $currency = osc_db_fetch_array($currency_query);
 
         if ($currency['currencies_id'] == $currencies_id) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
         }
 
-        tep_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
+        osc_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
+        osc_redirect(osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
         break;
       case 'update':
         $server_used = CURRENCY_SERVER_PRIMARY;
 
-        $currency_query = tep_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
-        while ($currency = tep_db_fetch_array($currency_query)) {
+        $currency_query = osc_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
+        while ($currency = osc_db_fetch_array($currency_query)) {
           $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
           $rate = $quote_function($currency['code']);
 
-          if (empty($rate) && (tep_not_null(CURRENCY_SERVER_BACKUP))) {
+          if (empty($rate) && (osc_not_null(CURRENCY_SERVER_BACKUP))) {
             $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency['title'], $currency['code']), 'warning');
 
             $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
@@ -84,8 +84,8 @@
             $server_used = CURRENCY_SERVER_BACKUP;
           }
 
-          if (tep_not_null($rate)) {
-            tep_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
+          if (osc_not_null($rate)) {
+            osc_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
 
             $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency['title'], $currency['code'], $server_used), 'success');
           } else {
@@ -93,13 +93,13 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
+        osc_redirect(osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'delete':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = osc_db_prepare_input($_GET['cID']);
 
-        $currency_query = tep_db_query("select code from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $currency_query = osc_db_query("select code from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
+        $currency = osc_db_fetch_array($currency_query);
 
         $remove_currency = true;
         if ($currency['code'] == DEFAULT_CURRENCY) {
@@ -175,7 +175,7 @@ function updateForm() {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -192,16 +192,16 @@ function updateForm() {
 <?php
   $currency_query_raw = "select currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from " . TABLE_CURRENCIES . " order by title";
   $currency_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $currency_query_raw, $currency_query_numrows);
-  $currency_query = tep_db_query($currency_query_raw);
-  while ($currency = tep_db_fetch_array($currency_query)) {
+  $currency_query = osc_db_query($currency_query_raw);
+  while ($currency = osc_db_fetch_array($currency_query)) {
     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $currency['currencies_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
       $cInfo = new objectInfo($currency);
     }
 
     if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '\'">' . "\n";
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '\'">' . "\n";
     }
 
     if (DEFAULT_CURRENCY == $currency['code']) {
@@ -212,7 +212,7 @@ function updateForm() {
 ?>
                 <td class="dataTableContent"><?php echo $currency['code']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo number_format($currency['value'], 8); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo osc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . osc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -227,8 +227,8 @@ function updateForm() {
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText"><?php if (CURRENCY_SERVER_PRIMARY) { echo tep_draw_button(IMAGE_UPDATE_CURRENCIES, 'refresh', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update')); } ?></td>
-                    <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_NEW_CURRENCY, 'plus', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new')); ?></td>
+                    <td class="smallText"><?php if (CURRENCY_SERVER_PRIMARY) { echo osc_draw_button(IMAGE_UPDATE_CURRENCIES, 'refresh', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update')); } ?></td>
+                    <td class="smallText" align="right"><?php echo osc_draw_button(IMAGE_NEW_CURRENCY, 'plus', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -244,48 +244,48 @@ function updateForm() {
     case 'new':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_CURRENCY . '</strong>');
 
-      $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert'));
+      $contents = array('form' => osc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . tep_draw_pull_down_menu('cs', $currency_select_array, '', 'onchange="updateForm();"'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . tep_draw_input_field('title'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . tep_draw_input_field('code'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . tep_draw_input_field('symbol_left'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . tep_draw_input_field('symbol_right'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . tep_draw_input_field('decimal_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . tep_draw_input_field('thousands_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . tep_draw_input_field('decimal_places'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . tep_draw_input_field('value'));
-      $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID'])));
+      $contents[] = array('text' => '<br />' . osc_draw_pull_down_menu('cs', $currency_select_array, '', 'onchange="updateForm();"'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . osc_draw_input_field('title'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . osc_draw_input_field('code'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . osc_draw_input_field('symbol_left'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . osc_draw_input_field('symbol_right'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . osc_draw_input_field('decimal_point'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . osc_draw_input_field('thousands_point'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . osc_draw_input_field('decimal_places'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . osc_draw_input_field('value'));
+      $contents[] = array('text' => '<br />' . osc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
+      $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID'])));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CURRENCY . '</strong>');
 
-      $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
+      $contents = array('form' => osc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . tep_draw_input_field('title', $cInfo->title));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . tep_draw_input_field('code', $cInfo->code));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . tep_draw_input_field('symbol_left', $cInfo->symbol_left));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . tep_draw_input_field('symbol_right', $cInfo->symbol_right));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . tep_draw_input_field('decimal_point', $cInfo->decimal_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . tep_draw_input_field('thousands_point', $cInfo->thousands_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . tep_draw_input_field('decimal_places', $cInfo->decimal_places));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . tep_draw_input_field('value', $cInfo->value));
-      if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . osc_draw_input_field('title', $cInfo->title));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . osc_draw_input_field('code', $cInfo->code));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . osc_draw_input_field('symbol_left', $cInfo->symbol_left));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . osc_draw_input_field('symbol_right', $cInfo->symbol_right));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . osc_draw_input_field('decimal_point', $cInfo->decimal_point));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . osc_draw_input_field('thousands_point', $cInfo->thousands_point));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . osc_draw_input_field('decimal_places', $cInfo->decimal_places));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . osc_draw_input_field('value', $cInfo->value));
+      if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . osc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
+      $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CURRENCY . '</strong>');
 
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $cInfo->title . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_currency) ? tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=deleteconfirm'), 'primary') : '') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_currency) ? osc_draw_button(IMAGE_DELETE, 'trash', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=deleteconfirm'), 'primary') : '') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
       break;
     default:
       if (is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->title . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => osc_draw_button(IMAGE_EDIT, 'document', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit')) . osc_draw_button(IMAGE_DELETE, 'trash', osc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . ' ' . $cInfo->title);
         $contents[] = array('text' => TEXT_INFO_CURRENCY_CODE . ' ' . $cInfo->code);
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . ' ' . $cInfo->symbol_left);
@@ -293,14 +293,14 @@ function updateForm() {
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . ' ' . $cInfo->decimal_point);
         $contents[] = array('text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point);
         $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . tep_date_short($cInfo->last_updated));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . osc_date_short($cInfo->last_updated));
         $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_EXAMPLE . '<br />' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
       }
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

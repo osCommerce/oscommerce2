@@ -25,13 +25,13 @@
         }
 
         if ( $error == false ) {
-          $OSCOM_PDO->perform('customers', array('customers_password' => tep_encrypt_password($password_new)), array('customers_id' => $Qc->valueInt('customers_id')));
+          $OSCOM_PDO->perform('customers', array('customers_password' => osc_encrypt_password($password_new)), array('customers_id' => $Qc->valueInt('customers_id')));
 
           $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => 'null', 'password_reset_date' => 'null'), array('customers_info_id' => $Qc->valueInt('customers_id')));
 
           $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-          tep_redirect(tep_href_link('account', 'login', 'SSL'));
+          osc_redirect(osc_href_link('account', 'login', 'SSL'));
         }
       }
     }

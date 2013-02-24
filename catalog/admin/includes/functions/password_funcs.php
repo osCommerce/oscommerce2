@@ -13,10 +13,10 @@
 ////
 // This function validates a plain text password with a
 // salted or phpass password
-  function tep_validate_password($plain, $encrypted) {
-    if (tep_not_null($plain) && tep_not_null($encrypted)) {
-      if (tep_password_type($encrypted) == 'salt') {
-        return tep_validate_old_password($plain, $encrypted);
+  function osc_validate_password($plain, $encrypted) {
+    if (osc_not_null($plain) && osc_not_null($encrypted)) {
+      if (osc_password_type($encrypted) == 'salt') {
+        return osc_validate_old_password($plain, $encrypted);
       }
 
       if (!class_exists('PasswordHash')) {
@@ -34,8 +34,8 @@
 ////
 // This function validates a plain text password with a
 // salted password
-  function tep_validate_old_password($plain, $encrypted) {
-    if (tep_not_null($plain) && tep_not_null($encrypted)) {
+  function osc_validate_old_password($plain, $encrypted) {
+    if (osc_not_null($plain) && osc_not_null($encrypted)) {
 // split apart the hash / salt
       $stack = explode(':', $encrypted);
 
@@ -52,7 +52,7 @@
 ////
 // This function encrypts a phpass password from a plaintext
 // password.
-  function tep_encrypt_password($plain) {
+  function osc_encrypt_password($plain) {
     if (!class_exists('PasswordHash')) {
       include(DIR_WS_CLASSES . 'passwordhash.php');
     }
@@ -65,11 +65,11 @@
 ////
 // This function encrypts a salted password from a plaintext
 // password.
-  function tep_encrypt_old_password($plain) {
+  function osc_encrypt_old_password($plain) {
     $password = '';
 
     for ($i=0; $i<10; $i++) {
-      $password .= tep_rand();
+      $password .= osc_rand();
     }
 
     $salt = substr(md5($password), 0, 2);
@@ -82,7 +82,7 @@
 ////
 // This function returns the type of the encrpyted password
 // (phpass or salt)
-  function tep_password_type($encrypted) {
+  function osc_password_type($encrypted) {
     if (preg_match('/^[A-Z0-9]{32}\:[A-Z0-9]{2}$/i', $encrypted) === 1) {
       return 'salt';
     }
@@ -93,7 +93,7 @@
 ////
 // This function produces a crypted string using the APR-MD5 algorithm
 // Source: http://www.php.net/crypt
-  function tep_crypt_apr_md5($password, $salt = null) {
+  function osc_crypt_apr_md5($password, $salt = null) {
     if (empty($salt)) {
       $salt_string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 

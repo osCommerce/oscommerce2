@@ -11,12 +11,12 @@
       global $OSCOM_PDO;
 
       if ( !isset($_SESSION['customer_id']) ) {
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
 // Check download.php was called with proper GET parameters
       if ( (isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']) && !is_numeric($_GET['id'])) ) {
-        tep_redirect(tep_href_link());
+        osc_redirect(osc_href_link());
       }
 
 // Check that order_id, customer_id and filename match
@@ -28,7 +28,7 @@
       $Qdownload->execute();
 
       if ( $Qdownload->fetch() === false ) {
-        tep_redirect(tep_href_link());
+        osc_redirect(osc_href_link());
       }
 
 // MySQL 3.22 does not have INTERVAL
@@ -60,13 +60,13 @@
       if (DOWNLOAD_BY_REDIRECT == 'true') {
 // This will work only on Unix/Linux hosts
         $this->_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
-        $tempdir = tep_create_random_value(20);
+        $tempdir = osc_create_random_value(20);
         umask(0000);
         mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
         symlink(DIR_FS_DOWNLOAD . $Qdownload->value('orders_products_filename'), DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
 
         if (file_exists(DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'))) {
-          tep_redirect(tep_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename')));
+          osc_redirect(osc_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename')));
         }
       }
 

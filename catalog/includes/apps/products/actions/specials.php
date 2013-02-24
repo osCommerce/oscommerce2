@@ -12,7 +12,7 @@
 
       $app->setContentFile('specials.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SPECIALS, tep_href_link('products', 'specials'));
+      $breadcrumb->add(NAVBAR_TITLE_SPECIALS, osc_href_link('products', 'specials'));
     }
   }
 ?>

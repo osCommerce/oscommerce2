@@ -15,7 +15,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('password_forgotten', tep_href_link('account', 'password&forgotten&process', 'SSL'), 'post', '', true); ?>
+<?php echo osc_draw_form('password_forgotten', osc_href_link('account', 'password&forgotten&process', 'SSL'), 'post', '', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
@@ -24,15 +24,15 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_input_field('email_address'); ?></td>
       </tr>
     </table>
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', 'login', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', 'login', 'SSL')); ?>
   </div>
 </div>
 

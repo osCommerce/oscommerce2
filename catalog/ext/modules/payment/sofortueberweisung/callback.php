@@ -52,17 +52,17 @@
   $comment = '';
 
   if ($pw != MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT) {
-    $comment = 'ungültiges Benachrichtigung Passwort' . "\n";
+    $comment = 'ungï¿½ltiges Benachrichtigung Passwort' . "\n";
   }
 
   // check if order exists
-  $order_query = tep_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . (int)$kunden_var_0 . "' and customers_id = '" . (int)$kunden_var_1 . "'");
-  if (tep_db_num_rows($order_query) > 0) {
-    $order = tep_db_fetch_array($order_query);
+  $order_query = osc_db_query("select * from " . TABLE_ORDERS . " where orders_id = '" . (int)$kunden_var_0 . "' and customers_id = '" . (int)$kunden_var_1 . "'");
+  if (osc_db_num_rows($order_query) > 0) {
+    $order = osc_db_fetch_array($order_query);
 
     if ($order['orders_status'] == MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PREPARE_ORDER_STATUS_ID) {
-      $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" .  (int)$kunden_var_0 . "' and class = 'ot_total' limit 1");
-      $total = tep_db_fetch_array($total_query);
+      $total_query = osc_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" .  (int)$kunden_var_0 . "' and class = 'ot_total' limit 1");
+      $total = osc_db_fetch_array($total_query);
 
       $order_total_integer = number_format($total['value'] * $currencies->get_value('EUR'), 2, '.','')*100;
       if ($order_total_integer < 1) {
@@ -74,9 +74,9 @@
       }
 
       if ((int)$betrag_integer == (int)$order_total_integer) {
-        $comment = 'Zahlung durch Sofortüberweisung Benachrichtigung bestätigt!';
+        $comment = 'Zahlung durch Sofortï¿½berweisung Benachrichtigung bestï¿½tigt!';
       } else {
-        $comment = "Sofortüberweisungs Transaktionscheck fehlgeschlagen. Bitte manuell überprüfen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
+        $comment = "Sofortï¿½berweisungs Transaktionscheck fehlgeschlagen. Bitte manuell ï¿½berprï¿½fen\n" . ($betrag_integer/100) . '!=' . ($order_total_integer/100);
       }
 
       if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
@@ -91,9 +91,9 @@
                               'customer_notified' => '0',
                               'comments' => $comment);
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status . "', last_modified = now() where orders_id = '" . (int)$kunden_var_0 . "'");
+      osc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status . "', last_modified = now() where orders_id = '" . (int)$kunden_var_0 . "'");
     }
   }
 ?>
