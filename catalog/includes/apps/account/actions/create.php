@@ -14,7 +14,7 @@
 
       $app->setContentFile('create.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CREATE, tep_href_link('account', 'create', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_CREATE, osc_href_link('account', 'create', 'SSL'));
     }
   }
 ?>

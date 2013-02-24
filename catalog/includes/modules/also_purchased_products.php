@@ -11,23 +11,23 @@
 */
 
   if (isset($_GET['products_id'])) {
-    $orders_query = tep_db_query("select p.products_id, p.products_image from " . TABLE_ORDERS_PRODUCTS . " opa, " . TABLE_ORDERS_PRODUCTS . " opb, " . TABLE_ORDERS . " o, " . TABLE_PRODUCTS . " p where opa.products_id = '" . (int)$_GET['products_id'] . "' and opa.orders_id = opb.orders_id and opb.products_id != '" . (int)$_GET['products_id'] . "' and opb.products_id = p.products_id and opb.orders_id = o.orders_id and p.products_status = '1' group by p.products_id order by o.date_purchased desc limit " . MAX_DISPLAY_ALSO_PURCHASED);
-    $num_products_ordered = tep_db_num_rows($orders_query);
+    $orders_query = osc_db_query("select p.products_id, p.products_image from " . TABLE_ORDERS_PRODUCTS . " opa, " . TABLE_ORDERS_PRODUCTS . " opb, " . TABLE_ORDERS . " o, " . TABLE_PRODUCTS . " p where opa.products_id = '" . (int)$_GET['products_id'] . "' and opa.orders_id = opb.orders_id and opb.products_id != '" . (int)$_GET['products_id'] . "' and opb.products_id = p.products_id and opb.orders_id = o.orders_id and p.products_status = '1' group by p.products_id order by o.date_purchased desc limit " . MAX_DISPLAY_ALSO_PURCHASED);
+    $num_products_ordered = osc_db_num_rows($orders_query);
     if ($num_products_ordered >= MIN_DISPLAY_ALSO_PURCHASED) {
       $counter = 0;
       $col = 0;
 
       $also_pur_prods_content = '<table border="0" width="100%" cellspacing="0" cellpadding="2" class="ui-widget-content ui-corner-bottom">';
-      while ($orders = tep_db_fetch_array($orders_query)) {
+      while ($orders = osc_db_fetch_array($orders_query)) {
         $counter++;
 
-        $orders['products_name'] = tep_get_products_name($orders['products_id']);
+        $orders['products_name'] = osc_get_products_name($orders['products_id']);
 
         if ($col === 0) {
           $also_pur_prods_content .= '<tr>';
         }
 
-        $also_pur_prods_content .= '<td width="33%" valign="top" align="center"><a href="' . tep_href_link('products', 'id=' . $orders['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link('products', 'id=' . $orders['products_id']) . '">' . $orders['products_name'] . '</a></td>';
+        $also_pur_prods_content .= '<td width="33%" valign="top" align="center"><a href="' . osc_href_link('products', 'id=' . $orders['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . osc_href_link('products', 'id=' . $orders['products_id']) . '">' . $orders['products_name'] . '</a></td>';
 
         $col ++;
 

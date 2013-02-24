@@ -16,27 +16,27 @@
       array(
         'code' => FILENAME_COUNTRIES,
         'title' => BOX_TAXES_COUNTRIES,
-        'link' => tep_href_link(FILENAME_COUNTRIES)
+        'link' => osc_href_link(FILENAME_COUNTRIES)
       ),
       array(
         'code' => FILENAME_ZONES,
         'title' => BOX_TAXES_ZONES,
-        'link' => tep_href_link(FILENAME_ZONES)
+        'link' => osc_href_link(FILENAME_ZONES)
       ),
       array(
         'code' => FILENAME_GEO_ZONES,
         'title' => BOX_TAXES_GEO_ZONES,
-        'link' => tep_href_link(FILENAME_GEO_ZONES)
+        'link' => osc_href_link(FILENAME_GEO_ZONES)
       ),
       array(
         'code' => FILENAME_TAX_CLASSES,
         'title' => BOX_TAXES_TAX_CLASSES,
-        'link' => tep_href_link(FILENAME_TAX_CLASSES)
+        'link' => osc_href_link(FILENAME_TAX_CLASSES)
       ),
       array(
         'code' => FILENAME_TAX_RATES,
         'title' => BOX_TAXES_TAX_RATES,
-        'link' => tep_href_link(FILENAME_TAX_RATES)
+        'link' => osc_href_link(FILENAME_TAX_RATES)
       )
     )
   );

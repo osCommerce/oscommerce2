@@ -23,7 +23,7 @@
 /*
 // if the customer is not logged on, redirect them to the shopping cart page
   if (!isset($_SESSION['customer_id'])) {
-    tep_redirect(tep_href_link('cart'));
+    osc_redirect(osc_href_link('cart'));
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'update')) {
@@ -47,7 +47,7 @@
       }
     }
 
-    tep_redirect(tep_href_link(null, $notify_string));
+    osc_redirect(osc_href_link(null, $notify_string));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);

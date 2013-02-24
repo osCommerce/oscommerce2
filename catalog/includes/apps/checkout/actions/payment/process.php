@@ -11,7 +11,7 @@
       global $free_shipping, $shipping_modules;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
-        if ( tep_not_null($_POST['comments']) ) {
+        if ( osc_not_null($_POST['comments']) ) {
           $_SESSION['comments'] = trim($_POST['comments']);
         }
 
@@ -20,7 +20,7 @@
         }
       }
 
-      tep_redirect(tep_href_link('checkout', '', 'SSL'));
+      osc_redirect(osc_href_link('checkout', '', 'SSL'));
     }
   }
 ?>

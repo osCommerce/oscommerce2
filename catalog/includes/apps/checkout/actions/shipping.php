@@ -26,7 +26,7 @@
         $_SESSION['shipping'] = false;
         $_SESSION['sendto'] = false;
 
-        tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
+        osc_redirect(osc_href_link('checkout', 'payment', 'SSL'));
       }
 
       $total_weight = $_SESSION['cart']->show_weight();
@@ -70,7 +70,7 @@
 // get all available shipping quotes
       $quotes = $shipping_modules->quote();
 
-      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, tep_href_link('checkout', 'shipping', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('checkout', 'shipping', 'SSL'));
     }
   }
 ?>

@@ -50,8 +50,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -89,46 +89,46 @@
 
       $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $_SESSION['currency']);
 
-      $process_button_string .= tep_draw_hidden_field('x_login', substr(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, 0, 20)) .
-                                tep_draw_hidden_field('x_version', '3.1') .
-                                tep_draw_hidden_field('x_show_form', 'PAYMENT_FORM') .
-                                tep_draw_hidden_field('x_relay_response', 'TRUE') .
-                                tep_draw_hidden_field('x_relay_url', tep_href_link('checkout', 'process', 'SSL', false)) .
-                                tep_draw_hidden_field('x_first_name', substr($order->billing['firstname'], 0, 50)) .
-                                tep_draw_hidden_field('x_last_name', substr($order->billing['lastname'], 0, 50)) .
-                                tep_draw_hidden_field('x_company', substr($order->billing['company'], 0, 50)) .
-                                tep_draw_hidden_field('x_address', substr($order->billing['street_address'], 0, 60)) .
-                                tep_draw_hidden_field('x_city', substr($order->billing['city'], 0, 40)) .
-                                tep_draw_hidden_field('x_state', substr($order->billing['state'], 0, 40)) .
-                                tep_draw_hidden_field('x_zip', substr($order->billing['postcode'], 0, 20)) .
-                                tep_draw_hidden_field('x_country', substr($order->billing['country']['title'], 0, 60)) .
-                                tep_draw_hidden_field('x_phone', substr($order->customer['telephone'], 0, 25)) .
-                                tep_draw_hidden_field('x_cust_id', substr($_SESSION['customer_id'], 0, 20)) .
-                                tep_draw_hidden_field('x_customer_ip', tep_get_ip_address()) .
-                                tep_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
-                                tep_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .
-                                tep_draw_hidden_field('x_amount', substr($this->format_raw($order->info['total']), 0, 15)) .
-                                tep_draw_hidden_field('x_currency_code', substr($_SESSION['currency'], 0, 3)) .
-                                tep_draw_hidden_field('x_method', 'CC') .
-                                tep_draw_hidden_field('x_type', ((MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'));
+      $process_button_string .= osc_draw_hidden_field('x_login', substr(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, 0, 20)) .
+                                osc_draw_hidden_field('x_version', '3.1') .
+                                osc_draw_hidden_field('x_show_form', 'PAYMENT_FORM') .
+                                osc_draw_hidden_field('x_relay_response', 'TRUE') .
+                                osc_draw_hidden_field('x_relay_url', osc_href_link('checkout', 'process', 'SSL', false)) .
+                                osc_draw_hidden_field('x_first_name', substr($order->billing['firstname'], 0, 50)) .
+                                osc_draw_hidden_field('x_last_name', substr($order->billing['lastname'], 0, 50)) .
+                                osc_draw_hidden_field('x_company', substr($order->billing['company'], 0, 50)) .
+                                osc_draw_hidden_field('x_address', substr($order->billing['street_address'], 0, 60)) .
+                                osc_draw_hidden_field('x_city', substr($order->billing['city'], 0, 40)) .
+                                osc_draw_hidden_field('x_state', substr($order->billing['state'], 0, 40)) .
+                                osc_draw_hidden_field('x_zip', substr($order->billing['postcode'], 0, 20)) .
+                                osc_draw_hidden_field('x_country', substr($order->billing['country']['title'], 0, 60)) .
+                                osc_draw_hidden_field('x_phone', substr($order->customer['telephone'], 0, 25)) .
+                                osc_draw_hidden_field('x_cust_id', substr($_SESSION['customer_id'], 0, 20)) .
+                                osc_draw_hidden_field('x_customer_ip', osc_get_ip_address()) .
+                                osc_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
+                                osc_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .
+                                osc_draw_hidden_field('x_amount', substr($this->format_raw($order->info['total']), 0, 15)) .
+                                osc_draw_hidden_field('x_currency_code', substr($_SESSION['currency'], 0, 3)) .
+                                osc_draw_hidden_field('x_method', 'CC') .
+                                osc_draw_hidden_field('x_type', ((MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'));
 
       if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
-        $process_button_string .= tep_draw_hidden_field('x_ship_to_first_name', substr($order->delivery['firstname'], 0, 50)) .
-                                  tep_draw_hidden_field('x_ship_to_last_name', substr($order->delivery['lastname'], 0, 50)) .
-                                  tep_draw_hidden_field('x_ship_to_company', substr($order->delivery['company'], 0, 50)) .
-                                  tep_draw_hidden_field('x_ship_to_address', substr($order->delivery['street_address'], 0, 60)) .
-                                  tep_draw_hidden_field('x_ship_to_city', substr($order->delivery['city'], 0, 40)) .
-                                  tep_draw_hidden_field('x_ship_to_state', substr($order->delivery['state'], 0, 40)) .
-                                  tep_draw_hidden_field('x_ship_to_zip', substr($order->delivery['postcode'], 0, 20)) .
-                                  tep_draw_hidden_field('x_ship_to_country', substr($order->delivery['country']['title'], 0, 60));
+        $process_button_string .= osc_draw_hidden_field('x_ship_to_first_name', substr($order->delivery['firstname'], 0, 50)) .
+                                  osc_draw_hidden_field('x_ship_to_last_name', substr($order->delivery['lastname'], 0, 50)) .
+                                  osc_draw_hidden_field('x_ship_to_company', substr($order->delivery['company'], 0, 50)) .
+                                  osc_draw_hidden_field('x_ship_to_address', substr($order->delivery['street_address'], 0, 60)) .
+                                  osc_draw_hidden_field('x_ship_to_city', substr($order->delivery['city'], 0, 40)) .
+                                  osc_draw_hidden_field('x_ship_to_state', substr($order->delivery['state'], 0, 40)) .
+                                  osc_draw_hidden_field('x_ship_to_zip', substr($order->delivery['postcode'], 0, 20)) .
+                                  osc_draw_hidden_field('x_ship_to_country', substr($order->delivery['country']['title'], 0, 60));
       }
 
       if (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE == 'Test') {
-        $process_button_string .= tep_draw_hidden_field('x_test_request', 'TRUE');
+        $process_button_string .= osc_draw_hidden_field('x_test_request', 'TRUE');
       }
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
+        $process_button_string .= osc_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|>' . substr($order->products[$i]['name'], 0, 255) . '<|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
       $tax_value = 0;
@@ -141,11 +141,11 @@
       }
 
       if ($tax_value > 0) {
-        $process_button_string .= tep_draw_hidden_field('x_tax', $this->format_raw($tax_value));
+        $process_button_string .= osc_draw_hidden_field('x_tax', $this->format_raw($tax_value));
       }
 
-      $process_button_string .= tep_draw_hidden_field('x_freight', $this->format_raw($order->info['shipping_cost'])) .
-                                tep_draw_hidden_field(session_name(), session_id());
+      $process_button_string .= osc_draw_hidden_field('x_freight', $this->format_raw($order->info['shipping_cost'])) .
+                                osc_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }
@@ -156,7 +156,7 @@
       $error = false;
 
       if ($_POST['x_response_code'] == '1') {
-        if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($_POST['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) {
+        if (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($_POST['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) {
           $error = 'verification';
         } elseif ($_POST['x_amount'] != $this->format_raw($order->info['total'])) {
           $error = 'verification';
@@ -168,7 +168,7 @@
       }
 
       if ($error != false) {
-        tep_redirect(tep_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=' . $error, 'SSL', true, false));
+        osc_redirect(osc_href_link('checkout', 'payment&payment_error=' . $this->code . '&error=' . $error, 'SSL', true, false));
       }
     }
 
@@ -201,27 +201,27 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Authorize.net Credit Card SIM', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS', 'False', 'Do you want to accept Authorize.net Credit Card SIM payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Login ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID', '', 'The login ID used for the Authorize.net service', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY', '', 'Transaction key used for encrypting data', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Hash', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH', '', 'The MD5 hash value to verify transactions with', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER', 'Live', 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE', 'Test', 'Transaction mode used for processing orders', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD', 'Authorization', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Capture\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Authorize.net Credit Card SIM', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS', 'False', 'Do you want to accept Authorize.net Credit Card SIM payments?', '6', '0', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Login ID', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID', '', 'The login ID used for the Authorize.net service', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Transaction Key', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY', '', 'Transaction key used for encrypting data', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('MD5 Hash', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH', '', 'The MD5 hash value to verify transactions with', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER', 'Live', 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.', '6', '0', 'osc_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE', 'Test', 'Transaction mode used for processing orders', '6', '0', 'osc_cfg_select_option(array(\'Live\', \'Test\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD', 'Authorization', 'The processing method to use for each transaction.', '6', '0', 'osc_cfg_select_option(array(\'Authorization\', \'Capture\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'osc_get_zone_class_title', 'osc_cfg_pull_down_zone_classes(', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -257,9 +257,9 @@
 
       $fingerprint = $this->_hmac($x_tran_key, $loginid . '^' . $sequence . '^' . $tstamp . '^' . $amount . '^' . $currency);
 
-      return tep_draw_hidden_field('x_fp_sequence', $sequence) .
-             tep_draw_hidden_field('x_fp_timestamp', $tstamp) .
-             tep_draw_hidden_field('x_fp_hash', $fingerprint);
+      return osc_draw_hidden_field('x_fp_sequence', $sequence) .
+             osc_draw_hidden_field('x_fp_timestamp', $tstamp) .
+             osc_draw_hidden_field('x_fp_hash', $fingerprint);
     }
 
 // format prices without currency formatting
@@ -274,7 +274,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

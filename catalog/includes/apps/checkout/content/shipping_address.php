@@ -64,7 +64,7 @@ function check_form_optional(form_name) {
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link('checkout', 'shipping&address&process', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
+<?php echo osc_draw_form('checkout_address', osc_href_link('checkout', 'shipping&address&process', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
 
 <div class="contentContainer">
 
@@ -79,7 +79,7 @@ function check_form_optional(form_name) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
+        <?php echo osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
@@ -108,9 +108,9 @@ function check_form_optional(form_name) {
 <?php
       $radio_buttons = 0;
 
-      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-      while ($addresses = tep_db_fetch_array($addresses_query)) {
-        $format_id = tep_get_address_format_id($addresses['country_id']);
+      $addresses_query = osc_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+      while ($addresses = osc_db_fetch_array($addresses_query)) {
+        $format_id = osc_get_address_format_id($addresses['country_id']);
 
        if ($addresses['address_book_id'] == $_SESSION['sendto']) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
@@ -120,10 +120,10 @@ function check_form_optional(form_name) {
 ?>
 
         <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $_SESSION['sendto'])); ?></td>
+        <td align="right"><?php echo osc_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $_SESSION['sendto'])); ?></td>
       </tr>
       <tr>
-        <td colspan="2" style="padding-left: 15px;"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></td>
+        <td colspan="2" style="padding-left: 15px;"><?php echo osc_address_format($format_id, $addresses, true, ' ', ', '); ?></td>
       </tr>
 
 <?php
@@ -159,14 +159,14 @@ function check_form_optional(form_name) {
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . osc_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
       </table>
     </div>
 
-    <div style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
   </div>
 
 <script type="text/javascript">
@@ -180,7 +180,7 @@ $('#coProgressBar').progressbar({
 ?>
 
   <div class="contentText">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('checkout', 'shipping&address', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('checkout', 'shipping&address', 'SSL')); ?>
   </div>
 
 <?php

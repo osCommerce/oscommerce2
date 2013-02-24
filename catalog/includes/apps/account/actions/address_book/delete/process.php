@@ -18,7 +18,7 @@
 
         $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
 
-        tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+        osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }
     }
   }

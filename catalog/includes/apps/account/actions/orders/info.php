@@ -13,7 +13,7 @@
       global $OSCOM_PDO, $order, $breadcrumb;
 
       if ( !isset($_GET['id']) || !is_numeric($_GET['id']) ) {
-        tep_redirect(tep_href_link('account', 'orders', 'SSL'));
+        osc_redirect(osc_href_link('account', 'orders', 'SSL'));
       }
 
       $Qcheck = $OSCOM_PDO->prepare('select o.customers_id from :table_orders o, :table_orders_status s where o.orders_id = :orders_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1"');
@@ -22,14 +22,14 @@
       $Qcheck->execute();
 
       if ( ($Qcheck->fetch() === false) || ($Qcheck->value('customers_id') != $_SESSION['customer_id']) ) {
-        tep_redirect(tep_href_link('account', 'orders', 'SSL'));
+        osc_redirect(osc_href_link('account', 'orders', 'SSL'));
       }
 
       $order = new order($_GET['id']);
 
       $app->setContentFile('orders_info.php');
 
-      $breadcrumb->add(sprintf(NAVBAR_TITLE_ORDERS_INFO, $_GET['id']), tep_href_link('account', 'orders&info&id=' . $_GET['id'], 'SSL'));
+      $breadcrumb->add(sprintf(NAVBAR_TITLE_ORDERS_INFO, $_GET['id']), osc_href_link('account', 'orders&info&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

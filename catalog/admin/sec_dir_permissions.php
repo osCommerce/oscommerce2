@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  function tep_opendir($path) {
+  function osc_opendir($path) {
     $path = rtrim($path, '/') . '/';
 
     $exclude_array = array('.', '..', '.DS_Store', 'Thumbs.db');
@@ -24,12 +24,12 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => tep_is_writable($path . $filename));
+                        'writable' => osc_is_writable($path . $filename));
 
           $result[] = $file;
 
           if ($file['is_dir'] == true) {
-            $result = array_merge($result, tep_opendir($path . $filename));
+            $result = array_merge($result, osc_opendir($path . $filename));
           }
         }
       }
@@ -42,8 +42,8 @@
 
   $whitelist_array = array();
 
-  $whitelist_query = tep_db_query("select directory from " . TABLE_SEC_DIRECTORY_WHITELIST);
-  while ($whitelist = tep_db_fetch_array($whitelist_query)) {
+  $whitelist_query = osc_db_query("select directory from " . TABLE_SEC_DIRECTORY_WHITELIST);
+  while ($whitelist = osc_db_fetch_array($whitelist_query)) {
     $whitelist_array[] = $whitelist['directory'];
   }
 
@@ -65,7 +65,7 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -79,13 +79,13 @@
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RECOMMENDED; ?></td>
               </tr>
 <?php
-  foreach (tep_opendir(DIR_FS_CATALOG) as $file) {
+  foreach (osc_opendir(DIR_FS_CATALOG) as $file) {
     if ($file['is_dir']) {
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo substr($file['name'], strlen(DIR_FS_CATALOG)); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo osc_image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo osc_image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
               </tr>
 <?php
     }

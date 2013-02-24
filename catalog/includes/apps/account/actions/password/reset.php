@@ -26,7 +26,7 @@
         $email_address = isset($_GET['e']) ? trim($_GET['e']) : null;
         $password_key = isset($_GET['k']) ? trim($_GET['k']) : null;
 
-        if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
+        if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (osc_validate_email($email_address) == false) ) {
           $error = true;
 
           $messageStack->add_session('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
@@ -54,12 +54,12 @@
       }
 
       if ( $error == true ) {
-        tep_redirect(tep_href_link('account', 'password&forgotten'));
+        osc_redirect(osc_href_link('account', 'password&forgotten'));
       }
 
       $app->setContentFile('password_reset.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_RESET, tep_href_link('account', 'password&reset', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_RESET, osc_href_link('account', 'password&reset', 'SSL'));
     }
   }
 ?>

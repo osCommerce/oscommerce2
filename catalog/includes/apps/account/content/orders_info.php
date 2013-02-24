@@ -15,7 +15,7 @@
   <div class="contentText">
     <div>
       <span style="float: right;"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span>
-      <?php echo HEADING_ORDER_DATE . ' ' . tep_date_long($order->info['date_purchased']); ?>
+      <?php echo HEADING_ORDER_DATE . ' ' . osc_date_long($order->info['date_purchased']); ?>
     </div>
 
     <table border="0" width="100%" cellspacing="1" cellpadding="2">
@@ -29,10 +29,10 @@
             <td><strong><?php echo HEADING_DELIVERY_ADDRESS; ?></strong></td>
           </tr>
           <tr>
-            <td><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
+            <td><?php echo osc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
           </tr>
 <?php
-    if (tep_not_null($order->info['shipping_method'])) {
+    if (osc_not_null($order->info['shipping_method'])) {
 ?>
           <tr>
             <td><strong><?php echo HEADING_SHIPPING_METHOD; ?></strong></td>
@@ -80,10 +80,10 @@
     echo '</td>' . "\n";
 
     if (sizeof($order->info['tax_groups']) > 1) {
-      echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+      echo '            <td valign="top" align="right">' . osc_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
     }
 
-    echo '            <td align="right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
+    echo '            <td align="right" valign="top">' . $currencies->format(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
          '          </tr>' . "\n";
   }
 ?>
@@ -102,7 +102,7 @@
             <td><strong><?php echo HEADING_BILLING_ADDRESS; ?></strong></td>
           </tr>
           <tr>
-            <td><?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
+            <td><?php echo osc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
           </tr>
           <tr>
             <td><strong><?php echo HEADING_PAYMENT_METHOD; ?></strong></td>
@@ -132,12 +132,12 @@
       <tr>
         <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
-  $statuses_query = tep_db_query("select os.orders_status_name, osh.date_added, osh.comments from " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh where osh.orders_id = '" . (int)$_GET['id'] . "' and osh.orders_status_id = os.orders_status_id and os.language_id = '" . (int)$_SESSION['languages_id'] . "' and os.public_flag = '1' order by osh.date_added");
-  while ($statuses = tep_db_fetch_array($statuses_query)) {
+  $statuses_query = osc_db_query("select os.orders_status_name, osh.date_added, osh.comments from " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh where osh.orders_id = '" . (int)$_GET['id'] . "' and osh.orders_status_id = os.orders_status_id and os.language_id = '" . (int)$_SESSION['languages_id'] . "' and os.public_flag = '1' order by osh.date_added");
+  while ($statuses = osc_db_fetch_array($statuses_query)) {
     echo '          <tr>' . "\n" .
-         '            <td valign="top" width="70">' . tep_date_short($statuses['date_added']) . '</td>' . "\n" .
+         '            <td valign="top" width="70">' . osc_date_short($statuses['date_added']) . '</td>' . "\n" .
          '            <td valign="top" width="70">' . $statuses['orders_status_name'] . '</td>' . "\n" .
-         '            <td valign="top">' . (empty($statuses['comments']) ? '&nbsp;' : nl2br(tep_output_string_protected($statuses['comments']))) . '</td>' . "\n" .
+         '            <td valign="top">' . (empty($statuses['comments']) ? '&nbsp;' : nl2br(osc_output_string_protected($statuses['comments']))) . '</td>' . "\n" .
          '          </tr>' . "\n";
   }
 ?>
@@ -151,6 +151,6 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', tep_get_all_get_params(array('id')), 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', osc_get_all_get_params(array('id')), 'SSL')); ?>
   </div>
 </div>

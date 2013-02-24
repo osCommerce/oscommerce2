@@ -24,19 +24,19 @@
             if ( $actionRecorder->canPerform() ) {
               $actionRecorder->record();
 
-              $reset_key = tep_create_random_value(40);
+              $reset_key = osc_create_random_value(40);
 
               $OSCOM_PDO->perform('customers_info', array('password_reset_key' => $reset_key, 'password_reset_date' => 'now()'), array('customers_info_id' => $Qc->valueInt('customers_id')));
 
-              $reset_key_url = tep_href_link('account', 'password&reset&e=' . urlencode($email_address) . '&k=' . $reset_key, 'SSL', false);
+              $reset_key_url = osc_href_link('account', 'password&reset&e=' . urlencode($email_address) . '&k=' . $reset_key, 'SSL', false);
 
               if ( strpos($reset_key_url, '&amp;') !== false ) {
                 $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
               }
 
-              tep_mail($Qc->value('customers_firstname') . ' ' . $Qc->value('customers_lastname'), $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+              osc_mail($Qc->value('customers_firstname') . ' ' . $Qc->value('customers_lastname'), $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-              tep_redirect(tep_href_link('account', 'password&reset&initiated', 'SSL'));
+              osc_redirect(osc_href_link('account', 'password&reset&initiated', 'SSL'));
             } else {
               $actionRecorder->record(false);
 

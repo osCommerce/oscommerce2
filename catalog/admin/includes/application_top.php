@@ -23,7 +23,7 @@
     include('includes/configure.php');
   }
 
-// Define the project version --- obsolete, now retrieved with tep_get_version()
+// Define the project version --- obsolete, now retrieved with osc_get_version()
   define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
 
 // some code to solve compatibility issues
@@ -53,11 +53,11 @@
   require(DIR_WS_FUNCTIONS . 'database.php');
 
 // make a connection to the database... now
-  tep_db_connect() or die('Unable to connect to database server!');
+  osc_db_connect() or die('Unable to connect to database server!');
 
 // set application wide parameters
-  $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
+  $configuration_query = osc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
+  while ($configuration = osc_db_fetch_array($configuration_query)) {
     define($configuration['cfgKey'], $configuration['cfgValue']);
   }
 
@@ -84,14 +84,14 @@
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // lets start our session
-  tep_session_start();
+  osc_session_start();
 
 // set the language
   if (!isset($_SESSION['language']) || isset($_GET['language'])) {
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
+    if (isset($_GET['language']) && osc_not_null($_GET['language'])) {
       $lng->set_language($_GET['language']);
     } else {
       $lng->get_browser_language();
@@ -136,7 +136,7 @@
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
+      osc_redirect(osc_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
@@ -186,8 +186,8 @@
     $cPath = '';
   }
 
-  if (tep_not_null($cPath)) {
-    $cPath_array = tep_parse_category_path($cPath);
+  if (osc_not_null($cPath)) {
+    $cPath_array = osc_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {

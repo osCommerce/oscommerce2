@@ -11,11 +11,11 @@
       global $free_shipping, $shipping_modules;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
-        if ( tep_not_null($_POST['comments']) ) {
+        if ( osc_not_null($_POST['comments']) ) {
           $_SESSION['comments'] = trim($_POST['comments']);
         }
 
-        if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+        if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
             $_SESSION['shipping'] = $_POST['shipping'];
 
@@ -36,7 +36,7 @@
                                                 'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                                 'cost' => $quote[0]['methods'][0]['cost']);
 
-                  tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
+                  osc_redirect(osc_href_link('checkout', 'payment', 'SSL'));
                 }
               }
             } else {
@@ -46,11 +46,11 @@
         } else {
           $_SESSION['shipping'] = false;
 
-          tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
+          osc_redirect(osc_href_link('checkout', 'payment', 'SSL'));
         }
       }
 
-      tep_redirect(tep_href_link('checkout', '', 'SSL'));
+      osc_redirect(osc_href_link('checkout', '', 'SSL'));
     }
   }
 ?>

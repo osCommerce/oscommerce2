@@ -25,17 +25,17 @@
           $error = true;
         } else {
 // Check that password is good
-          if ( !tep_validate_password($password, $Qcheck->value('customers_password')) ) {
+          if ( !osc_validate_password($password, $Qcheck->value('customers_password')) ) {
             $error = true;
           } else {
             if ( SESSION_RECREATE == 'True' ) {
-              tep_session_recreate();
+              osc_session_recreate();
             }
 
 // migrate old hashed password to new phpass password
-            if ( tep_password_type($Qcheck->value('customers_password')) != 'phpass' ) {
+            if ( osc_password_type($Qcheck->value('customers_password')) != 'phpass' ) {
               $Qupdate = $OSCOM_PDO->prepare('update :table_customers set customers_password = :customers_password where customers_id = :customers_id');
-              $Qupdate->bindValue(':customers_password', tep_encrypt_password($password));
+              $Qupdate->bindValue(':customers_password', osc_encrypt_password($password));
               $Qupdate->bindInt(':customers_id', $Qcheck->valueInt('customers_id'));
               $Qupdate->execute();
             }
@@ -56,19 +56,19 @@
             $Qupdate->execute();
 
 // reset session token
-            $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+            $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
 
 // restore cart contents
             $_SESSION['cart']->restore_contents();
 
             if ( sizeof($_SESSION['navigation']->snapshot) > 0 ) {
-              $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+              $origin_href = osc_href_link($_SESSION['navigation']->snapshot['page'], osc_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
 
               $_SESSION['navigation']->clear_snapshot();
 
-              tep_redirect($origin_href);
+              osc_redirect($origin_href);
             } else {
-              tep_redirect(tep_href_link());
+              osc_redirect(osc_href_link());
             }
           }
         }
