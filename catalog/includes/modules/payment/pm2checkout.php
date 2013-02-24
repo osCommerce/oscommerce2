@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -78,11 +78,11 @@
     }
 
     function process_button() {
-      global $HTTP_POST_VARS, $customer_id, $currencies, $currency, $order, $languages_id, $cartID;
+      global $currencies, $order;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
-                               tep_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $customer_id . '-' . $cartID) .
+                               tep_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID']) .
                                tep_draw_hidden_field('fixed', 'Y') .
                                tep_draw_hidden_field('first_name', $order->billing['firstname']) .
                                tep_draw_hidden_field('last_name', $order->billing['lastname']) .
@@ -116,7 +116,7 @@
 
       $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       switch (strtolower($lang['code'])) {
@@ -132,15 +132,13 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS;
-
-      if ( ($HTTP_POST_VARS['credit_card_processed'] != 'Y') && ($HTTP_POST_VARS['credit_card_processed'] != 'K') ){
+      if ( ($_POST['credit_card_processed'] != 'Y') && ($_POST['credit_card_processed'] != 'K') ){
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
       }
     }
 
     function after_process() {
-      global $HTTP_POST_VARS, $order, $insert_id;
+      global $order, $insert_id;
 
       if (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Test') {
         $sql_data_array = array('orders_id' => (int)$insert_id, 
@@ -154,7 +152,7 @@
 
 // The KEY value returned from the gateway is intentionally broken for Test transactions so it is only checked in Production mode
       if (tep_not_null(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD) && (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Production')) {
-        if (strtoupper(md5(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD . MODULE_PAYMENT_2CHECKOUT_LOGIN . $HTTP_POST_VARS['order_number'] . $this->order_format($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY))) != strtoupper($HTTP_POST_VARS['key'])) {
+        if (strtoupper(md5(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD . MODULE_PAYMENT_2CHECKOUT_LOGIN . $_POST['order_number'] . $this->order_format($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY))) != strtoupper($_POST['key'])) {
           $sql_data_array = array('orders_id' => (int)$insert_id, 
                                   'orders_status_id' => (int)$order->info['order_status'], 
                                   'date_added' => 'now()', 
@@ -203,10 +201,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

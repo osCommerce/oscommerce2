@@ -10,11 +10,6 @@
   Released under the GNU General Public License
 */
 
-  if ( (PHP_VERSION >= 4.3) && ((bool)ini_get('register_globals') == false) ) {
-    @ini_set('session.bug_compat_42', 1);
-    @ini_set('session.bug_compat_warn', 0);
-  }
-
   if (STORE_SESSIONS == 'mysql') {
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
@@ -69,27 +64,25 @@
   }
 
   function tep_session_start() {
-    global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS;
-
     $sane_session_id = true;
 
-    if (isset($HTTP_GET_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) {
-        unset($HTTP_GET_VARS[tep_session_name()]);
+    if (isset($_GET[session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_GET[session_name()]) == false) {
+        unset($_GET[session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_POST_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) {
-        unset($HTTP_POST_VARS[tep_session_name()]);
+    } elseif (isset($_POST[session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_POST[session_name()]) == false) {
+        unset($_POST[session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_COOKIE_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false) {
+    } elseif (isset($_COOKIE[session_name()])) {
+      if (preg_match('/^[a-zA-Z0-9]+$/', $_COOKIE[session_name()]) == false) {
         $session_data = session_get_cookie_params();
 
-        setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
+        setcookie(session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
 
         $sane_session_id = false;
       }
@@ -101,72 +94,8 @@
 
     register_shutdown_function('session_write_close');
 
+    register_shutdown_function('session_write_close');
+
     return session_start();
-  }
-
-  function tep_session_register($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_register($variable);
-    } else {
-      if (!isset($GLOBALS[$variable])) {
-        $GLOBALS[$variable] = null;
-      }
-
-      $_SESSION[$variable] =& $GLOBALS[$variable];
-    }
-
-    return false;
-  }
-
-  function tep_session_is_registered($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_is_registered($variable);
-    } else {
-      return isset($_SESSION) && array_key_exists($variable, $_SESSION);
-    }
-  }
-
-  function tep_session_unregister($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_unregister($variable);
-    } else {
-      unset($_SESSION[$variable]);
-    }
-  }
-
-  function tep_session_id($sessid = '') {
-    if ($sessid != '') {
-      return session_id($sessid);
-    } else {
-      return session_id();
-    }
-  }
-
-  function tep_session_name($name = '') {
-    if ($name != '') {
-      return session_name($name);
-    } else {
-      return session_name();
-    }
-  }
-
-  function tep_session_close() {
-    if (PHP_VERSION >= '4.0.4') {
-      return session_write_close();
-    } elseif (function_exists('session_close')) {
-      return session_close();
-    }
-  }
-
-  function tep_session_destroy() {
-    return session_destroy();
-  }
-
-  function tep_session_save_path($path = '') {
-    if ($path != '') {
-      return session_save_path($path);
-    } else {
-      return session_save_path();
-    }
   }
 ?>

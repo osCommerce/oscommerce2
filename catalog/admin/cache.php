@@ -12,11 +12,11 @@
 
   require('includes/application_top.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     if ($action == 'reset') {
-      tep_reset_cache_block($HTTP_GET_VARS['block']);
+      tep_reset_cache_block($_GET['block']);
     }
 
     tep_redirect(tep_href_link(FILENAME_CACHE));

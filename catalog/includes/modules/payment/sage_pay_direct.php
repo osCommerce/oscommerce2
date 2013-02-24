@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -132,11 +132,11 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $customer_id, $order, $currency, $order_totals, $cartID;
+      global $order, $order_totals;
 
       $error = null;
 
-      if (isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == '3D') && isset($HTTP_POST_VARS['MD']) && tep_not_null($HTTP_POST_VARS['MD']) && isset($HTTP_POST_VARS['PaRes']) && tep_not_null($HTTP_POST_VARS['PaRes'])) {
+      if (isset($_GET['check']) && ($_GET['check'] == '3D') && isset($_POST['MD']) && tep_not_null($_POST['MD']) && isset($_POST['PaRes']) && tep_not_null($_POST['PaRes'])) {
         switch (MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER) {
           case 'Live':
             $gateway_url = 'https://live.sagepay.com/gateway/service/direct3dcallback.vsp';
@@ -151,13 +151,13 @@
             break;
         }
 
-        $post_string = 'MD=' . $HTTP_POST_VARS['MD'] . '&PARes=' . $HTTP_POST_VARS['PaRes'];
+        $post_string = 'MD=' . $_POST['MD'] . '&PARes=' . $_POST['PaRes'];
 
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
       } else {
-        $cc_type = substr($HTTP_POST_VARS['cc_type'], 0, 15);
-        $cc_owner = substr($HTTP_POST_VARS['cc_owner'], 0, 50);
-        $cc_number = substr(preg_replace('/[^0-9]/', '', $HTTP_POST_VARS['cc_number_nh-dns']), 0, 20);
+        $cc_type = substr($_POST['cc_type'], 0, 15);
+        $cc_owner = substr($_POST['cc_owner'], 0, 50);
+        $cc_number = substr(preg_replace('/[^0-9]/', '', $_POST['cc_number_nh-dns']), 0, 20);
         $cc_start = null;
         $cc_expires = null;
         $cc_issue = null;
@@ -180,56 +180,56 @@
           $year_valid_from_array[] = strftime('%Y',mktime(0,0,0,1,1,$i));
         }
 
-        if ( (isset($HTTP_POST_VARS['cc_type']) == false) || ($this->isCard($cc_type) == false) ) {
+        if ( (isset($_POST['cc_type']) == false) || ($this->isCard($cc_type) == false) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardtype', 'SSL'));
         }
 
-        if ( (isset($HTTP_POST_VARS['cc_owner']) == false) || empty($cc_owner) ) {
+        if ( (isset($_POST['cc_owner']) == false) || empty($cc_owner) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
         }
 
-        if ( (isset($HTTP_POST_VARS['cc_number_nh-dns']) == false) || (is_numeric($cc_number) == false) ) {
+        if ( (isset($_POST['cc_number_nh-dns']) == false) || (is_numeric($cc_number) == false) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
         }
 
         if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
-          if ( in_array($HTTP_POST_VARS['cc_starts_month'], $months_array) == false ) {
+          if ( in_array($_POST['cc_starts_month'], $months_array) == false ) {
             tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
           }
 
-          if ( in_array($HTTP_POST_VARS['cc_starts_year'], $year_valid_from_array) == false ) {
+          if ( in_array($_POST['cc_starts_year'], $year_valid_from_array) == false ) {
             tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
           }
 
-          $cc_start = substr($HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'], 0, 4);
+          $cc_start = substr($_POST['cc_starts_month'] . $_POST['cc_starts_year'], 0, 4);
         }
 
-        if ( in_array($HTTP_POST_VARS['cc_expires_month'], $months_array) == false ) {
+        if ( in_array($_POST['cc_expires_month'], $months_array) == false ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
-        if ( in_array($HTTP_POST_VARS['cc_expires_year'], $year_valid_to_array) == false ) {
+        if ( in_array($_POST['cc_expires_year'], $year_valid_to_array) == false ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
-        if ( ($HTTP_POST_VARS['cc_expires_year'] == date('y')) && ($HTTP_POST_VARS['cc_expires_month'] < date('m')) ) {
+        if ( ($_POST['cc_expires_year'] == date('y')) && ($_POST['cc_expires_month'] < date('m')) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
-        $cc_expires = substr($HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'], 0, 4);
+        $cc_expires = substr($_POST['cc_expires_month'] . $_POST['cc_expires_year'], 0, 4);
 
         if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) ) {
-          $cc_issue = substr($HTTP_POST_VARS['cc_issue_nh-dns'], 0, 2);
+          $cc_issue = substr($_POST['cc_issue_nh-dns'], 0, 2);
 
-          if ( (isset($HTTP_POST_VARS['cc_issue_nh-dns']) == false) || empty($cc_issue) ) {
+          if ( (isset($_POST['cc_issue_nh-dns']) == false) || empty($cc_issue) ) {
             tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardissue', 'SSL'));
           }
         }
 
         if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
-          $cc_cvc = substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4);
+          $cc_cvc = substr($_POST['cc_cvc_nh-dns'], 0, 4);
 
-          if ( (isset($HTTP_POST_VARS['cc_cvc_nh-dns']) == false) || empty($cc_cvc) ) {
+          if ( (isset($_POST['cc_cvc_nh-dns']) == false) || empty($cc_cvc) ) {
             tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvc', 'SSL'));
           }
         }
@@ -237,9 +237,9 @@
         $params = array('VPSProtocol' => '2.23',
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
-                        'Currency' => $currency,
+                        'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
                         'CardHolder' => $cc_owner,
                         'CardNumber' => $cc_number,
@@ -351,16 +351,11 @@
       }
 
       if ($return['Status'] == '3DAUTH') {
-        global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md;
+        $_SESSION['sage_pay_direct_acsurl'] = $return['ACSURL'];
 
-        tep_session_register('sage_pay_direct_acsurl');
-        $sage_pay_direct_acsurl = $return['ACSURL'];
+        $_SESSION['sage_pay_direct_pareq'] = $return['PAReq'];
 
-        tep_session_register('sage_pay_direct_pareq');
-        $sage_pay_direct_pareq = $return['PAReq'];
-
-        tep_session_register('sage_pay_direct_md');
-        $sage_pay_direct_md = $return['MD'];
+        $_SESSION['sage_pay_direct_md'] = $return['MD'];
 
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
       }
@@ -377,23 +372,21 @@
     }
 
     function after_process() {
-      if (tep_session_is_registered('sage_pay_direct_acsurl')) {
-        tep_session_unregister('sage_pay_direct_acsurl');
-        tep_session_unregister('sage_pay_direct_pareq');
-        tep_session_unregister('sage_pay_direct_md');
+      if (isset($_SESSION['sage_pay_direct_acsurl'])) {
+        unset($_SESSION['sage_pay_direct_acsurl']);
+        unset($_SESSION['sage_pay_direct_pareq']);
+        unset($_SESSION['sage_pay_direct_md']);
       }
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_GENERAL;
 
-      if ( isset($HTTP_GET_VARS['error']) && tep_not_null($HTTP_GET_VARS['error']) ) {
-        if ( is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-          $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_GENERAL;
+      if ( isset($_GET['error']) && tep_not_null($_GET['error']) ) {
+        if ( is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
+          $message = $this->getErrorMessage($_GET['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_GENERAL;
         } else {
-          switch ($HTTP_GET_VARS['error']) {
+          switch ($_GET['error']) {
             case 'cardtype':
               $message = MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDTYPE;
               break;
@@ -507,10 +500,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

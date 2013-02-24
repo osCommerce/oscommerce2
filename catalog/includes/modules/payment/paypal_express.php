@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -58,8 +58,6 @@
     }
 
     function checkout_initialization_method() {
-      global $cart;
-
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE == 'Dynamic') {
         if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
           $image_button = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image';
@@ -74,7 +72,7 @@
 
           if (isset($response_array['PAL'])) {
             $params[] = 'pal=' . $response_array['PAL'];
-            $params[] = 'ordertotal=' . $this->format_raw($cart->show_total());
+            $params[] = 'ordertotal=' . $this->format_raw($_SESSION['cart']->show_total());
           }
         }
 
@@ -100,19 +98,19 @@
     }
 
     function pre_confirmation_check() {
-      global $HTTP_GET_VARS, $order, $ppe_token;
+      global $order;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      if (!isset($HTTP_GET_VARS['do'])) {
-        $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      if (!isset($_GET['do'])) {
+        $response_array = $this->getExpressCheckoutDetails($_SESSION['ppe_token']);
 
         if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
 // load the selected shipping module
           include(DIR_WS_CLASSES . 'shipping.php');
-          $shipping_modules = new shipping($shipping);
+          $shipping_modules = new shipping($_SESSION['shipping']);
 
           include(DIR_WS_CLASSES . 'order_total.php');
           $order_total_modules = new order_total;
@@ -128,17 +126,15 @@
     }
 
     function confirmation() {
-      global $comments;
-
-      if (!isset($comments)) {
-        $comments = null;
+      if (!isset($_SESSION['comments'])) {
+        $_SESSION['comments'] = null;
       }
 
       $confirmation = false;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $_SESSION['comments']))));
       }
 
       return $confirmation;
@@ -149,22 +145,22 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments, $response_array;
+      global $order, $response_array;
 
-      if (empty($comments)) {
-        if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
-          $comments = tep_db_prepare_input($HTTP_POST_VARS['ppecomments']);
+      if (empty($_SESSION['comments'])) {
+        if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
+          $_SESSION['comments'] = tep_db_prepare_input($_POST['ppecomments']);
 
-          $order->info['comments'] = $comments;
+          $order->info['comments'] = $_SESSION['comments'];
         }
       }
 
-      $params = array('TOKEN' => $ppe_token,
-                      'PAYERID' => $ppe_payerid,
+      $params = array('TOKEN' => $_SESSION['ppe_token'],
+                      'PAYERID' => $_SESSION['ppe_payerid'],
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCYCODE' => $order->info['currency']);
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
@@ -181,10 +177,10 @@
     }
 
     function after_process() {
-      global $response_array, $insert_id, $order, $ppe_payerstatus, $ppe_addressstatus;
+      global $response_array, $insert_id, $order;
 
-      $pp_result = 'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
+      $pp_result = 'Payer Status: ' . tep_output_string_protected($_SESSION['ppe_payerstatus']) . "\n" .
+                   'Address Status: ' . tep_output_string_protected($_SESSION['ppe_addressstatus']) . "\n\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTTYPE']) . "\n" .
                    'Pending Reason: ' . tep_output_string_protected($response_array['PENDINGREASON']) . "\n" .
@@ -198,10 +194,10 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppe_token');
-      tep_session_unregister('ppe_payerid');
-      tep_session_unregister('ppe_payerstatus');
-      tep_session_unregister('ppe_addressstatus');
+      unset($_SESSION['ppe_token']);
+      unset($_SESSION['ppe_payerid']);
+      unset($_SESSION['ppe_payerstatus']);
+      unset($_SESSION['ppe_addressstatus']);
     }
 
     function get_error() {
@@ -306,10 +302,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -481,18 +477,16 @@
     }
 
     function sendDebugEmail() {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
-        $email_body = '$HTTP_POST_VARS:' . "\n\n";
+        $email_body = '$_POST:' . "\n\n";
 
-        foreach ($HTTP_POST_VARS as $key => $value) {
+        foreach ($_POST as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 
-        $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
+        $email_body .= "\n" . '$_GET:' . "\n\n";
 
-        foreach ($HTTP_GET_VARS as $key => $value) {
+        foreach ($_GET as $key => $value) {
           $email_body .= $key . '=' . $value . "\n";
         }
 

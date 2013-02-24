@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -28,8 +28,6 @@
     }
 
     function query($order_id) {
-      global $languages_id;
-
       $order_id = tep_db_prepare_input($order_id);
 
       $order_query = tep_db_query("select customers_id, customers_name, customers_company, customers_street_address, customers_suburb, customers_city, customers_postcode, customers_state, customers_country, customers_telephone, customers_email_address, customers_address_format_id, delivery_name, delivery_company, delivery_street_address, delivery_suburb, delivery_city, delivery_postcode, delivery_state, delivery_country, delivery_address_format_id, billing_name, billing_company, billing_street_address, billing_suburb, billing_city, billing_postcode, billing_state, billing_country, billing_address_format_id, payment_method, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value, date_purchased, orders_status, last_modified from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
@@ -47,7 +45,7 @@
       $shipping_method_query = tep_db_query("select title from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "' and class = 'ot_shipping'");
       $shipping_method = tep_db_fetch_array($shipping_method_query);
 
-      $order_status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . $order['orders_status'] . "' and language_id = '" . (int)$languages_id . "'");
+      $order_status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . $order['orders_status'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
       $order_status = tep_db_fetch_array($order_status_query);
 
       $this->info = array('currency' => $order['currency'],
@@ -131,36 +129,36 @@
     }
 
     function cart() {
-      global $HTTP_POST_VARS, $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
+      global $currencies;
 
-      $this->content_type = $cart->get_content_type();
+      $this->content_type = $_SESSION['cart']->get_content_type();
 
-      if ( ($this->content_type != 'virtual') && ($sendto == false) ) {
-        $sendto = $customer_default_address_id;
+      if ( ($this->content_type != 'virtual') && ($_SESSION['sendto'] == false) ) {
+        $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
       }
 
-      $customer_address_query = tep_db_query("select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from " . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " co on (ab.entry_country_id = co.countries_id) where c.customers_id = '" . (int)$customer_id . "' and ab.customers_id = '" . (int)$customer_id . "' and c.customers_default_address_id = ab.address_book_id");
+      $customer_address_query = tep_db_query("select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from " . TABLE_CUSTOMERS . " c, " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " co on (ab.entry_country_id = co.countries_id) where c.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and c.customers_default_address_id = ab.address_book_id");
       $customer_address = tep_db_fetch_array($customer_address_query);
 
-      if (is_array($sendto) && !empty($sendto)) {
-        $shipping_address = array('entry_firstname' => $sendto['firstname'],
-                                  'entry_lastname' => $sendto['lastname'],
-                                  'entry_company' => $sendto['company'],
-                                  'entry_street_address' => $sendto['street_address'],
-                                  'entry_suburb' => $sendto['suburb'],
-                                  'entry_postcode' => $sendto['postcode'],
-                                  'entry_city' => $sendto['city'],
-                                  'entry_zone_id' => $sendto['zone_id'],
-                                  'zone_name' => $sendto['zone_name'],
-                                  'entry_country_id' => $sendto['country_id'],
-                                  'countries_id' => $sendto['country_id'],
-                                  'countries_name' => $sendto['country_name'],
-                                  'countries_iso_code_2' => $sendto['country_iso_code_2'],
-                                  'countries_iso_code_3' => $sendto['country_iso_code_3'],
-                                  'address_format_id' => $sendto['address_format_id'],
-                                  'entry_state' => $sendto['zone_name']);
-      } elseif (is_numeric($sendto)) {
-        $shipping_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$customer_id . "' and ab.address_book_id = '" . (int)$sendto . "'");
+      if (is_array($_SESSION['sendto']) && !empty($_SESSION['sendto'])) {
+        $shipping_address = array('entry_firstname' => $_SESSION['sendto']['firstname'],
+                                  'entry_lastname' => $_SESSION['sendto']['lastname'],
+                                  'entry_company' => $_SESSION['sendto']['company'],
+                                  'entry_street_address' => $_SESSION['sendto']['street_address'],
+                                  'entry_suburb' => $_SESSION['sendto']['suburb'],
+                                  'entry_postcode' => $_SESSION['sendto']['postcode'],
+                                  'entry_city' => $_SESSION['sendto']['city'],
+                                  'entry_zone_id' => $_SESSION['sendto']['zone_id'],
+                                  'zone_name' => $_SESSION['sendto']['zone_name'],
+                                  'entry_country_id' => $_SESSION['sendto']['country_id'],
+                                  'countries_id' => $_SESSION['sendto']['country_id'],
+                                  'countries_name' => $_SESSION['sendto']['country_name'],
+                                  'countries_iso_code_2' => $_SESSION['sendto']['country_iso_code_2'],
+                                  'countries_iso_code_3' => $_SESSION['sendto']['country_iso_code_3'],
+                                  'address_format_id' => $_SESSION['sendto']['address_format_id'],
+                                  'entry_state' => $_SESSION['sendto']['zone_name']);
+      } elseif (is_numeric($_SESSION['sendto'])) {
+        $shipping_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$_SESSION['sendto'] . "'");
         $shipping_address = tep_db_fetch_array($shipping_address_query);
       } else {
         $shipping_address = array('entry_firstname' => null,
@@ -181,25 +179,25 @@
                                   'entry_state' => null);
       }
 
-      if (is_array($billto) && !empty($billto)) {
-        $billing_address = array('entry_firstname' => $billto['firstname'],
-                                 'entry_lastname' => $billto['lastname'],
-                                 'entry_company' => $billto['company'],
-                                 'entry_street_address' => $billto['street_address'],
-                                 'entry_suburb' => $billto['suburb'],
-                                 'entry_postcode' => $billto['postcode'],
-                                 'entry_city' => $billto['city'],
-                                 'entry_zone_id' => $billto['zone_id'],
-                                 'zone_name' => $billto['zone_name'],
-                                 'entry_country_id' => $billto['country_id'],
-                                 'countries_id' => $billto['country_id'],
-                                 'countries_name' => $billto['country_name'],
-                                 'countries_iso_code_2' => $billto['country_iso_code_2'],
-                                 'countries_iso_code_3' => $billto['country_iso_code_3'],
-                                 'address_format_id' => $billto['address_format_id'],
-                                 'entry_state' => $billto['zone_name']);
+      if (is_array($_SESSION['billto']) && !empty($_SESSION['billto'])) {
+        $billing_address = array('entry_firstname' => $_SESSION['billto']['firstname'],
+                                 'entry_lastname' => $_SESSION['billto']['lastname'],
+                                 'entry_company' => $_SESSION['billto']['company'],
+                                 'entry_street_address' => $_SESSION['billto']['street_address'],
+                                 'entry_suburb' => $_SESSION['billto']['suburb'],
+                                 'entry_postcode' => $_SESSION['billto']['postcode'],
+                                 'entry_city' => $_SESSION['billto']['city'],
+                                 'entry_zone_id' => $_SESSION['billto']['zone_id'],
+                                 'zone_name' => $_SESSION['billto']['zone_name'],
+                                 'entry_country_id' => $_SESSION['billto']['country_id'],
+                                 'countries_id' => $_SESSION['billto']['country_id'],
+                                 'countries_name' => $_SESSION['billto']['country_name'],
+                                 'countries_iso_code_2' => $_SESSION['billto']['country_iso_code_2'],
+                                 'countries_iso_code_3' => $_SESSION['billto']['country_iso_code_3'],
+                                 'address_format_id' => $_SESSION['billto']['address_format_id'],
+                                 'entry_state' => $_SESSION['billto']['zone_name']);
       } else {
-        $billing_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$customer_id . "' and ab.address_book_id = '" . (int)$billto . "'");
+        $billing_address_query = tep_db_query("select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from " . TABLE_ADDRESS_BOOK . " ab left join " . TABLE_ZONES . " z on (ab.entry_zone_id = z.zone_id) left join " . TABLE_COUNTRIES . " c on (ab.entry_country_id = c.countries_id) where ab.customers_id = '" . (int)$_SESSION['customer_id'] . "' and ab.address_book_id = '" . (int)$_SESSION['billto'] . "'");
         $billing_address = tep_db_fetch_array($billing_address_query);
       }
 
@@ -212,29 +210,29 @@
       }
 
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
-                          'currency' => $currency,
-                          'currency_value' => $currencies->currencies[$currency]['value'],
-                          'payment_method' => $payment,
+                          'currency' => $_SESSION['currency'],
+                          'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
+                          'payment_method' => $_SESSION['payment'],
                           'cc_type' => '',
                           'cc_owner' => '',
                           'cc_number' => '',
                           'cc_expires' => '',
-                          'shipping_method' => $shipping['title'],
-                          'shipping_cost' => $shipping['cost'],
+                          'shipping_method' => $_SESSION['shipping']['title'],
+                          'shipping_cost' => $_SESSION['shipping']['cost'],
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
-                          'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
+                          'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
-      if (isset($GLOBALS[$payment]) && is_object($GLOBALS[$payment])) {
-        if (isset($GLOBALS[$payment]->public_title)) {
-          $this->info['payment_method'] = $GLOBALS[$payment]->public_title;
+      if (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+        if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
+          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
         } else {
-          $this->info['payment_method'] = $GLOBALS[$payment]->title;
+          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->title;
         }
 
-        if ( isset($GLOBALS[$payment]->order_status) && is_numeric($GLOBALS[$payment]->order_status) && ($GLOBALS[$payment]->order_status > 0) ) {
-          $this->info['order_status'] = $GLOBALS[$payment]->order_status;
+        if ( isset($GLOBALS[$_SESSION['payment']]->order_status) && is_numeric($GLOBALS[$_SESSION['payment']]->order_status) && ($GLOBALS[$_SESSION['payment']]->order_status > 0) ) {
+          $this->info['order_status'] = $GLOBALS[$_SESSION['payment']]->order_status;
         }
       }
 
@@ -279,7 +277,7 @@
                              'format_id' => $billing_address['address_format_id']);
 
       $index = 0;
-      $products = $cart->get_products();
+      $products = $_SESSION['cart']->get_products();
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                         'name' => $products[$i]['name'],
@@ -287,7 +285,7 @@
                                         'tax' => tep_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'tax_description' => tep_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'price' => $products[$i]['price'],
-                                        'final_price' => $products[$i]['price'] + $cart->attributes_price($products[$i]['id']),
+                                        'final_price' => $products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']),
                                         'weight' => $products[$i]['weight'],
                                         'id' => $products[$i]['id']);
 
@@ -295,7 +293,7 @@
           $subindex = 0;
           reset($products[$i]['attributes']);
           while (list($option, $value) = each($products[$i]['attributes'])) {
-            $attributes_query = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$products[$i]['id'] . "' and pa.options_id = '" . (int)$option . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$value . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$languages_id . "' and poval.language_id = '" . (int)$languages_id . "'");
+            $attributes_query = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$products[$i]['id'] . "' and pa.options_id = '" . (int)$option . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$value . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
             $attributes = tep_db_fetch_array($attributes_query);
 
             $this->products[$index]['attributes'][$subindex] = array('option' => $attributes['products_options_name'],

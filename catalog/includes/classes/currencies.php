@@ -33,9 +33,7 @@
 
 // class methods
     function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
-      global $currency;
-
-      if (empty($currency_type)) $currency_type = $currency;
+      if (empty($currency_type)) $currency_type = $_SESSION['currency'];
 
       if ($calculate_currency_value == true) {
         $rate = (tep_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
@@ -48,9 +46,7 @@
     }
 
     function calculate_price($products_price, $products_tax, $quantity = 1) {
-      global $currency;
-
-      return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$currency]['decimal_places']) * $quantity;
+      return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$_SESSION['currency']]['decimal_places']) * $quantity;
     }
 
     function is_set($code) {

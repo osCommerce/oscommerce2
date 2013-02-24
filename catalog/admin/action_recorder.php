@@ -29,14 +29,14 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    if (file_exists(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/action_recorder/' . $file)) {
-      include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/action_recorder/' . $file);
+    if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file)) {
+      include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file);
     }
 
     include(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
+    if (class_exists($class)) {
       ${$class} = new $class;
     }
   }
@@ -52,18 +52,18 @@
                                   'text' => (is_object(${$modules['module']}) ? ${$modules['module']}->title : $modules['module']));
   }
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'expire':
         $expired_entries = 0;
 
-        if (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array)) {
-          if (is_object(${$HTTP_GET_VARS['module']})) {
-            $expired_entries += ${$HTTP_GET_VARS['module']}->expireEntries();
+        if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
+          if (is_object(${$_GET['module']})) {
+            $expired_entries += ${$_GET['module']}->expireEntries();
           } else {
-            $delete_query = tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($HTTP_GET_VARS['module']) . "'");
+            $delete_query = tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($_GET['module']) . "'");
             $expired_entries += tep_db_affected_rows($db_link);
           }
         } else {
@@ -110,7 +110,7 @@
                 </td>
               </tr>
             </table></td>
-            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) ? '&module=' . $HTTP_GET_VARS['module'] : '')), 'primary'); ?></td>
+            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -128,16 +128,16 @@
 <?php
   $filter = array();
 
-  if (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array)) {
-    $filter[] = " module = '" . tep_db_input($HTTP_GET_VARS['module']) . "' ";
+  if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
+    $filter[] = " module = '" . tep_db_input($_GET['module']) . "' ";
   }
 
-  if (isset($HTTP_GET_VARS['search']) && !empty($HTTP_GET_VARS['search'])) {
-    $filter[] = " identifier like '%" . tep_db_input($HTTP_GET_VARS['search']) . "%' ";
+  if (isset($_GET['search']) && !empty($_GET['search'])) {
+    $filter[] = " identifier like '%" . tep_db_input($_GET['search']) . "%' ";
   }
 
   $actions_query_raw = "select * from " . TABLE_ACTION_RECORDER . (!empty($filter) ? " where " . implode(" and ", $filter) : "") . " order by date_added desc";
-  $actions_split = new splitPageResults($HTTP_GET_VARS['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
+  $actions_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
   $actions_query = tep_db_query($actions_query_raw);
   while ($actions = tep_db_fetch_array($actions_query)) {
     $module = $actions['module'];
@@ -147,7 +147,7 @@
       $module_title = ${$module}->title;
     }
 
-    if ((!isset($HTTP_GET_VARS['aID']) || (isset($HTTP_GET_VARS['aID']) && ($HTTP_GET_VARS['aID'] == $actions['id']))) && !isset($aInfo)) {
+    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ($_GET['aID'] == $actions['id']))) && !isset($aInfo)) {
       $actions_extra_query = tep_db_query("select identifier from " . TABLE_ACTION_RECORDER . " where id = '" . (int)$actions['id'] . "'");
       $actions_extra = tep_db_fetch_array($actions_extra_query);
 
@@ -173,8 +173,8 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $actions_split->display_count($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $HTTP_GET_VARS['page'], TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $actions_split->display_links($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $HTTP_GET_VARS['page'], (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules_array) && is_object(${$HTTP_GET_VARS['module']}) ? 'module=' . $HTTP_GET_VARS['module'] : null) . '&' . (isset($HTTP_GET_VARS['search']) && !empty($HTTP_GET_VARS['search']) ? 'search=' . $HTTP_GET_VARS['search'] : null)); ?></td>
+                    <td class="smallText" valign="top"><?php echo $actions_split->display_count($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
+                    <td class="smallText" align="right"><?php echo $actions_split->display_links($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object(${$_GET['module']}) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></td>
                   </tr>
                 </table></td>
               </tr>

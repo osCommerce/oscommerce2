@@ -11,7 +11,7 @@
 */
 
 // close session (store variables)
-  tep_session_close();
+  session_write_close();
 
   if (STORE_PAGE_PARSE_TIME == 'true') {
     $time_start = explode(' ', PAGE_PARSE_START_TIME);
@@ -21,12 +21,6 @@
 
     if (DISPLAY_PAGE_PARSE_TIME == 'true') {
       echo '<span class="smallText">Parse Time: ' . $parse_time . 's</span>';
-    }
-  }
-
-  if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_output_compression < 1) ) {
-    if ( (PHP_VERSION < '4.0.4') && (PHP_VERSION >= '4') ) {
-      tep_gzip_output(GZIP_LEVEL);
     }
   }
 ?>

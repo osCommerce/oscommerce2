@@ -11,12 +11,10 @@
 */
 
   function tep_update_whos_online() {
-    global $customer_id;
+    if (isset($_SESSION['customer_id'])) {
+      $wo_customer_id = $_SESSION['customer_id'];
 
-    if (tep_session_is_registered('customer_id')) {
-      $wo_customer_id = $customer_id;
-
-      $customer_query = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
+      $customer_query = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       $customer = tep_db_fetch_array($customer_query);
 
       $wo_full_name = $customer['customers_firstname'] . ' ' . $customer['customers_lastname'];
@@ -25,7 +23,7 @@
       $wo_full_name = 'Guest';
     }
 
-    $wo_session_id = tep_session_id();
+    $wo_session_id = session_id();
     $wo_ip_address = getenv('REMOTE_ADDR');
     $wo_last_page_url = getenv('REQUEST_URI');
 

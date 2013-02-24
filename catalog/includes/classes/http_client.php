@@ -11,7 +11,7 @@
 */
 
   class httpClient {
-    var $drivers = array('curl', 'stream', 'socket');
+    var $drivers = array('http_request', 'curl', 'stream', 'socket');
     var $driver;
     var $url; // array containg scheme, host, port, user, pass, path, query, fragment (from parse_url())
     var $proxyHost, $proxyPort;
@@ -24,10 +24,6 @@
     var $response = array();
 
     function httpClient($host = null, $port = null) {
-      if (PHP_VERSION >= 5) {
-        array_unshift($this->drivers, 'http_request');
-      }
-
       if (isset($host)) {
         $this->connect($host, $port);
       }
@@ -330,7 +326,7 @@
     }
 
     function savePublicCertificate($server = null, $port = null) {
-      if ((PHP_VERSION >= 5) && extension_loaded('openssl') && is_writable(DIR_FS_CACHE)) {
+      if (extension_loaded('openssl') && is_writable(DIR_FS_CACHE)) {
         if (!isset($server)) {
           $server = $this->url['host'];
         }

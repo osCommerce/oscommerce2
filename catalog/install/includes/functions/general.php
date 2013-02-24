@@ -36,13 +36,6 @@
   }
 
   function osc_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!isset($seeded)) {
-      mt_srand((double)microtime()*1000000);
-      $seeded = true;
-    }
-
     if (isset($min) && isset($max)) {
       if ($min >= $max) {
         return $min;

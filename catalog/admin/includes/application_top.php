@@ -16,11 +16,6 @@
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
 
-// check support for register_globals
-  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION < 4.3) ) {
-    exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
-  }
-
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
     include('includes/local/configure.php');
@@ -35,7 +30,7 @@
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set php_self in the local scope
-  $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($HTTP_SERVER_VARS['SCRIPT_NAME'])) ? basename($HTTP_SERVER_VARS['PHP_SELF']) : basename($HTTP_SERVER_VARS['SCRIPT_NAME']);
+  $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($_SERVER['SCRIPT_NAME'])) ? basename($_SERVER['PHP_SELF']) : basename($_SERVER['SCRIPT_NAME']);
 
 // Used in the "Backup Manager" to compress backups
   define('LOCAL_EXE_GZIP', 'gzip');
@@ -80,94 +75,78 @@
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
 // set the session name and save path
-  tep_session_name('osCAdminID');
-  tep_session_save_path(SESSION_WRITE_DIRECTORY);
+  session_name('osCAdminID');
+  session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
-   if (function_exists('session_set_cookie_params')) {
-    session_set_cookie_params(0, DIR_WS_ADMIN);
-  } elseif (function_exists('ini_set')) {
-    ini_set('session.cookie_lifetime', '0');
-    ini_set('session.cookie_path', DIR_WS_ADMIN);
-  }
+  session_set_cookie_params(0, DIR_WS_ADMIN);
 
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // lets start our session
   tep_session_start();
 
-  if ( (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
-    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
-
 // set the language
-  if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {
-    if (!tep_session_is_registered('language')) {
-      tep_session_register('language');
-      tep_session_register('languages_id');
-    }
-
+  if (!isset($_SESSION['language']) || isset($_GET['language'])) {
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($HTTP_GET_VARS['language']) && tep_not_null($HTTP_GET_VARS['language'])) {
-      $lng->set_language($HTTP_GET_VARS['language']);
+    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
+      $lng->set_language($_GET['language']);
     } else {
       $lng->get_browser_language();
     }
 
-    $language = $lng->language['directory'];
-    $languages_id = $lng->language['id'];
+    $_SESSION['language'] = $lng->language['directory'];
+    $_SESSION['languages_id'] = $lng->language['id'];
   }
 
 // redirect to login page if administrator is not yet logged in
-  if (!tep_session_is_registered('admin')) {
+  if (!isset($_SESSION['admin'])) {
     $redirect = false;
 
     $current_page = basename($PHP_SELF);
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
-    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
+    if ( ($current_page == FILENAME_LOGIN) && !isset($_SESSION['redirect_origin']) ) {
       $current_page = FILENAME_DEFAULT;
-      $HTTP_GET_VARS = array();
+      $_GET = array();
     }
 
     if ($current_page != FILENAME_LOGIN) {
-      if (!tep_session_is_registered('redirect_origin')) {
-        tep_session_register('redirect_origin');
-
-        $redirect_origin = array('page' => $current_page,
-                                 'get' => $HTTP_GET_VARS);
+      if (!isset($_SESSION['redirect_origin'])) {
+        $_SESSION['redirect_origin'] = array('page' => $current_page,
+                                             'get' => $_GET);
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
-      if (!tep_session_is_registered('auth_ignore')) {
-        if (isset($HTTP_SERVER_VARS['PHP_AUTH_USER']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_USER']) && isset($HTTP_SERVER_VARS['PHP_AUTH_PW']) && !empty($HTTP_SERVER_VARS['PHP_AUTH_PW'])) {
-          $redirect_origin['auth_user'] = $HTTP_SERVER_VARS['PHP_AUTH_USER'];
-          $redirect_origin['auth_pw'] = $HTTP_SERVER_VARS['PHP_AUTH_PW'];
+      if (!isset($_SESSION['auth_ignore'])) {
+        if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
+          $_SESSION['redirect_origin']['auth_user'] = $_SERVER['PHP_AUTH_USER'];
+          $_SESSION['redirect_origin']['auth_pw'] = $_SERVER['PHP_AUTH_PW'];
         }
       }
 
       $redirect = true;
     }
 
-    if (!isset($login_request) || isset($HTTP_GET_VARS['login_request']) || isset($HTTP_POST_VARS['login_request']) || isset($HTTP_COOKIE_VARS['login_request']) || isset($HTTP_SESSION_VARS['login_request']) || isset($HTTP_POST_FILES['login_request']) || isset($HTTP_SERVER_VARS['login_request'])) {
+    if (!isset($login_request) || isset($_GET['login_request']) || isset($_POST['login_request']) || isset($_COOKIE['login_request']) || isset($_SESSION['login_request']) || isset($_FILES['login_request']) || isset($_SERVER['login_request'])) {
       $redirect = true;
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
   }
 
 // include the language translations
-  require(DIR_WS_LANGUAGES . $language . '.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '.php');
   $current_page = basename($PHP_SELF);
-  if (file_exists(DIR_WS_LANGUAGES . $language . '/' . $current_page)) {
-    include(DIR_WS_LANGUAGES . $language . '/' . $current_page);
+  if (file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page)) {
+    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . $current_page);
   }
 
 // define our localization functions
@@ -201,8 +180,8 @@
   require(DIR_WS_CLASSES . 'action_recorder.php');
 
 // calculate category path
-  if (isset($HTTP_GET_VARS['cPath'])) {
-    $cPath = $HTTP_GET_VARS['cPath'];
+  if (isset($_GET['cPath'])) {
+    $cPath = $_GET['cPath'];
   } else {
     $cPath = '';
   }

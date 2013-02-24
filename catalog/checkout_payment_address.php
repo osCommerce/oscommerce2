@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,42 +13,42 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
-    $navigation->set_snapshot();
+  if (!isset($_SESSION['customer_id'])) {
+    $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PAYMENT_ADDRESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_PAYMENT_ADDRESS);
 
   $error = false;
   $process = false;
-  if (isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'submit') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
+  if (isset($_POST['action']) && ($_POST['action'] == 'submit') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
 // process a new billing address
-    if (tep_not_null($HTTP_POST_VARS['firstname']) && tep_not_null($HTTP_POST_VARS['lastname']) && tep_not_null($HTTP_POST_VARS['street_address'])) {
+    if (tep_not_null($_POST['firstname']) && tep_not_null($_POST['lastname']) && tep_not_null($_POST['street_address'])) {
       $process = true;
 
-      if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($HTTP_POST_VARS['gender']);
-      if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($HTTP_POST_VARS['company']);
-      $firstname = tep_db_prepare_input($HTTP_POST_VARS['firstname']);
-      $lastname = tep_db_prepare_input($HTTP_POST_VARS['lastname']);
-      $street_address = tep_db_prepare_input($HTTP_POST_VARS['street_address']);
-      if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($HTTP_POST_VARS['suburb']);
-      $postcode = tep_db_prepare_input($HTTP_POST_VARS['postcode']);
-      $city = tep_db_prepare_input($HTTP_POST_VARS['city']);
-      $country = tep_db_prepare_input($HTTP_POST_VARS['country']);
+      if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
+      if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
+      $firstname = tep_db_prepare_input($_POST['firstname']);
+      $lastname = tep_db_prepare_input($_POST['lastname']);
+      $street_address = tep_db_prepare_input($_POST['street_address']);
+      if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
+      $postcode = tep_db_prepare_input($_POST['postcode']);
+      $city = tep_db_prepare_input($_POST['city']);
+      $country = tep_db_prepare_input($_POST['country']);
       if (ACCOUNT_STATE == 'true') {
-        if (isset($HTTP_POST_VARS['zone_id'])) {
-          $zone_id = tep_db_prepare_input($HTTP_POST_VARS['zone_id']);
+        if (isset($_POST['zone_id'])) {
+          $zone_id = tep_db_prepare_input($_POST['zone_id']);
         } else {
           $zone_id = false;
         }
-        $state = tep_db_prepare_input($HTTP_POST_VARS['state']);
+        $state = tep_db_prepare_input($_POST['state']);
       }
 
       if (ACCOUNT_GENDER == 'true') {
@@ -120,7 +120,7 @@
       }
 
       if ($error == false) {
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'entry_firstname' => $firstname,
                                 'entry_lastname' => $lastname,
                                 'entry_street_address' => $street_address,
@@ -141,52 +141,47 @@
           }
         }
 
-        if (!tep_session_is_registered('billto')) tep_session_register('billto');
-
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-        $billto = tep_db_insert_id();
+        $_SESSION['billto'] = tep_db_insert_id();
 
-        if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
 // process the selected billing destination
-    } elseif (isset($HTTP_POST_VARS['address'])) {
+    } elseif (isset($_POST['address'])) {
       $reset_payment = false;
-      if (tep_session_is_registered('billto')) {
-        if ($billto != $HTTP_POST_VARS['address']) {
-          if (tep_session_is_registered('payment')) {
+      if (isset($_SESSION['billto'])) {
+        if ($_SESSION['billto'] != $_POST['address']) {
+          if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
-      } else {
-        tep_session_register('billto');
       }
 
-      $billto = $HTTP_POST_VARS['address'];
+      $_SESSION['billto'] = $_POST['address'];
 
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
+      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and address_book_id = '" . (int)$_SESSION['billto'] . "'");
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
-        if ($reset_payment == true) tep_session_unregister('payment');
+        if ($reset_payment == true) unset($_SESSION['payment']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       } else {
-        tep_session_unregister('billto');
+        unset($_SESSION['billto']);
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      if (!tep_session_is_registered('billto')) tep_session_register('billto');
-      $billto = $customer_default_address_id;
+      $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
   }
 
 // if no billing destination address was selected, use their own address as default
-  if (!tep_session_is_registered('billto')) {
-    $billto = $customer_default_address_id;
+  if (!isset($_SESSION['billto'])) {
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -268,7 +263,7 @@ function check_form_optional(form_name) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_PAYMENT_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
@@ -297,11 +292,11 @@ function check_form_optional(form_name) {
 <?php
       $radio_buttons = 0;
 
-      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "'");
+      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       while ($addresses = tep_db_fetch_array($addresses_query)) {
         $format_id = tep_get_address_format_id($addresses['country_id']);
 
-       if ($addresses['address_book_id'] == $billto) {
+       if ($addresses['address_book_id'] == $_SESSION['billto']) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
         } else {
           echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
@@ -309,7 +304,7 @@ function check_form_optional(form_name) {
 ?>
 
         <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $billto)); ?></td>
+        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $_SESSION['billto'])); ?></td>
       </tr>
       <tr>
         <td colspan="2" style="padding-left: 15px;"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></td>

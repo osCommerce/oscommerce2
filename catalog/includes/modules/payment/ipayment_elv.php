@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -90,7 +90,7 @@
     }
 
     function process_button() {
-      global $order, $currency;
+      global $order;
 
       $zone_code = '';
 
@@ -108,7 +108,7 @@
                                tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_ELV_USER_ID) .
                                tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD) .
                                tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
-                               tep_draw_hidden_field('trx_currency', $currency) .
+                               tep_draw_hidden_field('trx_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
                                tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_ELV_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
                                tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
@@ -125,31 +125,31 @@
                                tep_draw_hidden_field('client_version', $this->signature);
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
-        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD));
+        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD));
       }
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_SERVER_VARS, $order, $currency;
+      global $order;
 
-      if ($HTTP_GET_VARS['ret_errorcode'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($HTTP_GET_VARS['ret_errormsg'])));
+      if ($_GET['ret_errorcode'] != '0') {
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
       }
 
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
         $pass = true;
 
 // verify ret_param_checksum
-        if ($HTTP_GET_VARS['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $currency . $HTTP_GET_VARS['ret_authcode'] . $HTTP_GET_VARS['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
+        if ($_GET['ret_param_checksum'] != md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . $_GET['ret_authcode'] . $_GET['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
           $pass = false;
         }
 
 // verify ret_url_checksum
-        $url= 'http' . (ENABLE_SSL == true ? 's' : '') . '://' . $HTTP_SERVER_VARS['SERVER_NAME'] . $HTTP_SERVER_VARS['REQUEST_URI'];
+        $url= 'http' . (ENABLE_SSL == true ? 's' : '') . '://' . $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
         $url_without_checksum = substr($url, 0, strpos($url, '&ret_url_checksum')+1);
-        if ($HTTP_GET_VARS['ret_url_checksum'] != md5($url_without_checksum . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
+        if ($_GET['ret_url_checksum'] != md5($url_without_checksum . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
           $pass = false;
         }
 
@@ -166,10 +166,8 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error = array('title' => MODULE_PAYMENT_IPAYMENT_ELV_ERROR_HEADING,
-                     'error' => ((isset($HTTP_GET_VARS['error'])) ? stripslashes(urldecode($HTTP_GET_VARS['error'])) : MODULE_PAYMENT_IPAYMENT_ELV_ERROR_MESSAGE));
+                     'error' => ((isset($_GET['error'])) ? urldecode($_GET['error']) : MODULE_PAYMENT_IPAYMENT_ELV_ERROR_MESSAGE));
 
       return $error;
     }
@@ -205,10 +203,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -219,8 +217,6 @@
     }
 
     function sendDebugEmail($checksum_match = 0) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_IPAYMENT_ELV_DEBUG_EMAIL)) {
         $email_body = 'iPayment (ELV) Transaction' . "\n\n" .
                       'Date: ' . strftime(DATE_TIME_FORMAT) . "\n" .
@@ -244,8 +240,8 @@
         $email_body .= "\n\n" .
                        'POST REQUEST:' . "\n\n";
 
-        if (!empty($HTTP_POST_VARS)) {
-          foreach ($HTTP_POST_VARS as $key => $value) {
+        if (!empty($_POST)) {
+          foreach ($_POST as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
         } else {
@@ -254,8 +250,8 @@
 
         $email_body .= "\n" . 'GET REQUEST:' . "\n\n";
 
-        if (!empty($HTTP_GET_VARS)) {
-          foreach ($HTTP_GET_VARS as $key => $value) {
+        if (!empty($_GET)) {
+          foreach ($_GET as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
           }
         } else {

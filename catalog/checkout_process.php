@@ -13,41 +13,41 @@
   include('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
-    $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
+  if (!isset($_SESSION['customer_id'])) {
+    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!tep_session_is_registered('shipping') || !tep_session_is_registered('sendto')) {
+  if (!isset($_SESSION['shipping']) || !isset($_SESSION['sendto'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!tep_session_is_registered('payment')) ) {
+  if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset($_SESSION['payment'])) ) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
  }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
-    if ($cart->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
-  include(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
+  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_PROCESS);
 
 // load selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($payment);
+  $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($shipping);
+  $shipping_modules = new shipping($_SESSION['shipping']);
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
@@ -68,7 +68,7 @@
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $payment) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
@@ -80,7 +80,7 @@
 // load the before_process function from the payment modules
   $payment_modules->before_process();
 
-  $sql_data_array = array('customers_id' => $customer_id,
+  $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                           'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                           'customers_company' => $order->customer['company'],
                           'customers_street_address' => $order->customer['street_address'],
@@ -208,11 +208,11 @@
                                 and pa.options_id = popt.products_options_id 
                                 and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' 
                                 and pa.options_values_id = poval.products_options_values_id 
-                                and popt.language_id = '" . (int)$languages_id . "' 
-                                and poval.language_id = '" . (int)$languages_id . "'";
+                                and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' 
+                                and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
           $attributes = tep_db_query($attributes_query);
         } else {
-          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$languages_id . "' and poval.language_id = '" . (int)$languages_id . "'");
+          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
         }
         $attributes_values = tep_db_fetch_array($attributes);
 
@@ -260,16 +260,16 @@
   if ($order->content_type != 'virtual') {
     $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
                     EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                    tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
   }
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
-                  tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
-  if (is_object($$payment)) {
+                  tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+  if (is_object($$_SESSION['payment'])) {
     $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" . 
                     EMAIL_SEPARATOR . "\n";
-    $payment_class = $$payment;
+    $payment_class = $$_SESSION['payment'];
     $email_order .= $order->info['payment_method'] . "\n\n";
     if (isset($payment_class->email_footer)) {
       $email_order .= $payment_class->email_footer . "\n\n";
@@ -285,14 +285,14 @@
 // load the after_process function from the payment modules
   $payment_modules->after_process();
 
-  $cart->reset(true);
+  $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-  tep_session_unregister('sendto');
-  tep_session_unregister('billto');
-  tep_session_unregister('shipping');
-  tep_session_unregister('payment');
-  tep_session_unregister('comments');
+  unset($_SESSION['sendto']);
+  unset($_SESSION['billto']);
+  unset($_SESSION['shipping']);
+  unset($_SESSION['payment']);
+  unset($_SESSION['comments']);
 
   tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 

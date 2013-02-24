@@ -12,18 +12,18 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGOFF);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_LOGOFF);
 
   $breadcrumb->add(NAVBAR_TITLE);
 
-  tep_session_unregister('customer_id');
-  tep_session_unregister('customer_default_address_id');
-  tep_session_unregister('customer_first_name');
-  tep_session_unregister('customer_country_id');
-  tep_session_unregister('customer_zone_id');
-  tep_session_unregister('comments');
+  unset($_SESSION['customer_id']);
+  unset($_SESSION['customer_default_address_id']);
+  unset($_SESSION['customer_first_name']);
+  unset($_SESSION['customer_country_id']);
+  unset($_SESSION['customer_zone_id']);
+  unset($_SESSION['comments']);
 
-  $cart->reset();
+  $_SESSION['cart']->reset();
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

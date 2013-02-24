@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $currencies, $HTTP_GET_VARS, $request_type, $currency, $oscTemplate;
+      global $PHP_SELF, $currencies, $request_type, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
@@ -42,9 +42,9 @@
           }
 
           $hidden_get_variables = '';
-          reset($HTTP_GET_VARS);
-          while (list($key, $value) = each($HTTP_GET_VARS)) {
-            if ( is_string($value) && ($key != 'currency') && ($key != tep_session_name()) && ($key != 'x') && ($key != 'y') ) {
+          reset($_GET);
+          while (list($key, $value) = each($_GET)) {
+            if ( is_string($value) && ($key != 'currency') && ($key != session_name()) && ($key != 'x') && ($key != 'y') ) {
               $hidden_get_variables .= tep_draw_hidden_field($key, $value);
             }
           }
@@ -53,7 +53,7 @@
                   '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CURRENCIES_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents">' . 
                   '    ' . tep_draw_form('currencies', tep_href_link(basename($PHP_SELF), '', $request_type, false), 'get') .
-                  '    ' . tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>' .
+                  '    ' . tep_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>' .
                   '  </div>' .
                   '</div>';
 

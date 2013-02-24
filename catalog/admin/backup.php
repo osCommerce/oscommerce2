@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
@@ -127,8 +127,8 @@
 
         fclose($fp);
 
-        if (isset($HTTP_POST_VARS['download']) && ($HTTP_POST_VARS['download'] == 'yes')) {
-          switch ($HTTP_POST_VARS['compress']) {
+        if (isset($_POST['download']) && ($_POST['download'] == 'yes')) {
+          switch ($_POST['compress']) {
             case 'gzip':
               exec(LOCAL_EXE_GZIP . ' ' . DIR_FS_BACKUP . $backup_file);
               $backup_file .= '.gz';
@@ -146,7 +146,7 @@
 
           exit;
         } else {
-          switch ($HTTP_POST_VARS['compress']) {
+          switch ($_POST['compress']) {
             case 'gzip':
               exec(LOCAL_EXE_GZIP . ' ' . DIR_FS_BACKUP . $backup_file);
               break;
@@ -165,11 +165,11 @@
         tep_set_time_limit(0);
 
         if ($action == 'restorenow') {
-          $read_from = $HTTP_GET_VARS['file'];
+          $read_from = $_GET['file'];
 
-          if (file_exists(DIR_FS_BACKUP . $HTTP_GET_VARS['file'])) {
-            $restore_file = DIR_FS_BACKUP . $HTTP_GET_VARS['file'];
-            $extension = substr($HTTP_GET_VARS['file'], -3);
+          if (file_exists(DIR_FS_BACKUP . $_GET['file'])) {
+            $restore_file = DIR_FS_BACKUP . $_GET['file'];
+            $extension = substr($_GET['file'], -3);
 
             if ( ($extension == 'sql') || ($extension == '.gz') || ($extension == 'zip') ) {
               switch ($extension) {
@@ -264,7 +264,7 @@
             tep_db_query($sql_array[$i]);
           }
 
-          tep_session_close();
+          session_write_close();
 
           tep_db_query("delete from " . TABLE_WHOS_ONLINE);
           tep_db_query("delete from " . TABLE_SESSIONS);
@@ -282,15 +282,15 @@
         tep_redirect(tep_href_link(FILENAME_BACKUP));
         break;
       case 'download':
-        $extension = substr($HTTP_GET_VARS['file'], -3);
+        $extension = substr($_GET['file'], -3);
 
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
-          if ($fp = fopen(DIR_FS_BACKUP . $HTTP_GET_VARS['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $HTTP_GET_VARS['file']));
+          if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
+            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $_GET['file']));
             fclose($fp);
 
             header('Content-type: application/x-octet-stream');
-            header('Content-disposition: attachment; filename=' . $HTTP_GET_VARS['file']);
+            header('Content-disposition: attachment; filename=' . $_GET['file']);
 
             echo $buffer;
 
@@ -301,9 +301,9 @@
         }
         break;
       case 'deleteconfirm':
-        if (strstr($HTTP_GET_VARS['file'], '..')) tep_redirect(tep_href_link(FILENAME_BACKUP));
+        if (strstr($_GET['file'], '..')) tep_redirect(tep_href_link(FILENAME_BACKUP));
 
-        tep_remove(DIR_FS_BACKUP . '/' . $HTTP_GET_VARS['file']);
+        tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
@@ -364,7 +364,7 @@
 
       $check = 0;
 
-      if ((!isset($HTTP_GET_VARS['file']) || (isset($HTTP_GET_VARS['file']) && ($HTTP_GET_VARS['file'] == $entry))) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
+      if ((!isset($_GET['file']) || (isset($_GET['file']) && ($_GET['file'] == $entry))) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
         $file_array['file'] = $entry;
         $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry));
         $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $entry)) . ' bytes';

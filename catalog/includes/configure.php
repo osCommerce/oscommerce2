@@ -31,7 +31,7 @@
   define('DIR_WS_LANGUAGES', DIR_WS_INCLUDES . 'languages/');
 
   define('DIR_WS_DOWNLOAD_PUBLIC', 'pub/');
-  define('DIR_FS_CATALOG', dirname($HTTP_SERVER_VARS['SCRIPT_FILENAME']) . '/');
+  define('DIR_FS_CATALOG', dirname($_SERVER['SCRIPT_FILENAME']) . '/');
   define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
   define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
 
@@ -40,6 +40,10 @@
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
   define('DB_DATABASE', 'osCommerce');
+  define('DB_TABLE_PREFIX', '');
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', ''); // leave empty '' for default handler or set to 'mysql'
+
+  define('DIR_FS_CACHE2', DIR_FS_CATALOG . 'includes/work/');
+  define('CFG_TIME_ZONE', 'Europe/Berlin');
 ?>

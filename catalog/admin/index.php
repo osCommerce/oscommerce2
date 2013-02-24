@@ -18,7 +18,7 @@
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $language) {
+    if ($languages[$i]['directory'] == $_SESSION['language']) {
       $languages_selected = $languages[$i]['code'];
     }
   }
@@ -59,7 +59,7 @@
       $class = substr($adm, 0, strrpos($adm, '.'));
 
       if ( !class_exists($class) ) {
-        include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
+        include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/dashboard/' . $adm);
         include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
       }
 

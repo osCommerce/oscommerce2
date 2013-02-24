@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -76,7 +76,7 @@
     }
 
     function process_button() {
-      global $order, $currencies, $currency;
+      global $order, $currencies;
 
       switch (MODULE_PAYMENT_PAYPOINT_SECPAY_CURRENCY) {
         case 'Default Currency':
@@ -84,7 +84,7 @@
           break;
         case 'Any Currency':
         default:
-          $sec_currency = $currency;
+          $sec_currency = $_SESSION['currency'];
           break;
       }
 
@@ -137,25 +137,23 @@
                                tep_draw_hidden_field('ship_country', $order->delivery['country']['title']) .
                                tep_draw_hidden_field('currency', $sec_currency) .
                                tep_draw_hidden_field('callback', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false) . ';' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', false)) .
-                               tep_draw_hidden_field(tep_session_name(), tep_session_id()) .
-                               tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . tep_session_name()) .
+                               tep_draw_hidden_field(session_name(), session_id()) .
+                               tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . session_name()) .
                                tep_draw_hidden_field('digest', $digest);
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_SERVER_VARS;
-
-      if ( ($HTTP_GET_VARS['valid'] == 'true') && ($HTTP_GET_VARS['code'] == 'A') && !empty($HTTP_GET_VARS['auth_code']) && empty($HTTP_GET_VARS['resp_code']) && !empty($HTTP_GET_VARS[tep_session_name()]) ) {
+      if ( ($_GET['valid'] == 'true') && ($_GET['code'] == 'A') && !empty($_GET['auth_code']) && empty($_GET['resp_code']) && !empty($_GET[session_name()]) ) {
         $DIGEST_PASSWORD = MODULE_PAYMENT_PAYPOINT_SECPAY_READERS_DIGEST;
-        list($REQUEST_URI, $CHECK_SUM) = split('hash=', $HTTP_SERVER_VARS['REQUEST_URI']);
+        list($REQUEST_URI, $CHECK_SUM) = split('hash=', $_SERVER['REQUEST_URI']);
 
-        if ($HTTP_GET_VARS['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $HTTP_GET_VARS[tep_session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
+        if ($_GET['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $HTTP_GET_VARS[tep_session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
       }
     }
 
@@ -164,11 +162,9 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
-      if ($HTTP_GET_VARS['code'] == 'N') {
+      if ($_GET['code'] == 'N') {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE_N;
-      } elseif ($HTTP_GET_VARS['code'] == 'C') {
+      } elseif ($_GET['code'] == 'C') {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE_C;
       } else {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE;

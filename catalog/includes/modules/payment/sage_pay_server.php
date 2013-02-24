@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -79,78 +79,78 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $sage_pay_server_securitykey, $sage_pay_server_nexturl, $customer_id, $order, $currency, $order_totals, $cartID;
+      global $order, $order_totals;
 
       $error = null;
 
-      if (isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == 'SERVER')) {
-        $sig = $HTTP_POST_VARS['VPSTxId'] . $HTTP_POST_VARS['VendorTxCode'] . $HTTP_POST_VARS['Status'];
+      if (isset($_GET['check']) && ($_GET['check'] == 'SERVER')) {
+        $sig = $_POST['VPSTxId'] . $_POST['VendorTxCode'] . $_POST['Status'];
 
-        if ($HTTP_POST_VARS['Status'] == 'OK') {
-          $sig .= $HTTP_POST_VARS['TxAuthNo'];
+        if ($_POST['Status'] == 'OK') {
+          $sig .= $_POST['TxAuthNo'];
         }
 
         $sig .= substr(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME, 0, 15);
 
-        if ( ($HTTP_POST_VARS['Status'] != 'AUTHENTICATED') && ($HTTP_POST_VARS['Status'] != 'REGISTERED') ) {
-          $sig .= $HTTP_POST_VARS['AVSCV2'];
+        if ( ($_POST['Status'] != 'AUTHENTICATED') && ($_POST['Status'] != 'REGISTERED') ) {
+          $sig .= $_POST['AVSCV2'];
         }
 
-        $sig .= $sage_pay_server_securitykey;
+        $sig .= $_SESSION['sage_pay_server_securitykey'];
 
-        if ( ($HTTP_POST_VARS['Status'] != 'AUTHENTICATED') && ($HTTP_POST_VARS['Status'] != 'REGISTERED') ) {
-          $sig .= $HTTP_POST_VARS['AddressResult'] . $HTTP_POST_VARS['PostCodeResult'] . $HTTP_POST_VARS['CV2Result'];
+        if ( ($_POST['Status'] != 'AUTHENTICATED') && ($_POST['Status'] != 'REGISTERED') ) {
+          $sig .= $_POST['AddressResult'] . $_POST['PostCodeResult'] . $_POST['CV2Result'];
         }
 
-        $sig .= $HTTP_POST_VARS['GiftAid'] . $HTTP_POST_VARS['3DSecureStatus'];
+        $sig .= $_POST['GiftAid'] . $_POST['3DSecureStatus'];
 
-        if ($HTTP_POST_VARS['3DSecureStatus'] == 'OK') {
-          $sig .= $HTTP_POST_VARS['CAVV'];
+        if ($_POST['3DSecureStatus'] == 'OK') {
+          $sig .= $_POST['CAVV'];
         }
 
-        if ( ($HTTP_POST_VARS['AddressStatus'] == 'NONE') || ($HTTP_POST_VARS['AddressStatus'] == 'CONFIRMED') || ($HTTP_POST_VARS['AddressStatus'] == 'UNCONFIRMED') ) {
-          $sig .= $HTTP_POST_VARS['AddressStatus'];
+        if ( ($_POST['AddressStatus'] == 'NONE') || ($_POST['AddressStatus'] == 'CONFIRMED') || ($_POST['AddressStatus'] == 'UNCONFIRMED') ) {
+          $sig .= $_POST['AddressStatus'];
         }
 
-        if ( ($HTTP_POST_VARS['PayerStatus'] == 'VERIFIED') || ($HTTP_POST_VARS['PayerStatus'] == 'UNVERIFIED') ) {
-          $sig .= $HTTP_POST_VARS['PayerStatus'];
+        if ( ($_POST['PayerStatus'] == 'VERIFIED') || ($_POST['PayerStatus'] == 'UNVERIFIED') ) {
+          $sig .= $_POST['PayerStatus'];
         }
 
-        if ( in_array($HTTP_POST_VARS['CardType'], array('VISA', 'MC', 'DELTA', 'SOLO', 'MAESTRO', 'UKE', 'AMEX', 'DC', 'JCB', 'SWITCH', 'LASER', 'PAYPAL')) ) {
-          $sig .= $HTTP_POST_VARS['CardType'];
+        if ( in_array($_POST['CardType'], array('VISA', 'MC', 'DELTA', 'SOLO', 'MAESTRO', 'UKE', 'AMEX', 'DC', 'JCB', 'SWITCH', 'LASER', 'PAYPAL')) ) {
+          $sig .= $_POST['CardType'];
         }
 
-        $sig .= $HTTP_POST_VARS['Last4Digits'];
+        $sig .= $_POST['Last4Digits'];
 
-        if (isset($HTTP_POST_VARS['VPSSignature']) && ($HTTP_POST_VARS['VPSSignature'] == strtoupper(md5($sig)))) {
-          if ( ($HTTP_POST_VARS['Status'] != 'OK') && ($HTTP_POST_VARS['Status'] != 'AUTHENTICATED') && ($HTTP_POST_VARS['Status'] != 'REGISTERED') ) {
-            tep_session_unregister('sage_pay_server_securitykey');
-            tep_session_unregister('sage_pay_server_nexturl');
+        if (isset($_POST['VPSSignature']) && ($_POST['VPSSignature'] == strtoupper(md5($sig)))) {
+          if ( ($_POST['Status'] != 'OK') && ($_POST['Status'] != 'AUTHENTICATED') && ($_POST['Status'] != 'REGISTERED') ) {
+            unset($_SESSION['sage_pay_server_securitykey']);
+            unset($_SESSION['sage_pay_server_nexturl']);
 
-            $error = $this->getErrorMessageNumber($HTTP_POST_VARS['StatusDetail']);
+            $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
             if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-              $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false);
+              $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             } else {
-              $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false);
+              $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             }
 
             $result = 'Status=OK' . chr(13) . chr(10) .
                       'RedirectURL=' . $this->formatURL($error_url);
           } else {
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($sage_pay_server_securitykey) . '&VPSTxId=' . $HTTP_POST_VARS['VPSTxId'] . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false));
+                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . session_name() . '=' . session_id(), 'SSL', false));
           }
         } else {
-          tep_session_unregister('sage_pay_server_securitykey');
-          tep_session_unregister('sage_pay_server_nexturl');
+          unset($_SESSION['sage_pay_server_securitykey']);
+          unset($_SESSION['sage_pay_server_nexturl']);
 
-          $error = $this->getErrorMessageNumber($HTTP_POST_VARS['StatusDetail']);
+          $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false);
+            $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           } else {
-            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false);
+            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           }
 
           $result = 'Status=INVALID' . chr(13) . chr(10) .
@@ -159,13 +159,13 @@
 
         echo $result;
         exit;
-      } elseif (isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == 'PROCESS')) {
-        if ($HTTP_GET_VARS['key'] == md5($sage_pay_server_securitykey)) {
-          tep_session_unregister('sage_pay_server_securitykey');
-          tep_session_unregister('sage_pay_server_nexturl');
+      } elseif (isset($_GET['check']) && ($_GET['check'] == 'PROCESS')) {
+        if ($_GET['key'] == md5($_SESSION['sage_pay_server_securitykey'])) {
+          unset($_SESSION['sage_pay_server_securitykey']);
+          unset($_SESSION['sage_pay_server_nexturl']);
 
-          if ( isset($HTTP_GET_VARS['VPSTxId']) ) {
-            $order->info['comments'] = 'Sage Pay Reference ID: ' . $HTTP_GET_VARS['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
+          if ( isset($_GET['VPSTxId']) ) {
+            $order->info['comments'] = 'Sage Pay Reference ID: ' . $_GET['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
           }
 
           return true;
@@ -174,11 +174,11 @@
         $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
-                        'Currency' => $currency,
+                        'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . session_name() . '=' . session_id(), 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -275,11 +275,9 @@
         }
 
         if ($return['Status'] == 'OK') {
-          tep_session_register('sage_pay_server_securitykey');
-          $sage_pay_server_securitykey = $return['SecurityKey'];
+          $_SESSION['sage_pay_server_securitykey'] = $return['SecurityKey'];
 
-          tep_session_register('sage_pay_server_nexturl');
-          $sage_pay_server_nexturl = $return['NextURL'];
+          $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
             tep_redirect($return['NextURL']);
@@ -291,34 +289,30 @@
         }
       }
 
-      tep_session_unregister('sage_pay_server_securitykey');
-      tep_session_unregister('sage_pay_server_nexturl');
+      unset($_SESSION['sage_pay_server_securitykey']);
+      unset($_SESSION['sage_pay_server_nexturl']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
 
     function after_process() {
-      global $cart;
-
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
       tep_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $message = MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_GENERAL;
 
-      if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-        $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_GENERAL;
+      if ( isset($_GET['error']) && is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
+        $message = $this->getErrorMessage($_GET['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_GENERAL;
       }
 
       $error = array('title' => MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_TITLE,
@@ -394,10 +388,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

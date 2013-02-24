@@ -1,21 +1,17 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
   class oscTemplate {
     var $_title;
     var $_blocks = array();
-    var $_grid_container_width = 24;
-    var $_grid_content_width = 16;
-    var $_grid_column_width = 4;
+    var $_grid_container_width = 12;
+    var $_grid_content_width = 8;
+    var $_grid_column_width = 2;
 
     function oscTemplate() {
       $this->_title = TITLE;
@@ -68,8 +64,6 @@
     }
 
     function buildBlocks() {
-      global $language;
-
       if ( defined('TEMPLATE_BLOCK_GROUPS') && tep_not_null(TEMPLATE_BLOCK_GROUPS) ) {
         $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
 
@@ -83,7 +77,7 @@
               $class = substr($module, 0, strrpos($module, '.'));
 
               if ( !class_exists($class) ) {
-                include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
+                include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
                 include(DIR_WS_MODULES . $group . '/' . $class . '.php');
               }
 
@@ -96,6 +90,10 @@
           }
         }
       }
+    }
+
+    public function getTemplateFilename() {
+      return DIR_WS_MODULES . 'templates/gosling/content/template_top.php';
     }
   }
 ?>

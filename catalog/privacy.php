@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PRIVACY);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRIVACY);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRIVACY));
 

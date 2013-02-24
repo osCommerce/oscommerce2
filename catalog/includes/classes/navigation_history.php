@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -23,7 +23,7 @@
     }
 
     function add_current_page() {
-      global $PHP_SELF, $HTTP_GET_VARS, $HTTP_POST_VARS, $request_type, $cPath;
+      global $PHP_SELF, $request_type, $cPath;
 
       $set = 'true';
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
@@ -60,8 +60,8 @@
       if ($set == 'true') {
         $this->path[] = array('page' => basename($PHP_SELF),
                               'mode' => $request_type,
-                              'get' => $this->filter_parameters($HTTP_GET_VARS),
-                              'post' => $this->filter_parameters($HTTP_POST_VARS));
+                              'get' => $this->filter_parameters($_GET),
+                              'post' => $this->filter_parameters($_POST));
       }
     }
 
@@ -75,7 +75,7 @@
     }
 
     function set_snapshot($page = '') {
-      global $PHP_SELF, $HTTP_GET_VARS, $HTTP_POST_VARS, $request_type;
+      global $PHP_SELF, $request_type;
 
       if (is_array($page)) {
         $this->snapshot = array('page' => $page['page'],
@@ -85,8 +85,8 @@
       } else {
         $this->snapshot = array('page' => basename($PHP_SELF),
                                 'mode' => $request_type,
-                                'get' => $this->filter_parameters($HTTP_GET_VARS),
-                                'post' => $this->filter_parameters($HTTP_POST_VARS));
+                                'get' => $this->filter_parameters($_GET),
+                                'post' => $this->filter_parameters($_POST));
       }
     }
 
@@ -120,7 +120,7 @@
       if (sizeof($this->snapshot) > 0) {
         echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(tep_session_name())) . '<br />';
+        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
       }
     }
 

@@ -63,10 +63,8 @@
     }
 
     function selection() {
-      global $cart_ChronoPay_ID;
-
-      if (tep_session_is_registered('cart_ChronoPay_ID')) {
-        $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      if (isset($_SESSION['cart_ChronoPay_ID'])) {
+        $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -78,7 +76,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_ChronoPay_ID');
+          unset($_SESSION['cart_ChronoPay_ID']);
         }
       }
 
@@ -87,30 +85,24 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
-
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
-      }
-
-      if (!tep_session_is_registered('cartID')) {
-        tep_session_register('cartID');
+      if (empty($_SESSION['cart']->cartID)) {
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
     }
 
     function confirmation() {
-      global $cartID, $cart_ChronoPay_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
-      if (tep_session_is_registered('cartID')) {
+      if (isset($_SESSION['cartID'])) {
         $insert_order = false;
 
-        if (tep_session_is_registered('cart_ChronoPay_ID')) {
-          $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+        if (isset($_SESSION['cart_ChronoPay_ID'])) {
+          $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
           $curr = tep_db_fetch_array($curr_check);
 
-          if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_ChronoPay_ID, 0, strlen($cartID))) ) {
+          if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_ChronoPay_ID'], 0, strlen($_SESSION['cartID']))) ) {
             $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
             if (tep_db_num_rows($check_query) < 1) {
@@ -148,7 +140,7 @@
             }
           }
 
-          $sql_data_array = array('customers_id' => $customer_id,
+          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                   'customers_company' => $order->customer['company'],
                                   'customers_street_address' => $order->customer['street_address'],
@@ -231,11 +223,11 @@
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . $languages_id . "'
-                                       and poval.language_id = '" . $languages_id . "'";
+                                       and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                       and poval.language_id = '" . $_SESSION['languages_id'] . "'";
                   $attributes = tep_db_query($attributes_query);
                 } else {
-                  $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+                  $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
                 }
                 $attributes_values = tep_db_fetch_array($attributes);
 
@@ -261,8 +253,7 @@
             }
           }
 
-          $cart_ChronoPay_ID = $cartID . '-' . $insert_id;
-          tep_session_register('cart_ChronoPay_ID');
+          $_SESSION['cart_ChronoPay_ID'] = $_SESSION['cartID'] . '-' . $insert_id;
         }
       }
 
@@ -270,7 +261,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currencies, $currency, $languages_id, $cart_ChronoPay_ID;
+      global $order, $currencies;
 
       switch ($order->billing['country']['iso_code_3']) {
         case 'USA':
@@ -286,7 +277,7 @@
           break;
       }
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       switch (strtoupper($lang['code'])) {
@@ -302,12 +293,12 @@
       }
 
       $total_price = number_format($order->info['total'] * $currencies->get_value('USD'), $currencies->currencies['USD']['decimal_places'], '.', '');
-      $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
       $process_button_string = tep_draw_hidden_field('product_id', MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID) .
                                tep_draw_hidden_field('product_name', STORE_NAME) .
                                tep_draw_hidden_field('product_price', $total_price) .
-                               tep_draw_hidden_field('product_price_currency', $currency) .
+                               tep_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('cb_url', urlencode(tep_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
                                tep_draw_hidden_field('cb_type', 'P') .
                                tep_draw_hidden_field('decline_url', urlencode(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .
@@ -321,18 +312,18 @@
                                tep_draw_hidden_field('country', $order->billing['country']['iso_code_3']) .
                                tep_draw_hidden_field('phone', $order->customer['telephone']) .
                                tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('cs1', $customer_id) .
+                               tep_draw_hidden_field('cs1', $_SESSION['customer_id']) .
                                tep_draw_hidden_field('cs2', $order_id) .
-                               tep_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $customer_id . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
+                               tep_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $_SESSION['customer_id'] . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_ChronoPay_ID;
-      global $$payment;
+      global $order, $order_totals, $currencies;
+      global $$_SESSION['payment'];
 
-      $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_ChronoPay_ID'], strpos($_SESSION['cart_ChronoPay_ID'], '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
@@ -419,11 +410,11 @@
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . $languages_id . "'
-                                   and poval.language_id = '" . $languages_id . "'";
+                                   and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                   and poval.language_id = '" . $_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -459,17 +450,17 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-      if (is_object($$payment)) {
+      if (is_object($$_SESSION['payment'])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                         EMAIL_SEPARATOR . "\n";
-        $payment_class = $$payment;
+        $payment_class = $$_SESSION['payment'];
         $email_order .= $payment_class->title . "\n\n";
         if ($payment_class->email_footer) {
           $email_order .= $payment_class->email_footer . "\n\n";
@@ -486,16 +477,16 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_ChronoPay_ID');
+      unset($_SESSION['cart_ChronoPay_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }

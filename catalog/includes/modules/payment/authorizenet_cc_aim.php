@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -99,7 +99,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $customer_id, $order, $sendto, $currency;
+      global $order;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -117,19 +117,19 @@
                       'x_zip' => substr($order->billing['postcode'], 0, 20),
                       'x_country' => substr($order->billing['country']['title'], 0, 60),
                       'x_phone' => substr($order->customer['telephone'], 0, 25),
-                      'x_cust_id' => substr($customer_id, 0, 20),
+                      'x_cust_id' => substr($_SESSION['customer_id'], 0, 20),
                       'x_customer_ip' => tep_get_ip_address(),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
                       'x_amount' => substr($this->format_raw($order->info['total']), 0, 15),
-                      'x_currency_code' => substr($currency, 0, 3),
+                      'x_currency_code' => substr($_SESSION['currency'], 0, 3),
                       'x_method' => 'CC',
                       'x_type' => ((MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'),
-                      'x_card_num' => substr($HTTP_POST_VARS['cc_number_nh-dns'], 0, 22),
-                      'x_exp_date' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                      'x_card_code' => substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4));
+                      'x_card_num' => substr($_POST['cc_number_nh-dns'], 0, 22),
+                      'x_exp_date' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
+                      'x_card_code' => substr($_POST['cc_cvc_nh-dns'], 0, 4));
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
         $params['x_ship_to_last_name'] = substr($order->delivery['lastname'], 0, 50);
         $params['x_ship_to_company'] = substr($order->delivery['company'], 0, 50);
@@ -236,11 +236,9 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_GENERAL;
 
-      switch ($HTTP_GET_VARS['error']) {
+      switch ($_GET['error']) {
         case 'invalid_expiration_date':
           $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_INVALID_EXP_DATE;
           break;
@@ -361,10 +359,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

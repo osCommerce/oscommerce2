@@ -12,16 +12,16 @@
 
   chdir('../../../../');
   require('includes/application_top.php');
-  require('../includes/languages/' . $language . '/modules/payment/moneybookers.php');
+  require('../includes/languages/' . $_SESSION['language'] . '/modules/payment/moneybookers.php');
   require('../includes/modules/payment/moneybookers.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $pass = false;
 
   switch ($action) {
     case 'verifyEmail':
       $mb = new moneybookers();
-      $result = $mb->sendTransactionToGateway('https://www.moneybookers.com/app/email_check.pl', 'email=' . $HTTP_POST_VARS['mb_email'] . '&cust_id=2167348&password=281f2d9f44066eab75db5afb063952b1');
+      $result = $mb->sendTransactionToGateway('https://www.moneybookers.com/app/email_check.pl', 'email=' . $_POST['mb_email'] . '&cust_id=2167348&password=281f2d9f44066eab75db5afb063952b1');
       $result = explode(',', $result, 2);
 
       if ( (sizeof($result) == 2) && ($result[0] == 'OK') ) {
@@ -29,12 +29,12 @@
 
         $email_body = 'Store Name: ' . STORE_NAME . ' (powered by osCommerce Online Merchant (' . $mb->signature . '))' . "\n" .
                       'Merchant Name: ' . STORE_OWNER . "\n" .
-                      'Moneybookers E-Mail Address: ' . $HTTP_POST_VARS['mb_email'] . "\n" .
+                      'Moneybookers E-Mail Address: ' . $_POST['mb_email'] . "\n" .
                       'Moneybookers Customer ID: ' . $result[1] . "\n" .
                       'Store URL: ' . tep_catalog_href_link() . "\n" .
-                      'Language: ' . $language . "\n";
+                      'Language: ' . $_SESSION['language'] . "\n";
 
-        tep_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $HTTP_POST_VARS['mb_email']);
+        tep_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
       }
 
       break;
@@ -78,7 +78,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_ACTIVATE_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_ACTIVATE_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=install&active=true&email=' . $HTTP_POST_VARS['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
+          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=install&active=true&email=' . $_POST['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php

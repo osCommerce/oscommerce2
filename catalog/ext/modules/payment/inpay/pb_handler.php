@@ -3,13 +3,13 @@
  $Id: pb_handler.php VER: 1.0.3414 $
  osCommerce, Open Source E-Commerce Solutions
  http://www.oscommerce.com
- Copyright (c) 2008 osCommerce
+ Copyright (c) 2013 osCommerce
  Released under the GNU General Public License
  */
 
 chdir('../../../../');
 require ('includes/application_top.php');
-reset($HTTP_POST_VARS);
+reset($_POST);
 $result = "VERIFIED";
 $ok = true;
 $my_order = null;
@@ -17,14 +17,14 @@ $my_order_query = null;
 //*************************************
 // Validate request
 //
-if (! isset ($HTTP_POST_VARS['order_id']) || !is_numeric($HTTP_POST_VARS['order_id']) || ($HTTP_POST_VARS['order_id'] <= 0))
+if (! isset ($_POST['order_id']) || !is_numeric($_POST['order_id']) || ($_POST['order_id'] <= 0))
 {
     $ok = false;
     $result = "bad order id";
 }
 if ($ok)
 {
-    if (! isset ($HTTP_POST_VARS["invoice_amount"]))
+    if (! isset ($_POST["invoice_amount"]))
     {
         $ok = false;
         $result = "bad amount";
@@ -32,7 +32,7 @@ if ($ok)
 }
 if ($ok)
 {
-    if (! isset ($HTTP_POST_VARS["invoice_currency"]))
+    if (! isset ($_POST["invoice_currency"]))
     {
         $ok = false;
         $result = "bad currency";
@@ -40,7 +40,7 @@ if ($ok)
 }
 if ($ok)
 {
-    if (! isset ($HTTP_POST_VARS["checksum"]) || ! isset ($HTTP_POST_VARS["invoice_reference"]) || ! isset ($HTTP_POST_VARS["invoice_created_at"]) || ! isset ($HTTP_POST_VARS["invoice_status"]))
+    if (! isset ($_POST["checksum"]) || ! isset ($_POST["invoice_reference"]) || ! isset ($_POST["invoice_created_at"]) || ! isset ($_POST["invoice_status"]))
     {
         $ok = false;
         $result = "missing vatiables";
@@ -53,15 +53,15 @@ if ($ok)
     //
     $sk = MODULE_PAYMENT_INPAY_SECRET_KEY;
     $q = http_build_query( array (
-    "order_id"=>$HTTP_POST_VARS['order_id'],
-    "invoice_reference"=>$HTTP_POST_VARS['invoice_reference'],
-    "invoice_amount"=>$HTTP_POST_VARS['invoice_amount'],
-    "invoice_currency"=>$HTTP_POST_VARS['invoice_currency'],
-    "invoice_created_at"=>$HTTP_POST_VARS['invoice_created_at'],
-    "invoice_status"=>$HTTP_POST_VARS['invoice_status'],
+    "order_id"=>$_POST['order_id'],
+    "invoice_reference"=>$_POST['invoice_reference'],
+    "invoice_amount"=>$_POST['invoice_amount'],
+    "invoice_currency"=>$_POST['invoice_currency'],
+    "invoice_created_at"=>$_POST['invoice_created_at'],
+    "invoice_status"=>$_POST['invoice_status'],
     "secret_key"=>$sk), "", "&");
     $md5v = md5($q);
-    if ($md5v != $HTTP_POST_VARS["checksum"])
+    if ($md5v != $_POST["checksum"])
     {
         $ok = false;
         $result = "bad checksum";
@@ -69,7 +69,7 @@ if ($ok)
 }
 if ($ok)
 {
-    $my_order_query = tep_db_query("select orders_status, currency, currency_value from ".TABLE_ORDERS." where orders_id = '".$HTTP_POST_VARS['order_id']."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+    $my_order_query = tep_db_query("select orders_status, currency, currency_value from ".TABLE_ORDERS." where orders_id = '".$_POST['order_id']."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
     if (tep_db_num_rows($my_order_query) <= 0)
     {
         $ok = false;
@@ -80,12 +80,12 @@ if ($ok)
 {
     $my_order = tep_db_fetch_array($my_order_query);
     $order = $my_order;
-    $total_query = tep_db_query("select value from ".TABLE_ORDERS_TOTAL." where orders_id = '".$HTTP_POST_VARS['order_id']."' and class = 'ot_total' limit 1");
+    $total_query = tep_db_query("select value from ".TABLE_ORDERS_TOTAL." where orders_id = '".$_POST['order_id']."' and class = 'ot_total' limit 1");
     $total = tep_db_fetch_array($total_query);
-    if (number_format($HTTP_POST_VARS['invoice_amount'], $currencies->get_decimal_places($order['currency'])) != number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])))
+    if (number_format($_POST['invoice_amount'], $currencies->get_decimal_places($order['currency'])) != number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])))
     {
         $ok = false;
-        $result = 'Inpay transaction value ('.tep_output_string_protected($HTTP_POST_VARS['invoice_amount']).') does not match order value ('.number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])).')';
+        $result = 'Inpay transaction value ('.tep_output_string_protected($_POST['invoice_amount']).') does not match order value ('.number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])).')';
     }
 }
 if ($ok)
@@ -103,13 +103,13 @@ if ($ok)
 }
 if ($ok) {
     require_once ('inpay_functions.php');
-    $invoice_status = get_invoice_status($HTTP_POST_VARS);
+    $invoice_status = get_invoice_status($_POST);
     $ok = false;
-    if ((($invoice_status == "pending")||($invoice_status == "created"))&&(($HTTP_POST_VARS["invoice_status"] == "pending")||($HTTP_POST_VARS["invoice_status"] == "created"))) {
+    if ((($invoice_status == "pending")||($invoice_status == "created"))&&(($_POST["invoice_status"] == "pending")||($_POST["invoice_status"] == "created"))) {
         $ok = true;
-    } else if (($invoice_status == "approved") && ($HTTP_POST_VARS["invoice_status"] == "approved")) {
+    } else if (($invoice_status == "approved") && ($_POST["invoice_status"] == "approved")) {
         $ok = true;
-    } else if (($invoice_status == "sum_too_low") && ($HTTP_POST_VARS["invoice_status"] == "sum_too_low")) {
+    } else if (($invoice_status == "sum_too_low") && ($_POST["invoice_status"] == "sum_too_low")) {
         $ok = true;
     }
 	if (!$ok)
@@ -126,20 +126,20 @@ if ($result == 'VERIFIED')
     $order = $my_order;
     $order_status_id = DEFAULT_ORDERS_STATUS_ID;
     $invoice_approved = false;
-    switch($HTTP_POST_VARS["invoice_status"])
+    switch($_POST["invoice_status"])
     {
         case "created":
         case "pending":
-            $msg = "customer has been asked to pay ".$HTTP_POST_VARS['invoice_amount']." ".$HTTP_POST_VARS['invoice_currency']." with reference: ".$HTTP_POST_VARS["invoice_reference"]. " via his online bank";
+            $msg = "customer has been asked to pay ".$_POST['invoice_amount']." ".$_POST['invoice_currency']." with reference: ".$_POST["invoice_reference"]. " via his online bank";
             $order_status_id = MODULE_PAYMENT_INPAY_CREATE_ORDER_STATUS_ID;
             break;
         case "approved":
-            $msg = "Inpay has confimed that the payment of ".$HTTP_POST_VARS['invoice_amount']." ".$HTTP_POST_VARS['invoice_currency']." has been received";
+            $msg = "Inpay has confimed that the payment of ".$_POST['invoice_amount']." ".$_POST['invoice_currency']." has been received";
             $order_status_id = MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID;
             $invoice_approved = true;
             break;
         case "sum_too_low":
-            $msg = "Partial payment received by inpay. Reference: ".$HTTP_POST_VARS["invoice_reference"];
+            $msg = "Partial payment received by inpay. Reference: ".$_POST["invoice_reference"];
             $order_status_id = MODULE_PAYMENT_INPAY_SUM_TOO_LOW_ORDER_STATUS_ID;
             break;
     }
@@ -148,20 +148,20 @@ if ($result == 'VERIFIED')
     //
     // update order status
     //
-    $sql_data_array = array ('orders_id'=>$HTTP_POST_VARS['order_id'],
+    $sql_data_array = array ('orders_id'=>$_POST['order_id'],
     'orders_status_id'=>$order_status_id,
     'date_added'=>'now()',
     'customer_notified'=>$customer_notified,
-    'comments'=>'Inpay '.ucfirst($HTTP_POST_VARS['invoice_status']).'['.$comment_status.']');
+    'comments'=>'Inpay '.ucfirst($_POST['invoice_status']).'['.$comment_status.']');
     tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-    tep_db_query("update ".TABLE_ORDERS." set orders_status = '".$order_status_id."', last_modified = now() where orders_id = '".(int)$HTTP_POST_VARS['order_id']."'");
+    tep_db_query("update ".TABLE_ORDERS." set orders_status = '".$order_status_id."', last_modified = now() where orders_id = '".(int)$_POST['order_id']."'");
     if ($invoice_approved)
     {
     	// for email
-		include(DIR_WS_LANGUAGES . $language . '/modules/payment/inpay.php');
+		include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/inpay.php');
         // let's re-create the required arrays
         require (DIR_WS_CLASSES.'order.php');
-        $order = new order($HTTP_POST_VARS['order_id']);
+        $order = new order($_POST['order_id']);
         // START STATUS == COMPLETED LOOP
         // initialized for the email confirmation
         $products_ordered = '';
@@ -249,14 +249,14 @@ if ($result == 'VERIFIED')
         $content_type = '';
         $content_count = 0;
         // BOF order comment fix
-        $comment_query = tep_db_query("select comments from ".TABLE_ORDERS_STATUS_HISTORY." where orders_id = '".$HTTP_POST_VARS['order_id']."'");
+        $comment_query = tep_db_query("select comments from ".TABLE_ORDERS_STATUS_HISTORY." where orders_id = '".$_POST['order_id']."'");
         $comment_array = tep_db_fetch_array($comment_query);
         $comments = $comment_array['comments'];
         // EOF order comment fix
 
         if (DOWNLOAD_ENABLED == 'true')
         {
-            $content_query = tep_db_query("select * from ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." where orders_id = '".(int)$HTTP_POST_VARS['order_id']."'");
+            $content_query = tep_db_query("select * from ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." where orders_id = '".(int)$_POST['order_id']."'");
             $content_count = tep_db_num_rows($content_query);
             if ($content_count > 0)
             {
@@ -276,8 +276,8 @@ if ($result == 'VERIFIED')
         // $order variables have been changed from checkout_process to work with the variables from the function query () instead of cart () in the order class
         $email_order = STORE_NAME."\n".
         EMAIL_SEPARATOR."\n".
-        EMAIL_TEXT_ORDER_NUMBER.' '.$HTTP_POST_VARS['order_id']."\n".
-        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$HTTP_POST_VARS['order_id'], 'SSL', false)."\n".
+        EMAIL_TEXT_ORDER_NUMBER.' '.$_POST['order_id']."\n".
+        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$_POST['order_id'], 'SSL', false)."\n".
         EMAIL_TEXT_DATE_ORDERED.' '.strftime(DATE_FORMAT_LONG)."\n\n";
         // BOF order comment fix by AlexStudio
         if ($comments)
@@ -308,11 +308,11 @@ if ($result == 'VERIFIED')
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
         tep_address_format($order->billing['format_id'], $order->billing, 0, '', "\n")."\n\n";
-        if (is_object($$payment))
+        if (is_object($$_SESSION['payment']))
         {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD."\n".
             EMAIL_SEPARATOR."\n";
-            $payment_class = $$payment;
+            $payment_class = $$_SESSION['payment'];
             $email_order .= $payment_class->title."\n\n";
             if ($payment_class->email_footer)
             {
@@ -340,18 +340,18 @@ if ($result == 'VERIFIED')
     //
     if (tep_not_null(MODULE_PAYMENT_INPAY_DEBUG_EMAIL))
     {
-        $email_body = '$HTTP_POST_VARS:'."\n\n";
+        $email_body = '$_POST:'."\n\n";
 
-        reset($HTTP_POST_VARS);
-        while ( list ($key, $value) = each($HTTP_POST_VARS))
+        reset($_POST);
+        while ( list ($key, $value) = each($_POST))
         {
             $email_body .= $key.'='.$value."\n";
         }
 
-        $email_body .= "\n".'$HTTP_GET_VARS:'."\n\n";
+        $email_body .= "\n".'$_GET:'."\n\n";
 
-        reset($HTTP_GET_VARS);
-        while ( list ($key, $value) = each($HTTP_GET_VARS))
+        reset($_GET);
+        while ( list ($key, $value) = each($_GET))
         {
             $email_body .= $key.'='.$value."\n";
         }
@@ -361,9 +361,9 @@ if ($result == 'VERIFIED')
     //
     // add error message to history if order can be found
     //
-    if ( isset ($HTTP_POST_VARS['order_id']) && is_numeric($HTTP_POST_VARS['order_id']) && ($HTTP_POST_VARS['order_id'] > 0))
+    if ( isset ($_POST['order_id']) && is_numeric($_POST['order_id']) && ($_POST['order_id'] > 0))
     {
-        $check_query = tep_db_query("select orders_id from ".TABLE_ORDERS." where orders_id = '".$HTTP_POST_VARS['order_id']."'"); //TODO: fix custom "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+        $check_query = tep_db_query("select orders_id from ".TABLE_ORDERS." where orders_id = '".$_POST['order_id']."'"); //TODO: fix custom "' and customers_id = '" . (int)$_POST['custom'] . "'");
         $order_status_id = $order['orders_status'];
 		if (($order_status_id==null)||($order['orders_status']=='')){
 		  $order_status_id = DEFAULT_ORDERS_STATUS_ID;
@@ -371,8 +371,8 @@ if ($result == 'VERIFIED')
         if (tep_db_num_rows($check_query) > 0)
         {
             $comment_status = $result;
-            //tep_db_query("update ".TABLE_ORDERS." set orders_status = '".((MODULE_PAYMENT_INPAY_ORDER_STATUS_ID > 0)?MODULE_PAYMENT_INPAY_ORDER_STATUS_ID:DEFAULT_ORDERS_STATUS_ID)."', last_modified = now() where orders_id = '".$HTTP_POST_VARS['order_id']."'");
-            $sql_data_array = array ('orders_id'=>$HTTP_POST_VARS['order_id'],
+            //tep_db_query("update ".TABLE_ORDERS." set orders_status = '".((MODULE_PAYMENT_INPAY_ORDER_STATUS_ID > 0)?MODULE_PAYMENT_INPAY_ORDER_STATUS_ID:DEFAULT_ORDERS_STATUS_ID)."', last_modified = now() where orders_id = '".$_POST['order_id']."'");
+            $sql_data_array = array ('orders_id'=>$_POST['order_id'],
             'orders_status_id'=>$order_status_id,
             'date_added'=>'now()',
             'customer_notified'=>'0',

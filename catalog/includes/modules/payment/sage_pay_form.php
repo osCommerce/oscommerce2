@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -92,7 +92,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currency, $cartID;
+      global $order;
 
       $process_button_string = '';
 
@@ -108,12 +108,12 @@
         $params['TxType'] = 'AUTHENTICATE';
       }
 
-      $crypt = array('VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+      $crypt = array('VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
-                     'Currency' => $currency,
+                     'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . tep_session_id(), 'SSL', false),
-                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false),
+                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . session_id(), 'SSL', false),
+                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&' . session_name() . '=' . session_id(), 'SSL', false),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -200,10 +200,10 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $order;
+      global $order;
 
-      if (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+      if (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->simpleXor($this->base64Decode($_GET['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
@@ -234,14 +234,12 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $message = MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
 
-      if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-        $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
-      } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+      if ( isset($_GET['error']) && is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
+        $message = $this->getErrorMessage($_GET['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+      } elseif (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->simpleXor($this->base64Decode($_GET['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
@@ -298,10 +296,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

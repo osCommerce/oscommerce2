@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -57,10 +57,8 @@
     }
 
     function checkout_initialization_method() {
-      global $language;
-
-      if (file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif')) {
-        $image = 'ext/modules/payment/paypal/images/btn_express_' . basename($language) . '.gif';
+      if (file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/images/btn_express_' . basename($_SESSION['language']) . '.gif')) {
+        $image = 'ext/modules/payment/paypal/images/btn_express_' . basename($_SESSION['language']) . '.gif';
       } else {
         $image = 'ext/modules/payment/paypal/images/btn_express.gif';
       }
@@ -80,23 +78,21 @@
     }
 
     function pre_confirmation_check() {
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
     }
 
     function confirmation() {
-      global $comments;
-
-      if (!isset($comments)) {
-        $comments = null;
+      if (!isset($_SESSION['comments'])) {
+        $_SESSION['comments'] = null;
       }
 
       $confirmation = false;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $_SESSION['comments']))));
       }
 
       return $confirmation;
@@ -107,13 +103,13 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppeuk_token, $ppeuk_payerid, $HTTP_POST_VARS, $comments;
+      global $order;
 
-      if (empty($comments)) {
-        if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
-          $comments = tep_db_prepare_input($HTTP_POST_VARS['ppecomments']);
+      if (empty($_SESSION['comments'])) {
+        if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
+          $_SESSION['comments'] = tep_db_prepare_input($_POST['ppecomments']);
 
-          $order->info['comments'] = $comments;
+          $order->info['comments'] = $_SESSION['comments'];
         }
       }
 
@@ -130,14 +126,14 @@
                       'TENDER' => 'P',
                       'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                       'EMAIL' => $order->customer['email_address'],
-                      'TOKEN' => $ppeuk_token,
+                      'TOKEN' => $_SESSION['ppeuk_token'],
                       'ACTION' => 'D',
-                      'PAYERID' => $ppeuk_payerid,
+                      'PAYERID' => $_SESSION['ppeuk_payerid'],
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCY' => $order->info['currency'],
                       'BUTTONSOURCE' => 'osCommerce22_Default_PRO2EC');
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
         $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
@@ -153,7 +149,7 @@
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $this->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $this->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($_SESSION['cartID'] . session_id() . rand())));
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -186,8 +182,8 @@
     }
 
     function after_process() {
-      tep_session_unregister('ppeuk_token');
-      tep_session_unregister('ppeuk_payerid');
+      unset($_SESSION['ppeuk_token']);
+      unset($_SESSION['ppeuk_payerid']);
     }
 
     function get_error() {
@@ -273,10 +269,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

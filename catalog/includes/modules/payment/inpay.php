@@ -3,7 +3,7 @@
  $Id: inpay.php VER: 1.0.3443 $
  osCommerce, Open Source E-Commerce Solutions
  http://www.oscommerce.com
- Copyright (c) 2008 osCommerce
+ Copyright (c) 2013 osCommerce
  Released under the GNU General Public License
  */
 
@@ -77,11 +77,9 @@ class inpay
 
     function selection()
     {
-        global $cart_inpay_Standard_ID;
-
-        if (tep_session_is_registered('cart_inpay_Standard_ID'))
+        if (isset($_SESSION['cart_inpay_Standard_ID']))
         {
-            $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
+            $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
             $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
@@ -94,7 +92,7 @@ class inpay
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
 
-                tep_session_unregister('cart_inpay_Standard_ID');
+                unset($_SESSION['cart_inpay_Standard_ID']);
             }
         }
 
@@ -104,35 +102,28 @@ class inpay
 
     function pre_confirmation_check()
     {
-        global $cartID, $cart;
-
-        if ( empty($cart->cartID))
+        if ( empty($_SESSION['cart']->cartID))
         {
-            $cartID = $cart->cartID = $cart->generate_cart_id();
-        }
-
-        if (!tep_session_is_registered('cartID'))
-        {
-            tep_session_register('cartID');
+            $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
         }
     }
 
     function confirmation()
     {
-        global $cartID, $cart_inpay_Standard_ID, $customer_id, $languages_id, $order, $order_total_modules;
+        global $order, $order_total_modules;
 
-        if (tep_session_is_registered('cartID'))
+        if (isset($_SESSION['cartID']))
         {
             $insert_order = false;
 
-            if (tep_session_is_registered('cart_inpay_Standard_ID'))
+            if (isset($_SESSION['cart_inpay_Standard_ID']))
             {
-                $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
+                $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
                 $curr_check = tep_db_query("select currency from ".TABLE_ORDERS." where orders_id = '".(int)$order_id."'");
                 $curr = tep_db_fetch_array($curr_check);
 
-                if (($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_inpay_Standard_ID, 0, strlen($cartID))))
+                if (($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_inpay_Standard_ID'], 0, strlen($_SESSION['cartID']))))
                 {
                     $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
@@ -179,7 +170,7 @@ class inpay
                     }
                 }
 
-                $sql_data_array = array ('customers_id'=>$customer_id,
+                $sql_data_array = array ('customers_id'=>$_SESSION['customer_id'],
                 'customers_name'=>$order->customer['firstname'].' '.$order->customer['lastname'],
                 'customers_company'=>$order->customer['company'],
                 'customers_street_address'=>$order->customer['street_address'],
@@ -267,12 +258,12 @@ class inpay
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '".$languages_id."'
-                                       and poval.language_id = '".$languages_id."'";
+                                       and popt.language_id = '".$_SESSION['languages_id']."'
+                                       and poval.language_id = '".$_SESSION['languages_id']."'";
                                 $attributes = tep_db_query($attributes_query);
                             } else
                             {
-                                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$languages_id."' and poval.language_id = '".$languages_id."'");
+                                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                             }
                             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -299,8 +290,7 @@ class inpay
                     }
                 }
 
-                $cart_inpay_Standard_ID = $cartID.'-'.$insert_id;
-                tep_session_register('cart_inpay_Standard_ID');
+                $_SESSION['cart_inpay_Standard_ID'] = $_SESSION['cartID'].'-'.$insert_id;
             }
         }
 
@@ -309,7 +299,7 @@ class inpay
 
     function process_button()
     {
-        global $customer_id, $order, $sendto, $currency, $cart_inpay_Standard_ID, $shipping;
+        global $order;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -318,9 +308,9 @@ class inpay
         'tax'=>$this->format_raw($order->info['tax']),
         //'business'=>MODULE_PAYMENT_INPAY_ID,
         'amount'=>$this->format_raw($order->info['total']), //TODO: we do not calculate tax+shipping only gross total -$order->info['shipping_cost']-$order->info['tax']),
-        'currency'=>$currency,
-        'order_id'=>substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1),
-        'custom'=>$customer_id,
+        'currency'=>$_SESSION['currency'],
+        'order_id'=>substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1),
+        'custom'=>$_SESSION['customer_id'],
         'no_note'=>'1',
         'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
         'return_url'=>tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
@@ -331,7 +321,7 @@ class inpay
         'flow_layout'=>MODULE_PAYMENT_INPAY_FLOW_LAYOUT,
         'paymentaction'=>'Sale');
 
-        if (is_numeric($sendto) && ($sendto > 0))
+        if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0))
         {
             $address = '';
             $address = $order->delivery['street_address'].' '.$order->delivery['city'].' '.
@@ -376,10 +366,10 @@ class inpay
 
     function before_process()
     {
-        global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_inpay_Standard_ID;
-        global $$payment;
-        $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
-        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+        global $order, $order_totals, $currencies;
+        global $$_SESSION['payment'];
+        $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
+        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
         $delivered_status = 3;
         $update_status = true;
@@ -477,12 +467,12 @@ class inpay
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '".$languages_id."'
-                                   and poval.language_id = '".$languages_id."'";
+                                   and popt.language_id = '".$_SESSION['languages_id']."'
+                                   and poval.language_id = '".$_SESSION['languages_id']."'";
                         $attributes = tep_db_query($attributes_query);
                     } else
                     {
-                        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$languages_id."' and poval.language_id = '".$languages_id."'");
+                        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                     }
                     $attributes_values = tep_db_fetch_array($attributes);
 
@@ -521,18 +511,18 @@ class inpay
         {
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_label($customer_id, $sendto, 0, '', "\n")."\n";
+            tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_label($customer_id, $billto, 0, '', "\n")."\n\n";
+        tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n")."\n\n";
 
-        if (is_object($$payment))
+        if (is_object($$_SESSION['payment']))
         {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD."\n".
             EMAIL_SEPARATOR."\n";
-            $payment_class = $$payment;
+            $payment_class = $$_SESSION['payment'];
             $email_order .= $payment_class->title."\n\n";
             if ($payment_class->email_footer)
             {
@@ -554,16 +544,16 @@ class inpay
         // load the after_process function from the payment modules
         $this->after_process();
 
-        $cart->reset(true);
+        $_SESSION['cart']->reset(true);
 
         // unregister session variables used during checkout
-        tep_session_unregister('sendto');
-        tep_session_unregister('billto');
-        tep_session_unregister('shipping');
-        tep_session_unregister('payment');
-        tep_session_unregister('comments');
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
+        unset($_SESSION['shipping']);
+        unset($_SESSION['payment']);
+        unset($_SESSION['comments']);
 
-        tep_session_unregister('cart_inpay_Standard_ID');
+        unset($_SESSION['cart_inpay_Standard_ID']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -665,11 +655,11 @@ class inpay
     // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '')
     {
-        global $currencies, $currency;
+        global $currencies;
 
         if ( empty($currency_code) || !$this->is_set($currency_code))
         {
-            $currency_code = $currency;
+            $currency_code = $_SESSION['currency'];
         }
 
         if ( empty($currency_value) || !is_numeric($currency_value))

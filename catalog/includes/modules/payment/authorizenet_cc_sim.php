@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -85,9 +85,9 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency;
+      global $order;
 
-      $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $currency);
+      $process_button_string = $this->_InsertFP(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, $this->format_raw($order->info['total']), rand(1, 1000), $_SESSION['currency']);
 
       $process_button_string .= tep_draw_hidden_field('x_login', substr(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID, 0, 20)) .
                                 tep_draw_hidden_field('x_version', '3.1') .
@@ -103,16 +103,16 @@
                                 tep_draw_hidden_field('x_zip', substr($order->billing['postcode'], 0, 20)) .
                                 tep_draw_hidden_field('x_country', substr($order->billing['country']['title'], 0, 60)) .
                                 tep_draw_hidden_field('x_phone', substr($order->customer['telephone'], 0, 25)) .
-                                tep_draw_hidden_field('x_cust_id', substr($customer_id, 0, 20)) .
+                                tep_draw_hidden_field('x_cust_id', substr($_SESSION['customer_id'], 0, 20)) .
                                 tep_draw_hidden_field('x_customer_ip', tep_get_ip_address()) .
                                 tep_draw_hidden_field('x_email', substr($order->customer['email_address'], 0, 255)) .
                                 tep_draw_hidden_field('x_description', substr(STORE_NAME, 0, 255)) .
                                 tep_draw_hidden_field('x_amount', substr($this->format_raw($order->info['total']), 0, 15)) .
-                                tep_draw_hidden_field('x_currency_code', substr($currency, 0, 3)) .
+                                tep_draw_hidden_field('x_currency_code', substr($_SESSION['currency'], 0, 3)) .
                                 tep_draw_hidden_field('x_method', 'CC') .
                                 tep_draw_hidden_field('x_type', ((MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'));
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $process_button_string .= tep_draw_hidden_field('x_ship_to_first_name', substr($order->delivery['firstname'], 0, 50)) .
                                   tep_draw_hidden_field('x_ship_to_last_name', substr($order->delivery['lastname'], 0, 50)) .
                                   tep_draw_hidden_field('x_ship_to_company', substr($order->delivery['company'], 0, 50)) .
@@ -145,23 +145,23 @@
       }
 
       $process_button_string .= tep_draw_hidden_field('x_freight', $this->format_raw($order->info['shipping_cost'])) .
-                                tep_draw_hidden_field(tep_session_name(), tep_session_id());
+                                tep_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order;
+      global $order;
 
       $error = false;
 
-      if ($HTTP_POST_VARS['x_response_code'] == '1') {
-        if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($HTTP_POST_VARS['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $HTTP_POST_VARS['x_trans_id'] . $this->format_raw($order->info['total']))))) {
+      if ($_POST['x_response_code'] == '1') {
+        if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && ($_POST['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) {
           $error = 'verification';
-        } elseif ($HTTP_POST_VARS['x_amount'] != $this->format_raw($order->info['total'])) {
+        } elseif ($_POST['x_amount'] != $this->format_raw($order->info['total'])) {
           $error = 'verification';
         }
-      } elseif ($HTTP_POST_VARS['x_response_code'] == '2') {
+      } elseif ($_POST['x_response_code'] == '2') {
         $error = 'declined';
       } else {
         $error = 'general';
@@ -177,11 +177,9 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ERROR_GENERAL;
 
-      switch ($HTTP_GET_VARS['error']) {
+      switch ($_GET['error']) {
         case 'verification':
           $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ERROR_VERIFICATION;
           break;
@@ -266,10 +264,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

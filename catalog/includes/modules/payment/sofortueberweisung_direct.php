@@ -6,7 +6,7 @@
   http://www.oscommerce.com
 
   Copyright (c) 2006 - 2007 Henri Schmidhuber (http://www.in-solution.de)
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -64,10 +64,8 @@
     }
 
     function selection() {
-      global $cart_Sofortueberweisung_Direct_ID;
-
-      if (tep_session_is_registered('cart_Sofortueberweisung_Direct_ID')) {
-        $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
+        $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -79,7 +77,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_Sofortueberweisung_Direct_ID');
+          unset($_SESSION['cart_Sofortueberweisung_Direct_ID']);
         }
       }
 
@@ -89,30 +87,24 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
-
       // We need the cartID
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
-      }
-
-      if (!tep_session_is_registered('cartID')) {
-        tep_session_register('cartID');
+      if (empty($_SESSION['cart']->cartID)) {
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
     }
 
     function confirmation() {
-      global $cartID, $cart_Sofortueberweisung_Direct_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
       $insert_order = false;
 
-      if (tep_session_is_registered('cart_Sofortueberweisung_Direct_ID')) {
-        $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
+        $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_Sofortueberweisung_Direct_ID, 0, strlen($cartID))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], 0, strlen($_SESSION['cartID']))) ) {
           $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -150,7 +142,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -233,11 +225,11 @@
                                      and pa.options_id = popt.products_options_id
                                      and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                      and pa.options_values_id = poval.products_options_values_id
-                                     and popt.language_id = '" . $languages_id . "'
-                                     and poval.language_id = '" . $languages_id . "'";
+                                     and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                     and poval.language_id = '" . $_SESSION['languages_id'] . "'";
                 $attributes = tep_db_query($attributes_query);
               } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
               }
               $attributes_values = tep_db_fetch_array($attributes);
 
@@ -263,17 +255,16 @@
           }
         }
 
-        $cart_Sofortueberweisung_Direct_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_Sofortueberweisung_Direct_ID');
+        $_SESSION['cart_Sofortueberweisung_Direct_ID'] = $_SESSION['cartID'] . '-' . $insert_id;
       }
 
       return array('title' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_DESCRIPTION_CHECKOUT_CONFIRMATION);
     }
 
     function process_button() {
-      global $order, $cart, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
+      global $order, $currencies;
 
-      $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
       $parameter= array();
       $parameter['kdnr']	= MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR;  // Repräsentiert Ihre Kundennummer bei der Sofortüberweisung
@@ -285,8 +276,8 @@
       $vzweck1 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck1);
       $vzweck2 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck2);
 
-      $vzweck1 = str_replace('{{customer_id}}', $customer_id, $vzweck1);
-      $vzweck2 = str_replace('{{customer_id}}', $customer_id, $vzweck2);
+      $vzweck1 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck1);
+      $vzweck2 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck2);
 
       $vzweck1 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck1);
       $vzweck2 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck2);
@@ -305,9 +296,9 @@
       $parameter['v_zweck_2'] = tep_output_string($vzweck2);  // Definieren Sie hier Ihre Verwendungszwecke
 
       $parameter['kunden_var_0'] = tep_output_string($order_id);  // Eindeutige Identifikation der Zahlung, z.B. Session ID oder Auftragsnummer.
-      $parameter['kunden_var_1'] = tep_output_string($customer_id);
-      $parameter['kunden_var_2'] = tep_output_string(tep_session_id());
-      $parameter['kunden_var_3'] = tep_output_string($cart->cartID);
+      $parameter['kunden_var_1'] = tep_output_string($_SESSION['customer_id']);
+      $parameter['kunden_var_2'] = tep_output_string(session_id());
+      $parameter['kunden_var_3'] = tep_output_string($_SESSION['cart']->cartID);
       $parameter['kunden_var_4'] = '';
       $parameter['kunden_var_5'] = '';
       // $parameter['Partner'] = '';
@@ -339,10 +330,10 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
-      global $$payment;
+      global $order, $order_totals, $currencies;
+      global $$_SESSION['payment'];
 
-      $md5var4 = md5($HTTP_GET_VARS['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
+      $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
       // Statusupdate nur wenn keine Cartänderung vorgenommen
       $order_total_integer = number_format($order->info['total'] * $currencies->get_value('EUR'), 2, '.','')*100;
       if ($order_total_integer < 1) {
@@ -353,7 +344,7 @@
         $order_total_integer = '0' . $order_total_integer;
       }
 
-      $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
@@ -366,14 +357,14 @@
                                   'customer_notified' => '0',
                                   'comments' => '');
 
-          if (($md5var4 == $HTTP_GET_VARS['sovar4']) && ((int)$HTTP_GET_VARS['betrag_integer'] == (int)$order_total_integer)) {
+          if (($md5var4 == $_GET['sovar4']) && ((int)$_GET['betrag_integer'] == (int)$order_total_integer)) {
             $sql_data_array['comments'] = 'Zahlung durch Sofortüberweisung Weiter-Button/Weiterleitung bestätigt!';
           } else {
-            $sql_data_array['comments'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($HTTP_GET_VARS['betrag_integer']/100) . '!=' . ($order_total_integer/100);
+            $sql_data_array['comments'] = MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_CHECK_ERROR . '\n' . ($_GET['betrag_integer']/100) . '!=' . ($order_total_integer/100);
           }
 
           if (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS == 'True') {
-            $sql_data_array['comments'] = (!empty($sql_data_array['comments']) ? $sql_data_array['comments'] . "\n\n" : '') . serialize($HTTP_GET_VARS) . "\n" . serialize($HTTP_POST_VARS);
+            $sql_data_array['comments'] = (!empty($sql_data_array['comments']) ? $sql_data_array['comments'] . "\n\n" : '') . serialize($_GET) . "\n" . serialize($_POST);
           }
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
@@ -450,11 +441,11 @@
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . $languages_id . "'
-                                   and poval.language_id = '" . $languages_id . "'";
+                                   and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                   and poval.language_id = '" . $_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -490,17 +481,17 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-      if (is_object($$payment)) {
+      if (is_object($$_SESSION['payment'])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                         EMAIL_SEPARATOR . "\n";
-        $payment_class = $$payment;
+        $payment_class = $$_SESSION['payment'];
         $email_order .= $payment_class->title . "\n\n";
         if ($payment_class->email_footer) {
           $email_order .= $payment_class->email_footer . "\n\n";
@@ -517,16 +508,16 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_Sofortueberweisung_Direct_ID');
+      unset($_SESSION['cart_Sofortueberweisung_Direct_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -536,8 +527,6 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $error = array('title' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_ERROR_HEADING,
                      'error' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_ERROR_MESSAGE);
 
@@ -554,13 +543,11 @@
     }
 
     function install() {
-      global $HTTP_GET_VARS;
-
-      $kdnr = (isset($HTTP_GET_VARS['kdnr']) && !empty($HTTP_GET_VARS['kdnr'])) ? tep_db_prepare_input($HTTP_GET_VARS['kdnr']) : '10000';
-      $projekt = (isset($HTTP_GET_VARS['projekt']) && !empty($HTTP_GET_VARS['projekt'])) ? tep_db_prepare_input($HTTP_GET_VARS['projekt']) : '500000';
-      $input_passwort = (isset($HTTP_GET_VARS['input_passwort']) && !empty($HTTP_GET_VARS['input_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['input_passwort']) : '';
-      $bna_passwort = (isset($HTTP_GET_VARS['bna_passwort']) && !empty($HTTP_GET_VARS['bna_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['bna_passwort']) : '';
-      $cnt_passwort = (isset($HTTP_GET_VARS['cnt_passwort']) && !empty($HTTP_GET_VARS['cnt_passwort'])) ? tep_db_prepare_input($HTTP_GET_VARS['cnt_passwort']) : '';
+      $kdnr = (isset($_GET['kdnr']) && !empty($_GET['kdnr'])) ? tep_db_prepare_input($_GET['kdnr']) : '10000';
+      $projekt = (isset($_GET['projekt']) && !empty($_GET['projekt'])) ? tep_db_prepare_input($_GET['projekt']) : '500000';
+      $input_passwort = (isset($_GET['input_passwort']) && !empty($_GET['input_passwort'])) ? tep_db_prepare_input($_GET['input_passwort']) : '';
+      $bna_passwort = (isset($_GET['bna_passwort']) && !empty($_GET['bna_passwort'])) ? tep_db_prepare_input($_GET['bna_passwort']) : '';
+      $cnt_passwort = (isset($_GET['cnt_passwort']) && !empty($_GET['cnt_passwort'])) ? tep_db_prepare_input($_GET['cnt_passwort']) : '';
 
       $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sofortüberweisung Vorbereitung' limit 1");
 
