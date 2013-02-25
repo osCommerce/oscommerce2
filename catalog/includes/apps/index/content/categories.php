@@ -14,8 +14,7 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
+      <div class="row-fluid">
 <?php
   if (isset($cPath) && strpos('_', $cPath)) {
 // check to see if there are deeper categories within the current category
@@ -41,22 +40,21 @@
     $rows++;
     $cPath_new = osc_get_path($categories['categories_id']);
     $width = (int)(100 / MAX_DISPLAY_CATEGORIES_PER_ROW) . '%';
-    echo '        <td align="center" class="smallText" width="' . $width . '" valign="top"><a href="' . osc_href_link(null, $cPath_new) . '">' . osc_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories['categories_name'] . '</a></td>' . "\n";
+    echo '        <div class="span4 pagination-centered smallText"><a href="' . osc_href_link(null, $cPath_new) . '">' . osc_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories['categories_name'] . '</a></div>' . "\n";
     if ((($rows / MAX_DISPLAY_CATEGORIES_PER_ROW) == floor($rows / MAX_DISPLAY_CATEGORIES_PER_ROW)) && ($rows != $number_of_categories)) {
-      echo '      </tr>' . "\n";
-      echo '      <tr>' . "\n";
+      echo '      </div>' . "\n";
+      echo '      <div>' . "\n";
     }
   }
 
 // needed for the new products module shown below
   $new_products_category_id = $current_category_id;
 ?>
-      </tr>
-    </table>
+      </div>
+    </div>
 
     <br />
 
 <?php include(DIR_WS_MODULES . 'new_products.php'); ?>
 
-  </div>
 </div>
