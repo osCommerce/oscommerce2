@@ -38,11 +38,11 @@
         if (osc_db_num_rows($manufacturer_query)) {
           $manufacturer = osc_db_fetch_array($manufacturer_query);
 
-          $manufacturer_info_string = '<table border="0" width="100%" cellspacing="0" cellpadding="0" class="ui-widget-content infoBoxContents">';
-          if (osc_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<tr><td align="center" colspan="2">' . osc_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</td></tr>';
-          if (osc_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<tr><td valign="top">-&nbsp;</td><td valign="top"><a href="' . osc_href_link('index', 'redirect&manufacturer=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></td></tr>';
-          $manufacturer_info_string .= '<tr><td valign="top">-&nbsp;</td><td valign="top"><a href="' . osc_href_link(null, 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></td></tr>' .
-                                       '</table>';
+          $manufacturer_info_string = '<div class="ui-widget-content infoBoxContents">';
+          if (osc_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<div class="row-fluid"><div class="pagination-centered">' . osc_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</div></div>';
+          if (osc_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<div>-&nbsp;<a href="' . osc_href_link('index', 'redirect&manufacturer=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></div>';
+          $manufacturer_info_string .= '<div>-&nbsp;<a href="' . osc_href_link(null, 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></div>' .
+                                       '</div>';
 
           $data = '<div class="ui-widget infoBoxContainer">' .
                   '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</div>' .
