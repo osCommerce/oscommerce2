@@ -15,7 +15,7 @@
 
 // class constructor
     function order_total() {
-      if (defined('MODULE_ORDER_TOTAL_INSTALLED') && tep_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+      if (defined('MODULE_ORDER_TOTAL_INSTALLED') && osc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
         $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
         reset($this->modules);
@@ -40,7 +40,7 @@
             $GLOBALS[$class]->process();
 
             for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-              if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+              if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text'])) {
                 $order_total_array[] = array('code' => $GLOBALS[$class]->code,
                                              'title' => $GLOBALS[$class]->output[$i]['title'],
                                              'text' => $GLOBALS[$class]->output[$i]['text'],

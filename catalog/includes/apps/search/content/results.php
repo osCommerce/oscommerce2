@@ -54,13 +54,13 @@
 
   $select_str = "select distinct " . $select_column_list . " m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price ";
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     $select_str .= ", SUM(tr.tax_rate) as tax_rate ";
   }
 
   $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id) left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id";
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     if (!isset($_SESSION['customer_country_id'])) {
       $_SESSION['customer_country_id'] = STORE_COUNTRY;
       $_SESSION['customer_zone_id'] = STORE_ZONE;
@@ -72,10 +72,10 @@
 
   $where_str = " where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id ";
 
-  if (isset($_GET['categories_id']) && tep_not_null($_GET['categories_id'])) {
+  if (isset($_GET['categories_id']) && osc_not_null($_GET['categories_id'])) {
     if (isset($_GET['inc_subcat']) && ($_GET['inc_subcat'] == '1')) {
       $subcategories_array = array();
-      tep_get_subcategories($subcategories_array, $_GET['categories_id']);
+      osc_get_subcategories($subcategories_array, $_GET['categories_id']);
 
       $where_str .= " and p2c.products_id = p.products_id and p2c.products_id = pd.products_id and (p2c.categories_id = '" . (int)$_GET['categories_id'] . "'";
 
@@ -89,7 +89,7 @@
     }
   }
 
-  if (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
+  if (isset($_GET['manufacturers_id']) && osc_not_null($_GET['manufacturers_id'])) {
     $where_str .= " and m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
   }
 
@@ -104,23 +104,23 @@
           $where_str .= " " . $search_keywords[$i] . " ";
           break;
         default:
-          $keyword = tep_db_prepare_input($search_keywords[$i]);
-          $where_str .= "(pd.products_name like '%" . tep_db_input($keyword) . "%' or p.products_model like '%" . tep_db_input($keyword) . "%' or m.manufacturers_name like '%" . tep_db_input($keyword) . "%' or pd.products_description like '%" . tep_db_input($keyword) . "%')";
+          $keyword = osc_db_prepare_input($search_keywords[$i]);
+          $where_str .= "(pd.products_name like '%" . osc_db_input($keyword) . "%' or p.products_model like '%" . osc_db_input($keyword) . "%' or m.manufacturers_name like '%" . osc_db_input($keyword) . "%' or pd.products_description like '%" . osc_db_input($keyword) . "%')";
           break;
       }
     }
     $where_str .= " )";
   }
 
-  if (tep_not_null($dfrom)) {
-    $where_str .= " and p.products_date_added >= '" . tep_date_raw($dfrom) . "'";
+  if (osc_not_null($dfrom)) {
+    $where_str .= " and p.products_date_added >= '" . osc_date_raw($dfrom) . "'";
   }
 
-  if (tep_not_null($dto)) {
-    $where_str .= " and p.products_date_added <= '" . tep_date_raw($dto) . "'";
+  if (osc_not_null($dto)) {
+    $where_str .= " and p.products_date_added <= '" . osc_date_raw($dto) . "'";
   }
 
-  if (tep_not_null($pfrom)) {
+  if (osc_not_null($pfrom)) {
     if ($currencies->is_set($_SESSION['currency'])) {
       $rate = $currencies->get_value($_SESSION['currency']);
 
@@ -128,7 +128,7 @@
     }
   }
 
-  if (tep_not_null($pto)) {
+  if (osc_not_null($pto)) {
     if (isset($rate)) {
       $pto = $pto / $rate;
     }
@@ -142,7 +142,7 @@
     if ($pto > 0) $where_str .= " and (IF(s.status, s.specials_new_products_price, p.products_price) <= " . (double)$pto . ")";
   }
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     $where_str .= " group by p.products_id, tr.tax_priority";
   }
 
@@ -191,6 +191,6 @@
   <br />
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('search', tep_get_all_get_params(array('search', 'sort', 'page')), 'NONSSL', true, false)); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('search', osc_get_all_get_params(array('search', 'sort', 'page')), 'NONSSL', true, false)); ?>
   </div>
 </div>

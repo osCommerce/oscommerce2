@@ -21,7 +21,7 @@
 
       $this->set_output_messages('direct');
 
-      if (tep_not_null($this->file) && tep_not_null($this->destination)) {
+      if (osc_not_null($this->file) && osc_not_null($this->destination)) {
         $this->set_output_messages('session');
 
         if ( ($this->parse() == true) && ($this->save() == true) ) {
@@ -44,7 +44,7 @@
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
       }
 
-      if ( tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
+      if ( osc_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
         if (sizeof($this->extensions) > 0) {
           if (!in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), $this->extensions)) {
             if ($this->message_location == 'direct') {
@@ -120,7 +120,7 @@
     }
 
     function set_extensions($extensions) {
-      if (tep_not_null($extensions)) {
+      if (osc_not_null($extensions)) {
         if (is_array($extensions)) {
           $this->extensions = $extensions;
         } else {
@@ -134,7 +134,7 @@
     function check_destination() {
       global $messageStack;
 
-      if (!tep_is_writable($this->destination)) {
+      if (!osc_is_writable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
             $messageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');

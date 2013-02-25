@@ -16,9 +16,9 @@
         $Qbanner->execute();
 
         if ( $Qbanner->fetch() !== false ) {
-          tep_update_banner_click_count($_GET['banner']);
+          osc_update_banner_click_count($_GET['banner']);
 
-          tep_redirect($Qbanner->value('banners_url'));
+          osc_redirect($Qbanner->value('banners_url'));
         }
       }
     }

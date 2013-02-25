@@ -48,8 +48,8 @@
         $keywords = trim($_GET['q']);
 
         $date_check_error = false;
-        if (tep_not_null($dfrom)) {
-          if (!tep_checkdate($dfrom, DOB_FORMAT_STRING, $dfrom_array)) {
+        if (osc_not_null($dfrom)) {
+          if (!osc_checkdate($dfrom, DOB_FORMAT_STRING, $dfrom_array)) {
             $error = true;
             $date_check_error = true;
 
@@ -57,8 +57,8 @@
           }
         }
 
-        if (tep_not_null($dto)) {
-          if (!tep_checkdate($dto, DOB_FORMAT_STRING, $dto_array)) {
+        if (osc_not_null($dto)) {
+          if (!osc_checkdate($dto, DOB_FORMAT_STRING, $dto_array)) {
             $error = true;
             $date_check_error = true;
 
@@ -66,7 +66,7 @@
           }
         }
 
-        if (($date_check_error == false) && tep_not_null($dfrom) && tep_not_null($dto)) {
+        if (($date_check_error == false) && osc_not_null($dfrom) && osc_not_null($dto)) {
           if (mktime(0, 0, 0, $dfrom_array[1], $dfrom_array[2], $dfrom_array[0]) > mktime(0, 0, 0, $dto_array[1], $dto_array[2], $dto_array[0])) {
             $error = true;
 
@@ -75,7 +75,7 @@
         }
 
         $price_check_error = false;
-        if (tep_not_null($pfrom)) {
+        if (osc_not_null($pfrom)) {
           if (!settype($pfrom, 'double')) {
             $error = true;
             $price_check_error = true;
@@ -84,7 +84,7 @@
           }
         }
 
-        if (tep_not_null($pto)) {
+        if (osc_not_null($pto)) {
           if (!settype($pto, 'double')) {
             $error = true;
             $price_check_error = true;
@@ -101,8 +101,8 @@
           }
         }
 
-        if (tep_not_null($keywords)) {
-          if (!tep_parse_search_string($keywords, $search_keywords)) {
+        if (osc_not_null($keywords)) {
+          if (!osc_parse_search_string($keywords, $search_keywords)) {
             $error = true;
 
             $messageStack->add_session('search', ERROR_INVALID_KEYWORDS);
@@ -117,10 +117,10 @@
       }
 
       if ($error == true) {
-        tep_redirect(tep_href_link('search', tep_get_all_get_params(array('search', 'q')), 'NONSSL', true, false));
+        osc_redirect(osc_href_link('search', osc_get_all_get_params(array('search', 'q')), 'NONSSL', true, false));
       }
 
-      $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('search', tep_get_all_get_params(array('search')), 'NONSSL', true, false));
+      $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link('search', osc_get_all_get_params(array('search')), 'NONSSL', true, false));
     }
   }
 ?>

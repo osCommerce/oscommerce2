@@ -12,7 +12,7 @@
 
       $app->setContentFile('conditions.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CONDITIONS, tep_href_link('info', 'conditions'));
+      $breadcrumb->add(NAVBAR_TITLE_CONDITIONS, osc_href_link('info', 'conditions'));
     }
   }
 ?>

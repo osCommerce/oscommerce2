@@ -43,7 +43,7 @@ function rowOutEffect(object) {
 
 <h1><?php echo HEADING_TITLE_PAYMENT; ?></h1>
 
-<?php echo tep_draw_form('checkout_payment', tep_href_link('checkout', 'payment&process', 'SSL'), 'post', 'onsubmit="return check_form();"', true); ?>
+<?php echo osc_draw_form('checkout_payment', osc_href_link('checkout', 'payment&process', 'SSL'), 'post', 'onsubmit="return check_form();"', true); ?>
 
 <div class="contentContainer">
 
@@ -52,9 +52,9 @@ function rowOutEffect(object) {
 ?>
 
   <div class="contentText">
-    <?php echo '<strong>' . tep_output_string_protected($error['title']) . '</strong>'; ?>
+    <?php echo '<strong>' . osc_output_string_protected($error['title']) . '</strong>'; ?>
 
-    <p class="messageStackError"><?php echo tep_output_string_protected($error['error']); ?></p>
+    <p class="messageStackError"><?php echo osc_output_string_protected($error['error']); ?></p>
   </div>
 
 <?php
@@ -68,11 +68,11 @@ function rowOutEffect(object) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
+        <?php echo osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
-    <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', tep_href_link('checkout', 'payment&address', 'SSL')); ?>
+    <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?><br /><br /><?php echo osc_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', osc_href_link('checkout', 'payment&address', 'SSL')); ?>
   </div>
 
   <div style="clear: both;"></div>
@@ -127,9 +127,9 @@ function rowOutEffect(object) {
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])));
+      echo osc_draw_radio_field('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])));
     } else {
-      echo tep_draw_hidden_field('payment', $selection[$i]['id']);
+      echo osc_draw_hidden_field('payment', $selection[$i]['id']);
     }
 ?>
 
@@ -183,7 +183,7 @@ function rowOutEffect(object) {
   <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments']) ? $_SESSION['comments'] : ''); ?>
+    <?php echo osc_draw_textarea_field('comments', 'soft', '60', '5', isset($_SESSION['comments']) ? $_SESSION['comments'] : ''); ?>
   </div>
 
   <div class="contentText">
@@ -192,14 +192,14 @@ function rowOutEffect(object) {
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . osc_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
       </table>
     </div>
 
-    <div style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
   </div>
 </div>
 

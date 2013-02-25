@@ -13,12 +13,12 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('address_book.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK, tep_href_link('account', 'address_book', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK, osc_href_link('account', 'address_book', 'SSL'));
     }
   }
 ?>

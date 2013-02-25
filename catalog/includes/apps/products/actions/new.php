@@ -12,7 +12,7 @@
 
       $app->setContentFile('new.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_NEW, tep_href_link('products', 'new'));
+      $breadcrumb->add(NAVBAR_TITLE_NEW, osc_href_link('products', 'new'));
     }
   }
 ?>

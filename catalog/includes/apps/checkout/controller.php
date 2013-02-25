@@ -20,12 +20,12 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ( $_SESSION['cart']->count_contents() < 1 ) {
-        tep_redirect(tep_href_link('cart'));
+        osc_redirect(osc_href_link('cart'));
       }
 
 // Stock Check
@@ -33,7 +33,7 @@
 
       if ( STOCK_CHECK == 'true' ) {
         foreach ( $_SESSION['cart']->get_products() as $p ) {
-          if ( tep_check_stock($p['id'], $p['quantity']) ) {
+          if ( osc_check_stock($p['id'], $p['quantity']) ) {
             $any_out_of_stock = true;
             break;
           }
@@ -41,7 +41,7 @@
 
 // Out of Stock
         if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-          tep_redirect(tep_href_link('cart'));
+          osc_redirect(osc_href_link('cart'));
         }
       }
 
@@ -90,23 +90,23 @@
 // avoid hack attempts during the checkout procedure by checking the internal cartID
       if ( !isset($_GET['shipping']) && isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID']) ) {
         if ( $_SESSION['cart']->cartID != $_SESSION['cartID'] ) {
-          tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+          osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
         }
       }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
       if ( !isset($_GET['shipping']) && !isset($_SESSION['shipping']) ) {
-        tep_redirect(tep_href_link('checkout', 'shipping', 'SSL'));
+        osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
       }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
       if ( !isset($_GET['payment']) && isset($_SESSION['shipping']) && !isset($_SESSION['payment']) ) {
-        tep_redirect(tep_href_link('checkout', 'payment', 'SSL'));
+        osc_redirect(osc_href_link('checkout', 'payment', 'SSL'));
       }
 
       $order = new order();
 
-      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('checkout', '', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE, osc_href_link('checkout', '', 'SSL'));
 
       if ( !isset($_GET['shipping']) && !isset($_GET['payment']) && isset($_SESSION['shipping']) && isset($_SESSION['payment']) ) {
 // load the selected payment module
@@ -119,7 +119,7 @@
         if ( (is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($GLOBALS[$_SESSION['payment']])) || (is_object($GLOBALS[$_SESSION['payment']]) && ($GLOBALS[$_SESSION['payment']]->enabled == false)) ) {
           unset($_SESSION['payment']);
 
-          tep_redirect(tep_href_link('checkout', 'payment&error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+          osc_redirect(osc_href_link('checkout', 'payment&error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
         }
 
         if ( is_array($payment_modules->modules) ) {

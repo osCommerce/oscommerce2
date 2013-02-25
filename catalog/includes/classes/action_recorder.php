@@ -16,10 +16,10 @@
     var $_user_name;
 
     function actionRecorder($module, $user_id = null, $user_name = null) {
-      $module = tep_sanitize_string(str_replace(' ', '', $module));
+      $module = osc_sanitize_string(str_replace(' ', '', $module));
 
-      if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
-        if (tep_not_null($module) && in_array($module . '.php', explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
+      if (defined('MODULE_ACTION_RECORDER_INSTALLED') && osc_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
+        if (osc_not_null($module) && in_array($module . '.php', explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
           if (!class_exists($module)) {
             if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.php')) {
               include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.php');
@@ -50,7 +50,7 @@
     }
 
     function canPerform() {
-      if (tep_not_null($this->_module)) {
+      if (osc_not_null($this->_module)) {
         return $GLOBALS[$this->_module]->canPerform($this->_user_id, $this->_user_name);
       }
 
@@ -58,25 +58,25 @@
     }
 
     function getTitle() {
-      if (tep_not_null($this->_module)) {
+      if (osc_not_null($this->_module)) {
         return $GLOBALS[$this->_module]->title;
       }
     }
 
     function getIdentifier() {
-      if (tep_not_null($this->_module)) {
+      if (osc_not_null($this->_module)) {
         return $GLOBALS[$this->_module]->identifier;
       }
     }
 
     function record($success = true) {
-      if (tep_not_null($this->_module)) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
+      if (osc_not_null($this->_module)) {
+        osc_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . osc_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . osc_db_input($this->_user_name) . "', '" . osc_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
       }
     }
 
     function expireEntries() {
-      if (tep_not_null($this->_module)) {
+      if (osc_not_null($this->_module)) {
         return $GLOBALS[$this->_module]->expireEntries();
       }
     }

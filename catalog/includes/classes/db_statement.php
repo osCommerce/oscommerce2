@@ -113,7 +113,7 @@
 
       switch ($type) {
         case 'protected':
-          return tep_output_string_protected($this->result[$column]);
+          return osc_output_string_protected($this->result[$column]);
           break;
         case 'int':
           return (int)$this->result[$column];

@@ -12,7 +12,7 @@
 
       $app->setContentFile('shipping.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, tep_href_link('info', 'shipping'));
+      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('info', 'shipping'));
     }
   }
 ?>

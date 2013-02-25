@@ -44,8 +44,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -96,21 +96,21 @@
         }
 
         $selection['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_OWNER_FIRSTNAME,
-                                           'field' => tep_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
+                                           'field' => osc_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_OWNER_LASTNAME,
-                                           'field' => tep_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
+                                           'field' => osc_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_TYPE,
-                                           'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
+                                           'field' => osc_draw_pull_down_menu('cc_type', $types_array)),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_NUMBER,
-                                           'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                           'field' => osc_draw_input_field('cc_number_nh-dns')),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM,
-                                           'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM_INFO),
+                                           'field' => osc_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . osc_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM_INFO),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_EXPIRES,
-                                           'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
+                                           'field' => osc_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . osc_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_CVC,
-                                           'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
+                                           'field' => osc_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
                                      array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER,
-                                           'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER_INFO));
+                                           'field' => osc_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER_INFO));
       }
 
       return $selection;
@@ -121,7 +121,7 @@
         if (!isset($_POST['cc_owner_firstname']) || empty($_POST['cc_owner_firstname']) || !isset($_POST['cc_owner_lastname']) || empty($_POST['cc_owner_lastname']) || (strlen($_POST['cc_owner_firstname'] . ' ' . $_POST['cc_owner_lastname']) < CC_OWNER_MIN_LENGTH) || !isset($_POST['cc_type']) || !isset($this->cc_types[$_POST['cc_type']]) || !isset($_POST['cc_number_nh-dns']) || empty($_POST['cc_number_nh-dns']) || (strlen($_POST['cc_number_nh-dns']) < CC_NUMBER_MIN_LENGTH)) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED) . '&cc_owner_firstname=' . urlencode($_POST['cc_owner_firstname']) . '&cc_owner_lastname=' . urlencode($_POST['cc_owner_lastname']) . '&cc_starts_month=' . $_POST['cc_starts_month'] . '&cc_starts_year=' . $_POST['cc_starts_year'] . '&cc_expires_month=' . $_POST['cc_expires_month'] . '&cc_expires_year=' . $_POST['cc_expires_year'];
 
-          tep_redirect(tep_href_link('checkout', 'payment&' . $payment_error_return, 'SSL', true, false));
+          osc_redirect(osc_href_link('checkout', 'payment&' . $payment_error_return, 'SSL', true, false));
         }
       }
 
@@ -176,21 +176,21 @@
         }
 
         $confirmation['fields'] = array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_OWNER_FIRSTNAME,
-                                              'field' => tep_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
+                                              'field' => osc_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_OWNER_LASTNAME,
-                                              'field' => tep_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
+                                              'field' => osc_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_TYPE,
-                                              'field' => tep_draw_pull_down_menu('cc_type', $types_array)),
+                                              'field' => osc_draw_pull_down_menu('cc_type', $types_array)),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_NUMBER,
-                                              'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                              'field' => osc_draw_input_field('cc_number_nh-dns')),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM,
-                                              'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM_INFO),
+                                              'field' => osc_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . osc_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_VALID_FROM_INFO),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_EXPIRES,
-                                              'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
+                                              'field' => osc_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . osc_draw_pull_down_menu('cc_expires_year', $year_expires_array)),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_CVC,
-                                              'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
+                                              'field' => osc_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"')),
                                         array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER,
-                                              'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER_INFO));
+                                              'field' => osc_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . ' ' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_ISSUE_NUMBER_INFO));
       }
 
       return $confirmation;
@@ -198,18 +198,18 @@
 
     function process_button() {
       if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE == 'Payment') {
-        $process_button_string = tep_draw_hidden_field('cc_owner_firstname', $_POST['cc_owner_firstname']) .
-                                 tep_draw_hidden_field('cc_owner_lastname', $_POST['cc_owner_lastname']) .
-                                 tep_draw_hidden_field('cc_type', $_POST['cc_type']) .
-                                 tep_draw_hidden_field('cc_number_nh-dns', $_POST['cc_number_nh-dns']) .
-                                 tep_draw_hidden_field('cc_starts_month', $_POST['cc_starts_month']) .
-                                 tep_draw_hidden_field('cc_starts_year', $_POST['cc_starts_year']) .
-                                 tep_draw_hidden_field('cc_expires_month', $_POST['cc_expires_month']) .
-                                 tep_draw_hidden_field('cc_expires_year', $_POST['cc_expires_year']) .
-                                 tep_draw_hidden_field('cc_cvc_nh-dns', $_POST['cc_cvc_nh-dns']);
+        $process_button_string = osc_draw_hidden_field('cc_owner_firstname', $_POST['cc_owner_firstname']) .
+                                 osc_draw_hidden_field('cc_owner_lastname', $_POST['cc_owner_lastname']) .
+                                 osc_draw_hidden_field('cc_type', $_POST['cc_type']) .
+                                 osc_draw_hidden_field('cc_number_nh-dns', $_POST['cc_number_nh-dns']) .
+                                 osc_draw_hidden_field('cc_starts_month', $_POST['cc_starts_month']) .
+                                 osc_draw_hidden_field('cc_starts_year', $_POST['cc_starts_year']) .
+                                 osc_draw_hidden_field('cc_expires_month', $_POST['cc_expires_month']) .
+                                 osc_draw_hidden_field('cc_expires_year', $_POST['cc_expires_year']) .
+                                 osc_draw_hidden_field('cc_cvc_nh-dns', $_POST['cc_cvc_nh-dns']);
 
         if (isset($_POST['cc_issue_nh-dns']) && !empty($_POST['cc_issue_nh-dns'])) {
-          $process_button_string .= tep_draw_hidden_field('cc_issue_nh-dns', $_POST['cc_issue_nh-dns']);
+          $process_button_string .= osc_draw_hidden_field('cc_issue_nh-dns', $_POST['cc_issue_nh-dns']);
         }
 
         return $process_button_string;
@@ -230,7 +230,7 @@
 
         $name = explode(' ', $_POST['cc_owner'], 2);
 
-        $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR),
+        $params = array('USER' => (osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR),
                         'VENDOR' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR,
                         'PARTNER' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PARTNER,
                         'PWD' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PASSWORD,
@@ -242,10 +242,10 @@
                         'LASTNAME' => $_POST['cc_owner_lastname'],
                         'STREET' => $order->billing['street_address'],
                         'CITY' => $order->billing['city'],
-                        'STATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
+                        'STATE' => osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
                         'COUNTRY' => $order->billing['country']['iso_code_2'],
                         'ZIP' => $order->billing['postcode'],
-                        'CLIENTIP' => tep_get_ip_address(),
+                        'CLIENTIP' => osc_get_ip_address(),
                         'EMAIL' => $order->customer['email_address'],
                         'ACCT' => $_POST['cc_number_nh-dns'],
                         'ACCTTYPE' => $_POST['cc_type'],
@@ -263,7 +263,7 @@
           $params['SHIPTOLASTNAME'] = $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];
           $params['SHIPTOCITY'] = $order->delivery['city'];
-          $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+          $params['SHIPTOSTATE'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['SHIPTOCOUNTRY'] = $order->delivery['country']['iso_code_2'];
           $params['SHIPTOZIP'] = $order->delivery['postcode'];
         }
@@ -305,10 +305,10 @@
               break;
           }
 
-          tep_redirect(tep_href_link('checkout', 'error_message=' . urlencode($error_message), 'SSL'));
+          osc_redirect(osc_href_link('checkout', 'error_message=' . urlencode($error_message), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link('checkout', 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        osc_redirect(osc_href_link('checkout', 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
       }
     }
 
@@ -328,29 +328,29 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PayPal Direct (UK)', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS', 'False', 'Do you want to accept PayPal Direct (UK) payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR', '', 'Your merchant login ID that you created when you registered for the Website Payments Pro account.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('User', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME', '', 'If you set up one or more additional users on the account, this value is the ID of the user authorised to process transactions. If, however, you have not set up additional users on the account, USER has the same value as VENDOR.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Password', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PASSWORD', '', 'The 6- to 32-character password that you defined while registering for the account.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Partner', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PARTNER', 'PayPalUK', 'The ID provided to you by the authorised PayPal Reseller who registered you for the Payflow SDK. If you purchased your account directly from PayPal, use PayPalUK.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_SERVER', 'Live', 'Use the live or testing (sandbox) gateway server to process transactions?', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Card Acceptance Page', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE', 'Confirmation', 'The location to accept card information. Either on the Checkout Confirmation page or the Checkout Payment page.', '6', '0', 'tep_cfg_select_option(array(\'Confirmation\', \'Payment\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PayPal Direct (UK)', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS', 'False', 'Do you want to accept PayPal Direct (UK) payments?', '6', '1', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR', '', 'Your merchant login ID that you created when you registered for the Website Payments Pro account.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('User', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_USERNAME', '', 'If you set up one or more additional users on the account, this value is the ID of the user authorised to process transactions. If, however, you have not set up additional users on the account, USER has the same value as VENDOR.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Password', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PASSWORD', '', 'The 6- to 32-character password that you defined while registering for the account.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Partner', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_PARTNER', 'PayPalUK', 'The ID provided to you by the authorised PayPal Reseller who registered you for the Payflow SDK. If you purchased your account directly from PayPal, use PayPalUK.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_SERVER', 'Live', 'Use the live or testing (sandbox) gateway server to process transactions?', '6', '0', 'osc_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'osc_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Card Acceptance Page', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CARD_INPUT_PAGE', 'Confirmation', 'The location to accept card information. Either on the Checkout Confirmation page or the Checkout Payment page.', '6', '0', 'osc_cfg_select_option(array(\'Confirmation\', \'Payment\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'osc_get_zone_class_title', 'osc_cfg_pull_down_zone_classes(', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
    }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -416,7 +416,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
   }
 ?>

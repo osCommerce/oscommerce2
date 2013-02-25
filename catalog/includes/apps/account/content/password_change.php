@@ -17,7 +17,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('account', 'password&change&process', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true); ?>
+<?php echo osc_draw_form('account_password', osc_href_link('account', 'password&change&process', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true); ?>
 
 <div class="contentContainer">
   <div>
@@ -29,23 +29,23 @@
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_CURRENT; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_current') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>': ''); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_password_field('password_current') . '&nbsp;' . (osc_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>': ''); ?></td>
       </tr>
       <tr> 
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_NEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_new') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_password_field('password_new') . '&nbsp;' . (osc_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?></td>
       </tr>
       <tr> 
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_confirmation') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_password_field('password_confirmation') . '&nbsp;' . (osc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?></td>
       </tr>
     </table>
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', '', 'SSL')); ?>
   </div>
 </div>
 

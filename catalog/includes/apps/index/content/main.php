@@ -11,11 +11,11 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <?php echo tep_customer_greeting(); ?>
+    <?php echo osc_customer_greeting(); ?>
   </div>
 
 <?php
-  if (tep_not_null(TEXT_MAIN)) {
+  if (osc_not_null(TEXT_MAIN)) {
 ?>
 
   <div class="contentText">

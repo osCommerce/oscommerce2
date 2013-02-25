@@ -152,7 +152,7 @@
               $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
             }
           } else {
-            if ( tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES ) {
+            if ( osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES ) {
               $sql_data_array['customers_id'] = (int)$_SESSION['customer_id'];
 
               $OSCOM_PDO->perform('address_book', $sql_data_array);
@@ -170,10 +170,10 @@
             }
           }
 
-          tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+          osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link('account', 'address_book', 'SSL'));
+        osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }
     }
   }

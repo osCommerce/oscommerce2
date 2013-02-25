@@ -13,7 +13,7 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('newsletters.php');
@@ -24,7 +24,7 @@
 
       $newsletter = $Qnewsletter->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_NEWSLETTERS, tep_href_link('account', 'newsletters', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_NEWSLETTERS, osc_href_link('account', 'newsletters', 'SSL'));
     }
   }
 ?>

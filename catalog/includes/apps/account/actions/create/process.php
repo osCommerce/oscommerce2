@@ -59,7 +59,7 @@
         }
 
         if ( ACCOUNT_DOB == 'true' ) {
-          if ( !is_numeric(tep_date_raw($dob)) || (@checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4)) == false) ) {
+          if ( !is_numeric(osc_date_raw($dob)) || (@checkdate(substr(osc_date_raw($dob), 4, 2), substr(osc_date_raw($dob), 6, 2), substr(osc_date_raw($dob), 0, 4)) == false) ) {
             $error = true;
 
             $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
@@ -70,7 +70,7 @@
           $error = true;
 
           $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
-        } elseif ( !tep_validate_email($email_address) ) {
+        } elseif ( !osc_validate_email($email_address) ) {
           $error = true;
 
           $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
@@ -167,10 +167,10 @@
                                   'customers_telephone' => $telephone,
                                   'customers_fax' => $fax,
                                   'customers_newsletter' => $newsletter,
-                                  'customers_password' => tep_encrypt_password($password));
+                                  'customers_password' => osc_encrypt_password($password));
 
           if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
+          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = osc_date_raw($dob);
 
           $OSCOM_PDO->perform('customers', $sql_data_array);
 
@@ -214,13 +214,13 @@
           $_SESSION['customer_zone_id'] = $zone_id;
 
 // reset session token
-          $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+          $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
 
 // restore cart contents
           $_SESSION['cart']->restore_contents();
 
           if ( SESSION_RECREATE == 'True' ) {
-            tep_session_recreate();
+            osc_session_recreate();
           }
 
 // build the message content
@@ -238,9 +238,9 @@
 
           $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
 
-          tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-          tep_redirect(tep_href_link('account', 'create&success', 'SSL'));
+          osc_redirect(osc_href_link('account', 'create&success', 'SSL'));
         }
       }
     }

@@ -17,7 +17,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('password_reset', tep_href_link('account', 'password&reset&process&e=' . $_GET['e'] . '&k=' . $_GET['k'], 'SSL'), 'post', 'onsubmit="return check_form(password_reset);"', true); ?>
+<?php echo osc_draw_form('password_reset', osc_href_link('account', 'password&reset&process&e=' . $_GET['e'] . '&k=' . $_GET['k'], 'SSL'), 'post', 'onsubmit="return check_form(password_reset);"', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
@@ -26,17 +26,17 @@
     <table border="0" cellspacing="2" cellpadding="2" width="100%">
       <tr>
         <td class="fieldKey"><?php echo ENTRY_PASSWORD; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password'); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_password_field('password'); ?></td>
       </tr>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('confirmation'); ?></td>
+        <td class="fieldValue"><?php echo osc_draw_password_field('confirmation'); ?></td>
       </tr>
     </table>
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
   </div>
 </div>
 

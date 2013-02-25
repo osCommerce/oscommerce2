@@ -42,7 +42,7 @@
         }
 
         if (ACCOUNT_DOB == 'true') {
-          if ((is_numeric(tep_date_raw($dob)) == false) || (@checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4)) == false)) {
+          if ((is_numeric(osc_date_raw($dob)) == false) || (@checkdate(substr(osc_date_raw($dob), 4, 2), substr(osc_date_raw($dob), 6, 2), substr(osc_date_raw($dob), 0, 4)) == false)) {
             $error = true;
 
             $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
@@ -55,7 +55,7 @@
           $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
         }
 
-        if (!tep_validate_email($email_address)) {
+        if (!osc_validate_email($email_address)) {
           $error = true;
 
           $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
@@ -86,7 +86,7 @@
                                   'customers_fax' => $fax);
 
           if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
+          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = osc_date_raw($dob);
 
           $OSCOM_PDO->perform('customers', $sql_data_array, array('customers_id' => $_SESSION['customer_id']));
           $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $_SESSION['customer_id']));
@@ -96,7 +96,7 @@
 
           $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
-          tep_redirect(tep_href_link('account', '', 'SSL'));
+          osc_redirect(osc_href_link('account', '', 'SSL'));
         }
       }
     }

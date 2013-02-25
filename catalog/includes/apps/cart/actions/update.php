@@ -15,7 +15,7 @@
         }
       }
 
-      tep_redirect(tep_href_link('cart'));
+      osc_redirect(osc_href_link('cart'));
     }
   }
 ?>

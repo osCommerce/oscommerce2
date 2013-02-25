@@ -17,7 +17,7 @@
       if ( isset($_GET['id']) ) {
 //product check query
         $Qpc = $OSCOM_PDO->prepare('select p.products_model from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :languages_id');
-        $Qpc->bindInt(':products_id', tep_get_prid($_GET['id']));
+        $Qpc->bindInt(':products_id', osc_get_prid($_GET['id']));
         $Qpc->bindInt(':languages_id', $_SESSION['languages_id']);
         $Qpc->execute();
 
@@ -29,7 +29,7 @@
           $this->_content_file = 'main.php';
 
           if ( !empty($model) ) {
-            $breadcrumb->add($model, tep_href_link('products', 'cPath=' . $cPath . '&id=' . $_GET['id']));
+            $breadcrumb->add($model, osc_href_link('products', 'cPath=' . $cPath . '&id=' . $_GET['id']));
           }
         }
       }

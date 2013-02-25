@@ -12,9 +12,9 @@
 
       $app->setContentFile('shipping_address.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SHIPPING_ADDRESS, tep_href_link('checkout', 'shipping&address', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_SHIPPING_ADDRESS, osc_href_link('checkout', 'shipping&address', 'SSL'));
 
-      $addresses_count = tep_count_customer_address_book_entries();
+      $addresses_count = osc_count_customer_address_book_entries();
 
       $process = false;
     }

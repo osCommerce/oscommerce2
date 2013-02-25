@@ -12,7 +12,7 @@
 
       $app->setContentFile('cookie_usage.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, tep_href_link('info', 'cookie_usage'));
+      $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, osc_href_link('info', 'cookie_usage'));
     }
   }
 ?>

@@ -23,7 +23,7 @@
       <div class="ui-widget-header infoBoxHeading"><?php echo PRIMARY_ADDRESS_TITLE; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?>
+        <?php echo osc_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?>
       </div>
     </div>
 
@@ -42,13 +42,13 @@
   $Qab->execute();
 
   while ( $Qab->fetch() ) {
-    $format_id = tep_get_address_format_id($Qab->valueInt('country_id'));
+    $format_id = osc_get_address_format_id($Qab->valueInt('country_id'));
 ?>
 
     <div>
-      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'document', tep_href_link('account', 'address_book&edit&id=' . $Qab->valueInt('address_book_id'), 'SSL')) . ' ' . tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'trash', tep_href_link('account', 'address_book&delete&id=' . $Qab->valueInt('address_book_id'), 'SSL')); ?></span>
+      <span style="float: right;"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'document', osc_href_link('account', 'address_book&edit&id=' . $Qab->valueInt('address_book_id'), 'SSL')) . ' ' . osc_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&id=' . $Qab->valueInt('address_book_id'), 'SSL')); ?></span>
       <p><strong><?php echo $Qab->valueProtected('firstname') . ' ' . $Qab->valueProtected('lastname'); ?></strong><?php if ($Qab->valueInt('address_book_id') == $_SESSION['customer_default_address_id']) echo '&nbsp;<small><i>' . PRIMARY_ADDRESS . '</i></small>'; ?></p>
-      <p style="padding-left: 20px;"><?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?></p>
+      <p style="padding-left: 20px;"><?php echo osc_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?></p>
     </div>
 
 <?php
@@ -60,16 +60,16 @@
   <div class="buttonSet">
 
 <?php
-  if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
+  if (osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'home', tep_href_link('account', 'address_book&new', 'SSL'), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'home', osc_href_link('account', 'address_book&new', 'SSL'), 'primary'); ?></span>
 
 <?php
   }
 ?>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', '', 'SSL')); ?>
   </div>
 
   <p><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></p>

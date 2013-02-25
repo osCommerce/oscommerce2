@@ -12,17 +12,17 @@
 
       if ( !isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false') ) {
         $_SESSION['navigation']->set_snapshot();
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       if ( isset($_GET['id']) && !empty($_GET['id']) ) {
         $Qp = $OSCOM_PDO->prepare('select pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
-        $Qp->bindInt(':products_id', tep_get_prid($_GET['id']));
+        $Qp->bindInt(':products_id', osc_get_prid($_GET['id']));
         $Qp->bindInt(':language_id', $_SESSION['languages_id']);
         $Qp->execute();
 
         if ( $Qp->fetch() === false ) {
-          tep_redirect(tep_href_link('products', 'id=' . $_GET['id']));
+          osc_redirect(osc_href_link('products', 'id=' . $_GET['id']));
         }
 
         $Qaccount = $OSCOM_PDO->prepare('select customers_firstname, customers_lastname, customers_email_address from :table_customers where customers_id = :customers_id');
@@ -34,7 +34,7 @@
 
         $app->setContentFile('tell_a_friend.php');
 
-        $breadcrumb->add(NAVBAR_TITLE_TELL_A_FRIEND, tep_href_link('products', 'tell_a_friend&id=' . $_GET['id']));
+        $breadcrumb->add(NAVBAR_TITLE_TELL_A_FRIEND, osc_href_link('products', 'tell_a_friend&id=' . $_GET['id']));
       }
     }
   }

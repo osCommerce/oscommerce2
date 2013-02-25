@@ -12,7 +12,7 @@
 
       $app->setContentFile('contact.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CONTACT, tep_href_link('info', 'contact'));
+      $breadcrumb->add(NAVBAR_TITLE_CONTACT, osc_href_link('info', 'contact'));
     }
   }
 ?>

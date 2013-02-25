@@ -15,7 +15,7 @@
       $app = 'index';
 
       if ( !empty($_GET) ) {
-        $requested_app = tep_sanitize_string(basename(key(array_slice($_GET, 0, 1, true))));
+        $requested_app = osc_sanitize_string(basename(key(array_slice($_GET, 0, 1, true))));
 
         if ( preg_match('/^[A-Za-z0-9-_]*$/', $requested_app) && file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $requested_app . '/controller.php') ) {
           $app = $requested_app;
@@ -58,10 +58,10 @@
       $action_index = 0;
 
       if ( !empty($_GET) ) {
-        $requested_action = tep_sanitize_string(basename(key(array_slice($_GET, 0, 1, true))));
+        $requested_action = osc_sanitize_string(basename(key(array_slice($_GET, 0, 1, true))));
 
         if ( $requested_action == $this->getCode() ) {
-          $requested_action = tep_sanitize_string(basename(key(array_slice($_GET, 1, 1, true))));
+          $requested_action = osc_sanitize_string(basename(key(array_slice($_GET, 1, 1, true))));
           $action_index = 1;
         }
 
@@ -81,7 +81,7 @@
           $action = array($action);
 
           for ( $i = $action_index, $n = count($_GET); $i < $n; $i++ ) {
-            $subaction = tep_sanitize_string(basename(key(array_slice($_GET, $i, 1, true))));
+            $subaction = osc_sanitize_string(basename(key(array_slice($_GET, $i, 1, true))));
 
             if ( preg_match('/^[A-Za-z0-9-_]*$/', $subaction) && !in_array($subaction, $this->_ignored_actions) && file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . implode('/', $action) . '/' . $subaction . '.php') ) {
               include(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $this->getCode() . '/actions/' . implode('/', $action) . '/' . $subaction . '.php');

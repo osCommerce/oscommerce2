@@ -13,12 +13,12 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('password_change.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD, tep_href_link('account', 'password&change', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_PASSWORD, osc_href_link('account', 'password&change', 'SSL'));
     }
   }
 ?>
