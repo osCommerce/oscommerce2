@@ -18,7 +18,7 @@
 // load all enabled payment modules
       $payment_modules = new payment;
 
-      $breadcrumb->add(NAVBAR_TITLE_PAYMENT, tep_href_link('checkout', 'payment', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_PAYMENT, osc_href_link('checkout', 'payment', 'SSL'));
     }
   }
 ?>

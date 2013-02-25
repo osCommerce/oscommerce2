@@ -13,12 +13,12 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('orders.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ORDERS, tep_href_link('account', 'orders', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_ORDERS, osc_href_link('account', 'orders', 'SSL'));
     }
   }
 ?>

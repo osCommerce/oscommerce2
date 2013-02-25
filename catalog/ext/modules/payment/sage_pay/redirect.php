@@ -16,19 +16,19 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'get' => 'checkout&payment'));
-    tep_redirect(tep_href_link('account', 'login', 'SSL'));
+    osc_redirect(osc_href_link('account', 'login', 'SSL'));
   }
 
-  if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
-    $redirect_url = tep_href_link('checkout', 'payment&payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
+  if ( isset($_GET['payment_error']) && osc_not_null($_GET['payment_error']) ) {
+    $redirect_url = osc_href_link('checkout', 'payment&payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && osc_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
   } else {
     $hidden_params = '';
 
     if ($_SESSION['payment'] == 'sage_pay_direct') {
-      $redirect_url = tep_href_link('checkout', 'process&check=3D', 'SSL');
-      $hidden_params = tep_draw_hidden_field('MD', $_POST['MD']) . tep_draw_hidden_field('PaRes', $_POST['PaRes']);
+      $redirect_url = osc_href_link('checkout', 'process&check=3D', 'SSL');
+      $hidden_params = osc_draw_hidden_field('MD', $_POST['MD']) . osc_draw_hidden_field('PaRes', $_POST['PaRes']);
     } else {
-      $redirect_url = tep_href_link('checkout', 'success', 'SSL');
+      $redirect_url = osc_href_link('checkout', 'success', 'SSL');
     }
   }
 

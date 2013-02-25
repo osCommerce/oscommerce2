@@ -12,7 +12,7 @@
 
       $app->setContentFile('privacy.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PRIVACY, tep_href_link('info', 'privacy'));
+      $breadcrumb->add(NAVBAR_TITLE_PRIVACY, osc_href_link('info', 'privacy'));
     }
   }
 ?>

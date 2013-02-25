@@ -22,7 +22,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
+      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
 
       <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
     </div>
@@ -40,18 +40,18 @@
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
 
 <?php
-    $products_new_query = tep_db_query($products_new_split->sql_query);
-    while ($products_new = tep_db_fetch_array($products_new_query)) {
-      if ($new_price = tep_get_products_special_price($products_new['products_id'])) {
-        $products_price = '<del>' . $currencies->display_price($products_new['products_price'], tep_get_tax_rate($products_new['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($products_new['products_tax_class_id'])) . '</span>';
+    $products_new_query = osc_db_query($products_new_split->sql_query);
+    while ($products_new = osc_db_fetch_array($products_new_query)) {
+      if ($new_price = osc_get_products_special_price($products_new['products_id'])) {
+        $products_price = '<del>' . $currencies->display_price($products_new['products_price'], osc_get_tax_rate($products_new['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, osc_get_tax_rate($products_new['products_tax_class_id'])) . '</span>';
       } else {
-        $products_price = $currencies->display_price($products_new['products_price'], tep_get_tax_rate($products_new['products_tax_class_id']));
+        $products_price = $currencies->display_price($products_new['products_price'], osc_get_tax_rate($products_new['products_tax_class_id']));
       }
 ?>
       <tr>
-        <td width="<?php echo SMALL_IMAGE_WIDTH + 10; ?>" valign="top" class="main"><?php echo '<a href="' . tep_href_link('products', 'id=' . $products_new['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $products_new['products_image'], $products_new['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></td>
-        <td valign="top" class="main"><?php echo '<a href="' . tep_href_link('products', 'id=' . $products_new['products_id']) . '"><strong><u>' . $products_new['products_name'] . '</u></strong></a><br />' . TEXT_DATE_ADDED_NEW . ' ' . tep_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER_NEW . ' ' . $products_new['manufacturers_name'] . '<br /><br />' . TEXT_PRICE_NEW . ' ' . $products_price; ?></td>
-        <td align="right" valign="middle" class="smallText"><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', tep_href_link('cart', 'add&id=' . $products_new['products_id'] . '&formid=' . md5($_SESSION['sessiontoken']))); ?></td>
+        <td width="<?php echo SMALL_IMAGE_WIDTH + 10; ?>" valign="top" class="main"><?php echo '<a href="' . osc_href_link('products', 'id=' . $products_new['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $products_new['products_image'], $products_new['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></td>
+        <td valign="top" class="main"><?php echo '<a href="' . osc_href_link('products', 'id=' . $products_new['products_id']) . '"><strong><u>' . $products_new['products_name'] . '</u></strong></a><br />' . TEXT_DATE_ADDED_NEW . ' ' . osc_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER_NEW . ' ' . $products_new['manufacturers_name'] . '<br /><br />' . TEXT_PRICE_NEW . ' ' . $products_price; ?></td>
+        <td align="right" valign="middle" class="smallText"><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'cart', osc_href_link('cart', 'add&id=' . $products_new['products_id'] . '&formid=' . md5($_SESSION['sessiontoken']))); ?></td>
       </tr>
 <?php
     }
@@ -76,7 +76,7 @@
     <br />
 
     <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
+      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
 
       <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
     </div>

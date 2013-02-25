@@ -25,7 +25,7 @@
 
         $messageStack->add_session('account', SUCCESS_NEWSLETTER_UPDATED, 'success');
 
-        tep_redirect(tep_href_link('account', '', 'SSL'));
+        osc_redirect(osc_href_link('account', '', 'SSL'));
       }
     }
   }

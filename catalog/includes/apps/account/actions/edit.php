@@ -13,7 +13,7 @@
       if ( !isset($_SESSION['customer_id']) ) {
         $_SESSION['navigation']->set_snapshot();
 
-        tep_redirect(tep_href_link('account', 'login', 'SSL'));
+        osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
       $app->setContentFile('edit.php');
@@ -24,7 +24,7 @@
 
       $account = $Qaccount->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_EDIT, tep_href_link('account', 'edit', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_EDIT, osc_href_link('account', 'edit', 'SSL'));
     }
   }
 ?>

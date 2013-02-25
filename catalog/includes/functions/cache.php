@@ -83,10 +83,10 @@
     if (($refresh == true)|| !read_cache($var, $filename)) {
 // Didn' get cache so go to the database.
 //      $conn = mysql_connect("localhost", "apachecon", "apachecon");
-      $res = tep_db_query($sql);
+      $res = osc_db_query($sql);
 //      if ($err = mysql_error()) trigger_error($err, E_USER_ERROR);
 // loop through the results and add them to an array
-      while ($rec = tep_db_fetch_array($res)) {
+      while ($rec = osc_db_fetch_array($res)) {
         $var[] = $rec;
       }
 // write the data to the file
@@ -97,7 +97,7 @@
 ////
 //! Cache the categories box
 // Cache the categories box
-  function tep_cache_categories_box($auto_expire = false, $refresh = false) {
+  function osc_cache_categories_box($auto_expire = false, $refresh = false) {
     global $cPath;
 
     $cache_output = '';
@@ -119,7 +119,7 @@
 ////
 //! Cache the manufacturers box
 // Cache the manufacturers box
-  function tep_cache_manufacturers_box($auto_expire = false, $refresh = false) {
+  function osc_cache_manufacturers_box($auto_expire = false, $refresh = false) {
     $cache_output = '';
 
     $manufacturers_id = '';
@@ -144,7 +144,7 @@
 ////
 //! Cache the also purchased module
 // Cache the also purchased module
-  function tep_cache_also_purchased($auto_expire = false, $refresh = false) {
+  function osc_cache_also_purchased($auto_expire = false, $refresh = false) {
     $cache_output = '';
 
     if (isset($_GET['products_id']) && is_numeric($_GET['products_id'])) {

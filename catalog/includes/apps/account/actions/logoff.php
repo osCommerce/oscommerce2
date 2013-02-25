@@ -24,7 +24,7 @@
       $_SESSION['cart']->reset();
 
       if ( SESSION_RECREATE == 'True' ) {
-        tep_session_recreate();
+        osc_session_recreate();
       }
 
       $app->setContentFile('logoff.php');

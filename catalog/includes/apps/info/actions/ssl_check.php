@@ -12,7 +12,7 @@
 
       $app->setContentFile('ssl_check.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, tep_href_link('info', 'ssl_check'));
+      $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, osc_href_link('info', 'ssl_check'));
     }
   }
 ?>

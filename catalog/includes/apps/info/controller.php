@@ -10,7 +10,7 @@
     public function __construct() {
       global $breadcrumb;
 
-      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('info'));
+      $breadcrumb->add(NAVBAR_TITLE, osc_href_link('info'));
     }
   }
 ?>

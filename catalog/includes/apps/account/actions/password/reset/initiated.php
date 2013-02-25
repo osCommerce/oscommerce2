@@ -12,7 +12,7 @@
 
       $app->setContentFile('password_reset_initiated.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_FORGOTTEN, tep_href_link('account', 'password&forgotten', 'SSL'));
+      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_FORGOTTEN, osc_href_link('account', 'password&forgotten', 'SSL'));
     }
   }
 ?>

@@ -21,12 +21,12 @@
   <div class="contentText">
     <p><?php echo DELETE_ADDRESS_DESCRIPTION; ?></p>
 
-    <p><?php echo tep_address_label($_SESSION['customer_id'], $_GET['id'], true, ' ', '<br />'); ?></p>
+    <p><?php echo osc_address_label($_SESSION['customer_id'], $_GET['id'], true, ' ', '<br />'); ?></p>
   </div>
 
   <div>
-    <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'trash', tep_href_link('account', 'address_book&delete&process&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary'); ?></span>
+    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&process&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link('account', 'address_book', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', 'address_book', 'SSL')); ?>
   </div>
 </div>

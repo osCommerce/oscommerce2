@@ -10,10 +10,10 @@
   Released under the GNU General Public License
 */
 
-  function tep_get_languages_directory($code) {
-    $language_query = tep_db_query("select languages_id, directory from " . TABLE_LANGUAGES . " where code = '" . tep_db_input($code) . "'");
-    if (tep_db_num_rows($language_query)) {
-      $language = tep_db_fetch_array($language_query);
+  function osc_get_languages_directory($code) {
+    $language_query = osc_db_query("select languages_id, directory from " . TABLE_LANGUAGES . " where code = '" . osc_db_input($code) . "'");
+    if (osc_db_num_rows($language_query)) {
+      $language = osc_db_fetch_array($language_query);
       $_SESSION['languages_id'] = $language['languages_id'];
       return $language['directory'];
     } else {

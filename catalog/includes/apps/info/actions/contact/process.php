@@ -17,7 +17,7 @@
         $email_address = isset($_POST['email']) ? trim($_POST['email']) : null;
         $enquiry = isset($_POST['enquiry']) ? trim($_POST['enquiry']) : null;
 
-        if ( !tep_validate_email($email_address) ) {
+        if ( !osc_validate_email($email_address) ) {
           $error = true;
 
           $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
@@ -34,11 +34,11 @@
         }
 
         if ( $error === false ) {
-          tep_mail(STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, EMAIL_SUBJECT, $enquiry, $name, $email_address);
+          osc_mail(STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, EMAIL_SUBJECT, $enquiry, $name, $email_address);
 
           $actionRecorder->record();
 
-          tep_redirect(tep_href_link('info', 'contact&success'));
+          osc_redirect(osc_href_link('info', 'contact&success'));
         }
       }
     }

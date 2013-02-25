@@ -11,9 +11,9 @@
 
 <?php
   if (isset($$_SESSION['payment']->form_action_url)) {
-    echo tep_draw_form('checkout_confirmation', $$_SESSION['payment']->form_action_url, 'post');
+    echo osc_draw_form('checkout_confirmation', $$_SESSION['payment']->form_action_url, 'post');
   } else {
-    echo tep_draw_form('checkout_confirmation', tep_href_link('checkout', 'process', 'SSL'), 'post', null, true);
+    echo osc_draw_form('checkout_confirmation', osc_href_link('checkout', 'process', 'SSL'), 'post', null, true);
   }
 ?>
 
@@ -30,10 +30,10 @@
 
         <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong> <a href="' . tep_href_link('checkout', 'shipping&address', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong> <a href="' . osc_href_link('checkout', 'shipping&address', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
           <tr>
-            <td><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
+            <td><?php echo osc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?></td>
           </tr>
 
 <?php
@@ -41,7 +41,7 @@
 ?>
 
           <tr>
-            <td><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong> <a href="' . tep_href_link('checkout', 'shipping', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong> <a href="' . osc_href_link('checkout', 'shipping', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
           <tr>
             <td><?php echo $order->info['shipping_method']; ?></td>
@@ -63,7 +63,7 @@
 ?>
 
           <tr>
-            <td colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . osc_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
             <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
             <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
@@ -73,7 +73,7 @@
 ?>
 
           <tr>
-            <td colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . tep_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> <a href="' . osc_href_link('cart') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
 
 <?php
@@ -85,7 +85,7 @@
          '            <td valign="top">' . $order->products[$i]['name'];
 
     if (STOCK_CHECK == 'true') {
-      echo tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
+      echo osc_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
     }
 
     if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
@@ -96,7 +96,7 @@
 
     echo '</td>' . "\n";
 
-    if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+    if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . osc_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
 
     echo '            <td align="right" valign="top">' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . '</td>' . "\n" .
          '          </tr>' . "\n";
@@ -115,13 +115,13 @@
       <tr>
         <td width="30%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong> <a href="' . tep_href_link('checkout', 'payment&address', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong> <a href="' . osc_href_link('checkout', 'payment&address', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
           <tr>
-            <td><?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
+            <td><?php echo osc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?></td>
           </tr>
           <tr>
-            <td><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong> <a href="' . tep_href_link('checkout', 'payment', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
+            <td><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong> <a href="' . osc_href_link('checkout', 'payment', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></td>
           </tr>
           <tr>
             <td><?php echo $order->info['payment_method']; ?></td>
@@ -159,9 +159,9 @@
 ?>
 
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
         <td class="main"><?php echo $confirmation['fields'][$i]['title']; ?></td>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '10', '1'); ?></td>
         <td class="main"><?php echo $confirmation['fields'][$i]['field']; ?></td>
       </tr>
 
@@ -177,13 +177,13 @@
     }
   }
 
-  if (tep_not_null($order->info['comments'])) {
+  if (osc_not_null($order->info['comments'])) {
 ?>
 
-  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> <a href="' . tep_href_link('checkout', 'payment', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></h2>
+  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> <a href="' . osc_href_link('checkout', 'payment', 'SSL') . '"><span class="orderEdit">(' . TEXT_EDIT . ')</span></a>'; ?></h2>
 
   <div class="contentText">
-    <?php echo nl2br(tep_output_string_protected($order->info['comments'])) . tep_draw_hidden_field('comments', $order->info['comments']); ?>
+    <?php echo nl2br(osc_output_string_protected($order->info['comments'])) . osc_draw_hidden_field('comments', $order->info['comments']); ?>
   </div>
 
 <?php
@@ -196,8 +196,8 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link('checkout', 'payment', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . osc_href_link('checkout', 'shipping', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . osc_href_link('checkout', 'payment', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
       </table>
@@ -210,7 +210,7 @@
     echo $payment_modules->process_button();
   }
 
-  echo tep_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'primary');
+  echo osc_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'primary');
 ?>
 
     </div>

@@ -9,7 +9,7 @@
 
 <h1><?php echo HEADING_TITLE; ?></h1>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('cart', 'update'), 'post', null, true); ?>
+<?php echo osc_draw_form('cart_quantity', osc_href_link('cart', 'update'), 'post', null, true); ?>
 
 <div class="contentContainer">
   <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
@@ -23,8 +23,8 @@
 // Push all attributes information in an array
     if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
       while (list($option, $value) = each($products[$i]['attributes'])) {
-        echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
-        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
+        echo osc_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
+        $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                     from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                     where pa.products_id = '" . (int)$products[$i]['id'] . "'
                                     and pa.options_id = '" . (int)$option . "'
@@ -33,7 +33,7 @@
                                     and pa.options_values_id = poval.products_options_values_id
                                     and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                     and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-        $attributes_values = tep_db_fetch_array($attributes);
+        $attributes_values = osc_db_fetch_array($attributes);
 
         $products[$i][$option]['products_options_name'] = $attributes_values['products_options_name'];
         $products[$i][$option]['options_values_id'] = $value;
@@ -53,12 +53,12 @@
 
     $products_name = '<table border="0" cellspacing="2" cellpadding="2">' .
                      '  <tr>' .
-                     '    <td align="center"><a href="' . tep_href_link('products', 'id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                     '    <td valign="top"><a href="' . tep_href_link('products', 'id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
+                     '    <td align="center"><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '">' . osc_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                     '    <td valign="top"><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
 
     if (STOCK_CHECK == 'true') {
-      $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
-      if (tep_not_null($stock_check)) {
+      $stock_check = osc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+      if (osc_not_null($stock_check)) {
         $any_out_of_stock = 1;
 
         $products_name .= $stock_check;
@@ -72,14 +72,14 @@
       }
     }
 
-    $products_name .= '<br /><br />' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'refresh') . '&nbsp;&nbsp;&nbsp;' . TEXT_OR . '<a href="' . tep_href_link('cart', 'remove&id=' . $products[$i]['id'] . '&formid=' . md5($_SESSION['sessiontoken'])) . '">' . TEXT_REMOVE . '</a>';
+    $products_name .= '<br /><br />' . osc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . osc_draw_hidden_field('products_id[]', $products[$i]['id']) . osc_draw_button(IMAGE_BUTTON_UPDATE, 'refresh') . '&nbsp;&nbsp;&nbsp;' . TEXT_OR . '<a href="' . osc_href_link('cart', 'remove&id=' . $products[$i]['id'] . '&formid=' . md5($_SESSION['sessiontoken'])) . '">' . TEXT_REMOVE . '</a>';
 
     $products_name .= '    </td>' .
                       '  </tr>' .
                       '</table>';
 
     echo '        <td valign="top">' . $products_name . '</td>' .
-         '        <td align="right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
+         '        <td align="right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], osc_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
          '      </tr>';
   }
 ?>
@@ -109,7 +109,7 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', tep_href_link('checkout', '', 'SSL'), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', osc_href_link('checkout', '', 'SSL'), 'primary'); ?></span>
   </div>
 
 <?php

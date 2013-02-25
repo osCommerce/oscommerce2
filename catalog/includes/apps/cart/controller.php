@@ -15,7 +15,7 @@
         $payment_modules = new payment();
       }
 
-      $breadcrumb->add(NAVBAR_TITLE, tep_href_link('cart'));
+      $breadcrumb->add(NAVBAR_TITLE, osc_href_link('cart'));
 
       if ( $_SESSION['cart']->count_contents() < 1 ) {
         $this->_content_file = 'empty.php';

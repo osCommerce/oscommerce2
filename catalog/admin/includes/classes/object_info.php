@@ -16,7 +16,7 @@
     function objectInfo($object_array) {
       reset($object_array);
       while (list($key, $value) = each($object_array)) {
-        $this->$key = tep_db_prepare_input($value);
+        $this->$key = osc_db_prepare_input($value);
       }
     }
   }
