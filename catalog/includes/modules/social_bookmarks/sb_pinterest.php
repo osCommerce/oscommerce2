@@ -33,7 +33,7 @@
       global $oscTemplate;
 
 // add the js in the footer
-      $oscTemplate->addBlock('<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
+      $oscTemplate->addBlock('<script src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
 
       $params = array();
 
@@ -72,7 +72,7 @@
 
       $output = substr($output, 0, -1); //remove last & from the url
 
-      $output .= '" class="pin-it-button" count-layout="' . strtolower(MODULE_SOCIAL_BOOKMARKS_PINTEREST_BUTTON_COUNT_POSITION) . '"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="' . $this->public_title . '" /></a>';
+      $output .= '" class="pin-it-button" count-layout="' . strtolower(MODULE_SOCIAL_BOOKMARKS_PINTEREST_BUTTON_COUNT_POSITION) . '"><img src="//assets.pinterest.com/images/PinExt.png" title="' . $this->public_title . '" /></a>';
 
       return $output;
     }
