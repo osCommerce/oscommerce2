@@ -155,15 +155,15 @@ $('#headerShortcuts').buttonset();
   }
 ?>
 
-    <div class="footer span12">
-      <p align="center"><?php echo FOOTER_TEXT_BODY; ?></p>
+    <div class="footer span12 pagination-centered">
+      <p><?php echo FOOTER_TEXT_BODY; ?></p>
     </div>
 
 <?php
   if ($banner = osc_banner_exists('dynamic', '468x50')) {
 ?>
 
-    <div class="span12" style="text-align: center; padding-bottom: 20px;">
+    <div class="span12 pagination-centered" style="padding-bottom: 20px;">
       <?php echo osc_display_banner('static', $banner); ?>
     </div>
 
