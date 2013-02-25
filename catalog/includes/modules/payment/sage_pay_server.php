@@ -40,8 +40,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -130,16 +130,16 @@
             $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
             if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-              $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+              $error_url = osc_href_link('checkout', 'payment&payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             } else {
-              $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+              $error_url = osc_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
             }
 
             $result = 'Status=OK' . chr(13) . chr(10) .
                       'RedirectURL=' . $this->formatURL($error_url);
           } else {
             $result = 'Status=OK' . chr(13) . chr(10) .
-                      'RedirectURL=' . $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . session_name() . '=' . session_id(), 'SSL', false));
+                      'RedirectURL=' . $this->formatURL(osc_href_link('checkout', 'process&check=PROCESS&key=' . md5($_SESSION['sage_pay_server_securitykey']) . '&VPSTxId=' . $_POST['VPSTxId'] . '&' . session_name() . '=' . session_id(), 'SSL', false));
           }
         } else {
           unset($_SESSION['sage_pay_server_securitykey']);
@@ -148,9 +148,9 @@
           $error = $this->getErrorMessageNumber($_POST['StatusDetail']);
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+            $error_url = osc_href_link('checkout', 'payment&payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           } else {
-            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
+            $error_url = osc_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : '') . '&' . session_name() . '=' . session_id(), 'SSL', false);
           }
 
           $result = 'Status=INVALID' . chr(13) . chr(10) .
@@ -165,7 +165,7 @@
           unset($_SESSION['sage_pay_server_nexturl']);
 
           if ( isset($_GET['VPSTxId']) ) {
-            $order->info['comments'] = 'Sage Pay Reference ID: ' . $_GET['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
+            $order->info['comments'] = 'Sage Pay Reference ID: ' . $_GET['VPSTxId'] . (osc_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
           }
 
           return true;
@@ -178,7 +178,7 @@
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=SERVER&' . session_name() . '=' . session_id(), 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(osc_href_link('checkout', 'process&check=SERVER&' . session_name() . '=' . session_id(), 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -196,7 +196,7 @@
                         'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                         'Apply3DSecure' => '0');
 
-        $ip_address = tep_get_ip_address();
+        $ip_address = osc_get_ip_address();
 
         if ( (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
           $params['ClientIPAddress']= $ip_address;
@@ -211,11 +211,11 @@
         }
 
         if ($params['BillingCountry'] == 'US') {
-          $params['BillingState'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], '');
+          $params['BillingState'] = osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], '');
         }
 
         if ($params['DeliveryCountry'] == 'US') {
-          $params['DeliveryState'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], '');
+          $params['DeliveryState'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], '');
         }
 
         if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE != 'Normal' ) {
@@ -280,9 +280,9 @@
           $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            tep_redirect($return['NextURL']);
+            osc_redirect($return['NextURL']);
           } else {
-            tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
+            osc_redirect(osc_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -292,7 +292,7 @@
       unset($_SESSION['sage_pay_server_securitykey']);
       unset($_SESSION['sage_pay_server_nexturl']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+      osc_redirect(osc_href_link('checkout', 'payment&payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
 
     function after_process() {
@@ -305,7 +305,7 @@
       unset($_SESSION['payment']);
       unset($_SESSION['comments']);
 
-      tep_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
+      osc_redirect(osc_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
     }
 
     function get_error() {
@@ -323,26 +323,26 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Sage Pay Server Module', 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS', 'False', 'Do you want to accept Sage Pay Server payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Login Name', 'MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME', '', 'The vendor login name to connect to the gateway with.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Profile Payment Page', 'MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE', 'Normal', 'Profile page to use for the payment page.', '6', '0', 'tep_cfg_select_option(array(\'Normal\', \'Low\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_METHOD', 'Authenticate', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_SERVER', 'Simulator', 'Perform transactions on the production server or on the testing server.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\', \'Simulator\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SAGE_PAY_SERVER_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SAGE_PAY_SERVER_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_SAGE_PAY_SERVER_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Sage Pay Server Module', 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS', 'False', 'Do you want to accept Sage Pay Server payments?', '6', '0', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Login Name', 'MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME', '', 'The vendor login name to connect to the gateway with.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Profile Payment Page', 'MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE', 'Normal', 'Profile page to use for the payment page.', '6', '0', 'osc_cfg_select_option(array(\'Normal\', \'Low\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_METHOD', 'Authenticate', 'The processing method to use for each transaction.', '6', '0', 'osc_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_SERVER', 'Simulator', 'Perform transactions on the production server or on the testing server.', '6', '0', 'osc_cfg_select_option(array(\'Live\', \'Test\', \'Simulator\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SAGE_PAY_SERVER_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'osc_get_zone_class_title', 'osc_cfg_pull_down_zone_classes(', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SAGE_PAY_SERVER_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_SAGE_PAY_SERVER_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -398,7 +398,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function loadErrorMessages() {

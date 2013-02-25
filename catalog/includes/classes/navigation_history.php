@@ -78,7 +78,7 @@
       global $PHP_SELF, $request_type;
 
       if (is_array($page)) {
-        $this->snapshot = array('page' => $page['page'],
+        $this->snapshot = array('page' => isset($page['page']) ? $page['page'] : null,
                                 'mode' => $page['mode'],
                                 'get' => $this->filter_parameters($page['get']),
                                 'post' => $this->filter_parameters($page['post']));
@@ -120,7 +120,7 @@
       if (sizeof($this->snapshot) > 0) {
         echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
+        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . osc_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
       }
     }
 

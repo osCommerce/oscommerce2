@@ -22,12 +22,12 @@
 
     $_SESSION['navigation']->set_snapshot($snapshot);
 
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link('account', 'login', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link('cart'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_payflow_ec.php');
@@ -36,7 +36,7 @@
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
   if (!$paypal_pro_payflow_ec->check() || !$paypal_pro_payflow_ec->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link('cart'));
   }
 
   if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Live') {
@@ -59,7 +59,7 @@
 // against alterations in the shopping cart contents
   $_SESSION['cartID'] = $_SESSION['cart']->cartID;
 
-  $params = array('USER' => (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR),
+  $params = array('USER' => (osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME) ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_USERNAME : MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR),
                   'VENDOR' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR,
                   'PARTNER' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PARTNER,
                   'PWD' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PASSWORD,
@@ -87,18 +87,18 @@
         include(DIR_WS_CLASSES . 'order.php');
 
         if ($_SESSION['cart']->get_content_type() != 'virtual') {
-          $country_iso_code_2 = tep_db_prepare_input($response_array['SHIPTOCOUNTRY']);
-          $zone_code = tep_db_prepare_input($response_array['SHIPTOSTATE']);
+          $country_iso_code_2 = osc_db_prepare_input($response_array['SHIPTOCOUNTRY']);
+          $zone_code = osc_db_prepare_input($response_array['SHIPTOSTATE']);
 
-          $country_query = tep_db_query("select countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($country_iso_code_2) . "'");
-          $country = tep_db_fetch_array($country_query);
+          $country_query = osc_db_query("select countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . osc_db_input($country_iso_code_2) . "'");
+          $country = osc_db_fetch_array($country_query);
 
           $zone_name = $response_array['SHIPTOSTATE'];
           $zone_id = 0;
 
-          $zone_query = tep_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country['countries_id'] . "' and zone_code = '" . tep_db_input($zone_code) . "'");
-          if (tep_db_num_rows($zone_query)) {
-            $zone = tep_db_fetch_array($zone_query);
+          $zone_query = osc_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country['countries_id'] . "' and zone_code = '" . osc_db_input($zone_code) . "'");
+          if (osc_db_num_rows($zone_query)) {
+            $zone = osc_db_fetch_array($zone_query);
 
             $zone_name = $zone['zone_name'];
             $zone_id = $zone['zone_id'];
@@ -162,7 +162,7 @@
 
           $_SESSION['shipping'] = false;
 
-          if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+          if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
               $_SESSION['shipping'] = 'free_free';
             } else {
@@ -189,7 +189,7 @@
               if (isset($quote['error'])) {
                 unset($_SESSION['shipping']);
 
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
@@ -206,7 +206,7 @@
 
           $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          osc_redirect(osc_href_link('checkout', '', 'SSL'));
         } else {
           $_SESSION['shipping'] = false;
 
@@ -218,7 +218,7 @@
 
           $_SESSION['ppeuk_payerid'] = $response_array['PAYERID'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          osc_redirect(osc_href_link('checkout', '', 'SSL'));
         }
       } else {
         switch ($response_array['RESULT']) {
@@ -244,7 +244,7 @@
             break;
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
+        osc_redirect(osc_href_link('cart', 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
@@ -257,8 +257,8 @@
       $params['CURRENCY'] = $order->info['currency'];
       $params['EMAIL'] = $order->customer['email_address'];
       $params['AMT'] = $paypal_pro_payflow_ec->format_raw($order->info['total']);
-      $params['RETURNURL'] = tep_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL', true, false);
-      $params['CANCELURL'] = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', true, false);
+      $params['RETURNURL'] = osc_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL', true, false);
+      $params['CANCELURL'] = osc_href_link('cart', '', 'SSL', true, false);
 
       if ($order->content_type == 'virtual') {
         $params['NOSHIPPING'] = '1';
@@ -277,7 +277,7 @@
       parse_str($response, $response_array);
 
       if ($response_array['RESULT'] == '0') {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+        osc_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
       } else {
         switch ($response_array['RESULT']) {
           case '1':
@@ -294,13 +294,13 @@
             break;
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($error_message), 'SSL'));
+        osc_redirect(osc_href_link('cart', 'error_message=' . urlencode($error_message), 'SSL'));
       }
 
       break;
   }
 
-  tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  osc_redirect(osc_href_link('cart', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

@@ -18,7 +18,7 @@
   $currencies = new currencies();
 
 // remove entries that have expired
-  tep_db_query("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
+  osc_db_query("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -28,7 +28,7 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -46,8 +46,8 @@
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?>&nbsp;</td>
               </tr>
 <?php
-  $whos_online_query = tep_db_query("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from " . TABLE_WHOS_ONLINE);
-  while ($whos_online = tep_db_fetch_array($whos_online_query)) {
+  $whos_online_query = osc_db_query("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from " . TABLE_WHOS_ONLINE);
+  while ($whos_online = osc_db_fetch_array($whos_online_query)) {
     $time_online = (time() - $whos_online['time_entry']);
     if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info)) {
       $info = $whos_online['session_id'];
@@ -56,7 +56,7 @@
     if ($whos_online['session_id'] == $info) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_WHOS_ONLINE, tep_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id'], 'NONSSL') . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . osc_href_link(FILENAME_WHOS_ONLINE, osc_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id'], 'NONSSL') . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo gmdate('H:i:s', $time_online); ?></td>
@@ -71,7 +71,7 @@
   }
 ?>
               <tr>
-                <td class="smallText" colspan="7"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, tep_db_num_rows($whos_online_query)); ?></td>
+                <td class="smallText" colspan="7"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, osc_db_num_rows($whos_online_query)); ?></td>
               </tr>
             </table></td>
 <?php
@@ -82,8 +82,8 @@
     $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
 
     if (STORE_SESSIONS == 'mysql') {
-      $session_data = tep_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");
-      $session_data = tep_db_fetch_array($session_data);
+      $session_data = osc_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");
+      $session_data = osc_db_fetch_array($session_data);
       $session_data = trim($session_data['value']);
     } else {
       if ( (file_exists(session_save_path() . '/sess_' . $info)) && (filesize(session_save_path() . '/sess_' . $info) > 0) ) {
@@ -132,7 +132,7 @@
         }
 
         if (sizeof($products) > 0) {
-          $contents[] = array('text' => tep_draw_separator('pixel_black.gif', '100%', '1'));
+          $contents[] = array('text' => osc_draw_separator('pixel_black.gif', '100%', '1'));
           $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($cart->show_total(), true, $currency));
         } else {
           $contents[] = array('text' => '&nbsp;');
@@ -141,7 +141,7 @@
     }
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

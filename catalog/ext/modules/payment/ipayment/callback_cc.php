@@ -21,10 +21,10 @@
     exit;
   }
 
-  if (in_array(tep_get_ip_address(), $ipayment_cc->gateway_addresses)) {
+  if (in_array(osc_get_ip_address(), $ipayment_cc->gateway_addresses)) {
     $checksum_pass = 0; // unknown
 
-    if (tep_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
+    if (osc_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
 // verify ret_param_checksum
       if ($_POST['ret_param_checksum'] == md5(MODULE_PAYMENT_IPAYMENT_CC_USER_ID . $_POST['trx_amount'] . $_POST['trx_currency'] . $_POST['ret_authcode'] . $_POST['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
         $checksum_pass = 1; // true

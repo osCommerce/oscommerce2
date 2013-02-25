@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
 
 // initialize variables if the customer is not logged in
   if (!isset($_SESSION['customer_id'])) {
@@ -26,7 +26,7 @@
   $paypal_express = new paypal_express();
 
   if (!$paypal_express->check() || !$paypal_express->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link('cart'));
   }
 
   if (!isset($_SESSION['sendto'])) {
@@ -45,7 +45,7 @@
     case 'cancel':
       unset($_SESSION['ppe_token']);
 
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+      osc_redirect(osc_href_link('cart', '', 'SSL'));
 
       break;
     case 'callbackSet':
@@ -82,9 +82,9 @@
                                     'country_iso_code_3' => '',
                                     'address_format_id' => '');
 
-        $country_query = tep_db_query("select * from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($_SESSION['sendto']['country_name']) . "' limit 1");
-        if (tep_db_num_rows($country_query)) {
-          $country = tep_db_fetch_array($country_query);
+        $country_query = osc_db_query("select * from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . osc_db_input($_SESSION['sendto']['country_name']) . "' limit 1");
+        if (osc_db_num_rows($country_query)) {
+          $country = osc_db_fetch_array($country_query);
 
           $_SESSION['sendto']['country_id'] = $country['countries_id'];
           $_SESSION['sendto']['country_name'] = $country['countries_name'];
@@ -94,9 +94,9 @@
         }
 
         if ($_SESSION['sendto']['country_id'] > 0) {
-          $zone_query = tep_db_query("select * from " . TABLE_ZONES . " where zone_country_id = '" . (int)$_SESSION['sendto']['country_id'] . "' and (zone_name = '" . tep_db_input($_SESSION['sendto']['zone_name']) . "' or zone_code = '" . tep_db_input($_SESSION['sendto']['zone_name']) . "') limit 1");
-          if (tep_db_num_rows($zone_query)) {
-            $zone = tep_db_fetch_array($zone_query);
+          $zone_query = osc_db_query("select * from " . TABLE_ZONES . " where zone_country_id = '" . (int)$_SESSION['sendto']['country_id'] . "' and (zone_name = '" . osc_db_input($_SESSION['sendto']['zone_name']) . "' or zone_code = '" . osc_db_input($_SESSION['sendto']['zone_name']) . "') limit 1");
+          if (osc_db_num_rows($zone_query)) {
+            $zone = osc_db_fetch_array($zone_query);
 
             $_SESSION['sendto']['zone_id'] = $zone['zone_id'];
             $_SESSION['sendto']['zone_name'] = $zone['zone_name'];
@@ -149,7 +149,7 @@
             }
           }
 
-          if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+          if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
               $quotes_array[] = array('id' => 'free_free',
                                       'name' => FREE_SHIPPING_TITLE,
@@ -189,13 +189,13 @@
         $cheapest_counter = $counter;
 
         foreach ($quotes_array as $quote) {
-          $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+          $shipping_rate = $paypal_express->format_raw($quote['cost'] + osc_calculate_tax($quote['cost'], $quote['tax']));
 
           $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
-          $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+          $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + osc_calculate_tax($quote['cost'], $quote['tax']));
 
           if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
             $cheapest_rate = $shipping_rate;
@@ -224,7 +224,7 @@
     case 'retrieve':
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($_SESSION['cart']->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link('cart'));
       }
 
       $response_array = $paypal_express->getExpressCheckoutDetails($_GET['token']);
@@ -236,20 +236,20 @@
         if (!isset($_SESSION['customer_id'])) {
           $force_login = true;
 
-          $email_address = tep_db_prepare_input($response_array['EMAIL']);
+          $email_address = osc_db_prepare_input($response_array['EMAIL']);
 
-          $check_query = tep_db_query("select * from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' limit 1");
-          if (tep_db_num_rows($check_query)) {
-            $check = tep_db_fetch_array($check_query);
+          $check_query = osc_db_query("select * from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "' limit 1");
+          if (osc_db_num_rows($check_query)) {
+            $check = osc_db_fetch_array($check_query);
 
             $_SESSION['customer_id'] = $check['customers_id'];
             $customers_firstname = $check['customers_firstname'];
             $_SESSION['customer_default_address_id'] = $check['customers_default_address_id'];
           } else {
-            $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
-            $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
+            $customers_firstname = osc_db_prepare_input($response_array['FIRSTNAME']);
+            $customers_lastname = osc_db_prepare_input($response_array['LASTNAME']);
 
-            $customer_password = tep_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
+            $customer_password = osc_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
 
             $sql_data_array = array('customers_firstname' => $customers_firstname,
                                     'customers_lastname' => $customers_lastname,
@@ -257,68 +257,68 @@
                                     'customers_telephone' => '',
                                     'customers_fax' => '',
                                     'customers_newsletter' => '0',
-                                    'customers_password' => tep_encrypt_password($customer_password));
+                                    'customers_password' => osc_encrypt_password($customer_password));
 
-            if (isset($response_array['PHONENUM']) && tep_not_null($response_array['PHONENUM'])) {
-              $customers_telephone = tep_db_prepare_input($response_array['PHONENUM']);
+            if (isset($response_array['PHONENUM']) && osc_not_null($response_array['PHONENUM'])) {
+              $customers_telephone = osc_db_prepare_input($response_array['PHONENUM']);
 
               $sql_data_array['customers_telephone'] = $customers_telephone;
             }
 
-            tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+            osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-            $_SESSION['customer_id'] = tep_db_insert_id();
+            $_SESSION['customer_id'] = osc_db_insert_id();
 
-            tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
+            osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
 
 // build the message content
             $name = $customers_firstname . ' ' . $customers_lastname;
             $email_text = sprintf(EMAIL_GREET_NONE, $customers_firstname) . EMAIL_WELCOME . sprintf(MODULE_PAYMENT_PAYPAL_EXPRESS_EMAIL_PASSWORD, $email_address, $customer_password) . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-            tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            osc_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
           }
 
           if (SESSION_RECREATE == 'True') {
-            tep_session_recreate();
+            osc_session_recreate();
           }
 
           $_SESSION['customer_first_name'] = $customers_firstname;
 
 // reset session token
-          $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+          $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
         }
 
 // check if paypal shipping address exists in the address book
-        $ship_firstname = tep_db_prepare_input(substr($response_array['SHIPTONAME'], 0, strpos($response_array['SHIPTONAME'], ' ')));
-        $ship_lastname = tep_db_prepare_input(substr($response_array['SHIPTONAME'], strpos($response_array['SHIPTONAME'], ' ')+1));
-        $ship_address = tep_db_prepare_input($response_array['SHIPTOSTREET']);
-        $ship_city = tep_db_prepare_input($response_array['SHIPTOCITY']);
-        $ship_zone = tep_db_prepare_input($response_array['SHIPTOSTATE']);
+        $ship_firstname = osc_db_prepare_input(substr($response_array['SHIPTONAME'], 0, strpos($response_array['SHIPTONAME'], ' ')));
+        $ship_lastname = osc_db_prepare_input(substr($response_array['SHIPTONAME'], strpos($response_array['SHIPTONAME'], ' ')+1));
+        $ship_address = osc_db_prepare_input($response_array['SHIPTOSTREET']);
+        $ship_city = osc_db_prepare_input($response_array['SHIPTOCITY']);
+        $ship_zone = osc_db_prepare_input($response_array['SHIPTOSTATE']);
         $ship_zone_id = 0;
-        $ship_postcode = tep_db_prepare_input($response_array['SHIPTOZIP']);
-        $ship_country = tep_db_prepare_input($response_array['SHIPTOCOUNTRYCODE']);
+        $ship_postcode = osc_db_prepare_input($response_array['SHIPTOZIP']);
+        $ship_country = osc_db_prepare_input($response_array['SHIPTOCOUNTRYCODE']);
         $ship_country_id = 0;
         $ship_address_format_id = 1;
 
-        $country_query = tep_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($ship_country) . "' limit 1");
-        if (tep_db_num_rows($country_query)) {
-          $country = tep_db_fetch_array($country_query);
+        $country_query = osc_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . osc_db_input($ship_country) . "' limit 1");
+        if (osc_db_num_rows($country_query)) {
+          $country = osc_db_fetch_array($country_query);
 
           $ship_country_id = $country['countries_id'];
           $ship_address_format_id = $country['address_format_id'];
         }
 
         if ($ship_country_id > 0) {
-          $zone_query = tep_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . tep_db_input($ship_zone) . "' or zone_code = '" . tep_db_input($ship_zone) . "') limit 1");
-          if (tep_db_num_rows($zone_query)) {
-            $zone = tep_db_fetch_array($zone_query);
+          $zone_query = osc_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . osc_db_input($ship_zone) . "' or zone_code = '" . osc_db_input($ship_zone) . "') limit 1");
+          if (osc_db_num_rows($zone_query)) {
+            $zone = osc_db_fetch_array($zone_query);
 
             $ship_zone_id = $zone['zone_id'];
           }
         }
 
-        $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
-        if (tep_db_num_rows($check_query)) {
-          $check = tep_db_fetch_array($check_query);
+        $check_query = osc_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and entry_firstname = '" . osc_db_input($ship_firstname) . "' and entry_lastname = '" . osc_db_input($ship_lastname) . "' and entry_street_address = '" . osc_db_input($ship_address) . "' and entry_postcode = '" . osc_db_input($ship_postcode) . "' and entry_city = '" . osc_db_input($ship_city) . "' and (entry_state = '" . osc_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+        if (osc_db_num_rows($check_query)) {
+          $check = osc_db_fetch_array($check_query);
 
           $_SESSION['sendto'] = $check['address_book_id'];
         } else {
@@ -340,14 +340,14 @@
             }
           }
 
-          tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+          osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-          $address_id = tep_db_insert_id();
+          $address_id = osc_db_insert_id();
 
           $_SESSION['sendto'] = $address_id;
 
           if ($_SESSION['customer_default_address_id'] < 1) {
-            tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+            osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
             $_SESSION['customer_default_address_id'] = $address_id;
           }
         }
@@ -403,7 +403,7 @@
 
           $_SESSION['shipping'] = false;
 
-          if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+          if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
             if ($free_shipping == true) {
               $_SESSION['shipping'] = 'free_free';
             } else {
@@ -418,7 +418,7 @@
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
                       if ($response_array['SHIPPINGOPTIONNAME'] == $quote['module'] . ' (' . $rate['title'] . ')') {
-                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']))) {
+                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'] + osc_calculate_tax($rate['cost'], $quote['tax']))) {
                           $_SESSION['shipping'] = $quote['id'] . '_' . $rate['id'];
                           $shipping_set = true;
                           break 2;
@@ -451,7 +451,7 @@
               if (isset($quote['error'])) {
                 unset($_SESSION['shipping']);
 
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                osc_redirect(osc_href_link('checkout', 'shipping', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $_SESSION['shipping'] = array('id' => $_SESSION['shipping'],
@@ -477,9 +477,9 @@
 
         $_SESSION['ppe_addressstatus'] = $response_array['ADDRESSSTATUS'];
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+        osc_redirect(osc_href_link('checkout', '', 'SSL'));
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        osc_redirect(osc_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       break;
@@ -487,7 +487,7 @@
     default:
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($_SESSION['cart']->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link('cart'));
       }
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
@@ -516,7 +516,7 @@
         $params['L_NUMBER' . $line_item_no] = $product['id'];
         $params['L_QTY' . $line_item_no] = $product['qty'];
 
-        $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
+        $product_tax = osc_calculate_tax($product['final_price'], $product['tax']);
 
         $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
         $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
@@ -529,12 +529,12 @@
       $params['ITEMAMT'] = $items_total;
       $params['TAXAMT'] = $tax_total;
 
-      if (tep_not_null($order->delivery['firstname'])) {
+      if (osc_not_null($order->delivery['firstname'])) {
         $params['ADDROVERRIDE'] = '1';
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
-        $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $params['SHIPTOSTATE'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $params['SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
         $params['SHIPTOZIP'] = $order->delivery['postcode'];
       }
@@ -579,7 +579,7 @@
           }
         }
 
-        if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
+        if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
           if ($free_shipping == true) {
             $quotes_array[] = array('id' => 'free_free',
                                     'name' => FREE_SHIPPING_TITLE,
@@ -612,7 +612,7 @@
       $default_shipping = null;
 
       foreach ($quotes_array as $quote) {
-        $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+        $shipping_rate = $paypal_express->format_raw($quote['cost'] + osc_calculate_tax($quote['cost'], $quote['tax']));
 
         $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
         $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
@@ -628,7 +628,7 @@
           $expensive_rate = $shipping_rate;
         }
 
-        if (tep_not_null($_SESSION['shipping']) && ($_SESSION['shipping']['id'] == $quote['id'])) {
+        if (osc_not_null($_SESSION['shipping']) && ($_SESSION['shipping']['id'] == $quote['id'])) {
           $default_shipping = $counter;
         }
 
@@ -642,7 +642,7 @@
 
       if (!is_null($cheapest_rate)) {
         if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
-          $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+          $params['CALLBACK'] = osc_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
           $params['CALLBACKTIMEOUT'] = '5';
         }
 
@@ -658,15 +658,15 @@
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN'] . '&useraction=commit');
+        osc_redirect($paypal_url . '&token=' . $response_array['TOKEN'] . '&useraction=commit');
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        osc_redirect(osc_href_link('cart', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       break;
   }
 
-  tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  osc_redirect(osc_href_link('cart', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

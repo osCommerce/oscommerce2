@@ -19,8 +19,8 @@
     $stats[] = array(strftime('%b', mktime(0,0,0,$i)), '0', '0');
   }
 
-  $banner_stats_query = tep_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by banner_month");
-  while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
+  $banner_stats_query = osc_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by banner_month");
+  while ($banner_stats = osc_db_fetch_array($banner_stats_query)) {
     $stats[($banner_stats['banner_month']-1)] = array(strftime('%b', mktime(0,0,0,$banner_stats['banner_month'])), (($banner_stats['value']) ? $banner_stats['value'] : '0'), (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0'));
   }
 

@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $languages = tep_get_languages();
+  $languages = osc_get_languages();
   $languages_array = array();
   $languages_selected = DEFAULT_LANGUAGE;
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -36,7 +36,7 @@
   if (sizeof($languages_array) > 1) {
 ?>
 
-            <td class="pageHeading" align="right"><?php echo tep_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . tep_hide_session_id() . '</form>'; ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . osc_hide_session_id() . '</form>'; ?></td>
 
 <?php
   }
@@ -48,7 +48,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
-  if ( defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && tep_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED) ) {
+  if ( defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && osc_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED) ) {
     $adm_array = explode(';', MODULE_ADMIN_DASHBOARD_INSTALLED);
 
     $col = 0;

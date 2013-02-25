@@ -49,8 +49,8 @@ class inpay
         if (($this->enabled == true) && ((int)MODULE_PAYMENT_INPAY_ZONE > 0))
         {
             $check_flag = false;
-            $check_query = tep_db_query("select zone_id from ".TABLE_ZONES_TO_GEO_ZONES." where geo_zone_id = '".MODULE_PAYMENT_INPAY_ZONE."' and zone_country_id = '".$order->billing['country']['id']."' order by zone_id");
-            while ($check = tep_db_fetch_array($check_query))
+            $check_query = osc_db_query("select zone_id from ".TABLE_ZONES_TO_GEO_ZONES." where geo_zone_id = '".MODULE_PAYMENT_INPAY_ZONE."' and zone_country_id = '".$order->billing['country']['id']."' order by zone_id");
+            while ($check = osc_db_fetch_array($check_query))
             {
                 if ($check['zone_id'] < 1)
                 {
@@ -81,16 +81,16 @@ class inpay
         {
             $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
-            $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
+            $check_query = osc_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
-            if (tep_db_num_rows($check_query) < 1)
+            if (osc_db_num_rows($check_query) < 1)
             {
-                tep_db_query('delete from '.TABLE_ORDERS.' where orders_id = "'.(int)$order_id.'"');
-                tep_db_query('delete from '.TABLE_ORDERS_TOTAL.' where orders_id = "'.(int)$order_id.'"');
-                tep_db_query('delete from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'"');
-                tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS.' where orders_id = "'.(int)$order_id.'"');
-                tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
-                tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS_TOTAL.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
+                osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
 
                 unset($_SESSION['cart_inpay_Standard_ID']);
             }
@@ -120,21 +120,21 @@ class inpay
             {
                 $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
 
-                $curr_check = tep_db_query("select currency from ".TABLE_ORDERS." where orders_id = '".(int)$order_id."'");
-                $curr = tep_db_fetch_array($curr_check);
+                $curr_check = osc_db_query("select currency from ".TABLE_ORDERS." where orders_id = '".(int)$order_id."'");
+                $curr = osc_db_fetch_array($curr_check);
 
                 if (($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_inpay_Standard_ID'], 0, strlen($_SESSION['cartID']))))
                 {
-                    $check_query = tep_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
+                    $check_query = osc_db_query('select orders_id from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'" limit 1');
 
-                    if (tep_db_num_rows($check_query) < 1)
+                    if (osc_db_num_rows($check_query) < 1)
                     {
-                        tep_db_query('delete from '.TABLE_ORDERS.' where orders_id = "'.(int)$order_id.'"');
-                        tep_db_query('delete from '.TABLE_ORDERS_TOTAL.' where orders_id = "'.(int)$order_id.'"');
-                        tep_db_query('delete from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'"');
-                        tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS.' where orders_id = "'.(int)$order_id.'"');
-                        tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
-                        tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS_TOTAL.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS_STATUS_HISTORY.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
+                        osc_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
                     }
 
                     $insert_order = true;
@@ -157,7 +157,7 @@ class inpay
                         {
                             for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i++)
                             {
-                                if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text']))
+                                if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text']))
                                 {
                                     $order_totals[] = array ('code'=>$GLOBALS[$class]->code,
                                     'title'=>$GLOBALS[$class]->output[$i]['title'],
@@ -210,9 +210,9 @@ class inpay
                 'currency'=>$order->info['currency'],
                 'currency_value'=>$order->info['currency_value']);
 
-                tep_db_perform(TABLE_ORDERS, $sql_data_array);
+                osc_db_perform(TABLE_ORDERS, $sql_data_array);
 
-                $insert_id = tep_db_insert_id();
+                $insert_id = osc_db_insert_id();
 
                 for ($i = 0, $n = sizeof($order_totals); $i < $n; $i++)
                 {
@@ -223,13 +223,13 @@ class inpay
                     'class'=>$order_totals[$i]['code'],
                     'sort_order'=>$order_totals[$i]['sort_order']);
 
-                    tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+                    osc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
                 }
 
                 for ($i = 0, $n = sizeof($order->products); $i < $n; $i++)
                 {
                     $sql_data_array = array ('orders_id'=>$insert_id,
-                    'products_id'=>tep_get_prid($order->products[$i]['id']),
+                    'products_id'=>osc_get_prid($order->products[$i]['id']),
                     'products_model'=>$order->products[$i]['model'],
                     'products_name'=>$order->products[$i]['name'],
                     'products_price'=>$order->products[$i]['price'],
@@ -237,9 +237,9 @@ class inpay
                     'products_tax'=>$order->products[$i]['tax'],
                     'products_quantity'=>$order->products[$i]['qty']);
 
-                    tep_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
+                    osc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
-                    $order_products_id = tep_db_insert_id();
+                    $order_products_id = osc_db_insert_id();
 
                     $attributes_exist = '0';
                     if ( isset ($order->products[$i]['attributes']))
@@ -260,12 +260,12 @@ class inpay
                                        and pa.options_values_id = poval.products_options_values_id
                                        and popt.language_id = '".$_SESSION['languages_id']."'
                                        and poval.language_id = '".$_SESSION['languages_id']."'";
-                                $attributes = tep_db_query($attributes_query);
+                                $attributes = osc_db_query($attributes_query);
                             } else
                             {
-                                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
+                                $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                             }
-                            $attributes_values = tep_db_fetch_array($attributes);
+                            $attributes_values = osc_db_fetch_array($attributes);
 
                             $sql_data_array = array ('orders_id'=>$insert_id,
                             'orders_products_id'=>$order_products_id,
@@ -274,9 +274,9 @@ class inpay
                             'options_values_price'=>$attributes_values['options_values_price'],
                             'price_prefix'=>$attributes_values['price_prefix']);
 
-                            tep_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
+                            osc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-                            if ((DOWNLOAD_ENABLED == 'true') && isset ($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename']))
+                            if ((DOWNLOAD_ENABLED == 'true') && isset ($attributes_values['products_attributes_filename']) && osc_not_null($attributes_values['products_attributes_filename']))
                             {
                                 $sql_data_array = array ('orders_id'=>$insert_id,
                                 'orders_products_id'=>$order_products_id,
@@ -284,7 +284,7 @@ class inpay
                                 'download_maxdays'=>$attributes_values['products_attributes_maxdays'],
                                 'download_count'=>$attributes_values['products_attributes_maxcount']);
 
-                                tep_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
+                                osc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
                             }
                         }
                     }
@@ -312,9 +312,9 @@ class inpay
         'order_id'=>substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1),
         'custom'=>$_SESSION['customer_id'],
         'no_note'=>'1',
-        'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
-        'return_url'=>tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-        'cancel_url'=>tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+        'notify_url'=>osc_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
+        'return_url'=>osc_href_link('checkout', 'process', 'SSL'),
+        'cancel_url'=>osc_href_link('checkout', 'payment', 'SSL'),
         'bn'=>'osCommerce22_Default_ST',
         'buyer_email'=>$order->customer['email_address'],
         'merchant_id'=>MODULE_PAYMENT_INPAY_MERCHANT_ID,
@@ -325,7 +325,7 @@ class inpay
         {
             $address = '';
             $address = $order->delivery['street_address'].' '.$order->delivery['city'].' '.
-            tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']).
+            osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']).
             ' '.$order->delivery['postcode'].' '.$order->delivery['country']['iso_code_2'];
 
             $parameters['address_override'] = '1';
@@ -336,7 +336,7 @@ class inpay
         {
             $address = '';
             $address = $order->billing['street_address'].' '.$order->billing['city'].' '.
-            tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']).
+            osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']).
             ' '.$order->billing['postcode'].' '.$order->billing['country']['iso_code_2'];
             $parameters['buyer_name'] = utf8_encode($order->billing['firstname']." ".$order->billing['lastname']);
             $parameters['buyer_address'] = utf8_encode($address);
@@ -359,7 +359,7 @@ class inpay
         reset($parameters);
         while ( list ($key, $value) = each($parameters))
         {
-            $process_button_string .= tep_draw_hidden_field($key, $value);
+            $process_button_string .= osc_draw_hidden_field($key, $value);
         }
         return $process_button_string;
     }
@@ -369,13 +369,13 @@ class inpay
         global $order, $order_totals, $currencies;
         global $$_SESSION['payment'];
         $order_id = substr($_SESSION['cart_inpay_Standard_ID'], strpos($_SESSION['cart_inpay_Standard_ID'], '-')+1);
-        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
+        $my_status_query = osc_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
         $delivered_status = 3;
         $update_status = true;
-        if (tep_db_num_rows($my_status_query) > 0)
+        if (osc_db_num_rows($my_status_query) > 0)
         {
-            $o_stat = tep_db_fetch_array($my_status_query);
+            $o_stat = osc_db_fetch_array($my_status_query);
             $current_status_id = (int)$o_stat['orders_status'];
         }
         if (($current_status_id == MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID) || ($current_status_id == $delivered_status))
@@ -385,7 +385,7 @@ class inpay
         if ($update_status)
         {
             $order_status_id = (int)DEFAULT_ORDERS_STATUS_ID;
-            tep_db_query("update ".TABLE_ORDERS." set orders_status = '".$order_status_id."', last_modified = now() where orders_id = '".(int)$order_id."'");
+            osc_db_query("update ".TABLE_ORDERS." set orders_status = '".$order_status_id."', last_modified = now() where orders_id = '".(int)$order_id."'");
 
             $sql_data_array = array ('orders_id'=>$order_id,
             'orders_status_id'=>$order_status_id,
@@ -393,7 +393,7 @@ class inpay
             'customer_notified'=>(SEND_EMAILS == 'true')?'1':'0',
             'comments'=>$order->info['comments']);
 
-            tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+            osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
         // initialized for the email confirmation
         $products_ordered = '';
@@ -413,7 +413,7 @@ class inpay
                                 ON p.products_id=pa.products_id
                                 LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '".tep_get_prid($order->products[$i]['id'])."'";
+                                WHERE p.products_id = '".osc_get_prid($order->products[$i]['id'])."'";
                     // Will work with only one option for downloadable products
                     // otherwise, we have to build the query dynamically with a loop
                     $products_attributes = $order->products[$i]['attributes'];
@@ -421,14 +421,14 @@ class inpay
                     {
                         $stock_query_raw .= " AND pa.options_id = '".$products_attributes[0]['option_id']."' AND pa.options_values_id = '".$products_attributes[0]['value_id']."'";
                     }
-                    $stock_query = tep_db_query($stock_query_raw);
+                    $stock_query = osc_db_query($stock_query_raw);
                 } else
                 {
-                    $stock_query = tep_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    $stock_query = osc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                 }
-                if (tep_db_num_rows($stock_query) > 0)
+                if (osc_db_num_rows($stock_query) > 0)
                 {
-                    $stock_values = tep_db_fetch_array($stock_query);
+                    $stock_values = osc_db_fetch_array($stock_query);
                     // do not decrement quantities if products_attributes_filename exists
                     if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename']))
                     {
@@ -437,16 +437,16 @@ class inpay
                     {
                         $stock_left = $stock_values['products_quantity'];
                     }
-                    tep_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    osc_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     if (($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false'))
                     {
-                        tep_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                        osc_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     }
                 }
             } // Decrease stock ended
 
             // Update products_ordered (for bestsellers list)
-            tep_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+            osc_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
 
             //------insert customer choosen option to order--------
             $attributes_exist = '0';
@@ -469,19 +469,19 @@ class inpay
                                    and pa.options_values_id = poval.products_options_values_id
                                    and popt.language_id = '".$_SESSION['languages_id']."'
                                    and poval.language_id = '".$_SESSION['languages_id']."'";
-                        $attributes = tep_db_query($attributes_query);
+                        $attributes = osc_db_query($attributes_query);
                     } else
                     {
-                        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
+                        $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                     }
-                    $attributes_values = tep_db_fetch_array($attributes);
+                    $attributes_values = osc_db_fetch_array($attributes);
 
                     $products_ordered_attributes .= "\n\t".$attributes_values['products_options_name'].' '.$attributes_values['products_options_values_name'];
                 }
             }
             //------insert customer choosen option eof ----
             $total_weight += ($order->products[$i]['qty']*$order->products[$i]['weight']);
-            $total_tax += tep_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
+            $total_tax += osc_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
             $total_cost += $total_products_price;
 
             $products_ordered .= $order->products[$i]['qty'].' x '.$order->products[$i]['name'].' ('.$order->products[$i]['model'].') = '.$currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']).$products_ordered_attributes."\n";
@@ -491,11 +491,11 @@ class inpay
         $email_order = STORE_NAME."\n".
         EMAIL_SEPARATOR."\n".
         EMAIL_TEXT_ORDER_NUMBER.' '.$order_id."\n".
-        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$order_id, 'SSL', false)."\n".
+        EMAIL_TEXT_INVOICE_URL.' '.osc_href_link('account', 'orders&id='.$order_id, 'SSL', false)."\n".
         EMAIL_TEXT_DATE_ORDERED.' '.strftime(DATE_FORMAT_LONG)."\n\n";
         if ($order->info['comments'])
         {
-            $email_order .= tep_db_output($order->info['comments'])."\n\n";
+            $email_order .= osc_db_output($order->info['comments'])."\n\n";
         }
         $email_order .= EMAIL_TEXT_PRODUCTS."\n".
         EMAIL_SEPARATOR."\n".
@@ -511,12 +511,12 @@ class inpay
         {
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n")."\n";
+            osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n")."\n\n";
+        osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n")."\n\n";
 
         if (is_object($$_SESSION['payment']))
         {
@@ -534,11 +534,11 @@ class inpay
         //
         if ($update_status)
         {
-            tep_mail($order->customer['firstname'].' '.$order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            osc_mail($order->customer['firstname'].' '.$order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 			// send emails to other people
             if (SEND_EXTRA_ORDER_EMAILS_TO != '')
             {
-                tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+                osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
             }
         }
         // load the after_process function from the payment modules
@@ -555,7 +555,7 @@ class inpay
 
         unset($_SESSION['cart_inpay_Standard_ID']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        osc_redirect(osc_href_link('checkout', 'success', 'SSL'));
     }
 
     function after_process()
@@ -572,38 +572,38 @@ class inpay
     {
         if (! isset ($this->_check))
         {
-            $check_query = tep_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_INPAY_STATUS'");
-            $this->_check = tep_db_num_rows($check_query);
+            $check_query = osc_db_query("select configuration_value from ".TABLE_CONFIGURATION." where configuration_key = 'MODULE_PAYMENT_INPAY_STATUS'");
+            $this->_check = osc_db_num_rows($check_query);
         }
         return $this->_check;
     }
     function set_order_status($order_status, $set_to_public)
     {
         $status_id = 0;
-        $check_query = tep_db_query("select orders_status_id from ".TABLE_ORDERS_STATUS." where orders_status_name = '".$order_status."' limit 1");
-        if (tep_db_num_rows($check_query) < 1)
+        $check_query = osc_db_query("select orders_status_id from ".TABLE_ORDERS_STATUS." where orders_status_name = '".$order_status."' limit 1");
+        if (osc_db_num_rows($check_query) < 1)
         {
-            $status_query = tep_db_query("select max(orders_status_id) as status_id from ".TABLE_ORDERS_STATUS);
-            $status = tep_db_fetch_array($status_query);
+            $status_query = osc_db_query("select max(orders_status_id) as status_id from ".TABLE_ORDERS_STATUS);
+            $status = osc_db_fetch_array($status_query);
             $status_id = $status['status_id']+1;
-            $languages = tep_get_languages();
-			$flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-            if (tep_db_num_rows($flags_query) == 1) {
+            $languages = osc_get_languages();
+			$flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+            if (osc_db_num_rows($flags_query) == 1) {
               foreach ($languages as $lang)
               {
-                tep_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name, public_flag) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."', 1)");
+                osc_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name, public_flag) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."', 1)");
               }
             }else{
               foreach ($languages as $lang)
               {
-                tep_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."')");
+                osc_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."')");
               }	
             }
 			
             
         } else
         {
-            $check = tep_db_fetch_array($check_query);
+            $check = osc_db_fetch_array($check_query);
             $status_id = $check['orders_status_id'];
         }
         return $status_id;
@@ -615,35 +615,35 @@ class inpay
         $completed_status_id = $this->set_order_status('Completed [inpay]', true);
 
 		$sort_order = 0;
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable inpay on your webshop?', 'MODULE_PAYMENT_INPAY_STATUS', 'False', '', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Gateway Server', 'MODULE_PAYMENT_INPAY_GATEWAY_SERVER', 'Production', 'Use the testing or production gateway server for transactions', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'Production\', \'Test\'), ', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your merchant id', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', '', 'Your merchant unique identifier (supplied by inpay)', '6', '".$sort_order++."', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your secret key', 'MODULE_PAYMENT_INPAY_SECRET_KEY', '', 'Your secret key (supplied by inpay)', '6', '".$sort_order++."', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Flow Layout', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'multi_page', 'Layout for the buyer flow', '6', '".$sort_order++."', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable inpay on your webshop?', 'MODULE_PAYMENT_INPAY_STATUS', 'False', '', '6', '".$sort_order++."', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Gateway Server', 'MODULE_PAYMENT_INPAY_GATEWAY_SERVER', 'Production', 'Use the testing or production gateway server for transactions', '6', '".$sort_order++."', 'osc_cfg_select_option(array(\'Production\', \'Test\'), ', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your merchant id', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', '', 'Your merchant unique identifier (supplied by inpay)', '6', '".$sort_order++."', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your secret key', 'MODULE_PAYMENT_INPAY_SECRET_KEY', '', 'Your secret key (supplied by inpay)', '6', '".$sort_order++."', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Flow Layout', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'multi_page', 'Layout for the buyer flow', '6', '".$sort_order++."', now())");
         
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Decrease stock on payment creation', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'False', 'Do you want to decrease stock upon payment creation?', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', '', 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.', '6', '".$sort_order++."', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Decrease stock on payment creation', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'False', 'Do you want to decrease stock upon payment creation?', '6', '".$sort_order++."', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', '', 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.', '6', '".$sort_order++."', now())");
         
         
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_INPAY_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '".$sort_order++."', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_INPAY_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '".$sort_order++."', 'osc_get_zone_class_title', 'osc_cfg_pull_down_zone_classes(', now())");
         
-        //tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_INPAY_ID', '', 'The inpay seller e-mail address to accept payments for', '6', '4', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_INPAY_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '".$sort_order++."', now())");
+        //osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_INPAY_ID', '', 'The inpay seller e-mail address to accept payments for', '6', '4', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_INPAY_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '".$sort_order++."', now())");
 
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay Acknowledged Order Status', 'MODULE_PAYMENT_INPAY_CREATE_ORDER_STATUS_ID', '".$created_status_id."', 'Set the status of orders made with this payment module to this value', '6', '".$sort_order++."', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay sum too low Order Status', 'MODULE_PAYMENT_INPAY_SUM_TOO_LOW_ORDER_STATUS_ID', '".$sum_too_low_status_id."', 'Set the status of orders which are paid with insufficient fund (sum too low) to this value', '6', '".$sort_order++."', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay Completed Order Status', 'MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID', '".$completed_status_id."', 'Set the status of orders which are confirmed as paid (approved) to this value', '6', '".$sort_order++."', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay Acknowledged Order Status', 'MODULE_PAYMENT_INPAY_CREATE_ORDER_STATUS_ID', '".$created_status_id."', 'Set the status of orders made with this payment module to this value', '6', '".$sort_order++."', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay sum too low Order Status', 'MODULE_PAYMENT_INPAY_SUM_TOO_LOW_ORDER_STATUS_ID', '".$sum_too_low_status_id."', 'Set the status of orders which are paid with insufficient fund (sum too low) to this value', '6', '".$sort_order++."', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
+        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set inpay Completed Order Status', 'MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID', '".$completed_status_id."', 'Set the status of orders which are confirmed as paid (approved) to this value', '6', '".$sort_order++."', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
 
-        //        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_INPAY_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
-        //        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Encrypted Web Payments', 'MODULE_PAYMENT_INPAY_EWP_STATUS', 'False', 'Do you want to enable Encrypted Web Payments?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-        //        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Working Directory', 'MODULE_PAYMENT_INPAY_EWP_WORKING_DIRECTORY', '', 'The working directory to use for temporary files. (trailing slash needed)', '6', '4', now())");
-        //        tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('OpenSSL Location', 'MODULE_PAYMENT_INPAY_EWP_OPENSSL', '/usr/bin/openssl', 'The location of the openssl binary file.', '6', '4', now())");
+        //        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_INPAY_TRANSACTION_METHOD', 'Sale', 'The processing method to use for each transaction.', '6', '0', 'osc_cfg_select_option(array(\'Authorization\', \'Sale\'), ', now())");
+        //        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Encrypted Web Payments', 'MODULE_PAYMENT_INPAY_EWP_STATUS', 'False', 'Do you want to enable Encrypted Web Payments?', '6', '3', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+        //        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Working Directory', 'MODULE_PAYMENT_INPAY_EWP_WORKING_DIRECTORY', '', 'The working directory to use for temporary files. (trailing slash needed)', '6', '4', now())");
+        //        osc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('OpenSSL Location', 'MODULE_PAYMENT_INPAY_EWP_OPENSSL', '/usr/bin/openssl', 'The location of the openssl binary file.', '6', '4', now())");
     }
 
     function remove()
     {
-        tep_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('".implode("', '", $this->keys())."')");
-        tep_db_query("delete from ".TABLE_ORDERS_STATUS." where orders_status_name like '%[inpay]%'");
+        osc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('".implode("', '", $this->keys())."')");
+        osc_db_query("delete from ".TABLE_ORDERS_STATUS." where orders_status_name like '%[inpay]%'");
     }
 
     function keys()
@@ -667,7 +667,7 @@ class inpay
             $currency_value = $currencies->currencies[$currency_code]['value'];
         }
 
-        return number_format(tep_round($number*$currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+        return number_format(osc_round($number*$currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
     //
     // calculate inpay MD5 for invoice creation

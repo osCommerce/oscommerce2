@@ -24,8 +24,8 @@
     }
 
     function _sess_read($key) {
-      $value_query = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' and expiry > '" . time() . "'");
-      $value = tep_db_fetch_array($value_query);
+      $value_query = osc_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "' and expiry > '" . time() . "'");
+      $value = osc_db_fetch_array($value_query);
 
       if (isset($value['value'])) {
         return $value['value'];
@@ -40,22 +40,22 @@
       $expiry = time() + $SESS_LIFE;
       $value = $val;
 
-      $check_query = tep_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
-      $check = tep_db_fetch_array($check_query);
+      $check_query = osc_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "'");
+      $check = osc_db_fetch_array($check_query);
 
       if ($check['total'] > 0) {
-        return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input($expiry) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
+        return osc_db_query("update " . TABLE_SESSIONS . " set expiry = '" . osc_db_input($expiry) . "', value = '" . osc_db_input($value) . "' where sesskey = '" . osc_db_input($key) . "'");
       } else {
-        return tep_db_query("insert into " . TABLE_SESSIONS . " values ('" . tep_db_input($key) . "', '" . tep_db_input($expiry) . "', '" . tep_db_input($value) . "')");
+        return osc_db_query("insert into " . TABLE_SESSIONS . " values ('" . osc_db_input($key) . "', '" . osc_db_input($expiry) . "', '" . osc_db_input($value) . "')");
       }
     }
 
     function _sess_destroy($key) {
-      return tep_db_query("delete from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
+      return osc_db_query("delete from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "'");
     }
 
     function _sess_gc($maxlifetime) {
-      tep_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . time() . "'");
+      osc_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . time() . "'");
 
       return true;
     }
@@ -63,7 +63,7 @@
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
   }
 
-  function tep_session_start() {
+  function osc_session_start() {
     $sane_session_id = true;
 
     if (isset($_GET[session_name()])) {
@@ -89,7 +89,7 @@
     }
 
     if ($sane_session_id == false) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      osc_redirect(osc_href_link(null, '', 'NONSSL', false));
     }
 
     register_shutdown_function('session_write_close');
@@ -97,7 +97,7 @@
     return session_start();
   }
 
-  function tep_session_recreate() {
+  function osc_session_recreate() {
     global $SID;
 
     session_regenerate_id(true);
