@@ -30,7 +30,11 @@
       
       $app_class = 'app_' . $app;
 
-      return new $app_class();
+      $OSCOM_APP = new $app_class();
+      $OSCOM_APP->runActions();
+      $OSCOM_APP->cleanUp();
+
+      return $OSCOM_APP;
     }
 
     public function getCode() {
@@ -106,5 +110,7 @@
     public function ignoreAction($key) {
       $this->_ignored_actions[] = $key;
     }
+
+    public function cleanUp() {}
   }
 ?>
