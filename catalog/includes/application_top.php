@@ -269,60 +269,6 @@
 // action recorder
   include('includes/classes/action_recorder.php');
 
-// Shopping cart actions
-  if (isset($_GET['action'])) {
-// redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ($session_started == false) {
-      osc_redirect(osc_href_link('info', 'cookie_usage'));
-    }
-
-    if (DISPLAY_CART == 'true') {
-      $goto =  'cart';
-      $parameters = array('action', 'cPath', 'products_id', 'pid');
-    } else {
-      $goto = basename($PHP_SELF);
-      $parameters = array('action', 'pid');
-    }
-    switch ($_GET['action']) {
-      case 'notify' :         if (isset($_SESSION['customer_id'])) {
-                                if (isset($_GET['products_id'])) {
-                                  $notify = $_GET['products_id'];
-                                } elseif (isset($_GET['notify'])) {
-                                  $notify = $_GET['notify'];
-                                } elseif (isset($_POST['notify'])) {
-                                  $notify = $_POST['notify'];
-                                } else {
-                                  osc_redirect(osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action', 'notify'))));
-                                }
-                                if (!is_array($notify)) $notify = array($notify);
-                                for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-                                  $check_query = osc_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$notify[$i] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-                                  $check = osc_db_fetch_array($check_query);
-                                  if ($check['count'] < 1) {
-                                    osc_db_query("insert into " . TABLE_PRODUCTS_NOTIFICATIONS . " (products_id, customers_id, date_added) values ('" . (int)$notify[$i] . "', '" . (int)$_SESSION['customer_id'] . "', now())");
-                                  }
-                                }
-                                osc_redirect(osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action', 'notify'))));
-                              } else {
-                                $_SESSION['navigation']->set_snapshot();
-                                osc_redirect(osc_href_link('account', 'login', 'SSL'));
-                              }
-                              break;
-      case 'notify_remove' :  if (isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
-                                $check_query = osc_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-                                $check = osc_db_fetch_array($check_query);
-                                if ($check['count'] > 0) {
-                                  osc_db_query("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-                                }
-                                osc_redirect(osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action'))));
-                              } else {
-                                $_SESSION['navigation']->set_snapshot();
-                                osc_redirect(osc_href_link('account', 'login', 'SSL'));
-                              }
-                              break;
-    }
-  }
-
 // include the who's online functions
   require(DIR_WS_FUNCTIONS . 'whos_online.php');
   osc_update_whos_online();
