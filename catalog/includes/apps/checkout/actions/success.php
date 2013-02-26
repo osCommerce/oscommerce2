@@ -20,39 +20,4 @@
       unset($_SESSION['comments']);
     }
   }
-/*
-// if the customer is not logged on, redirect them to the shopping cart page
-  if (!isset($_SESSION['customer_id'])) {
-    osc_redirect(osc_href_link('cart'));
-  }
-
-  if (isset($_GET['action']) && ($_GET['action'] == 'update')) {
-    $notify_string = '';
-
-    if (isset($_POST['notify']) && !empty($_POST['notify'])) {
-      $notify = $_POST['notify'];
-
-      if (!is_array($notify)) {
-        $notify = array($notify);
-      }
-
-      for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-        if (is_numeric($notify[$i])) {
-          $notify_string .= 'notify[]=' . $notify[$i] . '&';
-        }
-      }
-
-      if (!empty($notify_string)) {
-        $notify_string = 'action=notify&' . substr($notify_string, 0, -1);
-      }
-    }
-
-    osc_redirect(osc_href_link(null, $notify_string));
-  }
-
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
-
-  $breadcrumb->add(NAVBAR_TITLE_1);
-  $breadcrumb->add(NAVBAR_TITLE_2);
-*/
 ?>
