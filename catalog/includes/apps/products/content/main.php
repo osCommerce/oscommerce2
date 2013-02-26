@@ -99,7 +99,7 @@ $('#piGal ul').bxGallery({
       } else {
 ?>
 
-    <div id="piGal" style="float: right;">
+    <div id="piGal" style="margin:5px 5px; float: right;">
       <?php echo '<a href="' . HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $product_info['products_image'] . '" target="_blank" rel="fancybox">' . osc_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'itemprop="image"') . '</a>'; ?>
     </div>
 
