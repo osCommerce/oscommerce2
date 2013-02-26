@@ -106,7 +106,7 @@
     }
 
     if (osc_not_null($width) && osc_not_null($height)) {
-      $image .= ' width="' . osc_output_string($width) . '" height="' . osc_output_string($height) . '"';
+      $image .= ' style ="' . 'width:' . osc_output_string($width) . 'px; height:' . osc_output_string($height) . 'px;"';
     }
 
     if (osc_not_null($parameters)) $image .= ' ' . $parameters;

@@ -100,7 +100,7 @@ $('#piGal ul').bxGallery({
 ?>
 
     <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $product_info['products_image'] . '" target="_blank" rel="fancybox">' . osc_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'hspace="5" vspace="5" itemprop="image"') . '</a>'; ?>
+      <?php echo '<a href="' . HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $product_info['products_image'] . '" target="_blank" rel="fancybox">' . osc_image(DIR_WS_IMAGES . $product_info['products_image'], $product_info['products_name'], null, null, 'itemprop="image"') . '</a>'; ?>
     </div>
 
 <?php
