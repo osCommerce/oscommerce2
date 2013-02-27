@@ -8,10 +8,10 @@
 
   class app_account_action_edit {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $account, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $account, $breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }

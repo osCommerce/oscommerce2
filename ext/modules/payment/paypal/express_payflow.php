@@ -20,7 +20,7 @@
                       'get' => $_GET,
                       'post' => $_POST);
 
-    $_SESSION['navigation']->set_snapshot($snapshot);
+    $OSCOM_NavigationHistory->setSnapshot($snapshot);
 
     osc_redirect(osc_href_link('account', 'login', 'SSL'));
   }

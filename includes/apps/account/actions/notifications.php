@@ -8,10 +8,10 @@
 
   class app_account_action_notifications {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $global, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $global, $breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }

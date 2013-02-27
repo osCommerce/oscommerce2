@@ -15,7 +15,8 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'get' => 'checkout&payment'));
+    $OSCOM_NavigationHistory->setSnapshot(array('application' => 'checkout', 'action' => 'payment', 'mode' => 'SSL'));
+
     osc_redirect(osc_href_link('account', 'login', 'SSL'));
   }
 

@@ -37,8 +37,8 @@
 
 <?php
   } else {
-    if ( sizeof($_SESSION['navigation']->snapshot) > 0 ) {
-      $back_link = osc_href_link($_SESSION['navigation']->snapshot['page'], osc_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+    if ( $OSCOM_NavigationHistory->hasSnapshot() ) {
+      $back_link = $OSCOM_NavigationHistory->getSnapshotURL();
     } else {
       $back_link = osc_href_link('account', 'address_book', 'SSL');
     }

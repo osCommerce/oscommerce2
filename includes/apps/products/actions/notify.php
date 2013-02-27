@@ -8,7 +8,7 @@
 
   class app_products_action_notify {
     public static function execute(app $app) {
-      global $product_exists;
+      global $OSCOM_NavigationHistory, $product_exists;
 
       if ( $product_exists === false ) {
         osc_redirect(osc_href_link());
@@ -16,7 +16,7 @@
 
 // if the customer is not logged on, redirect them to the login page
       if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }

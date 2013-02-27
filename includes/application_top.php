@@ -117,9 +117,6 @@
 // include shopping cart class
   require(DIR_WS_CLASSES . 'shopping_cart.php');
 
-// include navigation history class
-  require(DIR_WS_CLASSES . 'navigation_history.php');
-
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
@@ -261,10 +258,8 @@
   }
 
 // navigation history
-  if (!isset($_SESSION['navigation']) || !is_object($_SESSION['navigation'])) {
-    $_SESSION['navigation'] = new navigationHistory;
-  }
-  $_SESSION['navigation']->add_current_page();
+  require(DIR_WS_CLASSES . 'navigation_history.php');
+  $OSCOM_NavigationHistory = new navigation_history(true);
 
 // action recorder
   include('includes/classes/action_recorder.php');

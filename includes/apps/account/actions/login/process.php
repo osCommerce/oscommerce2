@@ -8,7 +8,7 @@
 
   class app_account_action_login_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $messageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $error = false;
@@ -61,10 +61,10 @@
 // restore cart contents
             $_SESSION['cart']->restore_contents();
 
-            if ( sizeof($_SESSION['navigation']->snapshot) > 0 ) {
-              $origin_href = osc_href_link($_SESSION['navigation']->snapshot['page'], osc_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+            if ( $OSCOM_NavigationHistory->hasSnapshot() ) {
+              $origin_href = $OSCOM_NavigationHistory->getSnapshotURL(true);
 
-              $_SESSION['navigation']->clear_snapshot();
+              $OSCOM_NavigationHistory->resetSnapshot();
 
               osc_redirect($origin_href);
             } else {
