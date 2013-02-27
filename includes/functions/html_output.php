@@ -17,7 +17,7 @@
 
     $page = osc_output_string($page);
 
-    if ( $page == 'index' ) {
+    if ( empty($page) || ($page == 'index') ) {
       $page = null;
     }
 
