@@ -151,6 +151,6 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', osc_get_all_get_params(array('id')), 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', 'orders' . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'SSL')); ?>
   </div>
 </div>
