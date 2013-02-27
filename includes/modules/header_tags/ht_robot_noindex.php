@@ -29,21 +29,53 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate;
+      global $OSCOM_APP, $oscTemplate;
 
       if (osc_not_null(MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES)) {
-        $pages_array = array();
+        $pages = explode(';', MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES);
 
-        foreach (explode(';', MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES) as $page) {
-          $page = trim($page);
+        $app = isset($OSCOM_APP) ? $OSCOM_APP->getCode() : 'index';
 
-          if (!empty($page)) {
-            $pages_array[] = $page;
+        $action_counter = 0;
+        $application_key = null;
+        $action = array();
+
+        foreach ( $_GET as $key => $value ) {
+          $key = osc_sanitize_string(basename($key));
+
+          if ( preg_match('/^[A-Za-z0-9-_]*$/', $key) === false ) {
+            break;
           }
+
+          if ( !isset($application_key) && ($key == $app) ) {
+            $application_key = $action_counter;
+
+            $action_counter++;
+
+            continue;
+          }
+
+          $action[$key] = $value;
+
+          if ( !file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $app . '/actions/' . implode('/', array_keys($action)) . '.php') ) {
+            array_pop($action);
+
+            break;
+          }
+
+          $action_counter++;
         }
 
-        if (in_array(basename($PHP_SELF), $pages_array)) {
-          $oscTemplate->addBlock('<meta name="robots" content="noindex,follow" />' . "\n", $this->group);
+        $action_get = implode('/', array_keys($action));
+
+        $page = $app . (!empty($action_get) ? '/' . $action_get : null);
+
+        foreach ( $pages as $p ) {
+          if ( strpos($page, $p) === 0 ) {
+            $oscTemplate->addBlock('<meta name="robots" content="noindex,follow" />' . "\n", $this->group);
+
+            break;
+          }
         }
       }
     }
@@ -71,33 +103,13 @@
     }
 
     function get_default_pages() {
-      return array('account.php',
-                   'account_edit.php',
-                   'account_history.php',
-                   'account_history_info.php',
-                   'account_newsletters.php',
-                   'account_notifications.php',
-                   'account_password.php',
-                   'address_book.php',
-                   'address_book_process.php',
-                   'checkout_confirmation.php',
-                   'checkout_payment.php',
-                   'checkout_payment_address.php',
-                   'checkout_process.php',
-                   'checkout_shipping.php',
-                   'checkout_shipping_address.php',
-                   'checkout_success.php',
-                   'cookie_usage.php',
-                   'create_account.php',
-                   'create_account_success.php',
-                   'login.php',
-                   'logoff.php',
-                   'password_forgotten.php',
-                   'password_reset.php',
-                   'product_reviews_write.php',
-                   'shopping_cart.php',
-                   'ssl_check.php',
-                   'tell_a_friend.php');
+      return array('account',
+                   'cart',
+                   'checkout',
+                   'info/cookie_usage',
+                   'info/ssl_check',
+                   'products/reviews/new',
+                   'products/tell_a_friend');
     }
   }
 
@@ -106,20 +118,24 @@
   }
 
   function ht_robot_noindex_edit_pages($values, $key) {
-    global $PHP_SELF;
+    $strip = strlen(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/');
 
-    $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $files_array = array();
-	  if ($dir = @dir(DIR_FS_CATALOG)) {
-	    while ($file = $dir->read()) {
-	      if (!is_dir(DIR_FS_CATALOG . $file)) {
-	        if (substr($file, strrpos($file, '.')) == $file_extension) {
-            $files_array[] = $file;
-          }
+
+    $files = new RegexIterator(new RecursiveIteratorIterator(new RecursiveDirectoryIterator(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/'), RecursiveIteratorIterator::SELF_FIRST), '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+    foreach ( $files as $name => $object ) {
+      $name = substr($name, $strip); // remove full path
+      $name = substr($name, 0, -4); // remove file extension
+
+      $banana_split = explode('/', $name);
+
+      if ( isset($banana_split[1]) && isset($banana_split[2]) && ($banana_split[1] == 'actions') ) {
+        if ( !in_array($banana_split[0], $files_array) ) {
+          $files_array[] = $banana_split[0];
         }
+
+        $files_array[] = $banana_split[0] . '/' . implode('/', array_slice($banana_split, 2));
       }
-      sort($files_array);
-      $dir->close();
     }
 
     $values_array = explode(';', $values);
