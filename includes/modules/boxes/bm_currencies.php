@@ -52,8 +52,8 @@
           $data = '<div class="ui-widget infoBoxContainer">' .
                   '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CURRENCIES_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents">' . 
-                  '    ' . osc_draw_form('currencies', osc_href_link(null, '', $request_type, false), 'get') .
-                  '    ' . osc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . osc_hide_session_id() . '</form>' .
+                  '    ' . osc_draw_form('currencies', osc_href_link(null, '', $request_type, false), 'get') . $hidden_get_variables .
+                  '    ' . osc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();" style="width: 100%"') . osc_hide_session_id() . '</form>' .
                   '  </div>' .
                   '</div>';
 
