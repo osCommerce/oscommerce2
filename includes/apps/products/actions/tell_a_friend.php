@@ -8,10 +8,11 @@
 
   class app_products_action_tell_a_friend {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $Qp, $from_name, $from_email_address, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $Qp, $from_name, $from_email_address, $breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false') ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
+
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 

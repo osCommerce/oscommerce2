@@ -1,150 +1,217 @@
 <?php
-/*
-  $Id$
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+  class navigation_history {
+    protected $_data = array();
+    protected $_snapshot = array();
 
-  Copyright (c) 2013 osCommerce
+    public function __construct($add_current_page = false) {
+      if ( isset($_SESSION['NavigationHistory']['data']) && is_array($_SESSION['NavigationHistory']['data']) && !empty($_SESSION['NavigationHistory']['data']) ) {
+        $this->_data =& $_SESSION['NavigationHistory']['data'];
+      }
 
-  Released under the GNU General Public License
-*/
+      if ( isset($_SESSION['NavigationHistory']['snapshot']) && is_array($_SESSION['NavigationHistory']['snapshot']) && !empty($_SESSION['NavigationHistory']['snapshot']) ) {
+        $this->_snapshot =& $_SESSION['NavigationHistory']['snapshot'];
+      }
 
-  class navigationHistory {
-    var $path, $snapshot;
-
-    function navigationHistory() {
-      $this->reset();
+      if ( $add_current_page === true ) {
+        $this->addCurrentPage();
+      }
     }
 
-    function reset() {
-      $this->path = array();
-      $this->snapshot = array();
-    }
+    public function addCurrentPage() {
+      global $OSCOM_APP, $request_type;
 
-    function add_current_page() {
-      global $PHP_SELF, $request_type, $cPath;
+      $app = isset($OSCOM_APP) ? $OSCOM_APP->getCode() : 'index';
 
-      $set = 'true';
-      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-        if ( ($this->path[$i]['page'] == basename($PHP_SELF)) ) {
-          if (isset($cPath)) {
-            if (!isset($this->path[$i]['get']['cPath'])) {
-              continue;
-            } else {
-              if ($this->path[$i]['get']['cPath'] == $cPath) {
-                array_splice($this->path, ($i+1));
-                $set = 'false';
-                break;
-              } else {
-                $old_cPath = explode('_', $this->path[$i]['get']['cPath']);
-                $new_cPath = explode('_', $cPath);
+      $action_counter = 0;
+      $application_key = null;
+      $action = array();
 
-                for ($j=0, $n2=sizeof($old_cPath); $j<$n2; $j++) {
-                  if ($old_cPath[$j] != $new_cPath[$j]) {
-                    array_splice($this->path, ($i));
-                    $set = 'true';
-                    break 2;
-                  }
-                }
-              }
-            }
-          } else {
-            array_splice($this->path, ($i));
-            $set = 'true';
-            break;
-          }
+      foreach ( $_GET as $key => $value ) {
+        if ( !isset($application_key) && ($key == $app) ) {
+          $application_key = $action_counter;
+
+          $action_counter++;
+
+          continue;
+        }
+
+        $action[] = array($key => $value);
+
+        if ( $this->applicationActionExists(implode('/', array_keys($action))) === false ) {
+          array_pop($action);
+
+          break;
+        }
+
+        $action_counter++;
+      }
+
+      $action_get = http_build_query($action);
+
+      for ( $i=0, $n=sizeof($this->_data); $i<$n; $i++ ) {
+        if ( ($this->_data[$i]['application'] == $app) && ($this->_data[$i]['action'] == $action_get) ) {
+          array_splice($this->_data, $i);
+          break;
         }
       }
 
-      if ($set == 'true') {
-        $this->path[] = array('page' => basename($PHP_SELF),
-                              'mode' => $request_type,
-                              'get' => $this->filter_parameters($_GET),
-                              'post' => $this->filter_parameters($_POST));
+      $this->_data[] = array('page' => null,
+                             'application' => $app,
+                             'action' => $action_get,
+                             'mode' => $request_type,
+                             'get' => array_slice($_GET, $action_counter),
+                             'post' => $_POST);
+
+      if ( !isset($_SESSION['NavigationHistory']['data']) ) {
+        $_SESSION['NavigationHistory']['data'] = $this->_data;
       }
     }
 
-    function remove_current_page() {
-      global $PHP_SELF;
+    public function removeCurrentPage() {
+      array_pop($this->_data);
 
-      $last_entry_position = sizeof($this->path) - 1;
-      if ($this->path[$last_entry_position]['page'] == basename($PHP_SELF)) {
-        unset($this->path[$last_entry_position]);
+      if ( empty($this->_data) ) {
+        $this->resetPath();
       }
     }
 
-    function set_snapshot($page = '') {
-      global $PHP_SELF, $request_type;
+    public function hasPath($back = 1) {
+      if ( (is_numeric($back) === false) || (is_numeric($back) && ($back < 1)) ) {
+        $back = 1;
+      }
 
-      if (is_array($page)) {
-        $this->snapshot = array('page' => isset($page['page']) ? $page['page'] : null,
-                                'mode' => $page['mode'],
-                                'get' => $this->filter_parameters($page['get']),
-                                'post' => $this->filter_parameters($page['post']));
+      return isset($this->_data[count($this->_data) - $back]);
+    }
+
+    public function getPathURL($back = 1, $exclude = array()) {
+      if ( (is_numeric($back) === false) || (is_numeric($back) && ($back < 1)) ) {
+        $back = 1;
+      }
+
+      $back = count($this->_data) - $back;
+
+      if ( isset($this->_data[$back]['page']) ) {
+        return osc_href_link(null, $this->parseParameters($this->_data[$back]['get'], $exclude), $this->_data[$back]['mode'], true, true, $this->_data[$back]['page']);
       } else {
-        $this->snapshot = array('page' => basename($PHP_SELF),
-                                'mode' => $request_type,
-                                'get' => $this->filter_parameters($_GET),
-                                'post' => $this->filter_parameters($_POST));
+        return osc_href_link($this->_data[$back]['application'], $this->_data[$back]['action'] . '&' . $this->parseParameters($this->_data[$back]['get'], $exclude), $this->_data[$back]['mode']);
       }
     }
 
-    function clear_snapshot() {
-      $this->snapshot = array();
+    public function setSnapshot($page = null) {
+      if ( isset($page) && is_array($page) ) {
+        $this->_snapshot = array('page' => isset($page['page']) ? $page['page'] : null,
+                                 'application' => isset($page['application']) ? $page['application'] : null,
+                                 'action' => isset($page['action']) ? $page['action'] : null,
+                                 'mode' => isset($page['mode']) ? $page['mode'] : 'NONSSL',
+                                 'get' => isset($page['get']) ? $page['get'] : array(),
+                                 'post' => isset($page['post']) ? $page['post'] : array());
+      } else {
+        $this->_snapshot = $this->_data[count($this->_data) - 1];
+      }
+
+      if ( !isset($_SESSION['NavigationHistory']['snapshot']) ) {
+        $_SESSION['NavigationHistory']['snapshot'] = $this->_snapshot;
+      }
     }
 
-    function set_path_as_snapshot($history = 0) {
-      $pos = (sizeof($this->path)-1-$history);
-      $this->snapshot = array('page' => $this->path[$pos]['page'],
-                              'mode' => $this->path[$pos]['mode'],
-                              'get' => $this->path[$pos]['get'],
-                              'post' => $this->path[$pos]['post']);
+    public function hasSnapshot() {
+      return !empty($this->_snapshot);
     }
 
-    function debug() {
-      for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-        echo $this->path[$i]['page'] . '?';
-        while (list($key, $value) = each($this->path[$i]['get'])) {
-          echo $key . '=' . $value . '&';
+    public function getSnapshot($key) {
+      if ( isset($this->_snapshot[$key]) ) {
+        return $this->_snapshot[$key];
+      }
+    }
+
+    public function getSnapshotURL($auto_mode = false) {
+      if ( $this->hasSnapshot() ) {
+        if ( isset($this->_snapshot['page']) ) {
+          $target = osc_href_link(null, $this->parseParameters($this->_snapshot['get']), ($auto_mode === true) ? 'NONSSL' : $this->_snapshot['mode'], true, true, $this->_snapshot['page']);
+        } else {
+          $target = osc_href_link($this->_snapshot['application'], $this->_snapshot['action'] . '&' . $this->parseParameters($this->_snapshot['get']), ($auto_mode === true) ? 'NONSSL' : $this->_snapshot['mode']);
         }
-        if (sizeof($this->path[$i]['post']) > 0) {
-          echo '<br />';
-          while (list($key, $value) = each($this->path[$i]['post'])) {
-            echo '&nbsp;&nbsp;<strong>' . $key . '=' . $value . '</strong><br />';
+      } else {
+        $target = osc_href_link(null, null, ($auto_mode === true) ? 'NONSSL' : $this->_snapshot['mode']);
+      }
+
+      return $target;
+    }
+
+    public function redirectToSnapshot() {
+      $target = $this->getSnapshotURL(true);
+
+      $this->resetSnapshot();
+
+      osc_redirect($target);
+    }
+
+    public function resetPath() {
+      $this->_data = array();
+
+      if ( isset($_SESSION['NavigationHistory']['data']) ) {
+        unset($_SESSION['NavigationHistory']['data']);
+      }
+    }
+
+    public function resetSnapshot() {
+      $this->_snapshot = array();
+
+      if ( isset($_SESSION['NavigationHistory']['snapshot']) ) {
+        unset($_SESSION['NavigationHistory']['snapshot']);
+      }
+    }
+
+    public function reset() {
+      $this->resetPath();
+      $this->resetSnapshot();
+
+      if ( isset($_SESSION['NavigationHistory']) ) {
+        unset($_SESSION['NavigationHistory']);
+      }
+    }
+
+    protected function parseParameters($array, $additional_exclude = array()) {
+      $exclude = array('x', 'y', session_name());
+
+      if ( is_array($additional_exclude) && !empty($additional_exclude) ) {
+        $exclude = array_merge($exclude, $additional_exclude);
+      }
+
+      $string = '';
+
+      if ( is_array($array) && !empty($array) ) {
+        foreach ( $array as $key => $value ) {
+          if ( !in_array($key, $exclude) ) {
+            $string .= $key;
+
+            if ( !empty($value) ) {
+              $string .= '=' . $value;
+            }
+
+            $string .= '&';
           }
         }
-        echo '<br />';
+
+        $string = substr($string, 0, -1);
       }
 
-      if (sizeof($this->snapshot) > 0) {
-        echo '<br /><br />';
-
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . osc_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
-      }
+      return $string;
     }
 
-    function filter_parameters($parameters) {
-      $clean = array();
+    protected function applicationActionExists($action) {
+      global $OSCOM_APP;
 
-      if (is_array($parameters)) {
-        reset($parameters);
-        while (list($key, $value) = each($parameters)) {
-          if (strpos($key, '_nh-dns') < 1) {
-            $clean[$key] = $value;
-          }
-        }
-      }
+      $app = isset($OSCOM_APP) ? $OSCOM_APP->getCode() : 'index';
 
-      return $clean;
-    }
-
-    function unserialize($broken) {
-      for(reset($broken);$kv=each($broken);) {
-        $key=$kv['key'];
-        if (gettype($this->$key)!="user function")
-        $this->$key=$kv['value'];
-      }
+      return file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'apps/' . $app . '/actions/' . $action . '.php');
     }
   }
 ?>

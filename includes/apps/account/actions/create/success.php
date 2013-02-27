@@ -8,15 +8,16 @@
 
   class app_account_action_create_success {
     public static function execute(app $app) {
-      global $breadcrumb, $origin_href;
+      global $OSCOM_NavigationHistory, $breadcrumb, $origin_href;
 
       $app->setContentFile('create_success.php');
 
       $breadcrumb->add(NAVBAR_TITLE_CREATE_SUCCESS);
 
-      if ( sizeof($_SESSION['navigation']->snapshot) > 0 ) {
-        $origin_href = osc_href_link($_SESSION['navigation']->snapshot['page'], osc_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
-        $_SESSION['navigation']->clear_snapshot();
+      if ( $OSCOM_NavigationHistory->hasSnapshot() ) {
+        $origin_href = $OSCOM_NavigationHistory->getSnapshotURL(true);
+
+        $OSCOM_NavigationHistory->resetSnapshot();
       } else {
         $origin_href = osc_href_link();
       }

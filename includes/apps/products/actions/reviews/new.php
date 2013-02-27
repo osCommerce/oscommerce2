@@ -8,10 +8,11 @@
 
   class app_products_action_reviews_new {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $Qcustomer;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $Qcustomer;
 
       if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
+
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 

@@ -12,13 +12,11 @@
 
 ////
 // The HTML href link wrapper function
-  function osc_href_link($page = null, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
+  function osc_href_link($app = null, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $page = null) {
     global $request_type, $session_started, $SID;
 
-    $page = osc_output_string($page);
-
-    if ( empty($page) || ($page == 'index') ) {
-      $page = null;
+    if ( $app == 'index' ) {
+      $app = null;
     }
 
     if ( $connection == 'SSL' ) {
@@ -31,13 +29,18 @@
       $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
     }
 
-    $link .= 'index.php';
-
     if ( isset($page) ) {
-      $link .= '?' . $page;
-      $separator = '&';
-    } else {
+      $link .= $page;
       $separator = '?';
+    } else {
+      $link .= 'index.php';
+
+      if ( isset($app) ) {
+        $link .= '?' . $app;
+        $separator = '&';
+      } else {
+        $separator = '?';
+      }
     }
 
     if ( isset($parameters) ) {

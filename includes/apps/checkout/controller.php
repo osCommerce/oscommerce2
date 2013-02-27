@@ -14,11 +14,11 @@
 
   class app_checkout extends app {
     public function __construct() {
-      global $OSCOM_PDO, $order, $breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
 
 // if the customer is not logged on, redirect them to the login page
       if ( !isset($_SESSION['customer_id']) ) {
-        $_SESSION['navigation']->set_snapshot();
+        $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
