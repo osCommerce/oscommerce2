@@ -37,8 +37,7 @@
               '<li><a href="' . osc_href_link('info', 'shipping') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
               '<li><a href="' . osc_href_link('info', 'privacy') . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a></li>' .
               '<li><a href="' . osc_href_link('info', 'conditions') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a></li>' .
-              '<li><a href="' . osc_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>' .
-              '</li>';
+              '<li><a href="' . osc_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>';
 
       $oscTemplate->addBlock($data, $this->group);
     }
