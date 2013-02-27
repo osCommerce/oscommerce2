@@ -191,6 +191,6 @@
   <br />
 
   <div class="buttonSet">
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('search', osc_get_all_get_params(array('search', 'sort', 'page')), 'NONSSL', true, false)); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('search', 'showform&' . osc_get_all_get_params(array('search', 'sort', 'page')), 'NONSSL', true, false)); ?>
   </div>
 </div>
