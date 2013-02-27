@@ -34,6 +34,12 @@
       $action = array();
 
       foreach ( $_GET as $key => $value ) {
+        $key = osc_sanitize_string(basename($key));
+
+        if ( preg_match('/^[A-Za-z0-9-_]*$/', $key) === false ) {
+          break;
+        }
+
         if ( !isset($application_key) && ($key == $app) ) {
           $application_key = $action_counter;
 
