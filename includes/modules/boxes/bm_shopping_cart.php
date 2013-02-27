@@ -36,51 +36,33 @@
       $cart_contents_string = '';
 
       if ($_SESSION['cart']->count_contents() > 0) {
-        $cart_contents_string = '<table border="0" width="100%" cellspacing="0" cellpadding="0" class="ui-widget-content infoBoxContents">';
+        $cart_contents_string = '';
         $products = $_SESSION['cart']->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-          $cart_contents_string .= '<tr><td align="right" valign="top">';
+
+          $cart_contents_string .= '<li';
 
           if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-            $cart_contents_string .= '<span class="newItemInCart">';
+            $cart_contents_string .= ' class="active"';
           }
 
-          $cart_contents_string .= $products[$i]['quantity'] . '&nbsp;x&nbsp;';
+          $cart_contents_string .= '><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '">';
 
-          if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-            $cart_contents_string .= '</span>';
-          }
+          $cart_contents_string .= $products[$i]['quantity'] . '&nbsp;x&nbsp;' . $products[$i]['name'];
 
-          $cart_contents_string .= '</td><td valign="top"><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '">';
-
-          if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-            $cart_contents_string .= '<span class="newItemInCart">';
-          }
-
-          $cart_contents_string .= $products[$i]['name'];
-
-          if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
-            $cart_contents_string .= '</span>';
-          }
-
-          $cart_contents_string .= '</a></td></tr>';
+          $cart_contents_string .= '</a></li>';
 
           if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
             unset($_SESSION['new_products_id_in_cart']);
           }
         }
 
-        $cart_contents_string .= '<tr><td colspan="2" style="padding-top: 5px; padding-bottom: 2px;">' . osc_draw_separator() . '</td></tr>' .
-                                 '<tr><td colspan="2" align="right">' . $currencies->format($_SESSION['cart']->show_total()) . '</td></tr>' .
-                                 '</table>';
+        $cart_contents_string .= '<li style="padding-top: 5px; padding-bottom: 2px;"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
       } else {
-        $cart_contents_string .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</div>';
+        $cart_contents_string .= '<li>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</li>';
       }
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading"><a href="' . osc_href_link('cart') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></div>' .
-              '  ' . $cart_contents_string .
-              '</div>';
+      $data = '<li class="nav-header"><a href="' . osc_href_link('cart') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></li>' . $cart_contents_string;
 
       $oscTemplate->addBlock($data, $this->group);
     }
