@@ -33,15 +33,12 @@
     function execute() {
       global $oscTemplate;
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_INFORMATION_BOX_TITLE . '</div>' .
-              '  <div class="ui-widget-content infoBoxContents">' .
-              '    <a href="' . osc_href_link('info', 'shipping') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a><br />' .
-              '    <a href="' . osc_href_link('info', 'privacy') . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a><br />' .
-              '    <a href="' . osc_href_link('info', 'conditions') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a><br />' .
-              '    <a href="' . osc_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a>' .
-              '  </div>' .
-              '</div>';
+      $data = '<li class="nav-header">' . MODULE_BOXES_INFORMATION_BOX_TITLE . '</li>' .
+              '<li><a href="' . osc_href_link('info', 'shipping') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
+              '<li><a href="' . osc_href_link('info', 'privacy') . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a></li>' .
+              '<li><a href="' . osc_href_link('info', 'conditions') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a></li>' .
+              '<li><a href="' . osc_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>' .
+              '</li>';
 
       $oscTemplate->addBlock($data, $this->group);
     }

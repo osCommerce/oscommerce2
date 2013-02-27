@@ -132,7 +132,9 @@ $('#headerShortcuts').buttonset();
 ?>
 
     <div id="columnLeft" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
-      <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+      <ul class="nav nav-list">
+        <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+      </ul>
     </div>
 
 <?php

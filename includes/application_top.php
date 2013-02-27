@@ -302,6 +302,9 @@
     $current_category_id = 0;
   }
 
+// include category tree class
+  require(DIR_WS_CLASSES . 'category_tree.php');
+
 // include the breadcrumb class and start the breadcrumb trail
   require(DIR_WS_CLASSES . 'breadcrumb.php');
   $OSCOM_Breadcrumb = new breadcrumb();
