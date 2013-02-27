@@ -42,7 +42,7 @@
           continue;
         }
 
-        $action[] = array($key => $value);
+        $action[$key] = $value;
 
         if ( $this->applicationActionExists(implode('/', array_keys($action))) === false ) {
           array_pop($action);
