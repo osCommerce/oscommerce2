@@ -33,14 +33,12 @@
     function execute() {
       global $oscTemplate;
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_SEARCH_BOX_TITLE . '</div>' .
-              '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">' .
-              '    ' . osc_draw_form('quick_find', osc_href_link(), 'get') . osc_draw_hidden_field('search', '') .
-              '    ' . osc_draw_input_field('q', '', 'size="10" maxlength="30" style="width: 75%"') . '&nbsp;' . osc_hide_session_id() . osc_image_submit('button_quick_find.gif', MODULE_BOXES_SEARCH_BOX_TITLE) . '<br />' . MODULE_BOXES_SEARCH_BOX_TEXT . '<br /><a href="' . osc_href_link('search') . '"><strong>' . MODULE_BOXES_SEARCH_BOX_ADVANCED_SEARCH . '</strong></a>' .
-              '    </form>' .
-              '  </div>' .
-              '</div>';
+      $data = '<li class="nav-header">' . MODULE_BOXES_SEARCH_BOX_TITLE . '</li>' .
+              '<li style="text-align: center;">' .
+              '  ' . osc_draw_form('quick_find', osc_href_link(), 'get') . osc_draw_hidden_field('search', '') .
+              '  ' . osc_draw_input_field('q', '', 'size="10" maxlength="30" style="width: 75%"') . '&nbsp;' . osc_hide_session_id() . osc_image_submit('button_quick_find.gif', MODULE_BOXES_SEARCH_BOX_TITLE) . '<br />' . MODULE_BOXES_SEARCH_BOX_TEXT . '<br /><a href="' . osc_href_link('search') . '"><strong>' . MODULE_BOXES_SEARCH_BOX_ADVANCED_SEARCH . '</strong></a>' .
+              '  </form>' .
+              '</li>';
 
       $oscTemplate->addBlock($data, $this->group);
     }

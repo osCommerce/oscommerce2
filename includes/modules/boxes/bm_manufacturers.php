@@ -39,16 +39,13 @@
       if ($number_of_rows = osc_db_num_rows($manufacturers_query)) {
         if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
-          $manufacturers_list = '<ul style="list-style: none; margin: 0; padding: 0;">';
+          $content = '';
           while ($manufacturers = osc_db_fetch_array($manufacturers_query)) {
             $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturers['manufacturers_name']);
-            if (isset($_GET['manufacturers_id']) && ($_GET['manufacturers_id'] == $manufacturers['manufacturers_id'])) $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
-            $manufacturers_list .= '<li><a href="' . osc_href_link(null, 'manufacturers_id=' . $manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
+            $content .= '<li';
+            if (isset($_GET['manufacturers_id']) && ($_GET['manufacturers_id'] == $manufacturers['manufacturers_id'])) $content .= ' class="active"';
+            $content .= '><a href="' . osc_href_link(null, 'manufacturers_id=' . $manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
           }
-
-          $manufacturers_list .= '</ul>';
-
-          $content = $manufacturers_list;
         } else {
 // Display a drop-down
           $manufacturers_array = array();
@@ -62,15 +59,13 @@
                                            'text' => $manufacturers_name);
           }
 
-          $content = osc_draw_form('manufacturers', osc_href_link(null, '', 'NONSSL', false), 'get') .
+          $content = '<li>' . osc_draw_form('manufacturers', osc_href_link(null, '', 'NONSSL', false), 'get') .
                      osc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '" style="width: 100%"') . osc_hide_session_id() .
-                     '</form>';
+                     '</form></li>';
         }
 
-        $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents">' . $content . '</div>' .
-                  '</div>';
+        $data = '<li class="nav-header">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</li>' .
+                $content;
       }
 
       return $data;
