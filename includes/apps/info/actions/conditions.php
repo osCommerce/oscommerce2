@@ -8,11 +8,11 @@
 
   class app_info_action_conditions {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('conditions.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CONDITIONS, osc_href_link('info', 'conditions'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_CONDITIONS, osc_href_link('info', 'conditions'));
     }
   }
 ?>

@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_edit {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $entry, $messageStack, $breadcrumb;
+      global $OSCOM_PDO, $entry, $messageStack, $OSCOM_Breadcrumb;
 
       $exists = false;
 
@@ -33,7 +33,7 @@
 
       $app->setContentFile('address_book_process.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_EDIT, osc_href_link('account', 'address_book&edit&id=' . $_GET['id'], 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_EDIT, osc_href_link('account', 'address_book&edit&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

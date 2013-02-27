@@ -8,11 +8,11 @@
 
   class app_info_action_privacy {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('privacy.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PRIVACY, osc_href_link('info', 'privacy'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PRIVACY, osc_href_link('info', 'privacy'));
     }
   }
 ?>

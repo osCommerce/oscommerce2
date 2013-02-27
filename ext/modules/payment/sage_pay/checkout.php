@@ -82,8 +82,8 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link('checkout', 'shipping', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2);
+  $OSCOM_Breadcrumb->add(NAVBAR_TITLE_1, osc_href_link('checkout', 'shipping', 'SSL'));
+  $OSCOM_Breadcrumb->add(NAVBAR_TITLE_2);
 
   if ($_SESSION['payment'] == 'sage_pay_direct') {
     $iframe_url = osc_href_link('ext/modules/payment/sage_pay/direct_3dauth.php', '', 'SSL');

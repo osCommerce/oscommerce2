@@ -8,7 +8,7 @@
 
   class app_checkout_action_payment {
     public static function execute(app $app) {
-      global $total_weight, $total_count, $payment_modules, $breadcrumb;
+      global $total_weight, $total_count, $payment_modules, $OSCOM_Breadcrumb;
 
       $app->setContentFile('payment.php');
 
@@ -18,7 +18,7 @@
 // load all enabled payment modules
       $payment_modules = new payment;
 
-      $breadcrumb->add(NAVBAR_TITLE_PAYMENT, osc_href_link('checkout', 'payment', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PAYMENT, osc_href_link('checkout', 'payment', 'SSL'));
     }
   }
 ?>

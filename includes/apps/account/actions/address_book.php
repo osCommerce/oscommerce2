@@ -8,7 +8,7 @@
 
   class app_account_action_address_book {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -18,7 +18,7 @@
 
       $app->setContentFile('address_book.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK, osc_href_link('account', 'address_book', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK, osc_href_link('account', 'address_book', 'SSL'));
     }
   }
 ?>

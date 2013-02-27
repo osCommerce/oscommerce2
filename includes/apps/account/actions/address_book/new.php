@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_new {
     public static function execute(app $app) {
-      global $messageStack, $breadcrumb;
+      global $messageStack, $OSCOM_Breadcrumb;
 
       $app->setContentFile('address_book_process.php');
 
@@ -18,7 +18,7 @@
         osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_NEW, osc_href_link('account', 'address_book&new', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_NEW, osc_href_link('account', 'address_book&new', 'SSL'));
     }
   }
 ?>

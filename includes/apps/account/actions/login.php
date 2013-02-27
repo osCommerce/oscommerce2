@@ -8,7 +8,7 @@
 
  class app_account_action_login {
    public static function execute(app $app) {
-      global $session_started, $breadcrumb;
+      global $session_started, $OSCOM_Breadcrumb;
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
       if ( $session_started === false ) {
@@ -17,7 +17,7 @@
 
       $app->setContentFile('login.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_LOGIN, osc_href_link('account', 'login', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_LOGIN, osc_href_link('account', 'login', 'SSL'));
     }
   }
 ?>

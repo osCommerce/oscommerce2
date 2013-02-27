@@ -8,7 +8,7 @@
 
   class app_products extends app {
     public function __construct() {
-      global $OSCOM_PDO, $cPath, $product_exists, $breadcrumb;
+      global $OSCOM_PDO, $cPath, $product_exists, $OSCOM_Breadcrumb;
 
       $product_exists = false;
 
@@ -29,7 +29,7 @@
           $this->_content_file = 'main.php';
 
           if ( !empty($model) ) {
-            $breadcrumb->add($model, osc_href_link('products', 'cPath=' . $cPath . '&id=' . $_GET['id']));
+            $OSCOM_Breadcrumb->add($model, osc_href_link('products', 'cPath=' . $cPath . '&id=' . $_GET['id']));
           }
         }
       }

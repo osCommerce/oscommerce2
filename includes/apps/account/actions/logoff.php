@@ -8,7 +8,7 @@
 
   class app_account_action_logoff {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       unset($_SESSION['customer_id']);
       unset($_SESSION['customer_default_address_id']);
@@ -29,7 +29,7 @@
 
       $app->setContentFile('logoff.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_LOGOFF);
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_LOGOFF);
     }
   }
 ?>

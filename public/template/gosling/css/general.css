@@ -5324,6 +5324,9 @@ img {
   -webkit-box-shadow: 0px 0px 1px #000;
   -moz-box-shadow: 0px 0px 1px #000;
 }
+#piGal .outer {
+  margin-left: -30px;
+}
 .buttonSet {
   clear: both;
 }
@@ -5354,13 +5357,6 @@ img {
   color: #70d250;
   text-decoration: underline;
 }
-A {
-  color: #000000;
-  text-decoration: none;
-}
-A:hover {
-  text-decoration: underline;
-}
 FORM {
   display: inline;
 }
@@ -5376,12 +5372,6 @@ TD.headerNavigation {
   background: #bbc3d3;
   color: #ffffff;
   font-weight: bold;
-}
-A.headerNavigation {
-  color: #FFFFFF;
-}
-A.headerNavigation:hover {
-  color: #ffffff;
 }
 TR.headerError {
   background: #ff0000;
@@ -5474,13 +5464,6 @@ TABLE.productListing {
 }
 .productListingData {
   table-layout: fixed;
-}
-A.pageResults {
-  color: #0000FF;
-}
-A.pageResults:hover {
-  color: #0000FF;
-  background: #FFFF33;
 }
 TD.pageHeading,
 DIV.pageHeading {

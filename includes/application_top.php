@@ -304,10 +304,10 @@
 
 // include the breadcrumb class and start the breadcrumb trail
   require(DIR_WS_CLASSES . 'breadcrumb.php');
-  $breadcrumb = new breadcrumb;
+  $OSCOM_Breadcrumb = new breadcrumb();
 
-  $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
-  $breadcrumb->add(HEADER_TITLE_CATALOG, osc_href_link());
+  $OSCOM_Breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
+  $OSCOM_Breadcrumb->add(HEADER_TITLE_CATALOG, osc_href_link());
 
 // add category names or the manufacturer name to the breadcrumb trail
   if (isset($cPath_array)) {
@@ -315,7 +315,7 @@
       $categories_query = osc_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
       if (osc_db_num_rows($categories_query) > 0) {
         $categories = osc_db_fetch_array($categories_query);
-        $breadcrumb->add($categories['categories_name'], osc_href_link(null, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+        $OSCOM_Breadcrumb->add($categories['categories_name'], osc_href_link(null, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
       } else {
         break;
       }
@@ -324,7 +324,7 @@
     $manufacturers_query = osc_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
     if (osc_db_num_rows($manufacturers_query)) {
       $manufacturers = osc_db_fetch_array($manufacturers_query);
-      $breadcrumb->add($manufacturers['manufacturers_name'], osc_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id']));
+      $OSCOM_Breadcrumb->add($manufacturers['manufacturers_name'], osc_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
 

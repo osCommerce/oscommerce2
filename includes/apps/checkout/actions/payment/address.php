@@ -8,11 +8,11 @@
 
   class app_checkout_action_payment_address {
     public static function execute(app $app) {
-      global $breadcrumb, $addresses_count, $process;
+      global $OSCOM_Breadcrumb, $addresses_count, $process;
 
       $app->setContentFile('payment_address.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PAYMENT_ADDRESS, osc_href_link('checkout', 'payment&address', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PAYMENT_ADDRESS, osc_href_link('checkout', 'payment&address', 'SSL'));
 
       $addresses_count = osc_count_customer_address_book_entries();
 

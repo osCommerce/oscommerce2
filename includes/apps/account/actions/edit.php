@@ -8,7 +8,7 @@
 
   class app_account_action_edit {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $account, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $account, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -24,7 +24,7 @@
 
       $account = $Qaccount->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_EDIT, osc_href_link('account', 'edit', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_EDIT, osc_href_link('account', 'edit', 'SSL'));
     }
   }
 ?>

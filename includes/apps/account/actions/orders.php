@@ -8,7 +8,7 @@
 
   class app_account_action_orders {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -18,7 +18,7 @@
 
       $app->setContentFile('orders.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ORDERS, osc_href_link('account', 'orders', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ORDERS, osc_href_link('account', 'orders', 'SSL'));
     }
   }
 ?>

@@ -8,11 +8,11 @@
 
   class app_account_action_password_forgotten {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('password_forgotten.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_FORGOTTEN, osc_href_link('account', 'password&forgotten', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PASSWORD_FORGOTTEN, osc_href_link('account', 'password&forgotten', 'SSL'));
     }
   }
 ?>

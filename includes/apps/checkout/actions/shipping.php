@@ -8,7 +8,7 @@
 
   class app_checkout_action_shipping {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $order, $total_weight, $total_count, $shipping_modules, $free_shipping, $quotes, $breadcrumb;
+      global $OSCOM_PDO, $order, $total_weight, $total_count, $shipping_modules, $free_shipping, $quotes, $OSCOM_Breadcrumb;
 
       $app->setContentFile('shipping.php');
 
@@ -70,7 +70,7 @@
 // get all available shipping quotes
       $quotes = $shipping_modules->quote();
 
-      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('checkout', 'shipping', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('checkout', 'shipping', 'SSL'));
     }
   }
 ?>

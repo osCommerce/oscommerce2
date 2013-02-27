@@ -8,11 +8,11 @@
 
   class app_products_action_new {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('new.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_NEW, osc_href_link('products', 'new'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_NEW, osc_href_link('products', 'new'));
     }
   }
 ?>
