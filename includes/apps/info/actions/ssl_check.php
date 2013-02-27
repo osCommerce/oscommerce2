@@ -8,11 +8,11 @@
 
   class app_info_action_ssl_check {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('ssl_check.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, osc_href_link('info', 'ssl_check'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, osc_href_link('info', 'ssl_check'));
     }
   }
 ?>

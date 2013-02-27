@@ -95,8 +95,8 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 $('#headerShortcuts').buttonset();
 </script>
 
-  <div class="row-fluid ui-widget infoBoxContainer">
-    <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
+  <div class="row-fluid">
+    <?php echo $OSCOM_Breadcrumb->get(); ?>
   </div>
 
 <?php

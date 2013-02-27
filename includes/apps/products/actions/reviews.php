@@ -8,7 +8,7 @@
 
   class app_products_action_reviews {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $Qp, $Qreview, $currencies, $products_price, $products_name, $breadcrumb;
+      global $OSCOM_PDO, $Qp, $Qreview, $currencies, $products_price, $products_name, $OSCOM_Breadcrumb;
 
       $app->setContentFile('reviews_all.php');
 
@@ -74,7 +74,7 @@
         }
       }
 
-      $breadcrumb->add(NAVBAR_TITLE_REVIEWS, $reviews_breadcrumb_link);
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_REVIEWS, $reviews_breadcrumb_link);
     }
   }
 ?>

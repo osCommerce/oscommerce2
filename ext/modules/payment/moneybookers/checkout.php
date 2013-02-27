@@ -82,8 +82,8 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link('checkout', 'shipping', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2);
+  $OSCOM_Breadcrumb->add(NAVBAR_TITLE_1, osc_href_link('checkout', 'shipping', 'SSL'));
+  $OSCOM_Breadcrumb->add(NAVBAR_TITLE_2);
 
   $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $_POST['sid'];
 

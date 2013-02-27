@@ -8,7 +8,7 @@
 
   class app_account_action_password_reset {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $Qc, $messageStack, $breadcrumb;
+      global $OSCOM_PDO, $Qc, $messageStack, $OSCOM_Breadcrumb;
 
       if ( isset($_GET['initiated']) ) {
         return true;
@@ -59,7 +59,7 @@
 
       $app->setContentFile('password_reset.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD_RESET, osc_href_link('account', 'password&reset', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PASSWORD_RESET, osc_href_link('account', 'password&reset', 'SSL'));
     }
   }
 ?>

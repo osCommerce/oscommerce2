@@ -8,11 +8,11 @@
 
   class app_info_action_contact {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('contact.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CONTACT, osc_href_link('info', 'contact'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_CONTACT, osc_href_link('info', 'contact'));
     }
   }
 ?>

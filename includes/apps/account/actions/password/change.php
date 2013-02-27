@@ -8,7 +8,7 @@
 
   class app_account_action_password_change {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -18,7 +18,7 @@
 
       $app->setContentFile('password_change.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_PASSWORD, osc_href_link('account', 'password&change', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_PASSWORD, osc_href_link('account', 'password&change', 'SSL'));
     }
   }
 ?>

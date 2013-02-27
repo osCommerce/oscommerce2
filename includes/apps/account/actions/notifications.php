@@ -8,7 +8,7 @@
 
   class app_account_action_notifications {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $global, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $global, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -24,7 +24,7 @@
 
       $global = $Qglobal->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_NOTIFICATIONS, osc_href_link('account', 'notifications', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_NOTIFICATIONS, osc_href_link('account', 'notifications', 'SSL'));
     }
   }
 ?>

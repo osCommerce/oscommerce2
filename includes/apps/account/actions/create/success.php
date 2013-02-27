@@ -8,11 +8,11 @@
 
   class app_account_action_create_success {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $breadcrumb, $origin_href;
+      global $OSCOM_NavigationHistory, $OSCOM_Breadcrumb, $origin_href;
 
       $app->setContentFile('create_success.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CREATE_SUCCESS);
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_CREATE_SUCCESS);
 
       if ( $OSCOM_NavigationHistory->hasSnapshot() ) {
         $origin_href = $OSCOM_NavigationHistory->getSnapshotURL(true);

@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_delete {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack, $breadcrumb;
+      global $OSCOM_PDO, $messageStack, $OSCOM_Breadcrumb;
 
       $exists = false;
 
@@ -37,7 +37,7 @@
 
       $app->setContentFile('address_book_delete.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_DELETE, osc_href_link('account', 'address_book&delete&id=' . $_GET['id'], 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK_DELETE, osc_href_link('account', 'address_book&delete&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

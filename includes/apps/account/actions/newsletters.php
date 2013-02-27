@@ -8,7 +8,7 @@
 
   class app_account_action_newsletters {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $newsletter, $breadcrumb;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $newsletter, $OSCOM_Breadcrumb;
 
       if ( !isset($_SESSION['customer_id']) ) {
         $OSCOM_NavigationHistory->setSnapshot();
@@ -24,7 +24,7 @@
 
       $newsletter = $Qnewsletter->fetch();
 
-      $breadcrumb->add(NAVBAR_TITLE_NEWSLETTERS, osc_href_link('account', 'newsletters', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_NEWSLETTERS, osc_href_link('account', 'newsletters', 'SSL'));
     }
   }
 ?>

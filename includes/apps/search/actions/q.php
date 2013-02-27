@@ -8,7 +8,7 @@
 
   class app_search_action_q {
     public static function execute(app $app) {
-      global $dfrom, $dto, $pfrom, $pto, $keywords, $messageStack, $breadcrumb;
+      global $dfrom, $dto, $pfrom, $pto, $keywords, $messageStack, $OSCOM_Breadcrumb;
 
       $app->setContentFile('results.php');
 
@@ -120,7 +120,7 @@
         osc_redirect(osc_href_link('search', osc_get_all_get_params(array('search', 'q')), 'NONSSL', true, false));
       }
 
-      $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link('search', osc_get_all_get_params(array('search')), 'NONSSL', true, false));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_2, osc_href_link('search', osc_get_all_get_params(array('search')), 'NONSSL', true, false));
     }
   }
 ?>

@@ -8,9 +8,9 @@
 
   class app_info extends app {
     public function __construct() {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
-      $breadcrumb->add(NAVBAR_TITLE, osc_href_link('info'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE, osc_href_link('info'));
     }
   }
 ?>

@@ -8,13 +8,13 @@
 
   class app_account_action_create {
     public static function execute(app $app) {
-      global $process, $breadcrumb;
+      global $process, $OSCOM_Breadcrumb;
 
       $process = false;
 
       $app->setContentFile('create.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_CREATE, osc_href_link('account', 'create', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_CREATE, osc_href_link('account', 'create', 'SSL'));
     }
   }
 ?>

@@ -8,11 +8,11 @@
 
   class app_info_action_shipping {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('shipping.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('info', 'shipping'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_SHIPPING, osc_href_link('info', 'shipping'));
     }
   }
 ?>

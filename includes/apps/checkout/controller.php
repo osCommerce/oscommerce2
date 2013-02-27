@@ -14,7 +14,7 @@
 
   class app_checkout extends app {
     public function __construct() {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
+      global $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $OSCOM_Breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
 
 // if the customer is not logged on, redirect them to the login page
       if ( !isset($_SESSION['customer_id']) ) {
@@ -106,7 +106,7 @@
 
       $order = new order();
 
-      $breadcrumb->add(NAVBAR_TITLE, osc_href_link('checkout', '', 'SSL'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE, osc_href_link('checkout', '', 'SSL'));
 
       if ( !isset($_GET['shipping']) && !isset($_GET['payment']) && isset($_SESSION['shipping']) && isset($_SESSION['payment']) ) {
 // load the selected payment module
@@ -132,7 +132,7 @@
         $order_total_modules = new order_total;
         $order_totals = $order_total_modules->process();
 
-        $breadcrumb->add(NAVBAR_TITLE_CONFIRMATION);
+        $OSCOM_Breadcrumb->add(NAVBAR_TITLE_CONFIRMATION);
       }
     }
   }

@@ -1,44 +1,44 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2012 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
   class breadcrumb {
-    var $_trail;
+    protected $_trail;
 
-    function breadcrumb() {
+    public function __construct() {
       $this->reset();
     }
 
-    function reset() {
+    public function reset() {
       $this->_trail = array();
     }
 
-    function add($title, $link = '') {
+    public function add($title, $link = null) {
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
-    function trail($separator = ' - ') {
-      $trail_string = '';
+    public function get($separator = '/') {
+      $crumbs = array();
 
-      for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
-        if (isset($this->_trail[$i]['link']) && osc_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="' . $this->_trail[$i]['link'] . '" class="headerNavigation" itemprop="url"><span itemprop="title">' . $this->_trail[$i]['title'] . '</span></a></span>';
+      foreach ( $this->_trail as $crumb ) {
+        if ( isset($crumb['link']) && !empty($crumb['link']) ) {
+          $crumbs[] = '<span itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="' . $crumb['link'] . '" itemprop="url"><span itemprop="title">' . $crumb['title'] . '</span></a></span>';
         } else {
-          $trail_string .= $this->_trail[$i]['title'];
+          $crumbs[] = $crumb['title'];
         }
-
-        if (($i+1) < $n) $trail_string .= $separator;
       }
 
-      return $trail_string;
+      $result = '';
+
+      if ( !empty($crumbs) ) {
+        $result = '<ul class="breadcrumb"><li>' . implode(' <span class="divider">' . $separator . '</span></li><li>', $crumbs) . '</li></ul>';
+      }
+
+      return $result;
     }
   }
 ?>

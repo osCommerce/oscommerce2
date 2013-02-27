@@ -10,7 +10,7 @@
 
   class app_account_action_orders_info {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $order, $breadcrumb;
+      global $OSCOM_PDO, $order, $OSCOM_Breadcrumb;
 
       if ( !isset($_GET['id']) || !is_numeric($_GET['id']) ) {
         osc_redirect(osc_href_link('account', 'orders', 'SSL'));
@@ -29,7 +29,7 @@
 
       $app->setContentFile('orders_info.php');
 
-      $breadcrumb->add(sprintf(NAVBAR_TITLE_ORDERS_INFO, $_GET['id']), osc_href_link('account', 'orders&info&id=' . $_GET['id'], 'SSL'));
+      $OSCOM_Breadcrumb->add(sprintf(NAVBAR_TITLE_ORDERS_INFO, $_GET['id']), osc_href_link('account', 'orders&info&id=' . $_GET['id'], 'SSL'));
     }
   }
 ?>

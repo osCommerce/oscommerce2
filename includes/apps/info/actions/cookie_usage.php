@@ -8,11 +8,11 @@
 
   class app_info_action_cookie_usage {
     public static function execute(app $app) {
-      global $breadcrumb;
+      global $OSCOM_Breadcrumb;
 
       $app->setContentFile('cookie_usage.php');
 
-      $breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, osc_href_link('info', 'cookie_usage'));
+      $OSCOM_Breadcrumb->add(NAVBAR_TITLE_COOKIE_USAGE, osc_href_link('info', 'cookie_usage'));
     }
   }
 ?>
