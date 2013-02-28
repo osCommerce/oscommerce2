@@ -41,16 +41,14 @@
         }
 
         if (osc_db_num_rows($best_sellers_query) >= MIN_DISPLAY_BESTSELLERS) {
-          $bestsellers_list = '<ol style="margin: 0; padding-left: 25px;">';
+          $bestsellers_list = '';
+
           while ($best_sellers = osc_db_fetch_array($best_sellers_query)) {
             $bestsellers_list .= '<li><a href="' . osc_href_link('products', 'id=' . $best_sellers['products_id']) . '">' . $best_sellers['products_name'] . '</a></li>';
           }
-          $bestsellers_list .= '</ol>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents">' . $bestsellers_list . '</div>' .
-                  '</div>';
+          $data = '<li class="nav-header">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</li>' .
+                  $bestsellers_list;
 
           $oscTemplate->addBlock($data, $this->group);
         }
