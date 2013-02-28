@@ -60,7 +60,7 @@
           }
 
           $content = '<li>' . osc_draw_form('manufacturers', osc_href_link(null, '', 'NONSSL', false), 'get') .
-                     osc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '" style="width: 100%"') . osc_hide_session_id() .
+                     osc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" style="width: 100%"') . osc_hide_session_id() .
                      '</form></li>';
         }
 
