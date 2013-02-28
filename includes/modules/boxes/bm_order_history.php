@@ -43,20 +43,14 @@
           }
           $product_ids = substr($product_ids, 0, -1);
 
-          $customer_orders_string = '<table border="0" width="100%" cellspacing="0" cellpadding="1" class="ui-widget-content infoBoxContents">';
+          $customer_orders_string = '';
           $products_query = osc_db_query("select products_id, products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id in (" . $product_ids . ") and language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_name");
           while ($products = osc_db_fetch_array($products_query)) {
-            $customer_orders_string .= '  <tr>' .
-                                       '    <td><a href="' . osc_href_link('products', 'id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></td>' .
-                                       '    <td align="right" valign="top"><a href="' . osc_href_link('cart', 'add&id=' . $products['products_id'] . '&formid=' . md5($_SESSION['sessiontoken'])) . '">' . osc_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></td>' .
-                                       '  </tr>';
+            $customer_orders_string .= '<li><span style="float: right;"><a href="' . osc_href_link('cart', 'add&id=' . $products['products_id'] . '&formid=' . md5($_SESSION['sessiontoken'])) . '">' . osc_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></span><a href="' . osc_href_link('products', 'id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></li>';
           }
-          $customer_orders_string .= '</table>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</div>' .
-                  '  ' . $customer_orders_string .
-                  '</div>';
+          $data = '<li class="nav-header">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</li>' .
+                  $customer_orders_string;
 
           $oscTemplate->addBlock($data, $this->group);
         }
