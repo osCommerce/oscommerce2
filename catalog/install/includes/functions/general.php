@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -96,6 +96,24 @@
       return false;
     } else {
       return is_writable($file);
+    }
+  }
+
+////
+// Parse the data used in the html tags to ensure the tags will not break
+  function osc_parse_input_field_data($data, $parse) {
+    return strtr(trim($data), $parse);
+  }
+
+  function osc_output_string($string, $translate = false, $protected = false) {
+    if ($protected == true) {
+      return htmlspecialchars($string);
+    } else {
+      if ($translate == false) {
+        return osc_parse_input_field_data($string, array('"' => '&quot;'));
+      } else {
+        return osc_parse_input_field_data($string, $translate);
+      }
     }
   }
 ?>

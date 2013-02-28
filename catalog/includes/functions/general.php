@@ -37,14 +37,15 @@
     }
 
     if ( (ENABLE_SSL == true) && (getenv('HTTPS') == 'on') ) { // We are loading an SSL page
-      if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) { // NONSSL url
-        $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER)); // Change it to SSL
+      if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
+        $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
       }
     }
 
     if ( strpos($url, '&amp;') !== false ) {
       $url = str_replace('&amp;', '&', $url);
     }
+
     header('Location: ' . $url);
 
     tep_exit();

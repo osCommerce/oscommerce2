@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -64,7 +64,7 @@
             $expired_entries += ${$HTTP_GET_VARS['module']}->expireEntries();
           } else {
             $delete_query = tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($HTTP_GET_VARS['module']) . "'");
-            $expired_entries += mysql_affected_rows($db_link);
+            $expired_entries += tep_db_affected_rows($db_link);
           }
         } else {
           foreach ($modules_array as $module) {

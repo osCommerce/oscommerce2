@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -20,23 +20,25 @@
       return false;
     }
 
-    $$link = @mysql_connect($server, $username, $password) or $db_error = mysql_error();
+    $$link = @mysqli_connect($server, $username, $password) or $db_error = mysqli_error();
 
     return $$link;
   }
 
-  function osc_db_select_db($database) {
-    return mysql_select_db($database);
+  function osc_db_select_db($database, $link = 'db_link') {
+    global $$link;
+
+    return mysqli_select_db($$link, $database);
   }
 
   function osc_db_query($query, $link = 'db_link') {
     global $$link;
 
-    return mysql_query($query, $$link);
+    return mysqli_query($$link, $query);
   }
 
   function osc_db_num_rows($db_query) {
-    return mysql_num_rows($db_query);
+    return mysqli_num_rows($db_query);
   }
 
   function osc_db_install($database, $sql_file) {
@@ -48,7 +50,7 @@
       if (@osc_db_query('create database ' . $database)) {
         osc_db_select_db($database);
       } else {
-        $db_error = mysql_error();
+        $db_error = mysqli_error();
       }
     }
 
@@ -112,6 +114,34 @@
       }
     } else {
       return false;
+    }
+  }
+
+  if ( !function_exists('mysqli_connect') ) {
+    function mysqli_connect($server, $username, $password) {
+      if ( substr($server, 0, 2) == 'p:' ) {
+        $link = mysql_pconnect(substr($server, 2), $username, $password);
+      } else {
+        $link = mysql_connect($server, $username, $password);
+      }
+
+      return $link;
+    }
+
+    function mysqli_select_db($link, $database) {
+      return mysql_select_db($database, $link);
+    }
+
+    function mysqli_query($link, $query) {
+      return mysql_query($query, $link);
+    }
+
+    function mysqli_error($link = null) {
+      return mysql_error($link);
+    }
+
+    function mysqli_num_rows($query) {
+      return mysql_num_rows($query);
     }
   }
 ?>
