@@ -7,6 +7,7 @@
  */
 
   class oscTemplate {
+    protected $_template = 'gosling';
     var $_title;
     var $_blocks = array();
     var $_grid_container_width = 12;
@@ -15,6 +16,10 @@
 
     function oscTemplate() {
       $this->_title = TITLE;
+    }
+
+    public function getCode() {
+      return $this->_template;
     }
 
     function setGridContainerWidth($width) {
@@ -93,7 +98,7 @@
     }
 
     public function getTemplateFilename() {
-      return DIR_WS_MODULES . 'templates/gosling/content/template_top.php';
+      return DIR_WS_MODULES . 'templates/' . $this->_template . '/content/base.php';
     }
   }
 ?>
