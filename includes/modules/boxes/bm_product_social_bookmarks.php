@@ -54,10 +54,8 @@
         }
 
         if ( !empty($social_bookmarks) ) {
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">' . implode(' ', $social_bookmarks) . '</div>' .
-                  '</div>';
+          $data = '<li class="nav-header">' . MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_BOX_TITLE . '</li>' .
+                  '<li style="text-align: center;">' . implode(' ', $social_bookmarks) . '</li>';
 
           $oscTemplate->addBlock($data, $this->group);
         }
