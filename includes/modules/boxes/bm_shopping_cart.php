@@ -52,7 +52,7 @@
         }
 
         $cart_contents_string .= '<li class="divider"></li>' .
-                                 '<li style="text-align: right;">' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
+                                 '<li style="text-align: right;"><span class="badge badge-success">' . $currencies->format($_SESSION['cart']->show_total()) . '</span></li>';
       } else {
         $cart_contents_string .= '<li>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</li>';
       }
