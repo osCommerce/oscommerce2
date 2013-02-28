@@ -43,13 +43,11 @@
           $languages_string = '';
           reset($lng->catalog_languages);
           while (list($key, $value) = each($lng->catalog_languages)) {
-            $languages_string .= ' <a href="' . osc_href_link(null, osc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . osc_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name']) . '</a> ';
+            $languages_string .= '<a href="' . osc_href_link(null, osc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . osc_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name']) . '</a>';
           }
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_LANGUAGES_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">' . $languages_string . '</div>' .
-                  '</div>';
+          $data = '<li class="nav-header">' . MODULE_BOXES_LANGUAGES_BOX_TITLE . '</li>' .
+                  '<li style="text-align: center;">' . $languages_string . '</li>';
 
           $oscTemplate->addBlock($data, $this->group);
         }
