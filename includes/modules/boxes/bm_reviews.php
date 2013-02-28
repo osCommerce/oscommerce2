@@ -49,19 +49,19 @@
 
         $rand_review_text = osc_break_string(osc_output_string_protected($rand_review['reviews_text']), 15, '-<br />');
 
-        $reviews_box_contents .= '<div class="ui-widget-content infoBoxContents"><div align="center"><a href="' . osc_href_link('products', 'reviews=' . $random_product['reviews_id'] . '&id=' . $random_product['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $random_product['products_image'], $random_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><a href="' . osc_href_link('products', 'reviews=' . $random_product['reviews_id'] . '&id=' . $random_product['products_id']) . '">' . $rand_review_text . ' ..</a><br /><div align="center">' . osc_image(DIR_WS_IMAGES . 'stars_' . $random_product['reviews_rating'] . '.gif' , sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $random_product['reviews_rating'])) . '</div></div>';
+        $reviews_box_contents .= '<li style="text-align: center;"><a href="' . osc_href_link('products', 'reviews=' . $random_product['reviews_id'] . '&id=' . $random_product['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $random_product['products_image'], $random_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></li>' .
+                                 '<li style="text-align: center;"><a href="' . osc_href_link('products', 'reviews=' . $random_product['reviews_id'] . '&id=' . $random_product['products_id']) . '">' . $rand_review_text . ' ..</a></li>' .
+                                 '<li style="text-align: center;">' . osc_image(DIR_WS_IMAGES . 'stars_' . $random_product['reviews_rating'] . '.gif' , sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $random_product['reviews_rating'])) . '</li>';
       } elseif ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) ) {
 // display 'write a review' box
-        $reviews_box_contents .= '<table border="0" cellspacing="0" cellpadding="2" class="ui-widget-content infoBoxContents"><tr><td><a href="' . osc_href_link('products', 'reviews&new&id=' . $_GET['id']) . '">' . osc_image(DIR_WS_IMAGES . 'box_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW) . '</a></td><td><a href="' . osc_href_link('products', 'reviews&new&id=' . $_GET['id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a></td></tr></table>';
+        $reviews_box_contents .= '<li><span style="float: left; padding-right: 5px;"><a href="' . osc_href_link('products', 'reviews&new&id=' . $_GET['id']) . '">' . osc_image(DIR_WS_IMAGES . 'box_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW) . '</a></span><a href="' . osc_href_link('products', 'reviews&new&id=' . $_GET['id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a></li>';
       } else {
 // display 'no reviews' box
-        $reviews_box_contents .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</div>';
+        $reviews_box_contents .= '<li>' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</li>';
       }
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading"><a href="' . osc_href_link('products', 'reviews') . '">' . MODULE_BOXES_REVIEWS_BOX_TITLE . '</a></div>' .
-              '  ' . $reviews_box_contents .
-              '</div>';
+      $data = '<li class="nav-header"><a href="' . osc_href_link('products', 'reviews') . '">' . MODULE_BOXES_REVIEWS_BOX_TITLE . '</a></li>' .
+              $reviews_box_contents;
 
       $oscTemplate->addBlock($data, $this->group);
     }
