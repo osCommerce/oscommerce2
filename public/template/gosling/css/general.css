@@ -5357,14 +5357,6 @@ body {
   font-weight: bold;
   width: 150px;
 }
-h1 {
-  font-size: 20px;
-  margin-bottom: 0;
-  padding-bottom: 5px;
-}
-img {
-  border: 0;
-}
 #piGal ul {
   list-style-type: none;
 }
@@ -5546,11 +5538,6 @@ TD.tableHeading {
   font-family: Verdana, Arial, sans-serif;
   font-size: 12px;
   font-weight: bold;
-}
-SPAN.newItemInCart {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
-  color: #ff0000;
 }
 SPAN.greetUser {
   font-family: Verdana, Arial, sans-serif;
