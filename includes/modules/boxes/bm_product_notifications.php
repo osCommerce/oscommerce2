@@ -46,15 +46,13 @@
         $notif_contents = '';
 
         if ($notification_exists == true) {
-          $notif_contents = '<table border="0" cellspacing="0" cellpadding="2" class="ui-widget-content infoBoxContents"><tr><td><a href="' . osc_href_link('products', 'notify&delete&id=' . $_GET['id'], $request_type) . '">' . osc_image(DIR_WS_IMAGES . 'box_products_notifications_remove.gif', IMAGE_BUTTON_REMOVE_NOTIFICATIONS) . '</a></td><td><a href="' . osc_href_link('products', 'notify&delete&id=' . $_GET['id'], $request_type) . '">' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, osc_get_products_name($_GET['id'])) .'</a></td></tr></table>';
+          $notif_contents = '<li><span style="float: left;"><a href="' . osc_href_link('products', 'notify&delete&id=' . $_GET['id'], $request_type) . '">' . osc_image(DIR_WS_IMAGES . 'box_products_notifications_remove.gif', IMAGE_BUTTON_REMOVE_NOTIFICATIONS) . '</a></span><a href="' . osc_href_link('products', 'notify&delete&id=' . $_GET['id'], $request_type) . '">' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, osc_get_products_name($_GET['id'])) .'</a></li>';
         } else {
-          $notif_contents = '<table border="0" cellspacing="0" cellpadding="2" class="ui-widget-content infoBoxContents"><tr><td><a href="' . osc_href_link('products', 'notify&add&id=' . $_GET['id'], $request_type) . '">' . osc_image(DIR_WS_IMAGES . 'box_products_notifications.gif', IMAGE_BUTTON_NOTIFICATIONS) . '</a></td><td><a href="' . osc_href_link('products', 'notify&add&id=' . $_GET['id'], $request_type) . '">' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, osc_get_products_name($_GET['id'])) .'</a></td></tr></table>';
+          $notif_contents = '<li><span style="float: left;"><a href="' . osc_href_link('products', 'notify&add&id=' . $_GET['id'], $request_type) . '">' . osc_image(DIR_WS_IMAGES . 'box_products_notifications.gif', IMAGE_BUTTON_NOTIFICATIONS) . '</a></span><a href="' . osc_href_link('products', 'notify&add&id=' . $_GET['id'], $request_type) . '">' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, osc_get_products_name($_GET['id'])) .'</a></li>';
         }
 
-        $data = '<div class="ui-widget infoBoxContainer">' .
-                '  <div class="ui-widget-header infoBoxHeading"><a href="' . osc_href_link('account', 'notifications', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
-                '  ' . $notif_contents .
-                '</div>';
+        $data = '<li class="nav-header"><a href="' . osc_href_link('account', 'notifications', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></li>' .
+                $notif_contents;
 
         $oscTemplate->addBlock($data, $this->group);
       }
