@@ -44,25 +44,21 @@
 
           if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
             $cart_contents_string .= ' class="active"';
-          }
 
-          $cart_contents_string .= '><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '">';
-
-          $cart_contents_string .= $products[$i]['quantity'] . '&nbsp;x&nbsp;' . $products[$i]['name'];
-
-          $cart_contents_string .= '</a></li>';
-
-          if ((isset($_SESSION['new_products_id_in_cart'])) && ($_SESSION['new_products_id_in_cart'] == $products[$i]['id'])) {
             unset($_SESSION['new_products_id_in_cart']);
           }
+
+          $cart_contents_string .= '><a href="' . osc_href_link('products', 'id=' . $products[$i]['id']) . '">' . $products[$i]['quantity'] . '&nbsp;x&nbsp;' . $products[$i]['name'] . '</a></li>';
         }
 
-        $cart_contents_string .= '<li style="padding-top: 5px; padding-bottom: 2px;"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
+        $cart_contents_string .= '<li class="divider"></li>' .
+                                 '<li style="text-align: right;">' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
       } else {
         $cart_contents_string .= '<li>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</li>';
       }
 
-      $data = '<li class="nav-header"><a href="' . osc_href_link('cart') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></li>' . $cart_contents_string;
+      $data = '<li class="nav-header"><a href="' . osc_href_link('cart') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></li>' .
+              $cart_contents_string;
 
       $oscTemplate->addBlock($data, $this->group);
     }
