@@ -20,20 +20,6 @@
 <base href="<?php echo HTTP_SERVER . DIR_WS_ADMIN; ?>" />
 <!--[if IE]><script src="<?php echo osc_catalog_href_link('ext/flot/excanvas.min.js'); ?>"></script><![endif]-->
 <link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/bootstrap/css/bootstrap.min.css'); ?>" />
-    <style type="text/css">
-    body {
-		padding-top: 60px;
-		padding-bottom: 40px;
-	 }
-      @media (max-width: 980px) {
-        /* Enable use of floated navbar text */
-        .navbar-text.pull-right {
-          float: none;
-          padding-left: 5px;
-          padding-right: 5px;
-        }
-      }
-    </style>
 <link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/bootstrap/css/bootstrap-responsive.min.css'); ?>" />
 <!-- this is until boot strap is 100% -->
 <link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/jquery/ui/redmond/jquery-ui-1.8.23.css'); ?>">
