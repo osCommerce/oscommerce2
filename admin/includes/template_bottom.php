@@ -11,11 +11,16 @@
 */
 ?>
 
-		</section> <!-- bodyContent //-->
+    </section>
 
-		<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-
+    <footer class="span12">
+      <p class="text-center">
+        osCommerce Online Merchant Copyright © 2000-2013 <a href="http://www.oscommerce.com" target="_blank">osCommerce</a> (<a href="http://www.oscommerce.com/Us&amp;Legal" target="_blank">Copyright and Trademark Policies</a>)
+      </p>
+    </footer>
 	</div>
-</div> <!-- .container-fluid //-->
+</div>
+
 </body>
+
 </html>

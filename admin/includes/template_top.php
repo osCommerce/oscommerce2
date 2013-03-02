@@ -98,8 +98,7 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 ?>
 
     </div>
-  </div>
-</header>
+  </header>
 
 <?php
   if ($messageStack->size > 0) {
@@ -107,7 +106,7 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   }
 ?>
 
-<div class="row-fluid">
+  <div class="row-fluid">
 
 <?php
   if (isset($_SESSION['admin'])) {
@@ -115,4 +114,4 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   }
 ?>
 
-<section id="bodyContent">
+    <section id="bodyContent">
