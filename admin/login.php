@@ -119,58 +119,47 @@
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-?>
-
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td><table border="0" width="100%" cellspacing="0" cellpadding="0" height="40">
-      <tr>
-        <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-
-<?php
-  if (sizeof($languages_array) > 1) {
-?>
-
-        <td class="pageHeading" align="right"><?php echo osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . osc_hide_session_id() . '</form>'; ?></td>
-
-<?php
-  }
-?>
-
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td>
-
-<?php
-  $heading = array();
-  $contents = array();
 
   if (osc_db_num_rows($admins_check_query) > 0) {
-    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
-
-    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=process'));
-    $contents[] = array('text' => TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_LOGIN, 'key'));
+    $form_action = 'process';
+    $button_text = BUTTON_LOGIN;
   } else {
-    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
-
-    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=create'));
-    $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
-    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
+    $form_action = 'create';
+    $button_text = BUTTON_CREATE_ADMINISTRATOR;
   }
-
-  $box = new box;
-  echo $box->infoBox($heading, $contents);
 ?>
 
-    </td>
-  </tr>
-</table>
+<?php echo osc_draw_form('login', FILENAME_LOGIN, 'action=' . $form_action); ?>
+
+<div class="well offset3 span6" style="margin-top: 100px;">
+  <fieldset>
+    <legend>
+
+<?php
+  echo HEADING_TITLE;
+
+	if ( count($languages_array) > 1 ) {
+		echo osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') .
+         osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();" class="pull-right"') . osc_hide_session_id() .
+         '</form>';
+	}
+?>
+
+    </legend>
+
+    <div class="input-prepend span11">
+      <span class="add-on"><i class="icon-user"></i></span><?php echo osc_draw_input_field('username', '', 'class="input-block-level" placeholder="' . TEXT_USERNAME . '"'); ?>
+	  </div>
+
+    <div class="input-prepend span11">
+      <span class="add-on"><i class="icon-lock"></i></span><?php echo osc_draw_password_field('password', '','class="input-block-level" placeholder="' . TEXT_PASSWORD . '"'); ?>
+    </div>
+
+    <button class="btn btn-primary pull-right" type="submit"><?php echo $button_text; ?></button>
+  </fieldset>
+</div>
+
+</form>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
