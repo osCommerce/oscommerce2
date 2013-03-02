@@ -114,51 +114,65 @@
   }
 
   $admins_check_query = osc_db_query("select id from " . TABLE_ADMINISTRATORS . " limit 1");
-  if (osc_db_num_rows($admins_check_query) < 0) {
-  	// MOVED - DUPLICATE $messageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
-    $formAction = 'create';
-	$adminAlert = '	<div class="alert alert-block">' . PHP_EOL .
-    			  '		<button type="button" class="close" data-dismiss="alert">&times;</button>' . PHP_EOL .
-    			  '		<P>' . TEXT_CREATE_FIRST_ADMINISTRATOR . '</P>' . PHP_EOL .
-    			  '  </div>' . PHP_EOL;
-  	$buttonText = BUTTON_CREATE_ADMINISTRATOR;
-  } else {
-    $formAction = 'process';
-	$adminAlert = '<br>';
-	$buttonText = BUTTON_LOGIN;
+  if (osc_db_num_rows($admins_check_query) < 1) {
+    $messageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
   }
-  
+
   require(DIR_WS_INCLUDES . 'template_top.php');
+?>
 
+<table border="0" width="100%" cellspacing="2" cellpadding="2">
+  <tr>
+    <td><table border="0" width="100%" cellspacing="0" cellpadding="0" height="40">
+      <tr>
+        <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
 
-	$loginForm .= osc_draw_form('login', FILENAME_LOGIN, 'action='. $formAction .'')  . PHP_EOL;
-	$loginForm .= '	<div id="login-box" class="span6 offset3 well">'  . PHP_EOL;
-	$loginForm .= '		<fieldset>'  . PHP_EOL;
-	$loginForm .= '			<legend>' . HEADING_TITLE . PHP_EOL;
-	
-	if (sizeof($languages_array) > 1) {
-		$loginForm .= osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();" class="pull-right"') . osc_hide_session_id() . '</form>' . PHP_EOL;
-	}
-	
-	$loginForm .= '			</legend>'  . PHP_EOL;
-	
-	$loginForm .= '			' . $adminAlert . PHP_EOL;				
-					
-	$loginForm .= '			<div class="input-prepend span11"><span class="add-on"><i class="icon-user"></i></span>' . osc_draw_input_field('username','', 'class="input-block-level" placeholder="' . TEXT_USERNAME . '"') . PHP_EOL;
-	$loginForm .= '			</div>' . PHP_EOL;
-				
-	$loginForm .= '			<div class="input-prepend span11"><span class="add-on"><i class="icon-lock"></i></span>' . osc_draw_password_field('password','','class="input-block-level" placeholder="' . TEXT_PASSWORD . '"') . PHP_EOL;
-	$loginForm .= '			</div>' . PHP_EOL;
-	$loginForm .= '			<button class="btn btn-primary pull-right" type="submit">' . $buttonText . '</button>' . PHP_EOL;
-		
-		
-	$loginForm .= '		</fieldset>' . PHP_EOL;
-	$loginForm .= '	</div>' . PHP_EOL;
-	$loginForm .= '</form>' . PHP_EOL;
-	
-	
-  echo $loginForm;
- 
+<?php
+  if (sizeof($languages_array) > 1) {
+?>
+
+        <td class="pageHeading" align="right"><?php echo osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . osc_hide_session_id() . '</form>'; ?></td>
+
+<?php
+  }
+?>
+
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td>
+
+<?php
+  $heading = array();
+  $contents = array();
+
+  if (osc_db_num_rows($admins_check_query) > 0) {
+    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
+
+    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=process'));
+    $contents[] = array('text' => TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_LOGIN, 'key'));
+  } else {
+    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
+
+    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=create'));
+    $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
+    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
+  }
+
+  $box = new box;
+  echo $box->infoBox($heading, $contents);
+?>
+
+    </td>
+  </tr>
+</table>
+
+<?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>
