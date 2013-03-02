@@ -305,21 +305,6 @@ background-color: #FFBABA;
 padding: 2px;
 }
 
-#adminAppMenu {
-float: left;
-width: 150px;
-padding: 5px;
-}
-
-#adminAppMenu h3 {
-}
-
-#adminAppMenu ul {
-list-style: none;
-margin: -5px 0 -5px -10px;
-padding: 0;
-}
-
 #contentText {
 margin-left: 160px;
 }

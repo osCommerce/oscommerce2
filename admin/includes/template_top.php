@@ -114,4 +114,4 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   }
 ?>
 
-    <section id="bodyContent">
+    <section id="bodyContent" class="span<?php echo isset($_SESSION['admin']) ? '10' : '12'; ?>">
