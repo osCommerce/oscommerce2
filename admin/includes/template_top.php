@@ -16,11 +16,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <meta name="robots" content="noindex,nofollow">
 <title><?php echo TITLE; ?></title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <base href="<?php echo HTTP_SERVER . DIR_WS_ADMIN; ?>" />
 <!--[if IE]><script src="<?php echo osc_catalog_href_link('ext/flot/excanvas.min.js'); ?>"></script><![endif]-->
 <link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/bootstrap/css/bootstrap.min.css'); ?>" />
-<link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/bootstrap/css/bootstrap-responsive.min.css'); ?>" />
 <!-- this is until boot strap is 100% -->
 <link rel="stylesheet" type="text/css" href="<?php echo osc_catalog_href_link('ext/jquery/ui/redmond/jquery-ui-1.8.23.css'); ?>">
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
