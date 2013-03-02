@@ -65,24 +65,53 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 
 <body>
 
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-
 <div class="container-fluid">
-	<div class="row-fluid">
+  <header class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <a class="brand" href="#"><img src="./images/oscommerce_white_fill.png" alt="osCommerce Online Merchant" width="202" height="30" ></a>
+
+      <ul class="nav">
+        <li><?php echo '<a href="' . osc_catalog_href_link() . '">' . HEADER_TITLE_ONLINE_CATALOG . '</a>'; ?></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help<b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="http://www.oscommerce.com" target="_blank"><?php echo HEADER_TITLE_SUPPORT_SITE; ?></a></li>
+          </ul>
+        </li>
+      </ul>
+
+<?php
+  if ( isset($_SESSION['admin']) ) {
+?>
+
+      <ul class="nav pull-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo osc_output_string_protected($_SESSION['admin']['username']); ?><b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?php echo osc_href_link(FILENAME_LOGIN, 'action=logoff'); ?>">Logoff</a></li>
+          </ul>
+        </li>
+      </ul>
+
+<?php
+  }
+?>
+
+    </div>
+  </div>
+</header>
+
+<?php
+  if ($messageStack->size > 0) {
+    echo $messageStack->output();
+  }
+?>
+
+<div class="row-fluid">
 
 <?php
   if (isset($_SESSION['admin'])) {
     include(DIR_WS_INCLUDES . 'column_left.php');
-  } else {
-?>
-
-<style>
-#bodyContent {
-  margin-left: 0;
-}
-</style>
-
-<?php
   }
 ?>
 
