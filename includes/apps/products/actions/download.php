@@ -8,9 +8,9 @@
 
   class app_products_action_download {
     public static function execute(app $app) {
-      global $OSCOM_PDO;
+      global $OSCOM_Customer, $OSCOM_PDO;
 
-      if ( !isset($_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() ) {
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
       }
 
@@ -22,7 +22,7 @@
 // Check that order_id, customer_id and filename match
       $Qdownload = $OSCOM_PDO->prepare('select date_format(o.date_purchased, "%Y-%m-%d") as date_purchased_day, opd.download_maxdays, opd.download_count, opd.download_maxdays, opd.orders_products_filename from :table_orders o, :table_orders_products op, :table_orders_products_download opd, :table_orders_status os where o.orders_id = :orders_id and o.customers_id = :customers_id and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_download_id = :orders_products_download_id and opd.orders_products_filename != "" and o.orders_status = os.orders_status_id and os.downloads_flag = "1" and os.language_id = :language_id');
       $Qdownload->bindInt(':orders_id', $_GET['order']);
-      $Qdownload->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qdownload->bindInt(':customers_id', $OSCOM_Customer->getID());
       $Qdownload->bindInt(':orders_products_download_id', $_GET['id']);
       $Qdownload->bindInt(':language_id', $_SESSION['languages_id']);
       $Qdownload->execute();

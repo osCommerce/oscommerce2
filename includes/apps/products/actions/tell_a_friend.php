@@ -8,9 +8,9 @@
 
   class app_products_action_tell_a_friend {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $Qp, $from_name, $from_email_address, $OSCOM_Breadcrumb;
+      global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_PDO, $Qp, $from_name, $from_email_address, $OSCOM_Breadcrumb;
 
-      if ( !isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false') ) {
+      if ( !$OSCOM_Customer->isLoggedOn() && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false') ) {
         $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
@@ -27,7 +27,7 @@
         }
 
         $Qaccount = $OSCOM_PDO->prepare('select customers_firstname, customers_lastname, customers_email_address from :table_customers where customers_id = :customers_id');
-        $Qaccount->bindInt(':customers_id', $_SESSION['customer_id']);
+        $Qaccount->bindInt(':customers_id', $OSCOM_Customer->getID());
         $Qaccount->execute();
 
         $from_name = $Qaccount->value('customers_firstname') . ' ' . $Qaccount->value('customers_lastname');

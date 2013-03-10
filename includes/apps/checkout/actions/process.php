@@ -8,7 +8,7 @@
 
   class app_checkout_action_process {
     public static function execute(app $app) {
-      global $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $order, $insert_id, $currencies;
+      global $OSCOM_Customer, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $order, $insert_id, $currencies;
 
       if ( isset($GLOBALS[$_SESSION['payment']]->form_action_url) ) {
         if ( !isset($_POST['formid']) || ($_POST['formid'] != $_SESSION['sessiontoken']) ) {
@@ -19,7 +19,7 @@
 // load the before_process function from the payment modules
       $payment_modules->before_process();
 
-      $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+      $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                               'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                               'customers_company' => $order->customer['company'],
                               'customers_street_address' => $order->customer['street_address'],
@@ -224,12 +224,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" . 
                         EMAIL_SEPARATOR . "\n" .
-                        osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+                        osc_address_label($OSCOM_Customer->getID(), $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+                      osc_address_label($OSCOM_Customer->getID(), $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
       if (is_object($$_SESSION['payment'])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" . 

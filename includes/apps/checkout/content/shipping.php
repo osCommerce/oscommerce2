@@ -52,7 +52,7 @@ function rowOutEffect(object) {
       <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
       <div class="ui-widget-content infoBoxContents">
-        <?php echo osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
+        <?php echo osc_address_label($OSCOM_Customer->getID(), $_SESSION['sendto'], true, ' ', '<br />'); ?>
       </div>
     </div>
 

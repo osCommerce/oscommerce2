@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!isset($_SESSION['customer_id'])) {
+  if (!$OSCOM_Customer->isLoggedOn()) {
     $OSCOM_NavigationHistory->setSnapshot(array('application' => 'checkout', 'action' => 'payment', 'mode' => 'SSL'));
 
     osc_redirect(osc_href_link('account', 'login', 'SSL'));

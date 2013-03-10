@@ -29,7 +29,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Customer, $oscTemplate;
 
       if (osc_not_null(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID)) {
         if (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT != 'Header') {
@@ -41,8 +41,8 @@
   _gaq.push([\'_setAccount\', \'' . osc_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
   _gaq.push([\'_trackPageview\']);' . "\n";
 
-        if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && ($OSCOM_APP->getCode() == 'checkout') && ($OSCOM_APP->getCurrentAction() == 'success') && isset($_SESSION['customer_id']) ) {
-          $order_query = osc_db_query("select orders_id, billing_city, billing_state, billing_country from " . TABLE_ORDERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' order by date_purchased desc limit 1");
+        if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && ($OSCOM_APP->getCode() == 'checkout') && ($OSCOM_APP->getCurrentAction() == 'success') && $OSCOM_Customer->isLoggedOn() ) {
+          $order_query = osc_db_query("select orders_id, billing_city, billing_state, billing_country from " . TABLE_ORDERS . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' order by date_purchased desc limit 1");
 
           if (osc_db_num_rows($order_query) == 1) {
             $order = osc_db_fetch_array($order_query);

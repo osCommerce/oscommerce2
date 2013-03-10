@@ -31,11 +31,11 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $request_type, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Customer, $request_type, $oscTemplate;
 
       if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) ) {
-        if (isset($_SESSION['customer_id'])) {
-          $check_query = osc_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . osc_get_prid($_GET['id']) . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+        if ($OSCOM_Customer->isLoggedOn()) {
+          $check_query = osc_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . osc_get_prid($_GET['id']) . "' and customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
           $check = osc_db_fetch_array($check_query);
 
           $notification_exists = (($check['count'] > 0) ? true : false);

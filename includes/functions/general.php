@@ -329,15 +329,17 @@
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
   function osc_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
+    global $OSCOM_Customer;
+
     static $tax_rates = array();
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!isset($_SESSION['customer_id'])) {
+      if (!$OSCOM_Customer->isLoggedOn()) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
-        $country_id = $_SESSION['customer_country_id'];
-        $zone_id = $_SESSION['customer_zone_id'];
+        $country_id = $OSCOM_Customer->getCountryID();
+        $zone_id = $OSCOM_Customer->getZoneID();
       }
     }
 
@@ -1009,8 +1011,10 @@
 ////
 // Return a customer greeting
   function osc_customer_greeting() {
-    if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, osc_output_string_protected($_SESSION['customer_first_name']), osc_href_link('products', 'new'));
+    global $OSCOM_Customer;
+
+    if ($OSCOM_Customer->isLoggedOn()) {
+      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, osc_output_string_protected($OSCOM_Customer->getFirstName()), osc_href_link('products', 'new'));
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, osc_href_link('account', 'login', 'SSL'), osc_href_link('account', 'create', 'SSL'));
     }
@@ -1308,16 +1312,18 @@
   }
 
   function osc_count_customer_orders($id = '', $check_session = true) {
+    global $OSCOM_Customer;
+
     if (is_numeric($id) == false) {
-      if (isset($_SESSION['customer_id'])) {
-        $id = $_SESSION['customer_id'];
+      if ($OSCOM_Customer->isLoggedOn()) {
+        $id = $OSCOM_Customer->getID();
       } else {
         return 0;
       }
     }
 
     if ($check_session == true) {
-      if ( (isset($_SESSION['customer_id']) == false) || ($id != $_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() || ($id != $OSCOM_Customer->getID()) ) {
         return 0;
       }
     }
@@ -1329,16 +1335,18 @@
   }
 
   function osc_count_customer_address_book_entries($id = '', $check_session = true) {
+    global $OSCOM_Customer;
+
     if (is_numeric($id) == false) {
-      if (isset($_SESSION['customer_id'])) {
-        $id = $_SESSION['customer_id'];
+      if ($OSCOM_Customer->isLoggedOn()) {
+        $id = $OSCOM_Customer->getID();
       } else {
         return 0;
       }
     }
 
     if ($check_session == true) {
-      if ( (isset($_SESSION['customer_id']) == false) || ($id != $_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() || ($id != $OSCOM_Customer->getID()) ) {
         return 0;
       }
     }

@@ -10,7 +10,7 @@
 
   class app_account_action_orders_info {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $order, $OSCOM_Breadcrumb;
+      global $OSCOM_Customer, $OSCOM_PDO, $order, $OSCOM_Breadcrumb;
 
       if ( !isset($_GET['id']) || !is_numeric($_GET['id']) ) {
         osc_redirect(osc_href_link('account', 'orders', 'SSL'));
@@ -21,7 +21,7 @@
       $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
       $Qcheck->execute();
 
-      if ( ($Qcheck->fetch() === false) || ($Qcheck->value('customers_id') != $_SESSION['customer_id']) ) {
+      if ( ($Qcheck->fetch() === false) || ($Qcheck->value('customers_id') != $OSCOM_Customer->getID()) ) {
         osc_redirect(osc_href_link('account', 'orders', 'SSL'));
       }
 

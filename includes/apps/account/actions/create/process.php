@@ -8,7 +8,7 @@
 
   class app_account_action_create_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
+      global $OSCOM_Customer, $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $process = true;
@@ -174,9 +174,9 @@
 
           $OSCOM_PDO->perform('customers', $sql_data_array);
 
-          $_SESSION['customer_id'] = $OSCOM_PDO->lastInsertId();
+          $customer_id = $OSCOM_PDO->lastInsertId();
 
-          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+          $sql_data_array = array('customers_id' => $customer_id,
                                   'entry_firstname' => $firstname,
                                   'entry_lastname' => $lastname,
                                   'entry_street_address' => $street_address,
@@ -202,16 +202,13 @@
 
           $address_id = $OSCOM_PDO->lastInsertId();
 
-          $OSCOM_PDO->perform('customers', array('customers_default_address_id' => (int)$address_id), array('customers_id' => (int)$_SESSION['customer_id']));
+          $OSCOM_PDO->perform('customers', array('customers_default_address_id' => (int)$address_id), array('customers_id' => (int)$customer_id));
 
-          $OSCOM_PDO->perform('customers_info', array('customers_info_id' => (int)$_SESSION['customer_id'],
+          $OSCOM_PDO->perform('customers_info', array('customers_info_id' => (int)$customer_id,
                                                       'customers_info_number_of_logons' => '0',
                                                       'customers_info_date_account_created' => 'now()'));
 
-          $_SESSION['customer_first_name'] = $firstname;
-          $_SESSION['customer_default_address_id'] = $address_id;
-          $_SESSION['customer_country_id'] = $country;
-          $_SESSION['customer_zone_id'] = $zone_id;
+          $OSCOM_Customer->setData($customer_id);
 
 // reset session token
           $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());

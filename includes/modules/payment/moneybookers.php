@@ -104,7 +104,7 @@
     }
 
     function _prepareOrder() {
-      global $order, $order_total_modules;
+      global $OSCOM_Customer, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -152,7 +152,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+        $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -270,7 +270,7 @@
     }
 
     function confirmation() {
-      global $order;
+      global $OSCOM_Customer, $order;
 
       if (isset($_SESSION['cartID'])) {
         $this->_prepareOrder();
@@ -299,7 +299,7 @@
                             'currency' => $_SESSION['currency'],
                             'hide_login' => '1',
                             'merchant_fields' => 'osc_custid,referring_platform',
-                            'osc_custid' => $_SESSION['customer_id'],
+                            'osc_custid' => $OSCOM_Customer->getID(),
                             'referring_platform' => 'osCommerce|' . $this->signature);
 
         if (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'False') {
@@ -342,7 +342,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $currencies;
+      global $OSCOM_Customer, $order, $order_totals, $currencies;
       global $$_SESSION['payment'];
 
       $pass = false;
@@ -485,12 +485,12 @@
         if ($order->content_type != 'virtual') {
           $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                           EMAIL_SEPARATOR . "\n" .
-                          osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+                          osc_address_label($OSCOM_Customer->getID(), $_SESSION['sendto'], 0, '', "\n") . "\n";
         }
 
         $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+                        osc_address_label($OSCOM_Customer->getID(), $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
         if (is_object($$_SESSION['payment'])) {
           $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

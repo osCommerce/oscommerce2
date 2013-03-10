@@ -21,7 +21,7 @@
   <div class="contentText">
     <p><?php echo DELETE_ADDRESS_DESCRIPTION; ?></p>
 
-    <p><?php echo osc_address_label($_SESSION['customer_id'], $_GET['id'], true, ' ', '<br />'); ?></p>
+    <p><?php echo osc_address_label($OSCOM_Customer->getID(), $_GET['id'], true, ' ', '<br />'); ?></p>
   </div>
 
   <div>

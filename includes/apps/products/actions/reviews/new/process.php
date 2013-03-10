@@ -8,7 +8,7 @@
 
   class app_products_action_reviews_new_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $Qcustomer, $messageStack;
+      global $OSCOM_Customer, $OSCOM_PDO, $Qcustomer, $messageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $rating = isset($_POST['rating']) ? trim($_POST['rating']) : null;
@@ -30,7 +30,7 @@
 
         if ($error == false) {
           $sql_data_array = array('products_id' => osc_get_prid($_GET['id']),
-                                  'customers_id' => $_SESSION['customer_id'],
+                                  'customers_id' => $OSCOM_Customer->getID(),
                                   'customers_name' => $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'),
                                   'reviews_rating' => $rating,
                                   'date_added' => 'now()');

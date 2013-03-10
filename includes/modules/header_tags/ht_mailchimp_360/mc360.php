@@ -75,7 +75,7 @@ class mc360 {
             return;
         }
 
-        global $order, $insert_id;
+        global $OSCOM_Customer, $order, $insert_id;
 
         $orderId = $insert_id; // just to make it obvious.
 
@@ -99,7 +99,7 @@ class mc360 {
                             date('Y-m-d H:i:s') . ' cid =' . $_COOKIE['mailchimp_campaign_id'] . "\n";
         }
 
-        $customer_id = $_SESSION['customer_id'];
+        $customer_id = $OSCOM_Customer->getID();
 
         $orders_query = osc_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
         $orders = osc_db_fetch_array($orders_query);

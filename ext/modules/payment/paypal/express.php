@@ -16,12 +16,6 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
 
-// initialize variables if the customer is not logged in
-  if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['customer_id'] = 0;
-    $_SESSION['customer_default_address_id'] = 0;
-  }
-
   require('includes/modules/payment/paypal_express.php');
   $paypal_express = new paypal_express();
 
@@ -30,11 +24,11 @@
   }
 
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+    $_SESSION['sendto'] = $OSCOM_Customer->hasDefaultAddress() ? $OSCOM_Customer->getDefaultAddressID() : 0;
   }
 
   if (!isset($_SESSION['billto'])) {
-    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+    $_SESSION['billto'] = $OSCOM_Customer->hasDefaultAddress() ? $OSCOM_Customer->getDefaultAddressID() : 0;
   }
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -233,18 +227,16 @@
         $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
-        if (!isset($_SESSION['customer_id'])) {
+        if (!$OSCOM_Customer->isLoggedOn()) {
           $force_login = true;
 
           $email_address = osc_db_prepare_input($response_array['EMAIL']);
 
-          $check_query = osc_db_query("select * from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "' limit 1");
+          $check_query = osc_db_query("select customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "' limit 1");
           if (osc_db_num_rows($check_query)) {
             $check = osc_db_fetch_array($check_query);
 
-            $_SESSION['customer_id'] = $check['customers_id'];
-            $customers_firstname = $check['customers_firstname'];
-            $_SESSION['customer_default_address_id'] = $check['customers_default_address_id'];
+            $customer_id = $check['customers_id'];
           } else {
             $customers_firstname = osc_db_prepare_input($response_array['FIRSTNAME']);
             $customers_lastname = osc_db_prepare_input($response_array['LASTNAME']);
@@ -267,9 +259,9 @@
 
             osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-            $_SESSION['customer_id'] = osc_db_insert_id();
+            $customer_id = osc_db_insert_id();
 
-            osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
+            osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
 
 // build the message content
             $name = $customers_firstname . ' ' . $customers_lastname;
@@ -281,7 +273,7 @@
             osc_session_recreate();
           }
 
-          $_SESSION['customer_first_name'] = $customers_firstname;
+          $OSCOM_Customer->setData($customer_id);
 
 // reset session token
           $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
@@ -316,13 +308,13 @@
           }
         }
 
-        $check_query = osc_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and entry_firstname = '" . osc_db_input($ship_firstname) . "' and entry_lastname = '" . osc_db_input($ship_lastname) . "' and entry_street_address = '" . osc_db_input($ship_address) . "' and entry_postcode = '" . osc_db_input($ship_postcode) . "' and entry_city = '" . osc_db_input($ship_city) . "' and (entry_state = '" . osc_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+        $check_query = osc_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and entry_firstname = '" . osc_db_input($ship_firstname) . "' and entry_lastname = '" . osc_db_input($ship_lastname) . "' and entry_street_address = '" . osc_db_input($ship_address) . "' and entry_postcode = '" . osc_db_input($ship_postcode) . "' and entry_city = '" . osc_db_input($ship_city) . "' and (entry_state = '" . osc_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
         if (osc_db_num_rows($check_query)) {
           $check = osc_db_fetch_array($check_query);
 
           $_SESSION['sendto'] = $check['address_book_id'];
         } else {
-          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+          $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                                   'entry_firstname' => $ship_firstname,
                                   'entry_lastname' => $ship_lastname,
                                   'entry_street_address' => $ship_address,
@@ -346,15 +338,15 @@
 
           $_SESSION['sendto'] = $address_id;
 
-          if ($_SESSION['customer_default_address_id'] < 1) {
-            osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-            $_SESSION['customer_default_address_id'] = $address_id;
+          if (!$OSCOM_Customer->hasDefaultAddress()) {
+            osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
+            $OSCOM_Customer->setDefaultAddressID($address_id);
           }
         }
 
         if ($force_login == true) {
-          $_SESSION['customer_country_id'] = $ship_country_id;
-          $_SESSION['customer_zone_id'] = $ship_zone_id;
+          $OSCOM_Customer->setCountryID($ship_country_id);
+          $OSCOM_Customer->setZoneID($ship_zone_id);
 
           $_SESSION['billto'] = $_SESSION['sendto'];
         }

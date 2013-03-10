@@ -31,11 +31,11 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $OSCOM_Customer, $oscTemplate;
 
-      if (isset($_SESSION['customer_id'])) {
+      if ($OSCOM_Customer->isLoggedOn()) {
 // retreive the last x products purchased
-        $orders_query = osc_db_query("select distinct op.products_id from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p where o.customers_id = '" . (int)$_SESSION['customer_id'] . "' and o.orders_id = op.orders_id and op.products_id = p.products_id and p.products_status = '1' group by products_id order by o.date_purchased desc limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
+        $orders_query = osc_db_query("select distinct op.products_id from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p where o.customers_id = '" . (int)$OSCOM_Customer->getID() . "' and o.orders_id = op.orders_id and op.products_id = p.products_id and p.products_status = '1' group by products_id order by o.date_purchased desc limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
         if (osc_db_num_rows($orders_query)) {
           $product_ids = '';
           while ($orders = osc_db_fetch_array($orders_query)) {

@@ -8,13 +8,10 @@
 
   class app_account_action_logoff {
     public static function execute(app $app) {
-      global $OSCOM_Breadcrumb;
+      global $OSCOM_Customer, $OSCOM_Breadcrumb;
 
-      unset($_SESSION['customer_id']);
-      unset($_SESSION['customer_default_address_id']);
-      unset($_SESSION['customer_first_name']);
-      unset($_SESSION['customer_country_id']);
-      unset($_SESSION['customer_zone_id']);
+      $OSCOM_Customer->reset();
+
       unset($_SESSION['sendto']);
       unset($_SESSION['billto']);
       unset($_SESSION['shipping']);

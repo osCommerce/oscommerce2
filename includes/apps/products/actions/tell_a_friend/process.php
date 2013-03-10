@@ -8,7 +8,7 @@
 
   class app_products_action_tell_a_friend_process {
     public static function execute(app $app) {
-      global $Qp, $from_name, $from_email_address, $messageStack;
+      global $OSCOM_Customer, $Qp, $from_name, $from_email_address, $messageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $error = false;
@@ -41,7 +41,7 @@
           $messageStack->add('friend', ERROR_TO_ADDRESS);
         }
 
-        $actionRecorder = new actionRecorder('ar_tell_a_friend', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : null), $from_name);
+        $actionRecorder = new actionRecorder('ar_tell_a_friend', ($OSCOM_Customer->isLoggedOn() ? $OSCOM_Customer->getID() : null), $from_name);
 
         if ( !$actionRecorder->canPerform() ) {
           $error = true;

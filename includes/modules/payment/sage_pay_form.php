@@ -92,7 +92,7 @@
     }
 
     function process_button() {
-      global $order;
+      global $OSCOM_Customer, $order;
 
       $process_button_string = '';
 
@@ -108,7 +108,7 @@
         $params['TxType'] = 'AUTHENTICATE';
       }
 
-      $crypt = array('VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
+      $crypt = array('VendorTxCode' => substr(date('YmdHis') . '-' . $OSCOM_Customer->getID() . '-' . $_SESSION['cartID'], 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),

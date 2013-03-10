@@ -8,7 +8,7 @@
 
   class app_account_action_password_change_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack;
+      global $OSCOM_Customer, $OSCOM_PDO, $messageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $password_current = isset($_POST['password_current']) ? trim($_POST['password_current']) : null;
@@ -29,13 +29,13 @@
 
         if ( $error === false ) {
           $Qpw = $OSCOM_PDO->prepare('select customers_password from :table_customers where customers_id = :customers_id');
-          $Qpw->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qpw->bindInt(':customers_id', $OSCOM_Customer->getID());
           $Qpw->execute();
 
           if ( osc_validate_password($password_current, $Qpw->value('customers_password')) ) {
-            $OSCOM_PDO->perform('customers', array('customers_password' => osc_encrypt_password($password_new)), array('customers_id' => $_SESSION['customer_id']));
+            $OSCOM_PDO->perform('customers', array('customers_password' => osc_encrypt_password($password_new)), array('customers_id' => $OSCOM_Customer->getID()));
 
-            $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $_SESSION['customer_id']));
+            $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $OSCOM_Customer->getID()));
 
             $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 

@@ -78,11 +78,11 @@
     }
 
     function process_button() {
-      global $currencies, $order;
+      global $OSCOM_Customer, $currencies, $order;
 
       $process_button_string = osc_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                osc_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
-                               osc_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID']) .
+                               osc_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $OSCOM_Customer->getID() . '-' . $_SESSION['cartID']) .
                                osc_draw_hidden_field('fixed', 'Y') .
                                osc_draw_hidden_field('first_name', $order->billing['firstname']) .
                                osc_draw_hidden_field('last_name', $order->billing['lastname']) .

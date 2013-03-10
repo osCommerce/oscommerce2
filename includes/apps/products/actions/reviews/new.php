@@ -8,9 +8,9 @@
 
   class app_products_action_reviews_new {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $Qcustomer;
+      global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_PDO, $Qcustomer;
 
-      if ( !isset($_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() ) {
         $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
@@ -19,7 +19,7 @@
       $app->setContentFile('reviews_new.php');
 
       $Qcustomer = $OSCOM_PDO->prepare('select customers_firstname, customers_lastname from :table_customers where customers_id = :customers_id');
-      $Qcustomer->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcustomer->bindInt(':customers_id', $OSCOM_Customer->getID());
       $Qcustomer->execute();
     }
   }

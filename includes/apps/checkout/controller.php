@@ -14,10 +14,10 @@
 
   class app_checkout extends app {
     public function __construct() {
-      global $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $OSCOM_Breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
+      global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $OSCOM_Breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
 
 // if the customer is not logged on, redirect them to the login page
-      if ( !isset($_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() ) {
         $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
@@ -47,17 +47,17 @@
 
 // if no shipping destination address was selected, use the customers own address as default
       if ( !isset($_SESSION['sendto']) ) {
-        $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+        $_SESSION['sendto'] = $OSCOM_Customer->getDefaultAddressID();
       } else {
 // verify the selected shipping address
         if ( (is_array($_SESSION['sendto']) && empty($_SESSION['sendto'])) || is_numeric($_SESSION['sendto']) ) {
           $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
           $Qcheck->bindInt(':address_book_id', $_SESSION['sendto']);
-          $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qcheck->bindInt(':customers_id', $OSCOM_Customer->getID());
           $Qcheck->execute();
 
           if ( $Qcheck->fetch() === false ) {
-            $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+            $_SESSION['sendto'] = $OSCOM_Customer->getDefaultAddressID();
 
             if ( isset($_SESSION['shipping']) ) {
               unset($_SESSION['shipping']);
@@ -68,17 +68,17 @@
 
 // if no billing destination address was selected, use the customers own address as default
       if ( !isset($_SESSION['billto']) ) {
-        $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+        $_SESSION['billto'] = $OSCOM_Customer->getDefaultAddressID();
       } else {
 // verify the selected billing address
         if ( (is_array($_SESSION['billto']) && empty($_SESSION['billto'])) || is_numeric($_SESSION['billto']) ) {
           $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
           $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
-          $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qcheck->bindInt(':customers_id', $OSCOM_Customer->getID());
           $Qcheck->execute();
 
           if ( $Qcheck->fetch() === false ) {
-            $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+            $_SESSION['billto'] = $OSCOM_Customer->getDefaultAddressID();
 
             if ( isset($_SESSION['payment']) ) {
               unset($_SESSION['payment']);

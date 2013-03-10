@@ -38,7 +38,7 @@
   <div class="contentText">
 
 <?php
-    $products_check_query = osc_db_query("select count(*) as total from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+    $products_check_query = osc_db_query("select count(*) as total from " . TABLE_PRODUCTS_NOTIFICATIONS . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
     $products_check = osc_db_fetch_array($products_check_query);
     if ($products_check['total'] > 0) {
 ?>
@@ -49,7 +49,7 @@
 
 <?php
       $counter = 0;
-      $products_query = osc_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$_SESSION['customer_id'] . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
+      $products_query = osc_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$OSCOM_Customer->getID() . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
       while ($products = osc_db_fetch_array($products_query)) {
 ?>
 

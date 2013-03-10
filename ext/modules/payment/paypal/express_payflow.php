@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!isset($_SESSION['customer_id'])) {
+  if (!$OSCOM_Customer->isLoggedOn()) {
     $snapshot = array('page' => 'ext/modules/payment/paypal/express_payflow.php',
                       'mode' => $request_type,
                       'get' => $_GET,
@@ -48,11 +48,11 @@
   }
 
   if (!isset($_SESSION['sendto'])) {
-    $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+    $_SESSION['sendto'] = $OSCOM_Customer->getDefaultAddressID();
   }
 
   if (!isset($_SESSION['billto'])) {
-    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+    $_SESSION['billto'] = $OSCOM_Customer->getDefaultAddressID();
   }
 
 // register a random ID in the session to check throughout the checkout procedure

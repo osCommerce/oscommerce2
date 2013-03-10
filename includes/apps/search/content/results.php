@@ -61,11 +61,7 @@
   $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id) left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id";
 
   if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
-    if (!isset($_SESSION['customer_country_id'])) {
-      $_SESSION['customer_country_id'] = STORE_COUNTRY;
-      $_SESSION['customer_zone_id'] = STORE_ZONE;
-    }
-    $from_str .= " left join " . TABLE_TAX_RATES . " tr on p.products_tax_class_id = tr.tax_class_id left join " . TABLE_ZONES_TO_GEO_ZONES . " gz on tr.tax_zone_id = gz.geo_zone_id and (gz.zone_country_id is null or gz.zone_country_id = '0' or gz.zone_country_id = '" . (int)$_SESSION['customer_country_id'] . "') and (gz.zone_id is null or gz.zone_id = '0' or gz.zone_id = '" . (int)$_SESSION['customer_zone_id'] . "')";
+    $from_str .= " left join " . TABLE_TAX_RATES . " tr on p.products_tax_class_id = tr.tax_class_id left join " . TABLE_ZONES_TO_GEO_ZONES . " gz on tr.tax_zone_id = gz.geo_zone_id and (gz.zone_country_id is null or gz.zone_country_id = '0' or gz.zone_country_id = '" . ($OSCOM_Customer->hasDefaultAddressID() ? (int)$OSCOM_Customer->getCountryID() : (int)STORE_COUNTRY) . "') and (gz.zone_id is null or gz.zone_id = '0' or gz.zone_id = '" . ($OSCOM_Customer->hasDefaultAddressID() ? (int)$OSCOM_Customer->getZoneID() : (int)STORE_ZONE) . "')";
   }
 
   $from_str .= ", " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_CATEGORIES . " c, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c";

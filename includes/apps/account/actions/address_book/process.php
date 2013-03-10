@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
+      global $OSCOM_Customer, $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
 
       $app->setContentFile('address_book_process.php');
 
@@ -136,24 +136,24 @@
           if ( isset($_GET['id']) && is_numeric($_GET['id']) ) {
             $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
             $Qcheck->bindInt(':address_book_id', $_GET['id']);
-            $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+            $Qcheck->bindInt(':customers_id', $OSCOM_Customer->getID());
             $Qcheck->execute();
 
             if ( $Qcheck->fetch() !== false ) {
-              $OSCOM_PDO->perform('address_book', $sql_data_array, array('address_book_id' => $_GET['id'], 'customers_id' => $_SESSION['customer_id']));
+              $OSCOM_PDO->perform('address_book', $sql_data_array, array('address_book_id' => $_GET['id'], 'customers_id' => $OSCOM_Customer->getID()));
 
 // reregister session variables
-              if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['id'] == $_SESSION['customer_default_address_id']) ) {
-                $_SESSION['customer_country_id'] = $country;
-                $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
-                $_SESSION['customer_default_address_id'] = (int)$_GET['id'];
+              if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['id'] == $OSCOM_Customer->getDefaultAddressID()) ) {
+                $OSCOM_Customer->setCountryID($country);
+                $OSCOM_Customer->setZoneID(($zone_id > 0) ? (int)$zone_id : '0');
+                $OSCOM_Customer->setDefaultAddressID($_GET['id']);
               }
 
               $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
             }
           } else {
             if ( osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES ) {
-              $sql_data_array['customers_id'] = (int)$_SESSION['customer_id'];
+              $sql_data_array['customers_id'] = (int)$OSCOM_Customer->getID();
 
               $OSCOM_PDO->perform('address_book', $sql_data_array);
 
@@ -161,9 +161,9 @@
 
 // reregister session variables
               if ( isset($_POST['primary']) && ($_POST['primary'] == 'on') ) {
-                $_SESSION['customer_country_id'] = $country;
-                $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
-                $_SESSION['customer_default_address_id'] = $new_address_book_id;
+                $OSCOM_Customer->setCountryID($country);
+                $OSCOM_Customer->setZoneID(($zone_id > 0) ? (int)$zone_id : '0');
+                $OSCOM_Customer->setDefaultAddressID($new_address_book_id);
 
                 $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
               }

@@ -125,7 +125,7 @@
       </tr>
 
 <?php
-  if ( (isset($_GET['id']) && ($_SESSION['customer_default_address_id'] != $_GET['id'])) || !isset($_GET['id']) ) {
+  if ( (isset($_GET['id']) && ($OSCOM_Customer->getDefaultAddressID() != $_GET['id'])) || !isset($_GET['id']) ) {
 ?>
 
       <tr>

@@ -8,7 +8,7 @@
 
   class app_checkout_action_payment_address_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack, $process, $entry_state_has_zones, $country;
+      global $OSCOM_Customer, $OSCOM_PDO, $messageStack, $process, $entry_state_has_zones, $country;
 
       $error = false;
       $process = false;
@@ -112,7 +112,7 @@
           }
 
           if ($error == false) {
-            $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+            $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                                     'entry_firstname' => $firstname,
                                     'entry_lastname' => $lastname,
                                     'entry_street_address' => $street_address,
@@ -160,7 +160,7 @@
 
           $Qcheck = $OSCOM_PDO->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
           $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
-          $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qcheck->bindInt(':customers_id', $OSCOM_Customer->getID());
           $Qcheck->execute();
 
           if ( $Qcheck->fetch() !== false ) {
@@ -173,7 +173,7 @@
             unset($_SESSION['billto']);
           }
         } else {
-          $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
+          $_SESSION['billto'] = $OSCOM_Customer->getDefaultAddressID();
 
           osc_redirect(osc_href_link('checkout', 'payment', 'SSL'));
         }

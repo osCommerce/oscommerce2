@@ -95,7 +95,7 @@
     }
 
     function confirmation() {
-      global $order, $order_total_modules;
+      global $OSCOM_Customer, $order, $order_total_modules;
 
       if (isset($_SESSION['cartID'])) {
         $insert_order = false;
@@ -143,7 +143,7 @@
             }
           }
 
-          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+          $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                                   'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                   'customers_company' => $order->customer['company'],
                                   'customers_street_address' => $order->customer['street_address'],
@@ -264,7 +264,7 @@
     }
 
     function process_button() {
-      global $order;
+      global $OSCOM_Customer, $order;
 
       $process_button_string = '';
       $parameters = array('cmd' => '_xclick',
@@ -275,7 +275,7 @@
                           'amount' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
                           'currency_code' => $_SESSION['currency'],
                           'invoice' => substr($_SESSION['cart_PayPal_Standard_ID'], strpos($_SESSION['cart_PayPal_Standard_ID'], '-')+1),
-                          'custom' => $_SESSION['customer_id'],
+                          'custom' => $OSCOM_Customer->getID(),
                           'no_note' => '1',
                           'notify_url' => osc_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
                           'rm' => '2',
@@ -315,7 +315,7 @@
       if (MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS == 'True') {
         $parameters['cert_id'] = MODULE_PAYMENT_PAYPAL_STANDARD_EWP_CERT_ID;
 
-        $random_string = rand(100000, 999999) . '-' . $_SESSION['customer_id'] . '-';
+        $random_string = rand(100000, 999999) . '-' . $OSCOM_Customer->getID() . '-';
 
         $data = '';
         foreach ($parameters as $key => $value) {
@@ -382,7 +382,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals, $currencies, $$_SESSION['payment'], $messageStack;
+      global $OSCOM_Customer, $order, $order_totals, $currencies, $$_SESSION['payment'], $messageStack;
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -587,12 +587,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+                        osc_address_label($OSCOM_Customer->getID(), $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+                      osc_address_label($OSCOM_Customer->getID(), $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
       if (is_object($$_SESSION['payment'])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

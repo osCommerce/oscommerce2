@@ -95,7 +95,7 @@
     }
 
     function confirmation() {
-      global $order, $order_total_modules;
+      global $OSCOM_Customer, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -143,7 +143,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+        $sql_data_array = array('customers_id' => $OSCOM_Customer->getID(),
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -263,7 +263,7 @@
     }
 
     function process_button() {
-      global $order;
+      global $OSCOM_Customer, $order;
 
       $order_id = substr($_SESSION['cart_RBS_Worldpay_Hosted_ID'], strpos($_SESSION['cart_RBS_Worldpay_Hosted_ID'], '-')+1);
 
@@ -297,15 +297,15 @@
       }
 
       $process_button_string .= osc_draw_hidden_field('M_sid', session_id()) .
-                                osc_draw_hidden_field('M_cid', $_SESSION['customer_id']) .
+                                osc_draw_hidden_field('M_cid', $OSCOM_Customer->getID()) .
                                 osc_draw_hidden_field('M_lang', $_SESSION['language']) .
-                                osc_draw_hidden_field('M_hash', md5(session_id() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                                osc_draw_hidden_field('M_hash', md5(session_id() . $OSCOM_Customer->getID() . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       return $process_button_string;
     }
 
     function before_process() {
-      global $order, $order_totals, $currencies;
+      global $OSCOM_Customer, $order, $order_totals, $currencies;
       global $$_SESSION['payment'];
 
       $order_id = substr($_SESSION['cart_RBS_Worldpay_Hosted_ID'], strpos($_SESSION['cart_RBS_Worldpay_Hosted_ID'], '-')+1);
@@ -317,7 +317,7 @@
         if ($check['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
           $hash_result = false;
 
-          if (isset($_GET['hash']) && !empty($_GET['hash']) && ($_GET['hash'] == md5(session_name() . $_SESSION['customer_id'] . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
+          if (isset($_GET['hash']) && !empty($_GET['hash']) && ($_GET['hash'] == md5(session_name() . $OSCOM_Customer->getID() . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
             $hash_result = true;
           }
 
@@ -451,12 +451,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        osc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
+                        osc_address_label($OSCOM_Customer->getID(), $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      osc_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+                      osc_address_label($OSCOM_Customer->getID(), $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
       if (is_object($$_SESSION['payment'])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .

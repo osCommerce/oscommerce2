@@ -79,7 +79,7 @@
     }
 
     function before_process() {
-      global $order, $order_totals;
+      global $OSCOM_Customer, $order, $order_totals;
 
       $error = null;
 
@@ -174,7 +174,7 @@
         $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $OSCOM_Customer->getID() . '-' . $_SESSION['cartID'], 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),

@@ -84,7 +84,7 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
        osc_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', osc_href_link('checkout', '', 'SSL')) .
        osc_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', osc_href_link('account', '', 'SSL'));
 
-  if (isset($_SESSION['customer_id'])) {
+  if ( $OSCOM_Customer->isLoggedOn() ) {
     echo osc_draw_button(HEADER_TITLE_LOGOFF, null, osc_href_link('account', 'logoff', 'SSL'));
   }
 ?>

@@ -18,24 +18,26 @@
     }
 
     function restore_contents() {
-      if (!isset($_SESSION['customer_id'])) return false;
+      global $OSCOM_Customer;
+
+      if (!$OSCOM_Customer->isLoggedOn()) return false;
 
 // insert current cart contents in database
       if (is_array($this->contents)) {
         reset($this->contents);
         while (list($products_id, ) = each($this->contents)) {
           $qty = $this->contents[$products_id]['qty'];
-          $product_query = osc_db_query("select products_id from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id) . "'");
+          $product_query = osc_db_query("select products_id from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id) . "'");
           if (!osc_db_num_rows($product_query)) {
-            osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$_SESSION['customer_id'] . "', '" . osc_db_input($products_id) . "', '" . osc_db_input($qty) . "', '" . date('Ymd') . "')");
+            osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$OSCOM_Customer->getID() . "', '" . osc_db_input($products_id) . "', '" . osc_db_input($qty) . "', '" . date('Ymd') . "')");
             if (isset($this->contents[$products_id]['attributes'])) {
               reset($this->contents[$products_id]['attributes']);
               while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
-                osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$_SESSION['customer_id'] . "', '" . osc_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "')");
+                osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$OSCOM_Customer->getID() . "', '" . osc_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "')");
               }
             }
           } else {
-            osc_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . osc_db_input($qty) . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id) . "'");
+            osc_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . osc_db_input($qty) . "' where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id) . "'");
           }
         }
       }
@@ -43,11 +45,11 @@
 // reset per-session cart contents, but not the database contents
       $this->reset(false);
 
-      $products_query = osc_db_query("select products_id, customers_basket_quantity from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+      $products_query = osc_db_query("select products_id, customers_basket_quantity from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
       while ($products = osc_db_fetch_array($products_query)) {
         $this->contents[$products['products_id']] = array('qty' => $products['customers_basket_quantity']);
 // attributes
-        $attributes_query = osc_db_query("select products_options_id, products_options_value_id from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products['products_id']) . "'");
+        $attributes_query = osc_db_query("select products_options_id, products_options_value_id from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products['products_id']) . "'");
         while ($attributes = osc_db_fetch_array($attributes_query)) {
           $this->contents[$products['products_id']]['attributes'][$attributes['products_options_id']] = $attributes['products_options_value_id'];
         }
@@ -60,14 +62,16 @@
     }
 
     function reset($reset_database = false) {
+      global $OSCOM_Customer;
+
       $this->contents = array();
       $this->total = 0;
       $this->weight = 0;
       $this->content_type = false;
 
-      if (isset($_SESSION['customer_id']) && ($reset_database == true)) {
-        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+      if ($OSCOM_Customer->isLoggedOn() && ($reset_database == true)) {
+        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
+        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
       }
 
       unset($this->cartID);
@@ -75,6 +79,8 @@
     }
 
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
+      global $OSCOM_Customer;
+
       $products_id_string = osc_get_uprid($products_id, $attributes);
       $products_id = osc_get_prid($products_id_string);
 
@@ -116,14 +122,14 @@
           } else {
             $this->contents[$products_id_string] = array('qty' => (int)$qty);
 // insert into database
-            if (isset($_SESSION['customer_id'])) osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$_SESSION['customer_id'] . "', '" . osc_db_input($products_id_string) . "', '" . (int)$qty . "', '" . date('Ymd') . "')");
+            if ($OSCOM_Customer->isLoggedOn()) osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$OSCOM_Customer->getID() . "', '" . osc_db_input($products_id_string) . "', '" . (int)$qty . "', '" . date('Ymd') . "')");
 
             if (is_array($attributes)) {
               reset($attributes);
               while (list($option, $value) = each($attributes)) {
                 $this->contents[$products_id_string]['attributes'][$option] = $value;
 // insert into database
-                if (isset($_SESSION['customer_id'])) osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$_SESSION['customer_id'] . "', '" . osc_db_input($products_id_string) . "', '" . (int)$option . "', '" . (int)$value . "')");
+                if ($OSCOM_Customer->isLoggedOn()) osc_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$OSCOM_Customer->getID() . "', '" . osc_db_input($products_id_string) . "', '" . (int)$option . "', '" . (int)$value . "')");
               }
             }
           }
@@ -137,6 +143,8 @@
     }
 
     function update_quantity($products_id, $quantity = '', $attributes = '') {
+      global $OSCOM_Customer;
+
       $products_id_string = osc_get_uprid($products_id, $attributes);
       $products_id = osc_get_prid($products_id_string);
 
@@ -159,14 +167,14 @@
       if (is_numeric($products_id) && isset($this->contents[$products_id_string]) && is_numeric($quantity) && ($attributes_pass_check == true)) {
         $this->contents[$products_id_string] = array('qty' => (int)$quantity);
 // update database
-        if (isset($_SESSION['customer_id'])) osc_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . (int)$quantity . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id_string) . "'");
+        if ($OSCOM_Customer->isLoggedOn()) osc_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . (int)$quantity . "' where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id_string) . "'");
 
         if (is_array($attributes)) {
           reset($attributes);
           while (list($option, $value) = each($attributes)) {
             $this->contents[$products_id_string]['attributes'][$option] = $value;
 // update database
-            if (isset($_SESSION['customer_id'])) osc_db_query("update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " set products_options_value_id = '" . (int)$value . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id_string) . "' and products_options_id = '" . (int)$option . "'");
+            if ($OSCOM_Customer->isLoggedOn()) osc_db_query("update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " set products_options_value_id = '" . (int)$value . "' where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id_string) . "' and products_options_id = '" . (int)$option . "'");
           }
         }
 
@@ -176,14 +184,16 @@
     }
 
     function cleanup() {
+      global $OSCOM_Customer;
+
       reset($this->contents);
       while (list($key,) = each($this->contents)) {
         if ($this->contents[$key]['qty'] < 1) {
           unset($this->contents[$key]);
 // remove from database
-          if (isset($_SESSION['customer_id'])) {
-            osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($key) . "'");
-            osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($key) . "'");
+          if ($OSCOM_Customer->isLoggedOn()) {
+            osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($key) . "'");
+            osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($key) . "'");
           }
         }
       }
@@ -218,11 +228,13 @@
     }
 
     function remove($products_id) {
+      global $OSCOM_Customer;
+
       unset($this->contents[$products_id]);
 // remove from database
-      if (isset($_SESSION['customer_id'])) {
-        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id) . "'");
-        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id = '" . osc_db_input($products_id) . "'");
+      if ($OSCOM_Customer->isLoggedOn()) {
+        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id) . "'");
+        osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "' and products_id = '" . osc_db_input($products_id) . "'");
       }
 
 // assign a temporary unique ID to the order contents to prevent hack attempts during the checkout procedure

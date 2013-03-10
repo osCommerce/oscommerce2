@@ -11,10 +11,12 @@
 */
 
   function osc_update_whos_online() {
-    if (isset($_SESSION['customer_id'])) {
-      $wo_customer_id = $_SESSION['customer_id'];
+    global $OSCOM_Customer;
 
-      $customer_query = osc_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+    if ($OSCOM_Customer->isLoggedOn()) {
+      $wo_customer_id = $OSCOM_Customer->getID();
+
+      $customer_query = osc_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
       $customer = osc_db_fetch_array($customer_query);
 
       $wo_full_name = $customer['customers_firstname'] . ' ' . $customer['customers_lastname'];

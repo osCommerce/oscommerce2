@@ -8,9 +8,9 @@
 
   class app_account_action_orders {
     public static function execute(app $app) {
-      global $OSCOM_NavigationHistory, $OSCOM_Breadcrumb;
+      global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_Breadcrumb;
 
-      if ( !isset($_SESSION['customer_id']) ) {
+      if ( !$OSCOM_Customer->isLoggedOn() ) {
         $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));

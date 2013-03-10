@@ -213,6 +213,9 @@
     }
   }
 
+  require(DIR_WS_CLASSES . 'customer.php');
+  $OSCOM_Customer = new customer();
+
 // create the shopping cart
   if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
     $_SESSION['cart'] = new shoppingCart;
