@@ -5589,22 +5589,6 @@ SPAN.errorText {
   font-size: 10px;
   color: #000000;
 }
-/* message box */
-.messageBox {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
-}
-.messageStackError,
-.messageStackWarning {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
-  background-color: #ffb3b5;
-}
-.messageStackSuccess {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
-  background-color: #99ff00;
-}
 /* input requirement */
 .inputRequirement {
   font-family: Verdana, Arial, sans-serif;
