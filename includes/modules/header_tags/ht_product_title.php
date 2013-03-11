@@ -29,14 +29,14 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate, $product_exists;
+      global $OSCOM_APP, $OSCOM_Template, $product_exists;
 
       if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) ) {
         if ( $product_exists === true ) {
           $product_info_query = osc_db_query("select pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
           $product_info = osc_db_fetch_array($product_info_query);
 
-          $oscTemplate->setTitle($product_info['products_name'] . ', ' . $oscTemplate->getTitle());
+          $OSCOM_Template->setTitle($product_info['products_name'] . ', ' . $OSCOM_Template->getTitle());
         }
       }
     }

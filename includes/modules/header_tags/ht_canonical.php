@@ -29,15 +29,15 @@
     }
 
     function execute() {
-      global $cPath, $OSCOM_APP, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template, $cPath;
 
       if ( ($OSCOM_APP->getCode() == 'products') && ($OSCOM_APP->getCurrentAction() == null) && isset($_GET['id']) ) {
-        $oscTemplate->addBlock('<link rel="canonical" href="' . osc_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+        $OSCOM_Template->addBlock('<link rel="canonical" href="' . osc_href_link('products', 'id=' . $_GET['id'], 'NONSSL', false) . '" />' . "\n", $this->group);
       } elseif ( $OSCOM_APP->getCode() == 'index' ) {
         if (isset($cPath) && osc_not_null($cPath)) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . osc_href_link(null, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
+          $OSCOM_Template->addBlock('<link rel="canonical" href="' . osc_href_link(null, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
         } elseif (isset($_GET['manufacturers_id']) && osc_not_null($_GET['manufacturers_id'])) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . osc_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+          $OSCOM_Template->addBlock('<link rel="canonical" href="' . osc_href_link(null, 'manufacturers_id=' . $_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         }
       }
     }

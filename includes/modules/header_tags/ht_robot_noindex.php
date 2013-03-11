@@ -29,7 +29,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template;
 
       if (osc_not_null(MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES)) {
         $pages = explode(';', MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES);
@@ -72,7 +72,7 @@
 
         foreach ( $pages as $p ) {
           if ( strpos($page, $p) === 0 ) {
-            $oscTemplate->addBlock('<meta name="robots" content="noindex,follow" />' . "\n", $this->group);
+            $OSCOM_Template->addBlock('<meta name="robots" content="noindex,follow" />' . "\n", $this->group);
 
             break;
           }

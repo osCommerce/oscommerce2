@@ -6,14 +6,14 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  $oscTemplate->buildBlocks();
+  $OSCOM_Template->buildBlocks();
 
-  if (!$oscTemplate->hasBlocks('boxes_column_left')) {
-    $oscTemplate->setGridContentWidth($oscTemplate->getGridContentWidth() + $oscTemplate->getGridColumnWidth());
+  if (!$OSCOM_Template->hasBlocks('boxes_column_left')) {
+    $OSCOM_Template->setGridContentWidth($OSCOM_Template->getGridContentWidth() + $OSCOM_Template->getGridColumnWidth());
   }
 
-  if (!$oscTemplate->hasBlocks('boxes_column_right')) {
-    $oscTemplate->setGridContentWidth($oscTemplate->getGridContentWidth() + $oscTemplate->getGridColumnWidth());
+  if (!$OSCOM_Template->hasBlocks('boxes_column_right')) {
+    $OSCOM_Template->setGridContentWidth($OSCOM_Template->getGridContentWidth() + $OSCOM_Template->getGridColumnWidth());
   }
 ?>
 <!doctype html>
@@ -24,7 +24,7 @@
 
 <meta charset="<?php echo CHARSET; ?>" />
 
-<title><?php echo osc_output_string_protected($oscTemplate->getTitle()); ?></title>
+<title><?php echo osc_output_string_protected($OSCOM_Template->getTitle()); ?></title>
 
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 
@@ -48,7 +48,7 @@
 <script src="ext/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 
 <?php
-  echo $oscTemplate->getBlocks('header_tags');
+  echo $OSCOM_Template->getBlocks('header_tags');
 ?>
 
 </head>
@@ -115,12 +115,12 @@ $('#headerShortcuts').buttonset();
   <div class="row-fluid">
 
 <?php
-  if ( $oscTemplate->hasBlocks('boxes_column_left') ) {
+  if ( $OSCOM_Template->hasBlocks('boxes_column_left') ) {
 ?>
 
-    <div id="columnLeft" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+    <div id="columnLeft" class="span<?php echo $OSCOM_Template->getGridColumnWidth(); ?>">
       <ul class="nav nav-list">
-        <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+        <?php echo $OSCOM_Template->getBlocks('boxes_column_left'); ?>
       </ul>
     </div>
 
@@ -128,17 +128,17 @@ $('#headerShortcuts').buttonset();
   }
 ?>
 
-    <div id="bodyContent" class="span<?php echo $oscTemplate->getGridContentWidth(); ?>">
+    <div id="bodyContent" class="span<?php echo $OSCOM_Template->getGridContentWidth(); ?>">
       <?php require($OSCOM_APP->getContentFile(true)); ?>
     </div>
 
 <?php
-  if ( $oscTemplate->hasBlocks('boxes_column_right') ) {
+  if ( $OSCOM_Template->hasBlocks('boxes_column_right') ) {
 ?>
 
-    <div id="columnRight" class="span<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+    <div id="columnRight" class="span<?php echo $OSCOM_Template->getGridColumnWidth(); ?>">
       <ul class="nav nav-list">
-        <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
+        <?php echo $OSCOM_Template->getBlocks('boxes_column_right'); ?>
       </ul>
     </div>
 
@@ -170,7 +170,7 @@ $('.productListTable tr:nth-child(even)').addClass('alt');
 </script>
 
 <?php
-  echo $oscTemplate->getBlocks('footer_scripts');
+  echo $OSCOM_Template->getBlocks('footer_scripts');
 ?>
 
 </body>

@@ -6,7 +6,7 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
-  class oscTemplate {
+  class template {
     protected $_template = 'gosling';
     var $_title;
     var $_blocks = array();
@@ -14,7 +14,7 @@
     var $_grid_content_width = 8;
     var $_grid_column_width = 2;
 
-    function oscTemplate() {
+    public function __construct() {
       $this->_title = TITLE;
     }
 

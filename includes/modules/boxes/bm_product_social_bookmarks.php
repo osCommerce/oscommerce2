@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template;
 
       if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && osc_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
         $sbm_array = explode(';', MODULE_SOCIAL_BOOKMARKS_INSTALLED);
@@ -57,7 +57,7 @@
           $data = '<li class="nav-header">' . MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_BOX_TITLE . '</li>' .
                   '<li style="text-align: center;">' . implode(' ', $social_bookmarks) . '</li>';
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

@@ -31,8 +31,6 @@
     }
 
     function getData() {
-      global $oscTemplate;
-
       $data = '';
 
       $manufacturers_query = osc_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
@@ -72,7 +70,7 @@
     }
 
     function execute() {
-      global $SID, $oscTemplate;
+      global $SID, $OSCOM_Template;
 
       if ((USE_CACHE == 'true') && empty($SID)) {
         $output = osc_cache_manufacturers_box();
@@ -80,7 +78,7 @@
         $output = $this->getData();
       }
 
-      $oscTemplate->addBlock($output, $this->group);
+      $OSCOM_Template->addBlock($output, $this->group);
     }
 
     function isEnabled() {

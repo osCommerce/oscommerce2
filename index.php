@@ -8,7 +8,7 @@
 
   require('includes/application_top.php');
 
-  require($oscTemplate->getTemplateFilename());
+  require($OSCOM_Template->getTemplateFilename());
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

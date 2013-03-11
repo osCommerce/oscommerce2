@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $currencies, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template, $currencies;
 
       $random_select = "select r.reviews_id, r.reviews_rating, p.products_id, p.products_image, pd.products_name from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd, " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = r.products_id and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and r.reviews_status = 1";
       if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) ) {
@@ -63,7 +63,7 @@
       $data = '<li class="nav-header"><a href="' . osc_href_link('products', 'reviews') . '">' . MODULE_BOXES_REVIEWS_BOX_TITLE . '</a></li>' .
               $reviews_box_contents;
 
-      $oscTemplate->addBlock($data, $this->group);
+      $OSCOM_Template->addBlock($data, $this->group);
     }
 
     function isEnabled() {

@@ -7,7 +7,7 @@
  */
 ?>
 
-<script type="text/javascript" src="public/template/<?php echo $oscTemplate->getCode(); ?>/js/general.js"></script>
+<script type="text/javascript" src="public/template/<?php echo $OSCOM_Template->getCode(); ?>/js/general.js"></script>
 <script type="text/javascript"><!--
 function check_form() {
   var error_message = "<?php echo JS_ERROR; ?>";

@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template;
 
       if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) ) {
         $manufacturer_query = osc_db_query("select m.manufacturers_id, m.manufacturers_name, m.manufacturers_image, mi.manufacturers_url from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on (m.manufacturers_id = mi.manufacturers_id and mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'), " . TABLE_PRODUCTS . " p  where p.products_id = '" . osc_get_prid($_GET['id']) . "' and p.manufacturers_id = m.manufacturers_id");
@@ -45,7 +45,7 @@
 
           $data = '<li class="nav-header">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</li>' . $manufacturer_info_string;
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

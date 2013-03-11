@@ -30,10 +30,10 @@
     }
 
     function getOutput() {
-      global $oscTemplate;
+      global $OSCOM_Template;
 
 // add the js in the footer
-      $oscTemplate->addBlock('<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
+      $OSCOM_Template->addBlock('<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
 
       $params = array();
 

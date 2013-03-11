@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_Customer, $oscTemplate;
+      global $OSCOM_Customer, $OSCOM_Template;
 
       if ($OSCOM_Customer->isLoggedOn()) {
 // retreive the last x products purchased
@@ -52,7 +52,7 @@
           $data = '<li class="nav-header">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</li>' .
                   $customer_orders_string;
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

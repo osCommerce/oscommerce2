@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $currencies, $oscTemplate;
+      global $OSCOM_Template, $currencies;
 
       $cart_contents_string = '';
 
@@ -60,7 +60,7 @@
       $data = '<li class="nav-header"><a href="' . osc_href_link('cart') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></li>' .
               $cart_contents_string;
 
-      $oscTemplate->addBlock($data, $this->group);
+      $OSCOM_Template->addBlock($data, $this->group);
     }
 
     function isEnabled() {

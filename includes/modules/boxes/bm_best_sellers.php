@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $current_category_id, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template, $current_category_id;
 
       if ( $OSCOM_APP->getCode() != 'products' ) {
         if (isset($current_category_id) && ($current_category_id > 0)) {
@@ -50,7 +50,7 @@
           $data = '<li class="nav-header">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</li>' .
                   $bestsellers_list;
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $OSCOM_Template;
 
       $data = '<li class="nav-header">' . MODULE_BOXES_INFORMATION_BOX_TITLE . '</li>' .
               '<li><a href="' . osc_href_link('info', 'shipping') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
@@ -39,7 +39,7 @@
               '<li><a href="' . osc_href_link('info', 'conditions') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a></li>' .
               '<li><a href="' . osc_href_link('info', 'contact') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>';
 
-      $oscTemplate->addBlock($data, $this->group);
+      $OSCOM_Template->addBlock($data, $this->group);
     }
 
     function isEnabled() {

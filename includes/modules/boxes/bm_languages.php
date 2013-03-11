@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $lng, $request_type, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template, $lng, $request_type;
 
       if ( $OSCOM_APP->getCode() != 'checkout' ) {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
@@ -49,7 +49,7 @@
           $data = '<li class="nav-header">' . MODULE_BOXES_LANGUAGES_BOX_TITLE . '</li>' .
                   '<li style="text-align: center;">' . $languages_string . '</li>';
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

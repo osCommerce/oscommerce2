@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $oscTemplate, $cPath;
+      global $OSCOM_Template, $cPath;
 
       $OSCOM_CategoryTree = new category_tree();
       $OSCOM_CategoryTree->setCategoryPath($cPath, '<strong>', '</strong>');
@@ -40,7 +40,7 @@
       $output = '<li class="nav-header">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</li>' .
                 $OSCOM_CategoryTree->getTree();
 
-      $oscTemplate->addBlock($output, $this->group);
+      $OSCOM_Template->addBlock($output, $this->group);
     }
 
     function isEnabled() {

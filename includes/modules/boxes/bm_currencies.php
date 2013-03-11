@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $currencies, $request_type, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Template, $currencies, $request_type;
 
       if ( $OSCOM_APP->getCode() != 'checkout' ) {
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
@@ -57,7 +57,7 @@
                     osc_hide_session_id() . '</form>' .
                   '</li>';
 
-          $oscTemplate->addBlock($data, $this->group);
+          $OSCOM_Template->addBlock($data, $this->group);
         }
       }
     }

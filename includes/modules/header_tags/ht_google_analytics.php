@@ -29,7 +29,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $OSCOM_Customer, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Customer, $OSCOM_Template;
 
       if (osc_not_null(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID)) {
         if (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT != 'Header') {
@@ -91,7 +91,7 @@
   })();
 </script>' . "\n";
 
-        $oscTemplate->addBlock($header, $this->group);
+        $OSCOM_Template->addBlock($header, $this->group);
       }
     }
 

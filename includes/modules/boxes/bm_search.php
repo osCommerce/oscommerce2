@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $OSCOM_Template;
 
       $data = '<li class="nav-header">' . MODULE_BOXES_SEARCH_BOX_TITLE . '</li>' .
               '<li style="text-align: center;">' .
@@ -40,7 +40,7 @@
               '  </form>' .
               '</li>';
 
-      $oscTemplate->addBlock($data, $this->group);
+      $OSCOM_Template->addBlock($data, $this->group);
     }
 
     function isEnabled() {

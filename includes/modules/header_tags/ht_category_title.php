@@ -29,12 +29,12 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate, $categories, $current_category_id;
+      global $OSCOM_APP, $OSCOM_Template, $categories, $current_category_id;
 
       if ( $OSCOM_APP->getCode() == 'index' ) {
 // $categories is set in application_top.php to add the category to the breadcrumb
         if (isset($categories) && (sizeof($categories) == 1) && isset($categories['categories_name'])) {
-          $oscTemplate->setTitle($categories['categories_name'] . ', ' . $oscTemplate->getTitle());
+          $OSCOM_Template->setTitle($categories['categories_name'] . ', ' . $OSCOM_Template->getTitle());
         } else {
 // $categories is not set so a database query is needed
           if ($current_category_id > 0) {
@@ -42,7 +42,7 @@
             if (osc_db_num_rows($categories_query) > 0) {
               $categories = osc_db_fetch_array($categories_query);
 
-              $oscTemplate->setTitle($categories['categories_name'] . ', ' . $oscTemplate->getTitle());
+              $OSCOM_Template->setTitle($categories['categories_name'] . ', ' . $OSCOM_Template->getTitle());
             }
           }
         }

@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $OSCOM_Customer, $request_type, $oscTemplate;
+      global $OSCOM_APP, $OSCOM_Customer, $OSCOM_Template, $request_type;
 
       if ( ($OSCOM_APP->getCode() == 'products') && is_null($OSCOM_APP->getCurrentAction()) && isset($_GET['id']) && !empty($_GET['id']) ) {
         if ($OSCOM_Customer->isLoggedOn()) {
@@ -54,7 +54,7 @@
         $data = '<li class="nav-header"><a href="' . osc_href_link('account', 'notifications', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></li>' .
                 $notif_contents;
 
-        $oscTemplate->addBlock($data, $this->group);
+        $OSCOM_Template->addBlock($data, $this->group);
       }
     }
 

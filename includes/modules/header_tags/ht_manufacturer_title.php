@@ -29,20 +29,20 @@
     }
 
     function execute() {
-      global $OSCOM_APP, $oscTemplate, $manufacturers;
+      global $OSCOM_APP, $OSCOM_Template, $manufacturers;
 
       if ( $OSCOM_APP->getCode() == 'index' ) {
         if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
 // $manufacturers is set in application_top.php to add the manufacturer to the breadcrumb
           if (isset($manufacturers) && (sizeof($manufacturers) == 1) && isset($manufacturers['manufacturers_name'])) {
-            $oscTemplate->setTitle($manufacturers['manufacturers_name'] . ', ' . $oscTemplate->getTitle());
+            $OSCOM_Template->setTitle($manufacturers['manufacturers_name'] . ', ' . $OSCOM_Template->getTitle());
           } else {
 // $manufacturers is not set so a database query is needed
             $manufacturers_query = osc_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
             if (osc_db_num_rows($manufacturers_query)) {
               $manufacturers = osc_db_fetch_array($manufacturers_query);
 
-              $oscTemplate->setTitle($manufacturers['manufacturers_name'] . ', ' . $oscTemplate->getTitle());
+              $OSCOM_Template->setTitle($manufacturers['manufacturers_name'] . ', ' . $OSCOM_Template->getTitle());
             }
           }
         }

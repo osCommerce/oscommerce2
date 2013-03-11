@@ -29,9 +29,9 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $OSCOM_Template;
 
-      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . osc_href_link('search', 'opensearch', 'NONSSL', false) . '" title="' . osc_output_string(STORE_NAME) . '" />', $this->group);
+      $OSCOM_Template->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . osc_href_link('search', 'opensearch', 'NONSSL', false) . '" title="' . osc_output_string(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {
