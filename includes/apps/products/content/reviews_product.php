@@ -8,8 +8,8 @@
 ?>
 
 <?php
-  if ($messageStack->size('product_reviews') > 0) {
-    echo $messageStack->output('product_reviews');
+  if ( $OSCOM_MessageStack->exists('product_reviews') ) {
+    echo $OSCOM_MessageStack->get('product_reviews');
   }
 ?>
 

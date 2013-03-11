@@ -8,7 +8,7 @@
 
   class app_info_action_contact_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $error = false;
@@ -20,7 +20,7 @@
         if ( !osc_validate_email($email_address) ) {
           $error = true;
 
-          $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+          $OSCOM_MessageStack->addError('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
         }
 
         $actionRecorder = new actionRecorder('ar_contact_us', ($OSCOM_Customer->isLoggedOn() ? $OSCOM_Customer->getID() : null), $name);
@@ -30,7 +30,7 @@
 
           $actionRecorder->record(false);
 
-          $messageStack->add('contact', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)));
+          $OSCOM_MessageStack->addError('contact', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES : 15)));
         }
 
         if ( $error === false ) {

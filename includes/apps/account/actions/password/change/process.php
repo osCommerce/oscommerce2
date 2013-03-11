@@ -8,7 +8,7 @@
 
   class app_account_action_password_change_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $password_current = isset($_POST['password_current']) ? trim($_POST['password_current']) : null;
@@ -20,11 +20,11 @@
         if ( strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add_session('account_password', ENTRY_PASSWORD_NEW_ERROR);
+          $OSCOM_MessageStack->addError('account_password', ENTRY_PASSWORD_NEW_ERROR);
         } elseif ( $password_new != $password_confirmation ) {
           $error = true;
 
-          $messageStack->add_session('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
+          $OSCOM_MessageStack->addError('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
         }
 
         if ( $error === false ) {
@@ -37,13 +37,13 @@
 
             $OSCOM_PDO->perform('customers_info', array('customers_info_date_account_last_modified' => 'now()'), array('customers_info_id' => $OSCOM_Customer->getID()));
 
-            $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
+            $OSCOM_MessageStack->addSuccess('account', SUCCESS_PASSWORD_UPDATED);
 
             osc_redirect(osc_href_link('account', '', 'SSL'));
           } else {
             $error = true;
 
-            $messageStack->add_session('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
+            $OSCOM_MessageStack->addError('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
           }
         }
       }

@@ -10,8 +10,8 @@
 <h1><?php echo HEADING_TITLE_LOGIN; ?></h1>
 
 <?php
-  if ($messageStack->size('login') > 0) {
-    echo $messageStack->output('login');
+  if ( $OSCOM_MessageStack->exists('login') ) {
+    echo $OSCOM_MessageStack->get('login');
   }
 ?>
 

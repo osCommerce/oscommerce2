@@ -10,8 +10,8 @@
 <h1><?php echo sprintf(HEADING_TITLE_TELL_A_FRIEND, $Qp->value('products_name')); ?></h1>
 
 <?php
-  if ($messageStack->size('friend') > 0) {
-    echo $messageStack->output('friend');
+  if ( $OSCOM_MessageStack->exists('friend') ) {
+    echo $OSCOM_MessageStack->get('friend');
   }
 ?>
 

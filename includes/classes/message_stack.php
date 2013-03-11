@@ -1,82 +1,160 @@
 <?php
-/*
-  $Id$
+/**
+ * osCommerce Online Merchant
+ * 
+ * @copyright Copyright (c) 2013 osCommerce; http://www.oscommerce.com
+ * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
+ */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+  class messageStack {
+    protected $_data = array();
 
-  Copyright (c) 2002 osCommerce
+    public function __construct() {
+      register_shutdown_function(array($this, 'saveInSession'));
 
-  Released under the GNU General Public License
+      if ( isset($_SESSION['MessageStack']) && !empty($_SESSION['MessageStack']) ) {
+        $this->_data = $_SESSION['MessageStack'];
 
-  Example usage:
-
-  $messageStack = new messageStack();
-  $messageStack->add('general', 'Error: Error 1', 'error');
-  $messageStack->add('general', 'Error: Error 2', 'warning');
-  if ($messageStack->size('general') > 0) echo $messageStack->output('general');
-*/
-
-  class messageStack extends alertBlock {
-
-// class constructor
-    function messageStack() {
-      $this->messages = array();
-
-      if (isset($_SESSION['messageToStack'])) {
-        for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
-          $this->add($_SESSION['messageToStack'][$i]['class'], $_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
-        }
-        unset($_SESSION['messageToStack']);
+        unset($_SESSION['MessageStack']);
       }
     }
 
-// class methods
-    function add($class, $message, $type = 'error') {
-      if ($type == 'error') {
-        $this->messages[] = array('params' => 'class="alert alert-error span8 offset2"', 'class' => $class, 'text' => $message);
-      } elseif ($type == 'warning') {
-        $this->messages[] = array('params' => 'class="alert alert-warning span8 offset2"', 'class' => $class, 'text' => $message);
-      } elseif ($type == 'success') {
-        $this->messages[] = array('params' => 'class="alert alert-success span8 offset2"', 'class' => $class, 'text' => $message);
+    public function saveInSession() {
+      if ( !empty($this->_data) ) {
+        $_SESSION['MessageStack'] = $this->_data;
+      }
+    }
+
+    public function addError($group, $message) {
+      $this->add($group, $message, 'error');
+    }
+
+    public function addWarning($group, $message) {
+      $this->add($group, $message, 'warning');
+    }
+
+    public function addSuccess($group, $message) {
+      $this->add($group, $message, 'success');
+    }
+
+    public function addInfo($group, $message) {
+      $this->add($group, $message, 'info');
+    }
+
+    protected function add($group = null, $message, $type) {
+      global $OSCOM_APP;
+
+      if ( !isset($group) ) {
+        $group = $OSCOM_APP->getCode();
+      }
+
+      $types = array('error', 'warning', 'success', 'info');
+
+      if ( !in_array($type, $types) ) {
+        $type = 'error';
+      }
+
+      if ( !$this->exists($group) || !in_array($message, $this->_data[$group][$type]) ) {
+        $this->_data[$group][$type][] = $message;
+      }
+    }
+
+    public function reset() {
+      $this->_data = array();
+    }
+
+    public function exists($group = null, $type = null) {
+      global $OSCOM_APP;
+
+      if ( !isset($group) ) {
+        $group = $OSCOM_APP->getCode();
+      }
+
+      if ( isset($type) ) {
+        return array_key_exists($type, $this->_data[$group]);
       } else {
-        $this->messages[] = array('params' => 'class="alert alert-error span8 offset2"', 'class' => $class, 'text' => $message);
+        return array_key_exists($group, $this->_data);
       }
     }
 
-    function add_session($class, $message, $type = 'error') {
-      if (!isset($_SESSION['messageToStack'])) {
-        $_SESSION['messageToStack'] = array();
+    public function hasContent() {
+      return !empty($this->_data);
+    }
+
+    public function get($group = null, $type = null) {
+      global $OSCOM_APP;
+
+      if ( !isset($group) ) {
+        $group = $OSCOM_APP->getCode();
       }
 
-      $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
-    }
+      $result = '';
 
-    function reset() {
-      $this->messages = array();
-    }
+      if ( $this->exists($group) ) {
+        $messages = isset($type) ? array($type => $this->_data[$group][$type]) : $this->_data[$group];
 
-    function output($class) {
-      $output = array();
-      for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-        if ($this->messages[$i]['class'] == $class) {
-          $output[] = $this->messages[$i];
+        foreach ( array_keys($messages) as $key ) {
+          $result .= '<div class="alert';
+
+          if ( $key != 'warning' ) {
+            $result .= ' alert-' . $key;
+          }
+
+          if ( count($messages[$key]) > 1 ) {
+            $result .= ' alert-block';
+          }
+
+          $result .= '"><button type="button" class="close" data-dismiss="alert">&times;</button>';
+
+          $result .= implode('<br /><br />', $messages[$key]);
+
+          $result .= '</div>';
+        }
+
+        if ( isset($type) ) {
+          unset($this->_data[$group][$type]);
+        } else {
+          unset($this->_data[$group]);
         }
       }
 
-      return $this->alertBlock($output);
+      return $result;
     }
 
-    function size($class) {
-      $count = 0;
-
-      for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-        if ($this->messages[$i]['class'] == $class) {
-          $count++;
+    public function getAll($group = null, $type = null) {
+      if ( isset($group) ) {
+        if ( $this->exists($group) ) {
+          if ( isset($type) ) {
+            return $this->_data[$group][$type];
+          } else {
+            return $this->_data[$group];
+          }
+        } else {
+          return array();
         }
       }
 
-      return $count;
+      return $this->_data;
+    }
+
+    public function size($group = null, $type = null) {
+      global $OSCOM_APP;
+
+      if ( !isset($group) ) {
+        $group = $OSCOM_APP->getCode();
+      }
+
+      $size = 0;
+
+      if ( $this->exists($group) ) {
+        if ( isset($type) ) {
+          $size = count($this->_data[$group][$type]);
+        } else {
+          $size = count($this->_data[$group]);
+        }
+      }
+
+      return $size;
     }
   }
 ?>

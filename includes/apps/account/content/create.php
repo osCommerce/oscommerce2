@@ -12,8 +12,8 @@
 <h1><?php echo HEADING_TITLE_CREATE; ?></h1>
 
 <?php
-  if ($messageStack->size('create_account') > 0) {
-    echo $messageStack->output('create_account');
+  if ( $OSCOM_MessageStack->exists('create_account') ) {
+    echo $OSCOM_MessageStack->get('create_account');
   }
 ?>
 

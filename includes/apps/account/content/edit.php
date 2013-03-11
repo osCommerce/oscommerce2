@@ -12,8 +12,8 @@
 <h1><?php echo HEADING_TITLE_EDIT; ?></h1>
 
 <?php
-  if ($messageStack->size('account_edit') > 0) {
-    echo $messageStack->output('account_edit');
+  if ( $OSCOM_MessageStack->exists('account_edit') ) {
+    echo $OSCOM_MessageStack->get('account_edit');
   }
 ?>
 

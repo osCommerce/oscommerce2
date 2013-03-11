@@ -10,8 +10,8 @@
 <h1><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  if ($messageStack->size('account') > 0) {
-    echo $messageStack->output('account');
+  if ( $OSCOM_MessageStack->exists('account') ) {
+    echo $OSCOM_MessageStack->get('account');
   }
 ?>
 

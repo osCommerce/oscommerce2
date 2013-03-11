@@ -59,8 +59,8 @@ function check_form_optional(form_name) {
 <h1><?php echo HEADING_TITLE_PAYMENT_ADDRESS; ?></h1>
 
 <?php
-  if ($messageStack->size('checkout_address') > 0) {
-    echo $messageStack->output('checkout_address');
+  if ( $OSCOM_MessageStack->exists('checkout_address') ) {
+    echo $OSCOM_MessageStack->get('checkout_address');
   }
 ?>
 

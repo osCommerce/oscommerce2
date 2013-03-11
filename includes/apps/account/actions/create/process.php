@@ -8,7 +8,7 @@
 
   class app_account_action_create_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $process = true;
@@ -42,38 +42,38 @@
           if ( ($gender != 'm') && ($gender != 'f') ) {
             $error = true;
 
-            $messageStack->add('create_account', ENTRY_GENDER_ERROR);
+            $OSCOM_MessageStack->addError('create_account', ENTRY_GENDER_ERROR);
           }
         }
 
         if ( strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_FIRST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_FIRST_NAME_ERROR);
         }
 
         if ( strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_LAST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_LAST_NAME_ERROR);
         }
 
         if ( ACCOUNT_DOB == 'true' ) {
           if ( !is_numeric(osc_date_raw($dob)) || (@checkdate(substr(osc_date_raw($dob), 4, 2), substr(osc_date_raw($dob), 6, 2), substr(osc_date_raw($dob), 0, 4)) == false) ) {
             $error = true;
 
-            $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
+            $OSCOM_MessageStack->addError('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
           }
         }
 
         if ( strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
         } elseif ( !osc_validate_email($email_address) ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
         } else {
           $Qcheck = $OSCOM_PDO->prepare('select customers_email_address from :table_customers where customers_email_address = :customers_email_address limit 1');
           $Qcheck->bindValue(':customers_email_address', $email_address);
@@ -82,32 +82,32 @@
           if ( $Qcheck->fetch() !== false ) {
             $error = true;
 
-            $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
+            $OSCOM_MessageStack->addError('create_account', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
           }
         }
 
         if ( strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_STREET_ADDRESS_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_STREET_ADDRESS_ERROR);
         }
 
         if ( strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_POST_CODE_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_POST_CODE_ERROR);
         }
 
         if ( strlen($city) < ENTRY_CITY_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_CITY_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_CITY_ERROR);
         }
 
         if ( !is_numeric($country) ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_COUNTRY_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_COUNTRY_ERROR);
         }
 
         if ( ACCOUNT_STATE == 'true' ) {
@@ -133,13 +133,13 @@
             } else {
               $error = true;
 
-              $messageStack->add('create_account', ENTRY_STATE_ERROR_SELECT);
+              $OSCOM_MessageStack->addError('create_account', ENTRY_STATE_ERROR_SELECT);
             }
           } else {
             if ( strlen($state) < ENTRY_STATE_MIN_LENGTH ) {
               $error = true;
 
-              $messageStack->add('create_account', ENTRY_STATE_ERROR);
+              $OSCOM_MessageStack->addError('create_account', ENTRY_STATE_ERROR);
             }
           }
         }
@@ -147,17 +147,17 @@
         if ( strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
         }
 
         if ( strlen($password) < ENTRY_PASSWORD_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_PASSWORD_ERROR);
         } elseif ( $password != $confirmation ) {
           $error = true;
 
-          $messageStack->add('create_account', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
+          $OSCOM_MessageStack->addError('create_account', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
         }
 
         if ( $error === false ) {

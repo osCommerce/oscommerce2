@@ -8,7 +8,7 @@
 
   class app_search_action_q {
     public static function execute(app $app) {
-      global $dfrom, $dto, $pfrom, $pto, $keywords, $messageStack, $OSCOM_Breadcrumb;
+      global $OSCOM_Breadcrumb, $OSCOM_MessageStack, $dfrom, $dto, $pfrom, $pto, $keywords;
 
       $app->setContentFile('results.php');
 
@@ -21,7 +21,7 @@
            (isset($_GET['pto']) && !is_numeric($_GET['pto'])) ) {
         $error = true;
 
-        $messageStack->add_session('search', ERROR_AT_LEAST_ONE_INPUT);
+        $OSCOM_MessageStack->addError('search', ERROR_AT_LEAST_ONE_INPUT);
       } else {
         $dfrom = '';
         $dto = '';
@@ -53,7 +53,7 @@
             $error = true;
             $date_check_error = true;
 
-            $messageStack->add_session('search', ERROR_INVALID_FROM_DATE);
+            $OSCOM_MessageStack->addError('search', ERROR_INVALID_FROM_DATE);
           }
         }
 
@@ -62,7 +62,7 @@
             $error = true;
             $date_check_error = true;
 
-            $messageStack->add_session('search', ERROR_INVALID_TO_DATE);
+            $OSCOM_MessageStack->addError('search', ERROR_INVALID_TO_DATE);
           }
         }
 
@@ -70,7 +70,7 @@
           if (mktime(0, 0, 0, $dfrom_array[1], $dfrom_array[2], $dfrom_array[0]) > mktime(0, 0, 0, $dto_array[1], $dto_array[2], $dto_array[0])) {
             $error = true;
 
-            $messageStack->add_session('search', ERROR_TO_DATE_LESS_THAN_FROM_DATE);
+            $OSCOM_MessageStack->addError('search', ERROR_TO_DATE_LESS_THAN_FROM_DATE);
           }
         }
 
@@ -80,7 +80,7 @@
             $error = true;
             $price_check_error = true;
 
-            $messageStack->add_session('search', ERROR_PRICE_FROM_MUST_BE_NUM);
+            $OSCOM_MessageStack->addError('search', ERROR_PRICE_FROM_MUST_BE_NUM);
           }
         }
 
@@ -89,7 +89,7 @@
             $error = true;
             $price_check_error = true;
 
-            $messageStack->add_session('search', ERROR_PRICE_TO_MUST_BE_NUM);
+            $OSCOM_MessageStack->addError('search', ERROR_PRICE_TO_MUST_BE_NUM);
           }
         }
 
@@ -97,7 +97,7 @@
           if ($pfrom >= $pto) {
             $error = true;
 
-            $messageStack->add_session('search', ERROR_PRICE_TO_LESS_THAN_PRICE_FROM);
+            $OSCOM_MessageStack->addError('search', ERROR_PRICE_TO_LESS_THAN_PRICE_FROM);
           }
         }
 
@@ -105,7 +105,7 @@
           if (!osc_parse_search_string($keywords, $search_keywords)) {
             $error = true;
 
-            $messageStack->add_session('search', ERROR_INVALID_KEYWORDS);
+            $OSCOM_MessageStack->addError('search', ERROR_INVALID_KEYWORDS);
           }
         }
       }
@@ -113,7 +113,7 @@
       if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords)) {
         $error = true;
 
-        $messageStack->add_session('search', ERROR_AT_LEAST_ONE_INPUT);
+        $OSCOM_MessageStack->addError('search', ERROR_AT_LEAST_ONE_INPUT);
       }
 
       if ($error == true) {

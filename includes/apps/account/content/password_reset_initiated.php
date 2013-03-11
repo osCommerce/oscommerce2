@@ -10,8 +10,8 @@
 <h1><?php echo HEADING_TITLE_PASSWORD_FORGOTTEN; ?></h1>
 
 <?php
-  if ($messageStack->size('password_forgotten') > 0) {
-    echo $messageStack->output('password_forgotten');
+  if ( $OSCOM_MessageStack->exists('password_forgotten') ) {
+    echo $OSCOM_MessageStack->get('password_forgotten');
   }
 ?>
 

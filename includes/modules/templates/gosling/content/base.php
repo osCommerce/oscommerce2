@@ -57,8 +57,8 @@
 <div id="bodyWrapper" class="container-fluid">
 
 <?php
-  if ($messageStack->size('header') > 0) {
-    echo '<div class="row-fluid">' . $messageStack->output('header') . '</div>';
+  if ( $OSCOM_MessageStack->exists('header') ) {
+    echo '<div class="row-fluid">' . $OSCOM_MessageStack->get('header') . '</div>';
   }
 ?>
 

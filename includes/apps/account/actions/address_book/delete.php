@@ -8,13 +8,13 @@
 
   class app_account_action_address_book_delete {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $messageStack, $OSCOM_Breadcrumb;
+      global $OSCOM_Breadcrumb, $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO;
 
       $exists = false;
 
       if ( isset($_GET['id']) && is_numeric($_GET['id']) ) {
         if ( $_GET['id'] == $OSCOM_Customer->get('default_address_id') ) {
-          $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
+          $OSCOM_MessageStack->addWarning('addressbook', WARNING_PRIMARY_ADDRESS_DELETION);
 
           osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
         }
@@ -30,7 +30,7 @@
       }
 
       if ( $exists === false ) {
-        $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
+        $OSCOM_MessageStack->addError('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
         osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }

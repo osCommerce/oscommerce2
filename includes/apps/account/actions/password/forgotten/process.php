@@ -8,7 +8,7 @@
 
   class app_account_action_password_forgotten_process {
     public static function execute(app $app) {
-      global $OSCOM_PDO, $messageStack;
+      global $OSCOM_MessageStack, $OSCOM_PDO;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $email_address = isset($_POST['email_address']) ? trim($_POST['email_address']) : null;
@@ -40,13 +40,13 @@
             } else {
               $actionRecorder->record(false);
 
-              $messageStack->add('password_forgotten', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
+              $OSCOM_MessageStack->addError('password_forgotten', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES') ? (int)MODULE_ACTION_RECORDER_RESET_PASSWORD_MINUTES : 5)));
             }
           } else {
-            $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
+            $OSCOM_MessageStack->addError('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
           }
         } else {
-          $messageStack->add('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
+          $OSCOM_MessageStack->addError('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
         }
       }
     }

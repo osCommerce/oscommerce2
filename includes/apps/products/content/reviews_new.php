@@ -40,8 +40,8 @@ function checkForm() {
 </div>
 
 <?php
-  if ($messageStack->size('review') > 0) {
-    echo $messageStack->output('review');
+  if ( $OSCOM_MessageStack->exists('review') ) {
+    echo $OSCOM_MessageStack->get('review');
   }
 ?>
 

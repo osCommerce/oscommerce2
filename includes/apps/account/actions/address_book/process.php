@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $process, $entry_state_has_zones, $country, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
 
       $app->setContentFile('address_book_process.php');
 
@@ -37,44 +37,44 @@
           if ( ($gender != 'm') && ($gender != 'f') ) {
             $error = true;
 
-            $messageStack->add('addressbook', ENTRY_GENDER_ERROR);
+            $OSCOM_MessageStack->addError('addressbook', ENTRY_GENDER_ERROR);
           }
         }
 
         if ( strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_FIRST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_FIRST_NAME_ERROR);
         }
 
         if ( strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_LAST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_LAST_NAME_ERROR);
         }
 
         if ( strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_STREET_ADDRESS_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_STREET_ADDRESS_ERROR);
         }
 
         if ( strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_POST_CODE_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_POST_CODE_ERROR);
         }
 
         if ( strlen($city) < ENTRY_CITY_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_CITY_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_CITY_ERROR);
         }
 
         if ( !is_numeric($country) ) {
           $error = true;
 
-          $messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
+          $OSCOM_MessageStack->addError('addressbook', ENTRY_COUNTRY_ERROR);
         }
 
         if ( ACCOUNT_STATE == 'true' ) {
@@ -100,13 +100,13 @@
             } else {
               $error = true;
 
-              $messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
+              $OSCOM_MessageStack->addError('addressbook', ENTRY_STATE_ERROR_SELECT);
             }
           } else {
             if ( strlen($state) < ENTRY_STATE_MIN_LENGTH ) {
               $error = true;
 
-              $messageStack->add('addressbook', ENTRY_STATE_ERROR);
+              $OSCOM_MessageStack->addError('addressbook', ENTRY_STATE_ERROR);
             }
           }
         }
@@ -149,7 +149,7 @@
                 $OSCOM_Customer->setDefaultAddressID($_GET['id']);
               }
 
-              $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
+              $OSCOM_MessageStack->addSuccess('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED);
             }
           } else {
             if ( osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES ) {
@@ -165,7 +165,7 @@
                 $OSCOM_Customer->setZoneID(($zone_id > 0) ? (int)$zone_id : '0');
                 $OSCOM_Customer->setDefaultAddressID($new_address_book_id);
 
-                $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
+                $OSCOM_MessageStack->addSuccess('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED);
               }
             }
           }

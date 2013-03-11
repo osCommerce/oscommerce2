@@ -382,7 +382,7 @@
     }
 
     function before_process() {
-      global $OSCOM_Customer, $order, $order_totals, $currencies, $$_SESSION['payment'], $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $order, $order_totals, $currencies, $$_SESSION['payment'];
 
       if (!class_exists('httpClient')) {
         include('includes/classes/http_client.php');
@@ -427,7 +427,7 @@
 
       if ($result != 'VERIFIED') {
         if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION')) {
-          $messageStack->add_session('header', MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION);
+          $OSCOM_MessageStack->addError('header', MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION);
         }
 
         if (osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {

@@ -10,8 +10,8 @@
 <h1><?php echo HEADING_TITLE_CONTACT; ?></h1>
 
 <?php
-  if ($messageStack->size('contact') > 0) {
-    echo $messageStack->output('contact');
+  if ( $OSCOM_MessageStack->exists('contact') ) {
+    echo $OSCOM_MessageStack->get('contact');
   }
 ?>
 

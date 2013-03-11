@@ -94,8 +94,8 @@ function check_form() {
 <h1><?php echo HEADING_TITLE_1; ?></h1>
 
 <?php
-  if ($messageStack->size('search') > 0) {
-    echo $messageStack->output('search');
+  if ( $OSCOM_MessageStack->exists('search') ) {
+    echo $OSCOM_MessageStack->get('search');
   }
 ?>
 

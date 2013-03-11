@@ -8,7 +8,7 @@
 
   class app_account_action_notifications_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $global, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $global;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         if ( isset($_POST['product_global']) && is_numeric($_POST['product_global']) ) {
@@ -57,7 +57,7 @@
           }
         }
 
-        $messageStack->add_session('account', SUCCESS_NOTIFICATIONS_UPDATED, 'success');
+        $OSCOM_MessageStack->addSuccess('account', SUCCESS_NOTIFICATIONS_UPDATED);
 
         osc_redirect(osc_href_link('account', '', 'SSL'));
       }

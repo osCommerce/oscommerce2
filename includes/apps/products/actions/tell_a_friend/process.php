@@ -8,7 +8,7 @@
 
   class app_products_action_tell_a_friend_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $Qp, $from_name, $from_email_address, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $Qp, $from_name, $from_email_address;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $error = false;
@@ -20,25 +20,25 @@
         if ( empty($from_name) ) {
           $error = true;
 
-          $messageStack->add('friend', ERROR_FROM_NAME);
+          $OSCOM_MessageStack->addError('friend', ERROR_FROM_NAME);
         }
 
         if ( !osc_validate_email($from_email_address) ) {
           $error = true;
 
-          $messageStack->add('friend', ERROR_FROM_ADDRESS);
+          $OSCOM_MessageStack->addError('friend', ERROR_FROM_ADDRESS);
         }
 
         if ( empty($to_name) ) {
           $error = true;
 
-          $messageStack->add('friend', ERROR_TO_NAME);
+          $OSCOM_MessageStack->addError('friend', ERROR_TO_NAME);
         }
 
         if ( !osc_validate_email($to_email_address) ) {
           $error = true;
 
-          $messageStack->add('friend', ERROR_TO_ADDRESS);
+          $OSCOM_MessageStack->addError('friend', ERROR_TO_ADDRESS);
         }
 
         $actionRecorder = new actionRecorder('ar_tell_a_friend', ($OSCOM_Customer->isLoggedOn() ? $OSCOM_Customer->getID() : null), $from_name);
@@ -48,7 +48,7 @@
 
           $actionRecorder->record(false);
 
-          $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
+          $OSCOM_MessageStack->addError('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
         }
 
         if ( $error === false ) {
@@ -72,7 +72,7 @@
 
           $actionRecorder->record();
 
-          $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qp->value('products_name'), osc_output_string_protected($to_name)), 'success');
+          $OSCOM_MessageStack->addSuccess('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qp->value('products_name'), osc_output_string_protected($to_name)));
 
           osc_redirect(osc_href_link('products', 'id=' . $_GET['id']));
         }

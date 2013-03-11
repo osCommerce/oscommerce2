@@ -8,7 +8,7 @@
 
   class app_products_action_reviews_new_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $Qcustomer, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $Qcustomer;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $rating = isset($_POST['rating']) ? trim($_POST['rating']) : null;
@@ -19,13 +19,13 @@
         if ( strlen($review) < REVIEW_TEXT_MIN_LENGTH ) {
           $error = true;
 
-          $messageStack->add('review', JS_REVIEW_TEXT);
+          $OSCOM_MessageStack->addError('review', JS_REVIEW_TEXT);
         }
 
         if (($rating < 1) || ($rating > 5)) {
           $error = true;
 
-          $messageStack->add('review', JS_REVIEW_RATING);
+          $OSCOM_MessageStack->addError('review', JS_REVIEW_RATING);
         }
 
         if ($error == false) {
@@ -41,7 +41,7 @@
 
           $OSCOM_PDO->perform('reviews_description', array('reviews_id' => $insert_id, 'languages_id' => $_SESSION['languages_id'], 'reviews_text' => $review));
 
-          $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
+          $OSCOM_MessageStack->addSuccess('product_reviews', TEXT_REVIEW_RECEIVED);
 
           osc_redirect(osc_href_link('products', 'reviews&id=' . $_GET['id']));
         }

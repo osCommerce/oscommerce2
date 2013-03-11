@@ -10,8 +10,8 @@
 <h1><?php echo HEADING_TITLE_ADDRESS_BOOK_DELETE; ?></h1>
 
 <?php
-  if ($messageStack->size('addressbook') > 0) {
-    echo $messageStack->output('addressbook');
+  if ( $OSCOM_MessageStack->exists('addressbook') ) {
+    echo $OSCOM_MessageStack->get('addressbook');
   }
 ?>
 

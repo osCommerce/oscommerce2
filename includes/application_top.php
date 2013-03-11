@@ -336,7 +336,7 @@
 
 // initialize the message stack for output messages
   require(DIR_WS_CLASSES . 'message_stack.php');
-  $messageStack = new messageStack;
+  $OSCOM_MessageStack = new messageStack();
 
   register_shutdown_function('session_write_close');
 

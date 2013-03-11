@@ -8,7 +8,7 @@
 
   class app_account_action_login_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_PDO, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_NavigationHistory, $OSCOM_PDO;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         $error = false;
@@ -65,7 +65,7 @@
         }
 
         if ( $error === true ) {
-          $messageStack->add('login', TEXT_LOGIN_ERROR);
+          $OSCOM_MessageStack->addError('login', TEXT_LOGIN_ERROR);
         }
       }
     }

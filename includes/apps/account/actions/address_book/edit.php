@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_edit {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $entry, $messageStack, $OSCOM_Breadcrumb;
+      global $OSCOM_Breadcrumb, $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $entry;
 
       $exists = false;
 
@@ -26,7 +26,7 @@
       }
 
       if ( $exists === false ) {
-        $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
+        $OSCOM_MessageStack->addError('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
         osc_redirect(osc_href_link('account', 'address_book', 'SSL'));
       }

@@ -12,8 +12,8 @@
 <h1><?php echo (isset($_GET['id']) ? HEADING_TITLE_ADDRESS_BOOK_EDIT : HEADING_TITLE_ADDRESS_BOOK_NEW); ?></h1>
 
 <?php
-  if ($messageStack->size('addressbook') > 0) {
-    echo $messageStack->output('addressbook');
+  if ( $OSCOM_MessageStack->exists('addressbook') ) {
+    echo $OSCOM_MessageStack->get('addressbook');
   }
 ?>
 

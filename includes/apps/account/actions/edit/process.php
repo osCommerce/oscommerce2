@@ -8,7 +8,7 @@
 
   class app_account_action_edit_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $messageStack;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         if (ACCOUNT_GENDER == 'true') $gender = isset($_POST['gender']) ? trim($_POST['gender']) : null;
@@ -25,40 +25,40 @@
           if ( ($gender != 'm') && ($gender != 'f') ) {
             $error = true;
 
-            $messageStack->add('account_edit', ENTRY_GENDER_ERROR);
+            $OSCOM_MessageStack->addError('account_edit', ENTRY_GENDER_ERROR);
           }
         }
 
         if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_FIRST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_FIRST_NAME_ERROR);
         }
 
         if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_LAST_NAME_ERROR);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_LAST_NAME_ERROR);
         }
 
         if (ACCOUNT_DOB == 'true') {
           if ((is_numeric(osc_date_raw($dob)) == false) || (@checkdate(substr(osc_date_raw($dob), 4, 2), substr(osc_date_raw($dob), 6, 2), substr(osc_date_raw($dob), 0, 4)) == false)) {
             $error = true;
 
-            $messageStack->add('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
+            $OSCOM_MessageStack->addError('account_edit', ENTRY_DATE_OF_BIRTH_ERROR);
           }
         }
 
         if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
         }
 
         if (!osc_validate_email($email_address)) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
         }
 
         $Qcheck = $OSCOM_PDO->prepare('select customers_id from :table_customers where customers_email_address = :customers_email_address and customers_id != :customers_id limit 1');
@@ -69,13 +69,13 @@
         if ( $Qcheck->fetch() !== false ) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
         }
 
         if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
           $error = true;
 
-          $messageStack->add('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
+          $OSCOM_MessageStack->addError('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
         }
 
         if ($error == false) {
@@ -94,7 +94,7 @@
 // reset the session variables
           $OSCOM_Customer->setData($OSCOM_Customer->getID());
 
-          $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
+          $OSCOM_MessageStack->addSuccess('account', SUCCESS_ACCOUNT_UPDATED);
 
           osc_redirect(osc_href_link('account', '', 'SSL'));
         }

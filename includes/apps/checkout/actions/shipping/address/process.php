@@ -8,7 +8,7 @@
 
   class app_checkout_action_shipping_address_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_PDO, $messageStack, $process, $entry_state_has_zones, $country;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
 
       $error = false;
       $process = false;
@@ -37,38 +37,38 @@
             if ( ($gender != 'm') && ($gender != 'f') ) {
               $error = true;
 
-              $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
+              $OSCOM_MessageStack->addError('checkout_address', ENTRY_GENDER_ERROR);
             }
           }
 
           if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_FIRST_NAME_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_FIRST_NAME_ERROR);
           }
 
           if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_LAST_NAME_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_LAST_NAME_ERROR);
           }
 
           if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_STREET_ADDRESS_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_STREET_ADDRESS_ERROR);
           }
 
           if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_POST_CODE_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_POST_CODE_ERROR);
           }
 
           if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_CITY_ERROR);
           }
 
           if (ACCOUNT_STATE == 'true') {
@@ -94,13 +94,13 @@
               } else {
                 $error = true;
 
-                $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
+                $OSCOM_MessageStack->addError('checkout_address', ENTRY_STATE_ERROR_SELECT);
               }
             } else {
               if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
                 $error = true;
 
-                $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
+                $OSCOM_MessageStack->addError('checkout_address', ENTRY_STATE_ERROR);
               }
             }
           }
@@ -108,7 +108,7 @@
           if ( (is_numeric($country) == false) || ($country < 1) ) {
             $error = true;
 
-            $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
+            $OSCOM_MessageStack->addError('checkout_address', ENTRY_COUNTRY_ERROR);
           }
 
           if ($error == false) {
