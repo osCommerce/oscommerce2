@@ -166,7 +166,7 @@ function check_form_optional(form_name) {
       </table>
     </div>
 
-    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></div>
   </div>
 
 <script type="text/javascript">
@@ -180,7 +180,7 @@ $('#coProgressBar').progressbar({
 ?>
 
   <div class="contentText">
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('checkout', 'payment&address', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('checkout', 'payment&address', 'SSL')); ?>
   </div>
 
 <?php

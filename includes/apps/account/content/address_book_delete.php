@@ -25,8 +25,8 @@
   </div>
 
   <div>
-    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&process&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary'); ?></span>
+    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&process&id=' . $_GET['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'danger'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', 'address_book', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', 'address_book', 'SSL')); ?>
   </div>
 </div>

@@ -39,7 +39,7 @@
       <tr>
         <td width="50%" valign="top"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . osc_date_long($history['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . osc_output_string_protected($order_name); ?></td>
         <td width="30%" valign="top"><?php echo '<strong>' . TEXT_ORDER_PRODUCTS . '</strong> ' . $products['count'] . '<br /><strong>' . TEXT_ORDER_COST . '</strong> ' . strip_tags($history['order_total']); ?></td>
-        <td width="20%" align="right"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'document', osc_href_link('account', 'orders&info&id=' . $history['orders_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'SSL'), 'primary'); ?></td>
+        <td width="20%" align="right"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'list', osc_href_link('account', 'orders&info&id=' . $history['orders_id'] . (isset($_GET['page']) ? '&page=' . $_GET['page'] : ''), 'SSL'), 'info'); ?></td>
      </tr>
     </table>
   </div>
@@ -67,6 +67,6 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', '', 'SSL')); ?>
   </div>
 </div>

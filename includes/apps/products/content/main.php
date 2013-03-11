@@ -182,9 +182,9 @@ $("#piGal a[rel^='fancybox']").fancybox({
 ?>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_hidden_field('products_id', $product_info['products_id']) . osc_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_hidden_field('products_id', $product_info['products_id']) . osc_draw_button(IMAGE_BUTTON_IN_CART, 'shopping-cart', null, 'success'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', osc_href_link('products', 'reviews&id=' . $_GET['id'])); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', osc_href_link('products', 'reviews&id=' . $_GET['id']), 'info'); ?>
   </div>
 
 <?php

@@ -56,7 +56,7 @@ function rowOutEffect(object) {
       </div>
     </div>
 
-    <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?><br /><br /><?php echo osc_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', osc_href_link('checkout', 'shipping&address', 'SSL')); ?>
+    <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?><br /><br /><?php echo osc_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', osc_href_link('checkout', 'shipping&address', 'SSL'), 'info'); ?>
   </div>
 
   <div style="clear: both;"></div>
@@ -191,7 +191,7 @@ function rowOutEffect(object) {
       </table>
     </div>
 
-    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></div>
   </div>
 </div>
 

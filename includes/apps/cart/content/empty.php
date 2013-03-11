@@ -13,6 +13,6 @@
   <div class="contentText">
     <?php echo TEXT_CART_EMPTY; ?>
 
-    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', osc_href_link()); ?></p>
+    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', osc_href_link()); ?></p>
   </div>
 </div>

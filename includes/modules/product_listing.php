@@ -132,7 +132,7 @@
             }
             break;
           case 'PRODUCT_LIST_BUY_NOW':
-            $prod_list_contents .= '        <td align="center">' . osc_draw_button(IMAGE_BUTTON_BUY_NOW, 'cart', osc_href_link('cart', 'add&id=' . $listing['products_id'] . '&formid=' . md5($_SESSION['sessiontoken']))) . '</td>';
+            $prod_list_contents .= '        <td align="center">' . osc_draw_button(IMAGE_BUTTON_BUY_NOW, 'shopping-cart', osc_href_link('cart', 'add&id=' . $listing['products_id'] . '&formid=' . md5($_SESSION['sessiontoken'])), 'success') . '</td>';
             break;
         }
       }

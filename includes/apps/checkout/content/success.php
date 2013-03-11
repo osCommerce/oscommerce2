@@ -29,6 +29,6 @@
 ?>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', osc_href_link()); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', osc_href_link()); ?></span>
   </div>
 </div>

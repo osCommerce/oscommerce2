@@ -201,7 +201,7 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'person', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></span>
   </div>
 </div>
 

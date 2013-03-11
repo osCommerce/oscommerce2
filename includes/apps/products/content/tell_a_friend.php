@@ -62,9 +62,9 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('products', 'id=' . $_GET['id'])); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('products', 'id=' . $_GET['id'])); ?>
   </div>
 </div>
 

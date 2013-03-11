@@ -46,7 +46,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'document', osc_href_link('account', 'address_book&edit&id=' . $Qab->valueInt('address_book_id'), 'SSL')) . ' ' . osc_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&id=' . $Qab->valueInt('address_book_id'), 'SSL')); ?></span>
+      <span style="float: right;"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'edit', osc_href_link('account', 'address_book&edit&id=' . $Qab->valueInt('address_book_id'), 'SSL'), 'info') . ' ' . osc_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'trash', osc_href_link('account', 'address_book&delete&id=' . $Qab->valueInt('address_book_id'), 'SSL'), 'danger'); ?></span>
       <p><strong><?php echo $Qab->valueProtected('firstname') . ' ' . $Qab->valueProtected('lastname'); ?></strong><?php if ($Qab->valueInt('address_book_id') == $OSCOM_Customer->getDefaultAddressID()) echo '&nbsp;<small><i>' . PRIMARY_ADDRESS . '</i></small>'; ?></p>
       <p style="padding-left: 20px;"><?php echo osc_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?></p>
     </div>
@@ -63,13 +63,13 @@
   if (osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'home', osc_href_link('account', 'address_book&new', 'SSL'), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'home', osc_href_link('account', 'address_book&new', 'SSL'), 'success'); ?></span>
 
 <?php
   }
 ?>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', '', 'SSL')); ?>
   </div>
 
   <p><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></p>

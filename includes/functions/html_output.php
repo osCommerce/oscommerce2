@@ -325,11 +325,10 @@
   }
 
 ////
-// Output a jQuery UI Button
-  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
-    static $button_counter = 1;
-
+// Output a Bootstrap Button
+  function osc_draw_button($title = null, $icon = null, $link = null, $style = null, $params = null) {
     $types = array('submit', 'button', 'reset');
+    $styles = array('primary', 'info', 'success', 'warning', 'danger', 'inverse', 'link');
 
     if ( !isset($params['type']) ) {
       $params['type'] = 'submit';
@@ -343,37 +342,33 @@
       $params['type'] = 'button';
     }
 
-    if (!isset($priority)) {
-      $priority = 'secondary';
+    if ( isset($style) && !in_array($style, $styles) ) {
+      unset($style);
     }
 
-    $button = '<span class="tdbLink">';
+    $button = '';
 
     if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+      $button .= '<a href="' . $link . '"';
 
       if ( isset($params['newwindow']) ) {
         $button .= ' target="_blank"';
       }
     } else {
-      $button .= '<button id="tdb' . $button_counter . '" type="' . osc_output_string($params['type']) . '"';
+      $button .= '<button type="' . osc_output_string($params['type']) . '"';
     }
 
     if ( isset($params['params']) ) {
       $button .= ' ' . $params['params'];
     }
 
-    $button .= '>' . $title;
+    $button .= ' class="btn';
 
-    if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '</a>';
-    } else {
-      $button .= '</button>';
+    if ( isset($style) ) {
+      $button .= ' btn-' . $style;
     }
 
-    $button .= '</span><script type="text/javascript">$("#tdb' . $button_counter . '").button(';
-
-    $args = array();
+    $button .= '">';
 
     if ( isset($icon) ) {
       if ( !isset($params['iconpos']) ) {
@@ -381,23 +376,33 @@
       }
 
       if ( $params['iconpos'] == 'left' ) {
-        $args[] = 'icons:{primary:"ui-icon-' . $icon . '"}';
-      } else {
-        $args[] = 'icons:{secondary:"ui-icon-' . $icon . '"}';
+        $button .= '<i class="icon-' . $icon;
+
+        if ( isset($style) ) {
+          $button .= ' icon-white';
+        }
+
+        $button .= '"></i> ';
       }
     }
 
-    if (empty($title)) {
-      $args[] = 'text:false';
+    $button .= $title;
+
+    if ( isset($icon) && ($params['iconpos'] == 'right') ) {
+      $button .= ' <i class="icon-' . $icon;
+
+      if ( isset($style) ) {
+        $button .= ' icon-white';
+      }
+
+      $button .= '"></i>';
     }
 
-    if (!empty($args)) {
-      $button .= '{' . implode(',', $args) . '}';
+    if ( ($params['type'] == 'button') && isset($link) ) {
+      $button .= '</a>';
+    } else {
+      $button .= '</button>';
     }
-
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
-
-    $button_counter++;
 
     return $button;
   }

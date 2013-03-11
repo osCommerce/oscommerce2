@@ -22,7 +22,7 @@
     <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
     <p><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
 
-    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', osc_href_link('account', 'create', 'SSL')); ?></p>
+    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', osc_href_link('account', 'create', 'SSL'), 'success'); ?></p>
   </div>
 </div>
 
@@ -47,7 +47,7 @@
 
     <p><?php echo '<a href="' . osc_href_link('account', 'password&forgotten', 'SSL') . '">' . TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
 
-    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_LOGIN, 'key', null, 'primary'); ?></p>
+    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_LOGIN, 'user', null, 'success'); ?></p>
 
     </form>
   </div>

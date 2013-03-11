@@ -42,19 +42,6 @@
 
 
 
-<link rel="stylesheet" href="ext/jquery/ui/redmond/jquery-ui-1.8.23.css" />
-<script src="ext/jquery/ui/jquery-ui-1.8.23.min.js"></script>
-
-<?php
-  if (osc_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
-?>
-<script src="ext/jquery/ui/i18n/jquery.ui.datepicker-<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>.js"></script>
-<script>
-$.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>']);
-</script>
-<?php
-  }
-?>
 
 <script src="ext/jquery/bxGallery/jquery.bxGallery.1.1.min.js"></script>
 <link rel="stylesheet" href="ext/jquery/fancybox/jquery.fancybox-1.3.4.css" />
@@ -78,11 +65,11 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   <div id="header" class="row-fluid">
     <div id="storeLogo"><?php echo '<a href="' . osc_href_link() . '">' . osc_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
-    <div id="headerShortcuts">
+    <div id="headerShortcuts" class="btn-group">
 <?php
-  echo osc_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'cart', osc_href_link('cart')) .
-       osc_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', osc_href_link('checkout', '', 'SSL')) .
-       osc_draw_button(HEADER_TITLE_MY_ACCOUNT, 'person', osc_href_link('account', '', 'SSL'));
+  echo osc_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'shopping-cart', osc_href_link('cart'), ($OSCOM_APP->getCode() == 'cart' ? 'primary' : null)) .
+       osc_draw_button(HEADER_TITLE_CHECKOUT, 'play', osc_href_link('checkout', '', 'SSL'), ($OSCOM_APP->getCode() == 'checkout' ? 'primary' : null)) .
+       osc_draw_button(HEADER_TITLE_MY_ACCOUNT, 'user', osc_href_link('account', '', 'SSL'), ($OSCOM_APP->getCode() == 'account' ? 'primary' : null));
 
   if ( $OSCOM_Customer->isLoggedOn() ) {
     echo osc_draw_button(HEADER_TITLE_LOGOFF, null, osc_href_link('account', 'logoff', 'SSL'));

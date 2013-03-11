@@ -30,9 +30,9 @@
 ?>
 
   <div>
-    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_UPDATE, 'refresh', null, 'primary'); ?></span>
+    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_UPDATE, 'refresh', null, 'success'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('account', 'address_book', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', 'address_book', 'SSL')); ?>
   </div>
 
 <?php
@@ -45,9 +45,9 @@
 ?>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok', null, 'success'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', $back_link); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', $back_link); ?>
   </div>
 
 <?php

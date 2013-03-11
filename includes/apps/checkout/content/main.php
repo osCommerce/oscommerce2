@@ -210,7 +210,7 @@
     echo $payment_modules->process_button();
   }
 
-  echo osc_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'primary');
+  echo osc_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'check', null, 'success');
 ?>
 
     </div>

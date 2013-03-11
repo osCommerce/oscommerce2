@@ -27,7 +27,7 @@
   <div style="float: right; width: <?php echo SMALL_IMAGE_WIDTH+20; ?>px; text-align: center;">
     <?php echo '<a href="' . osc_href_link('products', 'id=' . $Qp->valueInt('products_id')) . '">' . osc_image(DIR_WS_IMAGES . $Qp->value('products_image'), $Qp->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-    <p><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'cart', osc_href_link('cart', 'add&id=' . $Qp->valueInt('products_id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></p>
+    <p><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'shopping-cart', osc_href_link('cart', 'add&id=' . $Qp->valueInt('products_id') . '&formid=' . md5($_SESSION['sessiontoken'])), 'success'); ?></p>
   </div>
 
 <?php
@@ -92,8 +92,8 @@
   <br />
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'comment', osc_href_link('products', 'reviews&new&id=' . $_GET['id']), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'comment', osc_href_link('products', 'reviews&new&id=' . $_GET['id']), 'warning'); ?></span>
 
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', osc_href_link('products', 'id=' . $_GET['id'])); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('products', 'id=' . $_GET['id'])); ?>
   </div>
 </div>

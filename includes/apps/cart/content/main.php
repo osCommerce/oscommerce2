@@ -109,7 +109,7 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CHECKOUT, 'triangle-1-e', osc_href_link('checkout', '', 'SSL'), 'primary'); ?></span>
+    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CHECKOUT, 'play', osc_href_link('checkout', '', 'SSL'), 'success'); ?></span>
   </div>
 
 <?php
