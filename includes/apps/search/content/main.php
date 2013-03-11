@@ -114,7 +114,7 @@ function check_form() {
       <span style="float: right;"><?php echo osc_hide_session_id() . osc_draw_button(IMAGE_BUTTON_SEARCH, 'search', null, 'success'); ?></span>
     </div>
 
-    <div id="helpSearch" class="modal hide">
+    <div id="helpSearch" class="modal hide" role="dialog" tabindex="-1" aria-labelledby="helpSearchLabel" aria-hidden="true">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h3><?php echo HEADING_SEARCH_HELP; ?></h3>
@@ -123,7 +123,7 @@ function check_form() {
         <p><?php echo TEXT_SEARCH_HELP; ?></p>
       </div>
       <div class="modal-footer">
-        <a href="#" class="btn" data-dismiss="modal">Close</a>
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
       </div>
     </div>
 
