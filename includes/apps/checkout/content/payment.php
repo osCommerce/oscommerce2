@@ -43,24 +43,15 @@ function rowOutEffect(object) {
 
 <h1><?php echo HEADING_TITLE_PAYMENT; ?></h1>
 
-<?php echo osc_draw_form('checkout_payment', osc_href_link('checkout', 'payment&process', 'SSL'), 'post', 'onsubmit="return check_form();"', true); ?>
-
-<div class="contentContainer">
-
 <?php
-  if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
-?>
-
-  <div class="contentText">
-    <?php echo '<strong>' . osc_output_string_protected($error['title']) . '</strong>'; ?>
-
-    <p class="messageStackError"><?php echo osc_output_string_protected($error['error']); ?></p>
-  </div>
-
-<?php
+  if ( $OSCOM_MessageStack->exists('payment_error') ) {
+    echo $OSCOM_MessageStack->get('payment_error');
   }
 ?>
 
+<?php echo osc_draw_form('checkout_payment', osc_href_link('checkout', 'payment&process', 'SSL'), 'post', 'onsubmit="return check_form();"', true); ?>
+
+<div class="contentContainer">
   <h2><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h2>
 
   <div class="contentText">
