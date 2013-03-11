@@ -185,7 +185,7 @@
        // $alertBox_string .= '<div class="span8 offset2">' . "\n";
         $alertBox_string .= '  <div';
 		  
-        if (isset($contents[$i]['params']) && tep_not_null($contents[$i]['params']))
+        if (isset($contents[$i]['params']) && osc_not_null($contents[$i]['params']))
 		  $alertBox_string .= ' ' . $contents[$i]['params'];
         
 		  $alertBox_string .= '>' . "\n";
