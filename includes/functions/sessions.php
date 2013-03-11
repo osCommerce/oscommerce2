@@ -92,8 +92,6 @@
       osc_redirect(osc_href_link(null, '', 'NONSSL', false));
     }
 
-    register_shutdown_function('session_write_close');
-
     return session_start();
   }
 

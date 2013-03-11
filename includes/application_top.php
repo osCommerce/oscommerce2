@@ -338,6 +338,8 @@
   require(DIR_WS_CLASSES . 'message_stack.php');
   $messageStack = new messageStack;
 
+  register_shutdown_function('session_write_close');
+
   require(DIR_WS_CLASSES . 'app.php');
   $OSCOM_APP = app::initialize();
 
