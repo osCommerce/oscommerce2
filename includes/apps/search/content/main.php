@@ -109,27 +109,23 @@ function check_form() {
       <?php echo osc_draw_input_field('q', '', 'style="width: 100%"'); ?>
     </div>
 
-    <br />
-
     <div>
-      <span><?php echo '<a href="#" target="_blank" onclick="$(\'#helpSearch\').dialog(\'open\'); return false;">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></span>
+      <span><?php echo '<a href="#helpSearch" role="button" class="btn btn-link" data-toggle="modal">' . TEXT_SEARCH_HELP_LINK . '</a>'; ?></span>
       <span style="float: right;"><?php echo osc_hide_session_id() . osc_draw_button(IMAGE_BUTTON_SEARCH, 'search', null, 'success'); ?></span>
     </div>
 
-    <div id="helpSearch" title="<?php echo HEADING_SEARCH_HELP; ?>">
-      <p><?php echo TEXT_SEARCH_HELP; ?></p>
+    <div id="helpSearch" class="modal hide">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3><?php echo HEADING_SEARCH_HELP; ?></h3>
+      </div>
+      <div class="modal-body">
+        <p><?php echo TEXT_SEARCH_HELP; ?></p>
+      </div>
+      <div class="modal-footer">
+        <a href="#" class="btn" data-dismiss="modal">Close</a>
+      </div>
     </div>
-
-<script type="text/javascript">
-$('#helpSearch').dialog({
-  autoOpen: false,
-  buttons: {
-    Ok: function() {
-      $(this).dialog('close');
-    }
-  }
-});
-</script>
 
     <br />
 
