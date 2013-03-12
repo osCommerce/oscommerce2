@@ -8,7 +8,7 @@
 
   class app_account_action_address_book_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $gender, $entry_state_has_zones, $country;
 
       $app->setContentFile('address_book_process.php');
 
