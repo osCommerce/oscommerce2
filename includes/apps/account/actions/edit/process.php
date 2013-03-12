@@ -8,7 +8,7 @@
 
   class app_account_action_edit_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $gender;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         if (ACCOUNT_GENDER == 'true') $gender = isset($_POST['gender']) ? trim($_POST['gender']) : null;
