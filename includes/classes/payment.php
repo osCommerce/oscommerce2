@@ -42,8 +42,13 @@
 // if there is only one payment method, select it as default because in
 // checkout_confirmation.php the $payment variable is being assigned the
 // $_POST['payment'] value which will be empty (no radio button selection possible)
-        if ( (osc_count_payment_modules() == 1) && (!isset($GLOBALS[$_SESSION['payment']]) || (isset($GLOBALS[$_SESSION['payment']]) && !is_object($GLOBALS[$_SESSION['payment']]))) ) {
-          $_SESSION['payment'] = $include_modules[0]['class'];
+        if ( (osc_count_payment_modules() == 1) && (!isset($_SESSION['payment']) || !isset($GLOBALS[$_SESSION['payment']]) || !is_object($GLOBALS[$_SESSION['payment']])) ) {
+          for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
+            if ( $GLOBALS[$include_modules[$i]['class']]->enabled ) {
+              $_SESSION['payment'] = $include_modules[$i]['class'];
+              break;
+            }
+          }
         }
 
         if ( (osc_not_null($module)) && (in_array($module, $this->modules)) && (isset($GLOBALS[$module]->form_action_url)) ) {

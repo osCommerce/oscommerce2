@@ -8,8 +8,6 @@
 
   class app_checkout_action_payment_process {
     public static function execute(app $app) {
-      global $free_shipping, $shipping_modules;
-
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
         if ( osc_not_null($_POST['comments']) ) {
           $_SESSION['comments'] = trim($_POST['comments']);

@@ -16,16 +16,16 @@
     public function __construct() {
       global $OSCOM_Customer, $OSCOM_NavigationHistory, $OSCOM_PDO, $order, $OSCOM_Breadcrumb, $payment_modules, $shipping_modules, $order_total_modules, $order_totals, $any_out_of_stock;
 
+// if there is nothing in the customers cart, redirect them to the shopping cart page
+      if ( $_SESSION['cart']->count_contents() < 1 ) {
+        osc_redirect(osc_href_link('cart'));
+      }
+
 // if the customer is not logged on, redirect them to the login page
       if ( !$OSCOM_Customer->isLoggedOn() ) {
         $OSCOM_NavigationHistory->setSnapshot();
 
         osc_redirect(osc_href_link('account', 'login', 'SSL'));
-      }
-
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-      if ( $_SESSION['cart']->count_contents() < 1 ) {
-        osc_redirect(osc_href_link('cart'));
       }
 
 // Stock Check

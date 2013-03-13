@@ -85,7 +85,7 @@ function rowOutEffect(object) {
   </div>
 
 <?php
-    } elseif ($free_shipping == false) {
+    } else {
 ?>
 
   <div class="contentText">
