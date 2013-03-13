@@ -160,7 +160,7 @@
               $new_address_book_id = $OSCOM_PDO->lastInsertId();
 
 // reregister session variables
-              if ( isset($_POST['primary']) && ($_POST['primary'] == 'on') ) {
+              if ( !$OSCOM_Customer->hasDefaultAddress() || (isset($_POST['primary']) && ($_POST['primary'] == 'on')) ) {
                 $OSCOM_Customer->setCountryID($country);
                 $OSCOM_Customer->setZoneID(($zone_id > 0) ? (int)$zone_id : '0');
                 $OSCOM_Customer->setDefaultAddressID($new_address_book_id);

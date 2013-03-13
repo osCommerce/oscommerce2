@@ -192,7 +192,9 @@
 
   <div class="contentText">
     <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
+      <div class="progress">
+        <div class="bar" style="width: 100%;"></div>
+      </div>
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
@@ -217,11 +219,5 @@
   </div>
 
 </div>
-
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 100
-});
-</script>
 
 </form>

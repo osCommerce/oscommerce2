@@ -11,9 +11,11 @@
     protected $_data = array();
 
     public function __construct() {
-      if ( isset($_SESSION['customer']) ) {
-        $this->_data =& $_SESSION['customer'];
+      if ( !isset($_SESSION['customer']) ) {
+        $_SESSION['customer'] = $this->_data;
       }
+
+      $this->_data =& $_SESSION['customer'];
 
       if ( isset($this->_data['id']) && is_numeric($this->_data['id']) && ($this->_data['id'] > 0) ) {
         $this->setIsLoggedOn(true);
@@ -124,8 +126,6 @@
               $this->setDefaultAddressID($Qcustomer->valueInt('customers_default_address_id'));
             }
           }
-
-          $_SESSION['customer'] = $this->_data;
         }
       }
 
@@ -139,7 +139,16 @@
     }
 
     public function setDefaultAddressID($id) {
+      global $OSCOM_PDO;
+
       if ( is_numeric($id) && ($id > 0) ) {
+        if ( !isset($this->_data['default_address_id']) || ($this->_data['default_address_id'] != $id) ) {
+          $Qupdate = $OSCOM_PDO->prepare('update :table_customers set customers_default_address_id = :customers_default_address_id where customers_id = :customers_id');
+          $Qupdate->bindInt(':customers_default_address_id', $id);
+          $Qupdate->bindInt(':customers_id', $this->getID());
+          $Qupdate->execute();
+        }
+
         $this->_data['default_address_id'] = $id;
       }
     }
@@ -177,10 +186,6 @@
     public function reset() {
       $this->_is_logged_on = false;
       $this->_data = array();
-
-      if ( isset($_SESSION['customer']) ) {
-        unset($_SESSION['customer']);
-      }
     }
   }
 ?>

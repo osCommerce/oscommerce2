@@ -18,6 +18,10 @@
 
       $app->setContentFile('address_book.php');
 
+      if ( !$OSCOM_Customer->hasDefaultAddress() && !isset($_GET['new']) ) {
+        $app->setContentFile('address_book_process.php');
+      }
+
       $OSCOM_Breadcrumb->add(NAVBAR_TITLE_ADDRESS_BOOK, osc_href_link('account', 'address_book', 'SSL'));
     }
   }

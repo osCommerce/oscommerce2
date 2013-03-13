@@ -5353,10 +5353,6 @@ body {
 .productListTable tr.alt td {
   background-color: #ecf6fc;
 }
-.fieldKey {
-  font-weight: bold;
-  width: 150px;
-}
 #piGal ul {
   list-style-type: none;
 }
@@ -5591,8 +5587,6 @@ SPAN.errorText {
 }
 /* input requirement */
 .inputRequirement {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
   color: #ff0000;
 }
 /* account link list */

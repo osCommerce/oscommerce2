@@ -8,14 +8,14 @@
 
   class app_checkout_action_shipping_address_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $gender, $entry_state_has_zones, $country;
 
       $error = false;
       $process = false;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
 // process a new shipping address
-        if ( isset($_POST['firstname']) && !empty($_POST['firstname']) && isset($_POST['lastname']) && !empty($_POST['lastname']) && isset($_POST['street_address']) && !empty($_POST['street_address']) ) {
+        if ( !$OSCOM_Customer->hasDefaultAddress() || (isset($_POST['firstname']) && !empty($_POST['firstname']) && isset($_POST['lastname']) && !empty($_POST['lastname']) && isset($_POST['street_address']) && !empty($_POST['street_address'])) ) {
           $process = true;
 
           if (ACCOUNT_GENDER == 'true') $gender = isset($_POST['gender']) ? trim($_POST['gender']) : null;
@@ -137,6 +137,12 @@
             $OSCOM_PDO->perform('address_book', $sql_data_array);
 
             $_SESSION['sendto'] = $OSCOM_PDO->lastInsertId();
+
+            if ( !$OSCOM_Customer->hasDefaultAddress() ) {
+              $OSCOM_Customer->setCountryID($country);
+              $OSCOM_Customer->setZoneID(($zone_id > 0) ? (int)$zone_id : '0');
+              $OSCOM_Customer->setDefaultAddressID($_SESSION['sendto']);
+            }
 
             if ( isset($_SESSION['shipping']) ) {
               unset($_SESSION['shipping']);

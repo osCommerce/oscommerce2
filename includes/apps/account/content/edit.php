@@ -17,17 +17,13 @@
   }
 ?>
 
-<?php echo osc_draw_form('account_edit', osc_href_link('account', 'edit&process', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);"', true); ?>
+<?php echo osc_draw_form('account_edit', osc_href_link('account', 'edit&process', 'SSL'), 'post', 'onsubmit="return check_form(account_edit);" class="form-horizontal"', true); ?>
 
-<div class="contentContainer">
-  <div>
-    <div class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
-
-    <h2><?php echo MY_ACCOUNT_TITLE; ?></h2>
-  </div>
-
-  <div class="contentText">
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
+<fieldset>
+  <legend>
+    <small class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></small>
+    <?php echo MY_ACCOUNT_TITLE; ?>
+  </legend>
 
 <?php
   if (ACCOUNT_GENDER == 'true') {
@@ -39,58 +35,91 @@
     $female = !$male;
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_GENDER; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_radio_field('gender', 'm', $male) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . osc_draw_radio_field('gender', 'f', $female) . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . (osc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">' . ENTRY_GENDER_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <span class="control-label"><?php echo ENTRY_GENDER; ?></span>
+
+    <div class="controls">
+      <label class="radio inline">
+        <?php echo osc_draw_radio_field('gender', 'm', $male); ?>
+        <?php echo MALE; ?>
+      </label>
+
+      <label class="radio inline">
+        <?php echo osc_draw_radio_field('gender', 'f', $female); ?>
+        <?php echo FEMALE; ?>
+      </label>
+
+      <?php echo (osc_not_null(ENTRY_GENDER_TEXT) ? '<small class="inline inputRequirement">' . ENTRY_GENDER_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   }
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('firstname', $account['customers_firstname']) . '&nbsp;' . (osc_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('lastname', $account['customers_lastname']) . '&nbsp;' . (osc_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="firstname"><?php echo ENTRY_FIRST_NAME; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('firstname', $account['customers_firstname']) . (osc_not_null(ENTRY_FIRST_NAME_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="lastname"><?php echo ENTRY_LAST_NAME; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('lastname', $account['customers_lastname']) . (osc_not_null(ENTRY_LAST_NAME_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   if (ACCOUNT_DOB == 'true') {
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('dob', osc_date_short($account['customers_dob']), 'id="dob"') . '&nbsp;' . (osc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '<span class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>': ''); ?><script type="text/javascript">$('#dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="dob"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('dob', osc_date_short($account['customers_dob']), 'id="dob"') . (osc_not_null(ENTRY_DATE_OF_BIRTH_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_DATE_OF_BIRTH_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   }
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('email_address', $account['customers_email_address']) . '&nbsp;' . (osc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '<span class="inputRequirement">' . ENTRY_EMAIL_ADDRESS_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_TELEPHONE_NUMBER; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('telephone', $account['customers_telephone']) . '&nbsp;' . (osc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_FAX_NUMBER; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('fax', $account['customers_fax']) . '&nbsp;' . (osc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '<span class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</span>': ''); ?></td>
-      </tr>
-    </table>
-
-    <br />
-
-    <div class="buttonSet">
-      <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok', null, 'success'); ?></span>
-
-      <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', '', 'SSL')); ?>
+  <div class="control-group">
+    <label class="control-label" for="email_address"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('email_address', $account['customers_email_address']) . (osc_not_null(ENTRY_EMAIL_ADDRESS_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_EMAIL_ADDRESS_TEXT . '</small>': ''); ?>
     </div>
+  </div>
+
+<?php
+  if ( $OSCOM_Customer->hasDefaultAddress() ) {
+?>
+
+  <div class="control-group">
+    <label class="control-label" for="telephone"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('telephone', $account['customers_telephone']) . (osc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="fax"><?php echo ENTRY_FAX_NUMBER; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('fax', $account['customers_fax']) . (osc_not_null(ENTRY_FAX_NUMBER_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_FAX_NUMBER_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+<?php
+  }
+?>
+
+</fieldset>
+
+<div class="control-group">
+  <div class="controls">
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?>
   </div>
 </div>
 

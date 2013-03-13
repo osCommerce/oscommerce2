@@ -8,30 +8,14 @@
 
   class app_account_action_create_process {
     public static function execute(app $app) {
-      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO, $process, $entry_state_has_zones, $country;
+      global $OSCOM_Customer, $OSCOM_MessageStack, $OSCOM_PDO;
 
       if ( isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
-        $process = true;
-
         if (ACCOUNT_GENDER == 'true') $gender = isset($_POST['gender']) ? trim($_POST['gender']) : null;
         $firstname = isset($_POST['firstname']) ? trim($_POST['firstname']) : null;
         $lastname = isset($_POST['lastname']) ? trim($_POST['lastname']) : null;
         if (ACCOUNT_DOB == 'true') $dob = isset($_POST['dob']) ? trim($_POST['dob']) : null;
         $email_address = isset($_POST['email_address']) ? trim($_POST['email_address']) : null;
-        if (ACCOUNT_COMPANY == 'true') $company = isset($_POST['company']) ? trim($_POST['company']) : null;
-        $street_address = isset($_POST['street_address']) ? trim($_POST['street_address']) : null;
-        if (ACCOUNT_SUBURB == 'true') $suburb = isset($_POST['suburb']) ? trim($_POST['suburb']) : null;
-        $postcode = isset($_POST['postcode']) ? trim($_POST['postcode']) : null;
-        $city = isset($_POST['city']) ? trim($_POST['city']) : null;
-
-        if ( ACCOUNT_STATE == 'true' ) {
-          $state = isset($_POST['state']) ? trim($_POST['state']) : null;
-          $zone_id = isset($_POST['zone_id']) ? trim($_POST['zone_id']) : null;
-        }
-
-        $country = isset($_POST['country']) ? trim($_POST['country']) : null;
-        $telephone = isset($_POST['telephone']) ? trim($_POST['telephone']) : null;
-        $fax = isset($_POST['fax']) ? trim($_POST['fax']) : null;
         $newsletter = isset($_POST['newsletter']) ? trim($_POST['newsletter']) : null;
         $password = isset($_POST['password']) ? trim($_POST['password']) : null;
         $confirmation = isset($_POST['confirmation']) ? trim($_POST['confirmation']) : null;
@@ -86,70 +70,6 @@
           }
         }
 
-        if ( strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH ) {
-          $error = true;
-
-          $OSCOM_MessageStack->addError('create_account', ENTRY_STREET_ADDRESS_ERROR);
-        }
-
-        if ( strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH ) {
-          $error = true;
-
-          $OSCOM_MessageStack->addError('create_account', ENTRY_POST_CODE_ERROR);
-        }
-
-        if ( strlen($city) < ENTRY_CITY_MIN_LENGTH ) {
-          $error = true;
-
-          $OSCOM_MessageStack->addError('create_account', ENTRY_CITY_ERROR);
-        }
-
-        if ( !is_numeric($country) ) {
-          $error = true;
-
-          $OSCOM_MessageStack->addError('create_account', ENTRY_COUNTRY_ERROR);
-        }
-
-        if ( ACCOUNT_STATE == 'true' ) {
-          $zone_id = 0;
-
-          $Qcheck = $OSCOM_PDO->prepare('select zone_country_id from :table_zones where zone_country_id = :zone_country_id limit 1');
-          $Qcheck->bindInt(':zone_country_id', $country);
-          $Qcheck->execute();
-
-          $entry_state_has_zones = ($Qcheck->fetch() !== false);
-
-          if ( $entry_state_has_zones === true ) {
-            $Qzone = $OSCOM_PDO->prepare('select distinct zone_id from :table_zones where zone_country_id = :zone_country_id and (zone_name = :zone_name or zone_code = :zone_code)');
-            $Qzone->bindInt(':zone_country_id', $country);
-            $Qzone->bindValue(':zone_name', $state);
-            $Qzone->bindValue(':zone_code', $state);
-            $Qzone->execute();
-
-            $result = $Qzone->fetchAll();
-
-            if ( count($result) === 1 ) {
-              $zone_id = (int)$result[0]['zone_id'];
-            } else {
-              $error = true;
-
-              $OSCOM_MessageStack->addError('create_account', ENTRY_STATE_ERROR_SELECT);
-            }
-          } else {
-            if ( strlen($state) < ENTRY_STATE_MIN_LENGTH ) {
-              $error = true;
-
-              $OSCOM_MessageStack->addError('create_account', ENTRY_STATE_ERROR);
-            }
-          }
-        }
-
-        if ( strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH ) {
-          $error = true;
-
-          $OSCOM_MessageStack->addError('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
-        }
-
         if ( strlen($password) < ENTRY_PASSWORD_MIN_LENGTH ) {
           $error = true;
 
@@ -164,8 +84,6 @@
           $sql_data_array = array('customers_firstname' => $firstname,
                                   'customers_lastname' => $lastname,
                                   'customers_email_address' => $email_address,
-                                  'customers_telephone' => $telephone,
-                                  'customers_fax' => $fax,
                                   'customers_newsletter' => $newsletter,
                                   'customers_password' => osc_encrypt_password($password));
 
@@ -175,34 +93,6 @@
           $OSCOM_PDO->perform('customers', $sql_data_array);
 
           $customer_id = $OSCOM_PDO->lastInsertId();
-
-          $sql_data_array = array('customers_id' => $customer_id,
-                                  'entry_firstname' => $firstname,
-                                  'entry_lastname' => $lastname,
-                                  'entry_street_address' => $street_address,
-                                  'entry_postcode' => $postcode,
-                                  'entry_city' => $city,
-                                  'entry_country_id' => $country);
-
-          if (ACCOUNT_GENDER == 'true') $sql_data_array['entry_gender'] = $gender;
-          if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $company;
-          if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $suburb;
-
-          if ( ACCOUNT_STATE == 'true' ) {
-            if ( $zone_id > 0 ) {
-              $sql_data_array['entry_zone_id'] = $zone_id;
-              $sql_data_array['entry_state'] = '';
-            } else {
-              $sql_data_array['entry_zone_id'] = '0';
-              $sql_data_array['entry_state'] = $state;
-            }
-          }
-
-          $OSCOM_PDO->perform('address_book', $sql_data_array);
-
-          $address_id = $OSCOM_PDO->lastInsertId();
-
-          $OSCOM_PDO->perform('customers', array('customers_default_address_id' => (int)$address_id), array('customers_id' => (int)$customer_id));
 
           $OSCOM_PDO->perform('customers_info', array('customers_info_id' => (int)$customer_id,
                                                       'customers_info_number_of_logons' => '0',

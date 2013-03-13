@@ -9,91 +9,120 @@
   if (!isset($process)) $process = false;
 ?>
 
-  <div>
-    <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo ADDRESS_BOOK_ENTRY; ?></h2>
-  </div>
-
-  <div class="contentText">
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+<fieldset>
+  <legend>
+    <small class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></small>
+    <?php echo ADDRESS_BOOK_ENTRY; ?>
+  </legend>
 
 <?php
   if (ACCOUNT_GENDER == 'true') {
-    $male = $female = false;
+    $male = ($OSCOM_Customer->getGender() == 'm') ? true : false;
+
     if (isset($gender)) {
       $male = ($gender == 'm') ? true : false;
-      $female = !$male;
     } elseif (isset($entry['entry_gender'])) {
       $male = ($entry['entry_gender'] == 'm') ? true : false;
-      $female = !$male;
     }
+
+    $female = !$male;
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_GENDER; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_radio_field('gender', 'm', $male) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . osc_draw_radio_field('gender', 'f', $female) . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . (osc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">' . ENTRY_GENDER_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <span class="control-label"><?php echo ENTRY_GENDER; ?></span>
+
+    <div class="controls">
+      <label class="radio inline">
+        <?php echo osc_draw_radio_field('gender', 'm', $male); ?>
+        <?php echo MALE; ?>
+      </label>
+
+      <label class="radio inline">
+        <?php echo osc_draw_radio_field('gender', 'f', $female); ?>
+        <?php echo FEMALE; ?>
+      </label>
+
+      <?php echo (osc_not_null(ENTRY_GENDER_TEXT) ? '<small class="inline inputRequirement">' . ENTRY_GENDER_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   }
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('firstname', (isset($entry['entry_firstname']) ? $entry['entry_firstname'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('lastname', (isset($entry['entry_lastname']) ? $entry['entry_lastname'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="firstname"><?php echo ENTRY_FIRST_NAME; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('firstname', (isset($entry['entry_firstname']) ? $entry['entry_firstname'] : $OSCOM_Customer->getFirstName())) . (osc_not_null(ENTRY_FIRST_NAME_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="lastname"><?php echo ENTRY_LAST_NAME; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('lastname', (isset($entry['entry_lastname']) ? $entry['entry_lastname'] : $OSCOM_Customer->getLastName())) . (osc_not_null(ENTRY_LAST_NAME_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   if (ACCOUNT_COMPANY == 'true') {
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_COMPANY; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('company', (isset($entry['entry_company']) ? $entry['entry_company'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_COMPANY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="company"><?php echo ENTRY_COMPANY; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('company', (isset($entry['entry_company']) ? $entry['entry_company'] : '')) . (osc_not_null(ENTRY_COMPANY_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   }
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_STREET_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('street_address', (isset($entry['entry_street_address']) ? $entry['entry_street_address'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_STREET_ADDRESS_TEXT) ? '<span class="inputRequirement">' . ENTRY_STREET_ADDRESS_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="street_address"><?php echo ENTRY_STREET_ADDRESS; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('street_address', (isset($entry['entry_street_address']) ? $entry['entry_street_address'] : '')) . (osc_not_null(ENTRY_STREET_ADDRESS_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_STREET_ADDRESS_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   if (ACCOUNT_SUBURB == 'true') {
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_SUBURB; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('suburb', (isset($entry['entry_suburb']) ? $entry['entry_suburb'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_SUBURB_TEXT) ? '<span class="inputRequirement">' . ENTRY_SUBURB_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="suburb"><?php echo ENTRY_SUBURB; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('suburb', (isset($entry['entry_suburb']) ? $entry['entry_suburb'] : '')) . (osc_not_null(ENTRY_SUBURB_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_SUBURB_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   }
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_POST_CODE; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('postcode', (isset($entry['entry_postcode']) ? $entry['entry_postcode'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_CITY; ?></td>
-        <td class="fieldValue"><?php echo osc_draw_input_field('city', (isset($entry['entry_city']) ? $entry['entry_city'] : '')) . '&nbsp;' . (osc_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">' . ENTRY_CITY_TEXT . '</span>': ''); ?></td>
-      </tr>
+  <div class="control-group">
+    <label class="control-label" for="postcode"><?php echo ENTRY_POST_CODE; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('postcode', (isset($entry['entry_postcode']) ? $entry['entry_postcode'] : '')) . (osc_not_null(ENTRY_POST_CODE_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <label class="control-label" for="city"><?php echo ENTRY_CITY; ?></label>
+    <div class="controls">
+      <?php echo osc_draw_input_field('city', (isset($entry['entry_city']) ? $entry['entry_city'] : '')) . (osc_not_null(ENTRY_CITY_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_CITY_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
 
 <?php
   if (ACCOUNT_STATE == 'true') {
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_STATE; ?></td>
-        <td class="fieldValue">
+  <div class="control-group">
+    <label class="control-label" for="state"><?php echo ENTRY_STATE; ?></label>
+    <div class="controls">
+
 <?php
     if ($process == true) {
       if ($entry_state_has_zones == true) {
@@ -110,30 +139,38 @@
       echo osc_draw_input_field('state', (isset($entry['entry_country_id']) ? osc_get_zone_name($entry['entry_country_id'], $entry['entry_zone_id'], $entry['entry_state']) : ''));
     }
 
-    if (osc_not_null(ENTRY_STATE_TEXT)) echo '&nbsp;<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>';
-?>
-        </td>
-      </tr>
-
-<?php
-  }
+    if (osc_not_null(ENTRY_STATE_TEXT)) echo '&nbsp;<small class="inputRequirement">' . ENTRY_STATE_TEXT . '</small>';
 ?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
-        <td class="fieldValue"><?php echo osc_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : (!isset($_POST['country']) ? STORE_COUNTRY : null))) . '&nbsp;' . (osc_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
-      </tr>
-
-<?php
-  if ( (isset($_GET['id']) && ($OSCOM_Customer->getDefaultAddressID() != $_GET['id'])) || !isset($_GET['id']) ) {
-?>
-
-      <tr>
-        <td class="fieldValue" colspan="2"><?php echo osc_draw_checkbox_field('primary', 'on', false, 'id="primary"') . ' ' . SET_AS_PRIMARY; ?></td>
-      </tr>
-
-<?php
-  }
-?>
-    </table>
+    </div>
   </div>
+
+<?php
+  }
+?>
+
+  <div class="control-group">
+    <label class="control-label" for="country"><?php echo ENTRY_COUNTRY; ?></label>
+    <div class="controls">
+      <?php echo osc_get_country_list('country', (isset($entry['entry_country_id']) ? $entry['entry_country_id'] : (!isset($_POST['country']) ? STORE_COUNTRY : null))) . (osc_not_null(ENTRY_COUNTRY_TEXT) ? '&nbsp;<small class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</small>': ''); ?>
+    </div>
+  </div>
+
+<?php
+  if ( (isset($_GET['id']) && ($OSCOM_Customer->getDefaultAddressID() != $_GET['id'])) || ($OSCOM_Customer->hasDefaultAddress() && !isset($_GET['id'])) ) {
+?>
+
+  <div class="control-group">
+    <div class="controls">
+      <label class="checkbox inline">
+        <?php echo osc_draw_checkbox_field('primary', 'on', false, 'id="primary"'); ?>
+        <?php echo SET_AS_PRIMARY; ?>
+      </label>
+    </div>
+  </div>
+
+<?php
+  }
+?>
+
+</fieldset>

@@ -17,43 +17,16 @@
   }
 ?>
 
-<?php echo osc_draw_form('addressbook', osc_href_link('account', 'address_book&process' . (isset($_GET['id']) ? '&id=' . $_GET['id'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"', true); ?>
-
-<div class="contentContainer">
+<?php echo osc_draw_form('addressbook', osc_href_link('account', 'address_book&process' . (isset($_GET['id']) ? '&id=' . $_GET['id'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);" class="form-horizontal"', true); ?>
 
 <?php
   require(DIR_FS_CATALOG . DIR_WS_MODULES . 'address_book_details.php');
 ?>
 
-<?php
-  if ( isset($_GET['id']) ) {
-?>
-
-  <div>
-    <span style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_UPDATE, 'refresh', null, 'success'); ?></span>
-
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', osc_href_link('account', 'address_book', 'SSL')); ?>
+<div class="control-group">
+  <div class="controls">
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?>
   </div>
-
-<?php
-  } else {
-    if ( $OSCOM_NavigationHistory->hasSnapshot() ) {
-      $back_link = $OSCOM_NavigationHistory->getSnapshotURL();
-    } else {
-      $back_link = osc_href_link('account', 'address_book', 'SSL');
-    }
-?>
-
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok', null, 'success'); ?></span>
-
-    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'arrow-left', $back_link); ?>
-  </div>
-
-<?php
-  }
-?>
-
 </div>
 
 </form>

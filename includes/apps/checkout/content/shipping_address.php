@@ -64,12 +64,13 @@ function check_form_optional(form_name) {
   }
 ?>
 
-<?php echo osc_draw_form('checkout_address', osc_href_link('checkout', 'shipping&address&process', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
+<?php echo osc_draw_form('checkout_address', osc_href_link('checkout', 'shipping&address&process', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);" class="form-horizontal"', true); ?>
 
 <div class="contentContainer">
 
 <?php
-  if ($process === false) {
+  if ( $OSCOM_Customer->hasDefaultAddress() ) {
+    if ($process === false) {
 ?>
 
   <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
@@ -89,7 +90,7 @@ function check_form_optional(form_name) {
   <div style="clear: both;"></div>
 
 <?php
-    if ($addresses_count > 1) {
+      if ($addresses_count > 1) {
 ?>
 
   <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
@@ -106,17 +107,17 @@ function check_form_optional(form_name) {
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
 
 <?php
-      $radio_buttons = 0;
+        $radio_buttons = 0;
 
-      $addresses_query = osc_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
-      while ($addresses = osc_db_fetch_array($addresses_query)) {
-        $format_id = osc_get_address_format_id($addresses['country_id']);
+        $addresses_query = osc_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$OSCOM_Customer->getID() . "'");
+        while ($addresses = osc_db_fetch_array($addresses_query)) {
+          $format_id = osc_get_address_format_id($addresses['country_id']);
 
-       if ($addresses['address_book_id'] == $_SESSION['sendto']) {
-          echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
-        } else {
-          echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
-        }
+         if ($addresses['address_book_id'] == $_SESSION['sendto']) {
+            echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+          } else {
+            echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+          }
 ?>
 
         <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
@@ -127,14 +128,15 @@ function check_form_optional(form_name) {
       </tr>
 
 <?php
-        $radio_buttons++;
-      }
+          $radio_buttons++;
+        }
 ?>
 
     </table>
   </div>
 
 <?php
+      }
     }
   }
 
@@ -155,7 +157,9 @@ function check_form_optional(form_name) {
 
   <div class="contentText">
     <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
+      <div class="progress">
+        <div class="bar" style="width: 33%;"></div>
+      </div>
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
@@ -168,12 +172,6 @@ function check_form_optional(form_name) {
 
     <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></div>
   </div>
-
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 33
-});
-</script>
 
 <?php
   if ($process === true) {

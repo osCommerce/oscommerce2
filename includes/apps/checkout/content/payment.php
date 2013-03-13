@@ -179,7 +179,9 @@ function rowOutEffect(object) {
 
   <div class="contentText">
     <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
+      <div class="progress">
+        <div class="bar" style="width: 66%;"></div>
+      </div>
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
@@ -193,11 +195,5 @@ function rowOutEffect(object) {
     <div style="float: right;"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'ok-sign', null, 'success'); ?></div>
   </div>
 </div>
-
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 66
-});
-</script>
 
 </form>

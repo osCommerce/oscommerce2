@@ -72,18 +72,23 @@
           $OSCOM_MessageStack->addError('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
         }
 
-        if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
-          $error = true;
+        if ( $OSCOM_Customer->hasDefaultAddress() ) {
+          if (strlen($telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+            $error = true;
 
-          $OSCOM_MessageStack->addError('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
+            $OSCOM_MessageStack->addError('account_edit', ENTRY_TELEPHONE_NUMBER_ERROR);
+          }
         }
 
         if ($error == false) {
           $sql_data_array = array('customers_firstname' => $firstname,
                                   'customers_lastname' => $lastname,
-                                  'customers_email_address' => $email_address,
-                                  'customers_telephone' => $telephone,
-                                  'customers_fax' => $fax);
+                                  'customers_email_address' => $email_address);
+
+          if ( $OSCOM_Customer->hasDefaultAddress() ) {
+            $sql_data_array['customers_telephone'] = $telephone;
+            $sql_data_array['customers_fax'] = $fax;
+          }
 
           if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
           if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = osc_date_raw($dob);

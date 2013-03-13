@@ -334,7 +334,7 @@
     static $tax_rates = array();
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!$OSCOM_Customer->isLoggedOn()) {
+      if ( !$OSCOM_Customer->isLoggedOn() || !$OSCOM_Customer->hasDefaultAddress() ) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
