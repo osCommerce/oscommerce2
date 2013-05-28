@@ -5,15 +5,15 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 
-  if (isset($HTTP_POST_VARS['M_sid']) && !empty($HTTP_POST_VARS['M_sid'])) {
-    chdir('../../../../');
-    require ('includes/application_top.php');
+  chdir('../../../../');
+  require ('includes/application_top.php');
 
+  if (isset($HTTP_POST_VARS['M_sid']) && !empty($HTTP_POST_VARS['M_sid'])) {
     if ($HTTP_POST_VARS['transStatus'] == 'Y') {
       $pass = false;
 

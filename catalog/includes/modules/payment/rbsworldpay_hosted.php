@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,7 @@
     function rbsworldpay_hosted() {
       global $order;
 
-      $this->signature = 'rbs|worldpay_hosted|1.0|2.2';
+      $this->signature = 'rbs|worldpay_hosted|1.1|2.2';
 
       $this->code = 'rbsworldpay_hosted';
       $this->title = MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_TITLE;
@@ -33,9 +33,9 @@
       if (is_object($order)) $this->update_status();
 
       if (defined('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE') && (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True')) {
-        $this->form_action_url = 'https://select-test.wp3.rbsworldpay.com/wcc/purchase';
+        $this->form_action_url = 'https://secure-test.worldpay.com/wcc/purchase';
       } else {
-        $this->form_action_url = 'https://select.wp3.rbsworldpay.com/wcc/purchase';
+        $this->form_action_url = 'https://secure.worldpay.com/wcc/purchase';
       }
     }
 
