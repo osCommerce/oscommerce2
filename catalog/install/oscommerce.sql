@@ -1230,7 +1230,7 @@ INSERT INTO products_attributes_download VALUES (26, 'unreal.zip', 7, 3);
 INSERT INTO products_images VALUES (1,28,'samsung/galaxy_tab_1.jpg',null,1);
 INSERT INTO products_images VALUES (2,28,'samsung/galaxy_tab_2.jpg',null,2);
 INSERT INTO products_images VALUES (3,28,'samsung/galaxy_tab_3.jpg',null,3);
-INSERT INTO products_images VALUES (4,28,'samsung/galaxy_tab_4.jpg','<object type="application/x-shockwave-flash" width="640" height="385" data="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1"><param name="movie" value="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="wmode" value="transparent" /></object>',4);
+INSERT INTO products_images VALUES (4,28,'samsung/galaxy_tab_4.jpg','<iframe width="560" height="315" src="http://www.youtube.com/embed/tAbsmHMAhrQ?autoplay=1" frameborder="0" allowfullscreen></iframe>',4);
 
 INSERT INTO products_options VALUES (1,1,'Color');
 INSERT INTO products_options VALUES (2,1,'Size');
