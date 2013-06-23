@@ -41,9 +41,11 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   }
 ?>
 
-<script type="text/javascript" src="ext/jquery/bxGallery/jquery.bxGallery.1.1.min.js"></script>
-<link rel="stylesheet" type="text/css" href="ext/jquery/fancybox/jquery.fancybox-1.3.4.css" />
-<script type="text/javascript" src="ext/jquery/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<script type="text/javascript" src="ext/photoset-grid/jquery.photoset-grid.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="ext/colorbox/colorbox.css" />
+<script type="text/javascript" src="ext/colorbox/jquery.colorbox-min.js"></script>
+
 <link rel="stylesheet" type="text/css" href="ext/960gs/<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? 'rtl_' : ''); ?>960_24_col.css" />
 <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
