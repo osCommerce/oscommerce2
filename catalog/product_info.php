@@ -86,7 +86,7 @@
         $photoset_layout = '1' . (tep_db_num_rows($pi_query) > 1 ? tep_db_num_rows($pi_query) - 1 : '');
 ?>
 
-    <div id="piGal" data-layout="1<?php echo $photoset_layout; ?>">
+    <div id="piGal" data-layout="<?php echo $photoset_layout; ?>">
 
 <?php
         $pi_counter = 0;
@@ -105,17 +105,10 @@
 
     </div>
 
-    <div style="display: none;">
-
 <?php
-        foreach ( $pi_html as $pi ) {
-          echo $pi;
+        if ( !empty($pi_html) ) {
+          echo '    <div style="display: none;">' . implode('', $pi_html) . '</div>';
         }
-?>
-
-    </div>
-
-<?php
       } else {
 ?>
 
@@ -130,11 +123,15 @@
 
 <script type="text/javascript">
 $(function() {
+  $('#piGal').css({ 'visibility': 'hidden'});
+
   $('#piGal').photosetGrid({
     width: '250px',
     highresLinks: true,
     rel: 'pigallery',
     onComplete: function() {
+      $('#piGal').css({ 'visibility': 'visible'});
+
       $('#piGal a').colorbox({
         maxHeight: '90%',
         maxWidth: '90%',
