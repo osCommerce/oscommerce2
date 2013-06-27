@@ -80,13 +80,15 @@
 
 <?php
     if (tep_not_null($product_info['products_image'])) {
+      $photoset_layout = '1';
+
       $pi_query = tep_db_query("select image, htmlcontent from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
 
       if (tep_db_num_rows($pi_query) > 0) {
         $photoset_layout = '1' . (tep_db_num_rows($pi_query) > 1 ? tep_db_num_rows($pi_query) - 1 : '');
 ?>
 
-    <div id="piGal" data-layout="<?php echo $photoset_layout; ?>">
+    <div id="piGal">
 
 <?php
         $pi_counter = 0;
@@ -112,7 +114,7 @@
       } else {
 ?>
 
-    <div id="piGal" data-layout="1">
+    <div id="piGal">
       <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'itemprop="image"'); ?>
     </div>
 
@@ -123,9 +125,12 @@
 
 <script type="text/javascript">
 $(function() {
-  $('#piGal').css({ 'visibility': 'hidden'});
+  $('#piGal').css({
+    'visibility': 'hidden'
+  });
 
   $('#piGal').photosetGrid({
+    layout: '<?php echo $photoset_layout; ?>',
     width: '250px',
     highresLinks: true,
     rel: 'pigallery',

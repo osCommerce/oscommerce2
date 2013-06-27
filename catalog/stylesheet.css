@@ -120,6 +120,12 @@ table, p {
 
 #piGal {
   float: right;
+  width: 250px;
+}
+
+#piGal img {
+  max-width: 250px;
+  height: auto;
 }
 
 .buttonSet {
