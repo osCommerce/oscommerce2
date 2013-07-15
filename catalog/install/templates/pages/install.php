@@ -5,14 +5,13 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 ?>
 
-<script type="text/javascript" src="ext/xmlhttp/xmlhttp.js"></script>
-<script type="text/javascript">
+<script>
 <!--
 
   var dbServer;
@@ -21,45 +20,7 @@
   var dbName;
 
   var formSubmited = false;
-
-  function handleHttpResponse_DoImport() {
-    if (http.readyState == 4) {
-      if (http.status == 200) {
-        var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(http.responseText);
-        result.shift();
-
-        if (result[0] == '1') {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/success.gif" align="right" hspace="5" vspace="5" border="0" />Database imported successfully.</p>';
-
-          setTimeout("document.getElementById('installForm').submit();", 2000);
-        } else {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem importing the database. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
-        }
-      }
-
-      formSubmited = false;
-    }
-  }
-
-  function handleHttpResponse() {
-    if (http.readyState == 4) {
-      if (http.status == 200) {
-        var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(http.responseText);
-        result.shift();
-
-        if (result[0] == '1') {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" border="0" />The database structure is now being imported. Please be patient during this procedure.</p>';
-
-          loadXMLDoc("rpc.php?action=dbImport&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName), handleHttpResponse_DoImport);
-        } else {
-          document.getElementById('mBoxContents').innerHTML = '<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" border="0" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result[1]);
-          formSubmited = false;
-        }
-      } else {
-        formSubmited = false;
-      }
-    }
-  }
+  var formSuccess = false;
 
   function prepareDB() {
     if (formSubmited == true) {
@@ -68,17 +29,65 @@
 
     formSubmited = true;
 
-    showDiv(document.getElementById('mBox'));
+    $('#mBox').show();
 
-    document.getElementById('mBoxContents').innerHTML = '<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" border="0" />Testing database connection..</p>';
+    $('#mBoxContents').html('<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" />Testing database connection..</p>');
 
-    dbServer = document.getElementById("DB_SERVER").value;
-    dbUsername = document.getElementById("DB_SERVER_USERNAME").value;
-    dbPassword = document.getElementById("DB_SERVER_PASSWORD").value;
-    dbName = document.getElementById("DB_DATABASE").value;
+    dbServer = $('#DB_SERVER').val();
+    dbUsername = $('#DB_SERVER_USERNAME').val();
+    dbPassword = $('#DB_SERVER_PASSWORD').val();
+    dbName = $('#DB_DATABASE').val();
 
-    loadXMLDoc("rpc.php?action=dbCheck&server=" + urlEncode(dbServer) + "&username=" + urlEncode(dbUsername) + "&password=" + urlEncode(dbPassword) + "&name=" + urlEncode(dbName), handleHttpResponse);
+    $.get('rpc.php?action=dbCheck&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password=' + encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response) {
+      var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response);
+      result.shift();
+
+      if (result[0] == '1') {
+        $('#mBoxContents').html('<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" />The database structure is now being imported. Please be patient during this procedure.</p>');
+
+        $.get('rpc.php?action=dbImport&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password='+ encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response2) {
+          var result2 = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response2);
+          result2.shift();
+
+          if (result2[0] == '1') {
+            $('#mBoxContents').html('<p><img src="images/success.gif" align="right" hspace="5" vspace="5" />Database imported successfully.</p>');
+
+            formSuccess = true;
+
+            setTimeout(function() {
+              $('#installForm').submit();
+            }, 2000);
+          } else {
+            var result2_error = result2[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+            $('#mBoxContents').html('<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" />There was a problem importing the database. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result2_error));
+
+            formSubmited = false;
+          }
+        }).fail(function() {
+          formSubmited = false;
+        });
+      } else {
+        var result_error = result[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+        $('#mBoxContents').html('<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result_error));
+
+        formSubmited = false;
+      }
+    }).fail(function() {
+      formSubmited = false;
+    });
   }
+
+  $(function() {
+    $('#installForm').submit(function(e) {
+      if ( formSuccess == false ) {
+        e.preventDefault();
+
+        prepareDB();
+      }
+    });
+  });
 
 //-->
 </script>
@@ -107,16 +116,17 @@
       <p>The database server stores the content of the online store such as product information, customer information, and the orders that have been made.</p>
       <p>Please consult your server administrator if your database server parameters are not yet known.</p>
     </div>
-  </div>
 
-  <div id="mBox">
-    <div id="mBoxContents"></div>
   </div>
 
   <div class="contentPane">
+    <div id="mBox">
+      <div id="mBoxContents"></div>
+    </div>
+
     <h2>Database Server</h2>
 
-    <form name="install" id="installForm" action="install.php?step=2" method="post" onsubmit="prepareDB(); return false;">
+    <form name="install" id="installForm" action="install.php?step=2" method="post">
 
     <table border="0" width="99%" cellspacing="0" cellpadding="5" class="inputForm">
       <tr>
@@ -137,7 +147,7 @@
       </tr>
     </table>
 
-    <p align="right"><input type="image" src="images/button_continue.gif" border="0" alt="Continue" id="inputButton" />&nbsp;&nbsp;<a href="index.php"><img src="images/button_cancel.gif" border="0" alt="Cancel" /></a></p>
+    <p><?php echo osc_draw_button('Continue', 'triangle-1-e', null, 'primary'); ?></p>
 
     </form>
   </div>

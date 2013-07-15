@@ -4,27 +4,25 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 
 body {
-  margin: 20px;
+  margin: 0 20px 20px 20px;
   background: #FFFFFF;
   font-family: Verdana, Arial, sans-serif;
-  font-size: 11px;
+  font-size: 12px;
   color: #000000;
   line-height: 1.5;
 }
 
 #pageHeader {
-  background: #f7f7f5;
-  border: 1px #b3b6b0 solid;
 }
 
 #pageContent {
-  margin-top: 15px;
+  margin-top: 10px;
 }
 
 #pageFooter {
@@ -47,6 +45,7 @@ body {
   width: 250px;
   background: #e7ffe7;
   border: 1px #6da96d solid;
+  margin-bottom: 15px;
 }
 
 .infoPaneContents {
@@ -93,15 +92,11 @@ h3 {
 }
 
 #mBox {
-  float: left;
-  clear: both;
-  margin-top: 10px;
-  visibility: hidden;
+  margin-bottom: 10px;
   display: none;
 }
 
 #mBoxContents {
-  width: 230px;
   background: #ffedd1;
   border: 1px #f0a42a solid;
   padding: 10px;
@@ -131,7 +126,8 @@ h3 {
   width: 60%;
 }
 
-input.text { font: 8pt verdana, arial, helvetica; color: #000000; width: 95%; }
+input.text { color: #000000; width: 95%; }
 
-A:link, A:visited { color: #0029A3; text-decoration: none; }
-A:hover { color: #5D59ac; text-decoration: underline; }
+img {
+  border: 0;
+}

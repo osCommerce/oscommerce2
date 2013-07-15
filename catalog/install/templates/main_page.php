@@ -5,26 +5,26 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 
 <html>
 
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>osCommerce, Open Source E-Commerce Solutions</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="icon" type="image/png" href="images/oscommerce_icon.png" />
 
-<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" type="text/css" href="../ext/jquery/ui/redmond/jquery-ui-1.10.3.min.css" />
+<script src="../ext/jquery/jquery-1.10.2.min.js"></script>
+<script src="../ext/jquery/ui/jquery-ui-1.10.3.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="templates/main_page/stylesheet.css">
-
-<link rel="stylesheet" type="text/css" href="ext/niftycorners/niftyCorners.css">
-<script type="text/javascript" src="ext/niftycorners/nifty.js"></script>
-
+<link rel="stylesheet" type="text/css" href="templates/main_page/stylesheet.css" />
 </head>
 
 <body>
@@ -33,25 +33,16 @@
   <div>
     <div style="float: right; padding-top: 40px; padding-right: 15px; color: #000000; font-weight: bold;"><a href="http://www.oscommerce.com" target="_blank">osCommerce Website</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.com/support" target="_blank">Support</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.info" target="_blank">Documentation</a></div>
 
-    <a href="index.php"><img src="images/oscommerce.png" border="0" title="osCommerce Online Merchant" style="margin: 5px;" /></a>
+    <a href="index.php"><img src="images/oscommerce.png" title="osCommerce Online Merchant" style="margin: 10px 10px 0 10px;" /></a>
   </div>
 </div>
-
-<script type="text/javascript">
-<!--
-  if (NiftyCheck()) {
-    Rounded("div#pageHeader", "all", "#FFFFFF", "#f7f7f5", "smooth border #b3b6b0");
-  }
-//-->
-</script>
 
 <div id="pageContent">
 <?php require('templates/pages/' . $page_contents); ?>
 </div>
 
 <div id="pageFooter">
-  <p>Copyright &copy; 2000-2010 <a href="http://www.oscommerce.com" target="_blank">osCommerce</a> (<a href="http://www.oscommerce.com/about/copyright" target="_blank">Copyright Policy</a>, <a href="http://www.oscommerce.com/about/trademark" target="_blank">Trademark Policy</a>)<br />osCommerce provides no warranty and is redistributable under the <a href="http://www.fsf.org/licenses/gpl.txt" target="_blank">GNU General Public License</a></p>
-  <p>osCommerce is a registered trademark of Harald Ponce de Leon</p>
+  <p>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>. All rights reserved. osCommerce is a registered trademark of Harald Ponce de Leon.</p>
 </div>
 
 </body>
