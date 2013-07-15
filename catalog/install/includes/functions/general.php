@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -35,37 +35,17 @@
     return str_replace('\\', '/', realpath($directory));
   }
 
-  function osc_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!isset($seeded)) {
-      mt_srand((double)microtime()*1000000);
-      $seeded = true;
+////
+// This function encrypts a phpass password from a plaintext
+// password.
+  function osc_encrypt_password($plain) {
+    if (!class_exists('PasswordHash')) {
+      include('../includes/classes/passwordhash.php');
     }
 
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
+    $hasher = new PasswordHash(10, true);
 
-  function osc_encrypt_string($plain) {
-    $password = '';
-
-    for ($i=0; $i<10; $i++) {
-      $password .= osc_rand();
-    }
-
-    $salt = substr(md5($password), 0, 2);
-
-    $password = md5($salt . $plain) . ':' . $salt;
-
-    return $password;
+    return $hasher->HashPassword($plain);
   }
 
 ////

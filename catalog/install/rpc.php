@@ -30,9 +30,7 @@
         osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
 
         if ($db_error == false) {
-          if (!@osc_db_select_db($db['DB_DATABASE'])) {
-            $db_error = mysqli_error();
-          }
+          osc_db_select_db($db['DB_DATABASE']);
         }
 
         if ($db_error != false) {
