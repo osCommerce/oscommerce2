@@ -100,7 +100,9 @@
           $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
           $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
 
-          tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+          if ( !empty($username) ) {
+            tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+          }
         }
 
         tep_redirect(tep_href_link(FILENAME_LOGIN));
