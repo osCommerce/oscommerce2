@@ -45,7 +45,7 @@
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
       if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_CATALOG_SERVER . DIR_WS_CATALOG;
+        $link = HTTPS_CATALOG_SERVER . (defined('DIR_WS_HTTPS_CATALOG') ? DIR_WS_HTTPS_CATALOG : DIR_WS_CATALOG);
       } else {
         $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
       }

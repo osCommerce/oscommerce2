@@ -21,6 +21,7 @@
   define('DIR_WS_ADMIN', '/admin/');
   define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT . DIR_WS_ADMIN);
   define('DIR_WS_CATALOG', '/catalog/');
+  define('DIR_WS_HTTPS_CATALOG', '/catalog/');
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT . DIR_WS_CATALOG);
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
