@@ -218,8 +218,23 @@
 ?>
 
     <p>The webserver environment has been verified to proceed with a successful installation and configuration of your online store.</p>
-    <p>Please continue to start the installation procedure.</p>
-    <p><?php echo osc_draw_button('Start', 'triangle-1-e', 'install.php', 'primary'); ?></p>
+
+    <div id="jsOn" style="display: none;">
+      <p>Please continue to start the installation procedure.</p>
+      <p><?php echo osc_draw_button('Start', 'triangle-1-e', 'install.php', 'primary'); ?></p>
+    </div>
+
+    <div id="jsOff">
+      <p>Please enable Javascript in your browser to be able to start the installation procedure.</p>
+      <p><?php echo osc_draw_button('Retry', 'arrowrefresh-1-e', 'index.php', 'primary'); ?></p>
+    </div>
+
+<script>
+$(function() {
+  $('#jsOff').hide();
+  $('#jsOn').show();
+});
+</script>
 
 <?php
   }
