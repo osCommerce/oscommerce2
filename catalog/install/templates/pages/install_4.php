@@ -25,7 +25,7 @@
     osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . trim($HTTP_POST_VARS['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '" where configuration_key = "EMAIL_FROM"');
   }
 
-  if ( !empty($HTTP_POST_VARS['CFG_ADMINISTRATOR_USERNAME'])) ) {
+  if ( !empty($HTTP_POST_VARS['CFG_ADMINISTRATOR_USERNAME']) ) {
     $check_query = osc_db_query('select user_name from ' . TABLE_ADMINISTRATORS . ' where user_name = "' . trim($HTTP_POST_VARS['CFG_ADMINISTRATOR_USERNAME']) . '"');
 
     if (osc_db_num_rows($check_query)) {
