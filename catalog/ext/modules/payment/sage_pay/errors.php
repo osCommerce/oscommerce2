@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,6 +26,7 @@
                   '2003' => 'An ERROR has occurred on the Protx System.',
                   '2008' => 'The Transaction timed-out.',
                   '2009' => 'The network connection to the bank is currently unavailable.',
+                  '2013' => 'The Transaction was cancelled by the customer.',
                   '2015' => 'The server encountered an unexpected condition which prevented it from fulfilling the request.',
                   '3002' => 'The VPSTxId is invalid.',
                   '3003' => 'The Currency is invalid.',
