@@ -93,6 +93,8 @@ $(function() {
       } else {
         $('#sagepay_table_new_card').hide();
 
+        $('[id^="sagepay_card_cvc_"]').hide();
+
         $('#sagepay_card_cvc_' + selected).show();
       }
 
