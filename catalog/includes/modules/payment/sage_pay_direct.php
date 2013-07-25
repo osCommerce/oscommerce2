@@ -269,6 +269,13 @@ EOD;
                     '</tr>';
       }
 
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
+        $content .= '<tr>' .
+                    '  <td width="30%">&nbsp;</td>' .
+                    '  <td>' . tep_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_SAVE . '</td>' .
+                    '</tr>';
+      }
+
       $content .= '</table>';
 
       $confirmation = array('title' => $content);
@@ -306,16 +313,18 @@ EOD;
         $sagepay_token = null;
         $sagepay_token_cvc = null;
 
-        if ( isset($HTTP_POST_VARS['sagepay_card']) && is_numeric($HTTP_POST_VARS['sagepay_card']) && ($HTTP_POST_VARS['sagepay_card'] > 0) ) {
-          $token_query = tep_db_query("select sagepay_token from customers_sagepay_tokens where id = '" . (int)$HTTP_POST_VARS['sagepay_card'] . "' and customers_id = '" . (int)$customer_id . "'");
+        if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
+          if ( isset($HTTP_POST_VARS['sagepay_card']) && is_numeric($HTTP_POST_VARS['sagepay_card']) && ($HTTP_POST_VARS['sagepay_card'] > 0) ) {
+            $token_query = tep_db_query("select sagepay_token from customers_sagepay_tokens where id = '" . (int)$HTTP_POST_VARS['sagepay_card'] . "' and customers_id = '" . (int)$customer_id . "'");
 
-          if ( tep_db_num_rows($token_query) == 1 ) {
-            $token = tep_db_fetch_array($token_query);
+            if ( tep_db_num_rows($token_query) == 1 ) {
+              $token = tep_db_fetch_array($token_query);
 
-            $sagepay_token = $token['sagepay_token'];
+              $sagepay_token = $token['sagepay_token'];
 
-            if ( isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && is_array($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']]) ) {
-              $sagepay_token_cvc = substr($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']], 0, 4);
+              if ( isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && is_array($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']]) ) {
+                $sagepay_token_cvc = substr($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']], 0, 4);
+              }
             }
           }
         }
@@ -434,7 +443,7 @@ EOD;
           $params['CardNumber'] = $cc_number;
           $params['ExpiryDate'] = $cc_expires;
           $params['CardType'] = $cc_type;
-          $params['CreateToken'] = (MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ? '1' : '0');
+          $params['CreateToken'] = ((MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && isset($HTTP_POST_VARS['cc_save']) && ($HTTP_POST_VARS['cc_save'] == 'true') ? '1' : '0');
 
           if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
             $params['StartDate'] = $cc_start;
