@@ -36,4 +36,16 @@
   define('MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDEXPIRES', 'The card expiry date was not able to be processed. Please try again and if problems persist, please try another payment method.');
   define('MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDISSUE', 'The card issue number was not able to be processed. Please try again and if problems persist, please try another payment method.');
   define('MODULE_PAYMENT_SAGE_PAY_DIRECT_ERROR_CARDCVC', 'The card security code was not able to be processed. Please try again and if problems persist, please try another payment method.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_LINK_TITLE', 'Test Gateway Connection');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_TITLE', 'Gateway Connection Test');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_GENERAL_ERROR', 'An error occurred. Please refresh the page and try again.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_GENERAL_TEXT', 'Testing connection to gateway..');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_BUTTON_CLOSE', 'Close');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_SUCCESS_TITLE', 'Success!');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_SUCCESS_TEXT_LIVE', 'A connection to the live Sage Pay gateway can been made.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_SUCCESS_TEXT_TEST', 'A connection to the test Sage Pay gateway can been made.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_ERROR_TITLE', 'Error!');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_ERROR_TEXT_LIVE', 'A connection to the live Sage Pay gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_ERROR_TEXT_TEST', 'A connection to the test Sage Pay gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
+  define('MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_NOT_INSTALLED', 'The Sage Pay Direct payment module is not installed. Please install it and try again.');
 ?>
