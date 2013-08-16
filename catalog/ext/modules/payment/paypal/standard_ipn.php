@@ -49,10 +49,6 @@
       $http->setProxy($proxy_server, $proxy_port);
     }
 
-    if (file_exists(DIR_FS_CACHE . $server . '.crt')) {
-      $http->addParameter('cafile', DIR_FS_CACHE . $server . '.crt');
-    }
-
     if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
       $result = $http->getBody();
     }
