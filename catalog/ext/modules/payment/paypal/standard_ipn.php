@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,18 +17,13 @@
     exit;
   }
 
-  if (!class_exists('httpClient')) {
-    include('includes/classes/http_client.php');
-  }
+  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_standard.php');
+  require('includes/modules/payment/paypal_standard.php');
 
   $result = false;
 
   if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
-    if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
-      $server = 'www.paypal.com';
-    } else {
-      $server = 'www.sandbox.paypal.com';
-    }
+    $paypal_standard = new paypal_standard();
 
     $parameters = 'cmd=_notify-validate';
 
@@ -36,22 +31,7 @@
       $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
     }
 
-    $http = new httpClient($server, 443);
-
-    if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PROXY') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY)) {
-      $proxy_server = MODULE_PAYMENT_PAYPAL_STANDARD_PROXY;
-      $proxy_port = null;
-
-      if (strpos(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, ':') !== false) {
-        list($proxy_server, $proxy_port) = explode(':', MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, 2);
-      }
-
-      $http->setProxy($proxy_server, $proxy_port);
-    }
-
-    if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
-      $result = $http->getBody();
-    }
+    $result = $paypal_standard->sendTransactionToGateway($paypal_standard->form_action_url, $parameters);
   }
 
   if ($result == 'VERIFIED') {
@@ -104,17 +84,16 @@
     }
   } else {
     if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-      $email_body = '$HTTP_POST_VARS:' . "\n\n";
+      $email_body = $result . "\n\n" .
+                    '$HTTP_POST_VARS:' . "\n\n";
 
-      reset($HTTP_POST_VARS);
-      while (list($key, $value) = each($HTTP_POST_VARS)) {
+      foreach ($HTTP_POST_VARS as $key => $value) {
         $email_body .= $key . '=' . $value . "\n";
       }
 
       $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
 
-      reset($HTTP_GET_VARS);
-      while (list($key, $value) = each($HTTP_GET_VARS)) {
+      foreach ($HTTP_GET_VARS as $key => $value) {
         $email_body .= $key . '=' . $value . "\n";
       }
 
