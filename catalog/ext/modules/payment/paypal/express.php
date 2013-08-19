@@ -55,6 +55,10 @@
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
 
+        if (isset($HTTP_POST_VARS['CURRENCYCODE']) && $currencies->is_set($HTTP_POST_VARS['CURRENCYCODE']) && ($currency != $HTTP_POST_VARS['CURRENCYCODE'])) {
+          $currency = $HTTP_POST_VARS['CURRENCYCODE'];
+        }
+
         while (true) {
           if (isset($HTTP_POST_VARS['L_NUMBER' . $counter])) {
             $cart->add_cart($HTTP_POST_VARS['L_NUMBER' . $counter], $HTTP_POST_VARS['L_QTY' . $counter]);
@@ -185,6 +189,7 @@
         }
 
         $params = array('METHOD' => 'CallbackResponse',
+                        'CURRENCYCODE' => $currency,
                         'OFFERINSURANCEOPTION' => 'false');
 
         $counter = 0;
@@ -194,8 +199,8 @@
         foreach ($quotes_array as $quote) {
           $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
           $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
@@ -636,8 +641,8 @@
       foreach ($quotes_array as $quote) {
         $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
         $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
