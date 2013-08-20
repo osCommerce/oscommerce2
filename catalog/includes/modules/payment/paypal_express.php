@@ -35,6 +35,10 @@
         $this->description .= $this->getTestLinkInfo();
       }
 
+      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
+        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      }
+
       if ( isset($order) && is_object($order) ) {
         $this->update_status();
       }

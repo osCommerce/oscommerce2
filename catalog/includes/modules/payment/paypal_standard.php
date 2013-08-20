@@ -34,6 +34,10 @@
         $this->description .= $this->getTestLinkInfo();
       }
 
+      if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Sandbox' ) {
+        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      }
+
       if ( isset($order) && is_object($order) ) {
         $this->update_status();
       }
@@ -778,11 +782,11 @@
     function sendTransactionToGateway($url, $parameters) {
       $server = parse_url($url);
 
-      if (isset($server['port']) === false) {
+      if ( !isset($server['port']) ) {
         $server['port'] = ($server['scheme'] == 'https') ? 443 : 80;
       }
 
-      if (isset($server['path']) === false) {
+      if ( !isset($server['path']) ) {
         $server['path'] = '/';
       }
 
