@@ -109,7 +109,7 @@
     }
 
     function before_process() {
-      global $order, $sendto, $ppeuk_token, $ppeuk_payerid, $HTTP_POST_VARS, $comments;
+      global $order, $ppeuk_token, $ppeuk_payerid, $HTTP_POST_VARS, $comments, $response_array;
 
       if (empty($comments)) {
         if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
@@ -139,7 +139,38 @@
                       'CURRENCY' => $order->info['currency'],
                       'BUTTONSOURCE' => 'OSCOM23_PRO_EC');
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      $line_item_no = 0;
+      $items_total = 0;
+      $tax_total = 0;
+
+      foreach ($order->products as $product) {
+        $params['L_NAME' . $line_item_no] = $product['name'];
+        $params['L_COST' . $line_item_no] = $this->format_raw($product['final_price']);
+        $params['L_QTY' . $line_item_no] = $product['qty'];
+
+        $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
+
+        $params['L_TAXAMT' . $line_item_no] = $this->format_raw($product_tax);
+        $tax_total += $this->format_raw($product_tax) * $product['qty'];
+
+        $items_total += $this->format_raw($product['final_price']) * $product['qty'];
+
+        $line_item_no++;
+      }
+
+      $params['ITEMAMT'] = $items_total;
+      $params['TAXAMT'] = $tax_total;
+
+      $params['BILLTOFIRSTNAME'] = $order->billing['firstname'];
+      $params['BILLTOLASTNAME'] = $order->billing['lastname'];
+      $params['BILLTOSTREET'] = $order->billing['street_address'];
+      $params['BILLTOCITY'] = $order->billing['city'];
+      $params['BILLTOSTATE'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
+      $params['BILLTOCOUNTRY'] = $order->billing['country']['iso_code_2'];
+      $params['BILLTOZIP'] = $order->billing['postcode'];
+
+      if (tep_not_null($order->delivery['firstname'])) {
+        $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
         $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
@@ -188,6 +219,22 @@
     }
 
     function after_process() {
+      global $insert_id, $response_array;
+
+      $pp_result = 'Payflow ID: ' . tep_output_string_protected($response_array['PNREF']) . "\n" .
+                   'PayPal ID: ' . tep_output_string_protected($response_array['PPREF']) . "\n\n" .
+                   'Payment Status: ' . tep_output_string_protected($response_array['PENDINGREASON']) . "\n" .
+                   'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTTYPE']) . "\n" .
+                   'Response: ' . tep_output_string_protected($response_array['RESPMSG']);
+
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'orders_status_id' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID,
+                              'date_added' => 'now()',
+                              'customer_notified' => '0',
+                              'comments' => $pp_result);
+
+      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
       tep_session_unregister('ppeuk_token');
       tep_session_unregister('ppeuk_payerid');
     }
@@ -255,6 +302,34 @@
     }
 
     function getParams() {
+      if (!defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID')) {
+        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
+
+        if (tep_db_num_rows($check_query) < 1) {
+          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = tep_db_fetch_array($status_query);
+
+          $status_id = $status['status_id']+1;
+
+          $languages = tep_get_languages();
+
+          foreach ($languages as $lang) {
+            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
+          }
+
+          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (tep_db_num_rows($flags_query) == 1) {
+            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          }
+        } else {
+          $check = tep_db_fetch_array($check_query);
+
+          $status_id = $check['orders_status_id'];
+        }
+      } else {
+        $status_id = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID;
+      }
+
       $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS' => array('title' => 'Enable PayPal Payments Pro Payflow Edition (Express Checkout)',
                                                                              'desc' => 'Do you want to accept PayPal Payments Pro Payflow Edition (Express Checkout) payments?',
                                                                              'value' => 'False',
@@ -292,6 +367,11 @@
                                                                                       'value' => '0',
                                                                                       'set_func' => 'tep_cfg_pull_down_order_statuses(',
                                                                                       'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
+                                                                                                   'desc' => 'Include PayPal transaction information in this order status level.',
+                                                                                                   'value' => $status_id,
+                                                                                                   'use_func' => 'tep_get_order_status_name',
+                                                                                                   'set_func' => 'tep_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                                  'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                                  'value' => '0'));
@@ -300,6 +380,8 @@
     }
 
     function sendTransactionToGateway($url, $parameters) {
+      global $cartID, $order;
+
       $server = parse_url($url);
 
       if ( !isset($server['port']) ) {
@@ -310,12 +392,18 @@
         $server['path'] = '/';
       }
 
+      $headers = array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])),
+                       'X-VPS-CLIENT-TIMEOUT: 45',
+                       'X-VPS-VIT-INTEGRATION-PRODUCT: OSCOM',
+                       'X-VPS-VIT-INTEGRATION-VERSION: 2.3');
+
       $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
       curl_setopt($curl, CURLOPT_PORT, $server['port']);
       curl_setopt($curl, CURLOPT_HEADER, false);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
       curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+      curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
       curl_setopt($curl, CURLOPT_POST, true);
       curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
 

@@ -298,6 +298,14 @@
       $params['ITEMAMT'] = $items_total;
       $params['TAXAMT'] = $tax_total;
 
+      $params['BILLTOFIRSTNAME'] = $order->billing['firstname'];
+      $params['BILLTOLASTNAME'] = $order->billing['lastname'];
+      $params['BILLTOSTREET'] = $order->billing['street_address'];
+      $params['BILLTOCITY'] = $order->billing['city'];
+      $params['BILLTOSTATE'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
+      $params['BILLTOCOUNTRY'] = $order->billing['country']['iso_code_2'];
+      $params['BILLTOZIP'] = $order->billing['postcode'];
+
       if (tep_not_null($order->delivery['firstname'])) {
         $params['ADDROVERRIDE'] = '1';
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
