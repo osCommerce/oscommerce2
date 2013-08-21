@@ -34,7 +34,7 @@
     $post_string = '';
 
     foreach ($params as $key => $value) {
-      $post_string .= $key . '=' . $value . '&';
+      $post_string .= $key . '[' . strlen(trim($value)) . ']=' . trim($value) . '&';
     }
 
     $post_string = substr($post_string, 0, -1);
