@@ -204,9 +204,9 @@
                    'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']) . "\n" .
                    'Reversal Code: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_REASONCODE']);
 
-      $sql_data_array = array('orders_id' => $insert_id, 
-                              'orders_status_id' => MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID, 
-                              'date_added' => 'now()', 
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'orders_status_id' => MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID,
+                              'date_added' => 'now()',
                               'customer_notified' => '0',
                               'comments' => $pp_result);
 
