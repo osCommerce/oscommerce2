@@ -714,8 +714,8 @@
         $status_id = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Website Payments Standard',
-                                                                       'desc' => 'Do you want to accept PayPal Website Payments Standard payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Payments Standard',
+                                                                       'desc' => 'Do you want to accept PayPal Payments Standard payments?',
                                                                        'value' => 'False',
                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_ID' => array('title' => 'Seller E-Mail Address',
