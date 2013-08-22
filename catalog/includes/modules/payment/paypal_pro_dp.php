@@ -301,8 +301,8 @@
     }
 
     function getParams() {
-      $params = array('MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS' => array('title' => 'Enable PayPal Direct',
-                                                                     'desc' => 'Do you want to accept PayPal Direct payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS' => array('title' => 'Enable PayPal Payments Pro Direct Payments',
+                                                                     'desc' => 'Do you want to accept PayPal Payments Pro Direct Payments payments?',
                                                                      'value' => 'False',
                                                                      'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME' => array('title' => 'API Username',

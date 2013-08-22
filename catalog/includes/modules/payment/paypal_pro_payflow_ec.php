@@ -330,8 +330,8 @@
         $status_id = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS' => array('title' => 'Enable PayPal Payments Pro Payflow Edition (Express Checkout)',
-                                                                             'desc' => 'Do you want to accept PayPal Payments Pro Payflow Edition (Express Checkout) payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS' => array('title' => 'Enable PayPal Payments Pro Express Checkout (Payflow Edition)',
+                                                                             'desc' => 'Do you want to accept PayPal Payments Pro Express Checkout (Payflow Edition) payments?',
                                                                              'value' => 'False',
                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR' => array('title' => 'Vendor',

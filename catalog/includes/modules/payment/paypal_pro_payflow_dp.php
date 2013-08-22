@@ -346,8 +346,8 @@
         $status_id = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTIONS_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS' => array('title' => 'Enable PayPal Payments Pro Payflow Edition (Direct Payments)',
-                                                                             'desc' => 'Do you want to accept PayPal Payments Pro Payflow Edition (Direct Payments) payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS' => array('title' => 'Enable PayPal Payments Pro Direct Payments (Payflow Edition)',
+                                                                             'desc' => 'Do you want to accept PayPal Payments Pro Direct Payments (Payflow Edition) payments?',
                                                                              'value' => 'False',
                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_VENDOR' => array('title' => 'Vendor',
