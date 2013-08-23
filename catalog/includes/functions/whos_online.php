@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,8 +26,8 @@
     }
 
     $wo_session_id = tep_session_id();
-    $wo_ip_address = getenv('REMOTE_ADDR');
-    $wo_last_page_url = getenv('REQUEST_URI');
+    $wo_ip_address = tep_get_ip_address();
+    $wo_last_page_url = tep_db_prepare_input(getenv('REQUEST_URI'));
 
     $current_time = time();
     $xx_mins_ago = ($current_time - 900);
