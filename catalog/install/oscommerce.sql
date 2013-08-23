@@ -607,7 +607,8 @@ CREATE TABLE whos_online (
   ip_address varchar(15) NOT NULL,
   time_entry varchar(14) NOT NULL,
   time_last_click varchar(14) NOT NULL,
-  last_page_url text NOT NULL
+  last_page_url text NOT NULL,
+  KEY idx_whos_online_session_id (session_id)
 );
 
 DROP TABLE IF EXISTS zones;
