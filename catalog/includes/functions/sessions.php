@@ -178,11 +178,15 @@
     global $SID;
 
     if (PHP_VERSION >= 5.1) {
+      $old_id = session_id();
+
       session_regenerate_id(true);
 
       if (!empty($SID)) {
         $SID = tep_session_name() . '=' . tep_session_id();
       }
+
+      tep_whos_online_update_session_id($old_id, tep_session_id());
     }
   }
 ?>
