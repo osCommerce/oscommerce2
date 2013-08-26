@@ -1,7 +1,31 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2012 osCommerce
+Copyright (c) 2013 osCommerce
+
+------------------------------------------------------------------------------
+08/26/2013 osCommerce Online Merchant v2.3.3.1
+------------------------------------------------------------------------------
+
+ * Who's Online
+   Parse REQUEST_URI with tep_db_prepare_input() before storing the value in
+   the database.
+   Replace REMOTE_ADDR with tep_get_ip_address().
+
+ * Administration Tool -> Catalog -> Categories/Products
+   Fix product price gross tax calculations when adding or editing products.
+
+ * Sessions
+   Register a shutdown function to close and write the session data.
+
+ * tep_redirect()
+   When redirecting from HTTPS -> HTTP and replacing the url with a HTTPS
+   version, also take DIR_WS_HTTPS_CATALOG into consideration which may differ
+   from DIR_WS_HTTP_CATALOG.
+
+ * Session
+   Also check for and allow , (comma) and - (minus) characters in the session
+   ID.
 
 ------------------------------------------------------------------------------
 08/15/2012 osCommerce Online Merchant v2.3.3
