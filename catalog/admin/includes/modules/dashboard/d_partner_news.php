@@ -25,6 +25,12 @@
         $this->sort_order = MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_SORT_ORDER;
         $this->enabled = (MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_STATUS == 'True');
       }
+
+      if ( !function_exists('json_decode') ) {
+        $this->description .= '<p style="color: #ff0000; font-weight: bold;">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_ERROR_JSON_DECODE . '</p>';
+
+        $this->enabled = false;
+      }
     }
 
     function getOutput() {
@@ -45,7 +51,7 @@
         }
 
         $output .= '  <tr class="dataTableRow">' .
-                   '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.oscommerce.com/Services" target="_blank">Partner Services</a></td>' .
+                   '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.oscommerce.com/Services" target="_blank">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_MORE_TITLE . '</a></td>' .
                    '  </tr>' .
                    '</table>';
       }
