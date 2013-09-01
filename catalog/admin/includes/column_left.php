@@ -13,14 +13,16 @@
   if (tep_session_is_registered('admin')) {
     $cl_box_groups = array();
 
-    include(DIR_WS_BOXES . 'configuration.php');
-    include(DIR_WS_BOXES . 'catalog.php');
-    include(DIR_WS_BOXES . 'modules.php');
-    include(DIR_WS_BOXES . 'customers.php');
-    include(DIR_WS_BOXES . 'taxes.php');
-    include(DIR_WS_BOXES . 'localization.php');
-    include(DIR_WS_BOXES . 'reports.php');
-    include(DIR_WS_BOXES . 'tools.php');
+    if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {
+      while ($file = $dir->read()) {
+        if (!is_dir($dir->path . '/' . $file)) {
+          if (substr($file, strrpos($file, '.')) == '.php') {
+            include($dir->path . '/' . $file);
+          }
+        }
+      }
+      $dir->close();
+    }
 ?>
 
 <div id="adminAppMenu">
