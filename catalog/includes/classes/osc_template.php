@@ -83,14 +83,21 @@
               $class = substr($module, 0, strrpos($module, '.'));
 
               if ( !class_exists($class) ) {
-                include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
-                include(DIR_WS_MODULES . $group . '/' . $class . '.php');
+                if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module) ) {
+                  include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
+                }
+
+                if ( file_exists(DIR_WS_MODULES . $group . '/' . $class . '.php') ) {
+                  include(DIR_WS_MODULES . $group . '/' . $class . '.php');
+                }
               }
 
-              $mb = new $class();
+              if ( class_exists($class) ) {
+                $mb = new $class();
 
-              if ( $mb->isEnabled() ) {
-                $mb->execute();
+                if ( $mb->isEnabled() ) {
+                  $mb->execute();
+                }
               }
             }
           }
