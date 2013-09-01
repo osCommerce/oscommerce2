@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -40,6 +40,7 @@
       foreach ($lng->catalog_languages as $lkey => $lvalue) {
         if ($lvalue['id'] == $languages_id) {
           $language_code = $lkey;
+          break;
         }
       }
 
@@ -58,9 +59,14 @@
       $output .= ' data-height="' . $button_height . '" data-align="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ALIGN) . '"></div>';
 
       $output .= '<script type="text/javascript">
-  window.___gcfg = {
-    lang: "' . $language_code . '"
-  };
+  if ( typeof window.___gcfg == "undefined" ) {
+    window.___gcfg = { };
+  }
+
+  if ( typeof window.___gcfg.lang == "undefined" ) {
+    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+  }
+
   (function() {
     var po = document.createElement(\'script\'); po.type = \'text/javascript\'; po.async = true;
     po.src = \'https://apis.google.com/js/plusone.js\';
