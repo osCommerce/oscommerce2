@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -43,29 +43,21 @@
 <script type="text/javascript">
 $('#adminAppMenu').accordion({
   autoHeight: false,
-  icons: {
-    'header': 'ui-icon-plus',
-    'headerSelected': 'ui-icon-minus'
-  }
+  collapsible: true,
 
 <?php
     $counter = 0;
     foreach ($cl_box_groups as $groups) {
       foreach ($groups['apps'] as $app) {
         if ($app['code'] == $PHP_SELF) {
-          $active_value = $counter;
-          break;
+          break 2;
         }
       }
 
       $counter++;
     }
 
-    if (isset($active_value)) {
-      echo ',active: ' . $active_value;
-    } else {
-      echo ',active: ' . $counter;
-    }
+    echo 'active: ' . (isset($app) && ($app['code'] == $PHP_SELF) ? $counter : 'false');
 ?>
 
 });
