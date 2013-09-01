@@ -23,68 +23,52 @@
     tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
+// login content module must return $login_customer_id as an integer after successful customer authentication
+  $login_customer_id = false;
 
-  $error = false;
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    $email_address = tep_db_prepare_input($HTTP_POST_VARS['email_address']);
-    $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+  $page_content = $oscTemplate->getContent('login');
 
-// Check if email exists
-    $check_customer_query = tep_db_query("select customers_id, customers_firstname, customers_password, customers_email_address, customers_default_address_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
-    if (!tep_db_num_rows($check_customer_query)) {
-      $error = true;
-    } else {
-      $check_customer = tep_db_fetch_array($check_customer_query);
-// Check that password is good
-      if (!tep_validate_password($password, $check_customer['customers_password'])) {
-        $error = true;
-      } else {
-        if (SESSION_RECREATE == 'True') {
-          tep_session_recreate();
-        }
+  if ( is_int($login_customer_id) && ($login_customer_id > 0) ) {
+    if (SESSION_RECREATE == 'True') {
+      tep_session_recreate();
+    }
 
-// migrate old hashed password to new phpass password
-        if (tep_password_type($check_customer['customers_password']) != 'phpass') {
-          tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
-        }
+    $customer_info_query = tep_db_query("select c.customers_firstname, c.customers_default_address_id, ab.entry_country_id, ab.entry_zone_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " ab on (c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id) where c.customers_id = '" . (int)$login_customer_id . "'");
+    $customer_info = tep_db_fetch_array($customer_info_query);
 
-        $check_country_query = tep_db_query("select entry_country_id, entry_zone_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$check_customer['customers_id'] . "' and address_book_id = '" . (int)$check_customer['customers_default_address_id'] . "'");
-        $check_country = tep_db_fetch_array($check_country_query);
+    $customer_id = $login_customer_id;
+    tep_session_register('customer_id');
 
-        $customer_id = $check_customer['customers_id'];
-        $customer_default_address_id = $check_customer['customers_default_address_id'];
-        $customer_first_name = $check_customer['customers_firstname'];
-        $customer_country_id = $check_country['entry_country_id'];
-        $customer_zone_id = $check_country['entry_zone_id'];
-        tep_session_register('customer_id');
-        tep_session_register('customer_default_address_id');
-        tep_session_register('customer_first_name');
-        tep_session_register('customer_country_id');
-        tep_session_register('customer_zone_id');
+    $customer_default_address_id = $customer_info['customers_default_address_id'];
+    tep_session_register('customer_default_address_id');
 
-        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
+    $customer_first_name = $customer_info['customers_firstname'];
+    tep_session_register('customer_first_name');
+
+    $customer_country_id = $customer_info['entry_country_id'];
+    tep_session_register('customer_country_id');
+
+    $customer_zone_id = $customer_info['entry_zone_id'];
+    tep_session_register('customer_zone_id');
+
+    tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
 
 // reset session token
-        $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+    $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-        $cart->restore_contents();
+    $cart->restore_contents();
 
-        if (sizeof($navigation->snapshot) > 0) {
-          $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
-          $navigation->clear_snapshot();
-          tep_redirect($origin_href);
-        } else {
-          tep_redirect(tep_href_link(FILENAME_DEFAULT));
-        }
-      }
+    if (sizeof($navigation->snapshot) > 0) {
+      $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
+      $navigation->clear_snapshot();
+      tep_redirect($origin_href);
     }
+
+    tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
-  if ($error == true) {
-    $messageStack->add('login', TEXT_LOGIN_ERROR);
-  }
+  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_LOGIN, '', 'SSL'));
 
@@ -99,43 +83,32 @@
   }
 ?>
 
-<div class="contentContainer" style="width: 45%; float: left;">
-  <h2><?php echo HEADING_NEW_CUSTOMER; ?></h2>
-
-  <div class="contentText">
-    <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
-    <p><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
-
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?></p>
-  </div>
+<div id="loginModules">
+  <?php echo $page_content; ?>
 </div>
 
-<div class="contentContainer" style="width: 45%; float: left; border-left: 1px dashed #ccc; padding-left: 3%; margin-left: 3%;">
-  <h2><?php echo HEADING_RETURNING_CUSTOMER; ?></h2>
+<script type="text/javascript">
+var login_modules_counter = 0;
+var login_modules_total = $('#loginModules .contentContainer').length;
 
-  <div class="contentText">
-    <p><?php echo TEXT_RETURNING_CUSTOMER; ?></p>
+$('#loginModules .contentContainer').each(function(index, element) {
+  login_modules_counter++;
 
-    <?php echo tep_draw_form('login', tep_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', '', true); ?>
+  if ( login_modules_counter == 1 ) {
+    if ( $(this).hasClass('grid_8') && ((index+1) != login_modules_total) ) {
+      $(this).addClass('alpha');
+    } else {
+      login_modules_counter = 0;
+    }
+  } else {
+    if ( $(this).hasClass('grid_8') ) {
+      $(this).addClass('omega');
+    }
 
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password'); ?></td>
-      </tr>
-    </table>
-
-    <p><?php echo '<a href="' . tep_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL') . '">' . TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
-
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_LOGIN, 'key', null, 'primary'); ?></p>
-
-    </form>
-  </div>
-</div>
+    login_modules_counter = 0;
+  }
+});
+</script>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
