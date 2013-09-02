@@ -10,21 +10,21 @@
   Released under the GNU General Public License
 */
 
-  class ht_product_twitter_card {
-    var $code = 'ht_product_twitter_card';
+  class ht_twitter_product_card {
+    var $code = 'ht_twitter_product_card';
     var $group = 'header_tags';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function ht_product_twitter_card() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_DESCRIPTION;
+    function ht_twitter_product_card() {
+      $this->title = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TITLE;
+      $this->description = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_DESCRIPTION;
 
-      if ( defined('MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_STATUS') ) {
-        $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SORT_ORDER;
-        $this->enabled = (MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_STATUS == 'True');
+      if ( defined('MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS') ) {
+        $this->sort_order = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SORT_ORDER;
+        $this->enabled = (MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS == 'True');
       }
     }
 
@@ -40,12 +40,12 @@
           $data = array('card' => 'product',
                         'title' => $product_info['products_name']);
 
-          if ( tep_not_null(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID) ) {
-            $data['site'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID;
+          if ( tep_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID) ) {
+            $data['site'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID;
           }
 
-          if ( tep_not_null(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID) ) {
-            $data['creator'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID;
+          if ( tep_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID) ) {
+            $data['creator'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID;
           }
 
           $product_description = substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($product_info['products_description']))), 0, 197);
@@ -78,20 +78,20 @@
           $data['label1'] = $currency;
 
           if ( $product_info['products_date_available'] > date('Y-m-d H:i:s') ) {
-            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_PRE_ORDER;
+            $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_PRE_ORDER;
             $data['label2'] = tep_date_short($product_info['products_date_available']);
           } elseif ( $product_info['products_quantity'] > 0 ) {
-            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_IN_STOCK;
-            $data['label2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_BUY_NOW;
+            $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_IN_STOCK;
+            $data['label2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_BUY_NOW;
           } else {
-            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_OUT_OF_STOCK;
-            $data['label2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_CONTACT_US;
+            $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_OUT_OF_STOCK;
+            $data['label2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_CONTACT_US;
           }
 
           $result = '';
 
           foreach ( $data as $key => $value ) {
-            $result .= '<meta name="twitter:' . tep_output_string_protected($key) . '" content="' . tep_output_string_protected($value) . '">' . "\n";
+            $result .= '<meta name="twitter:' . tep_output_string_protected($key) . '" content="' . tep_output_string_protected($value) . '" />' . "\n";
           }
 
           $oscTemplate->addBlock($result, $this->group);
@@ -104,14 +104,14 @@
     }
 
     function check() {
-      return defined('MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_STATUS');
+      return defined('MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS');
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Product Twitter Card Module', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_STATUS', 'True', 'Do you want to allow product Twitter Card Tags to be added to your page?  Note that your product thumbnails MUST be at least 160px by 160px.', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Twitter Author @username', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID', '', 'Your @username at Twitter', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Twitter Site @username', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID', '', 'Your shops @username at Twitter (or leave blank if it is the same as your @username above).', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Twitter Product Card Module', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS', 'True', 'Do you want to allow Twitter Product Card tags to be added to your product information pages? Note that your product images MUST be at least 160px by 160px.', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Twitter Author @username', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID', '', 'Your @username at Twitter', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Twitter Shop @username', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID', '', 'Your shops @username at Twitter (or leave blank if it is the same as your @username above).', '6', '0', now())");
+      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
     }
 
     function remove() {
@@ -119,7 +119,7 @@
     }
 
     function keys() {
-      return array('MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_STATUS', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID', 'MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SORT_ORDER');
+      return array('MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_STATUS', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID', 'MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SORT_ORDER');
     }
   }
 ?>
