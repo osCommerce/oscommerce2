@@ -19,6 +19,8 @@
     var $enabled = false;
 
     function cm_account() {
+      global $PHP_SELF, $oscTemplate;
+
       $this->title = MODULE_CONTENT_ACCOUNT_TITLE;
       $this->description = MODULE_CONTENT_ACCOUNT_DESCRIPTION;
 
@@ -26,34 +28,36 @@
         $this->sort_order = MODULE_CONTENT_ACCOUNT_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_ACCOUNT_STATUS == 'True');
       }
+
+      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_ACCOUNT) ) {
+        $this->enabled = false;
+      }
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate;
+      global $oscTemplate;
 
-      if ( basename($PHP_SELF) == FILENAME_ACCOUNT ) {
-        $oscTemplate->_data['account'] = array('account' => array('title' => MY_ACCOUNT_TITLE,
-                                                                  'links' => array('edit' => array('title' => MY_ACCOUNT_INFORMATION,
-                                                                                                   'link' => tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'),
-                                                                                                   'icon' => 'person'),
-                                                                                   'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
-                                                                                                           'link' => tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'),
-                                                                                                           'icon' => 'home'),
-                                                                                   'password' => array('title' => MY_ACCOUNT_PASSWORD,
-                                                                                                       'link' => tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'),
-                                                                                                       'icon' => 'key'))),
-                                               'orders' => array('title' => MY_ORDERS_TITLE,
-                                                                 'links' => array('history' => array('title' => MY_ORDERS_VIEW,
-                                                                                                     'link' => tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'),
-                                                                                                     'icon' => 'cart'))),
-                                               'notifications' => array('title' => EMAIL_NOTIFICATIONS_TITLE,
-                                                                        'links' => array('newsletters' => array('title' => EMAIL_NOTIFICATIONS_NEWSLETTERS,
-                                                                                                                'link' => tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL'),
-                                                                                                                'icon' => 'mail-closed'),
-                                                                                         'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
-                                                                                                             'link' => tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL'),
-                                                                                                             'icon' => 'heart'))));
-      }
+      $oscTemplate->_data['account'] = array('account' => array('title' => MY_ACCOUNT_TITLE,
+                                                                'links' => array('edit' => array('title' => MY_ACCOUNT_INFORMATION,
+                                                                                                 'link' => tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'),
+                                                                                                 'icon' => 'person'),
+                                                                                 'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
+                                                                                                         'link' => tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'),
+                                                                                                         'icon' => 'home'),
+                                                                                 'password' => array('title' => MY_ACCOUNT_PASSWORD,
+                                                                                                     'link' => tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'),
+                                                                                                     'icon' => 'key'))),
+                                             'orders' => array('title' => MY_ORDERS_TITLE,
+                                                               'links' => array('history' => array('title' => MY_ORDERS_VIEW,
+                                                                                                   'link' => tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'),
+                                                                                                   'icon' => 'cart'))),
+                                             'notifications' => array('title' => EMAIL_NOTIFICATIONS_TITLE,
+                                                                      'links' => array('newsletters' => array('title' => EMAIL_NOTIFICATIONS_NEWSLETTERS,
+                                                                                                              'link' => tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL'),
+                                                                                                              'icon' => 'mail-closed'),
+                                                                                       'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
+                                                                                                           'link' => tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL'),
+                                                                                                           'icon' => 'heart'))));
     }
 
     function build() {

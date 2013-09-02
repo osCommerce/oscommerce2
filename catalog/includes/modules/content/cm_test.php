@@ -19,6 +19,8 @@
     var $enabled = false;
 
     function cm_test() {
+      global $PHP_SELF, $oscTemplate;
+
       $this->title = MODULE_CONTENT_TEST_TITLE;
       $this->description = MODULE_CONTENT_TEST_DESCRIPTION;
 
@@ -32,36 +34,38 @@
           $this->enabled = false;
         }
       }
+
+      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_ACCOUNT) || !isset($oscTemplate->_data['account']) ) {
+        $this->enabled = false;
+      }
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate;
+      global $oscTemplate;
 
-      if ( (basename($PHP_SELF) == FILENAME_ACCOUNT) && isset($oscTemplate->_data['account']) ) {
-        $test_array = array('title' => 'Test link',
-                            'link' => tep_href_link(FILENAME_DEFAULT),
-                            'icon' => 'circle-arrow-e');
+      $test_array = array('title' => 'Test link',
+                          'link' => tep_href_link(FILENAME_DEFAULT),
+                          'icon' => 'circle-arrow-e');
 
-        $oscTemplate->_data['account']['account']['links']['test'] = $test_array;
+      $oscTemplate->_data['account']['account']['links']['test'] = $test_array;
 
-        $oscTemplate->_data['account']['test'] = array('title' => 'Test',
-                                                       'links' => array('test' => $test_array));
+      $oscTemplate->_data['account']['test'] = array('title' => 'Test',
+                                                     'links' => array('test' => $test_array));
 
-        $counter = 1;
+      $counter = 1;
 
-        foreach ( array_keys($oscTemplate->_data['account']['account']['links']) as $key ) {
-          if ( $key == 'edit' ) {
-            break;
-          }
-
-          $counter++;
+      foreach ( array_keys($oscTemplate->_data['account']['account']['links']) as $key ) {
+        if ( $key == 'edit' ) {
+          break;
         }
 
-        $before_eight = array_slice($oscTemplate->_data['account']['account']['links'], 0, $counter, true);
-        $after_eight = array_slice($oscTemplate->_data['account']['account']['links'], $counter, null, true);
-
-        $oscTemplate->_data['account']['account']['links'] = $before_eight + array('test2' => $test_array) + $after_eight;
+        $counter++;
       }
+
+      $before_eight = array_slice($oscTemplate->_data['account']['account']['links'], 0, $counter, true);
+      $after_eight = array_slice($oscTemplate->_data['account']['account']['links'], $counter, null, true);
+
+      $oscTemplate->_data['account']['account']['links'] = $before_eight + array('test2' => $test_array) + $after_eight;
     }
 
     function isEnabled() {
