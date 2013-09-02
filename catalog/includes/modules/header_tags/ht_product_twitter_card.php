@@ -8,10 +8,6 @@
   Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
-  
-  For more great code, get yourself over to
-  www.clubosc.com
-  
 */
 
   class ht_product_twitter_card {
@@ -33,34 +29,72 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $_GET, $languages_id;
-      global $currencies;
+      global $PHP_SELF, $HTTP_GET_VARS, $oscTemplate, $languages_id, $currencies, $currency;
 
-      if (basename($PHP_SELF) == FILENAME_PRODUCT_INFO) {
-        $twitter_card = NULL;
-        if (isset($_GET['products_id'])) {
-          $product_info_query = tep_db_query("select p.products_id, pd.products_name, SUBSTRING_INDEX(pd.products_description, ' ', 50) as products_description, p.products_image, p.products_price, p.products_quantity from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
+      if ( ($PHP_SELF == FILENAME_PRODUCT_INFO) && isset($HTTP_GET_VARS['products_id']) ) {
+        $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_image, p.products_price, p.products_quantity, p.products_tax_class_id, p.products_date_available from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
+
+        if ( tep_db_num_rows($product_info_query) === 1 ) {
           $product_info = tep_db_fetch_array($product_info_query);
 
-          $twitter_card = '<meta name="twitter:card" content="product">' . "\n";
-          if (strlen(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID) > 0) {
-            $twitter_card .= '<meta name="twitter:site" content="' . MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID . '">' . "\n";
-          }
-          if (strlen(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID) > 0) {
-            $twitter_card .= '<meta name="twitter:creator" content="' . MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID . '">' . "\n";
-          }
-          
-          $product_twitter_description = strip_tags(substr($product_info['products_description'], 0, 195));
-          
-          $twitter_card .= '<meta name="twitter:title" content="' . tep_output_string_protected($product_info['products_name']) . '">' . "\n" .
-                           '<meta name="twitter:description" content="' . tep_output_string_protected($product_twitter_description) . '...">' . "\n" .
-                           '<meta name="twitter:image:src" content="' . HTTP_SERVER . DIR_WS_HTTP_CATALOG . DIR_WS_IMAGES . $product_info['products_image'] . '">' . "\n" .
-                           '<meta name="twitter:data1" content="' . MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_PRICE . '">' . "\n" .
-                           '<meta name="twitter:label1" content="' . $currencies->format(tep_output_string_protected($product_info['products_price'])) . '">' . "\n" .
-                           '<meta name="twitter:data2" content="' . MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_STOCK . '">' . "\n" .
-                           '<meta name="twitter:label2" content="' . tep_output_string_protected($product_info['products_quantity']) . '">' . "\n";
+          $data = array('card' => 'product',
+                        'title' => $product_info['products_name']);
 
-          $oscTemplate->addBlock($twitter_card, $this->group);
+          if ( tep_not_null(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID) ) {
+            $data['site'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_SITE_ID;
+          }
+
+          if ( tep_not_null(MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID) ) {
+            $data['creator'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_USER_ID;
+          }
+
+          $product_description = substr(trim(preg_replace('/\s\s+/', ' ', strip_tags($product_info['products_description']))), 0, 197);
+
+          if ( strlen($product_description) == 197 ) {
+            $product_description .= ' ..';
+          }
+
+          $data['description'] = $product_description;
+
+          $products_image = $product_info['products_image'];
+
+          $pi_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order limit 1");
+  
+          if ( tep_db_num_rows($pi_query) === 1 ) {
+            $pi = tep_db_fetch_array($pi_query);
+
+            $products_image = $pi['image'];
+          }
+
+          $data['image:src'] = tep_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
+
+          if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
+            $products_price = $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id']));
+          } else {
+            $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+          }
+
+          $data['data1'] = $products_price;
+          $data['label1'] = $currency;
+
+          if ( $product_info['products_date_available'] > date('Y-m-d H:i:s') ) {
+            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_PRE_ORDER;
+            $data['label2'] = tep_date_short($product_info['products_date_available']);
+          } elseif ( $product_info['products_quantity'] > 0 ) {
+            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_IN_STOCK;
+            $data['label2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_BUY_NOW;
+          } else {
+            $data['data2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_OUT_OF_STOCK;
+            $data['label2'] = MODULE_HEADER_TAGS_PRODUCT_TWITTER_CARD_TEXT_CONTACT_US;
+          }
+
+          $result = '';
+
+          foreach ( $data as $key => $value ) {
+            $result .= '<meta name="twitter:' . tep_output_string_protected($key) . '" content="' . tep_output_string_protected($value) . '">' . "\n";
+          }
+
+          $oscTemplate->addBlock($result, $this->group);
         }
       }
     }
