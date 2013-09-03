@@ -10,7 +10,6 @@
   Released under the GNU General Public License
 */
 
-  define('MODULE_HEADER_TAGS_GOOGLE_ADWORDS_TITLE', 'Google Adwords Conversion Tracking');
-  define('MODULE_HEADER_TAGS_GOOGLE_ADWORDS_DESCRIPTION', 'Add Conversion Tracking to Checkout Success.');
-
+  define('MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_TITLE', 'Google AdWords Conversion Tracking');
+  define('MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_DESCRIPTION', 'Add Google AdWords Conversion Tracking to the Checkout Success page');
 ?>
