@@ -18,7 +18,7 @@
 </div>
 
 <?php
-  if ($banner = tep_banner_exists('dynamic', '468x50')) {
+  if ($banner = tep_banner_exists('dynamic', 'footer')) {
 ?>
 
 <div class="grid_24" style="text-align: center; padding-bottom: 20px;">
