@@ -4,6 +4,42 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2013 osCommerce
 
 ------------------------------------------------------------------------------
+09/04/2013 osCommerce Online Merchant v2.3.3.2
+------------------------------------------------------------------------------
+
+ * PHP 5.5 Compatibility
+   Replace mysql_* database function calls with mysqli_*.
+
+ * Administration Tool -> Dashboard -> Partner News
+   Add new Administration Tool Dashboard module.
+
+ * Administrator Account Initialization
+   Prevent empty administrator account from being initialized.
+
+ * tep_catalog_href_link()
+   Take the catalog HTTPS path into consideration for HTTPS links.
+
+ * Administration Tool Navigation Menu
+   Collapse navigation menu on the Dashboard page.
+
+ * Google+ +1 and Google+ Share Social Bookmark Modules
+   Show the button images in the chosen language.
+
+ * Template Modules
+   Only include template module class files and language definitions if their
+   files exist.
+
+ * Canonical Header Tag Module
+   Link to the main product information page and ignore product attribute
+   combinations.
+
+ * New Twitter Product Card Header Tag Module
+   Add Twitter Product Card meta tags to the product information page.
+
+ * New Google AdWords Conversion Tracking Header Tag Module
+   Add Google AdWords Conversion Tracking code to the checkout success page.
+
+------------------------------------------------------------------------------
 08/26/2013 osCommerce Online Merchant v2.3.3.1
 ------------------------------------------------------------------------------
 
