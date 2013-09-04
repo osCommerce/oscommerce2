@@ -642,7 +642,7 @@ INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$c
 INSERT INTO address_format VALUES (4, '$firstname $lastname$cr$streets$cr$city ($postcode)$cr$country', '$postcode / $country');
 INSERT INTO address_format VALUES (5, '$firstname $lastname$cr$streets$cr$postcode $city$cr$country','$city / $country');
 
-INSERT INTO banners VALUES (1, 'osCommerce', 'http://www.oscommerce.com', 'banners/oscommerce.gif', '468x50', '', 0, null, null, now(), null, 1);
+INSERT INTO banners VALUES (1, 'osCommerce', 'http://www.oscommerce.com', 'banners/oscommerce.gif', 'footer', '', 0, null, null, now(), null, 1);
 
 INSERT INTO categories VALUES ('1', 'category_hardware.gif', '0', '1', now(), null);
 INSERT INTO categories VALUES ('2', 'category_software.gif', '0', '2', now(), null);
