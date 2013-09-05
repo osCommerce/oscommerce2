@@ -20,9 +20,9 @@
 <meta name="robots" content="noindex,nofollow" />
 <link rel="icon" type="image/png" href="images/oscommerce_icon.png" />
 
-<link rel="stylesheet" type="text/css" href="../ext/jquery/ui/redmond/jquery-ui-1.10.3.min.css" />
-<script src="../ext/jquery/jquery-1.10.2.min.js"></script>
-<script src="../ext/jquery/ui/jquery-ui-1.10.3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="../ext/jquery/ui/redmond/jquery-ui-1.8.22.css" />
+<script src="../ext/jquery/jquery-1.8.0.min.js"></script>
+<script src="../ext/jquery/ui/jquery-ui-1.8.22.min.js"></script>
 
 <link rel="stylesheet" type="text/css" href="templates/main_page/stylesheet.css" />
 </head>
