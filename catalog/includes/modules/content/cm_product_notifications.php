@@ -17,12 +17,18 @@
     var $enabled = false;
 
     function cm_product_notifications() {
-      $this->title = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_TITLE;
+      global $PHP_SELF, $oscTemplate;
+
+      $this->title = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_DESCRIPTION;
 
 	  if (defined('MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_STATUS')) {
         $this->sort_order = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_SORT_ORDER;
         $this->enabled = (MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_STATUS == 'True');
+      }
+
+      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_CHECKOUT_SUCCESS) ) {
+        $this->enabled = false;
       }
 	}
 	 

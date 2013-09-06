@@ -17,12 +17,18 @@
     var $enabled = false;
 
     function cm_thank_you() {
-      $this->title = MODULE_CHECKOUT_SUCCESS_THANK_YOU_TITLE;
+      global $PHP_SELF, $oscTemplate;
+
+      $this->title = MODULE_CHECKOUT_SUCCESS_THANK_YOU_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CHECKOUT_SUCCESS_THANK_YOU_DESCRIPTION;
 
       if ( defined('MODULE_CHECKOUT_SUCCESS_THANK_YOU_STATUS') ) {
         $this->sort_order = MODULE_CHECKOUT_SUCCESS_THANK_YOU_SORT_ORDER;
         $this->enabled = (MODULE_CHECKOUT_SUCCESS_THANK_YOU_STATUS == 'True');
+      }
+
+      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_CHECKOUT_SUCCESS) ) {
+        $this->enabled = false;
       }
     }
 
