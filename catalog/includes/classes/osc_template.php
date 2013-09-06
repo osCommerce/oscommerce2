@@ -62,6 +62,25 @@
     }
 
     function getBlocks($group) {
+      if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
+        include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
+
+        $template_page_class = 'tp_' . $group;
+
+        $template_page = new $template_page_class();
+        $template_page->prepare();
+      }
+
+      if ( class_exists('tp_' . $group) ) {
+        if ( !isset($template_page) ) {
+          $template_page_class = 'tp_' . $group;
+
+          $template_page = new $template_page_class();
+        }
+
+        $template_page->build();
+      }
+
       if ($this->hasBlocks($group)) {
         return implode("\n", $this->_blocks[$group]);
       }
@@ -96,6 +115,15 @@
                 $mb = new $class();
 
                 if ( $mb->isEnabled() ) {
+                  if ( !class_exists('tp_' . $mb->group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $mb->group . '.php') ) {
+                    include(DIR_WS_MODULES . 'pages/tp_' . $mb->group . '.php');
+
+                    $template_page_class = 'tp_' . $mb->group;
+
+                    $template_page = new $template_page_class();
+                    $template_page->prepare();
+                  }
+
                   $mb->execute();
                 }
               }

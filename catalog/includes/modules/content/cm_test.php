@@ -21,21 +21,15 @@
     function cm_test() {
       global $PHP_SELF, $oscTemplate;
 
-      $this->title = MODULE_CONTENT_TEST_TITLE;
+      $this->title = MODULE_CONTENT_TEST_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CONTENT_TEST_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_TEST_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_TEST_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_TEST_STATUS == 'True');
-
-        if ( !defined('MODULE_CONTENT_ACCOUNT_SORT_ORDER') || (MODULE_CONTENT_ACCOUNT_SORT_ORDER >= $this->sort_order) ) {
-          $this->description .= '<p style="color: #ff0000; font-weight: bold;">Please review the sort order and load this module after the Account content module.</p>';
-
-          $this->enabled = false;
-        }
       }
 
-      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_ACCOUNT) || !isset($oscTemplate->_data['account']) ) {
+      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_ACCOUNT) ) {
         $this->enabled = false;
       }
     }
