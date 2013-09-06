@@ -61,12 +61,7 @@
       return (isset($this->_blocks[$group]) && !empty($this->_blocks[$group]));
     }
 
-    function getBlocks($group, $block = null) {
-      if ( isset($block) && class_exists($block) && method_exists($block, 'build') ) {
-        $module = new $block();
-        $module->build();
-      }
-
+    function getBlocks($group) {
       if ($this->hasBlocks($group)) {
         return implode("\n", $this->_blocks[$group]);
       }
