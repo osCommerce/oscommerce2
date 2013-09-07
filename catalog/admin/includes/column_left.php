@@ -17,6 +17,10 @@
       while ($file = $dir->read()) {
         if (!is_dir($dir->path . '/' . $file)) {
           if (substr($file, strrpos($file, '.')) == '.php') {
+            if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file) ) {
+              include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file);
+            }
+
             include($dir->path . '/' . $file);
           }
         }
