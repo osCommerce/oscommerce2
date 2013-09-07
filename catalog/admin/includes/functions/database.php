@@ -28,7 +28,13 @@
     return mysqli_close($$link);
   }
 
-  function tep_db_error($query, $errno, $error) { 
+  function tep_db_error($query, $errno, $error) {
+    global $logger;
+
+    if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
+      $logger->write('[' . $errno . '] ' . $error, 'ERROR');
+    }
+
     die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[TEP STOP]</font></small><br /><br /></strong></font>');
   }
 
@@ -41,10 +47,6 @@
     }
 
     $result = mysqli_query($$link, $query) or tep_db_error($query, mysqli_errno($$link), mysqli_error($$link));
-
-    if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
-      if (mysqli_error($$link)) $logger->write(mysqli_error($llink), 'ERROR');
-    }
 
     return $result;
   }
