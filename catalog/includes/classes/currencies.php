@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,7 +26,7 @@
                                                        'symbol_right' => $currencies['symbol_right'],
                                                        'decimal_point' => $currencies['decimal_point'],
                                                        'thousands_point' => $currencies['thousands_point'],
-                                                       'decimal_places' => $currencies['decimal_places'],
+                                                       'decimal_places' => (int)$currencies['decimal_places'],
                                                        'value' => $currencies['value']);
       }
     }
