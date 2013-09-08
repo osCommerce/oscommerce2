@@ -131,6 +131,7 @@
     if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
       $current_page = FILENAME_DEFAULT;
       $HTTP_GET_VARS = array();
+      $HTTP_POST_VARS = array();
     }
 
     if ($current_page != FILENAME_LOGIN) {
@@ -138,7 +139,8 @@
         tep_session_register('redirect_origin');
 
         $redirect_origin = array('page' => $current_page,
-                                 'get' => $HTTP_GET_VARS);
+                                 'get' => $HTTP_GET_VARS,
+                                 'post' => $HTTP_POST_VARS);
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
