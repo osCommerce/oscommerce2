@@ -26,7 +26,7 @@
                                                        'symbol_right' => $currencies['symbol_right'],
                                                        'decimal_point' => $currencies['decimal_point'],
                                                        'thousands_point' => $currencies['thousands_point'],
-                                                       'decimal_places' => $currencies['decimal_places'],
+                                                       'decimal_places' => (int)$currencies['decimal_places'],
                                                        'value' => $currencies['value']);
       }
     }
