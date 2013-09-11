@@ -37,7 +37,7 @@
         if (isset($cPath) && tep_not_null($cPath)) {
           $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
         } elseif (isset($HTTP_GET_VARS['manufacturers_id']) && tep_not_null($HTTP_GET_VARS['manufacturers_id'])) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $HTTP_GET_VARS['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . (int)$HTTP_GET_VARS['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         }
       }
     }
