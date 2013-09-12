@@ -28,18 +28,18 @@
       $dir->close();
     }
 
-    function sort_admin_boxes($a, $b) {
+    function tep_sort_admin_boxes($a, $b) {
       return strcmp($a['heading'], $b['heading']);
     }
 
-    usort($cl_box_groups, 'sort_admin_boxes');
+    usort($cl_box_groups, 'tep_sort_admin_boxes');
 
-    function sort_admin_boxes_links($a, $b) {
+    function tep_sort_admin_boxes_links($a, $b) {
       return strcmp($a['title'], $b['title']);
     }
 
     foreach ( $cl_box_groups as $key => &$group ) {
-      usort($group['apps'], 'sort_admin_boxes_links');
+      usort($group['apps'], 'tep_sort_admin_boxes_links');
     }
 ?>
 
