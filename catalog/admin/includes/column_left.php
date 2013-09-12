@@ -38,7 +38,7 @@
       return strcmp($a['title'], $b['title']);
     }
 
-    foreach ( $cl_box_groups as $key => &$group ) {
+    foreach ( $cl_box_groups as &$group ) {
       usort($group['apps'], 'tep_sort_admin_boxes_links');
     }
 ?>
