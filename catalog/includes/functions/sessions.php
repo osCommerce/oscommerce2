@@ -16,10 +16,6 @@
   }
 
   if (STORE_SESSIONS == 'mysql') {
-    if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
-      $SESS_LIFE = 1440;
-    }
-
     function _sess_open($save_path, $session_name) {
       return true;
     }
@@ -29,7 +25,7 @@
     }
 
     function _sess_read($key) {
-      $value_query = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' and expiry > '" . time() . "'");
+      $value_query = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
       $value = tep_db_fetch_array($value_query);
 
       if (isset($value['value'])) {
@@ -39,19 +35,13 @@
       return '';
     }
 
-    function _sess_write($key, $val) {
-      global $SESS_LIFE;
+    function _sess_write($key, $value) {
+      $check_query = tep_db_query("select sesskey from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' limit 1");
 
-      $expiry = time() + $SESS_LIFE;
-      $value = $val;
-
-      $check_query = tep_db_query("select count(*) as total from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
-      $check = tep_db_fetch_array($check_query);
-
-      if ($check['total'] > 0) {
-        return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input($expiry) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
+      if ( tep_db_num_rows($check_query) > 0 ) {
+        return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input(time()) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
       } else {
-        return tep_db_query("insert into " . TABLE_SESSIONS . " values ('" . tep_db_input($key) . "', '" . tep_db_input($expiry) . "', '" . tep_db_input($value) . "')");
+        return tep_db_query("insert into " . TABLE_SESSIONS . " values ('" . tep_db_input($key) . "', '" . tep_db_input(time()) . "', '" . tep_db_input($value) . "')");
       }
     }
 
@@ -60,9 +50,7 @@
     }
 
     function _sess_gc($maxlifetime) {
-      tep_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . time() . "'");
-
-      return true;
+      return tep_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . (time() - $maxlifetime) . "'");
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
