@@ -58,15 +58,9 @@
               if (tep_session_is_registered('redirect_origin')) {
                 $page = $redirect_origin['page'];
                 $get_string = '';
-                $post_string = '';
 
                 if (function_exists('http_build_query')) {
                   $get_string = http_build_query($redirect_origin['get']);
-                  $post_string = http_build_query($redirect_origin['post']);
-                }
-
-                if ( !empty($post_string) ) {
-                  tep_redirect(tep_href_link('login_redirect.php'));
                 }
 
                 tep_session_unregister('redirect_origin');
