@@ -14,6 +14,12 @@
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
   if ($session_started == false) {
+    if ( !isset($HTTP_GET_VARS['cookie_test']) ) {
+      $all_get = tep_get_all_get_params();
+
+      tep_redirect(tep_href_link(FILENAME_LOGIN, $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
+    }
+
     tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
   }
 
