@@ -25,7 +25,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'process':
-        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user'])) {
+        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user']) && !isset($HTTP_POST_VARS['username'])) {
           $username = tep_db_prepare_input($redirect_origin['auth_user']);
           $password = tep_db_prepare_input($redirect_origin['auth_pw']);
         } else {
@@ -72,7 +72,9 @@
             }
           }
 
-          $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+          if (isset($HTTP_POST_VARS['username'])) {
+            $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+          }
         } else {
           $messageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
         }
