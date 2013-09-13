@@ -140,7 +140,7 @@
 
         $redirect_origin = array('page' => $current_page,
                                  'get' => $HTTP_GET_VARS,
-                                 'post' => (!isset($HTTP_POST_FILES) || empty($HTTP_POST_FILES)) ? $HTTP_POST_VARS : null); // only store $_POST if no files have been uploaded
+                                 'post' => $HTTP_POST_VARS);
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
