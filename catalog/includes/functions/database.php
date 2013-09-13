@@ -19,6 +19,10 @@
 
     $$link = mysqli_connect($server, $username, $password, $database);
 
+    if ( function_exists('mysqli_set_charset') && !mysqli_connect_errno() ) {
+      mysqli_set_charset($$link, 'utf8');
+    }
+
     return $$link;
   }
 
