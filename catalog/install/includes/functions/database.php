@@ -22,7 +22,9 @@
 
     $$link = @mysqli_connect($server, $username, $password);
 
-    if ( mysqli_connect_errno() > 0 ) {
+    if ( !mysqli_connect_errno() ) {
+      mysqli_set_charset($$link, 'utf8');
+    } else {
       $db_error = mysqli_connect_error();
     }
 
@@ -146,6 +148,12 @@
       }
 
       return $link;
+    }
+
+    function mysqli_set_charset($link, $charset) {
+      if ( function_exists('mysql_set_charset') ) {
+        return mysql_set_charset($charset, $link);
+      }
     }
 
     function mysqli_select_db($link, $database) {
