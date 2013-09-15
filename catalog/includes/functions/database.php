@@ -19,9 +19,9 @@
 
     $$link = mysqli_connect($server, $username, $password, $database);
 
-    if ( function_exists('mysqli_set_charset') && !mysqli_connect_errno() ) {
+    if ( !mysqli_connect_errno() ) {
       mysqli_set_charset($$link, 'utf8');
-    }
+    } 
 
     return $$link;
   }
@@ -173,6 +173,20 @@
       }
 
       return $link;
+    }
+
+    function mysqli_connect_errno($link = null) {
+      return mysql_errno($link);
+    }
+
+    function mysqli_connect_error($link = null) {
+      return mysql_error($link);
+    }
+
+    function mysqli_set_charset($link, $charset) {
+      if ( function_exists('mysql_set_charset') ) {
+        return mysql_set_charset($charset, $link);
+      }
     }
 
     function mysqli_close($link) {
