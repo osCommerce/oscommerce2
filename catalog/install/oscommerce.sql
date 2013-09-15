@@ -538,7 +538,7 @@ CREATE TABLE sec_directory_whitelist (
 
 DROP TABLE IF EXISTS sessions;
 CREATE TABLE sessions (
-  sesskey varchar(32) NOT NULL,
+  sesskey varchar(128) NOT NULL,
   expiry int(11) unsigned NOT NULL,
   value text NOT NULL,
   PRIMARY KEY (sesskey)
