@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -57,7 +57,7 @@
         }
 
         if (ACCOUNT_DOB == 'true') {
-          if (checkdate(substr(tep_date_raw($customers_dob), 4, 2), substr(tep_date_raw($customers_dob), 6, 2), substr(tep_date_raw($customers_dob), 0, 4))) {
+          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && ((is_numeric(tep_date_raw($customers_dob)) && @checkdate(substr(tep_date_raw($customers_dob), 4, 2), substr(tep_date_raw($customers_dob), 6, 2), substr(tep_date_raw($customers_dob), 0, 4))) || empty($customers_dob))) {
             $entry_date_of_birth_error = false;
           } else {
             $error = true;
