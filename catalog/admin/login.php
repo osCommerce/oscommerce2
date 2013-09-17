@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -79,7 +79,9 @@
           $messageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
         }
 
-        $actionRecorder->record(false);
+        if (isset($HTTP_POST_VARS['username'])) {
+          $actionRecorder->record(false);
+        }
 
         break;
 
