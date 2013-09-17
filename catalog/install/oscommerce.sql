@@ -1222,15 +1222,7 @@ INSERT INTO products_attributes_download VALUES (26, 'unreal.zip', 7, 3);
 INSERT INTO products_images VALUES (1,28,'samsung/galaxy_tab_1.jpg',null,1);
 INSERT INTO products_images VALUES (2,28,'samsung/galaxy_tab_2.jpg',null,2);
 INSERT INTO products_images VALUES (3,28,'samsung/galaxy_tab_3.jpg',null,3);
-INSERT INTO products_images VALUES (4,28,'samsung/galaxy_tab_4.jpg','<iframe width="560" height="315" src="http://www.youtube.com/embed/tAbsmHMAhrQ?autoplay=1" frameborder="0" allowfullscreen></iframe>',4);
-INSERT INTO products_images VALUES (5,17,'dvd/speed_large.jpg',null,1);
-INSERT INTO products_images VALUES (6,12,'dvd/die_hard_3_large.jpg',null,1);
-INSERT INTO products_images VALUES (7,11,'dvd/fire_down_below_large.jpg',null,1);
-INSERT INTO products_images VALUES (8,13,'dvd/lethal_weapon_large.jpg',null,1);
-INSERT INTO products_images VALUES (9,18,'dvd/speed_2_large.jpg',null,1);
-INSERT INTO products_images VALUES (10,6,'dvd/the_matrix_large.jpg',null,1);
-INSERT INTO products_images VALUES (11,4,'dvd/replacement_killers_large.jpg',null,1);
-INSERT INTO products_images VALUES (12,9,'dvd/under_siege_large.jpg',null,1);
+INSERT INTO products_images VALUES (4,28,'samsung/galaxy_tab_4.jpg','<object type="application/x-shockwave-flash" width="640" height="385" data="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1"><param name="movie" value="http://www.youtube.com/v/tAbsmHMAhrQ?fs=1&amp;autoplay=1" /><param name="allowFullScreen" value="true" /><param name="allowscriptaccess" value="always" /><param name="wmode" value="transparent" /></object>',4);
 
 INSERT INTO products_options VALUES (1,1,'Color');
 INSERT INTO products_options VALUES (2,1,'Size');
