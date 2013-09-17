@@ -471,7 +471,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 
@@ -714,8 +714,8 @@
 
 ////
 // Function to read in text area in admin
- function tep_cfg_textarea($text) {
-    return tep_draw_textarea_field('configuration_value', false, 35, 5, $text);
+ function tep_cfg_textarea($text, $key = '') {
+    return tep_draw_textarea_field('configuration['.$key.']', false, 35, 5, $text);
   }
 
   function tep_cfg_get_zone_name($zone_id) {
