@@ -29,13 +29,13 @@
     }
 
     function tep_sort_admin_boxes($a, $b) {
-      return strcmp($a['heading'], $b['heading']);
+      return strcasecmp($a['heading'], $b['heading']);
     }
 
     usort($cl_box_groups, 'tep_sort_admin_boxes');
 
     function tep_sort_admin_boxes_links($a, $b) {
-      return strcmp($a['title'], $b['title']);
+      return strcasecmp($a['title'], $b['title']);
     }
 
     foreach ( $cl_box_groups as &$group ) {
