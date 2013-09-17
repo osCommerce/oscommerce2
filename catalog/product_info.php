@@ -44,17 +44,9 @@
     tep_db_query("update " . TABLE_PRODUCTS_DESCRIPTION . " set products_viewed = products_viewed+1 where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
 
     if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
-      $products_price = '<del>' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</del> <span class="productSpecialPrice" itemprop="price">' . $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
+      $products_price = '<del>' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
     } else {
-      $products_price = '<span itemprop="price">' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
-    }
-
-    if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
-      $products_price .= '<link itemprop="availability" href="http://schema.org/PreOrder" />';
-    } elseif ((STOCK_CHECK == 'true') && ($product_info['products_quantity'] < 1)) {
-      $products_price .= '<link itemprop="availability" href="http://schema.org/OutOfStock" />';
-    } else {
-      $products_price .= '<link itemprop="availability" href="http://schema.org/InStock" />';
+      $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
     }
 
     $products_name = '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product_info['products_id']) . '" itemprop="url"><span itemprop="name">' . $product_info['products_name'] . '</span></a>';
@@ -69,7 +61,7 @@
 <div itemscope itemtype="http://schema.org/Product">
 
 <div>
-  <h1 style="float: right;" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><?php echo $products_price; ?></h1>
+  <h1 style="float: right;" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><span itemprop="price"><?php echo $products_price; ?></span></h1>
   <h1 ><?php echo $products_name; ?></h1>
 </div>
 
@@ -227,7 +219,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
       $manufacturer_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$product_info['manufacturers_id'] . "'");
       if (tep_db_num_rows($manufacturer_query)) {
         $manufacturer = tep_db_fetch_array($manufacturer_query);
-        echo '<div itemprop="manufacturer" itemscope itemtype="http://schema.org/Organization" style="display: none;"><span itemprop="name">' . $manufacturer['manufacturers_name'] . '</span></div>';
+        echo '<div itemscope itemtype="http://schema.org/Organization" style="display: none;"><span itemprop="name">' . $manufacturer['manufacturers_name'] . '</span></div>';
       }
     }
 ?>
