@@ -57,8 +57,6 @@
       $products_price .= '<link itemprop="availability" href="http://schema.org/InStock" />';
     }
 
-    $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($currency) . '" />';
-
     $products_name = '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product_info['products_id']) . '" itemprop="url"><span itemprop="name">' . $product_info['products_name'] . '</span></a>';
 
     if (tep_not_null($product_info['products_model'])) {
@@ -208,7 +206,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
     $reviews = tep_db_fetch_array($reviews_query);
 
     if ($reviews['count'] > 0) {
-      echo '<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><meta itemprop="ratingValue" content="' . $reviews['avgrating'] . '" /><meta itemprop="ratingCount" content="' . $reviews['count'] . '" /></span>';
+      echo '<div itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating" style="display: none;"><span itemprop="ratingValue">' . $reviews['avgrating'] . '</span><span itemprop="ratingCount">' . $reviews['count'] . '</span></div>';
     }
 ?>
 
@@ -229,7 +227,7 @@ $("#piGal a[rel^='fancybox']").fancybox({
       $manufacturer_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$product_info['manufacturers_id'] . "'");
       if (tep_db_num_rows($manufacturer_query)) {
         $manufacturer = tep_db_fetch_array($manufacturer_query);
-        echo '<span itemprop="manufacturer" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="' . tep_output_string($manufacturer['manufacturers_name']) . '" /></span>';
+        echo '<div itemprop="manufacturer" itemscope itemtype="http://schema.org/Organization" style="display: none;"><span itemprop="name">' . $manufacturer['manufacturers_name'] . '</span></div>';
       }
     }
 ?>
