@@ -43,20 +43,12 @@
     $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
   }
 
-// load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($shipping);
-
 // load the selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
   $payment_modules = new payment($payment);
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
-
-  require(DIR_WS_CLASSES . 'order_total.php');
-  $order_total_modules = new order_total;
-  $order_total_modules->process();
 
   $payment_modules->update_status();
 
@@ -67,6 +59,14 @@
   if (is_array($payment_modules->modules)) {
     $payment_modules->pre_confirmation_check();
   }
+
+// load the selected shipping module
+  require(DIR_WS_CLASSES . 'shipping.php');
+  $shipping_modules = new shipping($shipping);
+
+  require(DIR_WS_CLASSES . 'order_total.php');
+  $order_total_modules = new order_total;
+  $order_total_modules->process();
 
 // Stock Check
   $any_out_of_stock = false;
