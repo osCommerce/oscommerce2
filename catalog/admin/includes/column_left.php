@@ -62,7 +62,7 @@
 
 <script type="text/javascript">
 $('#adminAppMenu').accordion({
-  heightStyle: 'content',
+  autoHeight: false,
   collapsible: true,
 
 <?php
