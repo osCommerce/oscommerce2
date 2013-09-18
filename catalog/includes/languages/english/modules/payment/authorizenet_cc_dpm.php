@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  define('MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_TITLE', 'Authorize.net Direct Post Method (DPM)');
+  define('MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_TITLE', 'Authorize.net Direct Post Method');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_PUBLIC_TITLE', 'Credit Card');
   define('MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.authorize.net" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit Authorize.net Website</a>');
 
