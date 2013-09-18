@@ -14,18 +14,27 @@
     $cl_box_groups = array();
 
     if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {
+      $files = array();
+
       while ($file = $dir->read()) {
         if (!is_dir($dir->path . '/' . $file)) {
           if (substr($file, strrpos($file, '.')) == '.php') {
-            if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file) ) {
-              include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file);
-            }
-
-            include($dir->path . '/' . $file);
+            $files[] = $file;
           }
         }
       }
+
       $dir->close();
+
+      natcasesort($files);
+
+      foreach ( $files as $file ) {
+        if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file) ) {
+          include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file);
+        }
+
+        include($dir->path . '/' . $file);
+      }
     }
 
     function tep_sort_admin_boxes($a, $b) {
