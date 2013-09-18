@@ -222,7 +222,7 @@ EOD;
 
       if ( $error === false ) {
         if ( ($HTTP_POST_VARS['x_response_code'] == '1') || ($HTTP_POST_VARS['x_response_code'] == '4') ) {
-          if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_MD5_HASH) && (!isset($HTTP_POST_VARS['x_MD5_Hash']) || (strtoupper($HTTP_POST_VARS['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . $HTTP_POST_VARS['x_trans_id'] . $this->format_raw($order->info['total']))))) ) {
+          if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_MD5_HASH) && (!isset($HTTP_POST_VARS['x_MD5_Hash']) || ($HTTP_POST_VARS['x_MD5_Hash'] != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . $HTTP_POST_VARS['x_trans_id'] . $this->format_raw($order->info['total']))))) ) {
             $error = 'verification';
           } elseif ($HTTP_POST_VARS['x_amount'] != $this->format_raw($order->info['total'])) {
             $error = 'verification';
