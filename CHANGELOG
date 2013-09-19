@@ -4,6 +4,78 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2013 osCommerce
 
 ------------------------------------------------------------------------------
+09/19/2013 osCommerce Online Merchant v2.3.3.3
+------------------------------------------------------------------------------
+
+ * Database Query Logging
+   Improve database query error logging.
+
+ * Administration Tool Navigation Menu
+   Dynamically load navigation boxes.
+
+ * HTTPS -> HTTP Browser Alert
+   Have forms posting from a HTTPS to HTTP page post to a HTTPS version to
+   prevent the browser (Firefox) from alerting the user of being directed to
+   an insecure page.
+
+ * Currencies
+   Force decimal places value to an integer value.
+
+ * Action Recorder
+   When expiring logged entries, don't pass the database connection link to
+   tep_db_affected_rows().
+
+ * UTF-8
+   Set the MySQL character set to UTF-8 after a connection is made.
+   Create the database tables in utf8_unicode_ci for new installations.
+   Set the English locale to en_US.UTF-8, en_US.UTF8, enu_usa.
+
+ * Date of Birth
+   Take the Configuration -> Minimum Values -> Date of Birth value into
+   consideration to make the date of birth field optional.
+
+ * Administration Tool Automatic HTTP Authentication Login
+   Don't use the HTTP Authentication values when the login form is being
+   submitted.
+   Don't show an invalid administrator notice when an automatic HTTP
+   Authentication fails.
+   Don't record failed automatic HTTP Authentication log ins.
+
+ * Canonical Manufacturer ID
+   Force the Manufacturer ID to an integer value.
+
+ * Administration Tool -> Who's Online
+   Remove the session_decode() functionality and show shopping cart contents
+   only for logged in customers.
+   When regenerating a session ID, update the session ID in the who's online
+   database table to prevent duplicate entries.
+
+ * MailChimp 360
+   Fix module title.
+
+ * Administration Tool Extended Security Check Modules
+   Introduce new extended security check modules that are called in the new
+   Administration Tool -> Tools -> Security Checks page. These modules are
+   not called on the Administration Tool Dashboard page as normal security
+   check modules as these modules are more resource intensive. New modules
+   include:
+
+   - admin/backups directory public accessibility check
+   - admin/backups file public accessibility check
+   - admin http authentication check
+   - ext/ directory public accessibility check
+   - mysql utf8 database tables check
+   - version update performed check (30 days)
+
+   A normal extended_last_run security check module is also added to check if
+   the extended checks have run in the last 30 days.
+
+ * Administration Tool -> Tools -> Database Tables
+   Introduce a new Database Tables page to check, analyze, optimize, and
+   repair database tables. A Convert to UTF8 action is also available to
+   convert existing database tables to utf8_unicode_ci.
+
+------------------------------------------------------------------------------
 09/04/2013 osCommerce Online Merchant v2.3.3.2
 ------------------------------------------------------------------------------
 
