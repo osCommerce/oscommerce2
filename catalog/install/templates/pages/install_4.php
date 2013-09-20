@@ -190,16 +190,17 @@
   }
 
   $file_contents .= '?>';
+  
+  if ($admin_folder != 'admin') {
+    @rename($dir_fs_document_root . 'admin', $dir_fs_document_root . $admin_folder);
+  }  
 
-  $fp = fopen($dir_fs_document_root . 'admin/includes/configure.php', 'w');
+  $fp = fopen($dir_fs_document_root . $admin_folder . '/includes/configure.php', 'w');
   fputs($fp, $file_contents);
   fclose($fp);
 
-  @chmod($dir_fs_document_root . 'admin/includes/configure.php', 0644);
+  @chmod($dir_fs_document_root . $admin_folder . '/includes/configure.php', 0644);
 
-  if ($admin_folder != 'admin') {
-    @rename($dir_fs_document_root . 'admin', $dir_fs_document_root . $admin_folder);
-  }
 ?>
 
     <p>The installation and configuration was successful!</p>
