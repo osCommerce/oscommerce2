@@ -125,6 +125,8 @@
       foreach ( $HTTP_POST_VARS['id'] as $table ) {
         $result = 'OK';
 
+        $queries = array();
+
         $cols_query = tep_db_query("show full columns from " . $table);
         while ( $cols = tep_db_fetch_array($cols_query) ) {
           if ( !empty($cols['Collation']) ) {
@@ -134,30 +136,29 @@
               $old_charset = $HTTP_POST_VARS['from_charset'];
             }
 
-            $query = "update " . $table . " set " . $cols['Field'] . " = @txt where char_length(" . $cols['Field'] . ") = length(@txt := convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
-
-            if ( isset($HTTP_POST_VARS['dryrun']) ) {
-              $table_data[] = array($query);
-            } else {
-              if ( !mysqli_query($db_link, $query) ) {
-                $result = mysqli_error($db_link);
-
-                break;
-              }
-            }
+            $queries[] = "update " . $table . " set " . $cols['Field'] . " = @txt where char_length(" . $cols['Field'] . ") = length(@txt := convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
           }
         }
 
-        if ( $result == 'OK' ) {
-          $query = "alter table " . $table . " convert to character set utf8 collate utf8_unicode_ci";
+        $query = "alter table " . $table . " convert to character set utf8 collate utf8_unicode_ci";
 
+        if ( isset($HTTP_POST_VARS['dryrun']) ) {
+          $table_data[] = array($query);
+
+          foreach ( $queries as $q ) {
+            $table_data[] = array($q);
+          }
+        } else {
 // mysqli_query() is directly called as tep_db_query() dies when an error occurs
-          if ( isset($HTTP_POST_VARS['dryrun']) ) {
-              $table_data[] = array($query);
-          } else {
-            if ( !mysqli_query($db_link, $query) ) {
-              $result = mysqli_error($db_link);
+          if ( mysqli_query($db_link, $query) ) {
+            foreach ( $queries as $q ) {
+              if ( !mysqli_query($db_link, $q) ) {
+                $result = mysqli_error($db_link);
+                break;
+              }
             }
+          } else {
+            $result = mysqli_error($db_link);
           }
         }
 
