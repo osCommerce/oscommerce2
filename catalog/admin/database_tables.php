@@ -23,6 +23,13 @@
     return $result;
   }
 
+  $mysql_charsets = array(array('id' => 'auto', 'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT));
+
+  $charsets_query = tep_db_query("show character set");
+  while ( $charsets = tep_db_fetch_array($charsets_query) ) {
+    $mysql_charsets[] = array('id' => $charsets['Charset'], 'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $charsets['Charset']));
+  }
+
   $action = null;
   $actions = array(array('id' => 'check',
                          'text' => ACTION_CHECK_TABLES),
@@ -84,25 +91,82 @@
       break;
 
     case 'utf8':
+      $charset_pass = false;
+
+      if ( isset($HTTP_POST_VARS['from_charset']) ) {
+        if ( $HTTP_POST_VARS['from_charset'] == 'auto' ) {
+          $charset_pass = true;
+        } else {
+          foreach ( $mysql_charsets as $c ) {
+            if ( $HTTP_POST_VARS['from_charset'] == $c['id'] ) {
+              $charset_pass = true;
+              break;
+            }
+          }
+        }
+      }
+
+      if ( $charset_pass === false ) {
+        tep_redirect(tep_href_link('database_tables.php'));
+      }
+
       tep_set_time_limit(0);
 
-      $table_headers = array(TABLE_HEADING_TABLE,
-                             TABLE_HEADING_MSG,
-                             tep_draw_checkbox_field('masterblaster'));
+      if ( isset($HTTP_POST_VARS['dryrun']) ) {
+        $table_headers = array(TABLE_HEADING_QUERIES);
+      } else {
+        $table_headers = array(TABLE_HEADING_TABLE,
+                               TABLE_HEADING_MSG,
+                               tep_draw_checkbox_field('masterblaster'));
+      }
 
       $table_data = array();
 
       foreach ( $HTTP_POST_VARS['id'] as $table ) {
         $result = 'OK';
 
-// mysqli_query() is directly called as tep_db_query() dies when an error occurs
-        if ( !mysqli_query($db_link, "alter table " . $table . " convert to character set utf8 collate utf8_unicode_ci") ) {
-          $result = mysqli_error($db_link);
+        $queries = array();
+
+        $cols_query = tep_db_query("show full columns from " . $table);
+        while ( $cols = tep_db_fetch_array($cols_query) ) {
+          if ( !empty($cols['Collation']) ) {
+            if ( $HTTP_POST_VARS['from_charset'] == 'auto' ) {
+              $old_charset = substr($cols['Collation'], 0, strpos($cols['Collation'], '_'));
+            } else {
+              $old_charset = $HTTP_POST_VARS['from_charset'];
+            }
+
+            $queries[] = "update " . $table . " set " . $cols['Field'] . " = convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8) where char_length(" . $cols['Field'] . ") = length(convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
+          }
         }
 
-        $table_data[] = array(tep_output_string_protected($table),
-                              tep_output_string_protected($result),
-                              tep_draw_checkbox_field('id[]', $table));
+        $query = "alter table " . $table . " convert to character set utf8 collate utf8_unicode_ci";
+
+        if ( isset($HTTP_POST_VARS['dryrun']) ) {
+          $table_data[] = array($query);
+
+          foreach ( $queries as $q ) {
+            $table_data[] = array($q);
+          }
+        } else {
+// mysqli_query() is directly called as tep_db_query() dies when an error occurs
+          if ( mysqli_query($db_link, $query) ) {
+            foreach ( $queries as $q ) {
+              if ( !mysqli_query($db_link, $q) ) {
+                $result = mysqli_error($db_link);
+                break;
+              }
+            }
+          } else {
+            $result = mysqli_error($db_link);
+          }
+        }
+
+        if ( !isset($HTTP_POST_VARS['dryrun']) ) {
+          $table_data[] = array(tep_output_string_protected($table),
+                                tep_output_string_protected($result),
+                                tep_draw_checkbox_field('id[]', $table, true));
+        }
       }
 
       break;
@@ -167,9 +231,17 @@
 
 </table>
 
-<div style="text-align: right;">
-  <?php echo tep_draw_pull_down_menu('action', $actions) . tep_draw_button(BUTTON_ACTION_GO); ?>
+<?php
+  if ( !isset($HTTP_POST_VARS['dryrun']) ) {
+?>
+
+<div class="main" style="text-align: right;">
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, tep_draw_checkbox_field('dryrun')) . '</span>' . tep_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . tep_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
 </div>
+
+<?php
+  }
+?>
 
 </form>
 
@@ -180,6 +252,20 @@ $(function() {
       $('form[name="sql"] input[type="checkbox"][name="id[]"]').prop('checked', $('form[name="sql"] input[type="checkbox"][name="masterblaster"]').prop('checked'));
     });
   }
+
+  if ( $('#sqlActionsMenu').val() == 'utf8' ) {
+    $('.runUtf8').show();
+  }
+
+  $('#sqlActionsMenu').change(function() {
+    var selected = $(this).val();
+
+    if ( selected == 'utf8' ) {
+      $('.runUtf8').show();
+    } else {
+      $('.runUtf8').hide();
+    }
+  });
 });
 </script>
 

@@ -190,10 +190,18 @@
     }
 
     function mysqli_connect_errno($link = null) {
+      if ( is_null($link) ) {
+        return mysql_errno();
+      }
+
       return mysql_errno($link);
     }
 
     function mysqli_connect_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
       return mysql_error($link);
     }
 
@@ -212,10 +220,18 @@
     }
 
     function mysqli_errno($link = null) {
+      if ( is_null($link) ) {
+        return mysql_errno();
+      }
+
       return mysql_errno($link);
     }
 
     function mysqli_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
       return mysql_error($link);
     }
 

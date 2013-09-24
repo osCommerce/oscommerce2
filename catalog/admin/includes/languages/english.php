@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
-// look in your $PATH_LOCALE/locale directory for available locales..
-// on RedHat6.0 I used 'en_US'
-// on FreeBSD 4.0 I use 'en_US.ISO_8859-1'
-// this may not work under win32 environments..
-setlocale(LC_ALL, array('en_US.UTF-8', 'en_US.UTF8', 'enu_usa'));
+// look in your $PATH_LOCALE/locale directory for available locales
+// or type locale -a on the server.
+@setlocale(LC_ALL, array('en_US.UTF-8', 'en_US.UTF8', 'enu_usa'));
+
+// other languages should set LC_NUMERIC to en_US otherwise floats may contain commas instead of decimal points (see bug #634)
+//@setlocale(LC_NUMERIC, array('en_US.UTF-8', 'en_US.UTF8', 'enu_usa'));
+
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
