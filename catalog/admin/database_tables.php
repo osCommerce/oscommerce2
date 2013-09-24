@@ -136,7 +136,7 @@
               $old_charset = $HTTP_POST_VARS['from_charset'];
             }
 
-            $queries[] = "update " . $table . " set " . $cols['Field'] . " = @txt where char_length(" . $cols['Field'] . ") = length(@txt := convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
+            $queries[] = "update " . $table . " set " . $cols['Field'] . " = convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8) where char_length(" . $cols['Field'] . ") = length(convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
           }
         }
 
