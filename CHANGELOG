@@ -4,7 +4,7 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2013 osCommerce
 
 ------------------------------------------------------------------------------
-09/xx/2013 osCommerce Online Merchant v2.3.3.4
+09/25/2013 osCommerce Online Merchant v2.3.3.4
 ------------------------------------------------------------------------------
 
  * MySQL Error Functions
@@ -16,10 +16,11 @@ Copyright (c) 2013 osCommerce
    to prevent double encodings. Allow a dry-run to show which queries would be
    performed.
 
- * Language Locale
-   As LC_ALL is now being used to set the locale, languages other than English
-   should manually set LC_NUMERIC to en_US to avoid PHP using commas in
-   float/decimal values.
+ * LC_NUMERIC Locale
+   As LC_ALL is now being used to set the locale, some languages other than
+   English were using commas in float/decimal values which conflicted with
+   MySQL. LC_NUMERIC is now set and forced to the system locale after the main
+   language file has loaded.
 
 ------------------------------------------------------------------------------
 09/20/2013 osCommerce Online Merchant v2.3.3.3
