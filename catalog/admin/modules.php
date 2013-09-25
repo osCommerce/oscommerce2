@@ -11,7 +11,6 @@
 */
 
   require('includes/application_top.php');
-
   $set = (isset($HTTP_GET_VARS['set']) ? $HTTP_GET_VARS['set'] : '');
 
   $modules = $cfgModules->getAll();
@@ -56,7 +55,9 @@
             $module->remove();
 
             $modules_installed = explode(';', constant($module_key));
-            unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
+            if (array_search($class . $file_extension, $modules_installed) !== false) { 
+               unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
+            } 
             tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
           }
@@ -67,10 +68,8 @@
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-
   $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
   $new_modules_counter = 0;
-
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
   if ($dir = @dir($module_directory)) {
@@ -224,6 +223,9 @@
   switch ($action) {
     case 'edit':
       $keys = '';
+      if (!isset($mInfo) || !is_array($mInfo->keys)) {
+        break; // won't work - you must remove first
+      }
       reset($mInfo->keys);
       while (list($key, $value) = each($mInfo->keys)) {
         $keys .= '<strong>' . $value['title'] . '</strong><br />' . $value['description'] . '<br />';
@@ -246,7 +248,7 @@
     default:
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
-      if ($mInfo->status == '1') {
+      if ($mInfo->status > 0) {
         $keys = '';
         reset($mInfo->keys);
         while (list(, $value) = each($mInfo->keys)) {
