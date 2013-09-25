@@ -4,6 +4,24 @@ osCommerce Online Merchant Changelog
 Copyright (c) 2013 osCommerce
 
 ------------------------------------------------------------------------------
+09/xx/2013 osCommerce Online Merchant v2.3.3.4
+------------------------------------------------------------------------------
+
+ * MySQL Error Functions
+   Don't pass a null parameter to the MySQL error functions otherwise PHP will
+   display a warning message.
+
+ * UTF-8 Conversion
+   Also manually convert existing data records to UTF-8 and detect encodings
+   to prevent double encodings. Allow a dry-run to show which queries would be
+   performed.
+
+ * Language Locale
+   As LC_ALL is now being used to set the locale, languages other than English
+   should manually set LC_NUMERIC to en_US to avoid PHP using commas in
+   float/decimal values.
+
+------------------------------------------------------------------------------
 09/20/2013 osCommerce Online Merchant v2.3.3.3
 ------------------------------------------------------------------------------
 
