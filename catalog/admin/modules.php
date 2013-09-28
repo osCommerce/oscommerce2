@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -46,17 +46,29 @@
           include($module_directory . $class . $file_extension);
           $module = new $class;
           if ($action == 'install') {
+            if ($module->check() > 0) { // remove module if already installed
+              $module->remove();
+            }
+
             $module->install();
 
             $modules_installed = explode(';', constant($module_key));
-            $modules_installed[] = $class . $file_extension;
+
+            if (!in_array($class . $file_extension, $modules_installed)) {
+              $modules_installed[] = $class . $file_extension;
+            }
+
             tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
           } elseif ($action == 'remove') {
             $module->remove();
 
             $modules_installed = explode(';', constant($module_key));
-            unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
+
+            if (in_array($class . $file_extension, $modules_installed)) {
+              unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
+            }
+
             tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
           }
@@ -178,7 +190,7 @@
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
-                <td class="dataTableContent" align="right"><?php if (is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
+                <td class="dataTableContent" align="right"><?php if (in_array($module->code . $file_extension, $modules_installed) && is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($HTTP_GET_VARS['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -246,7 +258,7 @@
     default:
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
-      if ($mInfo->status == '1') {
+      if (in_array($mInfo->code . $file_extension, $modules_installed) && ($mInfo->status > 0)) {
         $keys = '';
         reset($mInfo->keys);
         while (list(, $value) = each($mInfo->keys)) {
