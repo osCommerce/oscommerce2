@@ -190,6 +190,18 @@
       $response_array = $this->doExpressCheckoutPayment($params);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
+        if ( $response_array['L_ERRORCODE0'] == '10486' ) {
+          if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+            $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
+          } else {
+            $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
+          }
+
+          $paypal_url .= '&token=' . $ppe_token;
+
+          tep_redirect($paypal_url);
+        }
+
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
     }
