@@ -683,6 +683,10 @@
       $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_ITEMAMT'] + $params['TAXAMT'] + $params['PAYMENTREQUEST_0_SHIPPINGAMT'], '', 1);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
+      if (tep_session_is_registered('paypal_login_access_token')) {
+        $params['IDENTITYACCESSTOKEN'] = $paypal_login_access_token;
+      }
+
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
