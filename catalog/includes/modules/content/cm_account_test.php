@@ -10,15 +10,15 @@
   Released under the GNU General Public License
 */
 
-  class cm_test {
-    var $code = 'cm_test';
+  class cm_account_test {
+    var $code = 'cm_account_test';
     var $group = 'account';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_test() {
+    function cm_account_test() {
       global $PHP_SELF, $oscTemplate;
 
       $this->title = MODULE_CONTENT_TEST_TITLE . ' (' . $this->group . ')';

@@ -8,15 +8,15 @@
   Released under the GNU General Public License
 */
 
-  class cm_product_notifications {
-    var $code = 'cm_product_notifications';
+  class cm_checkout_success_product_notifications {
+    var $code = 'cm_checkout_success_product_notifications';
     var $group = 'checkout_success';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_product_notifications() {
+    function cm_checkout_success_product_notifications() {
       global $PHP_SELF, $oscTemplate;
 
       $this->title = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_TITLE . ' (' . $this->group . ')';

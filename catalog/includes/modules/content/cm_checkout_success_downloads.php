@@ -8,15 +8,15 @@
   Released under the GNU General Public License
 */
 
-  class cm_downloads {
-    var $code = 'cm_downloads';
+  class cm_checkout_success_downloads {
+    var $code = 'cm_checkout_success_downloads';
     var $group = 'checkout_success';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_downloads() {
+    function cm_checkout_success_downloads() {
       global $PHP_SELF, $oscTemplate;
 
       $this->title = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_TITLE . ' (' . $this->group . ')';

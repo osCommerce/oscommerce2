@@ -8,15 +8,15 @@
   Released under the GNU General Public License
 */
 
-  class cm_previous_orders {
-    var $code = 'cm_previous_orders';
-	var $group = 'checkout_success';
+  class cm_checkout_success_previous_orders {
+    var $code = 'cm_checkout_success_previous_orders';
+	  var $group = 'checkout_success';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_previous_orders() {
+    function cm_checkout_success_previous_orders() {
       global $PHP_SELF, $oscTemplate;
 
       $this->title = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_TITLE . ' (' . $this->group . ')';

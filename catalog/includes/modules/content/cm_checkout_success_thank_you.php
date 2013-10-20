@@ -8,15 +8,15 @@
   Released under the GNU General Public License
 */
 
-  class cm_thank_you {
-    var $code = 'cm_thank_you';
-	var $group = 'checkout_success';
+  class cm_checkout_success_thank_you {
+    var $code = 'cm_checkout_success_thank_you';
+  	var $group = 'checkout_success';
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_thank_you() {
+    function cm_checkout_success_thank_you() {
       global $PHP_SELF, $oscTemplate;
 
       $this->title = MODULE_CHECKOUT_SUCCESS_THANK_YOU_TITLE . ' (' . $this->group . ')';
