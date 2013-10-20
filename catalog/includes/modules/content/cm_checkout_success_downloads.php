@@ -17,18 +17,12 @@
     var $enabled = false;
 
     function cm_checkout_success_downloads() {
-      global $PHP_SELF, $oscTemplate;
-
       $this->title = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION;
 
 	  if (defined('MODULE_CHECKOUT_SUCCESS_DOWNLOADS_STATUS')) {
         $this->sort_order = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_SORT_ORDER;
         $this->enabled = (MODULE_CHECKOUT_SUCCESS_DOWNLOADS_STATUS == 'True');
-      }
-
-      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_CHECKOUT_SUCCESS) ) {
-        $this->enabled = false;
       }
 	}
 	 
@@ -78,7 +72,7 @@
 	  $cs_data .= '  </table>' . PHP_EOL;
 	  $cs_data .= '</div>' . PHP_EOL;
 		
-      $oscTemplate->addBlock($cs_data, $this->group);
+      $oscTemplate->addContent($cs_data, $this->group);
     }
 	
   }

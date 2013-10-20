@@ -16,7 +16,7 @@
     var $language_directory = DIR_FS_CATALOG_LANGUAGES;
     var $key = 'MODULE_CONTENT_INSTALLED';
     var $title;
-    var $template_integration = true;
+    var $template_integration = false;
 
     function cfgm_content() {
       $this->directory = DIR_FS_CATALOG_MODULES . 'content/';

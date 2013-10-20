@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,9 +13,11 @@
   class oscTemplate {
     var $_title;
     var $_blocks = array();
+    var $_content = array();
     var $_grid_container_width = 24;
     var $_grid_content_width = 16;
     var $_grid_column_width = 4;
+    var $_data = array();
 
     function oscTemplate() {
       $this->_title = TITLE;
@@ -62,25 +64,6 @@
     }
 
     function getBlocks($group) {
-      if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
-        include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
-
-        $template_page_class = 'tp_' . $group;
-
-        $template_page = new $template_page_class();
-        $template_page->prepare();
-      }
-
-      if ( class_exists('tp_' . $group) ) {
-        if ( !isset($template_page) ) {
-          $template_page_class = 'tp_' . $group;
-
-          $template_page = new $template_page_class();
-        }
-
-        $template_page->build();
-      }
-
       if ($this->hasBlocks($group)) {
         return implode("\n", $this->_blocks[$group]);
       }
@@ -115,15 +98,6 @@
                 $mb = new $class();
 
                 if ( $mb->isEnabled() ) {
-                  if ( !class_exists('tp_' . $mb->group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $mb->group . '.php') ) {
-                    include(DIR_WS_MODULES . 'pages/tp_' . $mb->group . '.php');
-
-                    $template_page_class = 'tp_' . $mb->group;
-
-                    $template_page = new $template_page_class();
-                    $template_page->prepare();
-                  }
-
                   $mb->execute();
                 }
               }
@@ -131,6 +105,70 @@
           }
         }
       }
+    }
+
+    function addContent($content, $group) {
+      $this->_content[$group][] = $content;
+    }
+
+    function hasContent($group) {
+      return (isset($this->_content[$group]) && !empty($this->_content[$group]));
+    }
+
+    function getContent($group) {
+      global $language;
+
+      if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
+        include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
+      }
+
+      if ( class_exists('tp_' . $group) ) {
+        $template_page_class = 'tp_' . $group;
+        $template_page = new $template_page_class();
+        $template_page->prepare();
+      }
+
+      foreach ( $this->getContentModules($group) as $module ) {
+        $class = substr($module, 0, strrpos($module, '.'));
+
+        if ( !class_exists($class) ) {
+          if ( file_exists(DIR_WS_MODULES . 'content/' . $module) ) {
+            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $module) ) {
+              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $module);
+            }
+
+            include(DIR_WS_MODULES . 'content/' . $module);
+          }
+        }
+
+        if ( class_exists($class) ) {
+          $mb = new $class();
+
+          if ( $mb->isEnabled() ) {
+            $mb->execute();
+          }
+        }
+      }
+
+      if ( class_exists('tp_' . $group) ) {
+        $template_page->build();
+      }
+
+      if ($this->hasContent($group)) {
+        return implode("\n", $this->_content[$group]);
+      }
+    }
+
+    function getContentModules($group) {
+      $result = array();
+
+      foreach ( explode(';', MODULE_CONTENT_INSTALLED) as $file ) {
+        if ( substr($file, 0, strlen('cm_' . $group . '_')) == 'cm_' . $group . '_' ) {
+          $result[] = $file;
+        }
+      }
+
+      return $result;
     }
   }
 ?>

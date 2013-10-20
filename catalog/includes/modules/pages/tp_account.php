@@ -44,7 +44,7 @@
 
       $output = '';
 
-      foreach ( $oscTemplate->_data['account'] as $group ) {
+      foreach ( $oscTemplate->_data[$this->group] as $group ) {
         $output .= '<h2>' . $group['title'] . '</h2>' .
                    '<div class="contentText">' .
                    '  <ul class="accountLinkList">';
@@ -63,7 +63,7 @@
                    '</div>';
       }
 
-      $oscTemplate->addBlock($output, $this->group);
+      $oscTemplate->addContent($output, $this->group);
     }
   }
 ?>

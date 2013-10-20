@@ -17,18 +17,12 @@
     var $enabled = false;
 
     function cm_checkout_success_previous_orders() {
-      global $PHP_SELF, $oscTemplate;
-
       $this->title = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_DESCRIPTION;
 
       if ( defined('MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_STATUS') ) {
         $this->sort_order = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_SORT_ORDER;
         $this->enabled = (MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_STATUS == 'True');
-      }
-
-      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_CHECKOUT_SUCCESS) ) {
-        $this->enabled = false;
       }
     }
     
@@ -68,7 +62,7 @@
                      '  <div class="ui-widget-content infoBoxContents">' . $customer_orders_string . '</div>' .
                      '</div>';
 
-          $oscTemplate->addBlock($cs_data, $this->group);
+          $oscTemplate->addContent($cs_data, $this->group);
         }
       }
     }

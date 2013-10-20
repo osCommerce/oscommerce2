@@ -35,7 +35,7 @@
 <div class="contentContainer">
 
 <?php
-  echo $oscTemplate->getBlocks('account');
+  echo $oscTemplate->getContent('account');
 ?>
 
 </div>

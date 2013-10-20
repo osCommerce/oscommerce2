@@ -106,7 +106,7 @@
 ?>
 
 <?php
-  echo $oscTemplate->getBlocks('checkout_success');
+  echo $oscTemplate->getContent('checkout_success');
 ?>
 
   <div class="buttonSet">

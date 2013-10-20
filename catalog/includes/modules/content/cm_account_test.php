@@ -19,18 +19,12 @@
     var $enabled = false;
 
     function cm_account_test() {
-      global $PHP_SELF, $oscTemplate;
-
       $this->title = MODULE_CONTENT_TEST_TITLE . ' (' . $this->group . ')';
       $this->description = MODULE_CONTENT_TEST_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_TEST_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_TEST_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_TEST_STATUS == 'True');
-      }
-
-      if ( !isset($oscTemplate) || ($PHP_SELF != FILENAME_ACCOUNT) ) {
-        $this->enabled = false;
       }
     }
 
