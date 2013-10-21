@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -93,43 +93,32 @@
   }
 ?>
 
-<div class="contentContainer" style="width: 45%; float: left;">
-  <h2><?php echo HEADING_NEW_CUSTOMER; ?></h2>
-
-  <div class="contentText">
-    <p><?php echo TEXT_NEW_CUSTOMER; ?></p>
-    <p><?php echo TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
-
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); ?></p>
-  </div>
+<div id="loginModules">
+  <?php echo $oscTemplate->getContent('login'); ?>
 </div>
 
-<div class="contentContainer" style="width: 45%; float: left; border-left: 1px dashed #ccc; padding-left: 3%; margin-left: 3%;">
-  <h2><?php echo HEADING_RETURNING_CUSTOMER; ?></h2>
+<script type="text/javascript">
+var login_modules_counter = 0;
+var login_modules_total = $('#loginModules .contentContainer').length;
 
-  <div class="contentText">
-    <p><?php echo TEXT_RETURNING_CUSTOMER; ?></p>
+$('#loginModules .contentContainer').each(function(index, element) {
+  login_modules_counter++;
 
-    <?php echo tep_draw_form('login', tep_href_link(FILENAME_LOGIN, 'action=process', 'SSL'), 'post', '', true); ?>
+  if ( login_modules_counter == 1 ) {
+    if ( $(this).hasClass('grid_8') && ((index+1) != login_modules_total) ) {
+      $(this).addClass('alpha');
+    } else {
+      login_modules_counter = 0;
+    }
+  } else {
+    if ( $(this).hasClass('grid_8') ) {
+      $(this).addClass('omega');
+    }
 
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password'); ?></td>
-      </tr>
-    </table>
-
-    <p><?php echo '<a href="' . tep_href_link(FILENAME_PASSWORD_FORGOTTEN, '', 'SSL') . '">' . TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
-
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_LOGIN, 'key', null, 'primary'); ?></p>
-
-    </form>
-  </div>
-</div>
+    login_modules_counter = 0;
+  }
+});
+</script>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
