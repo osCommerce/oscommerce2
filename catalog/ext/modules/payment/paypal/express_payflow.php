@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -40,10 +40,10 @@
   }
 
   if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Live') {
-    $api_url = 'https://payflowpro.verisign.com/transaction';
+    $api_url = 'https://payflowpro.paypal.com';
     $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
   } else {
-    $api_url = 'https://pilot-payflowpro.verisign.com/transaction';
+    $api_url = 'https://pilot-payflowpro.paypal.com';
     $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
   }
 
@@ -77,12 +77,13 @@
       $post_string = '';
 
       foreach ($params as $key => $value) {
-        $post_string .= $key . '[' . strlen(urlencode(utf8_encode(trim($value)))) . ']=' . urlencode(utf8_encode(trim($value))) . '&';
+        $post_string .= $key . '[' . strlen(trim($value)) . ']=' . trim($value) . '&';
       }
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string);
+
       $response_array = array();
       parse_str($response, $response_array);
 
@@ -275,15 +276,56 @@
         $params['NOSHIPPING'] = '1';
       }
 
+      $line_item_no = 0;
+      $items_total = 0;
+      $tax_total = 0;
+
+      foreach ($order->products as $product) {
+        $params['L_NAME' . $line_item_no] = $product['name'];
+        $params['L_COST' . $line_item_no] = $paypal_pro_payflow_ec->format_raw($product['final_price']);
+        $params['L_QTY' . $line_item_no] = $product['qty'];
+
+        $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
+
+        $params['L_TAXAMT' . $line_item_no] = $paypal_pro_payflow_ec->format_raw($product_tax);
+        $tax_total += $paypal_pro_payflow_ec->format_raw($product_tax) * $product['qty'];
+
+        $items_total += $paypal_pro_payflow_ec->format_raw($product['final_price']) * $product['qty'];
+
+        $line_item_no++;
+      }
+
+      $params['ITEMAMT'] = $items_total;
+      $params['TAXAMT'] = $tax_total;
+
+      $params['BILLTOFIRSTNAME'] = $order->billing['firstname'];
+      $params['BILLTOLASTNAME'] = $order->billing['lastname'];
+      $params['BILLTOSTREET'] = $order->billing['street_address'];
+      $params['BILLTOCITY'] = $order->billing['city'];
+      $params['BILLTOSTATE'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
+      $params['BILLTOCOUNTRY'] = $order->billing['country']['iso_code_2'];
+      $params['BILLTOZIP'] = $order->billing['postcode'];
+
+      if (tep_not_null($order->delivery['firstname'])) {
+        $params['ADDROVERRIDE'] = '1';
+        $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
+        $params['SHIPTOSTREET'] = $order->delivery['street_address'];
+        $params['SHIPTOCITY'] = $order->delivery['city'];
+        $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $params['SHIPTOCOUNTRY'] = $order->delivery['country']['iso_code_2'];
+        $params['SHIPTOZIP'] = $order->delivery['postcode'];
+      }
+
       $post_string = '';
 
       foreach ($params as $key => $value) {
-        $post_string .= $key . '[' . strlen(urlencode(utf8_encode(trim($value)))) . ']=' . urlencode(utf8_encode(trim($value))) . '&';
+        $post_string .= $key . '[' . strlen(trim($value)) . ']=' . trim($value) . '&';
       }
 
       $post_string = substr($post_string, 0, -1);
 
-      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string, array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . rand())));
+      $response = $paypal_pro_payflow_ec->sendTransactionToGateway($api_url, $post_string);
+
       $response_array = array();
       parse_str($response, $response_array);
 

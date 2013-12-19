@@ -20,15 +20,31 @@
       return false;
     }
 
-    $$link = @mysqli_connect($server, $username, $password) or $db_error = mysqli_error();
+    $$link = @mysqli_connect($server, $username, $password);
+
+    if ( !mysqli_connect_errno() ) {
+      mysqli_set_charset($$link, 'utf8');
+    } else {
+      $db_error = mysqli_connect_error();
+    }
 
     return $$link;
   }
 
   function osc_db_select_db($database, $link = 'db_link') {
-    global $$link;
+    global $$link, $db_error;
 
-    return mysqli_select_db($$link, $database);
+    if ( empty($database) ) {
+      $db_error = 'No Database selected.';
+      return false;
+    }
+
+    if ( !@mysqli_select_db($$link, $database) ) {
+      $db_error = 'Could not open database "' . $database . '".';
+      return false;
+    }
+
+    return true;
   }
 
   function osc_db_query($query, $link = 'db_link') {
@@ -107,8 +123,6 @@
         }
       }
 
-      osc_db_query("drop table if exists action_recorder, address_book, address_format, administrators, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, geo_zones, languages, manufacturers, manufacturers_info, newsletters, orders, orders_products, orders_products_attributes, orders_products_download, orders_status, orders_status_history, orders_total, products, products_attributes, products_attributes_download, products_description, products_images, products_notifications, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sec_directory_whitelist, sessions, specials, tax_class, tax_rates, whos_online, zones, zones_to_geo_zones");
-
       for ($i=0; $i<sizeof($sql_array); $i++) {
         osc_db_query($sql_array[$i]);
       }
@@ -118,6 +132,22 @@
   }
 
   if ( !function_exists('mysqli_connect') ) {
+    function mysqli_connect_errno($link = null) {
+      if ( is_null($link) ) {
+        return mysql_errno();
+      }
+
+      return mysql_errno($link);
+    }
+
+    function mysqli_connect_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
+      return mysql_error($link);
+    }
+
     function mysqli_connect($server, $username, $password) {
       if ( substr($server, 0, 2) == 'p:' ) {
         $link = mysql_pconnect(substr($server, 2), $username, $password);
@@ -126,6 +156,12 @@
       }
 
       return $link;
+    }
+
+    function mysqli_set_charset($link, $charset) {
+      if ( function_exists('mysql_set_charset') ) {
+        return mysql_set_charset($charset, $link);
+      }
     }
 
     function mysqli_select_db($link, $database) {
@@ -137,6 +173,10 @@
     }
 
     function mysqli_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
       return mysql_error($link);
     }
 

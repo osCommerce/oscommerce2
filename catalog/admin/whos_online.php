@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -50,10 +50,10 @@
   while ($whos_online = tep_db_fetch_array($whos_online_query)) {
     $time_online = (time() - $whos_online['time_entry']);
     if ((!isset($HTTP_GET_VARS['info']) || (isset($HTTP_GET_VARS['info']) && ($HTTP_GET_VARS['info'] == $whos_online['session_id']))) && !isset($info)) {
-      $info = $whos_online['session_id'];
+      $info = new ObjectInfo($whos_online);
     }
 
-    if ($whos_online['session_id'] == $info) {
+    if (isset($info) && ($whos_online['session_id'] == $info->session_id)) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
     } else {
       echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_WHOS_ONLINE, tep_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id'], 'NONSSL') . '\'">' . "\n";
@@ -65,7 +65,7 @@
                 <td class="dataTableContent" align="center"><?php echo $whos_online['ip_address']; ?></td>
                 <td class="dataTableContent"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
-                <td class="dataTableContent"><?php if (preg_match('/^(.*)' . tep_session_name() . '=[a-f,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { echo $array[1] . $array[2]; } else { echo $whos_online['last_page_url']; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php if (preg_match('/^(.*)osCsid=[A-Z0-9,-]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { echo $array[1] . $array[2]; } else { echo $whos_online['last_page_url']; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -81,63 +81,39 @@
   if (isset($info)) {
     $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
 
-    if (STORE_SESSIONS == 'mysql') {
-      $session_data = tep_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");
-      $session_data = tep_db_fetch_array($session_data);
-      $session_data = trim($session_data['value']);
-    } else {
-      if ( (file_exists(tep_session_save_path() . '/sess_' . $info)) && (filesize(tep_session_save_path() . '/sess_' . $info) > 0) ) {
-        $session_data = file(tep_session_save_path() . '/sess_' . $info);
-        $session_data = trim(implode('', $session_data));
-      }
-    }
+    if ( $info->customer_id > 0 ) {
+      $products_query = tep_db_query("select cb.customers_basket_quantity, cb.products_id, pd.products_name from " . TABLE_CUSTOMERS_BASKET . " cb, " . TABLE_PRODUCTS_DESCRIPTION . " pd where cb.customers_id = '" . (int)$info->customer_id . "' and cb.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
 
-    if ($length = strlen($session_data)) {
-      $start_id = strpos($session_data, 'customer_id|s');
-      $start_cart = strpos($session_data, 'cart|O');
-      $start_currency = strpos($session_data, 'currency|s');
-      $start_country = strpos($session_data, 'customer_country_id|s');
-      $start_zone = strpos($session_data, 'customer_zone_id|s');
+      if ( tep_db_num_rows($products_query) ) {
+        $shoppingCart = new shoppingCart();
 
-      for ($i=$start_cart; $i<$length; $i++) {
-        if ($session_data[$i] == '{') {
-          if (isset($tag)) {
-            $tag++;
-          } else {
-            $tag = 1;
+        while ( $products = tep_db_fetch_array($products_query) ) {
+          $contents[] = array('text' => $products['customers_basket_quantity'] . ' x ' . $products['products_name']);
+
+          $attributes = array();
+
+          if ( strpos($products['products_id'], '{') !== false ) {
+            $combos = array();
+            preg_match_all('/(\{[0-9]+\}[0-9]+){1}/', $products['products_id'], $combos);
+
+            foreach ( $combos[0] as $combo ) {
+              $att = array();
+              preg_match('/\{([0-9]+)\}([0-9]+)/', $combo, $att);
+
+              $attributes[$att[1]] = $att[2];
+            }
           }
-        } elseif ($session_data[$i] == '}') {
-          $tag--;
-        } elseif ( (isset($tag)) && ($tag < 1) ) {
-          break;
+
+          $shoppingCart->add_cart(tep_get_prid($products['products_id']), $products['customers_basket_quantity'], $attributes);
         }
+
+        $contents[] = array('text' => tep_draw_separator('pixel_black.gif', '100%', '1'));
+        $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($shoppingCart->show_total()));
+      } else {
+        $contents[] = array('text' => '&nbsp;');
       }
-
-      $session_data_id = substr($session_data, $start_id, (strpos($session_data, ';', $start_id) - $start_id + 1));
-      $session_data_cart = substr($session_data, $start_cart, $i);
-      $session_data_currency = substr($session_data, $start_currency, (strpos($session_data, ';', $start_currency) - $start_currency + 1));
-      $session_data_country = substr($session_data, $start_country, (strpos($session_data, ';', $start_country) - $start_country + 1));
-      $session_data_zone = substr($session_data, $start_zone, (strpos($session_data, ';', $start_zone) - $start_zone + 1));
-
-      session_decode($session_data_id);
-      session_decode($session_data_currency);
-      session_decode($session_data_country);
-      session_decode($session_data_zone);
-      session_decode($session_data_cart);
-
-      if (isset($cart) && is_object($cart)) {
-        $products = $cart->get_products();
-        for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-          $contents[] = array('text' => $products[$i]['quantity'] . ' x ' . $products[$i]['name']);
-        }
-
-        if (sizeof($products) > 0) {
-          $contents[] = array('text' => tep_draw_separator('pixel_black.gif', '100%', '1'));
-          $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($cart->show_total(), true, $currency));
-        } else {
-          $contents[] = array('text' => '&nbsp;');
-        }
-      }
+    } else {
+      $contents[] = array('text' => 'N/A');
     }
   }
 

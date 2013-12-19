@@ -19,6 +19,10 @@
 
     $$link = mysqli_connect($server, $username, $password, $database);
 
+    if ( !mysqli_connect_errno() ) {
+      mysqli_set_charset($$link, 'utf8');
+    } 
+
     return $$link;
   }
 
@@ -28,7 +32,13 @@
     return mysqli_close($$link);
   }
 
-  function tep_db_error($query, $errno, $error) { 
+  function tep_db_error($query, $errno, $error) {
+    global $logger;
+
+    if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
+      $logger->write('[' . $errno . '] ' . $error, 'ERROR');
+    }
+
     die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[TEP STOP]</font></small><br /><br /></strong></font>');
   }
 
@@ -41,10 +51,6 @@
     }
 
     $result = mysqli_query($$link, $query) or tep_db_error($query, mysqli_errno($$link), mysqli_error($$link));
-
-    if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
-      if (mysqli_error($$link)) $logger->write(mysqli_error($llink), 'ERROR');
-    }
 
     return $result;
   }
@@ -183,6 +189,28 @@
       return $link;
     }
 
+    function mysqli_connect_errno($link = null) {
+      if ( is_null($link) ) {
+        return mysql_errno();
+      }
+
+      return mysql_errno($link);
+    }
+
+    function mysqli_connect_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
+      return mysql_error($link);
+    }
+
+    function mysqli_set_charset($link, $charset) {
+      if ( function_exists('mysql_set_charset') ) {
+        return mysql_set_charset($charset, $link);
+      }
+    }
+
     function mysqli_close($link) {
       return mysql_close($link);
     }
@@ -192,10 +220,18 @@
     }
 
     function mysqli_errno($link = null) {
+      if ( is_null($link) ) {
+        return mysql_errno();
+      }
+
       return mysql_errno($link);
     }
 
     function mysqli_error($link = null) {
+      if ( is_null($link) ) {
+        return mysql_error();
+      }
+
       return mysql_error($link);
     }
 

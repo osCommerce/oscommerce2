@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -54,6 +54,10 @@
     case 'callbackSet':
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
+
+        if (isset($HTTP_POST_VARS['CURRENCYCODE']) && $currencies->is_set($HTTP_POST_VARS['CURRENCYCODE']) && ($currency != $HTTP_POST_VARS['CURRENCYCODE'])) {
+          $currency = $HTTP_POST_VARS['CURRENCYCODE'];
+        }
 
         while (true) {
           if (isset($HTTP_POST_VARS['L_NUMBER' . $counter])) {
@@ -185,6 +189,7 @@
         }
 
         $params = array('METHOD' => 'CallbackResponse',
+                        'CURRENCYCODE' => $currency,
                         'OFFERINSURANCEOPTION' => 'false');
 
         $counter = 0;
@@ -194,8 +199,8 @@
         foreach ($quotes_array as $quote) {
           $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
           $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
           $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
           $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
@@ -514,7 +519,7 @@
       include(DIR_WS_CLASSES . 'order.php');
       $order = new order;
 
-      $params = array('CURRENCYCODE' => $order->info['currency']);
+      $params = array('PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency']);
 
 // A billing address is required for digital orders so we use the shipping address PayPal provides
 //      if ($order->content_type == 'virtual') {
@@ -526,14 +531,21 @@
       $tax_total = 0;
 
       foreach ($order->products as $product) {
-        $params['L_NAME' . $line_item_no] = $product['name'];
-        $params['L_AMT' . $line_item_no] = $paypal_express->format_raw($product['final_price']);
-        $params['L_NUMBER' . $line_item_no] = $product['id'];
-        $params['L_QTY' . $line_item_no] = $product['qty'];
+        $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $product['name'];
+        $params['L_PAYMENTREQUEST_0_AMT' . $line_item_no] = $paypal_express->format_raw($product['final_price']);
+        $params['L_PAYMENTREQUEST_0_NUMBER' . $line_item_no] = $product['id'];
+        $params['L_PAYMENTREQUEST_0_QTY' . $line_item_no] = $product['qty'];
+        $params['L_PAYMENTREQUEST_0_ITEMURL' . $line_item_no] = tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product['id'], 'NONSSL', false);
+
+        if ( (DOWNLOAD_ENABLED == 'true') && isset($product['attributes']) ) {
+          $params['L_PAYMENTREQUEST_n_ITEMCATEGORY' . $line_item_no] = $paypal_express->getProductType($product['id'], $product['attributes']);
+        } else {
+          $params['L_PAYMENTREQUEST_n_ITEMCATEGORY' . $line_item_no] = 'Physical';
+        }
 
         $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
 
-        $params['L_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
+        $params['L_PAYMENTREQUEST_0_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
         $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
         $items_total += $paypal_express->format_raw($product['final_price']) * $product['qty'];
@@ -541,17 +553,17 @@
         $line_item_no++;
       }
 
-      $params['ITEMAMT'] = $items_total;
-      $params['TAXAMT'] = $tax_total;
+      $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
+      $params['PAYMENTREQUEST_0_TAXAMT'] = $tax_total;
 
       if (tep_not_null($order->delivery['firstname'])) {
         $params['ADDROVERRIDE'] = '1';
-        $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
-        $params['SHIPTOSTREET'] = $order->delivery['street_address'];
-        $params['SHIPTOCITY'] = $order->delivery['city'];
-        $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
-        $params['SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
-        $params['SHIPTOZIP'] = $order->delivery['postcode'];
+        $params['PAYMENTREQUEST_0_SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
+        $params['PAYMENTREQUEST_0_SHIPTOSTREET'] = $order->delivery['street_address'];
+        $params['PAYMENTREQUEST_0_SHIPTOCITY'] = $order->delivery['city'];
+        $params['PAYMENTREQUEST_0_SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $params['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
+        $params['PAYMENTREQUEST_0_SHIPTOZIP'] = $order->delivery['postcode'];
       }
 
       $quotes_array = array();
@@ -629,8 +641,8 @@
       foreach ($quotes_array as $quote) {
         $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
-        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['name'] . ' (' . $quote['label'] . ')';
+        $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+        $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
         $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
@@ -659,21 +671,22 @@
         if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
           $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
           $params['CALLBACKTIMEOUT'] = '5';
+          $params['CALLBACKVERSION'] = $paypal_express->api_version;
         }
 
-        $params['INSURANCEOPTIONSOFFERED'] = 'false';
+        $params['PAYMENTREQUEST_0_INSURANCEOPTIONOFFERED'] = 'false';
         $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       }
 
 // don't recalculate currency values as they have already been calculated
-      $params['SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate, '', 1);
-      $params['AMT'] = $paypal_express->format_raw($params['ITEMAMT'] + $params['TAXAMT'] + $params['SHIPPINGAMT'], '', 1);
-      $params['MAXAMT'] = $paypal_express->format_raw($params['AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
+      $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate, '', 1);
+      $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_ITEMAMT'] + $params['TAXAMT'] + $params['PAYMENTREQUEST_0_SHIPPINGAMT'], '', 1);
+      $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN'] . '&useraction=commit');
+        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }

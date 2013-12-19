@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,20 +17,30 @@
     function paypal_standard() {
       global $order;
 
-      $this->signature = 'paypal|paypal_standard|1.1|2.2';
+      $this->signature = 'paypal|paypal_standard|2.0|2.2';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER : 0;
+      $this->enabled = defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') && (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false;
 
-      if ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) {
+      if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) ) {
         $this->order_status = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
       }
 
-      if (is_object($order)) $this->update_status();
+      if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') ) {
+        $this->description .= $this->getTestLinkInfo();
+      }
+
+      if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Sandbox' ) {
+        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      }
+
+      if ( isset($order) && is_object($order) ) {
+        $this->update_status();
+      }
 
       if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
         $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
@@ -393,45 +403,16 @@
     function before_process() {
       global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $HTTP_GET_VARS, $HTTP_POST_VARS, $messageStack;
 
-      if (!class_exists('httpClient')) {
-        include('includes/classes/http_client.php');
-      }
-
       $result = false;
 
       if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
-        if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
-          $server = 'www.paypal.com';
-        } else {
-          $server = 'www.sandbox.paypal.com';
-        }
-
         $parameters = 'cmd=_notify-validate';
 
         foreach ($HTTP_POST_VARS as $key => $value) {
           $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
         }
 
-        $http = new httpClient($server, 443);
-
-        if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PROXY') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY)) {
-          $proxy_server = MODULE_PAYMENT_PAYPAL_STANDARD_PROXY;
-          $proxy_port = null;
-
-          if (strpos(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, ':') !== false) {
-            list($proxy_server, $proxy_port) = explode(':', MODULE_PAYMENT_PAYPAL_STANDARD_PROXY, 2);
-          }
-
-          $http->setProxy($proxy_server, $proxy_port);
-        }
-
-        if (file_exists(DIR_FS_CACHE . $server . '.crt')) {
-          $http->addParameter('cafile', DIR_FS_CACHE . $server . '.crt');
-        }
-
-        if ($http->post('/cgi-bin/webscr', $parameters) == 200) {
-          $result = $http->getBody();
-        }
+        $result = $this->sendTransactionToGateway($this->form_action_url, $parameters);
       }
 
       if ($result != 'VERIFIED') {
@@ -440,7 +421,8 @@
         }
 
         if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-          $email_body = '$HTTP_POST_VARS:' . "\n\n";
+          $email_body = $result . "\n\n" .
+                        '$HTTP_POST_VARS:' . "\n\n";
 
           foreach ($HTTP_POST_VARS as $key => $value) {
             $email_body .= $key . '=' . $value . "\n";
@@ -460,9 +442,9 @@
 
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
-      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query)) {
+      if (!tep_db_num_rows($check_query) || ($order_id != $HTTP_POST_VARS['invoice']) || ($customer_id != $HTTP_POST_VARS['custom'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
@@ -732,8 +714,8 @@
         $status_id = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Website Payments Standard',
-                                                                       'desc' => 'Do you want to accept PayPal Website Payments Standard payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Payments Standard',
+                                                                       'desc' => 'Do you want to accept PayPal Payments Standard payments?',
                                                                        'value' => 'False',
                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_ID' => array('title' => 'Seller E-Mail Address',
@@ -755,14 +737,18 @@
                                                                                 'value' => '0',
                                                                                 'set_func' => 'tep_cfg_pull_down_order_statuses(',
                                                                                 'use_func' => 'tep_get_order_status_name'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER' => array('title' => 'Gateway Server',
-                                                                               'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
-                                                                               'value' => 'Live',
-                                                                               'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                    'desc' => 'The processing method to use for each transaction.',
                                                                                    'value' => 'Sale',
                                                                                    'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER' => array('title' => 'Gateway Server',
+                                                                               'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
+                                                                               'value' => 'Live',
+                                                                               'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                           'desc' => 'Verify gateway server SSL certificate on connection?',
+                                                                           'value' => 'True',
+                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_PROXY' => array('title' => 'Proxy Server',
                                                                       'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE' => array('title' => 'Page Style',
@@ -793,6 +779,51 @@
       return $params;
     }
 
+    function sendTransactionToGateway($url, $parameters) {
+      $server = parse_url($url);
+
+      if ( !isset($server['port']) ) {
+        $server['port'] = ($server['scheme'] == 'https') ? 443 : 80;
+      }
+
+      if ( !isset($server['path']) ) {
+        $server['path'] = '/';
+      }
+
+      $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
+      curl_setopt($curl, CURLOPT_PORT, $server['port']);
+      curl_setopt($curl, CURLOPT_HEADER, false);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
+      curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
+      curl_setopt($curl, CURLOPT_POST, true);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+
+      if ( MODULE_PAYMENT_PAYPAL_STANDARD_VERIFY_SSL == 'True' ) {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+
+        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt');
+        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
+        }
+      } else {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+      }
+
+      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY) ) {
+        curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
+        curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_STANDARD_PROXY);
+      }
+
+      $result = curl_exec($curl);
+
+      curl_close($curl);
+
+      return $result;
+    }
+
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
       global $currencies, $currency;
@@ -806,6 +837,47 @@
       }
 
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+    }
+
+    function getTestLinkInfo() {
+      $dialog_title = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TITLE;
+      $dialog_general_error = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_ERROR;
+      $dialog_button_close = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_BUTTON_CLOSE;
+
+      $js = <<<EOD
+<script type="text/javascript">
+$(function() {
+  $('#tcdprogressbar').progressbar({
+    value: false
+  });
+});
+
+function openTestConnectionDialog() {
+  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
+    autoOpen: false,
+    modal: true,
+    title: '{$dialog_title}',
+    buttons: {
+      '{$dialog_button_close}': function () {
+        $(this).dialog('destroy');
+      }
+    }
+  });
+
+  d.load('ext/modules/payment/paypal/paypal_standard.php', function() {
+    if ( $('#ppctresult').length < 1 ) {
+      d.html('{$dialog_general_error}');
+    }
+  }).dialog('open');
+}
+</script>
+EOD;
+
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
+              $js;
+
+      return $info;
     }
   }
 ?>

@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -25,7 +25,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'process':
-        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user'])) {
+        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user']) && !isset($HTTP_POST_VARS['username'])) {
           $username = tep_db_prepare_input($redirect_origin['auth_user']);
           $password = tep_db_prepare_input($redirect_origin['auth_pw']);
         } else {
@@ -72,12 +72,16 @@
             }
           }
 
-          $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+          if (isset($HTTP_POST_VARS['username'])) {
+            $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+          }
         } else {
           $messageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
         }
 
-        $actionRecorder->record(false);
+        if (isset($HTTP_POST_VARS['username'])) {
+          $actionRecorder->record(false);
+        }
 
         break;
 
@@ -100,7 +104,9 @@
           $username = tep_db_prepare_input($HTTP_POST_VARS['username']);
           $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
 
-          tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+          if ( !empty($username) ) {
+            tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+          }
         }
 
         tep_redirect(tep_href_link(FILENAME_LOGIN));

@@ -164,7 +164,10 @@
   }
 
 // include the language translations
+  $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
   require(DIR_WS_LANGUAGES . $language . '.php');
+  setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+
   $current_page = basename($PHP_SELF);
   if (file_exists(DIR_WS_LANGUAGES . $language . '/' . $current_page)) {
     include(DIR_WS_LANGUAGES . $language . '/' . $current_page);

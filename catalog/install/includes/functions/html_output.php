@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -113,5 +113,83 @@
     }
 
     return osc_draw_select_menu($name, $result, $default);
+  }
+
+////
+// Output a jQuery UI Button
+  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
+    static $button_counter = 1;
+
+    $types = array('submit', 'button', 'reset');
+
+    if ( !isset($params['type']) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( !in_array($params['type'], $types) ) {
+      $params['type'] = 'submit';
+    }
+
+    if ( ($params['type'] == 'submit') && isset($link) ) {
+      $params['type'] = 'button';
+    }
+
+    if (!isset($priority)) {
+      $priority = 'secondary';
+    }
+
+    $button = '';
+
+    if ( ($params['type'] == 'button') && isset($link) ) {
+      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+
+      if ( isset($params['newwindow']) ) {
+        $button .= ' target="_blank"';
+      }
+    } else {
+      $button .= '<button id="tdb' . $button_counter . '" type="' . osc_output_string($params['type']) . '"';
+    }
+
+    if ( isset($params['params']) ) {
+      $button .= ' ' . $params['params'];
+    }
+
+    $button .= '>' . $title;
+
+    if ( ($params['type'] == 'button') && isset($link) ) {
+      $button .= '</a>';
+    } else {
+      $button .= '</button>';
+    }
+
+    $button .= '<script>$("#tdb' . $button_counter . '").button(';
+
+    $args = array();
+
+    if ( isset($icon) ) {
+      if ( !isset($params['iconpos']) ) {
+        $params['iconpos'] = 'left';
+      }
+
+      if ( $params['iconpos'] == 'left' ) {
+        $args[] = 'icons:{primary:"ui-icon-' . $icon . '"}';
+      } else {
+        $args[] = 'icons:{secondary:"ui-icon-' . $icon . '"}';
+      }
+    }
+
+    if (empty($title)) {
+      $args[] = 'text:false';
+    }
+
+    if (!empty($args)) {
+      $button .= '{' . implode(',', $args) . '}';
+    }
+
+    $button .= ').addClass("ui-priority-' . $priority . '");</script>';
+
+    $button_counter++;
+
+    return $button;
   }
 ?>

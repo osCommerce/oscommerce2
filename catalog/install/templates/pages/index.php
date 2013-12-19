@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -21,7 +21,7 @@
   <h1>Welcome to osCommerce Online Merchant v<?php echo osc_get_version(); ?>!</h1>
 
   <p>osCommerce Online Merchant helps you sell products worldwide with your own online store. Its Administration Tool manages products, customers, orders, newsletters, specials, and more to successfully build the success of your online business.</p>
-  <p>osCommerce has attracted a large community of store owners and developers who support each other and have provided over 6,000 free add-ons that can extend the features and potential of your online store.</p>
+  <p>osCommerce has attracted a large community of store owners and developers who support each other and have provided over 7,000 free add-ons that can extend the features and potential of your online store.</p>
 </div>
 
 <div class="contentBlock">
@@ -33,7 +33,7 @@
         <tr>
           <td><strong>PHP Version</strong></td>
           <td align="right"><?php echo PHP_VERSION; ?></td>
-          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
       </table>
 
@@ -45,34 +45,32 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><strong>PHP Settings</strong></td>
-          <td align="right"></td>
-          <td align="right" width="25"></td>
+          <td colspan="3"><strong>PHP Settings</strong></td>
         </tr>
         <tr>
           <td>register_globals</td>
           <td align="right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (($compat_register_globals == true) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (($compat_register_globals == true) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
         <tr>
           <td>magic_quotes</td>
           <td align="right"><?php echo (((int)ini_get('magic_quotes') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (((int)ini_get('magic_quotes') == 0) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (((int)ini_get('magic_quotes') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
         <tr>
           <td>file_uploads</td>
           <td align="right"><?php echo (((int)ini_get('file_uploads') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (((int)ini_get('file_uploads') == 1) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (((int)ini_get('file_uploads') == 1) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
         <tr>
           <td>session.auto_start</td>
           <td align="right"><?php echo (((int)ini_get('session.auto_start') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (((int)ini_get('session.auto_start') == 0) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (((int)ini_get('session.auto_start') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
         <tr>
           <td>session.use_trans_sid</td>
           <td align="right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'Off' : 'On'); ?></td>
-          <td align="right"><img src="images/<?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
       </table>
 
@@ -80,12 +78,11 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><strong>Required PHP Extensions</strong></td>
-          <td align="right" width="25"></td>
+          <td colspan="2"><strong>Required PHP Extensions</strong></td>
         </tr>
         <tr>
           <td>MySQL</td>
-          <td align="right"><img src="images/<?php echo (extension_loaded('mysql') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (extension_loaded('mysql') || extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
       </table>
 
@@ -93,20 +90,19 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td><strong>Optional PHP Extensions</strong></td>
-          <td align="right" width="25"></td>
+          <td colspan="2"><strong>Recommended PHP Extensions</strong></td>
         </tr>
         <tr>
           <td>GD</td>
-          <td align="right"><img src="images/<?php echo (extension_loaded('gd') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (extension_loaded('gd') ? 'success.gif' : 'failed.gif'); ?>"width="16" height="16" /></td>
         </tr>
         <tr>
           <td>cURL</td>
-          <td align="right"><img src="images/<?php echo (extension_loaded('curl') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (extension_loaded('curl') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
         <tr>
           <td>OpenSSL</td>
-          <td align="right"><img src="images/<?php echo (extension_loaded('openssl') ? 'tick.gif' : 'cross.gif'); ?>" border="0" width="16" height="16"></td>
+          <td align="right"><img src="images/<?php echo (extension_loaded('openssl') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
       </table>
 
@@ -215,15 +211,30 @@
     }
 ?>
 
-    <p align="right"><a href="index.php"><img src="images/button_retry.gif" border="0" alt="Retry" /></a></p>
+    <p><?php echo osc_draw_button('Retry', 'arrowrefresh-1-e', 'index.php', 'primary'); ?></p>
 
 <?php
   } else {
 ?>
 
     <p>The webserver environment has been verified to proceed with a successful installation and configuration of your online store.</p>
-    <p>Please continue to start the installation procedure.</p>
-    <p align="right"><a href="install.php"><img src="images/button_continue.gif" border="0" alt="Continue" /></a></p>
+
+    <div id="jsOn" style="display: none;">
+      <p>Please continue to start the installation procedure.</p>
+      <p><?php echo osc_draw_button('Start', 'triangle-1-e', 'install.php', 'primary'); ?></p>
+    </div>
+
+    <div id="jsOff">
+      <p>Please enable Javascript in your browser to be able to start the installation procedure.</p>
+      <p><?php echo osc_draw_button('Retry', 'arrowrefresh-1-e', 'index.php', 'primary'); ?></p>
+    </div>
+
+<script>
+$(function() {
+  $('#jsOff').hide();
+  $('#jsOn').show();
+});
+</script>
 
 <?php
   }

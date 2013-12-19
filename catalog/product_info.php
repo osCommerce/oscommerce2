@@ -68,73 +68,80 @@
 
 <?php
     if (tep_not_null($product_info['products_image'])) {
+      $photoset_layout = '1';
+
       $pi_query = tep_db_query("select image, htmlcontent from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
 
       if (tep_db_num_rows($pi_query) > 0) {
+        $photoset_layout = '1' . (tep_db_num_rows($pi_query) > 1 ? tep_db_num_rows($pi_query) - 1 : '');
 ?>
 
-    <div id="piGal" style="float: right;">
-      <ul>
+    <div id="piGal">
 
 <?php
         $pi_counter = 0;
+        $pi_html = array();
+
         while ($pi = tep_db_fetch_array($pi_query)) {
           $pi_counter++;
 
-          $pi_entry = '        <li><a href="';
-
           if (tep_not_null($pi['htmlcontent'])) {
-            $pi_entry .= '#piGalimg_' . $pi_counter;
-          } else {
-            $pi_entry .= tep_href_link(DIR_WS_IMAGES . $pi['image'], '', 'NONSSL', false);
+            $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div>';
           }
 
-          $pi_entry .= '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $pi['image']) . '</a>';
-
-          if (tep_not_null($pi['htmlcontent'])) {
-            $pi_entry .= '<div style="display: none;"><div id="piGalimg_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div></div>';
-          }
-
-          $pi_entry .= '</li>';
-
-          echo $pi_entry;
+          echo tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"');
         }
 ?>
 
-      </ul>
     </div>
 
-<script type="text/javascript">
-$('#piGal ul').bxGallery({
-  maxwidth: 300,
-  maxheight: 200,
-  thumbwidth: <?php echo (($pi_counter > 1) ? '75' : '0'); ?>,
-  thumbcontainer: 300,
-  load_image: 'ext/jquery/bxGallery/spinner.gif'
-});
-</script>
-
 <?php
+        if ( !empty($pi_html) ) {
+          echo '    <div style="display: none;">' . implode('', $pi_html) . '</div>';
+        }
       } else {
 ?>
 
-    <div id="piGal" style="float: right;">
-      <?php echo '<a href="' . tep_href_link(DIR_WS_IMAGES . $product_info['products_image'], '', 'NONSSL', false) . '" target="_blank" rel="fancybox">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), null, null, 'hspace="5" vspace="5"') . '</a>'; ?>
+    <div id="piGal">
+      <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
     </div>
 
 <?php
       }
+    }
 ?>
 
 <script type="text/javascript">
-$("#piGal a[rel^='fancybox']").fancybox({
-  cyclic: true
+$(function() {
+  $('#piGal').css({
+    'visibility': 'hidden'
+  });
+
+  $('#piGal').photosetGrid({
+    layout: '<?php echo $photoset_layout; ?>',
+    width: '250px',
+    highresLinks: true,
+    rel: 'pigallery',
+    onComplete: function() {
+      $('#piGal').css({ 'visibility': 'visible'});
+
+      $('#piGal a').colorbox({
+        maxHeight: '90%',
+        maxWidth: '90%',
+        rel: 'pigallery'
+      });
+
+      $('#piGal img').each(function() {
+        var imgid = $(this).attr('id').substring(9);
+
+        if ( $('#piGalDiv_' + imgid).length ) {
+          $(this).parent().colorbox({ inline: true, href: "#piGalDiv_" + imgid });
+        }
+      });
+    }
+  });
 });
 </script>
-
-<?php
-    }
-?>
 
 <?php echo stripslashes($product_info['products_description']); ?>
 

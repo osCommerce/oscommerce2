@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -31,12 +31,12 @@
     }
 
     function execute() {
-      global $oscTemplate;
+      global $request_type, $oscTemplate;
 
       $data = '<div class="ui-widget infoBoxContainer">' .
               '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_SEARCH_BOX_TITLE . '</div>' .
               '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">' .
-              '    ' . tep_draw_form('quick_find', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', 'NONSSL', false), 'get') .
+              '    ' . tep_draw_form('quick_find', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get') .
               '    ' . tep_draw_input_field('keywords', '', 'size="10" maxlength="30" style="width: 75%"') . '&nbsp;' . tep_draw_hidden_field('search_in_description', '1') . tep_hide_session_id() . tep_image_submit('button_quick_find.gif', MODULE_BOXES_SEARCH_BOX_TITLE) . '<br />' . MODULE_BOXES_SEARCH_BOX_TEXT . '<br /><a href="' . tep_href_link(FILENAME_ADVANCED_SEARCH) . '"><strong>' . MODULE_BOXES_SEARCH_BOX_ADVANCED_SEARCH . '</strong></a>' .
               '    </form>' .
               '  </div>' .

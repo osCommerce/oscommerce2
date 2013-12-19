@@ -17,7 +17,7 @@
     function sage_pay_server() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_server|1.1|2.3';
+      $this->signature = 'sage_pay|sage_pay_server|1.2|2.3';
       $this->api_version = '2.23';
 
       $this->code = 'sage_pay_server';

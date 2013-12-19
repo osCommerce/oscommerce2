@@ -118,17 +118,14 @@ table, p {
   line-height: 1.5;
 }
 
-#piGal ul {
-  list-style-type: none;
+#piGal {
+  float: right;
+  width: 250px;
 }
 
 #piGal img {
-  -webkit-box-shadow: 0px 0px 1px #000;
-  -moz-box-shadow: 0px 0px 1px #000;
-}
-
-#piGal .outer {
-  margin-left: -30px;
+  max-width: 250px;
+  height: auto;
 }
 
 .buttonSet {

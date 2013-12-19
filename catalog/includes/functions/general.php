@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2012 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -24,8 +24,8 @@
 
 ////
 // Stop from parsing any further PHP code
+// v2.3.3.1 now closes the session through a registered shutdown function
   function tep_exit() {
-   tep_session_close();
    exit();
   }
 

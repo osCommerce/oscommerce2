@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,20 +17,27 @@
     function sage_pay_direct() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_direct|1.0|2.3';
+      $this->signature = 'sage_pay|sage_pay_direct|2.0|2.3';
+      $this->api_version = '3.0';
 
       $this->code = 'sage_pay_direct';
       $this->title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER : 0;
+      $this->enabled = defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS == 'True') ? true : false;
 
-      if ((int)MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID > 0) {
+      if ( defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID > 0) ) {
         $this->order_status = MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID;
       }
 
-      if (is_object($order)) $this->update_status();
+      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') ) {
+        $this->description .= $this->getTestLinkInfo();
+      }
+
+      if ( isset($order) && is_object($order) ) {
+        $this->update_status();
+      }
     }
 
 // class methods
@@ -70,11 +77,110 @@
     }
 
     function pre_confirmation_check() {
-      return false;
+      global $oscTemplate;
+
+      $js = <<<EOD
+<script type="text/javascript">
+$(function() {
+  if ( $('#sagepay_table').length > 0 ) {
+    if ( typeof($('#sagepay_table').parent().closest('table').attr('width')) == 'undefined' ) {
+      $('#sagepay_table').parent().closest('table').attr('width', '100%');
+    }
+
+    $('#sagepay_table .moduleRowExtra').hide();
+
+    $('#sagepay_table_new_card').hide();
+
+    $('form[name="checkout_confirmation"] input[name="sagepay_card"]').change(function() {
+      var selected = $(this).val();
+
+      if ( selected == '0' ) {
+        sagepayShowNewCardFields();
+      } else {
+        $('#sagepay_table_new_card').hide();
+
+        $('[id^="sagepay_card_cvc_"]').hide();
+
+        $('#sagepay_card_cvc_' + selected).show();
+      }
+
+      $('tr[id^="sagepay_card_"]').removeClass('moduleRowSelected');
+      $('#sagepay_card_' + selected).addClass('moduleRowSelected');
+    });
+
+    $('form[name="checkout_confirmation"] input[name="sagepay_card"]:first').prop('checked', true).trigger('change');
+
+    $('#sagepay_table .moduleRow').hover(function() {
+      $(this).addClass('moduleRowOver');
+    }, function() {
+      $(this).removeClass('moduleRowOver');
+    }).click(function(event) {
+      var target = $(event.target);
+
+      if ( !target.is('input:radio') ) {
+        $(this).find('input:radio').each(function() {
+          if ( $(this).prop('checked') == false ) {
+            $(this).prop('checked', true).trigger('change');
+          }
+        });
+      }
+    });
+  } else {
+    if ( typeof($('#sagepay_table_new_card').parent().closest('table').attr('width')) == 'undefined' ) {
+      $('#sagepay_table_new_card').parent().closest('table').attr('width', '100%');
+    }
+
+    sagepayShowNewCardFields();
+  }
+
+  $('#sagepay_card_type').change(function() {
+    var selected = $(this).val();
+
+    if ( $('#sagepay_card_date_start').length > 0 ) {
+      if ( selected == 'MAESTRO' || selected == 'AMEX' ) {
+        $('#sagepay_card_date_start').parent().parent().show();
+      } else {
+        $('#sagepay_card_date_start').parent().parent().hide();
+      }
+    }
+
+    if ( $('#sagepay_card_issue').length > 0 ) {
+      if ( selected == 'MAESTRO' ) {
+        $('#sagepay_card_issue').parent().parent().show();
+      } else {
+        $('#sagepay_card_issue').parent().parent().hide();
+      }
+    }
+  });
+});
+
+function sagepayShowNewCardFields() {
+  var sagepay_card_type_default = $('#sagepay_card_type').val();
+
+  $('[id^="sagepay_card_cvc_"]').hide();
+
+  $('#sagepay_table_new_card').show();
+
+  if ( $('#sagepay_card_date_start').length > 0 ) {
+    if ( sagepay_card_type_default != 'MAESTRO' || sagepay_card_type_default != 'AMEX' ) {
+      $('#sagepay_card_date_start').parent().parent().hide();
+    }
+  }
+
+  if ( $('#sagepay_card_issue').length > 0 ) {
+    if ( sagepay_card_type_default != 'MAESTRO' ) {
+      $('#sagepay_card_issue').parent().parent().hide();
+    }
+  }
+}
+</script>
+EOD;
+
+      $oscTemplate->addBlock($js, 'header_tags');
     }
 
     function confirmation() {
-      global $order;
+      global $order, $customer_id;
 
       $card_types = array();
       foreach ($this->getCardTypes() as $key => $value) {
@@ -86,7 +192,7 @@
 
       $months_array = array();
       for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => sprintf('%02d', $i), 'text' => strftime('%B', mktime(0, 0, 0, $i, 1, 2000)));
+        $months_array[] = array('id' => sprintf('%02d', $i), 'text' => sprintf('%02d', $i));
       }
 
       $year_valid_to_array = array();
@@ -99,30 +205,86 @@
         $year_valid_from_array[] = array('id' => strftime('%y', mktime(0, 0, 0, 1, 1, $i)), 'text' => strftime('%Y', mktime(0, 0, 0, 1, 1, $i)));
       }
 
-      $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_TYPE,
-                                                    'field' => tep_draw_pull_down_menu('cc_type', $card_types)),
-                                              array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_OWNER,
-                                                    'field' => tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'maxlength="50"')),
-                                              array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_NUMBER,
-                                                    'field' => tep_draw_input_field('cc_number_nh-dns', '', 'maxlength="20"'))));
+      $content = '';
 
-      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') || (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True') || (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True') ) {
-        $confirmation['fields'][] = array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS,
-                                          'field' => tep_draw_pull_down_menu('cc_starts_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS_INFO);
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
+        $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+
+        if ( tep_db_num_rows($tokens_query) > 0 ) {
+          $content .= '<table id="sagepay_table" border="0" width="100%" cellspacing="0" cellpadding="2">';
+
+          while ( $tokens = tep_db_fetch_array($tokens_query) ) {
+            $content .= '<tr class="moduleRow" id="sagepay_card_' . (int)$tokens['id'] . '">' . 
+                        '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="' . (int)$tokens['id'] . '" /></td>' .
+                        '  <td valign="top">' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2)) . '/' . strftime('%Y', mktime(0, 0, 0, 1, 1, (2000 + substr($tokens['expiry_date'], 2)))) . '&nbsp;&nbsp;' . tep_output_string_protected($tokens['card_type']) . '</td>' .
+                        '</tr>';
+
+            if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
+              $content .= '<tr class="moduleRowExtra" id="sagepay_card_cvc_' . (int)$tokens['id'] . '">' .
+                          '  <td width="40" valign="top">&nbsp;</td>' .
+                          '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '&nbsp;' . tep_draw_input_field('cc_cvc_tokens_nh-dns[' . (int)$tokens['id'] . ']', '', 'size="5" maxlength="4"') . '</td>' .
+                          '</tr>';
+            }
+          }
+
+          $content .= '<tr class="moduleRow" id="sagepay_card_0">' .
+                      '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="0" /></td>' .
+                      '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_NEW . '</td>' .
+                      '</tr>' .
+                      '</table>';
+        }
       }
 
-      $confirmation['fields'][] = array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_EXPIRES,
-                                        'field' => tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_valid_to_array));
+      $content .= '<table id="sagepay_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
+                  '<tr>' .
+                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_TYPE . '</td>' .
+                  '  <td>' . tep_draw_pull_down_menu('cc_type', $card_types, '', 'id="sagepay_card_type"') . '</td>' .
+                  '</tr>' .
+                  '<tr>' .
+                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_OWNER . '</td>' .
+                  '  <td>' . tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'maxlength="50"') . '</td>' .
+                  '</tr>' .
+                  '<tr>' .
+                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_NUMBER . '</td>' .
+                  '  <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'maxlength="20"') . '</td>' .
+                  '</tr>';
 
-      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') || (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True') ) {
-        $confirmation['fields'][] = array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER,
-                                          'field' => tep_draw_input_field('cc_issue_nh-dns', '', 'size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER_INFO);
+      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') || (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True') ) {
+        $content .= '<tr>' .
+                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS . '</td>' .
+                    '  <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="sagepay_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_STARTS_INFO . '</td>' .
+                    '</tr>';
+      }
+
+      $content .= '<tr>' .
+                  '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_EXPIRES . '</td>' .
+                  '  <td>' . tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_valid_to_array) . '</td>' .
+                  '</tr>';
+
+      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') ) {
+        $content .= '<tr>' .
+                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER . '</td>' .
+                    '  <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="sagepay_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_ISSUE_NUMBER_INFO . '</td>' .
+                    '</tr>';
       }
 
       if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
-        $confirmation['fields'][] = array('title' => MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC,
-                                          'field' => tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"'));
+        $content .= '<tr>' .
+                    '  <td width="30%">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '</td>' .
+                    '  <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . '</td>' .
+                    '</tr>';
       }
+
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
+        $content .= '<tr>' .
+                    '  <td width="30%">&nbsp;</td>' .
+                    '  <td>' . tep_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_SAVE . '</td>' .
+                    '</tr>';
+      }
+
+      $content .= '</table>';
+
+      $confirmation = array('title' => $content);
 
       return $confirmation;
     }
@@ -132,7 +294,9 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $customer_id, $order, $currency, $order_totals, $cartID;
+      global $HTTP_GET_VARS, $HTTP_POST_VARS, $customer_id, $order, $currency, $order_totals, $cartID, $sage_pay_response;
+
+      $sage_pay_response = null;
 
       $error = null;
 
@@ -143,11 +307,8 @@
             break;
 
           case 'Test':
-            $gateway_url = 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp';
-            break;
-
           default:
-            $gateway_url = 'https://test.sagepay.com/Simulator/VSPDirectCallback.asp';
+            $gateway_url = 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp';
             break;
         }
 
@@ -155,96 +316,109 @@
 
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
       } else {
-        $cc_type = substr($HTTP_POST_VARS['cc_type'], 0, 15);
-        $cc_owner = substr($HTTP_POST_VARS['cc_owner'], 0, 50);
-        $cc_number = substr(preg_replace('/[^0-9]/', '', $HTTP_POST_VARS['cc_number_nh-dns']), 0, 20);
-        $cc_start = null;
-        $cc_expires = null;
-        $cc_issue = null;
-        $cc_cvc = null;
+        $sagepay_token = null;
+        $sagepay_token_cvc = null;
 
-        $today = getdate(); 
+        if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
+          if ( isset($HTTP_POST_VARS['sagepay_card']) && is_numeric($HTTP_POST_VARS['sagepay_card']) && ($HTTP_POST_VARS['sagepay_card'] > 0) ) {
+            $token_query = tep_db_query("select sagepay_token from customers_sagepay_tokens where id = '" . (int)$HTTP_POST_VARS['sagepay_card'] . "' and customers_id = '" . (int)$customer_id . "'");
 
-        $months_array = array();
-        for ($i=1; $i<13; $i++) {
-          $months_array[] = sprintf('%02d', $i);
-        }
+            if ( tep_db_num_rows($token_query) == 1 ) {
+              $token = tep_db_fetch_array($token_query);
 
-        $year_valid_to_array = array();
-        for ($i=$today['year']; $i < $today['year']+10; $i++) {
-          $year_valid_to_array[] = strftime('%y',mktime(0,0,0,1,1,$i));
-        }
+              $sagepay_token = $token['sagepay_token'];
 
-        $year_valid_from_array = array();
-        for ($i=$today['year']-4; $i < $today['year']+1; $i++) {
-          $year_valid_from_array[] = strftime('%Y',mktime(0,0,0,1,1,$i));
-        }
-
-        if ( (isset($HTTP_POST_VARS['cc_type']) == false) || ($this->isCard($cc_type) == false) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardtype', 'SSL'));
-        }
-
-        if ( (isset($HTTP_POST_VARS['cc_owner']) == false) || empty($cc_owner) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
-        }
-
-        if ( (isset($HTTP_POST_VARS['cc_number_nh-dns']) == false) || (is_numeric($cc_number) == false) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
-        }
-
-        if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
-          if ( in_array($HTTP_POST_VARS['cc_starts_month'], $months_array) == false ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
-          }
-
-          if ( in_array($HTTP_POST_VARS['cc_starts_year'], $year_valid_from_array) == false ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
-          }
-
-          $cc_start = substr($HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'], 0, 4);
-        }
-
-        if ( in_array($HTTP_POST_VARS['cc_expires_month'], $months_array) == false ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
-        }
-
-        if ( in_array($HTTP_POST_VARS['cc_expires_year'], $year_valid_to_array) == false ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
-        }
-
-        if ( ($HTTP_POST_VARS['cc_expires_year'] == date('y')) && ($HTTP_POST_VARS['cc_expires_month'] < date('m')) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
-        }
-
-        $cc_expires = substr($HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'], 0, 4);
-
-        if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) ) {
-          $cc_issue = substr($HTTP_POST_VARS['cc_issue_nh-dns'], 0, 2);
-
-          if ( (isset($HTTP_POST_VARS['cc_issue_nh-dns']) == false) || empty($cc_issue) ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardissue', 'SSL'));
+              if ( isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && is_array($HTTP_POST_VARS['cc_cvc_tokens_nh-dns']) && isset($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']]) ) {
+                $sagepay_token_cvc = substr($HTTP_POST_VARS['cc_cvc_tokens_nh-dns'][$HTTP_POST_VARS['sagepay_card']], 0, 4);
+              }
+            }
           }
         }
 
-        if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
-          $cc_cvc = substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4);
+        if ( !isset($sagepay_token) ) {
+          $cc_type = isset($HTTP_POST_VARS['cc_type']) ? substr($HTTP_POST_VARS['cc_type'], 0, 15) : null;
+          $cc_owner = isset($HTTP_POST_VARS['cc_owner']) ? substr($HTTP_POST_VARS['cc_owner'], 0, 50) : null;
+          $cc_number = isset($HTTP_POST_VARS['cc_number_nh-dns']) ? substr(preg_replace('/[^0-9]/', '', $HTTP_POST_VARS['cc_number_nh-dns']), 0, 20) : null;
+          $cc_start = null;
+          $cc_expires = null;
+          $cc_issue = isset($HTTP_POST_VARS['cc_issue_nh-dns']) ? substr($HTTP_POST_VARS['cc_issue_nh-dns'], 0, 2) : null;
+          $cc_cvc = isset($HTTP_POST_VARS['cc_cvc_nh-dns']) ? substr($HTTP_POST_VARS['cc_cvc_nh-dns'], 0, 4) : null;
 
-          if ( (isset($HTTP_POST_VARS['cc_cvc_nh-dns']) == false) || empty($cc_cvc) ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvc', 'SSL'));
+          $today = getdate(); 
+
+          $months_array = array();
+          for ($i=1; $i<13; $i++) {
+            $months_array[] = sprintf('%02d', $i);
+          }
+
+          $year_valid_to_array = array();
+          for ($i=$today['year']; $i < $today['year']+10; $i++) {
+            $year_valid_to_array[] = strftime('%y',mktime(0,0,0,1,1,$i));
+          }
+
+          $year_valid_from_array = array();
+          for ($i=$today['year']-4; $i < $today['year']+1; $i++) {
+            $year_valid_from_array[] = strftime('%Y',mktime(0,0,0,1,1,$i));
+          }
+
+          if ( !isset($cc_type) || ($this->isCard($cc_type) == false) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardtype', 'SSL'));
+          }
+
+          if ( !isset($cc_owner) || empty($cc_owner) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
+          }
+
+          if ( !isset($cc_number) || (is_numeric($cc_number) == false) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
+          }
+
+          if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
+            if ( !isset($HTTP_POST_VARS['cc_starts_month']) || !in_array($HTTP_POST_VARS['cc_starts_month'], $months_array) ) {
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
+            }
+
+            if ( !isset($HTTP_POST_VARS['cc_starts_year']) || !in_array($HTTP_POST_VARS['cc_starts_year'], $year_valid_from_array) ) {
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstart', 'SSL'));
+            }
+
+            $cc_start = substr($HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'], 0, 4);
+          }
+
+          if ( !isset($HTTP_POST_VARS['cc_expires_month']) || !in_array($HTTP_POST_VARS['cc_expires_month'], $months_array) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          }
+
+          if ( !isset($HTTP_POST_VARS['cc_expires_year']) || !in_array($HTTP_POST_VARS['cc_expires_year'], $year_valid_to_array) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          }
+
+          if ( ($HTTP_POST_VARS['cc_expires_year'] == date('y')) && ($HTTP_POST_VARS['cc_expires_month'] < date('m')) ) {
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          }
+
+          $cc_expires = substr($HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'], 0, 4);
+
+          if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) ) {
+            if ( !isset($cc_issue) || empty($cc_issue) ) {
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardissue', 'SSL'));
+            }
+          }
+
+          if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
+            if ( !isset($cc_cvc) || empty($cc_cvc) ) {
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvc', 'SSL'));
+            }
           }
         }
 
-        $params = array('VPSProtocol' => '2.23',
+        $params = array('VPSProtocol' => '3.00',
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
                         'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $currency,
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'CardHolder' => $cc_owner,
-                        'CardNumber' => $cc_number,
-                        'ExpiryDate' => $cc_expires,
-                        'CardType' => $cc_type,
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -258,14 +432,41 @@
                         'DeliveryCity' => substr($order->delivery['city'], 0, 40),
                         'DeliveryPostCode' => substr($order->delivery['postcode'], 0, 10),
                         'DeliveryCountry' => $order->delivery['country']['iso_code_2'],
-                        'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                         'DeliveryPhone' => substr($order->customer['telephone'], 0, 20),
                         'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
-                        'Apply3DSecure' => '0');
+                        'Apply3DSecure' => '0',
+                        'VendorData' => 'Customer ID ' . $customer_id);
+
+        if ( isset($sagepay_token) ) {
+          $params['Token'] = $sagepay_token;
+          $params['StoreToken'] = '1';
+
+          if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
+            $params['CV2'] = $sagepay_token_cvc;
+          }
+        } else {
+          $params['CardHolder'] = $cc_owner;
+          $params['CardNumber'] = $cc_number;
+          $params['ExpiryDate'] = $cc_expires;
+          $params['CardType'] = $cc_type;
+          $params['CreateToken'] = ((MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && isset($HTTP_POST_VARS['cc_save']) && ($HTTP_POST_VARS['cc_save'] == 'true') ? '1' : '0');
+
+          if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
+            $params['StartDate'] = $cc_start;
+          }
+
+          if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) ) {
+            $params['IssueNumber'] = $cc_issue;
+          }
+
+          if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
+            $params['CV2'] = $cc_cvc;
+          }
+        }
 
         $ip_address = tep_get_ip_address();
 
-        if ( (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
+        if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
           $params['ClientIPAddress']= $ip_address;
         }
 
@@ -275,18 +476,6 @@
           $params['TxType'] = 'DEFERRED';
         } else {
           $params['TxType'] = 'AUTHENTICATE';
-        }
-
-        if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
-          $params['StartDate'] = $cc_start;
-        }
-
-        if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'SOLO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True')) ) {
-          $params['IssueNumber'] = $cc_issue;
-        }
-
-        if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
-          $params['CV2'] = $cc_cvc;
         }
 
         if ($params['BillingCountry'] == 'US') {
@@ -329,11 +518,8 @@
             break;
 
           case 'Test':
-            $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
-            break;
-
           default:
-            $gateway_url = 'https://test.sagepay.com/Simulator/VSPDirectGateway.asp';
+            $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
             break;
         }
 
@@ -341,47 +527,126 @@
       }
 
       $string_array = explode(chr(10), $transaction_response);
-      $return = array();
+      $sage_pay_response = array();
 
       foreach ($string_array as $string) {
         if (strpos($string, '=') != false) {
           $parts = explode('=', $string, 2);
-          $return[trim($parts[0])] = trim($parts[1]);
+          $sage_pay_response[trim($parts[0])] = trim($parts[1]);
         }
       }
 
-      if ($return['Status'] == '3DAUTH') {
+      if ( isset($params['CreateToken']) && ($params['CreateToken'] == '1') ) {
+        global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
+
+        tep_session_register('sagepay_token_cc_type');
+        $sagepay_token_cc_type = $params['CardType'];
+
+        tep_session_register('sagepay_token_cc_number');
+        $sagepay_token_cc_number = str_repeat('X', strlen($params['CardNumber']) - 4) . substr($params['CardNumber'], -4);
+
+        tep_session_register('sagepay_token_cc_expiry_date');
+        $sagepay_token_cc_expiry_date = $params['ExpiryDate'];
+      }
+
+      if ($sage_pay_response['Status'] == '3DAUTH') {
         global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md;
 
         tep_session_register('sage_pay_direct_acsurl');
-        $sage_pay_direct_acsurl = $return['ACSURL'];
+        $sage_pay_direct_acsurl = $sage_pay_response['ACSURL'];
 
         tep_session_register('sage_pay_direct_pareq');
-        $sage_pay_direct_pareq = $return['PAReq'];
+        $sage_pay_direct_pareq = $sage_pay_response['PAReq'];
 
         tep_session_register('sage_pay_direct_md');
-        $sage_pay_direct_md = $return['MD'];
+        $sage_pay_direct_md = $sage_pay_response['MD'];
 
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
       }
 
-      if ( ($return['Status'] != 'OK') && ($return['Status'] != 'AUTHENTICATED') && ($return['Status'] != 'REGISTERED') ) {
-        $error = $this->getErrorMessageNumber($return['StatusDetail']);
+      if ( ($sage_pay_response['Status'] != 'OK') && ($sage_pay_response['Status'] != 'AUTHENTICATED') && ($sage_pay_response['Status'] != 'REGISTERED') ) {
+        $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
-      }
-
-      if ( isset($return['VPSTxId']) ) {
-        $order->info['comments'] = 'Sage Pay Reference ID: ' . $return['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
       }
     }
 
     function after_process() {
+      global $customer_id, $insert_id, $sage_pay_response;
+
+      $result = array();
+
+      if ( isset($sage_pay_response['VPSTxId']) ) {
+        $result['ID'] = $sage_pay_response['VPSTxId'];
+      }
+
+      if ( isset($sage_pay_response['SecurityKey']) ) {
+        $result['Security Key'] = $sage_pay_response['SecurityKey'];
+      }
+
+      if ( isset($sage_pay_response['AVSCV2']) ) {
+        $result['AVS/CV2'] = $sage_pay_response['AVSCV2'];
+      }
+
+      if ( isset($sage_pay_response['AddressResult']) ) {
+        $result['Address'] = $sage_pay_response['AddressResult'];
+      }
+
+      if ( isset($sage_pay_response['PostCodeResult']) ) {
+        $result['Post Code'] = $sage_pay_response['PostCodeResult'];
+      }
+
+      if ( isset($sage_pay_response['CV2Result']) ) {
+        $result['CV2'] = $sage_pay_response['CV2Result'];
+      }
+
+      if ( isset($sage_pay_response['3DSecureStatus']) ) {
+        $result['3D Secure'] = $sage_pay_response['3DSecureStatus'];
+      }
+
+      if ( isset($sage_pay_response['Token']) && tep_session_is_registered('sagepay_token_cc_number') ) {
+        global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
+
+        $check_query = tep_db_query("select id from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' and sagepay_token = '" . tep_db_input($sage_pay_response['Token']) . "' limit 1");
+        if ( tep_db_num_rows($check_query) < 1 ) {
+          $sql_data_array = array('customers_id' => $customer_id,
+                                  'sagepay_token' => $sage_pay_response['Token'],
+                                  'card_type' => $sagepay_token_cc_type,
+                                  'number_filtered' => $sagepay_token_cc_number,
+                                  'expiry_date' => $sagepay_token_cc_expiry_date,
+                                  'date_added' => 'now()');
+
+          tep_db_perform('customers_sagepay_tokens', $sql_data_array);
+        }
+
+        $result['Token Created'] = 'Yes';
+
+        tep_session_unregister('sagepay_token_cc_type');
+        tep_session_unregister('sagepay_token_cc_number');
+        tep_session_unregister('sagepay_token_cc_expiry_date');
+      }
+
+      $result_string = '';
+
+      foreach ( $result as $k => $v ) {
+        $result_string .= $k . ': ' . $v . "\n";
+      }
+
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'orders_status_id' => MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID,
+                              'date_added' => 'now()',
+                              'customer_notified' => '0',
+                              'comments' => trim($result_string));
+
+      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
       if (tep_session_is_registered('sage_pay_direct_acsurl')) {
         tep_session_unregister('sage_pay_direct_acsurl');
         tep_session_unregister('sage_pay_direct_pareq');
         tep_session_unregister('sage_pay_direct_md');
       }
+
+      $sage_pay_response = null;
     }
 
     function get_error() {
@@ -439,25 +704,36 @@
       return $this->_check;
     }
 
-    function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Sage Pay Direct Module', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS', 'False', 'Do you want to accept Sage Pay Direct payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Login Name', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME', '', 'The vendor login name to connect to the gateway with.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Verify With CVC', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC', 'True', 'Verify the credit card with the billing address with the Credit Card Verification Checknumber (CVC)?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_METHOD', 'Authenticate', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER', 'Simulator', 'Perform transactions on the production server or on the testing server.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\', \'Simulator\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('cURL Program Location', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_CURL', '/usr/bin/curl', 'The location to the cURL program application.', '6', '0' , now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Visa', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_VISA', 'True', 'Do you want to accept Visa payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Mastercard', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MC', 'True', 'Do you want to accept Mastercard payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Visa Delta/Debit', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DELTA', 'True', 'Do you want to accept Visa Delta/Debit payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Solo', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO', 'True', 'Do you want to accept Solo payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Maestro', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO', 'True', 'Do you want to accept Maestro payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Visa Electron UK Debit', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_UKE', 'True', 'Do you want to accept Visa Electron UK Debit payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept American Express', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX', 'True', 'Do you want to accept American Express payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Diners Club', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DC', 'True', 'Do you want to accept Diners Club payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Accept Japan Credit Bureau', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_JCB', 'True', 'Do you want to accept Japan Credit Bureau payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    function install($parameter = null) {
+      $params = $this->getParams();
+
+      if (isset($parameter)) {
+        if (isset($params[$parameter])) {
+          $params = array($parameter => $params[$parameter]);
+        } else {
+          $params = array();
+        }
+      }
+
+      foreach ($params as $key => $data) {
+        $sql_data_array = array('configuration_title' => $data['title'],
+                                'configuration_key' => $key,
+                                'configuration_value' => (isset($data['value']) ? $data['value'] : ''),
+                                'configuration_description' => $data['desc'],
+                                'configuration_group_id' => '6',
+                                'sort_order' => '0',
+                                'date_added' => 'now()');
+
+        if (isset($data['set_func'])) {
+          $sql_data_array['set_function'] = $data['set_func'];
+        }
+
+        if (isset($data['use_func'])) {
+          $sql_data_array['use_function'] = $data['use_func'];
+        }
+
+        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+      }
     }
 
     function remove() {
@@ -465,7 +741,154 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_METHOD', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_CURL', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_VISA', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MC', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DELTA', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_UKE', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DC', 'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_JCB');
+      $keys = array_keys($this->getParams());
+
+      if ($this->check()) {
+        foreach ($keys as $key) {
+          if (!defined($key)) {
+            $this->install($key);
+          }
+        }
+      }
+
+      return $keys;
+    }
+
+    function getParams() {
+      if ( tep_db_num_rows(tep_db_query("show tables like 'customers_sagepay_tokens'")) != 1 ) {
+        $sql = <<<EOD
+CREATE TABLE customers_sagepay_tokens (
+  id int NOT NULL auto_increment,
+  customers_id int NOT NULL,
+  sagepay_token char(38) NOT NULL,
+  card_type varchar(15) NOT NULL,
+  number_filtered varchar(20) NOT NULL,
+  expiry_date char(4) NOT NULL,
+  date_added datetime NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_csagepayt_customers_id (customers_id),
+  KEY idx_csagepayt_token (sagepay_token)
+);
+EOD;
+
+        tep_db_query($sql);
+      }
+
+      if (!defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID')) {
+        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sage Pay [Transactions]' limit 1");
+
+        if (tep_db_num_rows($check_query) < 1) {
+          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = tep_db_fetch_array($status_query);
+
+          $status_id = $status['status_id']+1;
+
+          $languages = tep_get_languages();
+
+          foreach ($languages as $lang) {
+            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
+          }
+
+          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (tep_db_num_rows($flags_query) == 1) {
+            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          }
+        } else {
+          $check = tep_db_fetch_array($check_query);
+
+          $status_id = $check['orders_status_id'];
+        }
+      } else {
+        $status_id = MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID;
+      }
+
+      $params = array('MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS' => array('title' => 'Enable Sage Pay Direct Module',
+                                                                       'desc' => 'Do you want to accept Sage Pay Direct payments?',
+                                                                       'value' => 'False',
+                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME' => array('title' => 'Vendor Login Name',
+                                                                                  'desc' => 'The vendor login name to connect to the gateway with.',
+                                                                                  'value' => ''),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                   'desc' => 'The processing method to use for each transaction.',
+                                                                                   'value' => 'Authenticate',
+                                                                                   'set_func' => 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC' => array('title' => 'Verify With CVC',
+                                                                                'desc' => 'Verify the credit card with the billing address with the Credit Card Verification Checknumber (CVC)?',
+                                                                                'value' => 'True',
+                                                                                'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS' => array('title' => 'Create Tokens',
+                                                                       'desc' => 'Create and store tokens for card payments customer can use on their next purchase?',
+                                                                       'value' => 'False',
+                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                   'desc' => 'Perform transactions on the production server or on the testing server.',
+                                                                                   'value' => 'Test',
+                                                                                   'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                           'desc' => 'Verify transaction server SSL certificate on connection?',
+                                                                           'value' => 'True',
+                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
+                                                                                            'desc' => 'Include transaction information in this order status level',
+                                                                                            'value' => $status_id,
+                                                                                            'set_func' => 'tep_cfg_pull_down_order_statuses(',
+                                                                                            'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE' => array('title' => 'Payment Zone',
+                                                                     'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                     'value' => '0',
+                                                                     'use_func' => 'tep_get_zone_class_title',
+                                                                     'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
+                                                                                'desc' => 'Set the status of orders made with this payment module to this value',
+                                                                                'value' => '0',
+                                                                                'use_func' => 'tep_get_order_status_name',
+                                                                                'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_SORT_ORDER' => array('title' => 'Sort order of display.',
+                                                                           'desc' => 'Sort order of display. Lowest is displayed first.',
+                                                                           'value' => '0'),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_VISA' => array('title' => 'Accept Visa',
+                                                                           'desc' => 'Do you want to accept Visa payments?',
+                                                                           'value' => 'True',
+                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MC' => array('title' => 'Accept Mastercard',
+                                                                         'desc' => 'Do you want to accept Mastercard payments?',
+                                                                         'value' => 'True',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MCDEBIT' => array('title' => 'Accept Mastercard Debit',
+                                                                              'desc' => 'Do you want to accept Mastercard Debit payments?',
+                                                                              'value' => 'True',
+                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DELTA' => array('title' => 'Accept Visa Delta/Debit',
+                                                                            'desc' => 'Do you want to accept Visa Delta/Debit payments?',
+                                                                            'value' => 'True',
+                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO' => array('title' => 'Accept Maestro',
+                                                                              'desc' => 'Do you want to accept Maestro payments?',
+                                                                              'value' => 'True',
+                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_UKE' => array('title' => 'Accept Visa Electron UK Debit',
+                                                                          'desc' => 'Do you want to accept Visa Electron UK Debit payments?',
+                                                                          'value' => 'True',
+                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX' => array('title' => 'Accept American Express',
+                                                                           'desc' => 'Do you want to accept American Express payments?',
+                                                                           'value' => 'True',
+                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DC' => array('title' => 'Accept Diners Club',
+                                                                         'desc' => 'Do you want to accept Diners Club payments?',
+                                                                         'value' => 'True',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_JCB' => array('title' => 'Accept Japan Credit Bureau',
+                                                                          'desc' => 'Do you want to accept Japan Credit Bureau payments?',
+                                                                          'value' => 'True',
+                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_LASER' => array('title' => 'Accept Laser Card',
+                                                                            'desc' => 'Do you want to accept Laser Card payments?',
+                                                                            'value' => 'True',
+                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '));
+
+      return $params;
     }
 
     function sendTransactionToGateway($url, $parameters) {
@@ -483,24 +906,25 @@
         $header[] = 'Authorization: Basic ' . base64_encode($server['user'] . ':' . $server['pass']);
       }
 
-      if (function_exists('curl_init')) {
-        $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
-        curl_setopt($curl, CURLOPT_PORT, $server['port']);
-        curl_setopt($curl, CURLOPT_HEADER, 0);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
-        curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+      $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
+      curl_setopt($curl, CURLOPT_PORT, $server['port']);
+      curl_setopt($curl, CURLOPT_HEADER, 0);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+      curl_setopt($curl, CURLOPT_FORBID_REUSE, 1);
+      curl_setopt($curl, CURLOPT_FRESH_CONNECT, 1);
+      curl_setopt($curl, CURLOPT_POST, 1);
+      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
 
-        $result = curl_exec($curl);
-
-        curl_close($curl);
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_SSL == 'True' ) {
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
       } else {
-        exec(escapeshellarg(MODULE_PAYMENT_SAGE_PAY_DIRECT_CURL) . ' -d ' . escapeshellarg($parameters) . ' "' . $server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : '') . '" -P ' . $server['port'] . ' -k', $result);
-        $result = implode("\n", $result);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
+
+      $result = curl_exec($curl);
+
+      curl_close($curl);
 
       return $result;
     }
@@ -531,12 +955,12 @@
         $this->_cards['MC'] = 'Mastercard';
       }
 
-      if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DELTA == 'True') {
-        $this->_cards['DELTA'] = 'Visa Delta/Debit';
+      if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MCDEBIT == 'True') {
+        $this->_cards['MCDEBIT'] = 'Mastercard Debit';
       }
 
-      if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_SOLO == 'True') {
-        $this->_cards['SOLO'] = 'Solo';
+      if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_DELTA == 'True') {
+        $this->_cards['DELTA'] = 'Visa Delta/Debit';
       }
 
       if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True') {
@@ -557,6 +981,10 @@
 
       if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_JCB == 'True') {
         $this->_cards['JCB'] = 'Japan Credit Bureau';
+      }
+
+      if (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_LASER == 'True') {
+        $this->_cards['LASER'] = 'Laser Card';
       }
 
       return $this->_cards;
@@ -620,6 +1048,47 @@
       }
 
       return (is_numeric($number) && isset($this->_error_messages[$number]));
+    }
+
+    function getTestLinkInfo() {
+      $dialog_title = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_TITLE;
+      $dialog_general_error = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_GENERAL_ERROR;
+      $dialog_button_close = MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_BUTTON_CLOSE;
+
+      $js = <<<EOD
+<script type="text/javascript">
+$(function() {
+  $('#tcdprogressbar').progressbar({
+    value: false
+  });
+});
+
+function openTestConnectionDialog() {
+  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
+    autoOpen: false,
+    modal: true,
+    title: '{$dialog_title}',
+    buttons: {
+      '{$dialog_button_close}': function () {
+        $(this).dialog('destroy');
+      }
+    }
+  });
+
+  d.load('ext/modules/payment/sage_pay/sage_pay_direct.php', function() {
+    if ( $('#spctresult').length < 1 ) {
+      d.html('{$dialog_general_error}');
+    }
+  }).dialog('open');
+}
+</script>
+EOD;
+
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
+              $js;
+
+      return $info;
     }
   }
 ?>
