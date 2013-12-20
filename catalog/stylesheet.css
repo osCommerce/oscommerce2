@@ -29,7 +29,6 @@ body {
 }
 
 #header {
-  height: 60px;
 }
 
 #storeLogo {
@@ -40,6 +39,15 @@ body {
 #headerShortcuts {
   float: right;
   margin-top: 15px;
+}
+
+#headerShortcuts.ui-buttonset { 
+  margin:15px 0 0 0; 
+  text-align: right;
+}
+
+#breadcrumb {
+  clear: both; 
 }
 
 #columnLeft {
@@ -179,30 +187,24 @@ A.headerNavigation:hover {
   color: #ffffff;
 }
 
-TR.headerError {
-  background: #ff0000;
-}
-
-TD.headerError {
+.headerError {
   font-family: Tahoma, Verdana, Arial, sans-serif;
   font-size: 12px;
   background: #ff0000;
   color: #ffffff;
   font-weight : bold;
   text-align : center;
+  padding: 5px;
 }
 
-TR.headerInfo {
-  background: #00ff00;
-}
-
-TD.headerInfo {
+.headerInfo {
   font-family: Tahoma, Verdana, Arial, sans-serif;
   font-size: 12px;
   background: #00ff00;
   color: #ffffff;
   font-weight: bold;
   text-align: center;
+  padding: 5px;
 }
 
 TR.footer {

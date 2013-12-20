@@ -13,15 +13,15 @@
   require(DIR_WS_INCLUDES . 'counter.php');
 ?>
 
-<div class="grid_24 footer">
+<footer class="grid-container footer">
   <p align="center"><?php echo FOOTER_TEXT_BODY; ?></p>
-</div>
+</footer>
 
 <?php
   if ($banner = tep_banner_exists('dynamic', 'footer')) {
 ?>
 
-<div class="grid_24" style="text-align: center; padding-bottom: 20px;">
+<div class="grid-container" style="text-align: center; padding-bottom: 20px;">
   <?php echo tep_display_banner('static', $banner); ?>
 </div>
 
@@ -29,6 +29,8 @@
   }
 ?>
 
-<script type="text/javascript">
-$('.productListTable tr:nth-child(even)').addClass('alt');
+<script>
+  head.ready(function() {
+    $('.productListTable tr:nth-child(even)').addClass('alt');
+  });
 </script>

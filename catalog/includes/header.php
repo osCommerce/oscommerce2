@@ -11,14 +11,14 @@
 */
 
   if ($messageStack->size('header') > 0) {
-    echo '<div class="grid_24">' . $messageStack->output('header') . '</div>';
+    echo '<div class="grid-container">' . $messageStack->output('header') . '</div>';
   }
 ?>
 
-<div id="header" class="grid_24">
-  <div id="storeLogo"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
+  <header id="header" class="grid-container">
+    <div id="storeLogo" class="grid-50"><?php echo '<a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . tep_image(DIR_WS_IMAGES . 'store_logo.png', STORE_NAME) . '</a>'; ?></div>
 
-  <div id="headerShortcuts">
+    <nav id="headerShortcuts" role="navigation" class="grid-50">
 <?php
   echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($cart->count_contents() > 0 ? ' (' . $cart->count_contents() . ')' : ''), 'cart', tep_href_link(FILENAME_SHOPPING_CART)) .
        tep_draw_button(HEADER_TITLE_CHECKOUT, 'triangle-1-e', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL')) .
@@ -28,35 +28,34 @@
     echo tep_draw_button(HEADER_TITLE_LOGOFF, null, tep_href_link(FILENAME_LOGOFF, '', 'SSL'));
   }
 ?>
-  </div>
+    </nav>
 
-<script type="text/javascript">
-  $("#headerShortcuts").buttonset();
-</script>
-</div>
+    <script>
+      head.ready(function () {
+        $("#headerShortcuts").buttonset();
+      });
+    </script>
 
-<div class="grid_24 ui-widget infoBoxContainer">
-  <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
-</div>
+    <div id="breadcrumb" class="grid-100 ui-widget infoBoxContainer">
+      <div class="ui-widget-header infoBoxHeading"><?php echo '&nbsp;&nbsp;' . $breadcrumb->trail(' &raquo; '); ?></div>
+    </div>
+
+  </header>
 
 <?php
   if (isset($HTTP_GET_VARS['error_message']) && tep_not_null($HTTP_GET_VARS['error_message'])) {
 ?>
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
-  <tr class="headerError">
-    <td class="headerError"><?php echo htmlspecialchars(stripslashes(urldecode($HTTP_GET_VARS['error_message']))); ?></td>
-  </tr>
-</table>
+  <div class="grid-container">
+    <div class="grid-100 headerError"><?php echo htmlspecialchars(stripslashes(urldecode($HTTP_GET_VARS['error_message']))); ?></div>
+  </div>
 <?php
   }
 
   if (isset($HTTP_GET_VARS['info_message']) && tep_not_null($HTTP_GET_VARS['info_message'])) {
 ?>
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
-  <tr class="headerInfo">
-    <td class="headerInfo"><?php echo htmlspecialchars(stripslashes(urldecode($HTTP_GET_VARS['info_message']))); ?></td>
-  </tr>
-</table>
+  <div class="grid-container">
+    <div class="grid-100 headerInfo"><?php echo htmlspecialchars(stripslashes(urldecode($HTTP_GET_VARS['info_message']))); ?></div>
+  </div>
 <?php
   }
 ?>
