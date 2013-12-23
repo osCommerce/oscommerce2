@@ -10,6 +10,20 @@
   Released under the GNU General Public License
 */
 
+  $oscTemplate->addBlock('//code.jquery.com/jquery-1.10.2.min.js', 'jquery1');
+  $oscTemplate->addBlock('//code.jquery.com/ui/1.10.3/jquery-ui.min.js', 'jquery1');
+
+  $oscTemplate->addBlock('//code.jquery.com/jquery.min.js', 'jquery2');
+  $oscTemplate->addBlock('//code.jquery.com/ui/1.10.3/jquery-ui.min.js', 'jquery2');
+
+  $oscTemplate->addBlock('$("#headerShortcuts").buttonset();', 'headjs_onloads');
+  $oscTemplate->addBlock('$(\'.productListTable tr:nth-child(even)\').addClass(\'alt\');', 'headjs_onloads');
+
+  if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
+    $oscTemplate->addBlock('ext/jquery/ui/i18n/jquery.ui.datepicker-' . JQUERY_DATEPICKER_I18N_CODE . '.js', 'headjs_scripts');
+    $oscTemplate->addBlock('$.datepicker.setDefaults($.datepicker.regional[\'' . JQUERY_DATEPICKER_I18N_CODE . '\']);', 'headjs_onloads');
+  }
+
   $oscTemplate->buildBlocks();
 
   if (!$oscTemplate->hasBlocks('boxes_column_left')) {
@@ -21,7 +35,7 @@
   }
 ?>
 <!doctype html>
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
+<html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta charset="<?php echo CHARSET; ?>" />
 <!--[if IE]><meta http-equiv="x-ua-compatible" content="ie=edge" /><![endif]-->
@@ -35,9 +49,9 @@
 <noscript>
   <link rel="stylesheet" href="ext/unsemantic/assets/stylesheets/unsemantic-grid-mobile<?php echo ((stripos(HTML_PARAMS, 'dir="rtl"') !== false) ? '-rtl' : ''); ?>.css" />
 </noscript>
-<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.10.3.min.css" />
-<link rel="stylesheet" type="text/css" href="ext/colorbox/colorbox.css" />
-<link rel="stylesheet" type="text/css" href="stylesheet.css" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/redmond/jquery-ui.min.css" />
+<?php if ($oscTemplate->hasBlocks('css')) { echo $oscTemplate->getBlocksArray('css', '', "\n", ''); } ?>
+<link rel="stylesheet" href="stylesheet.css" />
 
 <script>
   var ADAPT_CONFIG = {
@@ -53,26 +67,43 @@
 
 <script src="ext/headjs/head.min.js"></script>
 <script>
-  head.load("ext/jquery/jquery-1.10.2.min.js", "ext/jquery/ui/jquery-ui-1.10.3.min.js", "ext/photoset-grid/jquery.photoset-grid.min.js", "ext/colorbox/jquery.colorbox-min.js");
+if (head.browser.ie && head.browser.version < 9) {
+  head.load(<?php echo $oscTemplate->getBlocksArray('jquery1'); ?>);
+} else {
+  head.load(<?php echo $oscTemplate->getBlocksArray('jquery2'); ?>);
+}
 
 <?php
-  if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
-?>
-  head.load("ext/jquery/ui/i18n/jquery.ui.datepicker-<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>.js", function () {
-    $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>']);
-  });
-<?php
+  if ($oscTemplate->hasBlocks('headjs_scripts')) {
+    echo 'head.load(';
+    echo $oscTemplate->getBlocksArray('headjs_scripts');
+  }
+
+  if ($oscTemplate->hasBlocks('headjs_onloads')) {
+    if ($oscTemplate->hasBlocks('headjs_scripts')) {
+      echo ',function(){';
+    } else {
+      echo 'head.ready(function(){';
+    }
+    echo $oscTemplate->getBlocks('headjs_onloads');
+    echo '}';
+  }
+
+  if ($oscTemplate->hasBlocks('headjs_scripts') || $oscTemplate->hasBlocks('headjs_onloads')) {
+    echo ');';
   }
 ?>
 
 </script>
 
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
+
 </head>
+
 <body>
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 
-<article id="bodyWrapper" class="grid-container">
+<div id="bodyWrapper" class="grid-container">
 
-  <section id="bodyContent" class="grid-<?php echo $oscTemplate->getGridContentWidth(); ?> <?php echo ($oscTemplate->hasBlocks('boxes_column_left') ? 'push-' . $oscTemplate->getGridColumnWidth() : ''); ?>">
+  <article id="bodyContent" class="grid-<?php echo $oscTemplate->getGridContentWidth(); ?> <?php echo ($oscTemplate->hasBlocks('boxes_column_left') ? 'push-' . $oscTemplate->getGridColumnWidth() : ''); ?>" <?php echo (isset($schemaOrg)?$schemaOrg:''); ?>>

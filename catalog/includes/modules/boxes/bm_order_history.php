@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -53,10 +53,10 @@
           }
           $customer_orders_string .= '</table>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</div>' .
-                  '  ' . $customer_orders_string .
-                  '</div>';
+          $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+                  '        <h1 class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</h1>' . "\n" .
+                  '        ' . $customer_orders_string . "\n" .
+                  '      </aside>' . "\n";
 
           $oscTemplate->addBlock($data, $this->group);
         }

@@ -67,10 +67,10 @@
                      '</form>';
         }
 
-        $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents">' . $content . '</div>' .
-                  '</div>';
+        $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+                '        <h1 class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</h1>' . "\n" .
+                '        <div class="ui-widget-content infoBoxContents">' . $content . '</div>' . "\n" .
+                '      </aside>' . "\n";
       }
 
       return $data;

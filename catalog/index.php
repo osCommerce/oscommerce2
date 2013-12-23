@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -39,12 +39,10 @@
     $category = tep_db_fetch_array($category_query);
 ?>
 
-<h1><?php echo $category['categories_name']; ?></h1>
+    <h1><?php echo $category['categories_name']; ?></h1>
 
-<div class="contentContainer">
-  <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
+    <div class="grid-content">
+
 <?php
     if (isset($cPath) && strpos('_', $cPath)) {
 // check to see if there are deeper categories within the current category
@@ -69,26 +67,27 @@
     while ($categories = tep_db_fetch_array($categories_query)) {
       $rows++;
       $cPath_new = tep_get_path($categories['categories_id']);
-      $width = (int)(100 / MAX_DISPLAY_CATEGORIES_PER_ROW) . '%';
-      echo '        <td align="center" class="smallText" width="' . $width . '" valign="top"><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories['categories_name'] . '</a></td>' . "\n";
+      if (MAX_DISPLAY_CATEGORIES_PER_ROW>5) {
+        // Not as nice when you get over 5 but it'll be a tight fit anyway
+        $width = round((100 / MAX_DISPLAY_CATEGORIES_PER_ROW - 2.5) / 5) * 5;
+      } else {
+        $width = round(100 / MAX_DISPLAY_CATEGORIES_PER_ROW);
+      }
+      echo '      <div class="grid-' . $width . ' smallText" style="text-align:center;"><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '<br />' . $categories['categories_name'] . '</a></div>' . "\n";
       if ((($rows / MAX_DISPLAY_CATEGORIES_PER_ROW) == floor($rows / MAX_DISPLAY_CATEGORIES_PER_ROW)) && ($rows != $number_of_categories)) {
-        echo '      </tr>' . "\n";
-        echo '      <tr>' . "\n";
+        echo '      <div class="clear"></div>' . "\n";
       }
     }
 
 // needed for the new products module shown below
     $new_products_category_id = $current_category_id;
 ?>
-      </tr>
-    </table>
 
-    <br />
+    </div>
+
+    <div class="clear"></div>
 
 <?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?>
-
-  </div>
-</div>
 
 <?php
   } elseif ($category_depth == 'products' || (isset($HTTP_GET_VARS['manufacturers_id']) && !empty($HTTP_GET_VARS['manufacturers_id']))) {
@@ -204,9 +203,9 @@
     }
 ?>
 
-<h1><?php echo $catname; ?></h1>
+    <h1><?php echo $catname; ?></h1>
 
-<div class="contentContainer">
+    <div class="grid-content">
 
 <?php
 // optional Product List Filter
@@ -218,7 +217,7 @@
       }
       $filterlist_query = tep_db_query($filterlist_sql);
       if (tep_db_num_rows($filterlist_query) > 1) {
-        echo '<div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '      <div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p class="text-right">' . TEXT_SHOW . '&nbsp;';
         if (isset($HTTP_GET_VARS['manufacturers_id']) && !empty($HTTP_GET_VARS['manufacturers_id'])) {
           echo tep_draw_hidden_field('manufacturers_id', $HTTP_GET_VARS['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -231,44 +230,31 @@
           $options[] = array('id' => $filterlist['id'], 'text' => $filterlist['name']);
         }
         echo tep_draw_pull_down_menu('filter_id', $options, (isset($HTTP_GET_VARS['filter_id']) ? $HTTP_GET_VARS['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</p></form></div>' . "\n";
+        echo tep_hide_session_id() . '</p></form></div>' . "\n\n";
       }
     }
 
     include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
 ?>
 
-</div>
+    </div>
 
 <?php
   } else { // default page
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+    <h1><?php echo HEADING_TITLE; ?></h1>
 
-<div class="contentContainer">
-  <div class="contentText">
-    <?php echo tep_customer_greeting(); ?>
-  </div>
+    <p><?php echo tep_customer_greeting(); ?></p>
 
 <?php
     if (tep_not_null(TEXT_MAIN)) {
-?>
-
-  <div class="contentText">
-    <?php echo TEXT_MAIN; ?>
-  </div>
-
-<?php
+      echo TEXT_MAIN;
     }
 
     include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
     include(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
-?>
 
-</div>
-
-<?php
   }
 
   require(DIR_WS_INCLUDES . 'template_bottom.php');

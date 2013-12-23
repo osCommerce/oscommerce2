@@ -67,6 +67,16 @@
       }
     }
 
+    function getBlocksArray($group, $wrap_before = '"', $wrap_after = '"', $separator = ',') {
+      if ($this->hasBlocks($group)) {
+        $output = '';
+        for ($i=0; $i<count($this->_blocks[$group]); $i++) {
+          $output .= ($i>0?$separator:'') . $wrap_before . $this->_blocks[$group][$i] . $wrap_after;
+        }
+        return $output;
+      }
+    }
+
     function buildBlocks() {
       global $language;
 

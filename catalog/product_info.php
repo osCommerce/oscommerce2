@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -21,20 +21,26 @@
   $product_check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
   $product_check = tep_db_fetch_array($product_check_query);
 
+  $oscTemplate->addBlock('ext/photoset-grid/jquery.photoset-grid.min.js', 'headjs_scripts');
+  $oscTemplate->addBlock('ext/colorbox/jquery.colorbox-min.js', 'headjs_scripts');
+
+  $oscTemplate->addBlock('$(\'#piGal\').css({\'visibility\': \'hidden\'});', 'headjs_onloads');
+
+  $oscTemplate->addBlock('<link rel="stylesheet" href="ext/colorbox/colorbox.css" />', 'css');
+
+  $schemaOrg = 'itemscope itemtype="http://schema.org/Product"';
+
   require(DIR_WS_INCLUDES . 'template_top.php');
 
   if ($product_check['total'] < 1) {
 ?>
 
-<div class="contentContainer">
-  <div class="contentText">
-    <?php echo TEXT_PRODUCT_NOT_FOUND; ?>
-  </div>
+    <p><?php echo TEXT_PRODUCT_NOT_FOUND; ?></p>
 
-  <div style="float: right;">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?>
-  </div>
-</div>
+    <div class="float:right">
+      <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', tep_href_link(FILENAME_DEFAULT)); ?>
+
+    </div>
 
 <?php
   } else {
@@ -56,15 +62,16 @@
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
+    <?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
 
-<div>
-  <h1 style="float: right;"><?php echo $products_price; ?></h1>
-  <h1><?php echo $products_name; ?></h1>
-</div>
+      <div class="grid-content">
+        <h1 itemprop="name" class="grid-66"><?php echo $products_name; ?></h1>
 
-<div class="contentContainer">
-  <div class="contentText">
+        <h2 class="grid-33 text-right" itemscope itemtype="http://schema.org/Offer">
+          <span class="price" itemprop="price"><?php echo $products_price; ?></span>
+        </h2>
+
+        <div class="grid-100">
 
 <?php
     if (tep_not_null($product_info['products_image'])) {
@@ -76,7 +83,7 @@
         $photoset_layout = '1' . (tep_db_num_rows($pi_query) > 1 ? tep_db_num_rows($pi_query) - 1 : '');
 ?>
 
-    <div id="piGal">
+          <div id="piGal">
 
 <?php
         $pi_counter = 0;
@@ -89,61 +96,58 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div>';
           }
 
-          echo tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"');
+          echo '            ' . tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
         }
 ?>
 
-    </div>
+          </div>
 
 <?php
         if ( !empty($pi_html) ) {
-          echo '    <div style="display: none;">' . implode('', $pi_html) . '</div>';
+          echo '          <div style="display: none;">' . implode('', $pi_html) . '</div>' . "\n";
         }
       } else {
 ?>
 
-    <div id="piGal">
-      <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
-    </div>
+          <div id="piGal">
+          <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
+
+          </div>
 
 <?php
       }
     }
 ?>
 
-<script type="text/javascript">
-$(function() {
-  $('#piGal').css({
-    'visibility': 'hidden'
-  });
+          <script type="text/javascript">
+          head.ready(function() {
+            $('#piGal').photosetGrid({
+              layout: '<?php echo $photoset_layout; ?>',
+              width: '250px',
+              highresLinks: true,
+              rel: 'pigallery',
+              onComplete: function() {
+                $('#piGal').css({ 'visibility': 'visible'});
 
-  $('#piGal').photosetGrid({
-    layout: '<?php echo $photoset_layout; ?>',
-    width: '250px',
-    highresLinks: true,
-    rel: 'pigallery',
-    onComplete: function() {
-      $('#piGal').css({ 'visibility': 'visible'});
+                $('#piGal a').colorbox({
+                  maxHeight: '90%',
+                  maxWidth: '90%',
+                  rel: 'pigallery'
+                });
 
-      $('#piGal a').colorbox({
-        maxHeight: '90%',
-        maxWidth: '90%',
-        rel: 'pigallery'
-      });
+                $('#piGal img').each(function() {
+                  var imgid = $(this).attr('id').substring(9);
 
-      $('#piGal img').each(function() {
-        var imgid = $(this).attr('id').substring(9);
+                  if ( $('#piGalDiv_' + imgid).length ) {
+                    $(this).parent().colorbox({ inline: true, href: "#piGalDiv_" + imgid });
+                  }
+                });
+              }
+            });
+          });
+          </script>
 
-        if ( $('#piGalDiv_' + imgid).length ) {
-          $(this).parent().colorbox({ inline: true, href: "#piGalDiv_" + imgid });
-        }
-      });
-    }
-  });
-});
-</script>
-
-<?php echo stripslashes($product_info['products_description']); ?>
+          <div class="description" itemprop="description"><?php echo stripslashes($product_info['products_description']); ?></div>
 
 <?php
     $products_attributes_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$HTTP_GET_VARS['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "'");
@@ -151,9 +155,9 @@ $(function() {
     if ($products_attributes['total'] > 0) {
 ?>
 
-    <p><?php echo TEXT_PRODUCT_OPTIONS; ?></p>
+          <p><?php echo TEXT_PRODUCT_OPTIONS; ?></p>
 
-    <p>
+          <p>
 <?php
       $products_options_name_query = tep_db_query("select distinct popt.products_options_id, popt.products_options_name from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$HTTP_GET_VARS['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "' order by popt.products_options_name");
       while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
@@ -172,40 +176,38 @@ $(function() {
           $selected_attribute = false;
         }
 ?>
-      <strong><?php echo $products_options_name['products_options_name'] . ':'; ?></strong><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
+            <strong><?php echo $products_options_name['products_options_name'] . ':'; ?></strong><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
 <?php
       }
 ?>
-    </p>
+
+          </p>
 
 <?php
     }
 ?>
 
-    <div style="clear: both;"></div>
+        </div>
 
 <?php
     if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
 ?>
 
-    <p style="text-align: center;"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($product_info['products_date_available'])); ?></p>
+        <p class="grid-100 text-center"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($product_info['products_date_available'])); ?></p>
 
 <?php
     }
-?>
 
-  </div>
-
-<?php
     $reviews_query = tep_db_query("select count(*) as count from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$languages_id . "' and reviews_status = 1");
     $reviews = tep_db_fetch_array($reviews_query);
 ?>
 
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></span>
+        <div class="grid-100 buttonSet">
+          <span class="buttonAction"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'cart', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
-  </div>
+          <?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, tep_get_all_get_params())); ?>
+
+        </div>
 
 <?php
     if ((USE_CACHE == 'true') && empty($SID)) {
@@ -215,9 +217,8 @@ $(function() {
     }
 ?>
 
-</div>
-
-</form>
+      </div>
+    </form>
 
 <?php
   }
