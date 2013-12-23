@@ -382,7 +382,7 @@
       $button .= '</button>';
     }
 
-    $button .= '</span><script type="text/javascript">$("#tdb' . $button_counter . '").button(';
+    $button .= '</span><script>head.ready(function(){$("#tdb' . $button_counter . '").button(';
 
     $args = array();
 
@@ -406,7 +406,7 @@
       $button .= '{' . implode(',', $args) . '}';
     }
 
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
+    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");});</script>';
 
     $button_counter++;
 

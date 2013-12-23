@@ -13,9 +13,9 @@
   class oscTemplate {
     var $_title;
     var $_blocks = array();
-    var $_grid_container_width = 24;
-    var $_grid_content_width = 16;
-    var $_grid_column_width = 4;
+    var $_grid_container_width = 100;
+    var $_grid_content_width = 60;
+    var $_grid_column_width = 20;
 
     function oscTemplate() {
       $this->_title = TITLE;
@@ -64,6 +64,16 @@
     function getBlocks($group) {
       if ($this->hasBlocks($group)) {
         return implode("\n", $this->_blocks[$group]);
+      }
+    }
+
+    function getBlocksArray($group, $wrap_before = '"', $wrap_after = '"', $separator = ',') {
+      if ($this->hasBlocks($group)) {
+        $output = '';
+        for ($i=0; $i<count($this->_blocks[$group]); $i++) {
+          $output .= ($i>0?$separator:'') . $wrap_before . $this->_blocks[$group][$i] . $wrap_after;
+        }
+        return $output;
       }
     }
 

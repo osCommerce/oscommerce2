@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -36,10 +36,10 @@
       $cart_contents_string = '';
 
       if ($cart->count_contents() > 0) {
-        $cart_contents_string = '<table border="0" width="100%" cellspacing="0" cellpadding="0" class="ui-widget-content infoBoxContents">';
+        $cart_contents_string = '<table style="width:100%;" class="ui-widget-content infoBoxContents">';
         $products = $cart->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-          $cart_contents_string .= '<tr><td align="right" valign="top">';
+          $cart_contents_string .= '<tr><td class="text-right">';
 
           if ((tep_session_is_registered('new_products_id_in_cart')) && ($new_products_id_in_cart == $products[$i]['id'])) {
             $cart_contents_string .= '<span class="newItemInCart">';
@@ -51,7 +51,7 @@
             $cart_contents_string .= '</span>';
           }
 
-          $cart_contents_string .= '</td><td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">';
+          $cart_contents_string .= '</td><td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">';
 
           if ((tep_session_is_registered('new_products_id_in_cart')) && ($new_products_id_in_cart == $products[$i]['id'])) {
             $cart_contents_string .= '<span class="newItemInCart">';
@@ -71,16 +71,16 @@
         }
 
         $cart_contents_string .= '<tr><td colspan="2" style="padding-top: 5px; padding-bottom: 2px;">' . tep_draw_separator() . '</td></tr>' .
-                                 '<tr><td colspan="2" align="right">' . $currencies->format($cart->show_total()) . '</td></tr>' .
+                                 '<tr><td colspan="2" class="text-right">' . $currencies->format($cart->show_total()) . '</td></tr>' .
                                  '</table>';
       } else {
         $cart_contents_string .= '<div class="ui-widget-content infoBoxContents">' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</div>';
       }
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></div>' .
-              '  ' . $cart_contents_string .
-              '</div>';
+      $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+              '        <h1 class="ui-widget-header infoBoxHeading"><a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></h1>' . "\n" .
+              '        ' . $cart_contents_string . "\n" .
+              '      </aside>' . "\n";
 
       $oscTemplate->addBlock($data, $this->group);
     }

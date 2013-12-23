@@ -29,7 +29,6 @@ body {
 }
 
 #header {
-  height: 60px;
 }
 
 #storeLogo {
@@ -40,6 +39,28 @@ body {
 #headerShortcuts {
   float: right;
   margin-top: 15px;
+}
+
+#headerShortcuts.ui-buttonset { 
+  margin:15px 0; 
+  text-align: right;
+}
+
+#breadcrumb {
+  clear: both; 
+}
+
+#breadcrumb li {
+  display: inline-block;
+  padding-right: 5px;
+}
+
+#breadcrumb li:after {
+  content: ' > ';
+}
+
+#breadcrumb li:last-child:after {
+  content: none;
 }
 
 #columnLeft {
@@ -61,13 +82,20 @@ body {
   padding: 5px;
   font-size: 11px;
   line-height: 1.5;
+  overflow: hidden;
 }
 
-.contentContainer {
+.infoBoxContents img {
+  padding: 0;
+}
+
+
+
+article aside, article, .contentContainer {
   padding-bottom: 10px;
 }
 
-.contentContainer h2 {
+article aside h1, article aside h2, article h2, .contentContainer h1, .contentContainer h2 {
   font-size: 16px;
   text-decoration: underline;
   font-weight: normal;
@@ -130,6 +158,7 @@ table, p {
 
 .buttonSet {
   clear: both;
+  padding-top: 10px; 
 }
 
 .buttonAction {
@@ -179,42 +208,35 @@ A.headerNavigation:hover {
   color: #ffffff;
 }
 
-TR.headerError {
-  background: #ff0000;
-}
-
-TD.headerError {
+.headerError {
   font-family: Tahoma, Verdana, Arial, sans-serif;
   font-size: 12px;
   background: #ff0000;
   color: #ffffff;
   font-weight : bold;
   text-align : center;
+  padding: 5px;
 }
 
-TR.headerInfo {
-  background: #00ff00;
-}
-
-TD.headerInfo {
+.headerInfo {
   font-family: Tahoma, Verdana, Arial, sans-serif;
   font-size: 12px;
   background: #00ff00;
   color: #ffffff;
   font-weight: bold;
   text-align: center;
+  padding: 5px;
 }
 
-TR.footer {
-  background: #bbc3d3;
-}
-
-TD.footer {
+.footer {
   font-family: Verdana, Arial, sans-serif;
   font-size: 10px;
   background: #bbc3d3;
   color: #ffffff;
   font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  padding: 10px;
 }
 
 .infoBox {
@@ -231,11 +253,10 @@ TD.footer {
   font-size: 10px;
 }
 
-TD.infoBoxHeading {
+.infoBoxHeading {
   font-family: Verdana, Arial, sans-serif;
   font-size: 10px;
   font-weight: bold;
-  background: #bbc3d3;
   color: #ffffff;
 }
 
@@ -252,21 +273,33 @@ TR.accountHistory-even, TR.addressBook-even, TR.alsoPurchased-even, TR.payment-e
   background: #f8f8f9;
 }
 
-TABLE.productListing {
+.tight table {
+  padding: 0;
+}
+
+.productListing {
   border: 1px;
   border-style: solid;
   border-color: #b6b7cb;
   border-spacing: 1px;
+  table-layout: fixed;
 }
 
-.productListingHeader {
-  table-layout: fixed;
+.productListingHorizontal {
+  border:0;
+  width:100%;
+  border-spacing:0;
+  padding:2px;
+}
+
+.productListing thead td {
+  padding:-2px;
+  margin:-2px;
+}
+
+.productListing thead, .productListingHeader, .productListingHeader A:hover {
   color: #FFFFFF;
   font-weight: bold;
-}
-
-.productListingHeader A:hover {
-  color: #FFFFFF;
 }
 
 .productListingData {
@@ -410,4 +443,34 @@ SPAN.errorText {
 .accountLinkListEntry {
   float: left;
   margin-right: 5px;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right; 
+}
+
+section aside nav ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+section aside nav ul ul {
+  padding: 0 0 0 20px;
+  list-style-type: square;
 }

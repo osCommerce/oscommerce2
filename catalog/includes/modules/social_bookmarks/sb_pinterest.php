@@ -33,7 +33,7 @@
       global $HTTP_GET_VARS, $oscTemplate;
 
 // add the js in the footer
-      $oscTemplate->addBlock('<script type="text/javascript" src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
+      $oscTemplate->addBlock('//assets.pinterest.com/js/pinit.js', 'headjs_scripts');
 
       $params = array();
 
@@ -67,12 +67,12 @@
       $output = '<a href="http://pinterest.com/pin/create/button/?';
 
       foreach ($params as $key => $value) {
-        $output .= $key . '=' . urlencode($value) . '&';
+        $output .= $key . '=' . urlencode($value) . '&amp;';
       }
 
-      $output = substr($output, 0, -1); //remove last & from the url
+      $output = substr($output, 0, -5); //remove last & from the url
 
-      $output .= '" class="pin-it-button" count-layout="' . strtolower(MODULE_SOCIAL_BOOKMARKS_PINTEREST_BUTTON_COUNT_POSITION) . '"><img border="0" src="//assets.pinterest.com/images/PinExt.png" title="' . $this->public_title . '" /></a>';
+      $output .= '" class="pin-it-button" data-pin-do="buttonBookmark"><img src="//assets.pinterest.com/images/pidgets/pinit_fg_en_rect_gray_20.png" title="' . $this->public_title . '" alt="' . $this->public_title . '" /></a>';
 
       return $output;
     }

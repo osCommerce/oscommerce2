@@ -5,21 +5,22 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
 ?>
 
-</div> <!-- bodyContent //-->
+  </article> <!-- bodyContent //-->
 
 <?php
   if ($oscTemplate->hasBlocks('boxes_column_left')) {
 ?>
 
-<div id="columnLeft" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?> pull_<?php echo $oscTemplate->getGridContentWidth(); ?>">
-  <?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
-</div>
+  <section id="columnLeft" class="grid-<?php echo $oscTemplate->getGridColumnWidth(); ?> pull-<?php echo $oscTemplate->getGridContentWidth(); ?>">
+<?php echo $oscTemplate->getBlocks('boxes_column_left'); ?>
+
+  </section>
 
 <?php
   }
@@ -27,17 +28,18 @@
   if ($oscTemplate->hasBlocks('boxes_column_right')) {
 ?>
 
-<div id="columnRight" class="grid_<?php echo $oscTemplate->getGridColumnWidth(); ?>">
-  <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
-</div>
+  <section id="columnRight" class="grid-<?php echo $oscTemplate->getGridColumnWidth(); ?>">
+    <?php echo $oscTemplate->getBlocks('boxes_column_right'); ?>
+
+  </section>
 
 <?php
   }
 ?>
 
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-
 </div> <!-- bodyWrapper //-->
+
+<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
 <?php echo $oscTemplate->getBlocks('footer_scripts'); ?>
 

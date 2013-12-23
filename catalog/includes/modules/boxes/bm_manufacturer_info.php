@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -38,16 +38,16 @@
         if (tep_db_num_rows($manufacturer_query)) {
           $manufacturer = tep_db_fetch_array($manufacturer_query);
 
-          $manufacturer_info_string = '<table border="0" width="100%" cellspacing="0" cellpadding="0" class="ui-widget-content infoBoxContents">';
-          if (tep_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<tr><td align="center" colspan="2">' . tep_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</td></tr>';
-          if (tep_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<tr><td valign="top">-&nbsp;</td><td valign="top"><a href="' . tep_href_link(FILENAME_REDIRECT, 'action=manufacturer&manufacturers_id=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></td></tr>';
-          $manufacturer_info_string .= '<tr><td valign="top">-&nbsp;</td><td valign="top"><a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></td></tr>' .
-                                       '</table>';
+          $manufacturer_info_string = '<div class="ui-widget-content infoBoxContents">';
+          if (tep_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<div style="text-align:center">' . tep_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</div><ul>';
+          if (tep_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<li><a href="' . tep_href_link(FILENAME_REDIRECT, 'action=manufacturer&manufacturers_id=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></li>';
+          $manufacturer_info_string .= '<li><a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></li></ul>' .
+                                       '</div>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</div>' .
-                  '  ' . $manufacturer_info_string .
-                  '</div>';
+          $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+                  '        <h1 class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</h1>' . "\n" .
+                  '        ' . $manufacturer_info_string . "\n" .
+                  '      </aside>' . "\n";
 
           $oscTemplate->addBlock($data, $this->group);
         }

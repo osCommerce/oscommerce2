@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -22,33 +22,30 @@
     $counter = 0;
     $col = 0;
 
-    $new_prods_content = '<table border="0" width="100%" cellspacing="0" cellpadding="2">';
+    $new_prods_content = '<div class="grid-container">' . "\n";
     while ($new_products = tep_db_fetch_array($new_products_query)) {
       $counter++;
 
-      if ($col === 0) {
-        $new_prods_content .= '<tr>';
-      }
-
-      $new_prods_content .= '<td width="33%" align="center" valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . $new_products['products_name'] . '</a><br />' . $currencies->display_price($new_products['products_price'], tep_get_tax_rate($new_products['products_tax_class_id'])) . '</td>';
+      $new_prods_content .= '        <div class="grid-33 text-center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '" title="' . $new_products['products_name'] . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '<br />' . $new_products['products_name'] . '</a><br />' . $currencies->display_price($new_products['products_price'], tep_get_tax_rate($new_products['products_tax_class_id'])) . '</div>' . "\n";
 
       $col ++;
 
       if (($col > 2) || ($counter == $num_new_products)) {
-        $new_prods_content .= '</tr>';
+        $new_prods_content .= '        <div class="clear"></div>' . "\n";
 
         $col = 0;
       }
     }
 
-    $new_prods_content .= '</table>';
+    $new_prods_content .= '      </div>' . "\n";
 ?>
 
-  <h2><?php echo sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')); ?></h2>
+    <aside>
+      <h1><?php echo sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')); ?></h1>
 
-  <div class="contentText">
-    <?php echo $new_prods_content; ?>
-  </div>
+      <?php echo $new_prods_content; ?>
+
+    </aside>
 
 <?php
   }

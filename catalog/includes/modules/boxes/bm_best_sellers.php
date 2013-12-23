@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -47,10 +47,10 @@
           }
           $bestsellers_list .= '</ol>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents">' . $bestsellers_list . '</div>' .
-                  '</div>';
+          $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+                  '        <h1 class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_BEST_SELLERS_BOX_TITLE . '</h1>' . "\n" .
+                  '        <div class="ui-widget-content infoBoxContents">' . $bestsellers_list . '</div>' . "\n" .
+                  '      </aside>' . "\n";
 
           $oscTemplate->addBlock($data, $this->group);
         }

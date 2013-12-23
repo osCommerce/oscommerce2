@@ -36,7 +36,7 @@
           $this->group = 'footer_scripts';
         }
 
-        $header = '<script type="text/javascript">
+        $header = '<script>
   var _gaq = _gaq || [];
   _gaq.push([\'_setAccount\', \'' . tep_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
   _gaq.push([\'_trackPageview\']);' . "\n";

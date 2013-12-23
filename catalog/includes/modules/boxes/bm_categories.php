@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2013 osCommerce
 
   Released under the GNU General Public License
 */
@@ -31,11 +31,21 @@
     }
 
     function tep_show_category($counter) {
-      global $tree, $categories_string, $cPath_array;
+      global $tree, $categories_string, $cPath_array, $counter_level;
 
-      for ($i=0; $i<$tree[$counter]['level']; $i++) {
-        $categories_string .= "&nbsp;&nbsp;";
+      if (isset($counter_level)) {
+        if ($tree[$counter]['level'] > $counter_level) {
+          $categories_string .= "\n<ul><li>";
+        } else if ($tree[$counter]['level'] < $counter_level) {
+          $categories_string .= "</li></ul></li>\n<li>";
+        } else {
+          $categories_string .= "</li>\n<li>";
+        }
+      } else {
+        $categories_string .= "<ul><li>";
       }
+
+      $counter_level = $tree[$counter]['level'];
 
       $categories_string .= '<a href="';
 
@@ -71,10 +81,13 @@
         }
       }
 
-      $categories_string .= '<br />';
-
       if ($tree[$counter]['next_id'] != false) {
         $this->tep_show_category($tree[$counter]['next_id']);
+      } else {
+        for ($i=0; $i<$tree[$counter]['level']; $i++) {
+          $categories_string .= "</li></ul></li>\n";
+        }
+        $categories_string .= "</li></ul>";
       }
     }
 
@@ -142,10 +155,10 @@
 
       $this->tep_show_category($first_element);
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
-              '  <div class="ui-widget-content infoBoxContents">' . $categories_string . '</div>' .
-              '</div>';
+      $data = '      <aside class="ui-widget infoBoxContainer">' . "\n" .
+              '        <h1 class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</h1>' . "\n" .
+              '        <nav id="categoryNav" class="ui-widget-content infoBoxContents" role="navigation">' . $categories_string . '</nav>' . "\n" .
+              '      </aside>' . "\n";
 
       return $data;
     }
