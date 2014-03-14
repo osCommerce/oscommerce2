@@ -12,14 +12,15 @@
 
   class cm_account_test {
     var $code = 'cm_account_test';
-    var $group = 'account';
+    var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_account_test() {
-      $this->title = MODULE_CONTENT_TEST_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CONTENT_TEST_TITLE;
       $this->description = MODULE_CONTENT_TEST_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_TEST_STATUS') ) {

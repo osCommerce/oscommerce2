@@ -132,12 +132,12 @@
         $class = substr($module, 0, strrpos($module, '.'));
 
         if ( !class_exists($class) ) {
-          if ( file_exists(DIR_WS_MODULES . 'content/' . $module) ) {
-            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $module) ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $module);
+          if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module) ) {
+            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module) ) {
+              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module);
             }
 
-            include(DIR_WS_MODULES . 'content/' . $module);
+            include(DIR_WS_MODULES . 'content/' . $group . '/' . $module);
           }
         }
 

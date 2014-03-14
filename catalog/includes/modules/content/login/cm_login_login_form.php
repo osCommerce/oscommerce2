@@ -12,14 +12,15 @@
 
   class cm_login_login_form {
     var $code = 'cm_login_login_form';
-    var $group = 'login';
+    var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_login_login_form() {
-      $this->title = MODULE_CONTENT_LOGIN_LOGIN_FORM_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CONTENT_LOGIN_LOGIN_FORM_TITLE;
       $this->description = MODULE_CONTENT_LOGIN_LOGIN_FORM_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_LOGIN_LOGIN_FORM_STATUS') ) {
@@ -32,7 +33,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/templates/login_login_form.php');
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_login_form.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

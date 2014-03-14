@@ -5,10 +5,10 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-define('MODULE_CFG_MODULE_CONTENT_TITLE', 'Content');
+  define('MODULES_ADMIN_MENU_MODULES_CONTENT', 'Content');
 ?>

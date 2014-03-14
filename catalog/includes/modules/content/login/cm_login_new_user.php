@@ -12,14 +12,15 @@
 
   class cm_login_new_user {
     var $code = 'cm_login_new_user';
-    var $group = 'login';
+    var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_login_new_user() {
-      $this->title = MODULE_CONTENT_LOGIN_NEW_USER_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CONTENT_LOGIN_NEW_USER_TITLE;
       $this->description = MODULE_CONTENT_LOGIN_NEW_USER_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_LOGIN_NEW_USER_STATUS') ) {
@@ -32,7 +33,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/templates/login_new_user.php');
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_new_user.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

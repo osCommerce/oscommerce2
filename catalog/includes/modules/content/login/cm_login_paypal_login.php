@@ -12,14 +12,15 @@
 
   class cm_login_paypal_login {
     var $code = 'cm_login_paypal_login';
-    var $group = 'login';
+    var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_login_paypal_login() {
-      $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE;
       $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS') ) {
@@ -32,7 +33,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/templates/login_paypal_login.php');
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_paypal_login.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

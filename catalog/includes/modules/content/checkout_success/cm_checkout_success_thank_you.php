@@ -10,14 +10,15 @@
 
   class cm_checkout_success_thank_you {
     var $code = 'cm_checkout_success_thank_you';
-  	var $group = 'checkout_success';
+  	var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_checkout_success_thank_you() {
-      $this->title = MODULE_CHECKOUT_SUCCESS_THANK_YOU_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CHECKOUT_SUCCESS_THANK_YOU_TITLE;
       $this->description = MODULE_CHECKOUT_SUCCESS_THANK_YOU_DESCRIPTION;
 
       if ( defined('MODULE_CHECKOUT_SUCCESS_THANK_YOU_STATUS') ) {

@@ -10,14 +10,15 @@
 
   class cm_checkout_success_previous_orders {
     var $code = 'cm_checkout_success_previous_orders';
-	  var $group = 'checkout_success';
+    var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
     function cm_checkout_success_previous_orders() {
-      $this->title = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_TITLE . ' (' . $this->group . ')';
+      $this->group = basename(dirname(__FILE__));
+      $this->title = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_TITLE;
       $this->description = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_DESCRIPTION;
 
       if ( defined('MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_STATUS') ) {
