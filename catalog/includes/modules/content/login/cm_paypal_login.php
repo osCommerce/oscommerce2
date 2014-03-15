@@ -5,21 +5,23 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  class cm_login_paypal_login {
-    var $code = 'cm_login_paypal_login';
+  class cm_paypal_login {
+    var $code;
     var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_login_paypal_login() {
+    function cm_paypal_login() {
+      $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
+
       $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE;
       $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
 
@@ -33,7 +35,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_paypal_login.php');
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

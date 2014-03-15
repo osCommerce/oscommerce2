@@ -5,21 +5,23 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  class cm_account_test {
-    var $code = 'cm_account_test';
+  class cm_test {
+    var $code;
     var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_account_test() {
+    function cm_test() {
+      $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
+
       $this->title = MODULE_CONTENT_TEST_TITLE;
       $this->description = MODULE_CONTENT_TEST_DESCRIPTION;
 

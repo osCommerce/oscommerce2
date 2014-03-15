@@ -1,4 +1,4 @@
-<div class="contentContainer <?php echo (MODULE_CONTENT_LOGIN_NEW_USER_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
+<div class="contentContainer <?php echo (MODULE_CONTENT_CREATE_ACCOUNT_LINK_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
   <h2><?php echo HEADING_NEW_CUSTOMER; ?></h2>
 
   <div class="contentText">

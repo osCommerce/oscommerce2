@@ -8,16 +8,18 @@
   Released under the GNU General Public License
 */
 
-  class cm_checkout_success_downloads {
-    var $code = 'cm_checkout_success_downloads';
+  class cm_cs_downloads {
+    var $code;
     var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_checkout_success_downloads() {
+    function cm_cs_downloads() {
+      $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
+
       $this->title = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_TITLE;
       $this->description = MODULE_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION;
 

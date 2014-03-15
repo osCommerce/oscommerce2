@@ -8,16 +8,18 @@
   Released under the GNU General Public License
 */
 
-  class cm_checkout_success_previous_orders {
-    var $code = 'cm_checkout_success_previous_orders';
+  class cm_cs_previous_orders {
+    var $code;
     var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_checkout_success_previous_orders() {
+    function cm_cs_previous_orders() {
+      $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
+
       $this->title = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_TITLE;
       $this->description = MODULE_CHECKOUT_SUCCESS_PREVIOUS_ORDERS_DESCRIPTION;
 

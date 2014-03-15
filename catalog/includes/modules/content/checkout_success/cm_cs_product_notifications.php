@@ -8,16 +8,18 @@
   Released under the GNU General Public License
 */
 
-  class cm_checkout_success_product_notifications {
-    var $code = 'cm_checkout_success_product_notifications';
+  class cm_cs_product_notifications {
+    var $code;
     var $group;
     var $title;
     var $description;
     var $sort_order;
     var $enabled = false;
 
-    function cm_checkout_success_product_notifications() {
+    function cm_cs_product_notifications() {
+      $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
+
       $this->title = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_TITLE;
       $this->description = MODULE_CHECKOUT_SUCCESS_PRODUCT_NOTIFICATIONS_DESCRIPTION;
 

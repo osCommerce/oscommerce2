@@ -1,4 +1,4 @@
-<div class="contentContainer <?php echo (MODULE_CONTENT_LOGIN_LOGIN_FORM_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
+<div class="contentContainer <?php echo (MODULE_CONTENT_LOGIN_FORM_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
   <h2><?php echo HEADING_RETURNING_CUSTOMER; ?></h2>
 
   <div class="contentText">
