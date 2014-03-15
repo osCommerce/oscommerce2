@@ -129,20 +129,18 @@
       }
 
       foreach ( $this->getContentModules($group) as $module ) {
-        $class = substr($module, 0, strrpos($module, '.'));
-
-        if ( !class_exists($class) ) {
-          if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module) ) {
-            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module) ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module);
+        if ( !class_exists($module) ) {
+          if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php') ) {
+            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module . '.php') ) {
+              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module . '.php');
             }
 
-            include(DIR_WS_MODULES . 'content/' . $group . '/' . $module);
+            include(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php');
           }
         }
 
-        if ( class_exists($class) ) {
-          $mb = new $class();
+        if ( class_exists($module) ) {
+          $mb = new $module();
 
           if ( $mb->isEnabled() ) {
             $mb->execute();
@@ -162,9 +160,11 @@
     function getContentModules($group) {
       $result = array();
 
-      foreach ( explode(';', MODULE_CONTENT_INSTALLED) as $file ) {
-        if ( substr($file, 0, strlen('cm_' . $group . '_')) == 'cm_' . $group . '_' ) {
-          $result[] = $file;
+      foreach ( explode(';', MODULE_CONTENT_INSTALLED) as $m ) {
+        $module = explode('/', $m, 2);
+
+        if ( $module[0] == $group ) {
+          $result[] = $module[1];
         }
       }
 
