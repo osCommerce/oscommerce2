@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,68 +17,52 @@
     tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
+// login content module must return $login_customer_id as an integer after successful customer authentication
+  $login_customer_id = false;
 
-  $error = false;
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    $email_address = tep_db_prepare_input($HTTP_POST_VARS['email_address']);
-    $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+  $page_content = $oscTemplate->getContent('login');
 
-// Check if email exists
-    $check_customer_query = tep_db_query("select customers_id, customers_firstname, customers_password, customers_email_address, customers_default_address_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
-    if (!tep_db_num_rows($check_customer_query)) {
-      $error = true;
-    } else {
-      $check_customer = tep_db_fetch_array($check_customer_query);
-// Check that password is good
-      if (!tep_validate_password($password, $check_customer['customers_password'])) {
-        $error = true;
-      } else {
-        if (SESSION_RECREATE == 'True') {
-          tep_session_recreate();
-        }
+  if ( is_int($login_customer_id) && ($login_customer_id > 0) ) {
+    if (SESSION_RECREATE == 'True') {
+      tep_session_recreate();
+    }
 
-// migrate old hashed password to new phpass password
-        if (tep_password_type($check_customer['customers_password']) != 'phpass') {
-          tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
-        }
+    $customer_info_query = tep_db_query("select c.customers_firstname, c.customers_default_address_id, ab.entry_country_id, ab.entry_zone_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " ab on (c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id) where c.customers_id = '" . (int)$login_customer_id . "'");
+    $customer_info = tep_db_fetch_array($customer_info_query);
 
-        $check_country_query = tep_db_query("select entry_country_id, entry_zone_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$check_customer['customers_id'] . "' and address_book_id = '" . (int)$check_customer['customers_default_address_id'] . "'");
-        $check_country = tep_db_fetch_array($check_country_query);
+    $customer_id = $login_customer_id;
+    tep_session_register('customer_id');
 
-        $customer_id = $check_customer['customers_id'];
-        $customer_default_address_id = $check_customer['customers_default_address_id'];
-        $customer_first_name = $check_customer['customers_firstname'];
-        $customer_country_id = $check_country['entry_country_id'];
-        $customer_zone_id = $check_country['entry_zone_id'];
-        tep_session_register('customer_id');
-        tep_session_register('customer_default_address_id');
-        tep_session_register('customer_first_name');
-        tep_session_register('customer_country_id');
-        tep_session_register('customer_zone_id');
+    $customer_default_address_id = $customer_info['customers_default_address_id'];
+    tep_session_register('customer_default_address_id');
 
-        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
+    $customer_first_name = $customer_info['customers_firstname'];
+    tep_session_register('customer_first_name');
+
+    $customer_country_id = $customer_info['entry_country_id'];
+    tep_session_register('customer_country_id');
+
+    $customer_zone_id = $customer_info['entry_zone_id'];
+    tep_session_register('customer_zone_id');
+
+    tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
 
 // reset session token
-        $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+    $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-        $cart->restore_contents();
+    $cart->restore_contents();
 
-        if (sizeof($navigation->snapshot) > 0) {
-          $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
-          $navigation->clear_snapshot();
-          tep_redirect($origin_href);
-        } else {
-          tep_redirect(tep_href_link(FILENAME_DEFAULT));
-        }
-      }
+    if (sizeof($navigation->snapshot) > 0) {
+      $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
+      $navigation->clear_snapshot();
+      tep_redirect($origin_href);
     }
+
+    tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
-  if ($error == true) {
-    $messageStack->add('login', TEXT_LOGIN_ERROR);
-  }
+  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGIN);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_LOGIN, '', 'SSL'));
 
@@ -94,7 +78,7 @@
 ?>
 
 <div id="loginModules">
-  <?php echo $oscTemplate->getContent('login'); ?>
+  <?php echo $page_content; ?>
 </div>
 
 <script type="text/javascript">
