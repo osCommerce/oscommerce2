@@ -22,7 +22,7 @@ paypal.use( ["login"], function(login) {
     "appid": "<?php echo MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID; ?>",
     "scopes": "profile email address phone https://uri.paypal.com/services/paypalattributes https://uri.paypal.com/services/expresscheckout",
     "containerid": "PayPalLoginButton",
-    "returnurl": "<?php echo tep_href_link('ext/modules/payment/paypal/login.php', '', 'SSL'); ?>"
+    "returnurl": "<?php echo str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')); ?>"
   });
 });
 </script>
