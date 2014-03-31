@@ -19,6 +19,8 @@
     var $enabled = false;
 
     function cm_paypal_login() {
+      $this->signature = 'paypal|paypal_login|1.0|2.3';
+
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -26,27 +28,41 @@
       $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS') ) {
+        $this->description .= $this->getTestLinkInfo();
+
+        if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
+          $this->title .= ' (Sandbox)';
+        }
+
         $this->sort_order = MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_PAYPAL_LOGIN_STATUS == 'True');
+      }
+
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+          $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+        }
       }
     }
 
     function execute() {
       global $HTTP_GET_VARS, $oscTemplate;
 
-      if ( isset($HTTP_GET_VARS['action']) ) {
-        if ( ($HTTP_GET_VARS['action'] == 'paypal_login') && isset($HTTP_GET_VARS['code']) ) {
-          $this->preLogin();
-        } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
-          $this->postLogin();
+      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+        if ( isset($HTTP_GET_VARS['action']) ) {
+          if ( ($HTTP_GET_VARS['action'] == 'paypal_login') && isset($HTTP_GET_VARS['code']) ) {
+            $this->preLogin();
+          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+            $this->postLogin();
+          }
         }
+
+        ob_start();
+        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
+        $template = ob_get_clean();
+
+        $oscTemplate->addContent($template, $this->group);
       }
-
-      ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
-      $template = ob_get_clean();
-
-      $oscTemplate->addContent($template, $this->group);
     }
 
     function preLogin() {
@@ -238,15 +254,36 @@
       return defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS');
     }
 
-    function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PayPal Login Module', 'MODULE_CONTENT_PAYPAL_LOGIN_STATUS', 'True', 'Do you want to enable the PayPal Login module?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Client ID', 'MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID', '', 'Your PayPal Application Client ID.', '6', '1', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret', 'MODULE_CONTENT_PAYPAL_LOGIN_SECRET', '', 'Your PayPal Application Secret.', '6', '1', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Server Type', 'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE', 'Sandbox', 'Which server should be used? Live for production or Sandbox for testing.', '6', '1', 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Verify SSL Certificate', 'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL', 'True', 'Verify gateway server SSL certificate on connection?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Proxy Server', 'MODULE_CONTENT_PAYPAL_LOGIN_PROXY', '', 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)', '6', '1', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Content Width', 'MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH', 'Full', 'Should the content be shown in a full or half width container?', '6', '1', 'tep_cfg_select_option(array(\'Full\', \'Half\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+    function install($parameter = null) {
+      $params = $this->getParams();
+
+      if (isset($parameter)) {
+        if (isset($params[$parameter])) {
+          $params = array($parameter => $params[$parameter]);
+        } else {
+          $params = array();
+        }
+      }
+
+      foreach ($params as $key => $data) {
+        $sql_data_array = array('configuration_title' => $data['title'],
+                                'configuration_key' => $key,
+                                'configuration_value' => (isset($data['value']) ? $data['value'] : ''),
+                                'configuration_description' => $data['desc'],
+                                'configuration_group_id' => '6',
+                                'sort_order' => '0',
+                                'date_added' => 'now()');
+
+        if (isset($data['set_func'])) {
+          $sql_data_array['set_function'] = $data['set_func'];
+        }
+
+        if (isset($data['use_func'])) {
+          $sql_data_array['use_function'] = $data['use_func'];
+        }
+
+        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+      }
     }
 
     function remove() {
@@ -254,7 +291,51 @@
     }
 
     function keys() {
-      return array('MODULE_CONTENT_PAYPAL_LOGIN_STATUS', 'MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID', 'MODULE_CONTENT_PAYPAL_LOGIN_SECRET', 'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE', 'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL', 'MODULE_CONTENT_PAYPAL_LOGIN_PROXY', 'MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH', 'MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER');
+      $keys = array_keys($this->getParams());
+
+      if ($this->check()) {
+        foreach ($keys as $key) {
+          if (!defined($key)) {
+            $this->install($key);
+          }
+        }
+      }
+
+      return $keys;
+    }
+
+    function getParams() {
+      $params = array('MODULE_CONTENT_PAYPAL_LOGIN_STATUS' => array('title' => 'Enable Log In with PayPal',
+                                                                    'desc' => 'Do you want to enable the Log In with PayPal module?',
+                                                                    'value' => 'True',
+                                                                    'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID' => array('title' => 'Client ID',
+                                                                       'desc' => 'Your PayPal Application Client ID.'),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_SECRET' => array('title' => 'Secret',
+                                                                    'desc' => 'Your PayPal Application Secret.'),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_THEME' => array('title' => 'Theme',
+                                                                   'desc' => 'Which theme should be used for the button?',
+                                                                   'value' => 'Blue',
+                                                                   'set_func' => 'tep_cfg_select_option(array(\'Blue\', \'Neutral\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE' => array('title' => 'Server Type',
+                                                                         'desc' => 'Which server should be used? Live for production or Sandbox for testing.',
+                                                                         'value' => 'Sandbox',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                        'desc' => 'Verify gateway server SSL certificate on connection?',
+                                                                        'value' => 'True',
+                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_PROXY' => array('title' => 'Proxy Server',
+                                                                   'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH' => array('title' => 'Content Width',
+                                                                           'desc' => 'Should the content be shown in a full or half width container?',
+                                                                           'value' => 'Full',
+                                                                           'set_func' => 'tep_cfg_select_option(array(\'Full\', \'Half\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER' => array('title' => 'Sort order of display',
+                                                                        'desc' => 'Sort order of display. Lowest is displayed first.',
+                                                                        'value' => '0'));
+
+      return $params;
     }
 
     function sendRequest($url, $parameters = null) {
@@ -370,6 +451,47 @@
       $result_array = json_decode($result, true);
 
       return $result_array;
+    }
+
+    function getTestLinkInfo() {
+      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE;
+      $dialog_general_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_ERROR;
+      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_BUTTON_CLOSE;
+
+      $js = <<<EOD
+<script type="text/javascript">
+$(function() {
+  $('#tcdprogressbar').progressbar({
+    value: false
+  });
+});
+
+function openTestConnectionDialog() {
+  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
+    autoOpen: false,
+    modal: true,
+    title: '{$dialog_title}',
+    buttons: {
+      '{$dialog_button_close}': function () {
+        $(this).dialog('destroy');
+      }
+    }
+  });
+
+  d.load('ext/modules/content/paypal/login.php', function() {
+    if ( $('#ppctresult').length < 1 ) {
+      d.html('{$dialog_general_error}');
+    }
+  }).dialog('open');
+}
+</script>
+EOD;
+
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
+              $js;
+
+      return $info;
     }
   }
 ?>

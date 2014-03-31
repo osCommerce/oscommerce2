@@ -2,6 +2,13 @@
   <h2><?php echo MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_TITLE; ?></h2>
 
   <div class="contentText">
+
+<?php
+  if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
+    echo '    <p class="messageStackError">' . MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_SANDBOX . '</p>';
+  }
+?>
+
     <p><?php echo MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_CONTENT; ?></p>
 
     <div id="PayPalLoginButton" style="text-align: right; padding-top: 5px;"></div>
@@ -16,6 +23,14 @@ paypal.use( ["login"], function(login) {
 <?php
   if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
     echo '    "authend": "sandbox",';
+  }
+
+  if ( MODULE_CONTENT_PAYPAL_LOGIN_THEME == 'Neutral' ) {
+    echo '    "theme": "neutral",';
+  }
+
+  if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE') && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE) ) {
+    echo '    "locale": "' . MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE . '",';
   }
 ?>
 
