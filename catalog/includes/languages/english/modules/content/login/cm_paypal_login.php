@@ -59,4 +59,11 @@
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR_TEXT_LIVE', 'A connection to the live gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR_TEXT_TEST', 'A connection to the test gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_NOT_INSTALLED', 'The Log In with PayPal content module is not installed. Please install it and try again.');
+
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE', 'Show PayPal Application URLs');
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TITLE', 'PayPal Application URLs');
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT', 'Redirect/Return URL:');
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT', 'Privacy Policy URL:');
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT', 'User Agreement URL:');
+  define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_BUTTON_CLOSE', 'Close');
 ?>

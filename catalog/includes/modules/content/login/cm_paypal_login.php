@@ -30,6 +30,8 @@
       if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS') ) {
         $this->description .= $this->getTestLinkInfo();
 
+        $this->description .= $this->getShowUrlsInfo();
+
         if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
           $this->title .= ' (Sandbox)';
         }
@@ -509,6 +511,41 @@ EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
+              $js;
+
+      return $info;
+    }
+
+    function getShowUrlsInfo() {
+      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TITLE;
+      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_BUTTON_CLOSE;
+
+      $js = <<<EOD
+<script type="text/javascript">
+function openShowUrlsDialog() {
+  var d = $('<div>').html($('#showUrlsDialog').html()).dialog({
+    autoOpen: false,
+    modal: true,
+    title: '{$dialog_title}',
+    buttons: {
+      '{$dialog_button_close}': function () {
+        $(this).dialog('destroy');
+      }
+    },
+    width: 600
+  });
+
+  d.dialog('open');
+}
+</script>
+EOD;
+
+      $info = '<p><img src="images/icon_info.gif" border="0">&nbsp;<a href="javascript:openShowUrlsDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE . '</a></p>' .
+              '<div id="showUrlsDialog" style="display: none;">' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
+              '</div>' .
               $js;
 
       return $info;
