@@ -17,7 +17,7 @@
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  if ( MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_ALLOW_PASSWORD != 'True' ) {
+  if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
@@ -29,7 +29,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/modules/content/account/cm_paypal_login_local_account.php');
+  require(DIR_WS_LANGUAGES . $language . '/modules/content/account/cm_account_set_password.php');
 
   if (isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
     $password_new = tep_db_prepare_input($HTTP_POST_VARS['password_new']);
@@ -52,20 +52,20 @@
 
       tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
 
-      $messageStack->add_session('account', MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_SUCCESS_PASSWORD_SET, 'success');
+      $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 
       tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/paypal/account_password.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
   require('includes/form_check.js.php');
 ?>
 
-<h1><?php echo MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_HEADING_TITLE; ?></h1>
+<h1><?php echo MODULE_CONTENT_ACCOUNT_SET_PASSWORD_HEADING_TITLE; ?></h1>
 
 <?php
   if ($messageStack->size('account_password') > 0) {
@@ -73,12 +73,12 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/paypal/account_password.php', '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
   <div>
     <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo MODULE_CONTENT_PAYPAL_LOGIN_LOCAL_ACCOUNT_SET_PASSWORD_TITLE; ?></h2>
+    <h2><?php echo MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_TITLE; ?></h2>
   </div>
 
   <div class="contentText">
