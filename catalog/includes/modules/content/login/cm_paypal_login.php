@@ -587,14 +587,30 @@ EOD;
                  'checkout' => array('seamless_checkout' => 'https://uri.paypal.com/services/expresscheckout'));
   }
 
+  function cm_paypal_login_get_required_attributes() {
+    return array('full_name',
+                 'email_address',
+                 'street_address',
+                 'city',
+                 'state',
+                 'country',
+                 'zip_code');
+  }
+
   function cm_paypal_login_show_attributes($text) {
+    $active = explode(';', $text);
+
     $output = '';
 
-    foreach ( explode(';', $text) as $attribute ) {
-      $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
+      foreach ( $attributes as $attribute => $scope ) {
+        if ( in_array($attribute, $active) ) {
+          $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+        }
+      }
     }
 
-    if (!empty($output)) {
+    if ( !empty($output) ) {
       $output = substr($output, 0, -6);
     }
 
@@ -604,13 +620,21 @@ EOD;
   function cm_paypal_login_edit_attributes($values, $key) {
     $values_array = explode(';', $values);
 
+    $required_array = cm_paypal_login_get_required_attributes();
+
     $output = '';
 
     foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
       $output .= '<strong>' . constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
 
       foreach ( $attributes as $attribute => $scope ) {
-        $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;' . constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+        if ( in_array($attribute, $required_array) ) {
+          $output .= tep_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
+        } else {
+          $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
+        }
+
+        $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
       }
     }
 
@@ -624,14 +648,20 @@ EOD;
                 function cmpl_update_cfg_value() {
                   var cmpl_selected_attributes = \'\';
 
+                  if ($(\'input[name^="cm_paypal_login_attributes_tmp_"]\').length > 0) {
+                    $(\'input[name^="cm_paypal_login_attributes_tmp_"]\').each(function() {
+                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
+                    });
+                  }
+
                   if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
                     $(\'input[name="cm_paypal_login_attributes[]"]:checked\').each(function() {
                       cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
                     });
+                  }
 
-                    if (cmpl_selected_attributes.length > 0) {
-                      cmpl_selected_attributes = cmpl_selected_attributes.substring(0, cmpl_selected_attributes.length - 1);
-                    }
+                  if (cmpl_selected_attributes.length > 0) {
+                    cmpl_selected_attributes = cmpl_selected_attributes.substring(0, cmpl_selected_attributes.length - 1);
                   }
 
                   $(\'#cmpl_attributes\').val(cmpl_selected_attributes);
