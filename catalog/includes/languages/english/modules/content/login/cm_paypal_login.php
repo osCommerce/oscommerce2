@@ -23,6 +23,30 @@
 
   define('MODULE_CONTENT_PAYPAL_LOGIN_EMAIL_PASSWORD', 'An account has automatically been created for you with the following e-mail address and password:' . "\n\n" . 'Store Account E-Mail Address: %s' . "\n" . 'Store Account Password: %s' . "\n\n");
 
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_personal', 'Personal Information');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_address', 'Address Information');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_account', 'Account Information');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_checkout', 'Checkout Express');
+
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_full_name', 'Full Name');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_date_of_birth', 'Date of Birth');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_age_range', 'Age Range');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_gender', 'Gender');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_email_address', 'Email Address');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_street_address', 'Street Address');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_city', 'City');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_state', 'State');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_country', 'Country');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_zip_code', 'Zip Code');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_phone', 'Phone');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_account_status', 'Account Status (verified)');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_account_type', 'Account Type');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_account_creation_date', 'Account Creation Date');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_time_zone', 'Time Zone');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_locale', 'Locale');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_language', 'Language');
+  define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_seamless_checkout', 'Seamless Checkout');
+
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE', 'Test Gateway Connection');
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE', 'Gateway Connection Test');
   define('MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_ERROR', 'An error occurred. Please refresh the page and try again.');

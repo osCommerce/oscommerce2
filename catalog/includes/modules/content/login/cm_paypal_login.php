@@ -57,6 +57,21 @@
           }
         }
 
+        $scopes = cm_paypal_login_get_attributes();
+        $use_scopes = array('openid');
+
+        foreach ( explode(';', MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES) as $a ) {
+          foreach ( $scopes as $group => $attributes ) {
+            foreach ( $attributes as $attribute => $scope ) {
+              if ( $a == $attribute ) {
+                if ( !in_array($scope, $use_scopes) ) {
+                  $use_scopes[] = $scope;
+                }
+              }
+            }
+          }
+        }
+
         ob_start();
         include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
         $template = ob_get_clean();
@@ -317,6 +332,11 @@
                                                                    'desc' => 'Which theme should be used for the button?',
                                                                    'value' => 'Blue',
                                                                    'set_func' => 'tep_cfg_select_option(array(\'Blue\', \'Neutral\'), '),
+                      'MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES' => array('title' => 'Information Requested From Customers',
+                                                                    'desc' => 'The attributes the customer must share with you.',
+                                                                    'value' => implode(';', $this->get_default_attributes()),
+                                                                    'use_func' => 'cm_paypal_login_show_attributes',
+                                                                    'set_func' => 'cm_paypal_login_edit_attributes('),
                       'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE' => array('title' => 'Server Type',
                                                                          'desc' => 'Which server should be used? Live for production or Sandbox for testing.',
                                                                          'value' => 'Sandbox',
@@ -493,5 +513,102 @@ EOD;
 
       return $info;
     }
+
+    function get_default_attributes() {
+      $data = array();
+
+      foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
+        foreach ( $attributes as $attribute => $scope ) {
+          $data[] = $attribute;
+        }
+      }
+
+      return $data;
+    }
+  }
+
+  function cm_paypal_login_get_attributes() {
+    return array('personal' => array('full_name' => 'profile',
+                                     'date_of_birth' => 'profile',
+                                     'age_range' => 'https://uri.paypal.com/services/paypalattributes',
+                                     'gender' => 'profile'),
+                 'address' => array('email_address' => 'email',
+                                    'street_address' => 'address',
+                                    'city' => 'address',
+                                    'state' => 'address',
+                                    'country' => 'address',
+                                    'zip_code' => 'address',
+                                    'phone' => 'phone'),
+                 'account' => array('account_status' => 'https://uri.paypal.com/services/paypalattributes',
+                                    'account_type' => 'https://uri.paypal.com/services/paypalattributes',
+                                    'account_creation_date' => 'https://uri.paypal.com/services/paypalattributes',
+                                    'time_zone' => 'profile',
+                                    'locale' => 'profile',
+                                    'language' => 'profile'),
+                 'checkout' => array('seamless_checkout' => 'https://uri.paypal.com/services/expresscheckout'));
+  }
+
+  function cm_paypal_login_show_attributes($text) {
+    $output = '';
+
+    foreach ( explode(';', $text) as $attribute ) {
+      $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+    }
+
+    if (!empty($output)) {
+      $output = substr($output, 0, -6);
+    }
+
+    return $output;
+  }
+
+  function cm_paypal_login_edit_attributes($values, $key) {
+    $values_array = explode(';', $values);
+
+    $output = '';
+
+    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
+      $output .= '<strong>' . constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
+
+      foreach ( $attributes as $attribute => $scope ) {
+        $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;' . constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+      }
+    }
+
+    if (!empty($output)) {
+      $output = '<br />' . substr($output, 0, -6);
+    }
+
+    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
+
+    $output .= '<script type="text/javascript">
+                function cmpl_update_cfg_value() {
+                  var cmpl_selected_attributes = \'\';
+
+                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
+                    $(\'input[name="cm_paypal_login_attributes[]"]:checked\').each(function() {
+                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
+                    });
+
+                    if (cmpl_selected_attributes.length > 0) {
+                      cmpl_selected_attributes = cmpl_selected_attributes.substring(0, cmpl_selected_attributes.length - 1);
+                    }
+                  }
+
+                  $(\'#cmpl_attributes\').val(cmpl_selected_attributes);
+                }
+
+                $(function() {
+                  cmpl_update_cfg_value();
+
+                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
+                    $(\'input[name="cm_paypal_login_attributes[]"]\').change(function() {
+                      cmpl_update_cfg_value();
+                    });
+                  }
+                });
+                </script>';
+
+    return $output;
   }
 ?>
