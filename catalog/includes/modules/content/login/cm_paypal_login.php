@@ -28,21 +28,23 @@
       $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
 
       if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS') ) {
-        $this->description .= $this->getTestLinkInfo();
-
-        $this->description .= $this->getShowUrlsInfo();
-
-        if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
-          $this->title .= ' (Sandbox)';
-        }
-
         $this->sort_order = MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_PAYPAL_LOGIN_STATUS == 'True');
-      }
 
-      if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-          $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+        if ( basename($GLOBALS['PHP_SELF']) == 'modules_content.php' ) {
+          $this->description .= $this->getTestLinkInfo();
+
+          $this->description .= $this->getShowUrlsInfo();
+
+          if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
+            $this->title .= ' (Sandbox)';
+          }
+
+          if ( $this->enabled === true ) {
+            if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+              $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+            }
+          }
         }
       }
     }
