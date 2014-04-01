@@ -21,8 +21,6 @@
 
   define('MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE', 'en-us');
 
-  define('MODULE_CONTENT_PAYPAL_LOGIN_EMAIL_PASSWORD', 'An account has automatically been created for you with the following e-mail address and password:' . "\n\n" . 'Store Account E-Mail Address: %s' . "\n" . 'Store Account Password: %s' . "\n\n");
-
   define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_personal', 'Personal Information');
   define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_address', 'Address Information');
   define('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_account', 'Account Information');

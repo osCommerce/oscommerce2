@@ -131,15 +131,13 @@
                 $customers_firstname = tep_db_prepare_input($response['given_name']);
                 $customers_lastname = tep_db_prepare_input($response['family_name']);
 
-                $customer_password = tep_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
-
                 $sql_data_array = array('customers_firstname' => $customers_firstname,
                                         'customers_lastname' => $customers_lastname,
                                         'customers_email_address' => $email_address,
                                         'customers_telephone' => '',
                                         'customers_fax' => '',
                                         'customers_newsletter' => '0',
-                                        'customers_password' => tep_encrypt_password($customer_password));
+                                        'customers_password' => '');
 
                 if ($this->hasAttribute('phone') && isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
                   $customers_telephone = tep_db_prepare_input($response['phone_number']);
@@ -152,11 +150,6 @@
                 $customer_id = (int)tep_db_insert_id();
 
                 tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
-
-// build the message content
-                $name = $customers_firstname . ' ' . $customers_lastname;
-                $email_text = sprintf(EMAIL_GREET_NONE, $customers_firstname) . EMAIL_WELCOME . sprintf(MODULE_CONTENT_PAYPAL_LOGIN_EMAIL_PASSWORD, $email_address, $customer_password) . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-                tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
               }
             }
 
