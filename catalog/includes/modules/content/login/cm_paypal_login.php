@@ -140,7 +140,7 @@
                                       'customers_newsletter' => '0',
                                       'customers_password' => tep_encrypt_password($customer_password));
 
-              if (isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
+              if ($this->hasAttribute('phone') && isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
                 $customers_telephone = tep_db_prepare_input($response['phone_number']);
 
                 $sql_data_array['customers_telephone'] = $customers_telephone;
@@ -551,6 +551,10 @@ EOD;
               $js;
 
       return $info;
+    }
+
+    function hasAttribute($attribute) {
+      return in_array($attribute, explode(';', MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES));
     }
 
     function get_default_attributes() {
