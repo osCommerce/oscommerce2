@@ -66,19 +66,11 @@
     $maindir->close();
 
     function _sortContentModulesInstalled($a, $b) {
-      if ( ($a['group'] . '-' . $a['sort_order'] . '-' . $a['title']) == ($b['group'] . '-' . $b['sort_order'] . '-' . $b['title']) ) {
-        return 0;
-      }
-
-      return (($a['group'] . '-' . $a['sort_order'] . '-' . $a['title']) < ($b['group'] . '-' . $b['sort_order'] . '-' . $b['title'])) ? -1 : 1;
+      return strnatcmp($a['group'] . '-' . (int)$a['sort_order'] . '-' . $a['title'], $b['group'] . '-' . (int)$b['sort_order'] . '-' . $b['title']);
     }
 
     function _sortContentModuleFiles($a, $b) {
-      if ( ($a['group'] . $a['title']) == ($b['group'] . $b['title']) ) {
-        return 0;
-      }
-
-      return (($a['group'] . $a['title']) < ($b['group'] . $b['title'])) ? -1 : 1;
+      return strnatcmp($a['group'] . '-' . $a['title'], $b['group'] . '-' . $b['title']);
     }
 
     usort($modules['installed'], '_sortContentModulesInstalled');
