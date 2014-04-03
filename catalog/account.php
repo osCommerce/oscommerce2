@@ -33,32 +33,11 @@
 ?>
 
 <div class="contentContainer">
-  <h2><?php echo MY_ACCOUNT_TITLE; ?></h2>
 
-  <div class="contentText">
-    <ul class="accountLinkList">
-      <li><span class="ui-icon ui-icon-person accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL') . '">' . MY_ACCOUNT_INFORMATION . '</a>'; ?></li>
-      <li><span class="ui-icon ui-icon-home accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL') . '">' . MY_ACCOUNT_ADDRESS_BOOK . '</a>'; ?></li>
-      <li><span class="ui-icon ui-icon-key accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL') . '">' . MY_ACCOUNT_PASSWORD . '</a>'; ?></li>
-    </ul>
-  </div>
+<?php
+  echo $oscTemplate->getContent('account');
+?>
 
-  <h2><?php echo MY_ORDERS_TITLE; ?></h2>
-
-  <div class="contentText">
-    <ul class="accountLinkList">
-      <li><span class="ui-icon ui-icon-cart accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL') . '">' . MY_ORDERS_VIEW . '</a>'; ?></li>
-    </ul>
-  </div>
-
-  <h2><?php echo EMAIL_NOTIFICATIONS_TITLE; ?></h2>
-
-  <div class="contentText">
-    <ul class="accountLinkList">
-      <li><span class="ui-icon ui-icon-mail-closed accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_NEWSLETTERS . '</a>'; ?></li>
-      <li><span class="ui-icon ui-icon-heart accountLinkListEntry"></span><?php echo '<a href="' . tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . EMAIL_NOTIFICATIONS_PRODUCTS . '</a>'; ?></li>
-    </ul>
-  </div>
 </div>
 
 <?php

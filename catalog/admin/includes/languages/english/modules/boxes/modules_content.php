@@ -10,6 +10,5 @@
   Released under the GNU General Public License
 */
 
-define('NAVBAR_TITLE', 'Login');
-define('HEADING_TITLE', 'Welcome, Please Sign In');
+  define('MODULES_ADMIN_MENU_MODULES_CONTENT', 'Content');
 ?>
