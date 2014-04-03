@@ -1,12 +1,20 @@
 <?php
 /*
-  $Id$ cs_downloads
-  2013 G.L. Walker - http://wsfive.com
+  $Id$
+
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
-  Copyright (c) 2010 osCommerce
+
+  Copyright (c) 2014 osCommerce
+
   Released under the GNU General Public License
 */
 
-  define('MODULE_CHECKOUT_SUCCESS_DOWNLOADS_TITLE', 'Product Downloads');
-  define('MODULE_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION', 'Add product download to checkut success page');
+  define('MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_TITLE', 'Product Downloads');
+  define('MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION', 'Show ordered product download links to the checkut success page');
+
+  define('TABLE_HEADING_DOWNLOAD_DATE', 'Expiry date: ');
+  define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
+  define('HEADING_DOWNLOAD', 'Download your products here:');
+  define('FOOTER_DOWNLOAD', 'You can also download your products at a later time at \'%s\'');
+?>
