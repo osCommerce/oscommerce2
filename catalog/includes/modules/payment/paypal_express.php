@@ -384,7 +384,7 @@ EOD;
                                                                                 'value' => 'False',
                                                                                 'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE' => array('title' => 'PayPal Instant Update',
-                                                                              'desc' => 'Support PayPal shipping and tax calculations on the PayPal.com site during Express Checkout.',
+                                                                              'desc' => 'Allow PayPal to retrieve shipping methods for the order. (Not supported with In-Context checkout flow)',
                                                                               'value' => 'True',
                                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE' => array('title' => 'PayPal Checkout Image',

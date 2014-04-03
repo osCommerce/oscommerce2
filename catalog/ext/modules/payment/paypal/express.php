@@ -700,9 +700,11 @@ EOD;
 
       if (!is_null($cheapest_rate)) {
         if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
-          $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
-          $params['CALLBACKTIMEOUT'] = '5';
-          $params['CALLBACKVERSION'] = $paypal_express->api_version;
+          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
+            $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+            $params['CALLBACKTIMEOUT'] = '5';
+            $params['CALLBACKVERSION'] = $paypal_express->api_version;
+          }
         }
 
         $params['PAYMENTREQUEST_0_INSURANCEOPTIONOFFERED'] = 'false';
