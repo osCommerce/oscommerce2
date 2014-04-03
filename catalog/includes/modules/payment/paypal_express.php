@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -15,10 +15,10 @@
 
 // class constructor
     function paypal_express() {
-      global $order;
+      global $PHP_SELF, $request_type, $order;
 
       $this->signature = 'paypal|paypal_express|2.0|2.2';
-      $this->api_version = '104';
+      $this->api_version = '112';
 
       $this->code = 'paypal_express';
       $this->title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_TITLE;
@@ -41,6 +41,19 @@
 
       if ( isset($order) && is_object($order) ) {
         $this->update_status();
+      }
+
+// In-Context requires the shopping cart page to be loaded in HTTPS
+      if ( isset($request_type) && defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
+        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') && (ENABLE_SSL == true) ) {
+          if ( $request_type != 'SSL' ) {
+            tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
+          }
+
+          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT == 'True' ) {
+            header('X-UA-Compatible: IE=edge', true);
+          }
+        }
       }
     }
 
@@ -95,7 +108,22 @@
         $image_button = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON) . '" /></a>';
+      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON) . '" /></a>';
+
+      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context' ) {
+        $string .= <<<EOD
+<script type="text/javascript">
+(function(d, s, id){ 
+  var js, ref = d.getElementsByTagName(s)[0]; 
+  if (!d.getElementById(id)){ 
+    js = d.createElement(s); js.id = id; js.async = true; 
+    js.src = "//www.paypalobjects.com/js/external/paypal.js"; 
+    ref.parentNode.insertBefore(js, ref); 
+  } 
+}(document, "script", "paypal-js"));
+</script>
+EOD;
+      }
 
       return $string;
     }
@@ -132,11 +160,7 @@
             $order_total_modules->process();
           }
 
-          if ($response_array['PAYMENTREQUEST_0_AMT'] == $this->format_raw($order->info['total'])) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
-          } else {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL'));
-          }
+          tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=close', 'SSL'));
         }
       }
     }
@@ -333,6 +357,14 @@
                                                                             'desc' => 'The password to use for the PayPal API service.'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE' => array('title' => 'API Signature',
                                                                              'desc' => 'The signature to use for the PayPal API service.'),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW' => array('title' => 'Checkout Flow',
+                                                                             'desc' => 'Which checkout flow should be used? In-Context (lightbox), Checkout Now, or Classic?',
+                                                                             'value' => 'In-Context',
+                                                                             'set_func' => 'tep_cfg_select_option(array(\'In-Context\', \'Checkout Now\', \'Classic\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT' => array('title' => 'Disable IE Compatibility View (for In-Context)',
+                                                                                 'desc' => 'Send a "X-UA-Compatible: IE=edge" header to disable IE Compatiblity View recommended for In-Context checkout flow.',
+                                                                                 'value' => 'True',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                                   'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
                                                                                   'value' => 'Live',

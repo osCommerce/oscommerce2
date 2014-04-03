@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -257,15 +257,13 @@
             $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
             $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
 
-            $customer_password = tep_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
-
             $sql_data_array = array('customers_firstname' => $customers_firstname,
                                     'customers_lastname' => $customers_lastname,
                                     'customers_email_address' => $email_address,
                                     'customers_telephone' => '',
                                     'customers_fax' => '',
                                     'customers_newsletter' => '0',
-                                    'customers_password' => tep_encrypt_password($customer_password));
+                                    'customers_password' => '');
 
             if (isset($response_array['PHONENUM']) && tep_not_null($response_array['PHONENUM'])) {
               $customers_telephone = tep_db_prepare_input($response_array['PHONENUM']);
@@ -278,11 +276,6 @@
             $customer_id = tep_db_insert_id();
 
             tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
-
-// build the message content
-            $name = $customers_firstname . ' ' . $customers_lastname;
-            $email_text = sprintf(EMAIL_GREET_NONE, $customers_firstname) . EMAIL_WELCOME . sprintf(MODULE_PAYMENT_PAYPAL_EXPRESS_EMAIL_PASSWORD, $email_address, $customer_password) . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-            tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
           }
 
           if (SESSION_RECREATE == 'True') {
@@ -504,6 +497,35 @@
 
       break;
 
+    case 'close':
+      $return_url = tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL');
+
+      $output = <<<EOD
+<script type="text/javascript">
+(function(d, s, id){ 
+  var js, ref = d.getElementsByTagName(s)[0]; 
+  if (!d.getElementById(id)){ 
+    js = d.createElement(s); js.id = id; js.async = true; 
+    js.src = "//www.paypalobjects.com/js/external/paypal.js"; 
+    ref.parentNode.insertBefore(js, ref); 
+  } 
+}(document, "script", "paypal-js"));
+
+var nextUrl = "{$return_url}";
+
+if (top !== self) {
+  top.PAYPAL.apps.Checkout.closeFlow(nextUrl);
+} else {
+  window.location.href = nextUrl;
+}
+</script>
+EOD;
+
+      echo $output;
+      exit;
+
+      break;
+
     default:
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($cart->count_contents() < 1) {
@@ -511,15 +533,24 @@
       }
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
+        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') || (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'Checkout Now') ) {
+          $paypal_url = 'https://www.paypal.com/checkoutnow?';
+        } else {
+          $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
+        }
       } else {
-        $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
+        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') || (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'Checkout Now') ) {
+          $paypal_url = 'https://www.sandbox.paypal.com/checkoutnow?';
+        } else {
+          $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
+        }
       }
 
       include(DIR_WS_CLASSES . 'order.php');
       $order = new order;
 
-      $params = array('PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency']);
+      $params = array('PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency'],
+                      'ALLOWNOTE' => 0);
 
 // A billing address is required for digital orders so we use the shipping address PayPal provides
 //      if ($order->content_type == 'virtual') {
@@ -683,10 +714,14 @@
       $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_ITEMAMT'] + $params['TAXAMT'] + $params['PAYMENTREQUEST_0_SHIPPINGAMT'], '', 1);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
+      if (tep_session_is_registered('paypal_login_access_token')) {
+        $params['IDENTITYACCESSTOKEN'] = $paypal_login_access_token;
+      }
+
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . '&token=' . $response_array['TOKEN']);
+        tep_redirect($paypal_url . 'token=' . $response_array['TOKEN']);
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
