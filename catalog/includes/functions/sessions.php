@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -36,7 +36,7 @@
     }
 
     function _sess_write($key, $value) {
-      $check_query = tep_db_query("select sesskey from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "' limit 1");
+      $check_query = tep_db_query("select 1 from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
 
       if ( tep_db_num_rows($check_query) > 0 ) {
         return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input(time()) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
@@ -61,23 +61,28 @@
 
     $sane_session_id = true;
 
-    if (isset($HTTP_GET_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) {
+    if ( isset($HTTP_GET_VARS[tep_session_name()]) ) {
+      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) ) {
         unset($HTTP_GET_VARS[tep_session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_POST_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) {
+    }
+
+    if ( isset($HTTP_POST_VARS[tep_session_name()]) ) {
+      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) ) {
         unset($HTTP_POST_VARS[tep_session_name()]);
 
         $sane_session_id = false;
       }
-    } elseif (isset($HTTP_COOKIE_VARS[tep_session_name()])) {
-      if (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false) {
+    }
+
+    if ( isset($HTTP_COOKIE_VARS[tep_session_name()]) ) {
+      if ( preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false ) {
         $session_data = session_get_cookie_params();
 
         setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
+        unset($HTTP_COOKIE_VARS[tep_session_name()]);
 
         $sane_session_id = false;
       }
@@ -151,6 +156,15 @@
   }
 
   function tep_session_destroy() {
+    global $HTTP_COOKIE_VARS;
+
+    if ( isset($HTTP_COOKIE_VARS[tep_session_name()]) ) {
+      $session_data = session_get_cookie_params();
+
+      setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
+      unset($HTTP_COOKIE_VARS[tep_session_name()]);
+    }
+
     return session_destroy();
   }
 
