@@ -249,7 +249,7 @@
     }
 
     function postLogin() {
-      global $paypal_login_customer_id, $login_customer_id;
+      global $paypal_login_customer_id, $login_customer_id, $language, $payment;
 
       if ( tep_session_is_registered('paypal_login_customer_id') ) {
         if ( $paypal_login_customer_id !== false ) {
@@ -257,6 +257,25 @@
         }
 
         tep_session_unregister('paypal_login_customer_id');
+      }
+
+// Register PayPal Express Checkout as the default payment method
+      if ( !tep_session_is_registered('payment') || ($payment != 'paypal_express') ) {
+        if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
+          if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
+            if ( !class_exists('paypal_express') ) {
+              include(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
+              include(DIR_WS_MODULES . 'payment/paypal_express.php');
+            }
+
+            $ppe = new paypal_express();
+
+            if ( $ppe->enabled ) {
+              $payment = 'paypal_express';
+              tep_session_register('payment');
+            }
+          }
+        }
       }
     }
 
