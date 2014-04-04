@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2008 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -147,11 +147,13 @@
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // set the session ID if it exists
-   if (isset($HTTP_POST_VARS[tep_session_name()])) {
-     tep_session_id($HTTP_POST_VARS[tep_session_name()]);
-   } elseif ( ($request_type == 'SSL') && isset($HTTP_GET_VARS[tep_session_name()]) ) {
-     tep_session_id($HTTP_GET_VARS[tep_session_name()]);
-   }
+  if ( SESSION_FORCE_COOKIE_USE == 'False' ) {
+    if ( isset($HTTP_GET_VARS[tep_session_name()]) && (!isset($HTTP_COOKIE_VARS[tep_session_name()]) || ($HTTP_COOKIE_VARS[tep_session_name()] != $HTTP_GET_VARS[tep_session_name()])) ) {
+      tep_session_id($HTTP_GET_VARS[tep_session_name()]);
+    } elseif ( isset($HTTP_POST_VARS[tep_session_name()]) && (!isset($HTTP_COOKIE_VARS[tep_session_name()]) || ($HTTP_COOKIE_VARS[tep_session_name()] != $HTTP_POST_VARS[tep_session_name()])) ) {
+      tep_session_id($HTTP_POST_VARS[tep_session_name()]);
+    }
+  }
 
 // start the session
   $session_started = false;
