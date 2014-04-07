@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -26,6 +26,14 @@
       $this->description = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS') && (MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS == 'True') ? true : false;
+
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+
+          $this->enabled = false;
+        }
+      }
 
       if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID > 0) ) {
         $this->order_status = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID;
@@ -474,7 +482,7 @@
 
       $params = array('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS' => array('title' => 'Enable Authorize.net Advanced Integration Method',
                                                                            'desc' => 'Do you want to accept Authorize.net Advanced Integration Method payments?',
-                                                                           'value' => 'False',
+                                                                           'value' => 'True',
                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID' => array('title' => 'API Login ID',
                                                                              'desc' => 'The API Login ID used for the Authorize.net service'),
