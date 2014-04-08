@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,8 +16,8 @@
     function stripe() {
       global $order;
 
-      $this->signature = 'stripe|stripe|1.0|2.2';
-      $this->api_version = '2013-10-29';
+      $this->signature = 'stripe|stripe|1.0|2.3';
+      $this->api_version = '2014-03-28';
 
       $this->code = 'stripe';
       $this->title = MODULE_PAYMENT_STRIPE_TEXT_TITLE;
@@ -70,6 +70,17 @@
     }
 
     function selection() {
+      global $customer_id, $payment;
+
+      if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !tep_session_is_registered('payment') ) {
+        $tokens_query = tep_db_query("select 1 from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
+
+        if ( tep_db_num_rows($tokens_query) ) {
+          $payment = $this->code;
+          tep_session_register('payment');
+        }
+      }
+
       return array('id' => $this->code,
                    'module' => $this->public_title);
     }
@@ -121,7 +132,7 @@
           $content .= '<table id="stripe_table" border="0" width="100%" cellspacing="0" cellpadding="2">';
 
           while ( $tokens = tep_db_fetch_array($tokens_query) ) {
-            $content .= '<tr class="moduleRow" id="stripe_card_' . (int)$tokens['id'] . '">' . 
+            $content .= '<tr class="moduleRow" id="stripe_card_' . (int)$tokens['id'] . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="stripe_card" value="' . (int)$tokens['id'] . '" /></td>' .
                         '  <td valign="top">' . MODULE_PAYMENT_STRIPE_CREDITCARD_LAST_4 . '&nbsp;' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '&nbsp;&nbsp;' . tep_output_string_protected($tokens['card_type']) . '</td>' .
                         '</tr>';
