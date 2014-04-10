@@ -27,7 +27,7 @@
 
       $set = 'true';
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
-        if ( ($this->path[$i]['page'] == basename($PHP_SELF)) ) {
+        if ($this->path[$i]['page'] == $PHP_SELF) {
           if (isset($cPath)) {
             if (!isset($this->path[$i]['get']['cPath'])) {
               continue;
@@ -58,7 +58,7 @@
       }
 
       if ($set == 'true') {
-        $this->path[] = array('page' => basename($PHP_SELF),
+        $this->path[] = array('page' => $PHP_SELF,
                               'mode' => $request_type,
                               'get' => $this->filter_parameters($HTTP_GET_VARS),
                               'post' => $this->filter_parameters($HTTP_POST_VARS));
@@ -69,7 +69,7 @@
       global $PHP_SELF;
 
       $last_entry_position = sizeof($this->path) - 1;
-      if ($this->path[$last_entry_position]['page'] == basename($PHP_SELF)) {
+      if ($this->path[$last_entry_position]['page'] == $PHP_SELF) {
         unset($this->path[$last_entry_position]);
       }
     }
@@ -83,7 +83,7 @@
                                 'get' => $this->filter_parameters($page['get']),
                                 'post' => $this->filter_parameters($page['post']));
       } else {
-        $this->snapshot = array('page' => basename($PHP_SELF),
+        $this->snapshot = array('page' => $PHP_SELF,
                                 'mode' => $request_type,
                                 'get' => $this->filter_parameters($HTTP_GET_VARS),
                                 'post' => $this->filter_parameters($HTTP_POST_VARS));

@@ -52,7 +52,7 @@
           $data = '<div class="ui-widget infoBoxContainer">' .
                   '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CURRENCIES_BOX_TITLE . '</div>' .
                   '  <div class="ui-widget-content infoBoxContents">' . 
-                  '    ' . tep_draw_form('currencies', tep_href_link(basename($PHP_SELF), '', $request_type, false), 'get') .
+                  '    ' . tep_draw_form('currencies', tep_href_link($PHP_SELF, '', $request_type, false), 'get') .
                   '    ' . tep_draw_pull_down_menu('currency', $currencies_array, $currency, 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>' .
                   '  </div>' .
                   '</div>';

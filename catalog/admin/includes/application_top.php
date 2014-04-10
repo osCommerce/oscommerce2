@@ -35,7 +35,8 @@
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set php_self in the local scope
-  $PHP_SELF = (((strlen(ini_get('cgi.fix_pathinfo')) > 0) && ((bool)ini_get('cgi.fix_pathinfo') == false)) || !isset($HTTP_SERVER_VARS['SCRIPT_NAME'])) ? basename($HTTP_SERVER_VARS['PHP_SELF']) : basename($HTTP_SERVER_VARS['SCRIPT_NAME']);
+  $req = parse_url($HTTP_SERVER_VARS['SCRIPT_NAME']);
+  $PHP_SELF = substr($req['path'], strlen(DIR_WS_ADMIN));
 
 // Used in the "Backup Manager" to compress backups
   define('LOCAL_EXE_GZIP', 'gzip');
@@ -124,7 +125,7 @@
   if (!tep_session_is_registered('admin')) {
     $redirect = false;
 
-    $current_page = basename($PHP_SELF);
+    $current_page = $PHP_SELF;
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
