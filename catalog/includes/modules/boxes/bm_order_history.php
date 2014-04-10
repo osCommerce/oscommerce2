@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -48,7 +48,7 @@
           while ($products = tep_db_fetch_array($products_query)) {
             $customer_orders_string .= '  <tr>' .
                                        '    <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></td>' .
-                                       '    <td align="right" valign="top"><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '">' . tep_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></td>' .
+                                       '    <td align="right" valign="top"><a href="' . tep_href_link($PHP_SELF, tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '">' . tep_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></td>' .
                                        '  </tr>';
           }
           $customer_orders_string .= '</table>';
