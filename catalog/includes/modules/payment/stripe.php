@@ -26,6 +26,14 @@
       $this->sort_order = defined('MODULE_PAYMENT_STRIPE_SORT_ORDER') ? MODULE_PAYMENT_STRIPE_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_STRIPE_STATUS') && (MODULE_PAYMENT_STRIPE_STATUS == 'True') ? true : false;
 
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !tep_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_STRIPE_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+
+          $this->enabled = false;
+        }
+      }
+
       if ( defined('MODULE_PAYMENT_STRIPE_STATUS') ) {
         $this->description .= $this->getTestLinkInfo();
       }
@@ -35,6 +43,7 @@
       }
 
       if ( defined('MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER') && (MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER == 'Test') ) {
+        $this->title .= ' (Test)';
         $this->public_title .= ' (' . $this->code . '; Test)';
       }
 
@@ -134,7 +143,7 @@
           while ( $tokens = tep_db_fetch_array($tokens_query) ) {
             $content .= '<tr class="moduleRow" id="stripe_card_' . (int)$tokens['id'] . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="stripe_card" value="' . (int)$tokens['id'] . '" /></td>' .
-                        '  <td valign="top">' . MODULE_PAYMENT_STRIPE_CREDITCARD_LAST_4 . '&nbsp;' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '&nbsp;&nbsp;' . tep_output_string_protected($tokens['card_type']) . '</td>' .
+                        '  <td valign="top"><strong>' . tep_output_string_protected($tokens['card_type']) . '</strong>&nbsp;&nbsp;****' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '</td>' .
                         '</tr>';
           }
 
@@ -424,7 +433,7 @@ EOD;
 
       $params = array('MODULE_PAYMENT_STRIPE_STATUS' => array('title' => 'Enable Stripe Module',
                                                               'desc' => 'Do you want to accept Stripe payments?',
-                                                              'value' => 'False',
+                                                              'value' => 'True',
                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY' => array('title' => 'Publishable Key',
                                                                        'desc' => 'The Stripe account publishable key to use.',
@@ -476,7 +485,7 @@ EOD;
       return $params;
     }
 
-    function sendTransactionToGateway($url, $parameters) {
+    function sendTransactionToGateway($url, $parameters = null, $curl_opts = array()) {
       $server = parse_url($url);
 
       if (isset($server['port']) === false) {
@@ -489,7 +498,7 @@ EOD;
 
       $header = array('Stripe-Version: ' . $this->api_version);
 
-      if ( is_array($parameters) ) {
+      if ( is_array($parameters) && !empty($parameters) ) {
         $post_string = '';
 
         foreach ($parameters as $key => $value) {
@@ -507,10 +516,13 @@ EOD;
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
       curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
       curl_setopt($curl, CURLOPT_USERPWD, MODULE_PAYMENT_STRIPE_SECRET_KEY . ':');
       curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+
+      if ( !empty($parameters) ) {
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+      }
 
       if ( MODULE_PAYMENT_STRIPE_VERIFY_SSL == 'True' ) {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
@@ -528,6 +540,12 @@ EOD;
       if ( tep_not_null(MODULE_PAYMENT_STRIPE_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_STRIPE_PROXY);
+      }
+
+      if ( !empty($curl_opts) ) {
+        foreach ( $curl_opts as $key => $value ) {
+          curl_setopt($curl, $key, $value);
+        }
       }
 
       $result = curl_exec($curl);
@@ -768,6 +786,16 @@ EOD;
       }
 
       return false;
+    }
+
+    function deleteCard($card, $customer, $token_id) {
+      global $customer_id;
+
+      $this->sendTransactionToGateway('https://api.stripe.com/v1/customers/' . $customer . '/cards/' . $card, null, array(CURLOPT_CUSTOMREQUEST => 'DELETE'));
+
+      tep_db_query("delete from customers_stripe_tokens where id = '" . (int)$token_id . "' and customers_id = '" . (int)$customer_id . "' and stripe_token = '" . tep_db_prepare_input(tep_db_input($customer . ':|:' . $card)) . "'");
+
+      return (tep_db_affected_rows() === 1);
     }
   }
 ?>
