@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -173,7 +173,7 @@ function rowOutEffect(object) {
   </div>
 
 <?php
-    } elseif ($free_shipping == false) {
+    } else {
 ?>
 
   <div class="contentText">
