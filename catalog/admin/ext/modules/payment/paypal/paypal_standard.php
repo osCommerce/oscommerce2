@@ -5,13 +5,14 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
   chdir('../../../../');
   require('includes/application_top.php');
+
   require('../includes/languages/' . $language . '/modules/payment/paypal_standard.php');
   require('../includes/modules/payment/paypal_standard.php');
 
@@ -25,7 +26,7 @@
     if ( $result == 'INVALID' ) {
       echo '<h1 id="ppctresult">' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_SUCCESS_TITLE . '</h1>';
 
-      if (MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_SERVER == 'Live') {
+      if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
         echo '<p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_SUCCESS_TEXT_LIVE . '</p>';
       } else {
         echo '<p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_SUCCESS_TEXT_TEST . '</p>';
@@ -33,7 +34,7 @@
     } else {
       echo '<h1 id="ppctresult">' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR_TITLE . '</h1>';
 
-      if (MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_SERVER == 'Live') {
+      if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
         echo '<p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR_TEXT_LIVE . '</p>';
       } else {
         echo '<p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR_TEXT_TEST . '</p>';

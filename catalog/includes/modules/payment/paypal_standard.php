@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,7 +13,6 @@
   class paypal_standard {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function paypal_standard() {
       global $order;
 
@@ -25,31 +24,38 @@
       $this->description = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') && (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false;
-
-      if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
-      }
+      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID : 0;
 
       if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') ) {
+        if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Sandbox' ) {
+          $this->title .= ' [Sandbox]';
+          $this->public_title .= ' (' . $this->code . '; Sandbox)';
+        }
+
         $this->description .= $this->getTestLinkInfo();
+
+        if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live' ) {
+          $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
+        } else {
+          $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+        }
       }
 
-      if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Sandbox' ) {
-        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_ID) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+
+          $this->enabled = false;
+        }
       }
 
-      if ( isset($order) && is_object($order) ) {
-        $this->update_status();
-      }
-
-      if (MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live') {
-        $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
-      } else {
-        $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
     }
 
-// class methods
     function update_status() {
       global $order;
 
@@ -405,7 +411,7 @@
 
       $result = false;
 
-      if ( ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID)) ) {
+      if ( isset($HTTP_POST_VARS['receiver_email']) && (($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
         $parameters = 'cmd=_notify-validate';
 
         foreach ($HTTP_POST_VARS as $key => $value) {
@@ -440,6 +446,8 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
+      $this->verifyTransaction();
+
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
@@ -452,15 +460,7 @@
 
       $new_order_status = DEFAULT_ORDERS_STATUS_ID;
 
-      if ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
-        $sql_data_array = array('orders_id' => $order_id,
-                                'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID,
-                                'date_added' => 'now()',
-                                'customer_notified' => '0',
-                                'comments' => '');
-
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-      } else {
+      if ( $check['orders_status'] != MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID ) {
         $new_order_status = $check['orders_status'];
       }
 
@@ -714,9 +714,37 @@
         $status_id = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
       }
 
+      if (!defined('MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID')) {
+        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
+
+        if (tep_db_num_rows($check_query) < 1) {
+          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = tep_db_fetch_array($status_query);
+
+          $tx_status_id = $status['status_id']+1;
+
+          $languages = tep_get_languages();
+
+          foreach ($languages as $lang) {
+            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $tx_status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
+          }
+
+          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (tep_db_num_rows($flags_query) == 1) {
+            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $tx_status_id . "'");
+          }
+        } else {
+          $check = tep_db_fetch_array($check_query);
+
+          $tx_status_id = $check['orders_status_id'];
+        }
+      } else {
+        $tx_status_id = MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID;
+      }
+
       $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Payments Standard',
                                                                        'desc' => 'Do you want to accept PayPal Payments Standard payments?',
-                                                                       'value' => 'False',
+                                                                       'value' => 'True',
                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_ID' => array('title' => 'Seller E-Mail Address',
                                                                    'desc' => 'The PayPal seller e-mail address to accept payments for'),
@@ -737,6 +765,11 @@
                                                                                 'value' => '0',
                                                                                 'set_func' => 'tep_cfg_pull_down_order_statuses(',
                                                                                 'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
+                                                                                             'desc' => 'Include PayPal transaction information in this order status level.',
+                                                                                             'value' => $tx_status_id,
+                                                                                             'use_func' => 'tep_get_order_status_name',
+                                                                                             'set_func' => 'tep_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                    'desc' => 'The processing method to use for each transaction.',
                                                                                    'value' => 'Sale',
@@ -878,6 +911,58 @@ EOD;
               $js;
 
       return $info;
+    }
+
+    function verifyTransaction($is_ipn = false) {
+      global $HTTP_POST_VARS, $currencies;
+
+      if ( isset($HTTP_POST_VARS['invoice']) && is_numeric($HTTP_POST_VARS['invoice']) && ($HTTP_POST_VARS['invoice'] > 0) && isset($HTTP_POST_VARS['custom']) && is_numeric($HTTP_POST_VARS['custom']) && ($HTTP_POST_VARS['custom'] > 0) ) {
+        $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+
+        if ( tep_db_num_rows($order_query) === 1 ) {
+          $order = tep_db_fetch_array($order_query);
+
+          $new_order_status = DEFAULT_ORDERS_STATUS_ID;
+
+          if ( $order['orders_status'] != MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
+            $new_order_status = $order['orders_status'];
+          }
+
+          $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class = 'ot_total' limit 1");
+          $total = tep_db_fetch_array($total_query);
+
+          $comment_status = 'Transaction ID: ' . $HTTP_POST_VARS['txn_id'] . '; ' .
+                            $HTTP_POST_VARS['payment_status'] . ' (' . ucfirst($HTTP_POST_VARS['payer_status']) . '; ' . $currencies->format($HTTP_POST_VARS['mc_gross'], false, $HTTP_POST_VARS['mc_currency']) . ')';
+
+          if ( $HTTP_POST_VARS['payment_status'] == 'Pending' ) {
+            $comment_status .= '; ' . $HTTP_POST_VARS['pending_reason'];
+          } elseif ( ($HTTP_POST_VARS['payment_status'] == 'Reversed') || ($HTTP_POST_VARS['payment_status'] == 'Refunded') ) {
+            $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
+          }
+
+          if ( $HTTP_POST_VARS['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
+            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+          } elseif ($HTTP_POST_VARS['payment_status'] == 'Completed') {
+            $new_order_status = (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : $new_order_status);
+          }
+
+          tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (int)$new_order_status . "', last_modified = now() where orders_id = '" . (int)$order['orders_id'] . "'");
+
+          if ( $is_ipn === true ) {
+            $source = 'PayPal IPN Verified';
+          } else {
+            $source = 'PayPal Verified';
+          }
+
+          $sql_data_array = array('orders_id' => (int)$order['orders_id'],
+                                  'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID,
+                                  'date_added' => 'now()',
+                                  'customer_notified' => '0',
+                                  'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
+
+          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
+      }
     }
   }
 ?>

@@ -48,7 +48,7 @@
           $stripe_enabled = true;
 
           if ( MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER == 'Test' ) {
-            $this->title .= ' (Test)';
+            $this->title .= ' [Test]';
             $this->public_title .= ' (' . $stripe->code . '; Test)';
           }
         }

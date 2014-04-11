@@ -37,7 +37,7 @@
           $this->description .= $this->getShowUrlsInfo();
 
           if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
-            $this->title .= ' (Sandbox)';
+            $this->title .= ' [Sandbox]';
           }
 
           if ( $this->enabled === true ) {

@@ -25,6 +25,16 @@
       $this->description = MODULE_PAYMENT_STRIPE_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_STRIPE_SORT_ORDER') ? MODULE_PAYMENT_STRIPE_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_STRIPE_STATUS') && (MODULE_PAYMENT_STRIPE_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID : 0;
+
+      if ( defined('MODULE_PAYMENT_STRIPE_STATUS') ) {
+        if ( MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER == 'Test' ) {
+          $this->title .= ' [Test]';
+          $this->public_title .= ' (' . $this->code . '; Test)';
+        }
+
+        $this->description .= $this->getTestLinkInfo();
+      }
 
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !tep_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
@@ -34,21 +44,10 @@
         }
       }
 
-      if ( defined('MODULE_PAYMENT_STRIPE_STATUS') ) {
-        $this->description .= $this->getTestLinkInfo();
-      }
-
-      if ( defined('MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID;
-      }
-
-      if ( defined('MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER') && (MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER == 'Test') ) {
-        $this->title .= ' (Test)';
-        $this->public_title .= ' (' . $this->code . '; Test)';
-      }
-
-      if ( isset($order) && is_object($order) ) {
-        $this->update_status();
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
     }
 

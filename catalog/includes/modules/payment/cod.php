@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,24 +13,23 @@
   class cod {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function cod() {
       global $order;
 
       $this->code = 'cod';
       $this->title = MODULE_PAYMENT_COD_TEXT_TITLE;
       $this->description = MODULE_PAYMENT_COD_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_COD_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_COD_SORT_ORDER') ? MODULE_PAYMENT_COD_SORT_ORDER : 0;
+      $this->enabled = defined('MODULE_PAYMENT_COD_STATUS') && (MODULE_PAYMENT_COD_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_COD_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_COD_ORDER_STATUS_ID : 0;
 
-      if ((int)MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
-
-      if (is_object($order)) $this->update_status();
     }
 
-// class methods
     function update_status() {
       global $order;
 

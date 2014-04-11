@@ -5,14 +5,18 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_TITLE', 'PayPal Payments Pro Direct Payments');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_TITLE', 'PayPal Payments Pro (Direct Payment)');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_PUBLIC_TITLE', 'Credit or Debit Card');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION', '<strong>Note: PayPal requires the PayPal Express Checkout payment module to be enabled if this module is activated.</strong><br /><br /><img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit PayPal Website</a>');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="https://www.paypal.com" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit PayPal Website</a>');
+
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_EXPRESS_MODULE', 'PayPal mandates the PayPal Express Checkout payment module be enabled if this module is to be activated. This module will not load until the PayPal Express Checkout module has been installed.');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CONFIGURATION', 'This module will not load until the API Credential parameters have been configured. Please edit and configure the settings of this module.');
+
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER', 'Card Owner:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE', 'Card Type:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER', 'Card Number:');
@@ -35,5 +39,5 @@
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR_TITLE', 'Error!');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR_TEXT_LIVE', 'A connection to the live gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR_TEXT_TEST', 'A connection to the test gateway could not be made.<br /><br />Disable Verify SSL Certificate in the module configuration and try again.');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_NOT_INSTALLED', 'The PayPal Payments Pro Direct Payments payment module is not installed. Please install it and try again.');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_NOT_INSTALLED', 'The PayPal Payments Pro (Direct Payment) payment module is not installed. Please install it and try again.');
 ?>
