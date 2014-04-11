@@ -13,7 +13,6 @@
   class paypal_express {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function paypal_express() {
       global $PHP_SELF, $request_type, $order;
 
@@ -26,38 +25,47 @@
       $this->description = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') && (MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS == 'True') ? true : false;
-
-      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID;
-      }
+      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID : 0;
 
       if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') ) {
+        if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
+          $this->title .= ' [Sandbox]';
+          $this->public_title .= ' (' . $this->code . '; Sandbox)';
+        }
+
         $this->description .= $this->getTestLinkInfo();
       }
 
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
-        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT) && !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+
+          $this->enabled = false;
+        }
       }
 
-      if ( isset($order) && is_object($order) ) {
-        $this->update_status();
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
 
 // In-Context requires the shopping cart page to be loaded in HTTPS
-      if ( isset($request_type) && defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') && (ENABLE_SSL == true) ) {
-          if ( $request_type != 'SSL' ) {
-            tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
-          }
+      if ( $this->enabled === true ) {
+        if ( isset($request_type) && defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
+          if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') && (ENABLE_SSL == true) ) {
+            if ( $request_type != 'SSL' ) {
+              tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
+            }
 
-          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT == 'True' ) {
-            header('X-UA-Compatible: IE=edge', true);
+            if ( MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT == 'True' ) {
+              header('X-UA-Compatible: IE=edge', true);
+            }
           }
         }
       }
     }
 
-// class methods
     function update_status() {
       global $order;
 
@@ -108,7 +116,13 @@
         $image_button = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON) . '" /></a>';
+      $button_title = tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON);
+
+      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
+        $button_title .= ' (' . $this->code . '; Sandbox)';
+      }
+
+      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
 
       if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context' ) {
         $string .= <<<EOD
@@ -231,7 +245,7 @@ EOD;
     }
 
     function after_process() {
-      global $response_array, $insert_id, $order, $ppe_payerstatus, $ppe_addressstatus;
+      global $response_array, $insert_id, $ppe_payerstatus, $ppe_addressstatus;
 
       $pp_result = 'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
                    'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
@@ -347,10 +361,11 @@ EOD;
 
       $params = array('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS' => array('title' => 'Enable PayPal Express Checkout',
                                                                       'desc' => 'Do you want to accept PayPal Express Checkout payments?',
-                                                                      'value' => 'False',
+                                                                      'value' => 'True',
                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT' => array('title' => 'Seller Account',
-                                                                              'desc' => 'The email address of the seller account if no API credentials has been setup.'),
+                                                                              'desc' => 'The email address of the seller account if no API credentials has been setup.',
+                                                                              'value' => STORE_OWNER_EMAIL_ADDRESS),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME' => array('title' => 'API Username',
                                                                             'desc' => 'The username to use for the PayPal API service.'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD' => array('title' => 'API Password',

@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,7 +13,6 @@
   class paypal_pro_payflow_ec {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function paypal_pro_payflow_ec() {
       global $order;
 
@@ -25,25 +24,38 @@
       $this->description = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS') && (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID : 0;
 
-      if ( defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ORDER_STATUS_ID;
+      if ( !defined('MODULE_PAYMENT_INSTALLED') || !tep_not_null(MODULE_PAYMENT_INSTALLED) || !in_array('paypal_pro_payflow_dp.php', explode(';', MODULE_PAYMENT_INSTALLED)) || !defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS') || (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS != 'True') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ERROR_DIRECT_MODULE . '</div>' . $this->description;
+
+        $this->enabled = false;
       }
 
-      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') ) {
+      if ( defined('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS') ) {
+        if ( MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Sandbox' ) {
+          $this->title .= ' [Sandbox]';
+          $this->public_title .= ' (' . $this->code . '; Sandbox)';
+        }
+
         $this->description .= $this->getTestLinkInfo();
       }
 
-      if ( MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Sandbox' ) {
-        $this->public_title .= ' (' . $this->code . '; Sandbox)';
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_PASSWORD) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+
+          $this->enabled = false;
+        }
       }
 
-      if ( isset($order) && is_object($order) ) {
-        $this->update_status();
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
     }
 
-// class methods
     function update_status() {
       global $order;
 
@@ -67,7 +79,13 @@
     }
 
     function checkout_initialization_method() {
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL') . '"><img src="' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_BUTTON . '" border="0" alt="" title="' . tep_output_string_protected(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_BUTTON) . '" /></a>';
+      $button_title = tep_output_string_protected(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_BUTTON);
+
+      if ( MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_SERVER == 'Sandbox' ) {
+        $button_title .= ' (' . $this->code . '; Sandbox)';
+      }
+
+      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL') . '"><img src="' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_BUTTON . '" border="0" alt="" title="' . $button_title . '" /></a>';
 
       return $string;
     }
@@ -330,9 +348,9 @@
         $status_id = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTIONS_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS' => array('title' => 'Enable PayPal Payments Pro Express Checkout (Payflow Edition)',
-                                                                             'desc' => 'Do you want to accept PayPal Payments Pro Express Checkout (Payflow Edition) payments?',
-                                                                             'value' => 'False',
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_STATUS' => array('title' => 'Enable PayPal Express Checkout (Payflow Edition)',
+                                                                             'desc' => 'Do you want to accept PayPal Express Checkout (Payflow Edition) payments?',
+                                                                             'value' => 'True',
                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_VENDOR' => array('title' => 'Vendor',
                                                                              'desc' => 'Your merchant login ID that you created when you registered for the PayPal Payments Pro account.'),
@@ -392,7 +410,9 @@
         $server['path'] = '/';
       }
 
-      $headers = array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])),
+      $request_id = (isset($order) && is_object($order)) ? md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
+
+      $headers = array('X-VPS-REQUEST-ID: ' . $request_id,
                        'X-VPS-CLIENT-TIMEOUT: 45',
                        'X-VPS-VIT-INTEGRATION-PRODUCT: OSCOM',
                        'X-VPS-VIT-INTEGRATION-VERSION: 2.3');

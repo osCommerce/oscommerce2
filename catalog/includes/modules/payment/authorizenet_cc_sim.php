@@ -13,7 +13,6 @@
   class authorizenet_cc_sim {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function authorizenet_cc_sim() {
       global $order;
 
@@ -26,6 +25,20 @@
       $this->description = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_SORT_ORDER') ? MODULE_PAYMENT_AUTHORIZENET_CC_SIM_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS') && (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID : 0;
+
+      if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_STATUS') ) {
+        if ( (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER == 'Test') || (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE == 'Test') ) {
+          $this->title .= ' [Test]';
+          $this->public_title .= ' (' . $this->code . '; Test)';
+        }
+
+        if ( MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER == 'Live' ) {
+          $this->form_action_url = 'https://secure.authorize.net/gateway/transact.dll';
+        } else {
+          $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
+        }
+      }
 
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY) ) {
@@ -35,26 +48,13 @@
         }
       }
 
-      if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ORDER_STATUS_ID;
-      }
-
-      if ( (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER == 'Test') || (MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE == 'Test') ) {
-        $this->public_title .= ' (' . $this->code . '; Test)';
-      }
-
-      if ( isset($order) && is_object($order) ) {
-        $this->update_status();
-      }
-
-      if ( MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER == 'Live' ) {
-        $this->form_action_url = 'https://secure.authorize.net/gateway/transact.dll';
-      } else {
-        $this->form_action_url = 'https://test.authorize.net/gateway/transact.dll';
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
       }
     }
 
-// class methods
     function update_status() {
       global $order;
 
