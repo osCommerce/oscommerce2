@@ -10,11 +10,11 @@
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
 
-  require('../includes/languages/' . $language . '/modules/payment/paypal_standard.php');
-  require('../includes/modules/payment/paypal_standard.php');
+  require('includes/languages/' . $language . '/modules/payment/paypal_standard.php');
+  require('includes/modules/payment/paypal_standard.php');
 
   if (defined(MODULE_PAYMENT_PAYPAL_STANDARD_STATUS)) {
     $paypal_standard = new paypal_standard();

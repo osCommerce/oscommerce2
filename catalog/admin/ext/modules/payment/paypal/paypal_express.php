@@ -5,15 +5,16 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
-  require('../includes/languages/' . $language . '/modules/payment/paypal_express.php');
-  require('../includes/modules/payment/paypal_express.php');
+
+  require('includes/languages/' . $language . '/modules/payment/paypal_express.php');
+  require('includes/modules/payment/paypal_express.php');
 
   if (defined(MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS)) {
     $paypal_express = new paypal_express();

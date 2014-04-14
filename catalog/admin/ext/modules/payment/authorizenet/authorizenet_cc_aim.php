@@ -10,11 +10,11 @@
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
 
-  require(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/payment/authorizenet_cc_aim.php');
-  require(DIR_FS_CATALOG_MODULES . 'payment/authorizenet_cc_aim.php');
+  require('includes/languages/' . $language . '/modules/payment/authorizenet_cc_aim.php');
+  require('includes/modules/payment/authorizenet_cc_aim.php');
 
   if (defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS')) {
     $authorizenet_cc_aim = new authorizenet_cc_aim();

@@ -10,11 +10,11 @@
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
 
-  require(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/payment/stripe.php');
-  require(DIR_FS_CATALOG_MODULES . 'payment/stripe.php');
+  require('includes/languages/' . $language . '/modules/payment/stripe.php');
+  require('includes/modules/payment/stripe.php');
 
   if (defined('MODULE_PAYMENT_STRIPE_STATUS')) {
     $stripe = new stripe();
