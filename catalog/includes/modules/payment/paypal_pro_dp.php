@@ -179,7 +179,7 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order, $sendto, $response_array;
+      global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
 
       if (isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER == 'Live') {
@@ -224,6 +224,40 @@
           $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
           $params['SHIPTOZIP'] = $order->delivery['postcode'];
+        }
+
+        $item_params = array();
+
+        $line_item_no = 0;
+
+        foreach ($order->products as $product) {
+          $item_params['L_NAME' . $line_item_no] = $product['name'];
+          $item_params['L_AMT' . $line_item_no] = $this->format_raw($product['final_price']);
+          $item_params['L_NUMBER' . $line_item_no] = $product['id'];
+          $item_params['L_QTY' . $line_item_no] = $product['qty'];
+
+          $line_item_no++;
+        }
+
+        $items_total = $this->format_raw($order->info['subtotal']);
+
+        foreach ($order_totals as $ot) {
+          if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_total')) ) {
+            $item_params['L_NAME' . $line_item_no] = $ot['title'];
+            $item_params['L_AMT' . $line_item_no] = $this->format_raw($ot['value']);
+
+            $items_total += $this->format_raw($ot['value']);
+
+            $line_item_no++;
+          }
+        }
+
+        $item_params['ITEMAMT'] = $items_total;
+        $item_params['TAXAMT'] = $this->format_raw($order->info['tax']);
+        $item_params['SHIPPINGAMT'] = $this->format_raw($order->info['shipping_cost']);
+
+        if ( $this->format_raw($item_params['ITEMAMT'] + $item_params['TAXAMT'] + $item_params['SHIPPINGAMT']) == $params['AMT'] ) {
+          $params = array_merge($params, $item_params);
         }
 
         $post_string = '';
