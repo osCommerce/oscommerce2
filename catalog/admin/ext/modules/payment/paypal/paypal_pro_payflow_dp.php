@@ -5,15 +5,16 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
-  require('../includes/languages/' . $language . '/modules/payment/paypal_pro_payflow_dp.php');
-  require('../includes/modules/payment/paypal_pro_payflow_dp.php');
+
+  require('includes/languages/' . $language . '/modules/payment/paypal_pro_payflow_dp.php');
+  require('includes/modules/payment/paypal_pro_payflow_dp.php');
 
   if (defined(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_STATUS)) {
     $paypal_pro_payflow_dp = new paypal_pro_payflow_dp();

@@ -10,11 +10,11 @@
   Released under the GNU General Public License
 */
 
-  chdir('../../../../');
+  chdir('../../../../../');
   require('includes/application_top.php');
 
-  require('../includes/languages/' . $language . '/modules/payment/paypal_pro_hs.php');
-  require('../includes/modules/payment/paypal_pro_hs.php');
+  require('includes/languages/' . $language . '/modules/payment/paypal_pro_hs.php');
+  require('includes/modules/payment/paypal_pro_hs.php');
 
   if (defined(MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS)) {
     $paypal_pro_hs = new paypal_pro_hs();
