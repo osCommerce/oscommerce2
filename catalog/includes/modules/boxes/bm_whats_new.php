@@ -31,10 +31,10 @@
     }
 
     function execute() {
-      global $currencies, $oscTemplate;
+      global $currencies, $oscTemplate, $languages_id;
 
-      if ($random_product = tep_random_select("select products_id, products_image, products_tax_class_id, products_price from " . TABLE_PRODUCTS . " where products_status = '1' order by products_date_added desc limit " . MAX_RANDOM_SELECT_NEW)) {
-        $random_product['products_name'] = tep_get_products_name($random_product['products_id']);
+      if (if ($random_product = tep_random_select("select distinct products.products_id,products_description.products_name, products.products_image, products.products_tax_class_id, products.products_price from " . TABLE_PRODUCTS . ",products_description where products.products_status = '1' AND language_id = '$languages_id' AND products_description.products_id = products.products_id order by products_date_added desc limit " .  MAX_RANDOM_SELECT_NEW)) {
+        $random_product['products_name'] = $random_product['products_name'];
         $random_product['specials_new_products_price'] = tep_get_products_special_price($random_product['products_id']);
 
         if (tep_not_null($random_product['specials_new_products_price'])) {
