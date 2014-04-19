@@ -28,4 +28,6 @@ define('TABLE_HEADING_COMMENTS', 'Add Comments About Your Order');
 
 define('TITLE_CONTINUE_CHECKOUT_PROCEDURE', 'Continue Checkout Procedure');
 define('TEXT_CONTINUE_CHECKOUT_PROCEDURE', 'to select the preferred payment method.');
+
+define('ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS', 'Shipping is currently not available for the selected shipping address. Please select or create a new shipping address to use with your purchase.');
 ?>
