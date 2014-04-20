@@ -588,7 +588,6 @@ EOD;
 
       $line_item_no = 0;
       $items_total = 0;
-      $tax_total = 0;
 
       foreach ($order->products as $product) {
         $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $product['name'];
@@ -606,15 +605,11 @@ EOD;
         $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
 
         $params['L_PAYMENTREQUEST_0_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
-        $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
         $items_total += $paypal_express->format_raw($product['final_price']) * $product['qty'];
 
         $line_item_no++;
       }
-
-      $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
-      $params['PAYMENTREQUEST_0_TAXAMT'] = $tax_total;
 
       if (tep_not_null($order->delivery['firstname'])) {
         $params['ADDROVERRIDE'] = '1';
@@ -723,7 +718,7 @@ EOD;
           $expensive_rate = $shipping_rate;
         }
 
-        if (tep_not_null($shipping) && ($shipping['id'] == $quote['id'])) {
+        if (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) {
           $default_shipping = $counter;
         }
 
@@ -733,25 +728,58 @@ EOD;
       if (!is_null($default_shipping)) {
         $cheapest_rate = $params['L_SHIPPINGOPTIONAMOUNT' . $default_shipping];
         $cheapest_counter = $default_shipping;
+      } else {
+        if ( !empty($quotes_array) ) {
+          $shipping = array('id' => $quotes_array[$cheapest_counter]['id'],
+                            'title' => $quotes_array[$cheapest_counter]['name'] . '(' . $quotes_array[$cheapest_counter]['label'] . ')',
+                            'cost' => $paypal_express->format_raw($quotes_array[$cheapest_counter]['cost'] + tep_calculate_tax($quotes_array[$cheapest_counter]['cost'], $quotes_array[$cheapest_counter]['tax'])));
+        } else {
+          $shipping = false;
+        }
+
+        if ( !tep_session_is_registered('shipping') ) {
+          tep_session_register('shipping');
+        }
       }
 
-// Instant Update requires default shipping rates to be sent
-      if (!is_null($cheapest_rate)) {
+// set shipping for order total calculations
+      if ( is_array($shipping) ) {
+        $order->info['shipping_method'] = $shipping['title'];
+        $order->info['shipping_cost'] = $shipping['cost'];
+      }
 
+      if (!is_null($cheapest_rate)) {
         $params['PAYMENTREQUEST_0_INSURANCEOPTIONOFFERED'] = 'false';
         $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       }
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
-          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
-            $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
-            $params['CALLBACKTIMEOUT'] = '5';
-            $params['CALLBACKVERSION'] = $paypal_express->api_version;
-          }
-        }
 
-// don't recalculate currency values as they have already been calculated
-      $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate, '', 1);
-      $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_ITEMAMT'] + $params['PAYMENTREQUEST_0_TAXAMT'] + $params['PAYMENTREQUEST_0_SHIPPINGAMT'], '', 1);
+      if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
+        if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
+          $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+          $params['CALLBACKTIMEOUT'] = '5';
+          $params['CALLBACKVERSION'] = $paypal_express->api_version;
+        }
+      }
+
+      include(DIR_WS_CLASSES . 'order_total.php');
+      $order_total_modules = new order_total;
+      $order_totals = $order_total_modules->process();
+
+      foreach ($order_totals as $ot) {
+        if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
+          $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $ot['title'];
+          $params['L_PAYMENTREQUEST_0_AMT' . $line_item_no] = $paypal_express->format_raw($ot['value']);
+
+          $items_total += $paypal_express->format_raw($ot['value']);
+
+          $line_item_no++;
+        }
+      }
+
+      $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
+      $params['PAYMENTREQUEST_0_TAXAMT'] = $paypal_express->format_raw($order->info['tax']);
+      $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($order->info['shipping_cost']);
+      $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($order->info['total']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
 // Log In with PayPal token for seamless checkout
