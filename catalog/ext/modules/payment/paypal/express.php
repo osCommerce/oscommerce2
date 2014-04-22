@@ -30,13 +30,28 @@
   }
 
   if (!tep_session_is_registered('sendto')) {
+    $country = tep_get_countries(STORE_COUNTRY, true);
+
     tep_session_register('sendto');
-    $sendto = $customer_default_address_id;
+    $sendto = array('firstname' => '',
+                    'lastname' => '',
+                    'company' => '',
+                    'street_address' => '',
+                    'suburb' => '',
+                    'postcode' => '',
+                    'city' => '',
+                    'zone_id' => STORE_ZONE,
+                    'zone_name' => tep_get_zone_name(STORE_COUNTRY, STORE_ZONE, ''),
+                    'country_id' => STORE_COUNTRY,
+                    'country_name' => $country['countries_name'],
+                    'country_iso_code_2' => $country['countries_iso_code_2'],
+                    'country_iso_code_3' => $country['countries_iso_code_3'],
+                    'address_format_id' => tep_get_address_format_id(STORE_COUNTRY));
   }
 
   if (!tep_session_is_registered('billto')) {
     tep_session_register('billto');
-    $billto = $customer_default_address_id;
+    $billto = $sendto;
   }
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -77,7 +92,7 @@
         $sendto = array('firstname' => '',
                         'lastname' => '',
                         'company' => '',
-                        'street_address' => '',
+                        'street_address' => $HTTP_POST_VARS['SHIPTOSTREET'],
                         'suburb' => '',
                         'postcode' => $HTTP_POST_VARS['SHIPTOZIP'],
                         'city' => $HTTP_POST_VARS['SHIPTOCITY'],
@@ -189,31 +204,37 @@
         }
 
         $params = array('METHOD' => 'CallbackResponse',
-                        'CURRENCYCODE' => $currency,
-                        'OFFERINSURANCEOPTION' => 'false');
+                        'CALLBACKVERSION' => $paypal_express->api_version);
 
-        $counter = 0;
-        $cheapest_rate = null;
-        $cheapest_counter = $counter;
+        if ( !empty($quotes_array) ) {
+          $params['CURRENCYCODE'] = $currency;
+          $params['OFFERINSURANCEOPTION'] = 'false';
 
-        foreach ($quotes_array as $quote) {
-          $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+          $counter = 0;
+          $cheapest_rate = null;
+          $cheapest_counter = $counter;
 
-          $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
-          $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
-          $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
-          $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
-          $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+          foreach ($quotes_array as $quote) {
+            $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-          if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
-            $cheapest_rate = $shipping_rate;
-            $cheapest_counter = $counter;
+            $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
+            $params['L_SHIPINGPOPTIONLABEL' . $counter] = $quote['label'];
+            $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->format_raw($quote['cost']);
+            $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
+            $params['L_TAXAMT' . $counter] = $paypal_express->format_raw($order->info['tax'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+
+            if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
+              $cheapest_rate = $shipping_rate;
+              $cheapest_counter = $counter;
+            }
+
+            $counter++;
           }
 
-          $counter++;
+          $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+        } else {
+          $params['NO_SHIPPING_OPTION_DETAILS'] = '1';
         }
-
-        $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
 
         $post_string = '';
 
@@ -291,14 +312,14 @@
         }
 
 // check if paypal shipping address exists in the address book
-        $ship_firstname = tep_db_prepare_input(substr($response_array['SHIPTONAME'], 0, strpos($response_array['SHIPTONAME'], ' ')));
-        $ship_lastname = tep_db_prepare_input(substr($response_array['SHIPTONAME'], strpos($response_array['SHIPTONAME'], ' ')+1));
-        $ship_address = tep_db_prepare_input($response_array['SHIPTOSTREET']);
-        $ship_city = tep_db_prepare_input($response_array['SHIPTOCITY']);
-        $ship_zone = tep_db_prepare_input($response_array['SHIPTOSTATE']);
+        $ship_firstname = tep_db_prepare_input(substr($response_array['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($response_array['PAYMENTREQUEST_0_SHIPTONAME'], ' ')));
+        $ship_lastname = tep_db_prepare_input(substr($response_array['PAYMENTREQUEST_0_SHIPTONAME'], strpos($response_array['PAYMENTREQUEST_0_SHIPTONAME'], ' ')+1));
+        $ship_address = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOSTREET']);
+        $ship_city = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOCITY']);
+        $ship_zone = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOSTATE']);
         $ship_zone_id = 0;
-        $ship_postcode = tep_db_prepare_input($response_array['SHIPTOZIP']);
-        $ship_country = tep_db_prepare_input($response_array['SHIPTOCOUNTRYCODE']);
+        $ship_postcode = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOZIP']);
+        $ship_country = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
         $ship_country_id = 0;
         $ship_address_format_id = 1;
 
@@ -355,14 +376,14 @@
           }
         }
 
+        $billto = $sendto;
+
         if ($force_login == true) {
           $customer_country_id = $ship_country_id;
           $customer_zone_id = $ship_zone_id;
           tep_session_register('customer_default_address_id');
           tep_session_register('customer_country_id');
           tep_session_register('customer_zone_id');
-
-          $billto = $sendto;
         }
 
         include(DIR_WS_CLASSES . 'order.php');
@@ -424,7 +445,7 @@
                 foreach ($quotes as $quote) {
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
-                      if ($response_array['SHIPPINGOPTIONNAME'] == $quote['module'] . ' (' . $rate['title'] . ')') {
+                      if ($response_array['SHIPPINGOPTIONNAME'] == ($quote['module'] . ' ' . $rate['title'])) {
                         if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']))) {
                           $shipping = $quote['id'] . '_' . $rate['id'];
                           $shipping_set = true;
@@ -441,6 +462,14 @@
                 $shipping = $shipping_modules->cheapest();
                 $shipping = $shipping['id'];
               }
+            }
+          } else {
+            if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') ) {
+              tep_session_unregister('shipping');
+
+              $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
+
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
             }
           }
 
@@ -559,7 +588,6 @@ EOD;
 
       $line_item_no = 0;
       $items_total = 0;
-      $tax_total = 0;
 
       foreach ($order->products as $product) {
         $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $product['name'];
@@ -577,15 +605,11 @@ EOD;
         $product_tax = tep_calculate_tax($product['final_price'], $product['tax']);
 
         $params['L_PAYMENTREQUEST_0_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
-        $tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
         $items_total += $paypal_express->format_raw($product['final_price']) * $product['qty'];
 
         $line_item_no++;
       }
-
-      $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
-      $params['PAYMENTREQUEST_0_TAXAMT'] = $tax_total;
 
       if (tep_not_null($order->delivery['firstname'])) {
         $params['ADDROVERRIDE'] = '1';
@@ -660,6 +684,14 @@ EOD;
               }
             }
           }
+        } else {
+          if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') ) {
+            tep_session_unregister('shipping');
+
+            $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
+
+            tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+          }
         }
       }
 
@@ -686,7 +718,7 @@ EOD;
           $expensive_rate = $shipping_rate;
         }
 
-        if (tep_not_null($shipping) && ($shipping['id'] == $quote['id'])) {
+        if (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) {
           $default_shipping = $counter;
         }
 
@@ -696,26 +728,61 @@ EOD;
       if (!is_null($default_shipping)) {
         $cheapest_rate = $params['L_SHIPPINGOPTIONAMOUNT' . $default_shipping];
         $cheapest_counter = $default_shipping;
+      } else {
+        if ( !empty($quotes_array) ) {
+          $shipping = array('id' => $quotes_array[$cheapest_counter]['id'],
+                            'title' => $quotes_array[$cheapest_counter]['name'] . '(' . $quotes_array[$cheapest_counter]['label'] . ')',
+                            'cost' => $paypal_express->format_raw($quotes_array[$cheapest_counter]['cost'] + tep_calculate_tax($quotes_array[$cheapest_counter]['cost'], $quotes_array[$cheapest_counter]['tax'])));
+        } else {
+          $shipping = false;
+        }
+
+        if ( !tep_session_is_registered('shipping') ) {
+          tep_session_register('shipping');
+        }
+      }
+
+// set shipping for order total calculations
+      if ( is_array($shipping) ) {
+        $order->info['shipping_method'] = $shipping['title'];
+        $order->info['shipping_cost'] = $shipping['cost'];
       }
 
       if (!is_null($cheapest_rate)) {
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
-          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
-            $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
-            $params['CALLBACKTIMEOUT'] = '5';
-            $params['CALLBACKVERSION'] = $paypal_express->api_version;
-          }
-        }
-
         $params['PAYMENTREQUEST_0_INSURANCEOPTIONOFFERED'] = 'false';
         $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       }
 
-// don't recalculate currency values as they have already been calculated
-      $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($cheapest_rate, '', 1);
-      $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_ITEMAMT'] + $params['TAXAMT'] + $params['PAYMENTREQUEST_0_SHIPPINGAMT'], '', 1);
+      if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
+        if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
+          $params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+          $params['CALLBACKTIMEOUT'] = '5';
+          $params['CALLBACKVERSION'] = $paypal_express->api_version;
+        }
+      }
+
+      include(DIR_WS_CLASSES . 'order_total.php');
+      $order_total_modules = new order_total;
+      $order_totals = $order_total_modules->process();
+
+      foreach ($order_totals as $ot) {
+        if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
+          $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $ot['title'];
+          $params['L_PAYMENTREQUEST_0_AMT' . $line_item_no] = $paypal_express->format_raw($ot['value']);
+
+          $items_total += $paypal_express->format_raw($ot['value']);
+
+          $line_item_no++;
+        }
+      }
+
+      $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
+      $params['PAYMENTREQUEST_0_TAXAMT'] = $paypal_express->format_raw($order->info['tax']);
+      $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($order->info['shipping_cost']);
+      $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($order->info['total']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
+// Log In with PayPal token for seamless checkout
       if (tep_session_is_registered('paypal_login_access_token')) {
         $params['IDENTITYACCESSTOKEN'] = $paypal_login_access_token;
       }

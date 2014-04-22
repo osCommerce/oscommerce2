@@ -242,7 +242,7 @@
         $items_total = $this->format_raw($order->info['subtotal']);
 
         foreach ($order_totals as $ot) {
-          if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_total')) ) {
+          if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
             $item_params['L_NAME' . $line_item_no] = $ot['title'];
             $item_params['L_AMT' . $line_item_no] = $this->format_raw($ot['value']);
 
