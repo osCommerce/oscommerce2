@@ -36,4 +36,5 @@
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_NOT_INSTALLED', 'The PayPal Express payment module is not installed. Please install it and try again.');
 
   define('MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS', 'Shipping is currently not available for the selected shipping address. Please select or create a new shipping address to use with your purchase.');
+  define('MODULE_PAYMENT_PAYPAL_EXPRESS_WARNING_LOCAL_LOGIN_REQUIRED', 'Please log into your account to verify the order.');
 ?>
