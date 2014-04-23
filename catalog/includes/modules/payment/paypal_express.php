@@ -258,6 +258,7 @@ EOD;
       tep_session_unregister('ppe_payerid');
       tep_session_unregister('ppe_payerstatus');
       tep_session_unregister('ppe_addressstatus');
+      tep_session_unregister('ppe_secret');
     }
 
     function get_error() {
@@ -526,7 +527,8 @@ EOD;
                       'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
                       'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
                       'CANCELURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=cancel', 'SSL', true, false),
-                      'BRANDNAME' => STORE_NAME);
+                      'BRANDNAME' => STORE_NAME,
+                      'SOLUTIONTYPE' => (MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL == 'True') ? 'Sole' : 'Mark');
 
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
         $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
@@ -534,10 +536,6 @@ EOD;
         $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
       } else {
         $params['SUBJECT'] = MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT;
-      }
-
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL == 'True') {
-        $params['SOLUTIONTYPE'] = 'Sole';
       }
 
       if (is_array($parameters) && !empty($parameters)) {

@@ -259,6 +259,25 @@
       $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+        if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        }
+
+        if (!tep_session_is_registered('payment')) tep_session_register('payment');
+        $payment = $paypal_express->code;
+
+        if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
+        $ppe_token = $response_array['TOKEN'];
+
+        if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
+        $ppe_payerid = $response_array['PAYERID'];
+
+        if (!tep_session_is_registered('ppe_payerstatus')) tep_session_register('ppe_payerstatus');
+        $ppe_payerstatus = $response_array['PAYERSTATUS'];
+
+        if (!tep_session_is_registered('ppe_addressstatus')) tep_session_register('ppe_addressstatus');
+        $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
+
         $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
@@ -271,9 +290,31 @@
           if (tep_db_num_rows($check_query)) {
             $check = tep_db_fetch_array($check_query);
 
-            $customer_id = $check['customers_id'];
-            $customers_firstname = $check['customers_firstname'];
-            $customer_default_address_id = $check['customers_default_address_id'];
+// Force the customer to log into their local account if payerstatus is unverified and a local password is set
+            if ( ($response_array['PAYERSTATUS'] == 'unverified') && !empty($check['customers_password']) ) {
+              $messageStack->add_session('login', MODULE_PAYMENT_PAYPAL_EXPRESS_WARNING_LOCAL_LOGIN_REQUIRED, 'warning');
+
+              $navigation->set_snapshot();
+
+              $login_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
+              $login_email_address = tep_output_string($response_array['EMAIL']);
+
+      $output = <<<EOD
+<form name="pe" action="{$login_url}" method="post">
+  <input type="hidden" name="email_address" value="{$login_email_address}" />
+</form>
+<script type="text/javascript">
+document.pe.submit();
+</script>
+EOD;
+
+              echo $output;
+              exit;
+            } else {
+              $customer_id = $check['customers_id'];
+              $customers_firstname = $check['customers_firstname'];
+              $customer_default_address_id = $check['customers_default_address_id'];
+            }
           } else {
             $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
             $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
@@ -504,21 +545,6 @@
           $sendto = false;
         }
 
-        if (!tep_session_is_registered('payment')) tep_session_register('payment');
-        $payment = $paypal_express->code;
-
-        if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
-        $ppe_token = $response_array['TOKEN'];
-
-        if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
-        $ppe_payerid = $response_array['PAYERID'];
-
-        if (!tep_session_is_registered('ppe_payerstatus')) tep_session_register('ppe_payerstatus');
-        $ppe_payerstatus = $response_array['PAYERSTATUS'];
-
-        if (!tep_session_is_registered('ppe_addressstatus')) tep_session_register('ppe_addressstatus');
-        $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
-
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
@@ -746,6 +772,12 @@ EOD;
       if ( is_array($shipping) ) {
         $order->info['shipping_method'] = $shipping['title'];
         $order->info['shipping_cost'] = $shipping['cost'];
+
+        if (DISPLAY_PRICE_WITH_TAX == 'true') {
+          $order->info['total'] = $order->info['subtotal'] + $order->info['shipping_cost'];
+        } else {
+          $order->info['total'] = $order->info['subtotal'] + $order->info['tax'] + $order->info['shipping_cost'];
+        }
       }
 
       if (!is_null($cheapest_rate)) {
@@ -781,6 +813,14 @@ EOD;
       $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($order->info['shipping_cost']);
       $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($order->info['total']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
+
+      $ppe_secret = tep_create_random_value(32, 'digits');
+
+      if ( !tep_session_is_registered('ppe_secret') ) {
+        tep_session_register('ppe_secret');
+      }
+
+      $params['PAYMENTREQUEST_0_CUSTOM'] = $ppe_secret;
 
 // Log In with PayPal token for seamless checkout
       if (tep_session_is_registered('paypal_login_access_token')) {
