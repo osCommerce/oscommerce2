@@ -711,6 +711,10 @@ EOD;
             $return_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
       }
 
+      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) {
+        tep_redirect($return_url);
+      }
+
       $html_params = HTML_PARAMS;
       $charset = CHARSET;
       $title = tep_output_string_protected($oscTemplate->getTitle());
