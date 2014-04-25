@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_express() {
-      global $PHP_SELF, $request_type, $order;
+      global $PHP_SELF, $request_type, $order, $payment;
 
       $this->signature = 'paypal|paypal_express|2.0|2.2';
       $this->api_version = '112';
@@ -62,6 +62,14 @@
               header('X-UA-Compatible: IE=edge', true);
             }
           }
+        }
+      }
+
+      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('ppec_right_turn') ) {
+        tep_session_unregister('ppec_right_turn');
+
+        if ( tep_session_is_registered('payment') && ($payment == $this->code) ) {
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       }
     }
@@ -152,22 +160,16 @@ EOD;
     }
 
     function pre_confirmation_check() {
-      global $HTTP_GET_VARS, $ppe_token;
+      global $ppe_token;
 
       if (!tep_session_is_registered('ppe_token')) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      if (!isset($HTTP_GET_VARS['do'])) {
-        $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
-        if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-          if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context' ) {
-            tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=close', 'SSL'));
-          }
-        } else {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
-        }
+      if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
     }
 
@@ -194,6 +196,20 @@ EOD;
 
     function before_process() {
       global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $HTTP_POST_VARS, $comments, $response_array;
+
+      if (!tep_session_is_registered('ppe_token')) {
+        tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
+      }
+
+      $response_array = $this->getExpressCheckoutDetails($ppe_token);
+
+      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+        if ( $response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total']) ) {
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+        }
+      } else {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+      }
 
       if (empty($comments)) {
         if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
@@ -227,7 +243,7 @@ EOD;
             $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           }
 
-          $paypal_url .= '&token=' . $ppe_token;
+          $paypal_url .= '&token=' . $ppe_token . '&useraction=commit';
 
           tep_redirect($paypal_url);
         }
@@ -672,6 +688,67 @@ EOD;
 
         tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Debug E-Mail', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
+    }
+
+// breaks out of In-Context overlay
+    function safeRedirect($to = null) {
+      global $oscTemplate, $request_type;
+
+      switch ( $to ) {
+          case 'cart':
+            $return_url = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL');
+            break;
+
+          case 'shipping':
+            $return_url = tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
+            break;
+
+          case 'shipping_address':
+            $return_url = tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL');
+            break;
+
+          default:
+            $return_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+      }
+
+      $html_params = HTML_PARAMS;
+      $charset = CHARSET;
+      $title = tep_output_string_protected($oscTemplate->getTitle());
+      $base_href = (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
+
+      $output = <<<EOD
+<!DOCTYPE html>
+<html {$html_params}>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+<title>{$title}</title>
+<base href="{$base_href}" />
+</head>
+<body>
+<script type="text/javascript">
+(function(d, s, id){
+  var js, ref = d.getElementsByTagName(s)[0];
+  if (!d.getElementById(id)){
+    js = d.createElement(s); js.id = id; js.async = true;
+    js.src = "//www.paypalobjects.com/js/external/paypal.js";
+    ref.parentNode.insertBefore(js, ref);
+  }
+}(document, "script", "paypal-js"));
+
+var nextUrl = "{$return_url}";
+
+if (top !== self) {
+  top.PAYPAL.apps.Checkout.closeFlow(nextUrl);
+} else {
+  window.location.href = nextUrl;
+}
+</script>
+</body>
+</html>
+EOD;
+
+      echo $output;
+      exit;
     }
 
     function getTestLinkInfo() {
