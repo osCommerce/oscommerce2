@@ -253,14 +253,14 @@
     case 'retrieve':
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($cart->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        $paypal_express->safeRedirect('cart');
       }
 
       $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+          $paypal_express->safeRedirect('cart');
         }
 
         if (!tep_session_is_registered('payment')) tep_session_register('payment');
@@ -300,7 +300,7 @@
               $login_email_address = tep_output_string($response_array['EMAIL']);
 
       $output = <<<EOD
-<form name="pe" action="{$login_url}" method="post">
+<form name="pe" action="{$login_url}" method="post" target="_top">
   <input type="hidden" name="email_address" value="{$login_email_address}" />
 </form>
 <script type="text/javascript">
@@ -508,9 +508,12 @@ EOD;
             if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') ) {
               tep_session_unregister('shipping');
 
-              $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
+              $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS, 'error');
 
-              tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+              tep_session_register('ppec_right_turn');
+              $ppec_right_turn = true;
+
+              $paypal_express->safeRedirect('shipping_address');
             }
           }
 
@@ -528,7 +531,7 @@ EOD;
               if (isset($quote['error'])) {
                 tep_session_unregister('shipping');
 
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                $paypal_express->safeRedirect('shipping');
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $shipping = array('id' => $shipping,
@@ -545,39 +548,12 @@ EOD;
           $sendto = false;
         }
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+        $paypal_express->safeRedirect();
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        $messageStack->add_session('header', stripslashes($response_array['L_LONGMESSAGE0']), 'error');
+
+        $paypal_express->safeRedirect('cart');
       }
-
-      break;
-
-    case 'close':
-      $return_url = tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'do=confirm', 'SSL');
-
-      $output = <<<EOD
-<script type="text/javascript">
-(function(d, s, id){ 
-  var js, ref = d.getElementsByTagName(s)[0]; 
-  if (!d.getElementById(id)){ 
-    js = d.createElement(s); js.id = id; js.async = true; 
-    js.src = "//www.paypalobjects.com/js/external/paypal.js"; 
-    ref.parentNode.insertBefore(js, ref); 
-  } 
-}(document, "script", "paypal-js"));
-
-var nextUrl = "{$return_url}";
-
-if (top !== self) {
-  top.PAYPAL.apps.Checkout.closeFlow(nextUrl);
-} else {
-  window.location.href = nextUrl;
-}
-</script>
-EOD;
-
-      echo $output;
-      exit;
 
       break;
 
@@ -830,7 +806,7 @@ EOD;
       $response_array = $paypal_express->setExpressCheckout($params);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        tep_redirect($paypal_url . 'token=' . $response_array['TOKEN']);
+        tep_redirect($paypal_url . 'token=' . $response_array['TOKEN'] . '&useraction=commit');
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
