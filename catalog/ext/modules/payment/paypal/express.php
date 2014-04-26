@@ -64,11 +64,11 @@
       tep_session_unregister('ppe_token');
       tep_session_unregister('ppe_secret');
 
-      if ( empty($sendto['firstname']) && empty($sendto['lastname']) ) {
+      if ( empty($sendto['firstname']) && empty($sendto['lastname']) && empty($sendto['street_address']) ) {
         tep_session_unregister('sendto');
       }
 
-      if ( empty($billto['firstname']) && empty($billto['lastname']) ) {
+      if ( empty($billto['firstname']) && empty($billto['lastname']) && empty($billto['street_address']) ) {
         tep_session_unregister('billto');
       }
 
