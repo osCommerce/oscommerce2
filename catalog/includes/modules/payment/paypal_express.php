@@ -197,7 +197,7 @@ EOD;
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $HTTP_POST_VARS, $comments, $response_array;
+      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $HTTP_POST_VARS, $comments, $response_array;
 
       if (!tep_session_is_registered('ppe_token')) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
@@ -206,13 +206,20 @@ EOD;
       $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        if ( $response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total']) ) {
+        if ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !tep_session_is_registered('ppe_order_total_check') ) {
+          tep_session_register('ppe_order_total_check');
+          $ppe_order_total_check = true;
+
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         } elseif ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+      }
+
+      if ( tep_session_is_registered('ppe_order_total_check') ) {
+        tep_session_unregister('ppe_order_total_check');
       }
 
       if (empty($comments)) {
@@ -259,7 +266,8 @@ EOD;
     function after_process() {
       global $response_array, $insert_id, $ppe_payerstatus, $ppe_addressstatus;
 
-      $pp_result = 'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
+      $pp_result = 'Transaction ID: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
+                   'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
                    'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
@@ -393,20 +401,6 @@ EOD;
                                                                                  'desc' => 'Send a "X-UA-Compatible: IE=edge" header to disable IE Compatiblity View recommended for In-Context checkout flow.',
                                                                                  'value' => 'True',
                                                                                  'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                  'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
-                                                                                  'value' => 'Live',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                          'desc' => 'Verify gateway server SSL certificate on connection?',
-                                                                          'value' => 'True',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY' => array('title' => 'Proxy Server',
-                                                                     'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
-                                                                                  'desc' => 'The processing method to use for each transaction.',
-                                                                                  'value' => 'Sale',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL' => array('title' => 'PayPal Account Optional',
                                                                                 'desc' => 'This must also be enabled in your PayPal account, in Profile > Website Payment Preferences.',
                                                                                 'value' => 'False',
@@ -419,6 +413,10 @@ EOD;
                                                                               'desc' => 'Use static or dynamic Express Checkout image buttons. Dynamic images are used with PayPal campaigns.',
                                                                               'value' => 'Static',
                                                                               'set_func' => 'tep_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                  'desc' => 'The processing method to use for each transaction.',
+                                                                                  'value' => 'Sale',
+                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                                'desc' => 'Set the status of orders made with this payment module to this value',
                                                                                'value' => '0',
@@ -434,6 +432,16 @@ EOD;
                                                                     'value' => '0',
                                                                     'use_func' => 'tep_get_zone_class_title',
                                                                     'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                  'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
+                                                                                  'value' => 'Live',
+                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                          'desc' => 'Verify gateway server SSL certificate on connection?',
+                                                                          'value' => 'True',
+                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY' => array('title' => 'Proxy Server',
+                                                                     'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
                                                                            'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER' => array('title' => 'Sort order of display',
