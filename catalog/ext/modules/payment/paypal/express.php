@@ -62,6 +62,15 @@
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'cancel':
       tep_session_unregister('ppe_token');
+      tep_session_unregister('ppe_secret');
+
+      if ( empty($sendto['firstname']) && empty($sendto['lastname']) ) {
+        tep_session_unregister('sendto');
+      }
+
+      if ( empty($billto['firstname']) && empty($billto['lastname']) ) {
+        tep_session_unregister('billto');
+      }
 
       tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 
@@ -590,6 +599,7 @@ EOD;
 
       $line_item_no = 0;
       $items_total = 0;
+      $items_tax_total = 0;
 
       foreach ($order->products as $product) {
         $params['L_PAYMENTREQUEST_0_NAME' . $line_item_no] = $product['name'];
@@ -609,6 +619,7 @@ EOD;
         $params['L_PAYMENTREQUEST_0_TAXAMT' . $line_item_no] = $paypal_express->format_raw($product_tax);
 
         $items_total += $paypal_express->format_raw($product['final_price']) * $product['qty'];
+        $items_tax_total += $paypal_express->format_raw($product_tax) * $product['qty'];
 
         $line_item_no++;
       }
@@ -734,7 +745,7 @@ EOD;
         if ( !empty($quotes_array) ) {
           $shipping = array('id' => $quotes_array[$cheapest_counter]['id'],
                             'title' => $quotes_array[$cheapest_counter]['name'] . '(' . $quotes_array[$cheapest_counter]['label'] . ')',
-                            'cost' => $paypal_express->format_raw($quotes_array[$cheapest_counter]['cost'] + tep_calculate_tax($quotes_array[$cheapest_counter]['cost'], $quotes_array[$cheapest_counter]['tax'])));
+                            'cost' => $quotes_array[$cheapest_counter]['cost']);
         } else {
           $shipping = false;
         }
@@ -785,12 +796,12 @@ EOD;
       }
 
       $params['PAYMENTREQUEST_0_ITEMAMT'] = $items_total;
-      $params['PAYMENTREQUEST_0_TAXAMT'] = $paypal_express->format_raw($order->info['tax']);
+      $params['PAYMENTREQUEST_0_TAXAMT'] = $items_tax_total;
       $params['PAYMENTREQUEST_0_SHIPPINGAMT'] = $paypal_express->format_raw($order->info['shipping_cost']);
       $params['PAYMENTREQUEST_0_AMT'] = $paypal_express->format_raw($order->info['total']);
       $params['MAXAMT'] = $paypal_express->format_raw($params['PAYMENTREQUEST_0_AMT'] + $expensive_rate + 100, '', 1); // safely pad higher for dynamic shipping rates (eg, USPS express)
 
-      $ppe_secret = tep_create_random_value(32, 'digits');
+      $ppe_secret = tep_create_random_value(16, 'digits');
 
       if ( !tep_session_is_registered('ppe_secret') ) {
         tep_session_register('ppe_secret');
