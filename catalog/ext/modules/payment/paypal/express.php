@@ -512,7 +512,9 @@ EOD;
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
                       if ($response_array['SHIPPINGOPTIONNAME'] == ($quote['module'] . ' ' . $rate['title'])) {
-                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $paypal_express->format_raw($rate['cost'])) {
+                        $shipping_rate = $paypal_express->format_raw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']));
+
+                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $shipping_rate) {
                           $shipping = $quote['id'] . '_' . $rate['id'];
                           $shipping_set = true;
                           break 2;
