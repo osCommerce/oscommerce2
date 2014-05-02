@@ -380,6 +380,8 @@
                                                                               'desc' => 'Use static or dynamic Express Checkout image buttons. Dynamic images are used with PayPal campaigns.',
                                                                               'value' => 'Static',
                                                                               'set_func' => 'tep_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE' => array('title' => 'Page Style',
+                                                                          'desc' => 'The page style to use for the checkout flow (defined at your PayPal Profile page)'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                   'desc' => 'The processing method to use for each transaction.',
                                                                                   'value' => 'Sale',
