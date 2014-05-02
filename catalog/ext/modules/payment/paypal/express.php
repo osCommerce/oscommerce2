@@ -184,7 +184,7 @@
             if ($free_shipping == true) {
               $quotes_array[] = array('id' => 'free_free',
                                       'name' => FREE_SHIPPING_TITLE,
-                                      'label' => FREE_SHIPPING_TITLE,
+                                      'label' => '',
                                       'cost' => '0',
                                       'tax' => '0');
             } else {
@@ -207,7 +207,7 @@
         } else {
           $quotes_array[] = array('id' => 'null',
                                   'name' => 'No Shipping',
-                                  'label' => 'No Shipping',
+                                  'label' => '',
                                   'cost' => '0',
                                   'tax' => '0');
         }
@@ -511,7 +511,7 @@ EOD;
                 foreach ($quotes as $quote) {
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
-                      if ($response_array['SHIPPINGOPTIONNAME'] == ($quote['module'] . ' ' . $rate['title'])) {
+                      if ($response_array['SHIPPINGOPTIONNAME'] == trim($quote['module'] . ' ' . $rate['title'])) {
                         $shipping_rate = $paypal_express->format_raw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']));
 
                         if ($response_array['SHIPPINGOPTIONAMOUNT'] == $shipping_rate) {
@@ -686,7 +686,7 @@ EOD;
           if ($free_shipping == true) {
             $quotes_array[] = array('id' => 'free_free',
                                     'name' => FREE_SHIPPING_TITLE,
-                                    'label' => FREE_SHIPPING_TITLE,
+                                    'label' => '',
                                     'cost' => '0.00',
                                     'tax' => '0');
           } else {
@@ -725,7 +725,7 @@ EOD;
       foreach ($quotes_array as $quote) {
         $shipping_rate = $paypal_express->format_raw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
 
-        $item_params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'] . ' ' . $quote['label'];
+        $item_params['L_SHIPPINGOPTIONNAME' . $counter] = trim($quote['name'] . ' ' . $quote['label']);
         $item_params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
         $item_params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
@@ -781,7 +781,7 @@ EOD;
         $item_params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
       }
 
-      if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
+      if ( !empty($quotes_array) && (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
         $item_params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
         $item_params['CALLBACKTIMEOUT'] = '6';
         $item_params['CALLBACKVERSION'] = $paypal_express->api_version;
