@@ -131,7 +131,7 @@
     }
 
     function pre_confirmation_check() {
-      global $ppe_token, $ppe_secret, $messageStack;
+      global $ppe_token, $ppe_secret, $messageStack, $order;
 
       if (!tep_session_is_registered('ppe_token')) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
@@ -148,6 +148,8 @@
       if ( tep_session_is_registered('ppe_order_total_check') ) {
         $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_EXPRESS_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
       }
+
+      $order->info['payment_method'] = '<img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo" style="padding: 3px;" />';
     }
 
     function confirmation() {
@@ -380,6 +382,8 @@
                                                                               'desc' => 'Use static or dynamic Express Checkout image buttons. Dynamic images are used with PayPal campaigns.',
                                                                               'value' => 'Static',
                                                                               'set_func' => 'tep_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
+                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE' => array('title' => 'Page Style',
+                                                                          'desc' => 'The page style to use for the checkout flow (defined at your PayPal Profile page)'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                   'desc' => 'The processing method to use for each transaction.',
                                                                                   'value' => 'Sale',

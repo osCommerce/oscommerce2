@@ -829,6 +829,10 @@ EOD;
         $params = array_merge($params, $item_params);
       }
 
+      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE)) {
+        $params['PAGESTYLE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE;
+      }
+
       $ppe_secret = tep_create_random_value(16, 'digits');
 
       if ( !tep_session_is_registered('ppe_secret') ) {
