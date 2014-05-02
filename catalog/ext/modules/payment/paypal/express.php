@@ -25,7 +25,7 @@
   $paypal_express = new paypal_express();
 
   if (!$paypal_express->check() || !$paypal_express->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
   }
 
   if ( !tep_session_is_registered('sendto') ) {
@@ -271,14 +271,14 @@
     case 'retrieve':
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($cart->count_contents() < 1) {
-        $paypal_express->safeRedirect('cart');
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
       $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-          $paypal_express->safeRedirect('cart');
+          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
 
         if (!tep_session_is_registered('payment')) tep_session_register('payment');
@@ -538,7 +538,7 @@ EOD;
               tep_session_register('ppec_right_turn');
               $ppec_right_turn = true;
 
-              $paypal_express->safeRedirect('shipping_address');
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
             }
           }
 
@@ -556,7 +556,7 @@ EOD;
               if (isset($quote['error'])) {
                 tep_session_unregister('shipping');
 
-                $paypal_express->safeRedirect('shipping');
+                tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $shipping = array('id' => $shipping,
@@ -573,11 +573,11 @@ EOD;
           $sendto = false;
         }
 
-        $paypal_express->safeRedirect();
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
       } else {
         $messageStack->add_session('header', stripslashes($response_array['L_LONGMESSAGE0']), 'error');
 
-        $paypal_express->safeRedirect('cart');
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
       break;
@@ -585,21 +585,13 @@ EOD;
     default:
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($cart->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') || (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'Checkout Now') ) {
-          $paypal_url = 'https://www.paypal.com/checkoutnow?';
-        } else {
-          $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
-        }
+        $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
       } else {
-        if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') || (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'Checkout Now') ) {
-          $paypal_url = 'https://www.sandbox.paypal.com/checkoutnow?';
-        } else {
-          $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
-        }
+        $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout&';
       }
 
       include(DIR_WS_CLASSES . 'order.php');
@@ -788,11 +780,9 @@ EOD;
       }
 
       if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') && ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER != 'Live') || ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') && (ENABLE_SSL == true))) ) { // Live server requires SSL to be enabled
-        if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) { // In-Context does not support Instant Update
-          $item_params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
-          $item_params['CALLBACKTIMEOUT'] = '6';
-          $item_params['CALLBACKVERSION'] = $paypal_express->api_version;
-        }
+        $item_params['CALLBACK'] = tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=callbackSet', 'SSL', false, false);
+        $item_params['CALLBACKTIMEOUT'] = '6';
+        $item_params['CALLBACKVERSION'] = $paypal_express->api_version;
       }
 
       include(DIR_WS_CLASSES . 'order_total.php');

@@ -50,21 +50,7 @@
         }
       }
 
-// In-Context requires the shopping cart page to be loaded in HTTPS
-      if ( $this->enabled === true ) {
-        if ( isset($request_type) && defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
-          if ( (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context') && (ENABLE_SSL == true) ) {
-            if ( $request_type != 'SSL' ) {
-              tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
-            }
-
-            if ( MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT == 'True' ) {
-              header('X-UA-Compatible: IE=edge', true);
-            }
-          }
-        }
-      }
-
+// When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
       if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('ppec_right_turn') ) {
         tep_session_unregister('ppec_right_turn');
 
@@ -130,22 +116,7 @@
         $button_title .= ' (' . $this->code . '; Sandbox)';
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
-
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW == 'In-Context' ) {
-        $string .= <<<EOD
-<script type="text/javascript">
-(function(d, s, id){ 
-  var js, ref = d.getElementsByTagName(s)[0]; 
-  if (!d.getElementById(id)){ 
-    js = d.createElement(s); js.id = id; js.async = true; 
-    js.src = "//www.paypalobjects.com/js/external/paypal.js"; 
-    ref.parentNode.insertBefore(js, ref); 
-  } 
-}(document, "script", "paypal-js"));
-</script>
-EOD;
-      }
+      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
 
       return $string;
     }
@@ -397,14 +368,6 @@ EOD;
                                                                             'desc' => 'The password to use for the PayPal API service.'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE' => array('title' => 'API Signature',
                                                                              'desc' => 'The signature to use for the PayPal API service.'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW' => array('title' => 'Checkout Flow',
-                                                                             'desc' => 'Which checkout flow should be used? In-Context (lightbox), Checkout Now, or Classic?',
-                                                                             'value' => 'In-Context',
-                                                                             'set_func' => 'tep_cfg_select_option(array(\'In-Context\', \'Checkout Now\', \'Classic\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_DISABLE_IE_COMPAT' => array('title' => 'Disable IE Compatibility View (for In-Context)',
-                                                                                 'desc' => 'Send a "X-UA-Compatible: IE=edge" header to disable IE Compatiblity View recommended for In-Context checkout flow.',
-                                                                                 'value' => 'True',
-                                                                                 'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL' => array('title' => 'PayPal Account Optional',
                                                                                 'desc' => 'This must also be enabled in your PayPal account, in Profile > Website Payment Preferences.',
                                                                                 'value' => 'False',
@@ -704,71 +667,6 @@ EOD;
 
         tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Debug E-Mail', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
-    }
-
-// breaks out of In-Context overlay
-    function safeRedirect($to = null) {
-      global $oscTemplate, $request_type;
-
-      switch ( $to ) {
-          case 'cart':
-            $return_url = tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL');
-            break;
-
-          case 'shipping':
-            $return_url = tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL');
-            break;
-
-          case 'shipping_address':
-            $return_url = tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL');
-            break;
-
-          default:
-            $return_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
-      }
-
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_FLOW != 'In-Context' ) {
-        tep_redirect($return_url);
-      }
-
-      $html_params = HTML_PARAMS;
-      $charset = CHARSET;
-      $title = tep_output_string_protected($oscTemplate->getTitle());
-      $base_href = (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
-
-      $output = <<<EOD
-<!DOCTYPE html>
-<html {$html_params}>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
-<title>{$title}</title>
-<base href="{$base_href}" />
-</head>
-<body>
-<script type="text/javascript">
-(function(d, s, id){
-  var js, ref = d.getElementsByTagName(s)[0];
-  if (!d.getElementById(id)){
-    js = d.createElement(s); js.id = id; js.async = true;
-    js.src = "//www.paypalobjects.com/js/external/paypal.js";
-    ref.parentNode.insertBefore(js, ref);
-  }
-}(document, "script", "paypal-js"));
-
-var nextUrl = "{$return_url}";
-
-if (top !== self) {
-  top.PAYPAL.apps.Checkout.closeFlow(nextUrl);
-} else {
-  window.location.href = nextUrl;
-}
-</script>
-</body>
-</html>
-EOD;
-
-      echo $output;
-      exit;
     }
 
     function getTestLinkInfo() {
