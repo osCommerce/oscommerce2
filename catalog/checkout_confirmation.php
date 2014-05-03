@@ -93,6 +93,10 @@
 <h1><?php echo HEADING_TITLE; ?></h1>
 
 <?php
+  if ($messageStack->size('checkout_confirmation') > 0) {
+    echo $messageStack->output('checkout_confirmation');
+  }
+
   if (isset($$payment->form_action_url)) {
     $form_action_url = $$payment->form_action_url;
   } else {
