@@ -14,9 +14,9 @@
     var $code, $title, $description, $enabled;
 
     function paypal_standard() {
-      global $order;
+      global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_standard|2.0|2.2';
+      $this->signature = 'paypal|paypal_standard|3.0|2.2';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
@@ -41,6 +41,12 @@
         }
       }
 
+      if ( !function_exists('curl_init') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+        $this->enabled = false;
+      }
+
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_ID) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
@@ -53,6 +59,11 @@
         if ( isset($order) && is_object($order) ) {
           $this->update_status();
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
     }
 
@@ -107,7 +118,7 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
+      global $cartID, $cart, $order;
 
       if (empty($cart->cartID)) {
         $cartID = $cart->cartID = $cart->generate_cart_id();
@@ -116,6 +127,9 @@
       if (!tep_session_is_registered('cartID')) {
         tep_session_register('cartID');
       }
+
+      $order->info['payment_method_raw'] = $order->info['payment_method'];
+      $order->info['payment_method'] = '<img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo" style="padding: 3px;" />';
     }
 
     function confirmation() {
@@ -165,6 +179,11 @@
                 }
               }
             }
+          }
+
+          if ( isset($order->info['payment_method_raw']) ) {
+            $order->info['payment_method'] = $order->info['payment_method_raw'];
+            unset($order->info['payment_method_raw']);
           }
 
           $sql_data_array = array('customers_id' => $customer_id,
@@ -306,7 +325,7 @@
                           'rm' => '2',
                           'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                           'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                          'bn' => 'osCommerce22_Default_ST',
+                          'bn' => 'OSCOM23_PS',
                           'paymentaction' => ((MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
 
       if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) <= 60)) {
@@ -426,22 +445,7 @@
           $messageStack->add_session('header', MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION);
         }
 
-        if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-          $email_body = $result . "\n\n" .
-                        '$HTTP_POST_VARS:' . "\n\n";
-
-          foreach ($HTTP_POST_VARS as $key => $value) {
-            $email_body .= $key . '=' . $value . "\n";
-          }
-
-          $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
-
-          foreach ($HTTP_GET_VARS as $key => $value) {
-            $email_body .= $key . '=' . $value . "\n";
-          }
-
-          tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Invalid Transaction', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-        }
+        $this->sendDebugEmail($result);
 
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
@@ -750,11 +754,12 @@
                                                                    'desc' => 'The PayPal seller e-mail address to accept payments for'),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID' => array('title' => 'Primary E-Mail Address',
                                                                            'desc' => 'The primary PayPal seller e-mail address to validate IPN with (leave empty if it is the same as the Seller E-Mail Address)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_ZONE' => array('title' => 'Payment Zone',
-                                                                     'desc' => 'If a zone is selected, only enable this payment method for that zone.',
-                                                                     'value' => '0',
-                                                                     'use_func' => 'tep_get_zone_class_title',
-                                                                     'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE' => array('title' => 'Page Style',
+                                                                           'desc' => 'The page style to use for the transaction procedure (defined at your PayPal Profile page)'),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                   'desc' => 'The processing method to use for each transaction.',
+                                                                                   'value' => 'Sale',
+                                                                                   'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID' => array('title' => 'Set Preparing Order Status',
                                                                                         'desc' => 'Set the status of prepared orders made with this payment module to this value',
                                                                                         'value' => $status_id,
@@ -770,10 +775,11 @@
                                                                                              'value' => $tx_status_id,
                                                                                              'use_func' => 'tep_get_order_status_name',
                                                                                              'set_func' => 'tep_cfg_pull_down_order_statuses('),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
-                                                                                   'desc' => 'The processing method to use for each transaction.',
-                                                                                   'value' => 'Sale',
-                                                                                   'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_ZONE' => array('title' => 'Payment Zone',
+                                                                     'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                     'value' => '0',
+                                                                     'use_func' => 'tep_get_zone_class_title',
+                                                                     'set_func' => 'tep_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER' => array('title' => 'Gateway Server',
                                                                                'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
                                                                                'value' => 'Live',
@@ -784,12 +790,10 @@
                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_PROXY' => array('title' => 'Proxy Server',
                                                                       'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE' => array('title' => 'Page Style',
-                                                                           'desc' => 'The page style to use for the transaction procedure (defined at your PayPal Profile page)'),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
                                                                             'desc' => 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS' => array('title' => 'Enable Encrypted Web Payments',
-                                                                           'desc' => 'Do you want to enable Encrypted Web Payments?',
+                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS' => array('title' => 'Enable Encrypted Website Payments',
+                                                                           'desc' => 'Do you want to enable Encrypted Website Payments?',
                                                                            'value' => 'False',
                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PRIVATE_KEY' => array('title' => 'Your Private Key',
@@ -872,10 +876,39 @@
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
+    function sendDebugEmail($response = '', $ipn = false) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Standard Debug E-Mail' . ($ipn == true ? ' (IPN)' : ''), trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
+      }
+    }
+
     function getTestLinkInfo() {
       $dialog_title = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest', 'SSL');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -887,7 +920,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -897,11 +929,24 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/payment/paypal/paypal_standard.php', function() {
-    if ( $('#ppctresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
@@ -910,7 +955,31 @@ EOD;
               '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
               $js;
 
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />https://www.paypal.com/cgi-bin/webscr';
+      } else {
+        $info .= 'Sandbox Server:<br />https://www.sandbox.paypal.com/cgi-bin/webscr';
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
+
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      $parameters = 'cmd=_notify-validate&business=' . urlencode(MODULE_PAYMENT_PAYPAL_STANDARD_ID);
+
+      $result = $this->sendTransactionToGateway($this->form_action_url, $parameters);
+
+      if ( $result == 'INVALID' ) {
+        return 1;
+      }
+
+      return -1;
     }
 
     function verifyTransaction($is_ipn = false) {
