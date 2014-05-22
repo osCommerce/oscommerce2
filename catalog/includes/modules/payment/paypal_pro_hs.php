@@ -10,46 +10,47 @@
   Released under the GNU General Public License
 */
 
-  class paypal_standard {
+  class paypal_pro_hs {
     var $code, $title, $description, $enabled;
 
-    function paypal_standard() {
+    function paypal_pro_hs() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_standard|3.1|2.3';
+      $this->signature = 'paypal|paypal_pro_hs|1.0|2.3';
+      $this->api_version = '112';
 
-      $this->code = 'paypal_standard';
-      $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_DESCRIPTION;
-      $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER : 0;
-      $this->enabled = defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') && (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS == 'True') ? true : false;
-      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID : 0;
+      $this->code = 'paypal_pro_hs';
+      $this->title = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_TITLE;
+      $this->public_title = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PUBLIC_TITLE;
+      $this->description = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_DESCRIPTION;
+      $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_PRO_HS_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_PRO_HS_SORT_ORDER : 0;
+      $this->enabled = defined('MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS') && (MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID : 0;
 
-      if ( defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') ) {
-        if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Sandbox' ) {
+      if ( defined('MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS') ) {
+        if ( MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER == 'Sandbox' ) {
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
 
-        $this->description .= $this->getTestLinkInfo();
-
-        if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live' ) {
-          $this->form_action_url = 'https://www.paypal.com/cgi-bin/webscr';
+        if ( MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER == 'Live' ) {
+          $this->api_url = 'https://api-3t.paypal.com/nvp';
         } else {
-          $this->form_action_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+          $this->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
         }
+
+        $this->description .= $this->getTestLinkInfo();
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CURL . '</div>' . $this->description;
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_ID) ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_ID) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
         }
@@ -70,9 +71,9 @@
     function update_status() {
       global $order;
 
-      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_STANDARD_ZONE > 0) ) {
+      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_PRO_HS_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_STANDARD_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_PRO_HS_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
         while ($check = tep_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
@@ -94,10 +95,10 @@
     }
 
     function selection() {
-      global $cart_PayPal_Standard_ID;
+      global $cart_PayPal_Pro_HS_ID;
 
-      if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
-        $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+      if (tep_session_is_registered('cart_PayPal_Pro_HS_ID')) {
+        $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -109,7 +110,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_PayPal_Standard_ID');
+          tep_session_unregister('cart_PayPal_Pro_HS_ID');
         }
       }
 
@@ -118,7 +119,7 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart, $order;
+      global $cartID, $cart;
 
       if (empty($cart->cartID)) {
         $cartID = $cart->cartID = $cart->generate_cart_id();
@@ -127,24 +128,23 @@
       if (!tep_session_is_registered('cartID')) {
         tep_session_register('cartID');
       }
-
-      $order->info['payment_method_raw'] = $order->info['payment_method'];
-      $order->info['payment_method'] = '<img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo" style="padding: 3px;" />';
     }
 
     function confirmation() {
-      global $cartID, $cart_PayPal_Standard_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $cartID, $cart_PayPal_Pro_HS_ID, $customer_id, $languages_id, $order, $order_total_modules, $currency, $sendto, $pphs_result, $pphs_key;
+
+      $pphs_result = array();
 
       if (tep_session_is_registered('cartID')) {
         $insert_order = false;
 
-        if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
-          $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+        if (tep_session_is_registered('cart_PayPal_Pro_HS_ID')) {
+          $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
 
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
           $curr = tep_db_fetch_array($curr_check);
 
-          if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_PayPal_Standard_ID, 0, strlen($cartID))) ) {
+          if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_PayPal_Pro_HS_ID, 0, strlen($cartID))) ) {
             $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
             if (tep_db_num_rows($check_query) < 1) {
@@ -179,11 +179,6 @@
                 }
               }
             }
-          }
-
-          if ( isset($order->info['payment_method_raw']) ) {
-            $order->info['payment_method'] = $order->info['payment_method_raw'];
-            unset($order->info['payment_method_raw']);
           }
 
           $sql_data_array = array('customers_id' => $customer_id,
@@ -299,246 +294,157 @@
             }
           }
 
-          $cart_PayPal_Standard_ID = $cartID . '-' . $insert_id;
-          tep_session_register('cart_PayPal_Standard_ID');
+          $cart_PayPal_Pro_HS_ID = $cartID . '-' . $insert_id;
+          tep_session_register('cart_PayPal_Pro_HS_ID');
+        }
+
+        $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
+
+        $params = array('business' => MODULE_PAYMENT_PAYPAL_PRO_HS_ID,
+                        'bn' => 'OSCOM23_HS',
+                        'buyer_email' => $order->customer['email_address'],
+                        'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                        'currency_code' => $currency,
+                        'invoice' => $order_id,
+                        'custom' => $customer_id,
+                        'paymentaction' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD == 'Sale' ? 'sale' : 'authorization',
+                        'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                        'notify_url' => tep_href_link('ext/modules/payment/paypal/pro_hosted_ipn.php', '', 'SSL', false, false),
+                        'shipping' => $this->format_raw($order->info['shipping_cost']),
+                        'tax' => $this->format_raw($order->info['tax']),
+                        'subtotal' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
+                        'billing_first_name' => $order->billing['firstname'],
+                        'billing_last_name' => $order->billing['lastname'],
+                        'billing_address1' => $order->billing['street_address'],
+                        'billing_city' => $order->billing['city'],
+                        'billing_state' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
+                        'billing_zip' => $order->billing['postcode'],
+                        'billing_country' => $order->billing['country']['iso_code_2'],
+                        'night_phone_b' => $order->customer['telephone'],
+                        'template' => 'templateD',
+                        'item_name' => STORE_NAME,
+                        'showBillingAddress' => 'false',
+                        'showShippingAddress' => 'false',
+                        'showHostedThankyouPage' => 'false');
+
+        if ( is_numeric($sendto) && ($sendto > 0) ) {
+          $params['address_override'] = 'true';
+          $params['first_name'] = $order->delivery['firstname'];
+          $params['last_name'] = $order->delivery['lastname'];
+          $params['address1'] = $order->delivery['street_address'];
+          $params['city'] = $order->delivery['city'];
+          $params['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+          $params['zip'] = $order->delivery['postcode'];
+          $params['country'] = $order->delivery['country']['iso_code_2'];
+        }
+
+        if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) <= 60) ) {
+          $params['cbt'] = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON;
+        }
+
+        $counter = 0;
+        $params_string = 'USER=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME))) . '&PWD=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD))) . '&SIGNATURE=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE))) . '&VERSION=' . $this->api_version . '&METHOD=BMCreateButton&BUTTONCODE=TOKEN&BUTTONTYPE=PAYMENT&';
+
+        foreach ( $params as $key => $value ) {
+          $params_string .= 'L_BUTTONVAR' . $counter . '=' . $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+
+          $counter++;
+        }
+
+        $params_string = substr($params_string, 0, -1);
+
+        $response = $this->sendTransactionToGateway($this->api_url, $params_string);
+
+        $pphs_result = array();
+        parse_str($response, $pphs_result);
+
+        if (($pphs_result['ACK'] != 'Success') && ($pphs_result['ACK'] != 'SuccessWithWarning')) {
+          $this->sendDebugEmail($pphs_result);
+        }
+
+        if ( !tep_session_is_registered('pphs_result') ) {
+          tep_session_register('pphs_result');
         }
       }
 
-      return false;
+      $pphs_key = tep_create_random_value(16);
+
+      if ( !tep_session_is_registered('pphs_key') ) {
+        tep_session_register('pphs_key');
+      }
+
+      $iframe_url = tep_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');
+      $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
+
+      $output = <<<EOD
+<iframe src="{$iframe_url}" width="570px" height="540px" frameBorder="0" scrolling="no"></iframe>
+<script>
+$(function() {
+  $('form[name="checkout_confirmation"] input[type="submit"], form[name="checkout_confirmation"] input[type="image"], form[name="checkout_confirmation"] button[type="submit"]').hide();
+  $('form[name="checkout_confirmation"]').attr('action', '{$form_url}');
+});
+</script>
+EOD;
+
+      $confirmation = array('title' => $output);
+
+      return $confirmation;
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
-
-      $total_tax = $order->info['tax'];
-
-// remove shipping tax in total tax value
-      if ( isset($shipping['cost']) ) {
-        $total_tax -= ($order->info['shipping_cost'] - $shipping['cost']);
-      }
-
-      $process_button_string = '';
-      $parameters = array('cmd' => '_cart',
-                          'upload' => '1',
-                          'item_name_1' => STORE_NAME,
-                          'shipping_1' => $this->format_raw($order->info['shipping_cost']),
-                          'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
-                          'amount_1' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $total_tax),
-                          'currency_code' => $currency,
-                          'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
-                          'custom' => $customer_id,
-                          'no_note' => '1',
-                          'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
-                          'rm' => '2',
-                          'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-                          'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                          'bn' => 'OSCOM23_PS',
-                          'paymentaction' => ((MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
-
-      if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) <= 60)) {
-        $parameters['cbt'] = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON;
-      }
-
-      if (is_numeric($sendto) && ($sendto > 0)) {
-        $parameters['address_override'] = '1';
-        $parameters['first_name'] = $order->delivery['firstname'];
-        $parameters['last_name'] = $order->delivery['lastname'];
-        $parameters['address1'] = $order->delivery['street_address'];
-        $parameters['city'] = $order->delivery['city'];
-        $parameters['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
-        $parameters['zip'] = $order->delivery['postcode'];
-        $parameters['country'] = $order->delivery['country']['iso_code_2'];
-      } else {
-        $parameters['no_shipping'] = '1';
-        $parameters['first_name'] = $order->billing['firstname'];
-        $parameters['last_name'] = $order->billing['lastname'];
-        $parameters['address1'] = $order->billing['street_address'];
-        $parameters['city'] = $order->billing['city'];
-        $parameters['state'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
-        $parameters['zip'] = $order->billing['postcode'];
-        $parameters['country'] = $order->billing['country']['iso_code_2'];
-      }
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE)) {
-        $parameters['page_style'] = MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE;
-      }
-
-      $item_params = array();
-
-      $line_item_no = 1;
-
-      foreach ($order->products as $product) {
-        if ( DISPLAY_PRICE_WITH_TAX == 'true' ) {
-          $product_price = $this->format_raw($product['final_price'] + tep_calculate_tax($product['final_price'], $product['tax']));
-        } else {
-          $product_price = $this->format_raw($product['final_price']);
-        }
-
-        $item_params['item_name_' . $line_item_no] = $product['name'];
-        $item_params['amount_' . $line_item_no] = $product_price;
-        $item_params['quantity_' . $line_item_no] = $product['qty'];
-
-        $line_item_no++;
-      }
-
-      $items_total = $this->format_raw($order->info['subtotal']);
-
-      $has_negative_price = false;
-
-// order totals are processed on checkout confirmation but not captured into a variable
-      if (is_array($order_total_modules->modules)) {
-        foreach ($order_total_modules->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
-
-          if ($GLOBALS[$class]->enabled) {
-            for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-              if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
-                if ( !in_array($GLOBALS[$class]->code, array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
-                  $item_params['item_name_' . $line_item_no] = $GLOBALS[$class]->output[$i]['title'];
-                  $item_params['amount_' . $line_item_no] = $this->format_raw($GLOBALS[$class]->output[$i]['value']);
-
-                  $items_total += $item_params['amount_' . $line_item_no];
-
-                  if ( $item_params['amount_' . $line_item_no] < 0 ) {
-                    $has_negative_price = true;
-                  }
-
-                  $line_item_no++;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      $paypal_item_total = $items_total + $parameters['shipping_1'];
-
-      if ( DISPLAY_PRICE_WITH_TAX == 'false' ) {
-        $item_params['tax_cart'] = $this->format_raw($total_tax);
-
-        $paypal_item_total += $item_params['tax_cart'];
-      }
-
-      if ( ($has_negative_price == false) && ($this->format_raw($paypal_item_total) == $this->format_raw($order->info['total'])) ) {
-        $parameters = array_merge($parameters, $item_params);
-      } else {
-        $parameters['tax_cart'] = $this->format_raw($total_tax);
-      }
-
-      if (MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS == 'True') {
-        $parameters['cert_id'] = MODULE_PAYMENT_PAYPAL_STANDARD_EWP_CERT_ID;
-
-        $random_string = rand(100000, 999999) . '-' . $customer_id . '-';
-
-        $data = '';
-        foreach ($parameters as $key => $value) {
-          $data .= $key . '=' . $value . "\n";
-        }
-
-        $fp = fopen(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'data.txt', 'w');
-        fwrite($fp, $data);
-        fclose($fp);
-
-        unset($data);
-
-        if (function_exists('openssl_pkcs7_sign') && function_exists('openssl_pkcs7_encrypt')) {
-          openssl_pkcs7_sign(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'data.txt', MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt', file_get_contents(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PUBLIC_KEY), file_get_contents(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PRIVATE_KEY), array('From' => MODULE_PAYMENT_PAYPAL_STANDARD_ID), PKCS7_BINARY);
-
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'data.txt');
-
-// remove headers from the signature
-          $signed = file_get_contents(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt');
-          $signed = explode("\n\n", $signed);
-          $signed = base64_decode($signed[1]);
-
-          $fp = fopen(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt', 'w');
-          fwrite($fp, $signed);
-          fclose($fp);
-
-          unset($signed);
-
-          openssl_pkcs7_encrypt(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt', MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt', file_get_contents(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PAYPAL_KEY), array('From' => MODULE_PAYMENT_PAYPAL_STANDARD_ID), PKCS7_BINARY);
-
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt');
-
-// remove headers from the encrypted result
-          $data = file_get_contents(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt');
-          $data = explode("\n\n", $data);
-          $data = '-----BEGIN PKCS7-----' . "\n" . $data[1] . "\n" . '-----END PKCS7-----';
-
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt');
-        } else {
-          exec(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_OPENSSL . ' smime -sign -in ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'data.txt -signer ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PUBLIC_KEY . ' -inkey ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PRIVATE_KEY . ' -outform der -nodetach -binary > ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt');
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'data.txt');
-
-          exec(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_OPENSSL . ' smime -encrypt -des3 -binary -outform pem ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PAYPAL_KEY . ' < ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt > ' . MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt');
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'signed.txt');
-
-          $fh = fopen(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt', 'rb');
-          $data = fread($fh, filesize(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt'));
-          fclose($fh);
-
-          unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt');
-        }
-
-        $process_button_string = tep_draw_hidden_field('cmd', '_s-xclick') .
-                                 tep_draw_hidden_field('encrypted', $data);
-
-        unset($data);
-      } else {
-        foreach ($parameters as $key => $value) {
-          $process_button_string .= tep_draw_hidden_field($key, $value);
-        }
-      }
-
-      return $process_button_string;
+      return false;
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $HTTP_GET_VARS, $HTTP_POST_VARS, $messageStack;
+      global $HTTP_GET_VARS, $HTTP_POST_VARS, $cart_PayPal_Pro_HS_ID, $customer_id, $pphs_result, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $$payment;
 
       $result = false;
 
-      if ( isset($HTTP_POST_VARS['receiver_email']) && (($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
-        $parameters = 'cmd=_notify-validate';
-
-        foreach ($HTTP_POST_VARS as $key => $value) {
-          $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
-        }
-
-        $result = $this->sendTransactionToGateway($this->form_action_url, $parameters);
+      if ( isset($HTTP_GET_VARS['tx']) && !empty($HTTP_GET_VARS['tx']) ) { // direct payment (eg, credit card)
+        $result = $this->getTransactionDetails($HTTP_GET_VARS['tx']);
+      } elseif ( isset($HTTP_POST_VARS['txn_id']) && !empty($HTTP_POST_VARS['txn_id']) ) { // paypal payment
+        $result = $this->getTransactionDetails($HTTP_POST_VARS['txn_id']);
       }
 
-      if ($result != 'VERIFIED') {
-        if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION')) {
-          $messageStack->add_session('header', MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_INVALID_TRANSACTION);
-        }
+      if ( !is_array($result) || !isset($result['ACK']) || (($result['ACK'] != 'Success') && ($result['ACK'] != 'SuccessWithWarning')) ) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
+      }
 
-        $this->sendDebugEmail($result);
+      $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
 
+      $seller_accounts = array(MODULE_PAYMENT_PAYPAL_PRO_HS_ID);
+
+      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID) ) {
+        $seller_accounts[] = MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID;
+      }
+
+      if ( !isset($result['RECEIVERBUSINESS']) || !in_array($result['RECEIVERBUSINESS'], $seller_accounts) || ($result['INVNUM'] != $order_id) || ($result['CUSTOM'] != $customer_id) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
-      $this->verifyTransaction();
-
-      $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
+      $pphs_result = $result;
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query) || ($order_id != $HTTP_POST_VARS['invoice']) || ($customer_id != $HTTP_POST_VARS['custom'])) {
+      $tx_order_id = $pphs_result['INVNUM'];
+      $tx_customer_id = $pphs_result['CUSTOM'];
+
+      if (!tep_db_num_rows($check_query) || ($order_id != $tx_order_id) || ($customer_id != $tx_customer_id)) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = tep_db_fetch_array($check_query);
 
+      $this->verifyTransaction();
+
       $new_order_status = DEFAULT_ORDERS_STATUS_ID;
 
-      if ( $check['orders_status'] != MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID ) {
+      if ( $check['orders_status'] != MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID ) {
         $new_order_status = $check['orders_status'];
       }
 
-      if ( (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0) && ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID) ) {
-        $new_order_status = MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID;
+      if ( (MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID > 0) && ($check['orders_status'] == MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID) ) {
+        $new_order_status = MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID;
       }
 
       tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (int)$new_order_status . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
@@ -687,7 +593,9 @@
       tep_session_unregister('payment');
       tep_session_unregister('comments');
 
-      tep_session_unregister('cart_PayPal_Standard_ID');
+      tep_session_unregister('cart_PayPal_Pro_HS_ID');
+      tep_session_unregister('pphs_result');
+      tep_session_unregister('pphs_key');
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -697,12 +605,23 @@
     }
 
     function get_error() {
-      return false;
+      global $pphs_error_msg;
+
+      $error = array('title' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_TITLE,
+                     'error' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_GENERAL);
+
+      if ( tep_session_is_registered('pphs_error_msg') ) {
+        $error['error'] = $pphs_error_msg;
+
+        tep_session_unregister('pphs_error_msg');
+      }
+
+      return $error;
     }
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_STANDARD_STATUS'");
+        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS'");
         $this->_check = tep_db_num_rows($check_query);
       }
       return $this->_check;
@@ -759,8 +678,8 @@
     }
 
     function getParams() {
-      if (!defined('MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [PayPal Standard]' limit 1");
+      if (!defined('MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID')) {
+        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [PayPal Pro HS]' limit 1");
 
         if (tep_db_num_rows($check_query) < 1) {
           $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
@@ -771,7 +690,7 @@
           $languages = tep_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [PayPal Standard]')");
+            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [PayPal Pro HS]')");
           }
 
           $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
@@ -784,10 +703,10 @@
           $status_id = $check['orders_status_id'];
         }
       } else {
-        $status_id = MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID;
+        $status_id = MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID;
       }
 
-      if (!defined('MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID')) {
+      if (!defined('MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID')) {
         $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
 
         if (tep_db_num_rows($check_query) < 1) {
@@ -812,75 +731,62 @@
           $tx_status_id = $check['orders_status_id'];
         }
       } else {
-        $tx_status_id = MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID;
+        $tx_status_id = MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS' => array('title' => 'Enable PayPal Payments Standard',
-                                                                       'desc' => 'Do you want to accept PayPal Payments Standard payments?',
-                                                                       'value' => 'True',
-                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_ID' => array('title' => 'Seller E-Mail Address',
-                                                                   'desc' => 'The PayPal seller e-mail address to accept payments for'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID' => array('title' => 'Primary E-Mail Address',
-                                                                           'desc' => 'The primary PayPal seller e-mail address to validate IPN with (leave empty if it is the same as the Seller E-Mail Address)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE' => array('title' => 'Page Style',
-                                                                           'desc' => 'The page style to use for the transaction procedure (defined at your PayPal Profile page)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
-                                                                                   'desc' => 'The processing method to use for each transaction.',
-                                                                                   'value' => 'Sale',
-                                                                                   'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID' => array('title' => 'Set Preparing Order Status',
-                                                                                        'desc' => 'Set the status of prepared orders made with this payment module to this value',
-                                                                                        'value' => $status_id,
-                                                                                        'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                        'use_func' => 'tep_get_order_status_name'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID' => array('title' => 'Set PayPal Acknowledged Order Status',
-                                                                                'desc' => 'Set the status of orders made with this payment module to this value',
-                                                                                'value' => '0',
-                                                                                'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                'use_func' => 'tep_get_order_status_name'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
-                                                                                             'desc' => 'Include PayPal transaction information in this order status level.',
-                                                                                             'value' => $tx_status_id,
-                                                                                             'use_func' => 'tep_get_order_status_name',
-                                                                                             'set_func' => 'tep_cfg_pull_down_order_statuses('),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_ZONE' => array('title' => 'Payment Zone',
-                                                                     'desc' => 'If a zone is selected, only enable this payment method for that zone.',
-                                                                     'value' => '0',
-                                                                     'use_func' => 'tep_get_zone_class_title',
-                                                                     'set_func' => 'tep_cfg_pull_down_zone_classes('),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER' => array('title' => 'Gateway Server',
-                                                                               'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
-                                                                               'value' => 'Live',
-                                                                               'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                           'desc' => 'Verify gateway server SSL certificate on connection?',
-                                                                           'value' => 'True',
-                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_PROXY' => array('title' => 'Proxy Server',
-                                                                      'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
-                                                                            'desc' => 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS' => array('title' => 'Enable Encrypted Website Payments',
-                                                                           'desc' => 'Do you want to enable Encrypted Website Payments?',
-                                                                           'value' => 'False',
-                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PRIVATE_KEY' => array('title' => 'Your Private Key',
-                                                                                'desc' => 'The location of your Private Key to use for signing the data. (*.pem)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PUBLIC_KEY' => array('title' => 'Your Public Certificate',
-                                                                               'desc' => 'The location of your Public Certificate to use for signing the data. (*.pem)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_PAYPAL_KEY' => array('title' => 'PayPals Public Certificate',
-                                                                               'desc' => 'The location of the PayPal Public Certificate for encrypting the data.'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_CERT_ID' => array('title' => 'Your PayPal Public Certificate ID',
-                                                                            'desc' => 'The Certificate ID to use from your PayPal Encrypted Payment Settings Profile.'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY' => array('title' => 'Working Directory',
-                                                                                      'desc' => 'The working directory to use for temporary files. (trailing slash needed)'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_EWP_OPENSSL' => array('title' => 'OpenSSL Location',
-                                                                            'desc' => 'The location of the openssl binary file.',
-                                                                            'value' => '/usr/bin/openssl'),
-                      'MODULE_PAYMENT_PAYPAL_STANDARD_SORT_ORDER' => array('title' => 'Sort order of display.',
-                                                                           'desc' => 'Sort order of display. Lowest is displayed first.',
-                                                                           'value' => '0'));
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS' => array('title' => 'Enable PayPal Payments Pro (Hosted Solution)',
+                                                                     'desc' => 'Do you want to accept PayPal Payments Pro (Hosted Solution) payments?',
+                                                                     'value' => 'True',
+                                                                     'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME' => array('title' => 'API Username',
+                                                                           'desc' => 'The username to use for the PayPal API service.'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD' => array('title' => 'API Password',
+                                                                           'desc' => 'The password to use for the PayPal API service.'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE' => array('title' => 'API Signature',
+                                                                            'desc' => 'The signature to use for the PayPal API service.'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_ID' => array('title' => 'Seller E-Mail Address',
+                                                                 'desc' => 'The PayPal seller e-mail address to accept payments for'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID' => array('title' => 'Primary E-Mail Address',
+                                                                         'desc' => 'The primary PayPal seller e-mail address to validate transactions with (leave empty if it is the same as the Seller E-Mail Address)'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                 'desc' => 'The processing method to use for each transaction.',
+                                                                                 'value' => 'Sale',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID' => array('title' => 'Set Preparing Order Status',
+                                                                                      'desc' => 'Set the status of prepared orders made with this payment module to this value',
+                                                                                      'value' => $status_id,
+                                                                                      'set_func' => 'tep_cfg_pull_down_order_statuses(',
+                                                                                      'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID' => array('title' => 'Set PayPal Acknowledged Order Status',
+                                                                              'desc' => 'Set the status of orders made with this payment module to this value',
+                                                                              'value' => '0',
+                                                                              'set_func' => 'tep_cfg_pull_down_order_statuses(',
+                                                                              'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
+                                                                                           'desc' => 'Include PayPal transaction information in this order status level.',
+                                                                                           'value' => $tx_status_id,
+                                                                                           'use_func' => 'tep_get_order_status_name',
+                                                                                           'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_ZONE' => array('title' => 'Payment Zone',
+                                                                   'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                   'value' => '0',
+                                                                   'use_func' => 'tep_get_zone_class_title',
+                                                                   'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER' => array('title' => 'Gateway Server',
+                                                                             'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
+                                                                             'value' => 'Live',
+                                                                             'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                         'desc' => 'Verify gateway server SSL certificate on connection?',
+                                                                         'value' => 'True',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY' => array('title' => 'Proxy Server',
+                                                                    'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                          'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_SORT_ORDER' => array('title' => 'Sort order of display.',
+                                                                         'desc' => 'Sort order of display. Lowest is displayed first.',
+                                                                         'value' => '0'));
 
       return $params;
     }
@@ -905,7 +811,7 @@
       curl_setopt($curl, CURLOPT_POST, true);
       curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
 
-      if ( MODULE_PAYMENT_PAYPAL_STANDARD_VERIFY_SSL == 'True' ) {
+      if ( MODULE_PAYMENT_PAYPAL_PRO_HS_VERIFY_SSL == 'True' ) {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
@@ -918,9 +824,9 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY) ) {
+      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
-        curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_STANDARD_PROXY);
+        curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY);
       }
 
       $result = curl_exec($curl);
@@ -928,6 +834,34 @@
       curl_close($curl);
 
       return $result;
+    }
+
+    function getTransactionDetails($id) {
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD,
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE,
+                      'VERSION' => $this->api_version,
+                      'METHOD' => 'GetTransactionDetails',
+                      'TRANSACTIONID' => $id);
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($this->api_url, $post_string);
+
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
+        $this->sendDebugEmail($response_array);
+      }
+
+      return $response_array;
     }
 
 // format prices without currency formatting
@@ -945,37 +879,13 @@
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
-    function sendDebugEmail($response = '', $ipn = false) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-        $email_body = '';
-
-        if (!empty($response)) {
-          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
-        }
-
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
-        }
-
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
-        }
-
-        if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Standard Debug E-Mail' . ($ipn == true ? ' (IPN)' : ''), trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-        }
-      }
-    }
-
     function getTestLinkInfo() {
-      $dialog_title = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TIME;
+      $dialog_title = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TITLE;
+      $dialog_button_close = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TIME;
 
       $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
@@ -1020,27 +930,42 @@ function openTestConnectionDialog() {
 </script>
 EOD;
 
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
+      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>';
 
-      if ( MODULE_PAYMENT_PAYPAL_STANDARD_GATEWAY_SERVER == 'Live' ) {
-        $info .= 'Live Server:<br />https://www.paypal.com/cgi-bin/webscr';
+      if ( MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />' . $this->api_url;
       } else {
-        $info .= 'Sandbox Server:<br />https://www.sandbox.paypal.com/cgi-bin/webscr';
+        $info .= 'Sandbox Server:<br />' . $this->api_url;
       }
 
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
                $js;
 
       return $info;
     }
 
     function getTestConnectionResult() {
-      $parameters = 'cmd=_notify-validate&business=' . urlencode(MODULE_PAYMENT_PAYPAL_STANDARD_ID);
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD,
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE,
+                      'VERSION' => $paypal_pro_hs->api_version,
+                      'METHOD' => 'BMCreateButton');
 
-      $result = $this->sendTransactionToGateway($this->form_action_url, $parameters);
+      $post_string = '';
 
-      if ( $result == 'INVALID' ) {
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($this->api_url, $post_string);
+
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      if ( is_array($response_array) && isset($response_array['ACK']) ) {
         return 1;
       }
 
@@ -1048,36 +973,46 @@ EOD;
     }
 
     function verifyTransaction($is_ipn = false) {
-      global $HTTP_POST_VARS, $currencies;
+      global $pphs_result, $currencies;
 
-      if ( isset($HTTP_POST_VARS['invoice']) && is_numeric($HTTP_POST_VARS['invoice']) && ($HTTP_POST_VARS['invoice'] > 0) && isset($HTTP_POST_VARS['custom']) && is_numeric($HTTP_POST_VARS['custom']) && ($HTTP_POST_VARS['custom'] > 0) ) {
-        $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+      $tx_order_id = $pphs_result['INVNUM'];
+      $tx_customer_id = $pphs_result['CUSTOM'];
+      $tx_transaction_id = $pphs_result['TRANSACTIONID'];
+      $tx_payment_status = $pphs_result['PAYMENTSTATUS'];
+      $tx_payer_status = $pphs_result['PAYERSTATUS'];
+      $tx_amount = $pphs_result['AMT'];
+      $tx_currency = $pphs_result['CURRENCYCODE'];
+      $tx_pending_reason = (isset($pphs_result['PENDINGREASON'])) ? $pphs_result['PENDINGREASON'] : null;
+      $tx_reason_code = (isset($pphs_result['REASONCODE'])) ? $pphs_result['REASONCODE'] : null;
+
+      if ( is_numeric($tx_order_id) && ($tx_order_id > 0) && is_numeric($tx_customer_id) && ($tx_customer_id > 0) ) {
+        $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$tx_order_id . "' and customers_id = '" . (int)$tx_customer_id . "'");
 
         if ( tep_db_num_rows($order_query) === 1 ) {
           $order = tep_db_fetch_array($order_query);
 
           $new_order_status = DEFAULT_ORDERS_STATUS_ID;
 
-          if ( $order['orders_status'] != MODULE_PAYMENT_PAYPAL_STANDARD_PREPARE_ORDER_STATUS_ID) {
+          if ( $order['orders_status'] != MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID ) {
             $new_order_status = $order['orders_status'];
           }
 
           $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class = 'ot_total' limit 1");
           $total = tep_db_fetch_array($total_query);
 
-          $comment_status = 'Transaction ID: ' . $HTTP_POST_VARS['txn_id'] . '; ' .
-                            $HTTP_POST_VARS['payment_status'] . ' (' . ucfirst($HTTP_POST_VARS['payer_status']) . '; ' . $currencies->format($HTTP_POST_VARS['mc_gross'], false, $HTTP_POST_VARS['mc_currency']) . ')';
+          $comment_status = 'Transaction ID: ' . $tx_transaction_id . '; ' .
+                            $tx_payment_status . ' (' . ucfirst($tx_payer_status) . '; ' . $currencies->format($tx_amount, false, $tx_currency) . ')';
 
-          if ( $HTTP_POST_VARS['payment_status'] == 'Pending' ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['pending_reason'];
-          } elseif ( ($HTTP_POST_VARS['payment_status'] == 'Reversed') || ($HTTP_POST_VARS['payment_status'] == 'Refunded') ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
+          if ( $tx_payment_status == 'Pending' ) {
+            $comment_status .= '; ' . $tx_pending_reason;
+          } elseif ( ($tx_payment_status == 'Reversed') || ($tx_payment_status == 'Refunded') ) {
+            $comment_status .= '; ' . $tx_reason_code;
           }
 
-          if ( $HTTP_POST_VARS['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
-            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
-          } elseif ($HTTP_POST_VARS['payment_status'] == 'Completed') {
-            $new_order_status = (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : $new_order_status);
+          if ( $tx_amount != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
+            $comment_status .= '; PayPal transaction value (' . $tx_amount . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+          } elseif ( $tx_payment_status == 'Completed' ) {
+            $new_order_status = (MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID > 0 ? MODULE_PAYMENT_PAYPAL_PRO_HS_ORDER_STATUS_ID : $new_order_status);
           }
 
           tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (int)$new_order_status . "', last_modified = now() where orders_id = '" . (int)$order['orders_id'] . "'");
@@ -1089,12 +1024,36 @@ EOD;
           }
 
           $sql_data_array = array('orders_id' => (int)$order['orders_id'],
-                                  'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID,
+                                  'orders_status_id' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
                                   'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
+      }
+    }
+
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL, 'PayPal Payments Pro (Hosted Solution) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }
