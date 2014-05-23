@@ -82,7 +82,7 @@
         }
 
         if ($pi_sub > 0) {
-          $photoset_layout .= $pi_sub;
+          $photoset_layout .= ($pi_total > 5) ? 5 : $pi_sub;
         }
 ?>
 
