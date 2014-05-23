@@ -357,7 +357,7 @@
                                                                     'set_func' => 'cm_paypal_login_edit_attributes('),
                       'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE' => array('title' => 'Server Type',
                                                                          'desc' => 'Which server should be used? Live for production or Sandbox for testing.',
-                                                                         'value' => 'Sandbox',
+                                                                         'value' => 'Live',
                                                                          'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                         'desc' => 'Verify gateway server SSL certificate on connection?',
