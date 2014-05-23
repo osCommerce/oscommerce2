@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -71,9 +71,19 @@
       $photoset_layout = '1';
 
       $pi_query = tep_db_query("select image, htmlcontent from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
+      $pi_total = tep_db_num_rows($pi_query);
 
-      if (tep_db_num_rows($pi_query) > 0) {
-        $photoset_layout = '1' . (tep_db_num_rows($pi_query) > 1 ? tep_db_num_rows($pi_query) - 1 : '');
+      if ($pi_total > 0) {
+        $pi_sub = $pi_total-1;
+
+        while ($pi_sub > 5) {
+          $photoset_layout .= 5;
+          $pi_sub = $pi_sub-5;
+        }
+
+        if ($pi_sub > 0) {
+          $photoset_layout .= ($pi_total > 5) ? 5 : $pi_sub;
+        }
 ?>
 
     <div id="piGal">
