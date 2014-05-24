@@ -5,14 +5,14 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
 ////
 // The HTML href link wrapper function
-  function tep_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  function tep_href_link($page = '', $parameters = '', $connection = 'SSL') {
     $page = tep_output_string($page);
 
     if ($page == '') {
@@ -21,10 +21,18 @@
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER . DIR_WS_ADMIN;
     } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_SERVER . DIR_WS_ADMIN;
+      if (defined('HTTPS_SERVER') && defined('ENABLE_SSL')) {
+        if (ENABLE_SSL == true) {
+          $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
+        } else {
+          $link = HTTP_SERVER . DIR_WS_ADMIN;
+        }
       } else {
-        $link = HTTP_SERVER . DIR_WS_ADMIN;
+        if (ENABLE_SSL_CATALOG == 'true') {
+          $link = HTTPS_CATALOG_SERVER . DIR_WS_ADMIN;
+        } else {
+          $link = HTTP_SERVER . DIR_WS_ADMIN;
+        }
       }
     } else {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />tep_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');

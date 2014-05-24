@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -153,11 +153,18 @@
 
   $file_contents = '<?php' . "\n" .
                    '  define(\'HTTP_SERVER\', \'' . $http_server . '\');' . "\n" .
+                   '  define(\'HTTPS_SERVER\', \'' . $http_server . '\');' . "\n" .
+                   '  define(\'ENABLE_SSL\', false);' . "\n" .
+                   '  define(\'HTTP_COOKIE_DOMAIN\', \'\');' . "\n" .
+                   '  define(\'HTTPS_COOKIE_DOMAIN\', \'\');' . "\n" .
+                   '  define(\'HTTP_COOKIE_PATH\', \'' . $http_catalog . $admin_folder . '\');' . "\n" .
+                   '  define(\'HTTPS_COOKIE_PATH\', \'' . $http_catalog . $admin_folder . '\');' . "\n" .
                    '  define(\'HTTP_CATALOG_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'HTTPS_CATALOG_SERVER\', \'' . $http_server . '\');' . "\n" .
                    '  define(\'ENABLE_SSL_CATALOG\', \'false\');' . "\n" .
                    '  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . $dir_fs_document_root . '\');' . "\n" .
                    '  define(\'DIR_WS_ADMIN\', \'' . $http_catalog .  $admin_folder . '/\');' . "\n" .
+                   '  define(\'DIR_WS_HTTPS_ADMIN\', \'' . $http_catalog .  $admin_folder . '/\');' . "\n" .
                    '  define(\'DIR_FS_ADMIN\', \'' . $dir_fs_document_root .  $admin_folder . '/\');' . "\n" .
                    '  define(\'DIR_WS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
                    '  define(\'DIR_WS_HTTPS_CATALOG\', \'' . $http_catalog . '\');' . "\n" .
