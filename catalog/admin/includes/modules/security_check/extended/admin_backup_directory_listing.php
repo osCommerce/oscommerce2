@@ -23,7 +23,7 @@
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_href_link('backups/', '', 'NONSSL'));
+      $request = $this->getHttpRequest(tep_href_link('backups/'));
 
       return $request['http_code'] != 200;
     }

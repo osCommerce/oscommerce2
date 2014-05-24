@@ -28,7 +28,7 @@
     global $logger;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
     if ( strpos($url, '&amp;') !== false ) {
@@ -269,7 +269,7 @@
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
     if (tep_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = tep_image(DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+      $image = tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }

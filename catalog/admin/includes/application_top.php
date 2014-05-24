@@ -34,9 +34,12 @@
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
+// set the type of request (secure or not)
+  $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
+
 // set php_self in the local scope
   $req = parse_url($HTTP_SERVER_VARS['SCRIPT_NAME']);
-  $PHP_SELF = substr($req['path'], strlen(DIR_WS_ADMIN));
+  $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(DIR_WS_HTTPS_ADMIN) : strlen(DIR_WS_ADMIN));
 
 // Used in the "Backup Manager" to compress backups
   define('LOCAL_EXE_GZIP', 'gzip');
@@ -80,16 +83,21 @@
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
+// set the cookie domain
+  $cookie_domain = (($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN);
+  $cookie_path = (($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH);
+
 // set the session name and save path
   tep_session_name('osCAdminID');
   tep_session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
    if (function_exists('session_set_cookie_params')) {
-    session_set_cookie_params(0, DIR_WS_ADMIN);
+    session_set_cookie_params(0, $cookie_path, $cookie_domain);
   } elseif (function_exists('ini_set')) {
     ini_set('session.cookie_lifetime', '0');
-    ini_set('session.cookie_path', DIR_WS_ADMIN);
+    ini_set('session.cookie_path', $cookie_path);
+    ini_set('session.cookie_domain', $cookie_domain);
   }
 
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
