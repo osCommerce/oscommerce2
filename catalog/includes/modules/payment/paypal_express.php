@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_express() {
-      global $PHP_SELF, $request_type, $order, $payment;
+      global $HTTP_GET_VARS, $PHP_SELF, $order, $payment;
 
       $this->signature = 'paypal|paypal_express|3.0|2.2';
       $this->api_version = '112';
@@ -34,6 +34,12 @@
         }
 
         $this->description .= $this->getTestLinkInfo();
+      }
+
+      if ( !function_exists('curl_init') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+        $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
@@ -57,6 +63,11 @@
         if ( tep_session_is_registered('payment') && ($payment == $this->code) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
     }
 
@@ -508,7 +519,7 @@
       parse_str($response, $response_array);
 
       if (!isset($response_array['PAL'])) {
-        $this->sendDebugEmail();
+        $this->sendDebugEmail($response_array);
       }
 
       return $response_array;
@@ -554,7 +565,7 @@
       parse_str($response, $response_array);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail();
+        $this->sendDebugEmail($response_array);
       }
 
       return $response_array;
@@ -592,7 +603,7 @@
       parse_str($response, $response_array);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail();
+        $this->sendDebugEmail($response_array);
       }
 
       return $response_array;
@@ -635,7 +646,7 @@
       parse_str($response, $response_array);
 
       if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail();
+        $this->sendDebugEmail($response_array);
       }
 
       return $response_array;
@@ -653,30 +664,39 @@
       return 'Physical';
     }
 
-    function sendDebugEmail() {
+    function sendDebugEmail($response = array()) {
       global $HTTP_POST_VARS, $HTTP_GET_VARS;
 
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
-        $email_body = '$HTTP_POST_VARS:' . "\n\n";
+        $email_body = '';
 
-        foreach ($HTTP_POST_VARS as $key => $value) {
-          $email_body .= $key . '=' . $value . "\n";
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
-
-        foreach ($HTTP_GET_VARS as $key => $value) {
-          $email_body .= $key . '=' . $value . "\n";
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
         }
 
-        tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Debug E-Mail', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
       }
     }
 
     function getTestLinkInfo() {
       $dialog_title = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest', 'SSL');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -688,7 +708,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -698,20 +717,54 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/payment/paypal/paypal_express.php', function() {
-    if ( $('#ppctresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
-              $js;
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />https://api-3t.paypal.com/nvp';
+      } else {
+        $info .= 'Sandbox Server:<br />https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
 
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      $params = array('PAYMENTREQUEST_0_CURRENCYCODE' => DEFAULT_CURRENCY,
+                      'PAYMENTREQUEST_0_AMT' => '1.00');
+
+      $response_array = $this->setExpressCheckout($params);
+
+      if ( is_array($response_array) && isset($response_array['ACK']) ) {
+        return 1;
+      }
+
+      return -1;
     }
   }
 ?>
