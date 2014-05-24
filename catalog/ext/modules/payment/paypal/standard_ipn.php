@@ -37,23 +37,10 @@
   if ( $result == 'VERIFIED' ) {
     $paypal_standard->verifyTransaction(true);
   } else {
-    if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
-      $email_body = $result . "\n\n" .
-                    '$HTTP_POST_VARS:' . "\n\n";
-
-      foreach ($HTTP_POST_VARS as $key => $value) {
-        $email_body .= $key . '=' . $value . "\n";
-      }
-
-      $email_body .= "\n" . '$HTTP_GET_VARS:' . "\n\n";
-
-      foreach ($HTTP_GET_VARS as $key => $value) {
-        $email_body .= $key . '=' . $value . "\n";
-      }
-
-      tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal IPN Invalid Process', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-    }
+    $paypal_standard->sendDebugEmail($result, true);
   }
+
+  tep_session_destroy();
 
   require('includes/application_bottom.php');
 ?>
