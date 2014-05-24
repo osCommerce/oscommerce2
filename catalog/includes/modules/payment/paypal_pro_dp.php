@@ -14,9 +14,9 @@
     var $code, $title, $description, $enabled;
 
     function paypal_pro_dp() {
-      global $order;
+      global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_dp|2.0|2.2';
+      $this->signature = 'paypal|paypal_pro_dp|3.0|2.2';
       $this->api_version = '112';
 
       $this->code = 'paypal_pro_dp';
@@ -42,6 +42,12 @@
         $this->description .= $this->getTestLinkInfo();
       }
 
+      if ( !function_exists('curl_init') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+        $this->enabled = false;
+      }
+
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
@@ -54,6 +60,11 @@
         if ( isset($order) && is_object($order) ) {
           $this->update_status();
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
 
       $this->cc_types = array('VISA' => 'Visa',
@@ -519,8 +530,13 @@
 
     function getTestLinkInfo() {
       $dialog_title = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -532,7 +548,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -542,20 +557,75 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/payment/paypal/paypal_pro_dp.php', function() {
-    if ( $('#ppctresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
-              $js;
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />https://api-3t.paypal.com/nvp';
+      } else {
+        $info .= 'Sandbox Server:<br />https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
 
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      if (MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER == 'Live') {
+        $api_url = 'https://api-3t.paypal.com/nvp';
+      } else {
+        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+      }
+
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD,
+                      'VERSION' => $this->api_version,
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE,
+                      'METHOD' => 'DoDirectPayment',
+                      'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
+                      'IPADDRESS' => tep_get_ip_address());
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($api_url, $post_string);
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      if ( is_array($response_array) && isset($response_array['ACK']) ) {
+        return 1;
+      }
+
+      return -1;
     }
 
     function templateClassExists() {
