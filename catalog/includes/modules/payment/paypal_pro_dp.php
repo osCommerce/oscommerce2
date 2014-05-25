@@ -284,6 +284,8 @@
         parse_str($response, $response_array);
 
         if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
+          $this->sendDebugEmail($response_array);
+
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else {
@@ -408,16 +410,6 @@
                                                                            'desc' => 'The password to use for the PayPal API service.'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE' => array('title' => 'API Signature',
                                                                             'desc' => 'The signature to use for the PayPal API service.'),
-                      'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                 'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
-                                                                                 'value' => 'Live',
-                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_PAYMENT_PAYPAL_PRO_DP_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                         'desc' => 'Verify gateway server SSL certificate on connection?',
-                                                                         'value' => 'True',
-                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY' => array('title' => 'Proxy Server',
-                                                                    'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                  'desc' => 'The processing method to use for each transaction.',
                                                                                  'value' => 'Sale',
@@ -437,6 +429,18 @@
                                                                    'value' => '0',
                                                                    'set_func' => 'tep_cfg_pull_down_zone_classes(',
                                                                    'use_func' => 'tep_get_zone_class_title'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                 'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
+                                                                                 'value' => 'Live',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_DP_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                         'desc' => 'Verify gateway server SSL certificate on connection?',
+                                                                         'value' => 'True',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY' => array('title' => 'Proxy Server',
+                                                                    'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                          'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                          'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                          'value' => '0'),
@@ -696,6 +700,58 @@ function paypalShowNewCardFields() {
 EOD;
 
       return $js;
+    }
+
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          if (isset($HTTP_POST_VARS['cc_number_nh-dns'])) {
+            $HTTP_POST_VARS['cc_number_nh-dns'] = 'XXXX' . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4);
+          }
+
+          if (isset($HTTP_POST_VARS['cc_cvc_nh-dns'])) {
+            $HTTP_POST_VARS['cc_cvc_nh-dns'] = 'XXX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_issue_nh-dns'])) {
+            $HTTP_POST_VARS['cc_issue_nh-dns'] = 'XXX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_expires_month'])) {
+            $HTTP_POST_VARS['cc_expires_month'] = 'XX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_expires_year'])) {
+            $HTTP_POST_VARS['cc_expires_year'] = 'XX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_starts_month'])) {
+            $HTTP_POST_VARS['cc_starts_month'] = 'XX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_starts_year'])) {
+            $HTTP_POST_VARS['cc_starts_year'] = 'XX';
+          }
+
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL, 'PayPal Payments Pro (Direct Payment) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
+      }
     }
   }
 ?>
