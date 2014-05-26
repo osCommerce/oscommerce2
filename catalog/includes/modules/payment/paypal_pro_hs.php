@@ -14,9 +14,9 @@
     var $code, $title, $description, $enabled;
 
     function paypal_pro_hs() {
-      global $order;
+      global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_hs|2.0|2.2';
+      $this->signature = 'paypal|paypal_pro_hs|1.0|2.2';
       $this->api_version = '112';
 
       $this->code = 'paypal_pro_hs';
@@ -33,13 +33,19 @@
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
 
-        $this->description .= $this->getTestLinkInfo();
-
         if ( MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER == 'Live' ) {
           $this->api_url = 'https://api-3t.paypal.com/nvp';
         } else {
           $this->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
         }
+
+        $this->description .= $this->getTestLinkInfo();
+      }
+
+      if ( !function_exists('curl_init') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+        $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
@@ -54,6 +60,11 @@
         if ( isset($order) && is_object($order) ) {
           $this->update_status();
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
     }
 
@@ -290,7 +301,7 @@
         $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
 
         $params = array('business' => MODULE_PAYMENT_PAYPAL_PRO_HS_ID,
-                        'bn' => 'OSCOM23_PRO_HS',
+                        'bn' => 'OSCOM23_HS',
                         'buyer_email' => $order->customer['email_address'],
                         'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                         'currency_code' => $currency,
@@ -343,8 +354,13 @@
         $params_string = substr($params_string, 0, -1);
 
         $response = $this->sendTransactionToGateway($this->api_url, $params_string);
+
         $pphs_result = array();
         parse_str($response, $pphs_result);
+
+        if (($pphs_result['ACK'] != 'Success') && ($pphs_result['ACK'] != 'SuccessWithWarning')) {
+          $this->sendDebugEmail($pphs_result);
+        }
 
         if ( !tep_session_is_registered('pphs_result') ) {
           tep_session_register('pphs_result');
@@ -589,8 +605,16 @@ EOD;
     }
 
     function get_error() {
+      global $pphs_error_msg;
+
       $error = array('title' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_TITLE,
                      'error' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_GENERAL);
+
+      if ( tep_session_is_registered('pphs_error_msg') ) {
+        $error['error'] = $pphs_error_msg;
+
+        tep_session_unregister('pphs_error_msg');
+      }
 
       return $error;
     }
@@ -710,8 +734,8 @@ EOD;
         $tx_status_id = MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID;
       }
 
-      $params = array('MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS' => array('title' => 'Enable PayPal Payments Pro Hosted Solution',
-                                                                     'desc' => 'Do you want to accept PayPal Payments Pro Hosted Solution payments?',
+      $params = array('MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS' => array('title' => 'Enable PayPal Payments Pro (Hosted Solution)',
+                                                                     'desc' => 'Do you want to accept PayPal Payments Pro (Hosted Solution) payments?',
                                                                      'value' => 'True',
                                                                      'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME' => array('title' => 'API Username',
@@ -724,11 +748,10 @@ EOD;
                                                                  'desc' => 'The PayPal seller e-mail address to accept payments for'),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID' => array('title' => 'Primary E-Mail Address',
                                                                          'desc' => 'The primary PayPal seller e-mail address to validate transactions with (leave empty if it is the same as the Seller E-Mail Address)'),
-                      'MODULE_PAYMENT_PAYPAL_PRO_HS_ZONE' => array('title' => 'Payment Zone',
-                                                                   'desc' => 'If a zone is selected, only enable this payment method for that zone.',
-                                                                   'value' => '0',
-                                                                   'use_func' => 'tep_get_zone_class_title',
-                                                                   'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                 'desc' => 'The processing method to use for each transaction.',
+                                                                                 'value' => 'Sale',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_PREPARE_ORDER_STATUS_ID' => array('title' => 'Set Preparing Order Status',
                                                                                       'desc' => 'Set the status of prepared orders made with this payment module to this value',
                                                                                       'value' => $status_id,
@@ -744,10 +767,11 @@ EOD;
                                                                                            'value' => $tx_status_id,
                                                                                            'use_func' => 'tep_get_order_status_name',
                                                                                            'set_func' => 'tep_cfg_pull_down_order_statuses('),
-                      'MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
-                                                                                 'desc' => 'The processing method to use for each transaction.',
-                                                                                 'value' => 'Sale',
-                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_ZONE' => array('title' => 'Payment Zone',
+                                                                   'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                   'value' => '0',
+                                                                   'use_func' => 'tep_get_zone_class_title',
+                                                                   'set_func' => 'tep_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER' => array('title' => 'Gateway Server',
                                                                              'desc' => 'Use the testing (sandbox) or live gateway server for transactions?',
                                                                              'value' => 'Live',
@@ -758,6 +782,8 @@ EOD;
                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY' => array('title' => 'Proxy Server',
                                                                     'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
+                      'MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                          'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
                       'MODULE_PAYMENT_PAYPAL_PRO_HS_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                          'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                          'value' => '0'));
@@ -831,6 +857,10 @@ EOD;
       $response_array = array();
       parse_str($response, $response_array);
 
+      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
+        $this->sendDebugEmail($response_array);
+      }
+
       return $response_array;
     }
 
@@ -851,8 +881,13 @@ EOD;
 
     function getTestLinkInfo() {
       $dialog_title = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -864,7 +899,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -874,20 +908,68 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/payment/paypal/paypal_pro_hs.php', function() {
-    if ( $('#ppctresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
-              $js;
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />' . $this->api_url;
+      } else {
+        $info .= 'Sandbox Server:<br />' . $this->api_url;
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
 
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      $params = array('USER' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME,
+                      'PWD' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD,
+                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE,
+                      'VERSION' => $paypal_pro_hs->api_version,
+                      'METHOD' => 'BMCreateButton');
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $response = $this->sendTransactionToGateway($this->api_url, $post_string);
+
+      $response_array = array();
+      parse_str($response, $response_array);
+
+      if ( is_array($response_array) && isset($response_array['ACK']) ) {
+        return 1;
+      }
+
+      return -1;
     }
 
     function verifyTransaction($is_ipn = false) {
@@ -948,6 +1030,30 @@ EOD;
                                   'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        }
+      }
+    }
+
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL, 'PayPal Payments Pro (Hosted Solution) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }
