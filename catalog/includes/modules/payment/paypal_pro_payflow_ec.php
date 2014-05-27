@@ -16,7 +16,7 @@
     function paypal_pro_payflow_ec() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_payflow_ec|3.0|2.2';
+      $this->signature = 'paypal|paypal_pro_payflow_ec|3.0|2.3';
 
       $this->code = 'paypal_pro_payflow_ec';
       $this->title = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_TITLE;
