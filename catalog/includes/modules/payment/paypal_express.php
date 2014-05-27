@@ -16,7 +16,7 @@
     function paypal_express() {
       global $HTTP_GET_VARS, $PHP_SELF, $order, $payment;
 
-      $this->signature = 'paypal|paypal_express|3.0|2.2';
+      $this->signature = 'paypal|paypal_express|3.0|2.3';
       $this->api_version = '112';
 
       $this->code = 'paypal_express';

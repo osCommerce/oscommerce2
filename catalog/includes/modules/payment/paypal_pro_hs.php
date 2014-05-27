@@ -16,7 +16,7 @@
     function paypal_pro_hs() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_hs|1.0|2.2';
+      $this->signature = 'paypal|paypal_pro_hs|1.0|2.3';
       $this->api_version = '112';
 
       $this->code = 'paypal_pro_hs';
@@ -328,7 +328,7 @@
                         'showHostedThankyouPage' => 'false');
 
         if ( is_numeric($sendto) && ($sendto > 0) ) {
-          $params['address_override'] = '1';
+          $params['address_override'] = 'true';
           $params['first_name'] = $order->delivery['firstname'];
           $params['last_name'] = $order->delivery['lastname'];
           $params['address1'] = $order->delivery['street_address'];
@@ -343,7 +343,7 @@
         }
 
         $counter = 0;
-        $params_string = 'USER=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME))) . '&PWD=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD))) . '&SIGNATURE=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE))) . '&VERSION=112&METHOD=BMCreateButton&BUTTONCODE=TOKEN&BUTTONTYPE=PAYMENT&';
+        $params_string = 'USER=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME))) . '&PWD=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD))) . '&SIGNATURE=' . urlencode(utf8_encode(trim(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE))) . '&VERSION=' . $this->api_version . '&METHOD=BMCreateButton&BUTTONCODE=TOKEN&BUTTONTYPE=PAYMENT&';
 
         foreach ( $params as $key => $value ) {
           $params_string .= 'L_BUTTONVAR' . $counter . '=' . $key . '=' . urlencode(utf8_encode(trim($value))) . '&';

@@ -16,7 +16,7 @@
     function paypal_pro_payflow_dp() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_payflow_dp|3.0|2.2';
+      $this->signature = 'paypal|paypal_pro_payflow_dp|3.0|2.3';
 
       $this->code = 'paypal_pro_payflow_dp';
       $this->title = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TEXT_TITLE;
