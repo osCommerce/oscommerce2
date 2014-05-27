@@ -16,7 +16,7 @@
     function paypal_standard() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_standard|3.0|2.2';
+      $this->signature = 'paypal|paypal_standard|3.0|2.3';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
