@@ -11,12 +11,12 @@
 */
 
   $cl_box_groups[] = array(
-    'heading' => BOX_HEADING_CUSTOMERS,
+    'heading' => BOX_HEADING_ORDERS,
     'apps' => array(
       array(
-        'code' => FILENAME_CUSTOMERS,
-        'title' => BOX_CUSTOMERS_CUSTOMERS,
-        'link' => tep_href_link(FILENAME_CUSTOMERS)
+        'code' => FILENAME_ORDERS,
+        'title' => BOX_ORDERS_ORDERS,
+        'link' => tep_href_link(FILENAME_ORDERS)
       )
     )
   );
