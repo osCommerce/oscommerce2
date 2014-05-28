@@ -12,7 +12,7 @@
 
 ////
 // The HTML href link wrapper function
-  function tep_href_link($page = '', $parameters = '', $connection = 'SSL') {
+  function tep_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
     global $request_type;
 
     $page = tep_output_string($page);
@@ -44,16 +44,14 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (tep_not_null(SID)) {
-        $_sid = SID;
+    if ( ($add_session_id == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
+      if (tep_not_null($SID)) {
+        $_sid = $SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
         if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
           $_sid = tep_session_name() . '=' . tep_session_id();
         }
       }
-    } elseif (tep_not_null(SID)) {
-      $_sid = SID;
     }
 
     if (isset($_sid)) {
