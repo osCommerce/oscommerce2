@@ -19,6 +19,8 @@
     var $enabled = false;
 
     function cm_paypal_login() {
+      global $HTTP_GET_VARS, $PHP_SELF;
+
       $this->signature = 'paypal|paypal_login|1.0|2.3';
 
       $this->code = get_class($this);
@@ -40,12 +42,23 @@
             $this->title .= ' [Sandbox]';
           }
 
+          if ( !function_exists('curl_init') ) {
+            $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+            $this->enabled = false;
+          }
+
           if ( $this->enabled === true ) {
             if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
               $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
             }
           }
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
     }
 
@@ -493,8 +506,13 @@
 
     function getTestLinkInfo() {
       $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -506,7 +524,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -516,20 +533,53 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/content/paypal/login.php', function() {
-    if ( $('#ppctresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
-              $js;
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Live' ) {
+        $info .= 'Live Server:<br />https://api.paypal.com';
+      } else {
+        $info .= 'Sandbox Server:<br />https://api.sandbox.paypal.com';
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
 
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      $params = array('code' => 'oscom2_conn_test');
+
+      $response = $this->getToken($params);
+
+      if ( is_array($response) && isset($response['error']) ) {
+        return 1;
+      }
+
+      return -1;
     }
 
     function getShowUrlsInfo() {
@@ -623,7 +673,7 @@ EOD;
     foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
       foreach ( $attributes as $attribute => $scope ) {
         if ( in_array($attribute, $active) ) {
-          $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+          $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
         }
       }
     }
@@ -643,7 +693,7 @@ EOD;
     $output = '';
 
     foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
-      $output .= '<strong>' . constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
+      $output .= '<strong>' . constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
 
       foreach ( $attributes as $attribute => $scope ) {
         if ( in_array($attribute, $required_array) ) {
@@ -652,7 +702,7 @@ EOD;
           $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
         }
 
-        $output .= constant('MODULES_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
+        $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
       }
     }
 
