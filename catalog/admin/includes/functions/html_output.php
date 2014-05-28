@@ -13,37 +13,54 @@
 ////
 // The HTML href link wrapper function
   function tep_href_link($page = '', $parameters = '', $connection = 'SSL') {
+    global $request_type;
+
     $page = tep_output_string($page);
 
     if ($page == '') {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />Function used:<br /><br />tep_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
+
     if ($connection == 'NONSSL') {
       $link = HTTP_SERVER . DIR_WS_ADMIN;
     } elseif ($connection == 'SSL') {
-      if (defined('HTTPS_SERVER') && defined('ENABLE_SSL')) {
-        if (ENABLE_SSL == true) {
-          $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
-        } else {
-          $link = HTTP_SERVER . DIR_WS_ADMIN;
-        }
+      if (ENABLE_SSL == true) {
+        $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
       } else {
-        if (ENABLE_SSL_CATALOG == 'true') {
-          $link = HTTPS_CATALOG_SERVER . DIR_WS_ADMIN;
-        } else {
-          $link = HTTP_SERVER . DIR_WS_ADMIN;
-        }
+        $link = HTTP_SERVER . DIR_WS_ADMIN;
       }
     } else {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />tep_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
-    if ($parameters == '') {
-      $link = $link . $page . '?' . SID;
+
+    if (tep_not_null($parameters)) {
+      $link .= $page . '?' . tep_output_string($parameters);
+      $separator = '&';
     } else {
-      $link = $link . $page . '?' . tep_output_string($parameters) . '&' . SID;
+      $link .= $page;
+      $separator = '?';
     }
 
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+
+// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ( (SESSION_FORCE_COOKIE_USE == 'False') ) {
+      if (tep_not_null(SID)) {
+        $_sid = SID;
+      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+        if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
+          $_sid = tep_session_name() . '=' . tep_session_id();
+        }
+      }
+    } elseif (tep_not_null(SID)) {
+      $_sid = SID;
+    }
+
+    if (isset($_sid)) {
+      $link .= $separator . tep_output_string($_sid);
+    }
+
+    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
     return $link;
   }
