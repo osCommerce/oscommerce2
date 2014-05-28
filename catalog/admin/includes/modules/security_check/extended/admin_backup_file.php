@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -54,7 +54,7 @@
       $result = true;
 
       if ( isset($backup_file) ) {
-        $request = $this->getHttpRequest(tep_href_link('backups/' . $backup_file, '', 'NONSSL'));
+        $request = $this->getHttpRequest(tep_href_link('backups/' . $backup_file));
 
         $result = ($request['http_code'] != 200);
       }
