@@ -27,7 +27,7 @@
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.10.4.min.css" />
-<script type="text/javascript" src="ext/jquery/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="ext/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.10.4.min.js"></script>
 
 <?php
