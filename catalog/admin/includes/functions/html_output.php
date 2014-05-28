@@ -60,8 +60,6 @@
 
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
-    $link = str_replace('&', '&amp;', $link);
-
     return $link;
   }
 
