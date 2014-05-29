@@ -17,7 +17,7 @@
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
       $this->signature = 'sage_pay|sage_pay_direct|3.0|2.3';
-      $this->api_version = '3.0';
+      $this->api_version = '3.00';
 
       $this->code = 'sage_pay_direct';
       $this->title = MODULE_PAYMENT_SAGE_PAY_DIRECT_TEXT_TITLE;
@@ -227,15 +227,10 @@
       $error = null;
 
       if (isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == '3D') && isset($HTTP_POST_VARS['MD']) && tep_not_null($HTTP_POST_VARS['MD']) && isset($HTTP_POST_VARS['PaRes']) && tep_not_null($HTTP_POST_VARS['PaRes'])) {
-        switch (MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER) {
-          case 'Live':
-            $gateway_url = 'https://live.sagepay.com/gateway/service/direct3dcallback.vsp';
-            break;
-
-          case 'Test':
-          default:
-            $gateway_url = 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp';
-            break;
+        if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
+          $gateway_url = 'https://live.sagepay.com/gateway/service/direct3dcallback.vsp';
+        } else {
+          $gateway_url = 'https://test.sagepay.com/gateway/service/direct3dcallback.vsp';
         }
 
         $post_string = 'MD=' . $HTTP_POST_VARS['MD'] . '&PARes=' . $HTTP_POST_VARS['PaRes'];
@@ -338,7 +333,7 @@
           }
         }
 
-        $params = array('VPSProtocol' => '3.00',
+        $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
                         'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
@@ -438,15 +433,10 @@
           $post_string .= $key . '=' . urlencode(trim($value)) . '&';
         }
 
-        switch (MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER) {
-          case 'Live':
-            $gateway_url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
-            break;
-
-          case 'Test':
-          default:
-            $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
-            break;
+        if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
+          $gateway_url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
+        } else {
+          $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
         }
 
         $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
@@ -948,18 +938,13 @@ EOD;
     function deleteCard($token, $token_id) {
       global $customer_id;
 
-      switch (MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER) {
-        case 'Live':
-          $gateway_url = 'https://live.sagepay.com/gateway/service/removetoken.vsp';
-          break;
-
-        case 'Test':
-        default:
-          $gateway_url = 'https://test.sagepay.com/gateway/service/removetoken.vsp';
-          break;
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
+        $gateway_url = 'https://live.sagepay.com/gateway/service/removetoken.vsp';
+      } else {
+        $gateway_url = 'https://test.sagepay.com/gateway/service/removetoken.vsp';
       }
 
-      $params = array('VPSProtocol' => '3.00',
+      $params = array('VPSProtocol' => $this->api_version,
                       'TxType' => 'REMOVETOKEN',
                       'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
                       'Token' => $token);
@@ -1098,18 +1083,13 @@ EOD;
     }
 
     function getTestConnectionResult() {
-      switch (MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER) {
-        case 'Live':
-          $gateway_url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
-          break;
-
-        case 'Test':
-        default:
-          $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
-          break;
+      if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
+        $gateway_url = 'https://live.sagepay.com/gateway/service/vspdirect-register.vsp';
+      } else {
+        $gateway_url = 'https://test.sagepay.com/gateway/service/vspdirect-register.vsp';
       }
 
-      $params = array('VPSProtocol' => '3.00',
+      $params = array('VPSProtocol' => $this->api_version,
                       'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                       'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
                       'Amount' => 0,
