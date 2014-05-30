@@ -5,53 +5,62 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2009 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
-  function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
-  }
-
   class sage_pay_form {
     var $code, $title, $description, $enabled;
 
-// class constructor
     function sage_pay_form() {
       global $order;
 
-      $this->signature = 'sage_pay|sage_pay_form|1.2|2.2';
+      $this->signature = 'sage_pay|sage_pay_form|2.0|2.3';
+      $this->api_version = '3.00';
 
       $this->code = 'sage_pay_form';
       $this->title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_SAGE_PAY_FORM_TEXT_DESCRIPTION;
-      $this->sort_order = MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER;
-      $this->enabled = ((MODULE_PAYMENT_SAGE_PAY_FORM_STATUS == 'True') ? true : false);
+      $this->sort_order = defined('MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER') ? MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER : 0;
+      $this->enabled = defined('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS') && (MODULE_PAYMENT_SAGE_PAY_FORM_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID : 0;
 
-      if ((int)MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID > 0) {
-        $this->order_status = MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID;
+      if ( defined('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS') ) {
+        if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Test' ) {
+          $this->title .= ' [Test]';
+          $this->public_title .= ' (' . $this->code . '; Test)';
+        }
       }
 
-      if (is_object($order)) $this->update_status();
+      if ( !function_exists('mcrypt_encrypt') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_ADMIN_MCRYPT . '</div>' . $this->description;
 
-      switch (MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER) {
-        case 'Live':
-          $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
-          break;
+        $this->enabled = false;
+      }
 
-        case 'Test':
-          $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
-          break;
+      if ( $this->enabled === true ) {
+        if ( !tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME) || !tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD) ) {
+          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
-        default:
-          $this->form_action_url = 'https://test.sagepay.com/Simulator/VSPFormGateway.asp';
-          break;
+          $this->enabled = false;
+        }
+      }
+
+      if ( $this->enabled === true ) {
+        if ( isset($order) && is_object($order) ) {
+          $this->update_status();
+        }
+      }
+
+      if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Live' ) {
+        $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
+      } else {
+        $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
       }
     }
 
-// class methods
     function update_status() {
       global $order;
 
@@ -96,7 +105,7 @@
 
       $process_button_string = '';
 
-      $params = array('VPSProtocol' => '2.23',
+      $params = array('VPSProtocol' => $this->api_version,
                       'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                       'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME, 0, 15));
 
@@ -112,8 +121,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $currency,
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . tep_session_id(), 'SSL', false),
-                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&' . tep_session_name() . '=' . tep_session_id(), 'SSL', false),
+                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -190,7 +199,7 @@
 
       $crypt_string = substr($crypt_string, 0, -1);
 
-      $params['Crypt'] = base64_encode($this->simpleXor($crypt_string, MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD));
+      $params['Crypt'] = $this->encryptParams($crypt_string);
 
       foreach ($params as $key => $value) {
         $process_button_string .= tep_draw_hidden_field($key, $value);
@@ -200,29 +209,27 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $order;
+      global $HTTP_GET_VARS, $sage_pay_response;
 
       if (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+        $transaction_response = $this->decryptParams($HTTP_GET_VARS['crypt']);
 
         $string_array = explode('&', $transaction_response);
-        $return = array('Status' => null);
+        $sage_pay_response = array('Status' => null);
 
         foreach ($string_array as $string) {
           if (strpos($string, '=') != false) {
             $parts = explode('=', $string, 2);
-            $return[trim($parts[0])] = trim($parts[1]);
+            $sage_pay_response[trim($parts[0])] = trim($parts[1]);
           }
         }
 
-        if ( ($return['Status'] != 'OK') && ($return['Status'] != 'AUTHENTICATED') && ($return['Status'] != 'REGISTERED') ) {
-          $error = $this->getErrorMessageNumber($return['StatusDetail']);
+        if ( ($sage_pay_response['Status'] != 'OK') && ($sage_pay_response['Status'] != 'AUTHENTICATED') && ($sage_pay_response['Status'] != 'REGISTERED') ) {
+          $this->sendDebugEmail($sage_pay_response);
+
+          $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
-        }
-
-        if ( isset($return['VPSTxId']) ) {
-          $order->info['comments'] = 'Sage Pay Reference ID: ' . $return['VPSTxId'] . (tep_not_null($order->info['comments']) ? "\n\n" . $order->info['comments'] : '');
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
@@ -230,7 +237,59 @@
     }
 
     function after_process() {
-      return false;
+      global $insert_id, $sage_pay_response;
+
+      $result = array();
+
+      if ( isset($sage_pay_response['VPSTxId']) ) {
+        $result['ID'] = $sage_pay_response['VPSTxId'];
+      }
+
+      if ( isset($sage_pay_response['CardType']) ) {
+        $result['Card'] = $sage_pay_response['CardType'];
+      }
+
+      if ( isset($sage_pay_response['AVSCV2']) ) {
+        $result['AVS/CV2'] = $sage_pay_response['AVSCV2'];
+      }
+
+      if ( isset($sage_pay_response['AddressResult']) ) {
+        $result['Address'] = $sage_pay_response['AddressResult'];
+      }
+
+      if ( isset($sage_pay_response['PostCodeResult']) ) {
+        $result['Post Code'] = $sage_pay_response['PostCodeResult'];
+      }
+
+      if ( isset($sage_pay_response['CV2Result']) ) {
+        $result['CV2'] = $sage_pay_response['CV2Result'];
+      }
+
+      if ( isset($sage_pay_response['3DSecureStatus']) ) {
+        $result['3D Secure'] = $sage_pay_response['3DSecureStatus'];
+      }
+
+      if ( isset($sage_pay_response['PayerStatus']) ) {
+        $result['PayPal Payer Status'] = $sage_pay_response['PayerStatus'];
+      }
+
+      if ( isset($sage_pay_response['AddressStatus']) ) {
+        $result['PayPal Payer Address'] = $sage_pay_response['AddressStatus'];
+      }
+
+      $result_string = '';
+
+      foreach ( $result as $k => $v ) {
+        $result_string .= $k . ': ' . $v . "\n";
+      }
+
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'orders_status_id' => MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID,
+                              'date_added' => 'now()',
+                              'customer_notified' => '0',
+                              'comments' => trim($result_string));
+
+      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
 
     function get_error() {
@@ -241,7 +300,7 @@
       if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
         $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
       } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->simpleXor($this->base64Decode($HTTP_GET_VARS['crypt']), MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
+        $transaction_response = $this->decryptParams($HTTP_GET_VARS['crypt']);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
@@ -256,6 +315,11 @@
         $error_number = $this->getErrorMessageNumber($return['StatusDetail']);
 
         if ( is_numeric($error_number) && $this->errorMessageNumberExists($error_number) ) {
+// don't show an error message for user cancelled/aborted transactions
+          if ( $error_number == '2013' ) {
+            return false;
+          }
+
           $message = $this->getErrorMessage($error_number) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
         }
       }
@@ -274,18 +338,36 @@
       return $this->_check;
     }
 
-    function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Sage Pay Form Module', 'MODULE_PAYMENT_SAGE_PAY_FORM_STATUS', 'False', 'Do you want to accept Sage Pay Form payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Login Name', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME', '', 'The vendor login name to connect to the gateway with.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Encryption Password', 'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD', '', 'The encrpytion password to secure transactions with.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Method', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD', 'Authenticate', 'The processing method to use for each transaction.', '6', '0', 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Server', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER', 'Simulator', 'Perform transactions on the production server or on the testing server.', '6', '0', 'tep_cfg_select_option(array(\'Live\', \'Test\', \'Simulator\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor E-Mail', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL', '', 'An e-mail address on which you can be contacted when a transaction completes. NOTE: If you wish to use multiple email addresses, you should add them using the : (colon) character as a separator. e.g. me@mail1.com:me@mail2.com', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Send E-Mail', 'MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL', 'Customer and Vendor', 'Who to send e-mails to.', '6', '0', 'tep_cfg_select_option(array(\'No One\', \'Customer and Vendor\', \'Vendor Only\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Customer E-Mail Message', 'MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE', '', 'A message to the customer which is inserted into the successful transaction e-mails only.', '6', '0', 'sage_pay_form_textarea_field(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+    function install($parameter = null) {
+      $params = $this->getParams();
+
+      if (isset($parameter)) {
+        if (isset($params[$parameter])) {
+          $params = array($parameter => $params[$parameter]);
+        } else {
+          $params = array();
+        }
+      }
+
+      foreach ($params as $key => $data) {
+        $sql_data_array = array('configuration_title' => $data['title'],
+                                'configuration_key' => $key,
+                                'configuration_value' => (isset($data['value']) ? $data['value'] : ''),
+                                'configuration_description' => $data['desc'],
+                                'configuration_group_id' => '6',
+                                'sort_order' => '0',
+                                'date_added' => 'now()');
+
+        if (isset($data['set_func'])) {
+          $sql_data_array['set_function'] = $data['set_func'];
+        }
+
+        if (isset($data['use_func'])) {
+          $sql_data_array['use_function'] = $data['use_func'];
+        }
+
+        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+      }
     }
 
     function remove() {
@@ -293,7 +375,96 @@
     }
 
     function keys() {
-      return array('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME', 'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD', 'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER', 'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL', 'MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL', 'MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE', 'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE', 'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID', 'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER');
+      $keys = array_keys($this->getParams());
+
+      if ($this->check()) {
+        foreach ($keys as $key) {
+          if (!defined($key)) {
+            $this->install($key);
+          }
+        }
+      }
+
+      return $keys;
+    }
+
+    function getParams() {
+      if (!defined('MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID')) {
+        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sage Pay [Transactions]' limit 1");
+
+        if (tep_db_num_rows($check_query) < 1) {
+          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = tep_db_fetch_array($status_query);
+
+          $status_id = $status['status_id']+1;
+
+          $languages = tep_get_languages();
+
+          foreach ($languages as $lang) {
+            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
+          }
+
+          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (tep_db_num_rows($flags_query) == 1) {
+            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          }
+        } else {
+          $check = tep_db_fetch_array($check_query);
+
+          $status_id = $check['orders_status_id'];
+        }
+      } else {
+        $status_id = MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID;
+      }
+
+      $params = array('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS' => array('title' => 'Enable Sage Pay Form Module',
+                                                                     'desc' => 'Do you want to accept Sage Pay Form payments?',
+                                                                     'value' => 'True',
+                                                                     'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME' => array('title' => 'Vendor Login Name',
+                                                                                  'desc' => 'The vendor login name to connect to the gateway with.'),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD' => array('title' => 'Encryption Password',
+                                                                                  'desc' => 'The encrpytion password to secure and verify transactions with.'),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
+                                                                                 'desc' => 'The processing method to use for each transaction.',
+                                                                                 'value' => 'Authenticate',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authenticate\', \'Deferred\', \'Payment\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_EMAIL' => array('title' => 'Vendor E-Mail Notification',
+                                                                           'desc' => 'An e-mail address on which you can be contacted when a transaction completes. NOTE: If you wish to use multiple email addresses, you should add them using the colon character as a separator. e.g. me@mail1.com:me@mail2.com'),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_SEND_EMAIL' => array('title' => 'Send E-Mail Notifications',
+                                                                         'desc' => 'Who to send e-mails to.',
+                                                                         'value' => 'Customer and Vendor',
+                                                                         'set_func' => 'tep_cfg_select_option(array(\'No One\', \'Customer and Vendor\', \'Vendor Only\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_CUSTOMER_EMAIL_MESSAGE' => array('title' => 'Customer E-Mail Message',
+                                                                                     'desc' => 'A message to the customer which is inserted into successful transaction e-mails only.',
+                                                                                     'use_func' => 'sage_pay_form_clip_text',
+                                                                                     'set_func' => 'sage_pay_form_textarea_field('),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
+                                                                              'desc' => 'Set the status of orders made with this payment module to this value',
+                                                                              'value' => '0',
+                                                                              'use_func' => 'tep_get_order_status_name',
+                                                                              'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
+                                                                                          'desc' => 'Include transaction information in this order status level',
+                                                                                          'value' => $status_id,
+                                                                                          'set_func' => 'tep_cfg_pull_down_order_statuses(',
+                                                                                          'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_ZONE' => array('title' => 'Payment Zone',
+                                                                   'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                   'value' => '0',
+                                                                   'use_func' => 'tep_get_zone_class_title',
+                                                                   'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                 'desc' => 'Perform transactions on the production server or on the testing server.',
+                                                                                 'value' => 'Live',
+                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                          'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
+                      'MODULE_PAYMENT_SAGE_PAY_FORM_SORT_ORDER' => array('title' => 'Sort order of display.',
+                                                                         'desc' => 'Sort order of display. Lowest is displayed first.',
+                                                                         'value' => '0'));
+
+      return $params;
     }
 
 // format prices without currency formatting
@@ -334,6 +505,28 @@
       }
 
       return $order_total_array;
+    }
+
+    function encryptParams($string) {
+// pad pkcs5
+      $blocksize = 16;
+
+      $pad = $blocksize - (strlen($string) % $blocksize);
+
+      $string .= str_repeat(chr($pad), $pad);
+
+// encrypt
+      return '@' . strtoupper(bin2hex(mcrypt_encrypt(MCRYPT_RIJNDAEL_128, MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD, $string, MCRYPT_MODE_CBC, MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD)));
+	}
+
+    function decryptParams($string) {
+      if ( substr($string, 0, 1) == '@' ) {
+        $string = substr($string, 1);
+      }
+
+      $string = pack('H*', $string);
+
+      return mcrypt_decrypt(MCRYPT_RIJNDAEL_128, MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD, $string, MCRYPT_MODE_CBC, MODULE_PAYMENT_SAGE_PAY_FORM_ENCRYPTION_PASSWORD);
     }
 
     function loadErrorMessages() {
@@ -380,52 +573,40 @@
       return (is_numeric($number) && isset($this->_error_messages[$number]));
     }
 
-/*  From the Sage Pay Form PHP Kit:
-**  The SimpleXor encryption algorithm                                                                                **
-**  NOTE: This is a placeholder really.  Future releases of VSP Form will use AES or TwoFish.  Proper encryption      **
-**  This simple function and the Base64 will deter script kiddies and prevent the "View Source" type tampering        **
-**  It won't stop a half decent hacker though, but the most they could do is change the amount field to something     **
-**  else, so provided the vendor checks the reports and compares amounts, there is no harm done.  It's still          **
-**  more secure than the other PSPs who don't both encrypting their forms at all                                      */
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
 
-    function simpleXor($InString, $Key) {
-// Initialise key array
-      $KeyList = array();
-// Initialise out variable
-      $output = "";
+      if (tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL)) {
+        $email_body = '';
 
-// Convert $Key into array of ASCII values
-      for ($i=0; $i<strlen($Key); $i++) {
-        $KeyList[$i] = ord(substr($Key, $i, 1));
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL, 'Sage Pay Form Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
       }
+    }
+  }
 
-// Step through string a character at a time
-      for ($i=0; $i<strlen($InString); $i++) {
-// Get ASCII code from string, get ASCII code from key (loop through with MOD), XOR the two, get the character from the result
-// % is MOD (modulus), ^ is XOR
-        $output .= @chr(ord(substr($InString, $i, 1)) ^ ($KeyList[$i % strlen($Key)]));
-      }
-
-// Return the result
-      return $output;
+  function sage_pay_form_clip_text($value) {
+    if ( strlen($value) > 20 ) {
+      $value = substr($value, 0, 20) . '..';
     }
 
-/*  From the Sage Pay Form PHP Kit:
-** Base 64 decoding function **
-** PHP does it natively but just for consistency and ease of maintenance, let's declare our own function **/
+    return $value;
+  }
 
-    function base64Decode($scrambled) {
-// Initialise output variable
-      $output = '';
-
-// Fix plus to space conversion issue
-      $scrambled = str_replace(' ', '+', $scrambled);
-
-// Do encoding
-      $output = base64_decode($scrambled);
-
-// Return the result
-      return $output;
-    }
+  function sage_pay_form_textarea_field($value = '', $key = '') {
+    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
   }
 ?>
