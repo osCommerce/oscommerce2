@@ -16,7 +16,7 @@
     function paypal_standard() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_standard|3.0|2.3';
+      $this->signature = 'paypal|paypal_standard|3.1|2.3';
 
       $this->code = 'paypal_standard';
       $this->title = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_TITLE;
@@ -308,15 +308,22 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping;
+      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
+
+      $total_tax = $order->info['tax'];
+
+// remove shipping tax in total tax value
+      if ( isset($shipping['cost']) ) {
+        $total_tax -= ($order->info['shipping_cost'] - $shipping['cost']);
+      }
 
       $process_button_string = '';
-      $parameters = array('cmd' => '_xclick',
-                          'item_name' => STORE_NAME,
-                          'shipping' => $this->format_raw($order->info['shipping_cost']),
-                          'tax' => $this->format_raw($order->info['tax']),
+      $parameters = array('cmd' => '_cart',
+                          'upload' => '1',
+                          'item_name_1' => STORE_NAME,
+                          'shipping_1' => $this->format_raw($order->info['shipping_cost']),
                           'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
-                          'amount' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
+                          'amount_1' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $total_tax),
                           'currency_code' => $currency,
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
@@ -354,6 +361,68 @@
 
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE)) {
         $parameters['page_style'] = MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE;
+      }
+
+      $item_params = array();
+
+      $line_item_no = 1;
+
+      foreach ($order->products as $product) {
+        if ( DISPLAY_PRICE_WITH_TAX == 'true' ) {
+          $product_price = $this->format_raw($product['final_price'] + tep_calculate_tax($product['final_price'], $product['tax']));
+        } else {
+          $product_price = $this->format_raw($product['final_price']);
+        }
+
+        $item_params['item_name_' . $line_item_no] = $product['name'];
+        $item_params['amount_' . $line_item_no] = $product_price;
+        $item_params['quantity_' . $line_item_no] = $product['qty'];
+
+        $line_item_no++;
+      }
+
+      $items_total = $this->format_raw($order->info['subtotal']);
+
+      $has_negative_price = false;
+
+// order totals are processed on checkout confirmation but not captured into a variable
+      if (is_array($order_total_modules->modules)) {
+        foreach ($order_total_modules->modules as $value) {
+          $class = substr($value, 0, strrpos($value, '.'));
+
+          if ($GLOBALS[$class]->enabled) {
+            for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
+              if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+                if ( !in_array($GLOBALS[$class]->code, array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
+                  $item_params['item_name_' . $line_item_no] = $GLOBALS[$class]->output[$i]['title'];
+                  $item_params['amount_' . $line_item_no] = $this->format_raw($GLOBALS[$class]->output[$i]['value']);
+
+                  $items_total += $item_params['amount_' . $line_item_no];
+
+                  if ( $item_params['amount_' . $line_item_no] < 0 ) {
+                    $has_negative_price = true;
+                  }
+
+                  $line_item_no++;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      $paypal_item_total = $items_total + $parameters['shipping_1'];
+
+      if ( DISPLAY_PRICE_WITH_TAX == 'false' ) {
+        $item_params['tax_cart'] = $this->format_raw($total_tax);
+
+        $paypal_item_total += $item_params['tax_cart'];
+      }
+
+      if ( ($has_negative_price == false) && ($this->format_raw($paypal_item_total) == $this->format_raw($order->info['total'])) ) {
+        $parameters = array_merge($parameters, $item_params);
+      } else {
+        $parameters['tax_cart'] = $this->format_raw($total_tax);
       }
 
       if (MODULE_PAYMENT_PAYPAL_STANDARD_EWP_STATUS == 'True') {
