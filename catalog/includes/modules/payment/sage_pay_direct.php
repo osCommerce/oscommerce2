@@ -583,9 +583,11 @@
         tep_session_unregister('sagepay_token_cc_expiry_date');
       }
 
-      if ( isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == 'PAYPAL') && isset($HTTP_POST_VARS['Status']) && ($HTTP_POST_VARS['Status'] == 'PAYPALOK') && isset($HTTP_POST_VARS['VPSTxId']) && isset($HTTP_POST_VARS['CustomerEMail']) && isset($HTTP_POST_VARS['PayerID']) ) {
+      if ( isset($HTTP_GET_VARS['check']) && ($HTTP_GET_VARS['check'] == 'PAYPAL') && isset($HTTP_POST_VARS['Status']) && ($HTTP_POST_VARS['Status'] == 'PAYPALOK') && isset($HTTP_POST_VARS['VPSTxId']) && isset($sage_pay_response['VPSTxId']) && ($HTTP_POST_VARS['VPSTxId'] == $sage_pay_response['VPSTxId']) ) {
         $result['PayPal Payer E-Mail'] = $HTTP_POST_VARS['CustomerEMail'];
+        $result['PayPal Payer Status'] = $HTTP_POST_VARS['PayerStatus'];
         $result['PayPal Payer ID'] = $HTTP_POST_VARS['PayerID'];
+        $result['PayPal Payer Address'] = $HTTP_POST_VARS['AddressStatus'];
       }
 
       $result_string = '';
