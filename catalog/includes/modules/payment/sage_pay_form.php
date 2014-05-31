@@ -297,8 +297,10 @@
 
       $message = MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
 
+      $error_number = null;
+
       if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-        $message = $this->getErrorMessage($HTTP_GET_VARS['error']) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+        $error_number = $HTTP_GET_VARS['error'];
       } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
         $transaction_response = $this->decryptParams($HTTP_GET_VARS['crypt']);
 
@@ -312,16 +314,20 @@
           }
         }
 
-        $error_number = $this->getErrorMessageNumber($return['StatusDetail']);
+        $error = $this->getErrorMessageNumber($return['StatusDetail']);
 
-        if ( is_numeric($error_number) && $this->errorMessageNumberExists($error_number) ) {
-// don't show an error message for user cancelled/aborted transactions
-          if ( $error_number == '2013' ) {
-            return false;
-          }
-
-          $message = $this->getErrorMessage($error_number) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
+        if ( is_numeric($error) && $this->errorMessageNumberExists($error) ) {
+          $error_number = $error;
         }
+      }
+
+      if ( isset($error_number) ) {
+// don't show an error message for user cancelled/aborted transactions
+        if ( $error_number == '2013' ) {
+          return false;
+        }
+
+        $message = $this->getErrorMessage($error_number) . ' ' . MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
       }
 
       $error = array('title' => MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_TITLE,
