@@ -11,7 +11,7 @@
 */
 
   define('MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_TITLE', 'Product Downloads');
-  define('MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION', 'Show ordered product download links to the checkut success page');
+  define('MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION', 'Show ordered product download links on the checkout success page');
 
   define('TABLE_HEADING_DOWNLOAD_DATE', 'Expiry date: ');
   define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
