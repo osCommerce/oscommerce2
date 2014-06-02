@@ -16,7 +16,7 @@
     function authorizenet_cc_sim() {
       global $order;
 
-      $this->signature = 'authorizenet|authorizenet_cc_sim|2.0|2.2';
+      $this->signature = 'authorizenet|authorizenet_cc_sim|2.0|2.3';
       $this->api_version = '3.1';
 
       $this->code = 'authorizenet_cc_sim';
@@ -184,7 +184,7 @@
                            'x_amount');
 
       foreach ( $check_array as $check ) {
-        if ( !isset($HTTP_POST_VARS[$check]) || !is_string($HTTP_POST_VARS[$check]) || empty($HTTP_POST_VARS[$check]) ) {
+        if ( !isset($HTTP_POST_VARS[$check]) || !is_string($HTTP_POST_VARS[$check]) || (strlen($HTTP_POST_VARS[$check]) < 1) ) {
           $error = 'general';
           break;
         }
@@ -199,7 +199,9 @@
           }
 
           if ( ($error === false) && ($HTTP_POST_VARS['x_response_code'] == '4') ) {
-            $this->order_status = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_REVIEW_ORDER_STATUS_ID;
+            if ( MODULE_PAYMENT_AUTHORIZENET_CC_SIM_REVIEW_ORDER_STATUS_ID > 0 ) {
+              $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_SIM_REVIEW_ORDER_STATUS_ID;
+            }
           }
         } elseif ($HTTP_POST_VARS['x_response_code'] == '2') {
           $error = 'declined';
@@ -209,6 +211,8 @@
       }
 
       if ( $error !== false ) {
+        $this->sendDebugEmail();
+
         $authorizenet_cc_sim_error = $HTTP_POST_VARS['x_response_reason_text'];
         tep_session_register('authorizenet_cc_sim_error');
 
@@ -269,6 +273,35 @@
                               'comments' => implode("\n", $response));
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+      if ( ENABLE_SSL != true ) {
+        global $cart;
+
+        $cart->reset(true);
+
+// unregister session variables used during checkout
+        tep_session_unregister('sendto');
+        tep_session_unregister('billto');
+        tep_session_unregister('shipping');
+        tep_session_unregister('payment');
+        tep_session_unregister('comments');
+
+        $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+
+        echo <<<EOD
+<form name="redirect" action="{$redirect_url}" method="post" target="_top">
+<noscript>
+  <p>The transaction is being finalized. Please click continue to finalize your order.</p>
+  <p><input type="submit" value="Continue" /></p>
+</noscript>
+</form>
+<script type="text/javascript">
+document.redirect.submit();
+</script>
+EOD;
+
+        exit;
+      }
     }
 
     function get_error() {
@@ -399,14 +432,6 @@
                                                                                     'desc' => 'The API Transaction Key used for the Authorize.net service'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH' => array('title' => 'MD5 Hash',
                                                                              'desc' => 'The MD5 Hash value to verify transactions with'),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                       'desc' => 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.',
-                                                                                       'value' => 'Live',
-                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE' => array('title' => 'Transaction Mode',
-                                                                                     'desc' => 'Transaction mode used for processing orders',
-                                                                                     'value' => 'Test',
-                                                                                     'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                        'desc' => 'The processing method to use for each transaction.',
                                                                                        'value' => 'Authorization',
@@ -431,6 +456,16 @@
                                                                          'value' => '0',
                                                                          'set_func' => 'tep_cfg_pull_down_zone_classes(',
                                                                          'use_func' => 'tep_get_zone_class_title'),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                       'desc' => 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.',
+                                                                                       'value' => 'Live',
+                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_MODE' => array('title' => 'Transaction Mode',
+                                                                                     'desc' => 'Transaction mode used for processing orders',
+                                                                                     'value' => 'Live',
+                                                                                     'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                                'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_SIM_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                                'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                                'value' => '0'));
@@ -477,6 +512,30 @@
       }
 
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+    }
+
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL, 'Authorize.net SIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
+      }
     }
   }
 ?>
