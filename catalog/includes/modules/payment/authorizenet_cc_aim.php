@@ -14,9 +14,9 @@
     var $code, $title, $description, $enabled;
 
     function authorizenet_cc_aim() {
-      global $order;
+      global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'authorizenet|authorizenet_cc_aim|2.0|2.2';
+      $this->signature = 'authorizenet|authorizenet_cc_aim|2.0|2.3';
       $this->api_version = '3.1';
 
       $this->code = 'authorizenet_cc_aim';
@@ -36,6 +36,12 @@
         $this->description .= $this->getTestLinkInfo();
       }
 
+      if ( !function_exists('curl_init') ) {
+        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_ADMIN_CURL . '</div>' . $this->description;
+
+        $this->enabled = false;
+      }
+
       if ( $this->enabled === true ) {
         if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
@@ -48,6 +54,11 @@
         if ( isset($order) && is_object($order) ) {
           $this->update_status();
         }
+      }
+
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+        echo $this->getTestConnectionResult();
+        exit;
       }
     }
 
@@ -258,11 +269,15 @@
 
       if ( ($response['x_response_code'] == '1') || ($response['x_response_code'] == '4') ) {
         if ( (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) && (strtoupper($response['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))))) || ($response['x_amount'] != $this->format_raw($order->info['total'])) ) {
-          $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
+          if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID > 0 ) {
+            $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
+          }
         }
 
         if ( $response['x_response_code'] == '4' ) {
-          $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
+          if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID > 0 ) {
+            $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
+          }
         }
       } elseif ($response['x_response_code'] == '2') {
         $error = 'declined';
@@ -280,10 +295,18 @@
             $error = 'expired';
             break;
 
+          case '13':
+            $error = 'merchant_account';
+            break;
+
           case '6':
           case '17':
           case '28':
             $error = 'declined';
+            break;
+
+          case '39':
+            $error = 'currency';
             break;
 
           case '78':
@@ -293,6 +316,8 @@
       }
 
       if ($error !== false) {
+        $this->sendDebugEmail($response);
+
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
     }
@@ -382,6 +407,14 @@
 
         case 'ccv':
           $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_CCV;
+          break;
+
+        case 'merchant_account':
+          $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_MERCHANT_ACCOUNT;
+          break;
+
+        case 'currency':
+          $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_CURRENCY;
           break;
 
         default:
@@ -492,20 +525,6 @@
                                                                                     'desc' => 'The API Transaction Key used for the Authorize.net service'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH' => array('title' => 'MD5 Hash',
                                                                              'desc' => 'The MD5 Hash value to verify transactions with'),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                       'desc' => 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.',
-                                                                                       'value' => 'Live',
-                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                               'desc' => 'Verify transaction server SSL certificate on connection?',
-                                                                               'value' => 'True',
-                                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY' => array('title' => 'Proxy Server',
-                                                                          'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE' => array('title' => 'Transaction Mode',
-                                                                                     'desc' => 'Transaction mode used for processing orders',
-                                                                                     'value' => 'Live',
-                                                                                     'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                        'desc' => 'The processing method to use for each transaction.',
                                                                                        'value' => 'Authorization',
@@ -530,6 +549,22 @@
                                                                          'value' => '0',
                                                                          'set_func' => 'tep_cfg_pull_down_zone_classes(',
                                                                          'use_func' => 'tep_get_zone_class_title'),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                       'desc' => 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.',
+                                                                                       'value' => 'Live',
+                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE' => array('title' => 'Transaction Mode',
+                                                                                     'desc' => 'Transaction mode used for processing orders',
+                                                                                     'value' => 'Live',
+                                                                                     'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
+                                                                               'desc' => 'Verify transaction server SSL certificate on connection?',
+                                                                               'value' => 'True',
+                                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY' => array('title' => 'Proxy Server',
+                                                                          'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
+                      'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
+                                                                                'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                                'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                                'value' => '0'));
@@ -610,8 +645,13 @@
 
     function getTestLinkInfo() {
       $dialog_title = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_TITLE;
-      $dialog_general_error = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_GENERAL_ERROR;
       $dialog_button_close = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_BUTTON_CLOSE;
+      $dialog_success = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_SUCCESS;
+      $dialog_failed = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_FAILED;
+      $dialog_error = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_ERROR;
+      $dialog_connection_time = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_TIME;
+
+      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -623,7 +663,6 @@ $(function() {
 
 function openTestConnectionDialog() {
   var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    autoOpen: false,
     modal: true,
     title: '{$dialog_title}',
     buttons: {
@@ -633,20 +672,84 @@ function openTestConnectionDialog() {
     }
   });
 
-  d.load('ext/modules/payment/authorizenet/authorizenet_cc_aim.php', function() {
-    if ( $('#actresult').length < 1 ) {
-      d.html('{$dialog_general_error}');
+  var timeStart = new Date().getTime();
+
+  $.ajax({
+    url: '{$test_url}'
+  }).done(function(data) {
+    if ( data == '1' ) {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
+    } else {
+      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
     }
-  }).dialog('open');
+  }).fail(function() {
+    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
+  }).always(function() {
+    var timeEnd = new Date().getTime();
+    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
+
+    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
+  });
 }
 </script>
 EOD;
 
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div>' .
-              $js;
+              '<div id="testConnectionDialog" style="display: none;"><p>';
+
+      if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER == 'Live' ) {
+        $info .= 'Live Server:<br />https://secure.authorize.net/gateway/transact.dll';
+      } else {
+        $info .= 'Test Server:<br />https://test.authorize.net/gateway/transact.dll';
+      }
+
+      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
+               $js;
 
       return $info;
+    }
+
+    function getTestConnectionResult() {
+      if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER == 'Live' ) {
+        $api_url = 'https://secure.authorize.net/gateway/transact.dll';
+      } else {
+        $api_url = 'https://test.authorize.net/gateway/transact.dll';
+      }
+
+      $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
+                      'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
+                      'x_version' => $this->api_version,
+                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_relay_response' => 'FALSE',
+                      'x_delim_data' => 'TRUE',
+                      'x_delim_char' => ',',
+                      'x_encap_char' => '|');
+
+      $post_string = '';
+
+      foreach ($params as $key => $value) {
+        $post_string .= $key . '=' . urlencode(trim($value)) . '&';
+      }
+
+      $post_string = substr($post_string, 0, -1);
+
+      $result = $this->sendTransactionToGateway($api_url, $post_string);
+
+      $response = array('x_response_code' => '-1');
+
+      if ( !empty($result) ) {
+        $raw = explode('|,|', substr($result, 1, -1));
+
+        if ( count($raw) > 54 ) {
+          $response['x_response_code'] = $raw[0];
+        }
+      }
+
+      if ( $response['x_response_code'] != '-1' ) {
+        return 1;
+      }
+
+      return -1;
     }
 
 // format prices without currency formatting
@@ -662,6 +765,46 @@ EOD;
       }
 
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+    }
+
+    function sendDebugEmail($response = array()) {
+      global $HTTP_POST_VARS, $HTTP_GET_VARS;
+
+      if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL)) {
+        $email_body = '';
+
+        if (!empty($response)) {
+          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_POST_VARS)) {
+          if (isset($HTTP_POST_VARS['cc_number_nh-dns'])) {
+            $HTTP_POST_VARS['cc_number_nh-dns'] = 'XXXX' . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4);
+          }
+
+          if (isset($HTTP_POST_VARS['cc_ccv_nh-dns'])) {
+            $HTTP_POST_VARS['cc_ccv_nh-dns'] = 'XXX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_expires_month'])) {
+            $HTTP_POST_VARS['cc_expires_month'] = 'XX';
+          }
+
+          if (isset($HTTP_POST_VARS['cc_expires_year'])) {
+            $HTTP_POST_VARS['cc_expires_year'] = 'XX';
+          }
+
+          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        }
+
+        if (!empty($HTTP_GET_VARS)) {
+          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        }
+
+        if (!empty($email_body)) {
+          tep_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL, 'Authorize.net AIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        }
+      }
     }
   }
 ?>
