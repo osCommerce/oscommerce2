@@ -35,14 +35,10 @@
       global $order_id;
 
       if ( (int)MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_MINUTES > 0 ) {
-        $check_query = tep_db_query("select date_purchased from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+        $check_query = tep_db_query("select 1 from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and date_purchased < date_sub(now(), interval '" . (int)MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_MINUTES . "' minute)");
 
         if ( tep_db_num_rows($check_query) ) {
-          $check = tep_db_fetch_array($check_query);
-
-          if ( strtotime($check['date_purchased'] . ' + ' . (int)MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_MINUTES . ' minutes') < time() ) {
-            tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-          }
+          tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
         }
       }
     }
