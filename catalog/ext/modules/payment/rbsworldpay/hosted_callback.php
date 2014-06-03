@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,52 +13,74 @@
   chdir('../../../../');
   require ('includes/application_top.php');
 
-  if (isset($HTTP_POST_VARS['M_sid']) && !empty($HTTP_POST_VARS['M_sid'])) {
-    if ($HTTP_POST_VARS['transStatus'] == 'Y') {
-      $pass = false;
+  if ( !defined('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS') || (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS  != 'True') ) {
+    exit;
+  }
 
-      if (isset($HTTP_POST_VARS['M_hash']) && !empty($HTTP_POST_VARS['M_hash']) && ($HTTP_POST_VARS['M_hash'] == md5($HTTP_POST_VARS['M_sid'] . $HTTP_POST_VARS['M_cid'] . $HTTP_POST_VARS['cartId'] . $HTTP_POST_VARS['M_lang'] . number_format($HTTP_POST_VARS['amount'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
-        $pass = true;
-      }
+  include('includes/languages/' . basename($HTTP_POST_VARS['M_lang']) . '/modules/payment/rbsworldpay_hosted.php');
+  include('includes/modules/payment/rbsworldpay_hosted.php');
 
-      if (isset($HTTP_POST_VARS['callbackPW']) && ($HTTP_POST_VARS['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) {
-        $pass = false;
-      }
+  $rbsworldpay_hosted = new rbsworldpay_hosted();
 
-      if (tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && !isset($HTTP_POST_VARS['callbackPW'])) {
-        $pass = false;
-      }
+  $error = false;
 
-      if ($pass == true) {
-        include('includes/languages/' . basename($HTTP_POST_VARS['M_lang']) . '/modules/payment/rbsworldpay_hosted.php');
+  if ( !isset($HTTP_GET_VARS['installation']) || ($HTTP_GET_VARS['installation'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
+    $error = true;
+  } elseif ( !isset($HTTP_POST_VARS['installation']) || ($HTTP_POST_VARS['installation'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
+    $error = true;
+  } elseif ( tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && (!isset($HTTP_POST_VARS['callbackPW']) || ($HTTP_POST_VARS['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) ) {
+    $error = true;
+  } elseif ( !isset($HTTP_POST_VARS['transStatus']) || ($HTTP_POST_VARS['transStatus'] != 'Y') ) {
+    $error = true;
+  } elseif ( !isset($HTTP_POST_VARS['M_hash']) || !isset($HTTP_POST_VARS['M_sid']) || !isset($HTTP_POST_VARS['M_cid']) || !isset($HTTP_POST_VARS['cartId']) || !isset($HTTP_POST_VARS['M_lang']) || !isset($HTTP_POST_VARS['amount']) || ($HTTP_POST_VARS['M_hash'] != md5($HTTP_POST_VARS['M_sid'] . $HTTP_POST_VARS['M_cid'] . $HTTP_POST_VARS['cartId'] . $HTTP_POST_VARS['M_lang'] . number_format($HTTP_POST_VARS['amount'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD)) ) {
+    $error = true;
+  }
 
-        $order_query = tep_db_query("select orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['cartId'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['M_cid'] . "'");
-        if (tep_db_num_rows($order_query) > 0) {
-          $order = tep_db_fetch_array($order_query);
+  if ( $error == false ) {
+    $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['cartId'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['M_cid'] . "'");
 
-          if ($order['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
-            $order_status_id = (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
+    if (!tep_db_num_rows($order_query)) {
+      $error = true;
+    }
+  }
 
-            tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$HTTP_POST_VARS['cartId'] . "'");
+  if ( $error == true ) {
+    $rbsworldpay_hosted->sendDebugEmail();
 
-            $sql_data_array = array('orders_id' => $HTTP_POST_VARS['cartId'],
-                                    'orders_status_id' => $order_status_id,
-                                    'date_added' => 'now()',
-                                    'customer_notified' => '0',
-                                    'comments' => 'WorldPay: Transaction Verified');
+    exit;
+  }
 
-            tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+  $order = tep_db_fetch_array($order_query);
 
-            if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
-              $sql_data_array = array('orders_id' => $HTTP_POST_VARS['cartId'],
-                                      'orders_status_id' => $order_status_id,
-                                      'date_added' => 'now()',
-                                      'customer_notified' => '0',
-                                      'comments' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE);
+  if ($order['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
+    $order_status_id = (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
 
-              tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-            }
+    tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$order['orders_id'] . "'");
+
+    $sql_data_array = array('orders_id' => $order['orders_id'],
+                            'orders_status_id' => $order_status_id,
+                            'date_added' => 'now()',
+                            'customer_notified' => '0',
+                            'comments' => '');
+
+    tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+  }
+
+  $trans_result = 'WorldPay: Transaction Verified (Callback)';
+
+  if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
+    $trans_result .= "\n" . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE;
+  }
+
+  $sql_data_array = array('orders_id' => $order['orders_id'],
+                          'orders_status_id' => MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTIONS_ORDER_STATUS_ID,
+                          'date_added' => 'now()',
+                          'customer_notified' => '0',
+                          'comments' => $trans_result);
+
+  tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 ?>
+
 <html>
 <head>
 <title><wpdisplay msg=result.success></title>
@@ -82,7 +104,9 @@
 
 <p class="main" align="center"><?php echo MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION; ?></p>
 
-<form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $HTTP_POST_VARS['M_sid'] . '&hash=' . $HTTP_POST_VARS['hash'], 'SSL', false); ?>" method="post"><p align="center"><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p></form>
+<form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $HTTP_POST_VARS['M_sid'] . '&hash=' . $HTTP_POST_VARS['M_hash'], 'SSL', false); ?>" method="post" target="_top">
+  <p align="center"><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p>
+</form>
 
 <p>&nbsp;</p>
 
@@ -90,10 +114,7 @@
 
 </body>
 </html>
+
 <?php
-          }
-        }
-      }
-    }
-  }
+  tep_session_destroy();
 ?>
