@@ -526,7 +526,8 @@ EOD;
         $server['path'] = '/';
       }
 
-      $header = array('Stripe-Version: ' . $this->api_version);
+      $header = array('Stripe-Version: ' . $this->api_version,
+                      'User-Agent: OSCOM ' . tep_get_version());
 
       if ( is_array($parameters) && !empty($parameters) ) {
         $post_string = '';
