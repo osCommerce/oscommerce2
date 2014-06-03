@@ -4,7 +4,7 @@
  *
  * @package    Braintree
  * @category   Resources
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
@@ -16,7 +16,7 @@
  *
  * @package    Braintree
  * @category   Resources
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  *
  * @property-read array  $addresses
  * @property-read string $company
@@ -151,6 +151,7 @@ class Braintree_Customer extends Braintree
         $signature = array(
             'id', 'company', 'email', 'fax', 'firstName',
             'lastName', 'phone', 'website', 'deviceData',
+            'deviceSessionId', 'fraudMerchantId',
             array('creditCard' => $creditCardSignature),
             array('customFields' => array('_anyKey_')),
             );
@@ -174,6 +175,7 @@ class Braintree_Customer extends Braintree
         $signature = array(
             'id', 'company', 'email', 'fax', 'firstName',
             'lastName', 'phone', 'website', 'deviceData',
+            'deviceSessionId', 'fraudMerchantId',
             array('creditCard' => $creditCardSignature),
             array('customFields' => array('_anyKey_')),
             );

@@ -11,11 +11,17 @@ class Braintree_WebhookNotification extends Braintree
     const SUB_MERCHANT_ACCOUNT_APPROVED = 'sub_merchant_account_approved';
     const SUB_MERCHANT_ACCOUNT_DECLINED = 'sub_merchant_account_declined';
     const TRANSACTION_DISBURSED = 'transaction_disbursed';
-    const PARTNER_USER_CREATED = 'partner_user_created';
-    const PARTNER_USER_DELETED = 'partner_user_deleted';
+    const DISBURSEMENT_EXCEPTION = 'disbursement_exception';
+    const DISBURSEMENT = 'disbursement';
+    const PARTNER_MERCHANT_CONNECTED = 'partner_merchant_connected';
+    const PARTNER_MERCHANT_DISCONNECTED = 'partner_merchant_disconnected';
+    const PARTNER_MERCHANT_DECLINED = 'partner_merchant_declined';
 
     public static function parse($signature, $payload)
     {
+        if (preg_match("/[^A-Za-z0-9+=\/\n]/", $payload) === 1) {
+            throw new Braintree_Exception_InvalidSignature("payload contains illegal characters");
+        }
         self::_validateSignature($signature, $payload);
 
         $xml = base64_decode($payload);
@@ -26,7 +32,7 @@ class Braintree_WebhookNotification extends Braintree
     public static function verify($challenge)
     {
         $publicKey = Braintree_Configuration::publicKey();
-        $digest = Braintree_Digest::hexDigest($challenge);
+        $digest = Braintree_Digest::hexDigestSha1(Braintree_Configuration::privateKey(), $challenge);
         return "{$publicKey}|{$digest}";
     }
 
@@ -50,14 +56,22 @@ class Braintree_WebhookNotification extends Braintree
         return null;
     }
 
-    private static function _validateSignature($signature, $payload)
+    private static function _payloadMatches($signature, $payload)
     {
-        $signaturePairs = preg_split("/&/", $signature);
-        $matchingSignature = self::_matchingSignature($signaturePairs);
+        $payloadSignature = Braintree_Digest::hexDigestSha1(Braintree_Configuration::privateKey(), $payload);
+        return Braintree_Digest::secureCompare($signature, $payloadSignature);
+    }
 
-        $payloadSignature = Braintree_Digest::hexDigest($payload);
-        if (!Braintree_Digest::secureCompare($matchingSignature, $payloadSignature)) {
-            throw new Braintree_Exception_InvalidSignature("webhook notification signature invalid");
+    private static function _validateSignature($signatureString, $payload)
+    {
+        $signaturePairs = preg_split("/&/", $signatureString);
+        $signature = self::_matchingSignature($signaturePairs);
+        if (!$signature) {
+            throw new Braintree_Exception_InvalidSignature("no matching public key");
+        }
+
+        if (!(self::_payloadMatches($signature, $payload) || self::_payloadMatches($signature, $payload . "\n"))) {
+            throw new Braintree_Exception_InvalidSignature("signature does not match payload - one has been modified");
         }
     }
 
@@ -83,8 +97,12 @@ class Braintree_WebhookNotification extends Braintree
             $this->_set('transaction', Braintree_Transaction::factory($wrapperNode['transaction']));
         }
 
-        if (isset($wrapperNode['partnerUser'])) {
-            $this->_set('partnerUser', Braintree_PartnerUser::factory($wrapperNode['partnerUser']));
+        if (isset($wrapperNode['disbursement'])) {
+            $this->_set('disbursement', Braintree_Disbursement::factory($wrapperNode['disbursement']));
+        }
+
+        if (isset($wrapperNode['partnerMerchant'])) {
+            $this->_set('partnerMerchant', Braintree_PartnerMerchant::factory($wrapperNode['partnerMerchant']));
         }
 
         if (isset($wrapperNode['errors'])) {

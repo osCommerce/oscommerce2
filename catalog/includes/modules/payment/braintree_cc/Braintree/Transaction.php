@@ -4,7 +4,7 @@
  *
  * @package    Braintree
  * @category   Resources
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
@@ -42,7 +42,7 @@
  *     'id'    => 'customer_123',
  *     'firstName' => 'Dan',
  *     'lastName' => 'Smith',
- *     'company' => 'Braintree Payment Solutions',
+ *     'company' => 'Braintree',
  *     'email' => 'dan@example.com',
  *     'phone' => '419-555-1234',
  *     'fax' => '419-555-1235',
@@ -144,7 +144,7 @@
  *
  * @package    Braintree
  * @category   Resources
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  *
  *
  * @property-read string $avsErrorResponseCode
@@ -165,6 +165,7 @@
  * @property-read string $type transaction type
  * @property-read string $updatedAt transaction updated timestamp
  * @property-read object $disbursementDetails populated when transaction is disbursed
+ * @property-read object $disputes populated when transaction is disputed
  *
  */
 
@@ -181,6 +182,7 @@ final class Braintree_Transaction extends Braintree
     const SETTLING                 = 'settling';
     const SUBMITTED_FOR_SETTLEMENT = 'submitted_for_settlement';
     const VOIDED                   = 'voided';
+    const UNRECOGNIZED             = 'unrecognized';
 
     // Transaction Escrow Status
     const ESCROW_HOLD_PENDING    = 'hold_pending';
@@ -195,18 +197,19 @@ final class Braintree_Transaction extends Braintree
 
     // Transaction Created Using
     const FULL_INFORMATION = 'full_information';
-    const TOKEN = 'token';
+    const TOKEN            = 'token';
 
     // Transaction Sources
-    const API = 'api';
+    const API           = 'api';
     const CONTROL_PANEL = 'control_panel';
-    const RECURRING = 'recurring';
+    const RECURRING     = 'recurring';
 
     // Gateway Rejection Reason
-    const AVS = 'avs';
-    const AVS_AND_CVV = 'avs_and_cvv';
-    const CVV = 'cvv';
-    const DUPLICATE = 'duplicate';
+    const AVS          = 'avs';
+    const AVS_AND_CVV  = 'avs_and_cvv';
+    const CVV          = 'cvv';
+    const DUPLICATE    = 'duplicate';
+    const FRAUD        = 'fraud';
 
     public static function cloneTransaction($transactionId, $attribs)
     {
@@ -283,7 +286,7 @@ final class Braintree_Transaction extends Braintree
         return array(
             'amount', 'customerId', 'merchantAccountId', 'orderId', 'channel', 'paymentMethodToken', 'deviceSessionId',
             'purchaseOrderNumber', 'recurring', 'shippingAddressId', 'taxAmount', 'taxExempt', 'type', 'venmoSdkPaymentMethodCode',
-            'serviceFeeAmount', 'deviceData',
+            'serviceFeeAmount', 'deviceData', 'fraudMerchantId', 'billingAddressId', 'paymentMethodNonce',
             array('creditCard' =>
                 array('token', 'cardholderName', 'cvv', 'expirationDate', 'expirationMonth', 'expirationYear', 'number'),
             ),
@@ -407,13 +410,17 @@ final class Braintree_Transaction extends Braintree
         }
 
         $response = Braintree_Http::post('/transactions/advanced_search_ids', array('search' => $criteria));
-        $pager = array(
-            'className' => __CLASS__,
-            'classMethod' => 'fetch',
-            'methodArgs' => array($query)
-            );
+        if (array_key_exists('searchResults', $response)) {
+            $pager = array(
+                'className' => __CLASS__,
+                'classMethod' => 'fetch',
+                'methodArgs' => array($query)
+                );
 
-        return new Braintree_ResourceCollection($response, $pager);
+            return new Braintree_ResourceCollection($response, $pager);
+        } else {
+            throw new Braintree_Exception_DownForMaintenance();
+        }
     }
 
     public static function fetch($query, $ids)
@@ -569,6 +576,15 @@ final class Braintree_Transaction extends Braintree
                 new Braintree_DisbursementDetails($transactionAttribs['disbursementDetails'])
             );
         }
+
+        $disputes = array();
+        if (isset($transactionAttribs['disputes'])) {
+            foreach ($transactionAttribs['disputes'] AS $dispute) {
+                $disputes[] = new Braintree_Dispute($dispute);
+            }
+        }
+
+        $this->_set('disputes', $disputes);
 
         $statusHistory = array();
         if (isset($transactionAttribs['statusHistory'])) {

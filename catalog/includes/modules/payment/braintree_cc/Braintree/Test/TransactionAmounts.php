@@ -4,7 +4,7 @@
  *
  * @package    Braintree
  * @subpackage Test
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
@@ -12,10 +12,10 @@
  *
  * The constants in this class can be used to create transactions with
  * the desired status in the sandbox environment.
- * 
+ *
  * @package    Braintree
  * @subpackage Test
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 class Braintree_Test_TransactionAmounts
 {

@@ -1,26 +1,27 @@
 <?php
 /**
- * Partner User information that is generated when a partner is connected
+ * Partner Merchant information that is generated when a partner is connected
  * to or disconnected from a user.
  *
  * @package    Braintree
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
- * Creates an instance of PartnerUsers
+ * Creates an instance of PartnerMerchants
  *
  *
  * @package    Braintree
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  *
  * @property-read string $merchantPublicId
  * @property-read string $publicKey
  * @property-read string $privateKey
- * @property-read string $partnerUserId
+ * @property-read string $clientSideEncryptionKey
+ * @property-read string $partnerMerchantId
  * @uses Braintree_Instance inherits methods
  */
-class Braintree_PartnerUser extends Braintree
+class Braintree_PartnerMerchant extends Braintree
 {
     protected $_attributes = array();
 
