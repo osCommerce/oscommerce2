@@ -80,32 +80,20 @@
 
   tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 ?>
-
-<html>
+<!DOCTYPE html>
+<html <?php echo HTML_PARAMS; ?>>
 <head>
-<title><wpdisplay msg=result.success></title>
-<style>
-.pageHeading {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 20px;
-  font-weight: bold;
-  color: #9a9a9a;
-}
-
-.main {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 11px;
-  line-height: 1.5;
-}
-</style>
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
+<title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
+<meta http-equiv="refresh" content="3; URL=<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $HTTP_POST_VARS['M_sid'] . '&hash=' . $HTTP_POST_VARS['M_hash'], 'SSL', false); ?>">
 </head>
 <body>
-<p class="pageHeading"><?php echo STORE_NAME; ?></p>
+<h1><?php echo STORE_NAME; ?></h1>
 
-<p class="main" align="center"><?php echo MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION; ?></p>
+<p><?php echo MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION; ?></p>
 
 <form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $HTTP_POST_VARS['M_sid'] . '&hash=' . $HTTP_POST_VARS['M_hash'], 'SSL', false); ?>" method="post" target="_top">
-  <p align="center"><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p>
+  <p><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p>
 </form>
 
 <p>&nbsp;</p>

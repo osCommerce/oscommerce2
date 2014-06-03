@@ -16,8 +16,8 @@
 
   define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ERROR_ADMIN_CONFIGURATION', 'This module will not load until the Installation ID parameter has been configured. Please edit and configure the settings of this module.');
 
-  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE', 'In Review: Transaction performed in demo mode.');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE', 'Transaction performed in test mode.');
 
-  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION', 'The payment transaction has been successfully performed!');
-  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON', 'Click here to continue to %s');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION', 'The payment has been successfully performed! You will be automatically redirected back to our website in 3 seconds.');
+  define('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON', 'Continue to %s');
 ?>
