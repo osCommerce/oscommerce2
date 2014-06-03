@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -16,7 +16,8 @@
     function braintree_cc() {
       global $order;
 
-      $this->signature = 'braintree|braintree_cc|1.0|2.2';
+      $this->signature = 'braintree|braintree_cc|1.0|2.3';
+      $this->api_version = '1';
 
       $this->code = 'braintree_cc';
       $this->title = MODULE_PAYMENT_BRAINTREE_CC_TEXT_TITLE;
@@ -24,49 +25,76 @@
       $this->description = MODULE_PAYMENT_BRAINTREE_CC_TEXT_DESCRIPTION;
       $this->sort_order = defined('MODULE_PAYMENT_BRAINTREE_CC_SORT_ORDER') ? MODULE_PAYMENT_BRAINTREE_CC_SORT_ORDER : 0;
       $this->enabled = defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') && (MODULE_PAYMENT_BRAINTREE_CC_STATUS == 'True') ? true : false;
+      $this->order_status = defined('MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID : 0;
 
-      if ( defined('MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID > 0) ) {
-        $this->order_status = MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID;
-      }
-
-      $braintree_errors = array();
-
-      if ( version_compare(PHP_VERSION, '5.2.1', '<') ) {
-        $braintree_errors[] = 'PHP version >= 5.2.1 is required.';
-      }
-
-      $requiredExtensions = array('xmlwriter', 'SimpleXML', 'openssl', 'dom', 'hash', 'curl');
-
-      foreach ( $requiredExtensions as $ext ) {
-        if ( !extension_loaded($ext) ) {
-          $braintree_errors[] = 'The "' . $ext . '"" extension is required.';
+      if ( defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
+        if ( MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER == 'Sandbox' ) {
+          $this->title .= ' [Sandbox]';
+          $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
       }
 
-      if ( empty($braintree_errors) ) {
-        include('braintree_cc/Braintree.php');
+      $braintree_error = null;
+
+      if ( version_compare(PHP_VERSION, '5.2.1', '<') ) {
+        $braintree_error = sprintf(MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_PHP, '5.2.1');
+      }
+
+      if ( !isset($braintree_error) ) {
+        $requiredExtensions = array('xmlwriter', 'SimpleXML', 'openssl', 'dom', 'hash', 'curl');
+
+        $exts = array();
+
+        foreach ( $requiredExtensions as $ext ) {
+          if ( !extension_loaded($ext) ) {
+            $exts[] = $ext;
+          }
+        }
+
+        if ( !empty($exts) ) {
+          $braintree_error = sprintf(MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_PHP_EXTENSIONS, implode('<br />', $exts));
+        }
+      }
+
+      if ( !isset($braintree_error) && defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
+        if ( !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_PRIVATE_KEY) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY) ) {
+          $braintree_error = MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_CONFIGURATION;
+        }
+      }
+
+      if ( !isset($braintree_error) && defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
+        $ma_error = true;
+
+        if ( tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS) ) {
+          $mas = explode(';', MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS);
+
+          foreach ( $mas as $a ) {
+            $ac = explode(':', $a, 2);
+
+            if ( isset($ac[1]) && ($ac[1] == DEFAULT_CURRENCY) ) {
+              $ma_error = false;
+              break;
+            }
+          }
+        }
+
+        if ( $ma_error === true ) {
+          $braintree_error = sprintf(MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_MERCHANT_ACCOUNTS, DEFAULT_CURRENCY);
+        }
+      }
+
+      if ( !isset($braintree_error) ) {
+        if ( !class_exists('Braintree') ) {
+          include('braintree_cc/Braintree.php');
+        }
 
         spl_autoload_register('tep_braintree_autoloader');
 
-        $this->api_version = '1 [' . Braintree_Version::get() . ']';
-
-        if ( defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
-//          $this->description .= $this->getTestLinkInfo();
-        }
+        $this->api_version .= ' [' . Braintree_Version::get() . ']';
       } else {
-        $this->description .= '<div style="color: #ff0000; font-weight: bold;"><p>Error:</p><ul>';
-
-        foreach ( $braintree_errors as $error ) {
-          $this->description .= '<li>' . tep_output_string_protected($error) . '</li>';
-        }
-
-        $this->description .= '</ul></div>';
+        $this->description = '<div class="secWarning">' . $braintree_error . '</div>' . $this->description;
 
         $this->enabled = false;
-      }
-
-      if ( MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER == 'Sandbox' ) {
-        $this->public_title .= ' (' . $this->code . '; Sandbox)';
       }
 
       if ( isset($order) && is_object($order) ) {
@@ -207,10 +235,11 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $HTTP_POST_VARS, $braintree_result, $braintree_token;
+      global $customer_id, $order, $HTTP_POST_VARS, $braintree_result, $braintree_token, $braintree_error;
 
       $braintree_token = null;
       $braintree_token_cvv = null;
+      $braintree_error = null;
 
       if ( MODULE_PAYMENT_BRAINTREE_CC_TOKENS == 'True' ) {
         if ( isset($HTTP_POST_VARS['braintree_card']) && is_numeric($HTTP_POST_VARS['braintree_card']) && ($HTTP_POST_VARS['braintree_card'] > 0) ) {
@@ -361,35 +390,29 @@
         return true;
       }
 
-/*
-      if ( $connection_error === false ) {
-        if ( $braintree_result->success ) {
-          return true;
-        }
+      if ( $braintree_result->transaction ) {
+        $braintree_error = $braintree_result->message;
 
-        if ( $braintree_result->transaction ) {
-          echo("Error: " . $braintree_result->message);
-          echo("<br/>");
-          echo("Code: " . $braintree_result->transaction->processorResponseCode);
-        } else {
-          echo '<pre>';var_dump($braintree_result->errors->deepAll());exit;
-
-          $msg = '';
-
-          foreach ( $braintree_result->errors->deepAll() as $error ) {
-            $msg .= $error->message . '. ';
-          }
-
-          if ( !empty($msg) ) {
-            $msg = substr($msg, 0, -1);
-          }
-
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (!empty($msg) ? '&error=' . $msg : ''), 'SSL'));
+        if ( !empty($braintree_error) ) {
+          tep_session_register('braintree_error');
         }
       } else {
-        echo $connection_error;
+        $braintree_error = '';
+
+        if ( isset($braintree_result->errors) ) {
+          foreach ( $braintree_result->errors->deepAll() as $error ) {
+            $braintree_error .= $error->message . ' ';
+          }
+
+          if ( !empty($braintree_error) ) {
+            $braintree_error = substr($braintree_error, 0, -1);
+          }
+        }
+
+        if ( !empty($braintree_error) ) {
+          tep_session_register('braintree_error');
+        }
       }
-*/
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
@@ -432,7 +455,7 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
+      global $HTTP_GET_VARS, $braintree_error;
 
       $message = MODULE_PAYMENT_BRAINTREE_CC_ERROR_GENERAL;
 
@@ -454,6 +477,10 @@
             $message = MODULE_PAYMENT_BRAINTREE_CC_ERROR_CARDCVV;
             break;
         }
+      } elseif ( tep_session_is_registered('braintree_error') ) {
+        $message = $braintree_error . ' ' . $message;
+
+        tep_session_unregister('braintree_error');
       }
 
       $error = array('title' => MODULE_PAYMENT_BRAINTREE_CC_ERROR_TITLE,
@@ -570,25 +597,20 @@ EOD;
 
       $params = array('MODULE_PAYMENT_BRAINTREE_CC_STATUS' => array('title' => 'Enable Braintree Module',
                                                                     'desc' => 'Do you want to accept Braintree payments?',
-                                                                    'value' => 'False',
+                                                                    'value' => 'True',
                                                                     'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID' => array('title' => 'Merchant ID',
-                                                                         'desc' => 'The Braintree account Merchant ID to use.',
-                                                                         'value' => ''),
+                                                                         'desc' => 'The Braintree account Merchant ID to use.'),
                       'MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY' => array('title' => 'Public Key',
-                                                                        'desc' => 'The Braintree account public key to use.',
-                                                                        'value' => ''),
+                                                                        'desc' => 'The Braintree account public key to use.'),
                       'MODULE_PAYMENT_BRAINTREE_CC_PRIVATE_KEY' => array('title' => 'Private Key',
-                                                                         'desc' => 'The Braintree account private key to use.',
-                                                                         'value' => ''),
+                                                                         'desc' => 'The Braintree account private key to use.'),
                       'MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY' => array('title' => 'Client Side Encryption Key',
                                                                         'desc' => 'The client side encryption key to use.',
-                                                                        'value' => '',
                                                                         'set_func' => 'tep_cfg_braintree_cc_set_client_key(',
                                                                         'use_func' => 'tep_cfg_braintree_cc_show_client_key'),
                       'MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS' => array('title' => 'Merchant Accounts',
                                                                                'desc' => 'Merchant accounts and defined currencies.',
-                                                                               'value' => '',
                                                                                'set_func' => 'tep_cfg_braintree_cc_set_merchant_accounts(',
                                                                                'use_func' => 'tep_cfg_braintree_cc_show_merchant_accounts'),
                       'MODULE_PAYMENT_BRAINTREE_CC_TOKENS' => array('title' => 'Create Tokens',
@@ -603,25 +625,25 @@ EOD;
                                                                                 'desc' => 'The processing method to use for each transaction.',
                                                                                 'value' => 'Authorize',
                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authorize\', \'Payment\'), '),
-                      'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                'desc' => 'Perform transactions on the production server or on the testing server.',
-                                                                                'value' => 'Live',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
-                                                                                         'desc' => 'Include transaction information in this order status level',
-                                                                                         'value' => $status_id,
-                                                                                         'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                         'use_func' => 'tep_get_order_status_name'),
-                      'MODULE_PAYMENT_BRAINTREE_CC_ZONE' => array('title' => 'Payment Zone',
-                                                                  'desc' => 'If a zone is selected, only enable this payment method for that zone.',
-                                                                  'value' => '0',
-                                                                  'use_func' => 'tep_get_zone_class_title',
-                                                                  'set_func' => 'tep_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                              'desc' => 'Set the status of orders made with this payment module to this value',
                                                                              'value' => '0',
                                                                              'use_func' => 'tep_get_order_status_name',
                                                                              'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                      'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
+                                                                                         'desc' => 'Include transaction information in this order status level',
+                                                                                         'value' => $status_id,
+                                                                                         'set_func' => 'tep_cfg_pull_down_order_statuses(',
+                                                                                         'use_func' => 'tep_get_order_status_name'),
+                      'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
+                                                                                'desc' => 'Perform transactions on the production server or on the testing server.',
+                                                                                'value' => 'Live',
+                                                                                'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                      'MODULE_PAYMENT_BRAINTREE_CC_ZONE' => array('title' => 'Payment Zone',
+                                                                  'desc' => 'If a zone is selected, only enable this payment method for that zone.',
+                                                                  'value' => '0',
+                                                                  'use_func' => 'tep_get_zone_class_title',
+                                                                  'set_func' => 'tep_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_BRAINTREE_CC_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                         'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                         'value' => '0'));
@@ -673,6 +695,24 @@ EOD;
       }
 
       return false;
+    }
+
+    function deleteCard($token, $token_id) {
+      global $customer_id;
+
+      Braintree_Configuration::environment(MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER == 'Live' ? 'production' : 'sandbox');
+      Braintree_Configuration::merchantId(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID);
+      Braintree_Configuration::publicKey(MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY);
+      Braintree_Configuration::privateKey(MODULE_PAYMENT_BRAINTREE_CC_PRIVATE_KEY);
+
+      try {
+        Braintree_CreditCard::delete($token);
+      } catch ( Exception $e ) {
+      }
+
+      tep_db_query("delete from customers_braintree_tokens where id = '" . (int)$token_id . "' and customers_id = '" . (int)$customer_id . "' and braintree_token = '" . tep_db_prepare_input(tep_db_input($token)) . "'");
+
+      return (tep_db_affected_rows() === 1);
     }
 
     function templateClassExists() {

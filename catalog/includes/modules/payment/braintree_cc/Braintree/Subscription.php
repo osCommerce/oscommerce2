@@ -9,7 +9,7 @@
  * PHP Version 5
  *
  * @package   Braintree
- * @copyright 2010 Braintree Payment Solutions
+ * @copyright 2014 Braintree, a division of PayPal, Inc.
  */
 class Braintree_Subscription extends Braintree
 {
@@ -124,6 +124,7 @@ class Braintree_Subscription extends Braintree
                 'neverExpires',
                 'numberOfBillingCycles',
                 'paymentMethodToken',
+                'paymentMethodNonce',
                 'planId',
                 'price',
                 'trialDuration',
@@ -141,7 +142,7 @@ class Braintree_Subscription extends Braintree
         return array_merge(
             array(
                 'merchantAccountId', 'numberOfBillingCycles', 'paymentMethodToken', 'planId',
-                'id', 'neverExpires', 'price',
+                'paymentMethodNonce', 'id', 'neverExpires', 'price',
                 array('descriptor' => array('name', 'phone')),
                 array('options' => array('prorateCharges', 'replaceAllAddOnsAndDiscounts', 'revertSubscriptionOnProrationFailure')),
             ),

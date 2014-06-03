@@ -4,7 +4,7 @@
  *
  * @package    Braintree
  * @subpackage Transaction
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
@@ -13,8 +13,8 @@
  *
  * @package    Braintree
  * @subpackage Transaction
- * @copyright  2010 Braintree Payment Solutions
- * 
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
+ *
  * @property-read string $bin
  * @property-read string $cardType
  * @property-read string $expirationDate

@@ -3,7 +3,7 @@
  * Disbursement details from a transaction
  *
  * @package    Braintree
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  */
 
 /**
@@ -11,12 +11,13 @@
  *
  *
  * @package    Braintree
- * @copyright  2010 Braintree Payment Solutions
+ * @copyright  2014 Braintree, a division of PayPal, Inc.
  *
  * @property-read string $settlementAmount
  * @property-read string $settlementCurrencyIsoCode
  * @property-read string $settlementCurrencyExchangeRate
- * @property-read string $settlementFundsHeld
+ * @property-read string $fundsHeld
+ * @property-read string $success
  * @property-read string $disbursementDate
  * @uses Braintree_Instance inherits methods
  */
