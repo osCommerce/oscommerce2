@@ -142,6 +142,7 @@ FORM { display: inline; }
 
 /* Custom jQuery UI */
 .ui-widget { }
+.ui-dialog { min-width: 500px; }
 
 /* buttons */
 
