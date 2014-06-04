@@ -57,7 +57,7 @@ body { background-color: #ffffff; color: #000000; margin: 0px; }
 .messageStackSuccess { background-color: #99ff00; }
 
 /* forms */
-CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { }
+CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif; }
 FORM { display: inline; }
 
 /* account */
