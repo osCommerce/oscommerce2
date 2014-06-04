@@ -66,7 +66,8 @@
     tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
   }
 
-  $trans_result = 'WorldPay: Transaction Verified (Callback)';
+  $trans_result = 'WorldPay: Transaction Verified (Callback)' . "\n" .
+                  'Transaction ID: ' . $HTTP_POST_VARS['transId'];
 
   if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
     $trans_result .= "\n" . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_WARNING_DEMO_MODE;
