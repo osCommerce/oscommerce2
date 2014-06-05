@@ -106,7 +106,6 @@
       $process_button_string = '';
 
       $params = array('VPSProtocol' => $this->api_version,
-                      'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                       'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_FORM_VENDOR_LOGIN_NAME, 0, 15));
 
       if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_METHOD == 'Payment' ) {
@@ -117,7 +116,8 @@
         $params['TxType'] = 'AUTHENTICATE';
       }
 
-      $crypt = array('VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+      $crypt = array('ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
+                     'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $currency,
                      'Description' => substr(STORE_NAME, 0, 100),
