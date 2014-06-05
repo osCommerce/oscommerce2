@@ -1,7 +1,74 @@
 $Id$
 
 osCommerce Online Merchant Changelog
-Copyright (c) 2013 osCommerce
+Copyright (c) 2014 osCommerce
+
+------------------------------------------------------------------------------
+06/05/2014 osCommerce Online Merchant v2.3.4
+------------------------------------------------------------------------------
+ * Introduce new Card Acceptance box.
+
+ * Place Administration Tool Orders link in own box.
+
+ * New Content Modules implementation for the following pages:
+   - Login
+   - My Account
+   - Checkout Success
+
+ * Force HTTPS in Administration Tool if SSL has been enabled.
+
+ * Add CA certificate bundle for curl to verify secure connections with.
+
+ * Add Message Stack output to the checkout confirmation page.
+
+ * Block orders when no defined shipping rates is available to the
+   destination.
+
+ * Sessions
+   - Let PHP handle session garbage collection for database based sessions to
+     have the same behaviour as file based sessions.
+   - Ignore GET and POST session IDs if force cookie usage is enabled.
+   - Only set the session ID if it differs from the cookie value.
+
+ * Fix $PHP_SELF so it works in pages located in subdirectories.
+
+ * PayPal Modules:
+   - Update PayPal Express Checkout payment module
+   - Update PayPal Payments Standard payment module
+   - Update PayPal Payments Pro (Direct Payments) payment module
+   - Update PayPal Express Checkout (Payflow Edition) payment module
+   - Update PayPal Payments Pro (Payflow Edition) payment module
+   - Introduce PayPal Payments Pro (Hosted Solution) payment module
+   - Introduce Log In with PayPal content module
+
+ * Sage Pay Modules:
+   - Update Sage Pay Direct payment module
+   - Update Sage Pay Form payment module
+   - Update Sage Pay Server payment module
+   - Introduce Sage Pay Cards Management Page content module
+
+ * Authorize.net Modules:
+   - Update Server Integration Method (SIM) payment module
+   - Update Advanced Integration Method (AIM) payment module
+   - Introduce Direct Post Method payment method
+
+ * Stripe Modules:
+   - Introduce Stripe.js payment module
+   - Introduce Stripe Cards Management content module
+
+ * Braintree Modules:
+   - Introduce Braintree payment module
+   - Introduce Braintree Cards Management Page content module
+
+ * WorldPay Modules:
+   - Update WorldPay Hosted Payment Pages payment module
+
+ * Libraries Update
+   - jQuery 1.11.1
+   - jQuery UI 1.10.4
+   - Flot 0.8.3
+   - bxGallery replaced by PhotosetGrid
+   - FancyBox replaced by ColorBox
 
 ------------------------------------------------------------------------------
 09/25/2013 osCommerce Online Merchant v2.3.3.4
