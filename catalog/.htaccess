@@ -36,3 +36,5 @@
 
 # php_value session.use_trans_sid 0
 # php_value register_globals 1
+
+Options -indexes

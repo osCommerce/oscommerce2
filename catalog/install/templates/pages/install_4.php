@@ -78,6 +78,7 @@
     }
   }
 
+  osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . $dir_fs_document_root . 'includes/work/page_parse_time.log" where configuration_key = "STORE_PAGE_PARSE_TIME_LOG"');
   osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "DIR_FS_CACHE"');
   osc_db_query('update ' . TABLE_CONFIGURATION . ' set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "SESSION_WRITE_DIRECTORY"');
 
@@ -255,8 +256,9 @@
   }
 ?>
 
-      <li>Review the directory permissions on the Administration Tool -> Tools -> Security Directory Permissions page.</li>
-      <li>The Administration Tool should be further protected using htaccess/htpasswd and can be set-up within the Configuration -> Administrators page.</li>
-    </ol>
+      <li>You should also check the permissions on directories and files to check they are secure. This can be done on the Administration Tool -> Tools -> Security Directory Permissions page.</li>
+      <li>To make a more secure shop, in the shop admin go to Configuration >> Administrators and edit the adminstrator, enter a password and tick the "Protect With htaccess/htpasswd" box.</li>
+      <li>Finally check the general state of the site using Tools >> Security Checks.</li>
+	 </ol>
   </div>
 </div>

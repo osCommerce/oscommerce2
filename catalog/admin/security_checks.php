@@ -71,7 +71,7 @@
     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULE; ?></td>
     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_INFO; ?></td>
-    <td class="dataTableHeadingContent" width="20" align="right">&nbsp;</td>
+    <td class="dataTableHeadingContent" width="100" align="right">TABLE_HEADING_HOW</td>
   </tr>
 
 <?php
