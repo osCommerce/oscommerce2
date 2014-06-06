@@ -16,7 +16,7 @@
     function braintree_cc() {
       global $order;
 
-      $this->signature = 'braintree|braintree_cc|1.0|2.3';
+      $this->signature = 'braintree|braintree_cc|1.1|2.3';
       $this->api_version = '1';
 
       $this->code = 'braintree_cc';
