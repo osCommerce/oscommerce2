@@ -209,54 +209,15 @@
   }
 ?>
 
-    <p>The installation and configuration was successful!</p>
+    <p>The installation of your online store was successful! Click on either button to start your online selling experience:</p>
 
     <br />
 
     <table border="0" width="99%" cellspacing="0" cellpadding="0">
       <tr>
-        <td align="right" width="50%" style="padding-right: 30px;"><?php echo osc_draw_button('Online Store', 'cart', $http_server . $http_catalog . 'index.php', 'primary', array('newwindow' => 1)); ?></td>
-        <td width="50%" style="padding-left: 30px;"><?php echo osc_draw_button('Administration Tool', 'locked', $http_server . $http_catalog . $admin_folder . '/index.php', 'primary', array('newwindow' => 1)); ?></td>
+        <td align="right" width="50%" style="padding-right: 30px;"><?php echo osc_draw_button('Online Store (Frontend)', 'cart', $http_server . $http_catalog . 'index.php', 'primary', array('newwindow' => 1)); ?></td>
+        <td width="50%" style="padding-left: 30px;"><?php echo osc_draw_button('Administration Tool (Backend)', 'locked', $http_server . $http_catalog . $admin_folder . '/index.php', 'primary', array('newwindow' => 1)); ?></td>
       </tr>
     </table>
-
-    <br />
-
-    <h3>Post-Installation Notes</h3>
-
-    <p>It is recommended to follow the following post-installation steps to secure your osCommerce Online Merchant online store:</p>
-
-    <ol>
-      <li>Delete the <?php echo $dir_fs_document_root . 'install'; ?> directory.</li>
-
-<?php
-  if ($admin_folder == 'admin') {
-?>
-
-      <li>Rename the Administration Tool directory located at <?php echo $dir_fs_document_root . 'admin'; ?>.</li>
-
-<?php
-  }
-
-  if (file_exists($dir_fs_document_root . 'includes/configure.php') && osc_is_writable($dir_fs_document_root . 'includes/configure.php')) {
-?>
-
-      <li>Set the permissions on <?php echo $dir_fs_document_root . 'includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
-
-<?php
-  }
-
-  if (file_exists($dir_fs_document_root .  $admin_folder . '/includes/configure.php') && osc_is_writable($dir_fs_document_root . $admin_folder . '/includes/configure.php')) {
-?>
-
-      <li>Set the permissions on <?php echo $dir_fs_document_root . $admin_folder . '/includes/configure.php'; ?> to 644 (or 444 if this file is still writable).</li>
-
-<?php
-  }
-?>
-
-      <li>Review the directory permissions on the Administration Tool -> Tools -> Security Directory Permissions page.</li>
-      <li>The Administration Tool should be further protected using htaccess/htpasswd and can be set-up within the Configuration -> Administrators page.</li>
-    </ol>
   </div>
 </div>
