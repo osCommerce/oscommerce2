@@ -16,7 +16,7 @@
 
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>osCommerce, Open Source E-Commerce Solutions</title>
+<title>osCommerce, Starting Your Online Business</title>
 <meta name="robots" content="noindex,nofollow" />
 <link rel="icon" type="image/png" href="images/oscommerce_icon.png" />
 
@@ -42,7 +42,7 @@
 </div>
 
 <div id="pageFooter">
-  <p>Copyright &copy; <?php echo date('Y'); ?> <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>. All rights reserved. osCommerce is a registered trademark of Harald Ponce de Leon.</p>
+  <p>osCommerce Online Merchant Copyright &copy; 2000-<?php echo date('Y'); ?> <a href="http://www.oscommerce.com" target="_blank">osCommerce</a> (<a href="http://www.oscommerce.com/Us&amp;Legal" target="_blank">Copyright and Trademark Policy</a>)</p>
 </div>
 
 </body>
