@@ -85,7 +85,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
-<title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
+<title><?php echo tep_output_string_protected(TITLE); ?></title>
 <meta http-equiv="refresh" content="3; URL=<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, tep_session_name() . '=' . $HTTP_POST_VARS['M_sid'] . '&hash=' . $HTTP_POST_VARS['M_hash'], 'SSL', false); ?>">
 </head>
 <body>
