@@ -16,7 +16,7 @@
     function authorizenet_cc_dpm() {
       global $order;
 
-      $this->signature = 'authorizenet|authorizenet_cc_dpm|1.0|2.3';
+      $this->signature = 'authorizenet|authorizenet_cc_dpm|1.1|2.3';
       $this->api_version = '3.1';
 
       $this->code = 'authorizenet_cc_dpm';
@@ -109,7 +109,13 @@
       $expiry_field .= '</select>' . tep_draw_hidden_field('x_exp_date');
 
       $js = <<<EOD
-<script type="text/javascript">
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+}
+</script>
+
+<script>
 $(function() {
   $('form[name="checkout_confirmation"]').submit(function() {
     $('form[name="checkout_confirmation"] input[name="x_exp_date"]').val($('#cc_expires_month').val() + $('#cc_expires_year').val());

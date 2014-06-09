@@ -48,7 +48,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
-<title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
+<title><?php echo tep_output_string_protected(TITLE); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 </head>
 <body>

@@ -16,7 +16,7 @@
     function paypal_pro_hs() {
       global $HTTP_GET_VARS, $PHP_SELF, $order;
 
-      $this->signature = 'paypal|paypal_pro_hs|1.0|2.3';
+      $this->signature = 'paypal|paypal_pro_hs|1.1|2.3';
       $this->api_version = '112';
 
       $this->code = 'paypal_pro_hs';
@@ -62,7 +62,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -376,8 +376,15 @@
       $iframe_url = tep_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');
       $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
 
+// include jquery if it doesn't exist in the template
       $output = <<<EOD
 <iframe src="{$iframe_url}" width="570px" height="540px" frameBorder="0" scrolling="no"></iframe>
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+}
+</script>
+
 <script>
 $(function() {
   $('form[name="checkout_confirmation"] input[type="submit"], form[name="checkout_confirmation"] input[type="image"], form[name="checkout_confirmation"] button[type="submit"]').hide();
@@ -889,8 +896,17 @@ EOD;
 
       $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
+// include jquery if it doesn't exist in the template
       $js = <<<EOD
-<script type="text/javascript">
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+  document.write('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css" />');
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></scr' + 'ipt>');
+}
+</script>
+
+<script>
 $(function() {
   $('#tcdprogressbar').progressbar({
     value: false
