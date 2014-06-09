@@ -16,7 +16,7 @@
     function stripe() {
       global $HTTP_GET_VARS, $PHP_SELF, $order, $payment;
 
-      $this->signature = 'stripe|stripe|1.0|2.3';
+      $this->signature = 'stripe|stripe|1.1|2.3';
       $this->api_version = '2014-05-19';
 
       $this->code = 'stripe';
@@ -56,7 +56,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && ($PHP_SELF == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -597,7 +597,15 @@ EOD;
       $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
-<script type="text/javascript">
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+  document.write('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css" />');
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></scr' + 'ipt>');
+}
+</script>
+
+<script>
 $(function() {
   $('#tcdprogressbar').progressbar({
     value: false
@@ -676,8 +684,13 @@ EOD;
       $stripe_publishable_key = MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY;
 
       $js = <<<EOD
-<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-<script type="text/javascript">
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+}
+</script>
+<script src="https://js.stripe.com/v2/"></script>
+<script>
 $(function() {
   Stripe.setPublishableKey('{$stripe_publishable_key}');
 
