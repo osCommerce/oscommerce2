@@ -949,7 +949,7 @@ EOD;
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>';
 
-      if ( MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_SERVER == 'Live' ) {
+      if ( MODULE_PAYMENT_PAYPAL_PRO_HS_GATEWAY_SERVER == 'Live' ) {
         $info .= 'Live Server:<br />' . $this->api_url;
       } else {
         $info .= 'Sandbox Server:<br />' . $this->api_url;
