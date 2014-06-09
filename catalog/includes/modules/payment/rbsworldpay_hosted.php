@@ -16,7 +16,7 @@
     function rbsworldpay_hosted() {
       global $order;
 
-      $this->signature = 'rbs|worldpay_hosted|2.0|2.3';
+      $this->signature = 'rbs|worldpay_hosted|2.1|2.3';
       $this->api_version = '4.6';
 
       $this->code = 'rbsworldpay_hosted';
