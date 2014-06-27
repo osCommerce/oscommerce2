@@ -22,7 +22,7 @@
                                                                                                     'icon' => 'person'),
                                                                                     'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
                                                                                                             'link' => tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'),
-                                                                                                            'icon' => 'home'),
+                                                                                                            'icon' => 'note'),
                                                                                     'password' => array('title' => MY_ACCOUNT_PASSWORD,
                                                                                                         'link' => tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'),
                                                                                                         'icon' => 'key'))),
@@ -55,8 +55,12 @@
           if ( isset($entry['icon']) ) {
             $output .= ' ui-icon ui-icon-' . $entry['icon'] . ' ';
           }
-
-          $output .= 'accountLinkListEntry"></span><a href="' . $entry['link'] . '">' . $entry['title'] . '</a></li>';
+          // If link was not provided only display the title. Useful for addon integration which do not have a target page
+          if ( isset($entry['link']) ) {
+            $output .= 'accountLinkListEntry"></span><a href="' . $entry['link'] . '">' . $entry['title'] . '</a></li>';
+          } else {
+            $output .= 'accountLinkListEntry"></span>' . $entry['title'] . '</li>';
+          }          
         }
 
         $output .= '  </ul>' .
