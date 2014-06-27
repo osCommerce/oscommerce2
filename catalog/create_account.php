@@ -252,6 +252,13 @@
     }
   }
 
+    $address_format_query = tep_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " af left join " . TABLE_COUNTRIES . " c on af.address_format_id = c.address_format_id where countries_id = '" . STORE_COUNTRY . "'");
+    $address_format = tep_db_fetch_array($address_format_query);
+    $fmt = $address_format['format'];
+	$replace = array(",", "(", ")", "\$cr", "comma", "-", " ");
+	$fmt = str_replace($replace, "", $fmt);
+	$pieces = explode("$",$fmt);
+
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -290,8 +297,9 @@
 
 <?php
   }
-?>
 
+if ($pieces[1] == "firstname") {
+?>
       <tr>
         <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
         <td class="fieldValue"><?php echo tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
@@ -300,9 +308,21 @@
         <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
         <td class="fieldValue"><?php echo tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
       </tr>
+<?php
+} else {
+?>
+      <tr> 
+        <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
+      </tr>
+      <tr>
+        <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
+        <td class="fieldValue"><?php echo tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
+      </tr>
 
 <?php
-  if (ACCOUNT_DOB == 'true') {
+	  }
+if (ACCOUNT_DOB == 'true') {
 ?>
 
       <tr>
@@ -360,25 +380,13 @@
 
 <?php
   }
-?>
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_POST_CODE; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('postcode') . '&nbsp;' . (tep_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_CITY; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('city') . '&nbsp;' . (tep_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">' . ENTRY_CITY_TEXT . '</span>': ''); ?></td>
-      </tr>
+$city =   '<tr> <td class="fieldKey">' . ENTRY_CITY . '</td><td class="fieldValue">'. tep_draw_input_field('city') . '&nbsp;' . (tep_not_null(ENTRY_CITY_TEXT) ? '<span class="inputRequirement">' . ENTRY_CITY_TEXT . '</span>': '') . '</td></tr>' ;
+$pc =   '<tr> <td class="fieldKey">' . ENTRY_POST_CODE . '</td><td class="fieldValue">'. tep_draw_input_field('postcode') . '&nbsp;' . (tep_not_null(ENTRY_POST_CODE_TEXT) ? '<span class="inputRequirement">' . ENTRY_POST_CODE_TEXT . '</span>': '') . '</td></tr>' ;
 
-<?php
   if (ACCOUNT_STATE == 'true') {
-?>
+	  $state =   '<tr> <td class="fieldKey">' . ENTRY_STATE . '</td><td class="fieldValue">';
 
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_STATE; ?></td>
-        <td class="fieldValue">
-<?php
     if ($process == true) {
       if ($entry_state_has_zones == true) {
         $zones_array = array();
@@ -386,28 +394,66 @@
         while ($zones_values = tep_db_fetch_array($zones_query)) {
           $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
         }
-        echo tep_draw_pull_down_menu('state', $zones_array);
+        $state .= tep_draw_pull_down_menu('state', $zones_array);
       } else {
-        echo tep_draw_input_field('state');
+        $state .= tep_draw_input_field('state');
       }
     } else {
-      echo tep_draw_input_field('state');
+      $state .= tep_draw_input_field('state');
     }
 
-    if (tep_not_null(ENTRY_STATE_TEXT)) echo '&nbsp;<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>';
-?>
-        </td>
-      </tr>
+    if (tep_not_null(ENTRY_STATE_TEXT)) $state .=  '&nbsp;<span class="inputRequirement">' . ENTRY_STATE_TEXT . '</span>';
 
+$state .= '</td></tr>'
+	
+?>
 <?php
-  }
+  } else {
+	$state = "";
+}
+
+if ($pieces[4] == 'city') {
+	echo $city;
+
+	if ($pieces[5] == 'postcode') { 
+		echo $pc;
+		echo $state;
+	} else { 
+		echo $state;
+		echo $pc;
+	}
+
+} elseif ($pieces[4] == 'postcode') {
+	echo $pc;
+
+	  if ($pieces[5] == 'state') { 
+		echo $state;
+		echo $city;
+	  } else { 
+		echo $city;
+		echo $state;
+	  }
+
+} else { 
+	echo $state;
+
+	  if ($pieces[5] == 'postcode') { 
+		echo $pc;
+		echo $city;
+	  } else { 
+		echo $city;
+		echo $pc;
+	  }
+
+}
+
 ?>
 
       <tr>
         <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
         <td class="fieldValue"><?php echo tep_get_country_list('country') . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
       </tr>
-    </table>
+	</table>
   </div>
 
   <h2><?php echo CATEGORY_CONTACT; ?></h2>
