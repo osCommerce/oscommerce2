@@ -298,30 +298,16 @@
 <?php
   }
 
-if ($pieces[1] == "firstname") {
-?>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
-<?php
-} else {
-?>
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_LAST_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_FIRST_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': ''); ?></td>
-      </tr>
+$fn =   '<tr> <td class="fieldKey">' . ENTRY_FIRST_NAME . '</td><td class="fieldValue">'. tep_draw_input_field('firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': '') . '</td></tr>' ;
+$sn =   '<tr> <td class="fieldKey">' . ENTRY_LAST_NAME . '</td><td class="fieldValue">'. tep_draw_input_field('lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': '') . '</td></tr>' ;
 
-<?php
-	  }
+if ($pieces[1] == "firstname") {
+		echo $fn;
+		echo $sn;
+} else {
+		echo $sn;
+		echo $ln;
+}
 if (ACCOUNT_DOB == 'true') {
 ?>
 
@@ -424,7 +410,7 @@ if ($pieces[4] == 'city') {
 	}
 
 } elseif ($pieces[4] == 'postcode') {
-	echo $pc;
+		echo $pc;
 
 	  if ($pieces[5] == 'state') { 
 		echo $state;
@@ -435,7 +421,7 @@ if ($pieces[4] == 'city') {
 	  }
 
 } else { 
-	echo $state;
+		echo $state;
 
 	  if ($pieces[5] == 'postcode') { 
 		echo $pc;
@@ -451,7 +437,7 @@ if ($pieces[4] == 'city') {
 
       <tr>
         <td class="fieldKey"><?php echo ENTRY_COUNTRY; ?></td>
-        <td class="fieldValue"><?php echo tep_get_country_list('country') . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
+        <td class="fieldValue"><?php echo tep_get_country_list('country',STORE_COUNTRY) . '&nbsp;' . (tep_not_null(ENTRY_COUNTRY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COUNTRY_TEXT . '</span>': ''); ?></td>
       </tr>
 	</table>
   </div>
