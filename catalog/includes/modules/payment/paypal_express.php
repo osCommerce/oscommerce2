@@ -10,30 +10,36 @@
   Released under the GNU General Public License
 */
 
+  if ( !class_exists('OSCOM_PayPal') ) {
+    include(DIR_FS_CATALOG . 'includes/apps/paypal/OSCOM_PayPal.php');
+  }
+
   class paypal_express {
-    var $code, $title, $description, $enabled;
+    var $code, $title, $description, $enabled, $_app;
 
     function paypal_express() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order, $payment;
+      global $PHP_SELF, $order, $payment, $request_type;
 
-      $this->signature = 'paypal|paypal_express|3.1|2.3';
-      $this->api_version = '112';
+      $this->_app = new OSCOM_PayPal();
+
+      $this->signature = 'paypal|paypal_express|' . $this->_app->getVersion() . '|2.3';
+      $this->api_version = $this->_app->getApiVersion();
 
       $this->code = 'paypal_express';
       $this->title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_PUBLIC_TITLE;
       $this->description = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_DESCRIPTION;
-      $this->sort_order = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER') ? MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER : 0;
-      $this->enabled = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') && (MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS == 'True') ? true : false;
-      $this->order_status = defined('MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID : 0;
+      $this->sort_order = defined('OSCOM_APP_PAYPAL_EC_SORT_ORDER') ? OSCOM_APP_PAYPAL_EC_SORT_ORDER : 0;
+      $this->enabled = defined('OSCOM_APP_PAYPAL_EC_STATUS') && in_array(OSCOM_APP_PAYPAL_EC_STATUS, array('1', '0')) ? true : false;
+      $this->order_status = defined('OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID') && ((int)OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID > 0) ? (int)OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID : 0;
 
-      if ( defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') ) {
-        if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
+      if ( defined('OSCOM_APP_PAYPAL_EC_STATUS') ) {
+        $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=EC'), 'primary', null, true) . '</div><br />' . $this->description;
+
+        if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
-
-        $this->description .= $this->getTestLinkInfo();
       }
 
       if ( !function_exists('curl_init') ) {
@@ -43,7 +49,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT) && !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME) ) {
+        if ( !$this->_app->hasCredentials('EC') ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -56,6 +62,16 @@
         }
       }
 
+      if ( defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
+        if ( OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1' ) {
+          if ( isset($request_type) && ($request_type != 'SSL') && (ENABLE_SSL == true) ) {
+            tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
+          }
+
+          header('X-UA-Compatible: IE=edge', true);
+        }
+      }
+
 // When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
       if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('ppec_right_turn') ) {
         tep_session_unregister('ppec_right_turn');
@@ -64,19 +80,14 @@
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       }
-
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
-        echo $this->getTestConnectionResult();
-        exit;
-      }
     }
 
     function update_status() {
       global $order;
 
-      if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE > 0) ) {
+      if ( ($this->enabled == true) && ((int)OSCOM_APP_PAYPAL_EC_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . OSCOM_APP_PAYPAL_EC_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while ($check = tep_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
@@ -96,8 +107,8 @@
     function checkout_initialization_method() {
       global $cart;
 
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE == 'Dynamic') {
-        if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+      if (OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE == '1') {
+        if (OSCOM_APP_PAYPAL_EC_STATUS == '1') {
           $image_button = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image';
         } else {
           $image_button = 'https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image';
@@ -105,12 +116,12 @@
 
         $params = array('locale=' . MODULE_PAYMENT_PAYPAL_EXPRESS_LANGUAGE_LOCALE);
 
-        if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
-          $response_array = $this->getPalDetails();
+        if ( $this->_app->hasCredentials('EC') ) {
+          $response_array = $this->_app->getApiResult('EC', 'GetPalDetails');
 
           if (isset($response_array['PAL'])) {
             $params[] = 'pal=' . $response_array['PAL'];
-            $params[] = 'ordertotal=' . $this->format_raw($cart->show_total());
+            $params[] = 'ordertotal=' . $this->_app->formatCurrencyRaw($cart->show_total());
           }
         }
 
@@ -123,11 +134,26 @@
 
       $button_title = tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON);
 
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
+      if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
         $button_title .= ' (' . $this->code . '; Sandbox)';
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+
+      if ( OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1' ) {
+        $string .= <<<EOD
+<script>
+(function(d, s, id){
+  var js, ref = d.getElementsByTagName(s)[0];
+  if (!d.getElementById(id)){
+    js = d.createElement(s); js.id = id; js.async = true;
+    js.src = "//www.paypalobjects.com/js/external/paypal.v1.js";
+    ref.parentNode.insertBefore(js, ref);
+  }
+}(document, "script", "paypal-js"));
+</script>
+EOD;
+      }
 
       return $string;
     }
@@ -148,9 +174,9 @@
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      $response_array = $this->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $ppe_token));
 
-      if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
+      if ( !in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       } elseif ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
@@ -191,12 +217,12 @@
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      $response_array = $this->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $ppe_token));
 
-      if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
+      if ( in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
         if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !tep_session_is_registered('ppe_order_total_check') ) {
+        } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->_app->formatCurrencyRaw($order->info['total'])) && !tep_session_is_registered('ppe_order_total_check') ) {
           tep_session_register('ppe_order_total_check');
           $ppe_order_total_check = true;
 
@@ -220,7 +246,7 @@
 
       $params = array('TOKEN' => $ppe_token,
                       'PAYERID' => $ppe_payerid,
-                      'PAYMENTREQUEST_0_AMT' => $this->format_raw($order->info['total']),
+                      'PAYMENTREQUEST_0_AMT' => $this->_app->formatCurrencyRaw($order->info['total']),
                       'PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency']);
 
       if (is_numeric($sendto) && ($sendto > 0)) {
@@ -232,17 +258,17 @@
         $params['PAYMENTREQUEST_0_SHIPTOZIP'] = $order->delivery['postcode'];
       }
 
-      $response_array = $this->doExpressCheckoutPayment($params);
+      $response_array = $this->_app->getApiResult('EC', 'DoExpressCheckoutPayment', $params);
 
-      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
+      if ( !in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
         if ( $response_array['L_ERRORCODE0'] == '10486' ) {
-          if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
+          if (OSCOM_APP_PAYPAL_EC_STATUS == '1') {
             $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           } else {
             $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           }
 
-          $paypal_url .= '&token=' . $ppe_token . '&useraction=commit';
+          $paypal_url .= '&token=' . $ppe_token;
 
           tep_redirect($paypal_url);
         }
@@ -256,14 +282,13 @@
 
       $pp_result = 'Transaction ID: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
                    'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
+                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
-                   'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']) . "\n" .
-                   'Reversal Code: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_REASONCODE']);
+                   'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']);
 
       $sql_data_array = array('orders_id' => $insert_id,
-                              'orders_status_id' => MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID,
+                              'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,
                               'date_added' => 'now()',
                               'customer_notified' => '0',
                               'comments' => $pp_result);
@@ -282,374 +307,44 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+      $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'OSCOM_APP_PAYPAL_EC_STATUS'");
+      if ( tep_db_num_rows($check_query) ) {
+        $check = tep_db_fetch_array($check_query);
+
+        return tep_not_null($check['configuration_value']);
       }
-      return $this->_check;
+
+      return false;
     }
 
-    function install($parameter = null) {
-      $params = $this->getParams();
-
-      if (isset($parameter)) {
-        if (isset($params[$parameter])) {
-          $params = array($parameter => $params[$parameter]);
-        } else {
-          $params = array();
-        }
-      }
-
-      foreach ($params as $key => $data) {
-        $sql_data_array = array('configuration_title' => $data['title'],
-                                'configuration_key' => $key,
-                                'configuration_value' => (isset($data['value']) ? $data['value'] : ''),
-                                'configuration_description' => $data['desc'],
-                                'configuration_group_id' => '6',
-                                'sort_order' => '0',
-                                'date_added' => 'now()');
-
-        if (isset($data['set_func'])) {
-          $sql_data_array['set_function'] = $data['set_func'];
-        }
-
-        if (isset($data['use_func'])) {
-          $sql_data_array['use_function'] = $data['use_func'];
-        }
-
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
-      }
+    function install() {
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=install&module=EC'));
     }
 
-    function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
-    }
-
-    function keys() {
-      $keys = array_keys($this->getParams());
-
-      if ($this->check()) {
-        foreach ($keys as $key) {
-          if (!defined($key)) {
-            $this->install($key);
-          }
-        }
+    function remove($fromApp = false) {
+      if ( !$fromApp ) {
+        tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=EC'));
       }
 
-      return $keys;
+      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", array_merge($this->keys(), $this->keys(true))) . "')");
     }
 
-    function getParams() {
-      if (!defined('MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
+    function keys($fromApp = false) {
+      $params = array('OSCOM_APP_PAYPAL_EC_STATUS',
+                      'OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW',
+                      'OSCOM_APP_PAYPAL_EC_ACCOUNT_OPTIONAL',
+                      'OSCOM_APP_PAYPAL_EC_INSTANT_UPDATE',
+                      'OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE',
+                      'OSCOM_APP_PAYPAL_EC_PAGE_STYLE',
+                      'OSCOM_APP_PAYPAL_EC_TRANSACTION_METHOD',
+                      'OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID',
+                      'OSCOM_APP_PAYPAL_EC_ZONE');
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
-
-          $status_id = $status['status_id']+1;
-
-          $languages = tep_get_languages();
-
-          foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
-          }
-
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
-          }
-        } else {
-          $check = tep_db_fetch_array($check_query);
-
-          $status_id = $check['orders_status_id'];
-        }
-      } else {
-        $status_id = MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID;
+      if ( $fromApp == false ) {
+        $params = array('OSCOM_APP_PAYPAL_EC_SORT_ORDER');
       }
-
-      $params = array('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS' => array('title' => 'Enable PayPal Express Checkout',
-                                                                      'desc' => 'Do you want to accept PayPal Express Checkout payments?',
-                                                                      'value' => 'True',
-                                                                      'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT' => array('title' => 'Seller Account',
-                                                                              'desc' => 'The email address of the seller account if no API credentials has been setup.',
-                                                                              'value' => STORE_OWNER_EMAIL_ADDRESS),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME' => array('title' => 'API Username',
-                                                                            'desc' => 'The username to use for the PayPal API service.'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD' => array('title' => 'API Password',
-                                                                            'desc' => 'The password to use for the PayPal API service.'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE' => array('title' => 'API Signature',
-                                                                             'desc' => 'The signature to use for the PayPal API service.'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL' => array('title' => 'PayPal Account Optional',
-                                                                                'desc' => 'This must also be enabled in your PayPal account, in Profile > Website Payment Preferences.',
-                                                                                'value' => 'False',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE' => array('title' => 'PayPal Instant Update',
-                                                                              'desc' => 'Allow PayPal to retrieve shipping rates and taxes for the order.',
-                                                                              'value' => 'True',
-                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE' => array('title' => 'PayPal Checkout Image',
-                                                                              'desc' => 'Use static or dynamic Express Checkout image buttons. Dynamic images are used with PayPal campaigns.',
-                                                                              'value' => 'Static',
-                                                                              'set_func' => 'tep_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE' => array('title' => 'Page Style',
-                                                                          'desc' => 'The page style to use for the checkout flow (defined at your PayPal Profile page)'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
-                                                                                  'desc' => 'The processing method to use for each transaction.',
-                                                                                  'value' => 'Sale',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
-                                                                               'desc' => 'Set the status of orders made with this payment module to this value',
-                                                                               'value' => '0',
-                                                                               'use_func' => 'tep_get_order_status_name',
-                                                                               'set_func' => 'tep_cfg_pull_down_order_statuses('),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
-                                                                                            'desc' => 'Include PayPal transaction information in this order status level.',
-                                                                                            'value' => $status_id,
-                                                                                            'use_func' => 'tep_get_order_status_name',
-                                                                                            'set_func' => 'tep_cfg_pull_down_order_statuses('),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE' => array('title' => 'Payment Zone',
-                                                                    'desc' => 'If a zone is selected, only enable this payment method for that zone.',
-                                                                    'value' => '0',
-                                                                    'use_func' => 'tep_get_zone_class_title',
-                                                                    'set_func' => 'tep_cfg_pull_down_zone_classes('),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
-                                                                                  'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
-                                                                                  'value' => 'Live',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                          'desc' => 'Verify gateway server SSL certificate on connection?',
-                                                                          'value' => 'True',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY' => array('title' => 'Proxy Server',
-                                                                     'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
-                                                                           'desc' => 'All parameters of an invalid transaction will be sent to this email address.'),
-                      'MODULE_PAYMENT_PAYPAL_EXPRESS_SORT_ORDER' => array('title' => 'Sort order of display',
-                                                                          'desc' => 'Sort order of display. Lowest is displayed first.',
-                                                                          'value' => '0'));
 
       return $params;
-    }
-
-    function sendTransactionToGateway($url, $parameters) {
-      $server = parse_url($url);
-
-      if ( !isset($server['port']) ) {
-        $server['port'] = ($server['scheme'] == 'https') ? 443 : 80;
-      }
-
-      if ( !isset($server['path']) ) {
-        $server['path'] = '/';
-      }
-
-      $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
-      curl_setopt($curl, CURLOPT_PORT, $server['port']);
-      curl_setopt($curl, CURLOPT_HEADER, false);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
-      curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
-
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_VERIFY_SSL == 'True' ) {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
-        }
-      } else {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-      }
-
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY) ) {
-        curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
-        curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY);
-      }
-
-      $result = curl_exec($curl);
-
-      curl_close($curl);
-
-      return $result;
-    }
-
-// format prices without currency formatting
-    function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
-
-      if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
-      }
-
-      if (empty($currency_value) || !is_numeric($currency_value)) {
-        $currency_value = $currencies->currencies[$currency_code]['value'];
-      }
-
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
-    }
-
-    function getPalDetails() {
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('VERSION' => $this->api_version,
-                      'METHOD' => 'GetPalDetails',
-                      'USER' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME,
-                      'PWD' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD,
-                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE);
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      if (!isset($response_array['PAL'])) {
-        $this->sendDebugEmail($response_array);
-      }
-
-      return $response_array;
-    }
-
-    function setExpressCheckout($parameters) {
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('VERSION' => $this->api_version,
-                      'METHOD' => 'SetExpressCheckout',
-                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
-                      'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
-                      'CANCELURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=cancel', 'SSL', true, false),
-                      'BRANDNAME' => STORE_NAME,
-                      'SOLUTIONTYPE' => (MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL == 'True') ? 'Sole' : 'Mark');
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
-        $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
-        $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
-        $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
-      } else {
-        $params['SUBJECT'] = MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT;
-      }
-
-      if (is_array($parameters) && !empty($parameters)) {
-        $params = array_merge($params, $parameters);
-      }
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail($response_array);
-      }
-
-      return $response_array;
-    }
-
-    function getExpressCheckoutDetails($token) {
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('VERSION' => $this->api_version,
-                      'METHOD' => 'GetExpressCheckoutDetails',
-                      'TOKEN' => $token);
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
-        $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
-        $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
-        $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
-      } else {
-        $params['SUBJECT'] = MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT;
-      }
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail($response_array);
-      }
-
-      return $response_array;
-    }
-
-    function doExpressCheckoutPayment($parameters) {
-      if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('VERSION' => $this->api_version,
-                      'METHOD' => 'DoExpressCheckoutPayment',
-                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
-                      'BUTTONSOURCE' => 'OSCOM23_EC');
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
-        $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
-        $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
-        $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
-      } else {
-        $params['SUBJECT'] = MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT;
-      }
-
-      if (is_array($parameters) && !empty($parameters)) {
-        $params = array_merge($params, $parameters);
-      }
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
-        $this->sendDebugEmail($response_array);
-      }
-
-      return $response_array;
     }
 
     function getProductType($id, $attributes) {
@@ -662,30 +357,6 @@
       }
 
       return 'Physical';
-    }
-
-    function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
-        $email_body = '';
-
-        if (!empty($response)) {
-          $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
-        }
-
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
-        }
-
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
-        }
-
-        if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Checkout Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
-        }
-      }
     }
 
     function getTestLinkInfo() {
@@ -702,6 +373,9 @@
 <script>
 if ( typeof jQuery == 'undefined' ) {
   document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+}
+
+if ( typeof jQuery.ui == 'undefined' ) {
   document.write('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css" />');
   document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></scr' + 'ipt>');
 }
@@ -750,7 +424,7 @@ EOD;
       $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
               '<div id="testConnectionDialog" style="display: none;"><p>';
 
-      if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live' ) {
+      if ( OSCOM_APP_PAYPAL_EC_STATUS == '1' ) {
         $info .= 'Live Server:<br />https://api-3t.paypal.com/nvp';
       } else {
         $info .= 'Sandbox Server:<br />https://api-3t.sandbox.paypal.com/nvp';

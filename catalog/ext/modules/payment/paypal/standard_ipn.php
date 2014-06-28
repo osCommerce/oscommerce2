@@ -13,31 +13,53 @@
   chdir('../../../../');
   require('includes/application_top.php');
 
-  if (!defined('MODULE_PAYMENT_PAYPAL_STANDARD_STATUS') || (MODULE_PAYMENT_PAYPAL_STANDARD_STATUS  != 'True')) {
+  if ( !defined('OSCOM_APP_PAYPAL_PS_STATUS') || !in_array(OSCOM_APP_PAYPAL_PS_STATUS, array('1', '0')) ) {
     exit;
   }
 
   require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_standard.php');
   require('includes/modules/payment/paypal_standard.php');
 
+  $paypal_standard = new paypal_standard();
+
   $result = false;
 
-  if ( isset($HTTP_POST_VARS['receiver_email']) && (($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
-    $paypal_standard = new paypal_standard();
+  $seller_accounts = array($paypal_standard->_app->getCredentials('PS', 'email'));
 
-    $parameters = 'cmd=_notify-validate';
-
-    foreach ($HTTP_POST_VARS as $key => $value) {
-      $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
-    }
-
-    $result = $paypal_standard->sendTransactionToGateway($paypal_standard->form_action_url, $parameters);
+  if ( tep_not_null($paypal_standard->_app->getCredentials('PS', 'email_primary')) ) {
+    $seller_accounts[] = $paypal_standard->_app->getCredentials('PS', 'email_primary');
   }
+
+  $params = array('cmd' => '_notify-validate');
+
+  if ( isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts) ) {
+    foreach ($HTTP_POST_VARS as $key => $value) {
+      if ( $key != 'cmd' ) {
+        $params[$key] = $value;
+      }
+    }
+  }
+
+  $parameters = '';
+
+  foreach ($params as $key => $value) {
+    $parameters .= $key . '=' . urlencode(utf8_encode(trim(stripslashes($value)))) . '&';
+  }
+
+  $parameters = substr($parameters, 0, -1);
+
+  $result = $paypal_standard->_app->makeApiCall($paypal_standard->form_action_url, $parameters);
+
+  $log_params = $params;
+
+  foreach ( $HTTP_GET_VARS as $key => $value ) {
+    $log_params['GET ' . $key] = $value;
+  }
+
+  $paypal_standard->_app->log('PS', '_notify-validate', ($result == 'VERIFIED') ? 1 : -1, $log_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox', true);
 
   if ( $result == 'VERIFIED' ) {
     $paypal_standard->verifyTransaction(true);
-  } else {
-    $paypal_standard->sendDebugEmail($result, true);
   }
 
   tep_session_destroy();
