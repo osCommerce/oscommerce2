@@ -105,7 +105,7 @@ define('BOX_TOOLS_ACTION_RECORDER', 'Action Recorder');
 define('BOX_TOOLS_BACKUP', 'Database Backup');
 define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
 define('BOX_TOOLS_CACHE', 'Cache Control');
-define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
+define('BOX_TOOLS_DEFINE_LANGUAGE', 'Edit Screen Text');
 define('BOX_TOOLS_MAIL', 'Send Email');
 define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter Manager');
 define('BOX_TOOLS_SEC_DIR_PERMISSIONS', 'Security Directory Permissions');
