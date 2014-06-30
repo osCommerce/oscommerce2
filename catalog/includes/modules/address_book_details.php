@@ -17,7 +17,7 @@
     $fmt = $address_format['format'];
 	$replace = array(",", "(", ")", "\$cr", "comma", "-", " ");
 	$fmt = str_replace($replace, "", $fmt);
-	$pieces = explode("$",$fmt);
+	$address_position = explode("$",$fmt);
 ?>
 
   <div>
@@ -51,7 +51,7 @@
 $fn =   '<tr> <td class="fieldKey">' . ENTRY_FIRST_NAME . '</td><td class="fieldValue">'. tep_draw_input_field('entry_firstname') . '&nbsp;' . (tep_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': '') . '</td></tr>' ;
 $sn =   '<tr> <td class="fieldKey">' . ENTRY_LAST_NAME . '</td><td class="fieldValue">'. tep_draw_input_field('entry_lastname') . '&nbsp;' . (tep_not_null(ENTRY_LAST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_LAST_NAME_TEXT . '</span>': '') . '</td></tr>' ;
 
-if ($pieces[1] == "firstname") {
+if ($address_position[1] == "firstname") {
 		echo $fn;
 		echo $sn;
 } else {
@@ -119,10 +119,10 @@ $state .= '</td></tr>'
 	$state = "";
 }
 
-if ($pieces[4] == 'city') {
+if ($address_position[4] == 'city') {
 	echo $city;
 
-	if ($pieces[5] == 'postcode') { 
+	if ($address_position[5] == 'postcode') { 
 		echo $pc;
 		echo $state;
 	} else { 
@@ -130,10 +130,10 @@ if ($pieces[4] == 'city') {
 		echo $pc;
 	}
 
-} elseif ($pieces[4] == 'postcode') {
+} elseif ($address_position[4] == 'postcode') {
 		echo $pc;
 
-	  if ($pieces[5] == 'state') { 
+	  if ($address_position[5] == 'state') { 
 		echo $state;
 		echo $city;
 	  } else { 
@@ -144,7 +144,7 @@ if ($pieces[4] == 'city') {
 } else { 
 		echo $state;
 
-	  if ($pieces[5] == 'postcode') { 
+	  if ($address_position[5] == 'postcode') { 
 		echo $pc;
 		echo $city;
 	  } else { 
