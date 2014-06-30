@@ -117,7 +117,10 @@
       }
 
 ?>
-          <tr><?php echo tep_draw_form('language', FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $HTTP_GET_VARS['filename'] . '&action=save'); ?>
+          <tr>
+            <td class="main"><?php echo TEXT_EDIT_NOTE; ?></td>
+          </tr>
+		  <tr><?php echo tep_draw_form('language', FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $HTTP_GET_VARS['lngdir'] . '&filename=' . $HTTP_GET_VARS['filename'] . '&action=save'); ?>
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td class="main"><strong><?php echo $HTTP_GET_VARS['filename']; ?></strong></td>
@@ -135,9 +138,6 @@
           </form></tr>
           <tr>
             <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td class="main"><?php echo TEXT_EDIT_NOTE; ?></td>
           </tr>
 <?php
     } else {
