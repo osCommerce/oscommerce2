@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2002 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -51,6 +51,7 @@ define('ENTRY_TOTAL', 'Total:');
 define('ENTRY_DATE_PURCHASED', 'Date Purchased:');
 define('ENTRY_STATUS', 'Status:');
 define('ENTRY_DATE_LAST_UPDATED', 'Date Last Updated:');
+define('ENTRY_ADD_COMMENT', 'Add Comment:');
 define('ENTRY_NOTIFY_CUSTOMER', 'Notify Customer:');
 define('ENTRY_NOTIFY_COMMENTS', 'Append Comments:');
 define('ENTRY_PRINTABLE', 'Print Invoice');
