@@ -209,7 +209,7 @@ EOD;
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $appPayPalEcResult, $appPayPalEcSecret, $appPayPalEcOrderTotalCheck, $HTTP_POST_VARS, $comments;
+      global $customer_id, $order, $sendto, $appPayPalEcResult, $appPayPalEcSecret, $appPayPalEcOrderTotalCheck, $response_array, $HTTP_POST_VARS, $comments;
 
       if ( !tep_session_is_registered('appPayPalEcResult') ) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
