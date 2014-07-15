@@ -286,15 +286,15 @@
     echo $payment_modules->process_button();
   }
 
-  echo tep_draw_button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'check', null, 'primary');
+  echo tep_draw_button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), null, null, 'primary', array('params' => 'data-button="payNow"'));
 ?>
 
   </div>
 </div>
 
 <script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 100
+$('form[name="checkout_confirmation"]').submit(function() {
+  $('button[data-button="payNow"]').button('option', { label: '<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>', disabled: true });
 });
 </script>
 
