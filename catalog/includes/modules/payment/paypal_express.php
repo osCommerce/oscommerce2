@@ -180,10 +180,6 @@ EOD;
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      if ( tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
-        $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_EXPRESS_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
-      }
-
       $order->info['payment_method'] = '<img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo" style="padding: 3px;" />';
     }
 
@@ -209,7 +205,7 @@ EOD;
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $appPayPalEcResult, $appPayPalEcSecret, $appPayPalEcOrderTotalCheck, $response_array, $HTTP_POST_VARS, $comments;
+      global $customer_id, $order, $sendto, $appPayPalEcResult, $appPayPalEcSecret, $response_array, $HTTP_POST_VARS, $comments;
 
       if ( !tep_session_is_registered('appPayPalEcResult') ) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
@@ -218,18 +214,9 @@ EOD;
       if ( in_array($appPayPalEcResult['ACK'], array('Success', 'SuccessWithWarning')) ) {
         if ( !tep_session_is_registered('appPayPalEcSecret') || ($appPayPalEcResult['PAYMENTREQUEST_0_CUSTOM'] != $appPayPalEcSecret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( ($appPayPalEcResult['PAYMENTREQUEST_0_AMT'] != $this->_app->formatCurrencyRaw($order->info['total'])) && !tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
-          tep_session_register('appPayPalEcOrderTotalCheck');
-          $appPayPalEcOrderTotalCheck = true;
-
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($appPayPalEcResult['L_LONGMESSAGE0']), 'SSL'));
-      }
-
-      if ( tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
-        tep_session_unregister('appPayPalEcOrderTotalCheck');
       }
 
       if (empty($comments)) {
