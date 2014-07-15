@@ -63,8 +63,8 @@
 
   switch ($HTTP_GET_VARS['osC_Action']) {
     case 'cancel':
-      tep_session_unregister('ppe_token');
-      tep_session_unregister('ppe_secret');
+      tep_session_unregister('appPayPalEcResult');
+      tep_session_unregister('appPayPalEcSecret');
 
       if ( empty($sendto['firstname']) && empty($sendto['lastname']) && empty($sendto['street_address']) ) {
         tep_session_unregister('sendto');
@@ -285,32 +285,22 @@
 
       break;
     case 'retrieve':
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-      if ($cart->count_contents() < 1) {
+      if ( ($cart->count_contents() < 1) || !isset($HTTP_GET_VARS['token']) || empty($HTTP_GET_VARS['token']) || !tep_session_is_registered('appPayPalEcSecret') ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      $response_array = $paypal_express->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $HTTP_GET_VARS['token']));
+      if ( !tep_session_is_registered('appPayPalEcResult') ) {
+        tep_session_register('appPayPalEcResult');
+        $appPayPalEcResult = $paypal_express->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $HTTP_GET_VARS['token']));
+      }
 
-      if ( in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
-        if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+      if ( in_array($appPayPalEcResult['ACK'], array('Success', 'SuccessWithWarning')) ) {
+        if ( $appPayPalEcResult['PAYMENTREQUEST_0_CUSTOM'] != $appPayPalEcSecret ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
 
         if (!tep_session_is_registered('payment')) tep_session_register('payment');
         $payment = $paypal_express->code;
-
-        if (!tep_session_is_registered('ppe_token')) tep_session_register('ppe_token');
-        $ppe_token = $response_array['TOKEN'];
-
-        if (!tep_session_is_registered('ppe_payerid')) tep_session_register('ppe_payerid');
-        $ppe_payerid = $response_array['PAYERID'];
-
-        if (!tep_session_is_registered('ppe_payerstatus')) tep_session_register('ppe_payerstatus');
-        $ppe_payerstatus = $response_array['PAYERSTATUS'];
-
-        if (!tep_session_is_registered('ppe_addressstatus')) tep_session_register('ppe_addressstatus');
-        $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
 
         $force_login = false;
 
@@ -318,20 +308,20 @@
         if (!tep_session_is_registered('customer_id')) {
           $force_login = true;
 
-          $email_address = tep_db_prepare_input($response_array['EMAIL']);
+          $email_address = tep_db_prepare_input($appPayPalEcResult['EMAIL']);
 
           $check_query = tep_db_query("select * from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' limit 1");
           if (tep_db_num_rows($check_query)) {
             $check = tep_db_fetch_array($check_query);
 
 // Force the customer to log into their local account if payerstatus is unverified and a local password is set
-            if ( ($response_array['PAYERSTATUS'] == 'unverified') && !empty($check['customers_password']) ) {
+            if ( ($appPayPalEcResult['PAYERSTATUS'] == 'unverified') && !empty($check['customers_password']) ) {
               $messageStack->add_session('login', MODULE_PAYMENT_PAYPAL_EXPRESS_WARNING_LOCAL_LOGIN_REQUIRED, 'warning');
 
               $navigation->set_snapshot();
 
               $login_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
-              $login_email_address = tep_output_string($response_array['EMAIL']);
+              $login_email_address = tep_output_string($appPayPalEcResult['EMAIL']);
 
       $output = <<<EOD
 <form name="pe" action="{$login_url}" method="post" target="_top">
@@ -350,8 +340,8 @@ EOD;
               $customer_default_address_id = $check['customers_default_address_id'];
             }
           } else {
-            $customers_firstname = tep_db_prepare_input($response_array['FIRSTNAME']);
-            $customers_lastname = tep_db_prepare_input($response_array['LASTNAME']);
+            $customers_firstname = tep_db_prepare_input($appPayPalEcResult['FIRSTNAME']);
+            $customers_lastname = tep_db_prepare_input($appPayPalEcResult['LASTNAME']);
 
             $sql_data_array = array('customers_firstname' => $customers_firstname,
                                     'customers_lastname' => $customers_lastname,
@@ -361,8 +351,8 @@ EOD;
                                     'customers_newsletter' => '0',
                                     'customers_password' => '');
 
-            if (isset($response_array['PHONENUM']) && tep_not_null($response_array['PHONENUM'])) {
-              $customers_telephone = tep_db_prepare_input($response_array['PHONENUM']);
+            if (isset($appPayPalEcResult['PHONENUM']) && tep_not_null($appPayPalEcResult['PHONENUM'])) {
+              $customers_telephone = tep_db_prepare_input($appPayPalEcResult['PHONENUM']);
 
               $sql_data_array['customers_telephone'] = $customers_telephone;
             }
@@ -399,14 +389,14 @@ EOD;
         }
 
 // check if paypal shipping address exists in the address book
-        $ship_firstname = tep_db_prepare_input(substr($response_array['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($response_array['PAYMENTREQUEST_0_SHIPTONAME'], ' ')));
-        $ship_lastname = tep_db_prepare_input(substr($response_array['PAYMENTREQUEST_0_SHIPTONAME'], strpos($response_array['PAYMENTREQUEST_0_SHIPTONAME'], ' ')+1));
-        $ship_address = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOSTREET']);
-        $ship_city = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOCITY']);
-        $ship_zone = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOSTATE']);
+        $ship_firstname = tep_db_prepare_input(substr($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], 0, strpos($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], ' ')));
+        $ship_lastname = tep_db_prepare_input(substr($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], strpos($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTONAME'], ' ')+1));
+        $ship_address = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOSTREET']);
+        $ship_city = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOCITY']);
+        $ship_zone = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOSTATE']);
         $ship_zone_id = 0;
-        $ship_postcode = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOZIP']);
-        $ship_country = tep_db_prepare_input($response_array['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
+        $ship_postcode = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOZIP']);
+        $ship_country = tep_db_prepare_input($appPayPalEcResult['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE']);
         $ship_country_id = 0;
         $ship_address_format_id = 1;
 
@@ -535,14 +525,14 @@ EOD;
               $shipping_set = false;
 
 // if available, set the selected shipping rate from PayPals order review page
-              if (isset($response_array['SHIPPINGOPTIONNAME']) && isset($response_array['SHIPPINGOPTIONAMOUNT'])) {
+              if (isset($appPayPalEcResult['SHIPPINGOPTIONNAME']) && isset($appPayPalEcResult['SHIPPINGOPTIONAMOUNT'])) {
                 foreach ($quotes as $quote) {
                   if (!isset($quote['error'])) {
                     foreach ($quote['methods'] as $rate) {
-                      if ($response_array['SHIPPINGOPTIONNAME'] == trim($quote['module'] . ' ' . $rate['title'])) {
+                      if ($appPayPalEcResult['SHIPPINGOPTIONNAME'] == trim($quote['module'] . ' ' . $rate['title'])) {
                         $shipping_rate = $paypal_express->_app->formatCurrencyRaw($rate['cost'] + tep_calculate_tax($rate['cost'], $quote['tax']));
 
-                        if ($response_array['SHIPPINGOPTIONAMOUNT'] == $shipping_rate) {
+                        if ($appPayPalEcResult['SHIPPINGOPTIONAMOUNT'] == $shipping_rate) {
                           $shipping = $quote['id'] . '_' . $rate['id'];
                           $shipping_set = true;
                           break 2;
@@ -565,8 +555,8 @@ EOD;
 
               $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS, 'error');
 
-              tep_session_register('ppec_right_turn');
-              $ppec_right_turn = true;
+              tep_session_register('appPayPalEcRightTurn');
+              $appPayPalEcRightTurn = true;
 
               tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
             }
@@ -605,7 +595,7 @@ EOD;
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
-        $messageStack->add_session('header', stripslashes($response_array['L_LONGMESSAGE0']), 'error');
+        $messageStack->add_session('header', stripslashes($appPayPalEcResult['L_LONGMESSAGE0']), 'error');
 
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
@@ -869,13 +859,13 @@ EOD;
         $params['PAGESTYLE'] = OSCOM_APP_PAYPAL_EC_PAGE_STYLE;
       }
 
-      $ppe_secret = tep_create_random_value(16, 'digits');
+      $appPayPalEcSecret = tep_create_random_value(16, 'digits');
 
-      if ( !tep_session_is_registered('ppe_secret') ) {
-        tep_session_register('ppe_secret');
+      if ( !tep_session_is_registered('appPayPalEcSecret') ) {
+        tep_session_register('appPayPalEcSecret');
       }
 
-      $params['PAYMENTREQUEST_0_CUSTOM'] = $ppe_secret;
+      $params['PAYMENTREQUEST_0_CUSTOM'] = $appPayPalEcSecret;
 
 // Log In with PayPal token for seamless checkout
       if (tep_session_is_registered('paypal_login_access_token')) {

@@ -73,8 +73,8 @@
       }
 
 // When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
-      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('ppec_right_turn') ) {
-        tep_session_unregister('ppec_right_turn');
+      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('appPayPalEcRightTurn') ) {
+        tep_session_unregister('appPayPalEcRightTurn');
 
         if ( tep_session_is_registered('payment') && ($payment == $this->code) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
@@ -168,21 +168,19 @@ EOD;
     }
 
     function pre_confirmation_check() {
-      global $ppe_token, $ppe_secret, $messageStack, $order;
+      global $appPayPalEcResult, $appPayPalEcSecret, $messageStack, $order;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if ( !tep_session_is_registered('appPayPalEcResult') ) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $ppe_token));
-
-      if ( !in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
-      } elseif ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+      if ( !in_array($appPayPalEcResult['ACK'], array('Success', 'SuccessWithWarning')) ) {
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($appPayPalEcResult['L_LONGMESSAGE0']), 'SSL'));
+      } elseif ( !tep_session_is_registered('appPayPalEcSecret') || ($appPayPalEcResult['PAYMENTREQUEST_0_CUSTOM'] != $appPayPalEcSecret) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppe_order_total_check') ) {
+      if ( tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
         $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_EXPRESS_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
       }
 
@@ -211,29 +209,27 @@ EOD;
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $HTTP_POST_VARS, $comments, $response_array;
+      global $customer_id, $order, $sendto, $appPayPalEcResult, $appPayPalEcSecret, $appPayPalEcOrderTotalCheck, $HTTP_POST_VARS, $comments;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if ( !tep_session_is_registered('appPayPalEcResult') ) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->_app->getApiResult('EC', 'GetExpressCheckoutDetails', array('TOKEN' => $ppe_token));
-
-      if ( in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
-        if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+      if ( in_array($appPayPalEcResult['ACK'], array('Success', 'SuccessWithWarning')) ) {
+        if ( !tep_session_is_registered('appPayPalEcSecret') || ($appPayPalEcResult['PAYMENTREQUEST_0_CUSTOM'] != $appPayPalEcSecret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->_app->formatCurrencyRaw($order->info['total'])) && !tep_session_is_registered('ppe_order_total_check') ) {
-          tep_session_register('ppe_order_total_check');
-          $ppe_order_total_check = true;
+        } elseif ( ($appPayPalEcResult['PAYMENTREQUEST_0_AMT'] != $this->_app->formatCurrencyRaw($order->info['total'])) && !tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
+          tep_session_register('appPayPalEcOrderTotalCheck');
+          $appPayPalEcOrderTotalCheck = true;
 
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($appPayPalEcResult['L_LONGMESSAGE0']), 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppe_order_total_check') ) {
-        tep_session_unregister('ppe_order_total_check');
+      if ( tep_session_is_registered('appPayPalEcOrderTotalCheck') ) {
+        tep_session_unregister('appPayPalEcOrderTotalCheck');
       }
 
       if (empty($comments)) {
@@ -244,8 +240,8 @@ EOD;
         }
       }
 
-      $params = array('TOKEN' => $ppe_token,
-                      'PAYERID' => $ppe_payerid,
+      $params = array('TOKEN' => $appPayPalEcResult['TOKEN'],
+                      'PAYERID' => $appPayPalEcResult['PAYERID'],
                       'PAYMENTREQUEST_0_AMT' => $this->_app->formatCurrencyRaw($order->info['total']),
                       'PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency']);
 
@@ -262,13 +258,13 @@ EOD;
 
       if ( !in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
         if ( $response_array['L_ERRORCODE0'] == '10486' ) {
-          if (OSCOM_APP_PAYPAL_EC_STATUS == '1') {
+          if ( OSCOM_APP_PAYPAL_EC_STATUS == '1' ) {
             $paypal_url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           } else {
             $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           }
 
-          $paypal_url .= '&token=' . $ppe_token;
+          $paypal_url .= '&token=' . $appPayPalEcResult['TOKEN'];
 
           tep_redirect($paypal_url);
         }
@@ -278,11 +274,11 @@ EOD;
     }
 
     function after_process() {
-      global $response_array, $insert_id, $ppe_payerstatus, $ppe_addressstatus;
+      global $response_array, $insert_id, $appPayPalEcResult;
 
       $pp_result = 'Transaction ID: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
-                   'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n" .
+                   'Payer Status: ' . tep_output_string_protected($appPayPalEcResult['PAYERSTATUS']) . "\n" .
+                   'Address Status: ' . tep_output_string_protected($appPayPalEcResult['ADDRESSSTATUS']) . "\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
                    'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']);
@@ -295,11 +291,8 @@ EOD;
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppe_token');
-      tep_session_unregister('ppe_payerid');
-      tep_session_unregister('ppe_payerstatus');
-      tep_session_unregister('ppe_addressstatus');
-      tep_session_unregister('ppe_secret');
+      tep_session_unregister('appPayPalEcResult');
+      tep_session_unregister('appPayPalEcSecret');
     }
 
     function get_error() {
