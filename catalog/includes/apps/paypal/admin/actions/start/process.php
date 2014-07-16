@@ -18,8 +18,7 @@
       $params['merchant_id'] = OSCOM_APP_PAYPAL_START_MERCHANT_ID;
     }
 
-//    $result_string = $OSCOM_PayPal->makeApiCall('https://ssl.oscommerce.com/?RPC&Website&Index&PayPalStart', $params);
-    $result_string = $OSCOM_PayPal->makeApiCall('https://localhost/Projects/osCommerce/haraldpdl/oscommerce/?RPC&Website&Index&PayPalStart', $params);
+    $result_string = $OSCOM_PayPal->makeApiCall('https://ssl.oscommerce.com/index.php?RPC&Website&Index&PayPalStart', $params);
     $result = array();
 
     if ( !empty($result_string) && (substr($result_string, 0, 9) == 'rpcStatus') ) {
@@ -43,9 +42,9 @@
 
 //      tep_redirect($result['redirect_url']);
       echo '<b>Redirect to PayPal:</b><br /><a href="' . $result['redirect_url'] . '">' . $result['redirect_url'] . '</a></p>';
-
-      echo '<pre>';var_dump($result);
-      exit;
     }
+
+    echo '<pre>';var_dump($result);
+    exit;
   }
 ?>
