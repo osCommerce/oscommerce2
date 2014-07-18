@@ -321,7 +321,6 @@
 
       $process_button_string = '';
       $parameters = array('cmd' => '_cart',
-                          'charset' => CHARSET,
                           'upload' => '1',
                           'item_name_1' => STORE_NAME,
                           'shipping_1' => $this->_app->formatCurrencyRaw($order->info['shipping_cost']),
