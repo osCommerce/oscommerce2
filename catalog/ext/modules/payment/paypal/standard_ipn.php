@@ -43,7 +43,7 @@
   $parameters = '';
 
   foreach ($params as $key => $value) {
-    $parameters .= $key . '=' . urlencode(utf8_encode(trim(stripslashes($value)))) . '&';
+    $parameters .= $key . '=' . urlencode(stripslashes($value)) . '&';
   }
 
   $parameters = substr($parameters, 0, -1);
