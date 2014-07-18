@@ -30,27 +30,22 @@
     $seller_accounts[] = $paypal_standard->_app->getCredentials('PS', 'email_primary');
   }
 
-  $params = array('cmd' => '_notify-validate');
-
   if ( isset($HTTP_POST_VARS['receiver_email']) && in_array($HTTP_POST_VARS['receiver_email'], $seller_accounts) ) {
-    foreach ($HTTP_POST_VARS as $key => $value) {
+    $parameters = 'cmd=_notify-validate&';
+
+    foreach ( $HTTP_POST_VARS as $key => $value ) {
       if ( $key != 'cmd' ) {
-        $params[$key] = $value;
+        $parameters .= $key . '=' . urlencode(stripslashes($value)) . '&';
       }
     }
+
+    $parameters = substr($parameters, 0, -1);
+
+    $result = $paypal_standard->_app->makeApiCall($paypal_standard->form_action_url, $parameters);
   }
 
-  $parameters = '';
-
-  foreach ($params as $key => $value) {
-    $parameters .= $key . '=' . urlencode(stripslashes($value)) . '&';
-  }
-
-  $parameters = substr($parameters, 0, -1);
-
-  $result = $paypal_standard->_app->makeApiCall($paypal_standard->form_action_url, $parameters);
-
-  $log_params = $params;
+  $log_params = $HTTP_POST_VARS;
+  $log_params['cmd'] = '_notify-validate';
 
   foreach ( $HTTP_GET_VARS as $key => $value ) {
     $log_params['GET ' . $key] = $value;
