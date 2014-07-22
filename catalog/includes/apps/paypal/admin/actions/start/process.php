@@ -14,10 +14,6 @@
     $params = array('return_url' => tep_href_link('paypal.php', 'action=start&subaction=retrieve', 'SSL'),
                     'type' => $HTTP_GET_VARS['type']);
 
-    if ( defined('OSCOM_APP_PAYPAL_START_MERCHANT_ID') ) {
-      $params['merchant_id'] = OSCOM_APP_PAYPAL_START_MERCHANT_ID;
-    }
-
     $result_string = $OSCOM_PayPal->makeApiCall('https://ssl.oscommerce.com/index.php?RPC&Website&Index&PayPalStart', $params);
     $result = array();
 
@@ -34,10 +30,7 @@
     }
 
     if ( isset($result['rpcStatus']) && ($result['rpcStatus'] === '1') && isset($result['merchant_id']) && (preg_match('/^[A-Za-z0-9]{32}$/', $result['merchant_id']) === 1) && isset($result['redirect_url']) && isset($result['secret']) ) {
-      if ( !defined('OSCOM_APP_PAYPAL_START_MERCHANT_ID') || (OSCOM_APP_PAYPAL_START_MERCHANT_ID != $result['merchant_id']) ) {
-        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID', $result['merchant_id']);
-      }
-
+      $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID', $result['merchant_id']);
       $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_SECRET', $result['secret']);
 
       tep_redirect($result['redirect_url']);
