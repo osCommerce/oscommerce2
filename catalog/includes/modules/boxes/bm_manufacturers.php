@@ -39,7 +39,7 @@
       if ($number_of_rows = tep_db_num_rows($manufacturers_query)) {
         if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
-          $manufacturers_list = '<ul style="list-style: none; margin: 0; padding: 0;">';
+          $manufacturers_list = '<ul class="nav nav-list">';
           while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
             $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturers['manufacturers_name']);
             if (isset($HTTP_GET_VARS['manufacturers_id']) && ($HTTP_GET_VARS['manufacturers_id'] == $manufacturers['manufacturers_id'])) $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
@@ -67,9 +67,9 @@
                      '</form>';
         }
 
-        $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents">' . $content . '</div>' .
+        $data = '<div class="panel panel-default">' .
+                  '  <div class="panel-heading">' . MODULE_BOXES_MANUFACTURERS_BOX_TITLE . '</div>' .
+                  '  <div class="panel-body">' . $content . '</div>' .
                   '</div>';
       }
 
