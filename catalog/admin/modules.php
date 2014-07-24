@@ -23,7 +23,7 @@
   $module_type = $cfgModules->get($set, 'code');
   $module_directory = $cfgModules->get($set, 'directory');
   $module_language_directory = $cfgModules->get($set, 'language_directory');
-  $module_key = $cfgModules->get($set, 'key');;
+  $module_key = $cfgModules->get($set, 'key');
   define('HEADING_TITLE', $cfgModules->get($set, 'title'));
   $template_integration = $cfgModules->get($set, 'template_integration');
 
