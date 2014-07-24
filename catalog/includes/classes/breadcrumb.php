@@ -25,18 +25,18 @@
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
-    function trail($separator = ' - ') {
-      $trail_string = '';
+    function trail($separator = NULL) {
+      $trail_string = '<ol class="breadcrumb">';
 
       for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
         if (isset($this->_trail[$i]['link']) && tep_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<a href="' . $this->_trail[$i]['link'] . '" class="headerNavigation">' . $this->_trail[$i]['title'] . '</a>';
+          $trail_string .= '<li><a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a></li>' . "\n";
         } else {
-          $trail_string .= $this->_trail[$i]['title'];
+          $trail_string .= '<li>' . $this->_trail[$i]['title'] . '</li>';
         }
-
-        if (($i+1) < $n) $trail_string .= $separator;
       }
+
+      $trail_string .= '</ol>';
 
       return $trail_string;
     }
