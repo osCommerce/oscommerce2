@@ -53,7 +53,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
+    //tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
   }
 
   if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
@@ -116,8 +116,8 @@
     </table>
   </div>
 
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
+  <div class="text-right">
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?>
   </div>
 </div>
 

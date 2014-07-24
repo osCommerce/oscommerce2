@@ -276,12 +276,12 @@
 
     <p><?php echo tep_address_label($customer_id, $HTTP_GET_VARS['delete'], true, ' ', '<br />'); ?></p>
   </div>
-
-  <div>
-    <span style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $HTTP_GET_VARS['delete'] . '&action=deleteconfirm&formid=' . md5($sessiontoken), 'SSL'), 'primary'); ?></span>
-
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?>
+  
+  <div class="row">
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $HTTP_GET_VARS['delete'] . '&action=deleteconfirm&formid=' . md5($sessiontoken), 'SSL'), 'primary', null, 'btn-warning'); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
   </div>
+  
 </div>
 
 <?php
@@ -299,9 +299,9 @@
 ?>
 
   <div>
-    <span style="float: right;"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $HTTP_GET_VARS['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'refresh', null, 'primary'); ?></span>
+    <span style="float: right;"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $HTTP_GET_VARS['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary'); ?></span>
 
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?>
   </div>
 
 <?php
@@ -312,11 +312,10 @@
         $back_link = tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
       }
 ?>
-
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_hidden_field('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
-
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'triangle-1-w', $back_link); ?>
+  
+  <div class="row">
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
   </div>
 
 <?php
