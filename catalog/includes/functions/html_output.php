@@ -337,7 +337,7 @@
 
 ////
 // Output a jQuery UI Button
-  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
+  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;
 
     $types = array('submit', 'button', 'reset');
@@ -354,11 +354,7 @@
       $params['type'] = 'button';
     }
 
-    if (!isset($priority)) {
-      $priority = 'secondary';
-    }
-
-    $button = '<span class="tdbLink">';
+    $button = NULL;
 
     if ( ($params['type'] == 'button') && isset($link) ) {
       $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
@@ -373,40 +369,24 @@
     if ( isset($params['params']) ) {
       $button .= ' ' . $params['params'];
     }
+    
+    $button .= ' class="btn ';
+    $button .= (isset($class)) ? $class : 'btn-default';
+    $button .= '"';
 
-    $button .= '>' . $title;
+    $button .= '>';
+    
+    if (isset($icon) && tep_not_null($icon)) {
+      $button .= ' <span class="' . $icon . '"></span> ';
+    }
+
+    $button .= $title;
 
     if ( ($params['type'] == 'button') && isset($link) ) {
       $button .= '</a>';
     } else {
       $button .= '</button>';
     }
-
-    $button .= '</span><script type="text/javascript">$("#tdb' . $button_counter . '").button(';
-
-    $args = array();
-
-    if ( isset($icon) ) {
-      if ( !isset($params['iconpos']) ) {
-        $params['iconpos'] = 'left';
-      }
-
-      if ( $params['iconpos'] == 'left' ) {
-        $args[] = 'icons:{primary:"ui-icon-' . $icon . '"}';
-      } else {
-        $args[] = 'icons:{secondary:"ui-icon-' . $icon . '"}';
-      }
-    }
-
-    if (empty($title)) {
-      $args[] = 'text:false';
-    }
-
-    if (!empty($args)) {
-      $button .= '{' . implode(',', $args) . '}';
-    }
-
-    $button .= ').addClass("ui-priority-' . $priority . '").parent().removeClass("tdbLink");</script>';
 
     $button_counter++;
 
