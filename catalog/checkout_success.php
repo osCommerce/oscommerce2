@@ -52,11 +52,7 @@
   <?php echo $page_content; ?>
 </div>
 
-<div class="contentContainer">
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></span>
-  </div>
-</div>
+<div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
 
 </form>
 

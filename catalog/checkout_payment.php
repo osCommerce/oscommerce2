@@ -153,7 +153,7 @@ function rowOutEffect(object) {
       </div>
     </div>
 
-    <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'home', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL')); ?>
+    <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL')); ?>
   </div>
 
   <div style="clear: both;"></div>
@@ -280,7 +280,7 @@ function rowOutEffect(object) {
       </table>
     </div>
 
-    <div style="float: right;"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'triangle-1-e', null, 'primary'); ?></div>
+    <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
 </div>
 
