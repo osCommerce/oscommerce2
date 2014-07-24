@@ -90,7 +90,9 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+<div class="page-header">
+  <h1><?php echo HEADING_TITLE; ?></h1>
+</div>
 
 <?php
   if ($messageStack->size('checkout_confirmation') > 0) {

@@ -107,7 +107,9 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<h1><?php echo sprintf(HEADING_TITLE, $product_info['products_name']); ?></h1>
+<div class="page-header">
+  <h1><?php echo sprintf(HEADING_TITLE, $product_info['products_name']); ?></h1>
+</div>
 
 <?php
   if ($messageStack->size('friend') > 0) {

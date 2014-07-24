@@ -107,7 +107,9 @@ function popupWindow(url) {
 }
 //--></script>
 
-<h1><?php echo HEADING_TITLE_1; ?></h1>
+<div class="page-header">
+  <h1><?php echo HEADING_TITLE_1; ?></h1>
+</div>
 
 <?php
   if ($messageStack->size('search') > 0) {

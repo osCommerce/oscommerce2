@@ -130,7 +130,9 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<h1><?php echo HEADING_TITLE_2; ?></h1>
+<div class="page-header">
+  <h1><?php echo HEADING_TITLE_2; ?></h1>
+</div>
 
 <div class="contentContainer">
 

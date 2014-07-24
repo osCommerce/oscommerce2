@@ -142,9 +142,11 @@
 
       $this->tep_show_category($first_element);
 
-      $data = '<div class="ui-widget infoBoxContainer">' .
-              '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
-              '  <div class="ui-widget-content infoBoxContents">' . $categories_string . '</div>' .
+
+              
+      $data = '<div class="panel panel-default">' .
+              '  <div class="panel-heading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
+              '  <div class="panel-body">' . $categories_string . '</div>' .
               '</div>';
 
       return $data;

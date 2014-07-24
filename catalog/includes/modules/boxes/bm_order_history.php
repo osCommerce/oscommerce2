@@ -43,19 +43,16 @@
           }
           $product_ids = substr($product_ids, 0, -1);
 
-          $customer_orders_string = '<table border="0" width="100%" cellspacing="0" cellpadding="1" class="ui-widget-content infoBoxContents">';
+          $customer_orders_string = '<ul class="list-unstyled">';
           $products_query = tep_db_query("select products_id, products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id in (" . $product_ids . ") and language_id = '" . (int)$languages_id . "' order by products_name");
           while ($products = tep_db_fetch_array($products_query)) {
-            $customer_orders_string .= '  <tr>' .
-                                       '    <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></td>' .
-                                       '    <td align="right" valign="top"><a href="' . tep_href_link($PHP_SELF, tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '">' . tep_image(DIR_WS_ICONS . 'cart.gif', ICON_CART) . '</a></td>' .
-                                       '  </tr>';
+            $customer_orders_string .= '<li><span class="pull-right"><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></li>';
           }
-          $customer_orders_string .= '</table>';
+          $customer_orders_string .= '</ul>';
 
-          $data = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</div>' .
-                  '  ' . $customer_orders_string .
+          $data = '<div class="panel panel-default">' .
+                  '  <div class="panel-heading">' . MODULE_BOXES_ORDER_HISTORY_BOX_TITLE . '</div>' .
+                  '  <div class="panel-body">' . $customer_orders_string . '</div>' .
                   '</div>';
 
           $oscTemplate->addBlock($data, $this->group);

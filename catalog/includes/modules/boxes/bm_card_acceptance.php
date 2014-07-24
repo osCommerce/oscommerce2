@@ -34,9 +34,9 @@
       global $PHP_SELF, $oscTemplate;
 
       if ( (substr(basename($PHP_SELF), 0, 8) != 'checkout') && tep_not_null(MODULE_BOXES_CARD_ACCEPTANCE_LOGOS) ) {
-        $output = '<div class="ui-widget infoBoxContainer">' .
-                  '  <div class="ui-widget-header infoBoxHeading">' . MODULE_BOXES_CARD_ACCEPTANCE_BOX_TITLE . '</div>' .
-                  '  <div class="ui-widget-content infoBoxContents" style="text-align: center;">';
+        $output = '<div class="panel panel-default">' .
+                  '  <div class="panel-heading">' . MODULE_BOXES_CARD_ACCEPTANCE_BOX_TITLE . '</div>' .
+                  '  <div class="panel-body text-center">';
 
         foreach ( explode(';', MODULE_BOXES_CARD_ACCEPTANCE_LOGOS) as $logo ) {
           $output .= tep_image(DIR_WS_IMAGES . 'card_acceptance/' . basename($logo));
