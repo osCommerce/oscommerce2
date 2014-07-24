@@ -23,7 +23,7 @@
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
-<meta charset=<?php echo CHARSET; ?>" />
+<meta charset="<?php echo CHARSET; ?>" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
