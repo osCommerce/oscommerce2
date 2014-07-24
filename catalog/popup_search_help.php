@@ -28,7 +28,9 @@
 
 <div id="bodyWrapper">
   <div id="bodyContent">
-    <h1><?php echo HEADING_SEARCH_HELP; ?></h1>
+    <div class="page-header">
+      <h1><?php echo HEADING_TITLE; ?></h1>
+    </div>
 
     <div class="contentContainer">
       <div class="contentText">

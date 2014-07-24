@@ -39,7 +39,9 @@
     $category = tep_db_fetch_array($category_query);
 ?>
 
-<h1><?php echo $category['categories_name']; ?></h1>
+<div class="page-header">
+  <h1><?php echo $category['categories_name']; ?></h1>
+</div>
 
 <div class="contentContainer">
   <div class="contentText">
@@ -204,7 +206,9 @@
     }
 ?>
 
-<h1><?php echo $catname; ?></h1>
+<div class="page-header">
+  <h1><?php echo $catname; ?></h1>
+</div>
 
 <div class="contentContainer">
 
@@ -244,7 +248,9 @@
   } else { // default page
 ?>
 
-<h1><?php echo HEADING_TITLE; ?></h1>
+<div class="page-header">
+  <h1><?php echo HEADING_TITLE; ?></h1>
+</div>
 
 <div class="contentContainer">
   <div class="contentText">

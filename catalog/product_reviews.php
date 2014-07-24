@@ -48,8 +48,8 @@
   }
 ?>
 
-<div>
-  <h1 style="float: right;"><?php echo $products_price; ?></h1>
+<div class="page-header">
+  <h1 class="pull-right"><?php echo $products_price; ?></h1>
   <h1><?php echo $products_name; ?></h1>
 </div>
 
