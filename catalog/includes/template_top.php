@@ -54,8 +54,6 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 <link rel="stylesheet" type="text/css" href="ext/colorbox/colorbox.css" />
 <script type="text/javascript" src="ext/colorbox/jquery.colorbox-min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="stylesheet.css" />
-
 <!-- Custom -->
 <link href="custom.css" rel="stylesheet">
 <!-- Custom -->
