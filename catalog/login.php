@@ -86,31 +86,10 @@
 ?>
 
 <div id="loginModules">
-  <?php echo $page_content; ?>
+  <div class="row">
+    <?php echo $page_content; ?>
+  </div>
 </div>
-
-<script type="text/javascript">
-var login_modules_counter = 0;
-var login_modules_total = $('#loginModules .contentContainer').length;
-
-$('#loginModules .contentContainer').each(function(index, element) {
-  login_modules_counter++;
-
-  if ( login_modules_counter == 1 ) {
-    if ( $(this).hasClass('grid_8') && ((index+1) != login_modules_total) ) {
-      $(this).addClass('alpha');
-    } else {
-      login_modules_counter = 0;
-    }
-  } else {
-    if ( $(this).hasClass('grid_8') ) {
-      $(this).addClass('omega');
-    }
-
-    login_modules_counter = 0;
-  }
-});
-</script>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
