@@ -1,3 +1,25 @@
 /* DO NOT CHANGE THIS FILE -------------------------------------------------- */
 /* TO OVER-RIDE ANY ASPECT OF THIS CSS, AMEND THE user.css FILE ------------- */
 
+#storeLogo {
+  margin-top: 5px;
+}
+
+#headerShortcuts {
+  margin-top: 15px;
+}
+
+s, del {
+  color: silver;
+}
+
+.productSpecialPrice {
+  color: red;
+}
+
+#piGal {
+  float: right;
+  width: 250px;
+  margin-bottom: 20px;
+}
+
