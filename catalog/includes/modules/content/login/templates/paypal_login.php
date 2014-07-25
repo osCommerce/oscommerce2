@@ -1,4 +1,4 @@
-<div class="contentContainer <?php echo (MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
+<div class="contentContainer <?php echo (MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
   <h2><?php echo MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_TITLE; ?></h2>
 
   <div class="contentText">

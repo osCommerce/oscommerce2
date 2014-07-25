@@ -13,7 +13,7 @@
   require(DIR_WS_INCLUDES . 'counter.php');
 ?>
 
-<div class="grid_24 footer">
+<div class="footer">
   <p align="center"><?php echo FOOTER_TEXT_BODY; ?></p>
 </div>
 
@@ -21,7 +21,7 @@
   if ($banner = tep_banner_exists('dynamic', 'footer')) {
 ?>
 
-<div class="grid_24" style="text-align: center; padding-bottom: 20px;">
+<div style="text-align: center; padding-bottom: 20px;">
   <?php echo tep_display_banner('static', $banner); ?>
 </div>
 
