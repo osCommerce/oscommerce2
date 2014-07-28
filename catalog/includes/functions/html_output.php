@@ -117,6 +117,7 @@
 ////
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
+// 2.4 DEPRECATED
   function tep_image_submit($image, $alt = '', $parameters = '') {
     global $language;
 
@@ -147,6 +148,10 @@
 
 ////
 // Output a form
+// 2.4 - user must explicitly pass
+// class="form-horizontal" role="form"
+// into the parameters on each form
+// as not all forms are horizontal
   function tep_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
     global $sessiontoken;
 
@@ -165,7 +170,8 @@
 
 ////
 // Output a form input field
-  function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true) {
+// 2.4 - automatically pass form-control css class
+  function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
@@ -183,6 +189,8 @@
     }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    
+    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
 
     $field .= ' />';
 
@@ -230,12 +238,15 @@
 ////
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
+// 2.4 - automatically pass form-control css class
+  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control') {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    
+    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
 
     $field .= '>';
 
@@ -290,12 +301,15 @@
 
 ////
 // Output a form pull down menu
-  function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
+// 2.4 - automatically pass form-control css class
+  function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {
     global $HTTP_GET_VARS, $HTTP_POST_VARS;
 
     $field = '<select name="' . tep_output_string($name) . '"';
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
+    
+    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
 
     $field .= '>';
 
