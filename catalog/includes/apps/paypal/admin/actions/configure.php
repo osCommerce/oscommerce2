@@ -13,7 +13,7 @@
   $content = 'configure.php';
 
   $modules = array('EC', 'DP', 'HS', 'PS', 'G');
-  $current_module = (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules) ? $HTTP_GET_VARS['module'] : 'EC');
+  $current_module = (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules) ? $HTTP_GET_VARS['module'] : $modules[0]);
 
   if ( !defined('OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID') ) {
     $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
@@ -49,5 +49,9 @@
 
   if ( !defined('OSCOM_APP_PAYPAL_PROXY') ) {
     $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_PROXY', '');
+  }
+
+  if ( !defined('OSCOM_APP_PAYPAL_GATEWAY') ) {
+    $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_GATEWAY', '1');
   }
 ?>

@@ -191,15 +191,17 @@
     }
 
     function before_process() {
+      if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) {
+        $this->before_process_paypal();
+      } else {
+        $this->before_process_payflow();
+      }
+    }
+
+    function before_process_paypal() {
       global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
 
-      if (isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
-        if (OSCOM_APP_PAYPAL_DP_STATUS == '1') {
-          $api_url = 'https://api-3t.paypal.com/nvp';
-        } else {
-          $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-        }
-
+      if ( isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns']) ) {
         $params = array('AMT' => $this->_app->formatCurrencyRaw($order->info['total']),
                         'CREDITCARDTYPE' => $HTTP_POST_VARS['cc_type'],
                         'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
@@ -221,7 +223,7 @@
           $params['ISSUENUMBER'] = $HTTP_POST_VARS['cc_issue_nh-dns'];
         }
 
-        if (is_numeric($sendto) && ($sendto > 0)) {
+        if ( is_numeric($sendto) && ($sendto > 0) ) {
           $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];
           $params['SHIPTOCITY'] = $order->delivery['city'];
@@ -234,7 +236,7 @@
 
         $line_item_no = 0;
 
-        foreach ($order->products as $product) {
+        foreach ( $order->products as $product ) {
           $item_params['L_NAME' . $line_item_no] = $product['name'];
           $item_params['L_AMT' . $line_item_no] = $this->_app->formatCurrencyRaw($product['final_price']);
           $item_params['L_NUMBER' . $line_item_no] = $product['id'];
@@ -245,7 +247,7 @@
 
         $items_total = $this->_app->formatCurrencyRaw($order->info['subtotal']);
 
-        foreach ($order_totals as $ot) {
+        foreach ( $order_totals as $ot ) {
           if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
             $item_params['L_NAME' . $line_item_no] = $ot['title'];
             $item_params['L_AMT' . $line_item_no] = $this->_app->formatCurrencyRaw($ot['value']);
@@ -274,7 +276,111 @@
       }
     }
 
+    function before_process_payflow() {
+      global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
+
+      if ( isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns']) ) {
+        $params = array('AMT' => $this->_app->formatCurrencyRaw($order->info['total']),
+                        'CURRENCY' => $order->info['currency'],
+                        'BILLTOFIRSTNAME' => substr($HTTP_POST_VARS['cc_owner'], 0, strpos($HTTP_POST_VARS['cc_owner'], ' ')),
+                        'BILLTOLASTNAME' => substr($HTTP_POST_VARS['cc_owner'], strpos($HTTP_POST_VARS['cc_owner'], ' ')+1),
+                        'BILLTOSTREET' => $order->billing['street_address'],
+                        'BILLTOCITY' => $order->billing['city'],
+                        'BILLTOSTATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
+                        'BILLTOCOUNTRY' => $order->billing['country']['iso_code_2'],
+                        'BILLTOZIP' => $order->billing['postcode'],
+                        'EMAIL' => $order->customer['email_address'],
+                        'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
+                        'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
+                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns']);
+
+        if ( is_numeric($sendto) && ($sendto > 0) ) {
+          $params['SHIPTOFIRSTNAME'] = $order->delivery['firstname'];
+          $params['SHIPTOLASTNAME'] = $order->delivery['lastname'];
+          $params['SHIPTOSTREET'] = $order->delivery['street_address'];
+          $params['SHIPTOCITY'] = $order->delivery['city'];
+          $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+          $params['SHIPTOCOUNTRY'] = $order->delivery['country']['iso_code_2'];
+          $params['SHIPTOZIP'] = $order->delivery['postcode'];
+        }
+
+        $item_params = array();
+
+        $line_item_no = 0;
+
+        foreach ($order->products as $product) {
+          $item_params['L_NAME' . $line_item_no] = $product['name'];
+          $item_params['L_COST' . $line_item_no] = $this->_app->formatCurrencyRaw($product['final_price']);
+          $item_params['L_QTY' . $line_item_no] = $product['qty'];
+
+          $line_item_no++;
+        }
+
+        $items_total = $this->_app->formatCurrencyRaw($order->info['subtotal']);
+
+        foreach ($order_totals as $ot) {
+          if ( !in_array($ot['code'], array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
+            $item_params['L_NAME' . $line_item_no] = $ot['title'];
+            $item_params['L_COST' . $line_item_no] = $this->_app->formatCurrencyRaw($ot['value']);
+            $item_params['L_QTY' . $line_item_no] = 1;
+
+            $items_total += $this->_app->formatCurrencyRaw($ot['value']);
+
+            $line_item_no++;
+          }
+        }
+
+        $item_params['ITEMAMT'] = $items_total;
+        $item_params['TAXAMT'] = $this->_app->formatCurrencyRaw($order->info['tax']);
+        $item_params['FREIGHTAMT'] = $this->_app->formatCurrencyRaw($order->info['shipping_cost']);
+
+        if ( $this->_app->formatCurrencyRaw($item_params['ITEMAMT'] + $item_params['TAXAMT'] + $item_params['FREIGHTAMT']) == $params['AMT'] ) {
+          $params = array_merge($params, $item_params);
+        }
+
+        $response_array = $this->_app->getApiResult('DP', 'PayflowPayment', $params);
+
+        if ( $response_array['RESULT'] != '0' ) {
+          switch ( $response_array['RESULT'] ) {
+            case '1':
+            case '26':
+              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_CFG_ERROR;
+              break;
+
+            case '7':
+              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ADDRESS;
+              break;
+
+            case '12':
+              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_DECLINED;
+              break;
+
+            case '23':
+            case '24':
+              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_INVALID_CREDIT_CARD;
+              break;
+
+            default:
+              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_GENERAL;
+              break;
+          }
+
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . urlencode($error_message), 'SSL'));
+        }
+      } else {
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+      }
+    }
+
     function after_process() {
+      if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) {
+        $this->after_process_paypal();
+      } else {
+        $this->after_process_payflow();
+      }
+    }
+
+    function after_process_paypal() {
       global $response_array, $insert_id;
 
       $details = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $response_array['TRANSACTIONID']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
@@ -291,6 +397,99 @@
 
       $result .= 'AVS Code: ' . tep_output_string_protected($response_array['AVSCODE']) . "\n" .
                  'CVV2 Match: ' . tep_output_string_protected($response_array['CVV2MATCH']);
+
+      $sql_data_array = array('orders_id' => $insert_id,
+                              'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,
+                              'date_added' => 'now()',
+                              'customer_notified' => '0',
+                              'comments' => $result);
+
+      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+    }
+
+    function after_process_payflow() {
+      global $insert_id, $response_array;
+
+      $details = $this->_app->getApiResult('APP', 'PayflowInquiry', array('ORIGID' => $response_array['PNREF']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
+
+      $result = 'Transaction ID: ' . tep_output_string_protected($response_array['PNREF']) . "\n" .
+                'Gateway: Payflow' . "\n" .
+                'PayPal ID: ' . tep_output_string_protected($response_array['PPREF']) . "\n" .
+                'Response: ' . tep_output_string_protected($response_array['RESPMSG']) . "\n";
+
+      if ( isset($details['RESULT']) && ($details['RESULT'] == '0') ) {
+        $pending_reason = $details['TRANSSTATE'];
+        $payment_status = null;
+
+        switch ( $details['TRANSSTATE'] ) {
+          case '3':
+            $pending_reason = 'authorization';
+            $payment_status = 'Pending';
+            break;
+
+          case '4':
+            $pending_reason = 'other';
+            $payment_status = 'In-Progress';
+            break;
+
+          case '6':
+            $pending_reason = 'scheduled';
+            $payment_status = 'Pending';
+            break;
+
+          case '8':
+          case '9':
+            $pending_reason = 'None';
+            $payment_status = 'Completed';
+            break;
+        }
+
+        if ( isset($payment_status) ) {
+          $result .= 'Payment Status: ' . tep_output_string_protected($payment_status) . "\n";
+        }
+
+        $result .= 'Pending Reason: ' . tep_output_string_protected($pending_reason) . "\n";
+      }
+
+      switch ( $response_array['AVSADDR'] ) {
+        case 'Y':
+          $result .= 'AVS Address: Match' . "\n";
+          break;
+
+        case 'N':
+          $result .= 'AVS Address: No Match' . "\n";
+          break;
+      }
+
+      switch ( $response_array['AVSZIP'] ) {
+        case 'Y':
+          $result .= 'AVS ZIP: Match' . "\n";
+          break;
+
+        case 'N':
+          $result .= 'AVS ZIP: No Match' . "\n";
+          break;
+      }
+
+      switch ( $response_array['IAVS'] ) {
+        case 'Y':
+          $result .= 'IAVS: International' . "\n";
+          break;
+
+        case 'N':
+          $result .= 'IAVS: USA' . "\n";
+          break;
+      }
+
+      switch ( $response_array['CVV2MATCH'] ) {
+        case 'Y':
+          $result .= 'CVV2: Match' . "\n";
+          break;
+
+        case 'N':
+          $result .= 'CVV2: No Match' . "\n";
+          break;
+      }
 
       $sql_data_array = array('orders_id' => $insert_id,
                               'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,

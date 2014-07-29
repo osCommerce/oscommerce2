@@ -32,7 +32,7 @@
                              'link' => tep_href_link('paypal.php', 'action=configure'));
 
       $paypal_menu[] = array('code' => 'paypal.php',
-                             'title' => MODULES_ADMIN_MENU_PAYPAL_MANAGE_API,
+                             'title' => MODULES_ADMIN_MENU_PAYPAL_MANAGE_CREDENTIALS,
                              'link' => tep_href_link('paypal.php', 'action=credentialsManual'));
 
       $paypal_menu[] = array('code' => 'paypal.php',

@@ -15,8 +15,8 @@
 
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
   <?php echo $OSCOM_PayPal->drawButton('Express Checkout', tep_href_link('paypal.php', 'action=configure&module=EC'), 'info', 'data-module="EC"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Payments Pro (Direct Payment)', tep_href_link('paypal.php', 'action=configure&module=DP'), 'info', 'data-module="DP"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Payments Pro (Hosted Solution)', tep_href_link('paypal.php', 'action=configure&module=HS'), 'info', 'data-module="HS"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('Direct Payment', tep_href_link('paypal.php', 'action=configure&module=DP'), 'info', 'data-module="DP"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('Hosted Solution', tep_href_link('paypal.php', 'action=configure&module=HS'), 'info', 'data-module="HS"'); ?>
   <?php echo $OSCOM_PayPal->drawButton('Payments Standard', tep_href_link('paypal.php', 'action=configure&module=PS'), 'info', 'data-module="PS"'); ?>
   <?php echo $OSCOM_PayPal->drawButton('General', tep_href_link('paypal.php', 'action=configure&module=G'), 'info', 'data-module="G"'); ?>
 </div>

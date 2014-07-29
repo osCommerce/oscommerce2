@@ -136,6 +136,8 @@
 
       if ( $type == 'email') {
         $creds = array('OSCOM_APP_PAYPAL_' . $server . '_SELLER_EMAIL');
+      } elseif ( substr($type, 0, 7) == 'payflow' ) {
+        $creds = array('OSCOM_APP_PAYPAL_PF_' . $server . '_' . strtoupper(substr($type, 8)));
       } else {
         $creds = array('OSCOM_APP_PAYPAL_' . $server . '_API_USERNAME',
                        'OSCOM_APP_PAYPAL_' . $server . '_API_PASSWORD',
@@ -157,6 +159,8 @@
           return constant('OSCOM_APP_PAYPAL_LIVE_SELLER_EMAIL');
         } elseif ( $type == 'email_primary') {
           return constant('OSCOM_APP_PAYPAL_LIVE_SELLER_EMAIL_PRIMARY');
+        } elseif ( substr($type, 0, 7) == 'payflow' ) {
+          return constant('OSCOM_APP_PAYPAL_PF_LIVE_' . strtoupper(substr($type, 8)));
         } else {
           return constant('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type));
         }
@@ -166,6 +170,8 @@
         return constant('OSCOM_APP_PAYPAL_SANDBOX_SELLER_EMAIL');
       } elseif ( $type == 'email_primary') {
         return constant('OSCOM_APP_PAYPAL_SANDBOX_SELLER_EMAIL_PRIMARY');
+      } elseif ( substr($type, 0, 7) == 'payflow' ) {
+        return constant('OSCOM_APP_PAYPAL_PF_SANDBOX_' . strtoupper(substr($type, 8)));
       } else {
         return constant('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type));
       }

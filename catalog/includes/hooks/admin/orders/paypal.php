@@ -41,16 +41,101 @@
 
             switch ( $HTTP_GET_VARS['tabaction'] ) {
               case 'getTransactionDetails':
-                $result = $OSCOM_PayPal->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+                $pp_result = null;
 
-                if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
-                  $pp_result = 'Transaction ID: ' . tep_output_string_protected($result['TRANSACTIONID']) . "\n" .
-                               'Payer Status: ' . tep_output_string_protected($result['PAYERSTATUS']) . "\n" .
-                               'Address Status: ' . tep_output_string_protected($result['ADDRESSSTATUS']) . "\n" .
-                               'Payment Status: ' . tep_output_string_protected($result['PAYMENTSTATUS']) . "\n" .
-                               'Payment Type: ' . tep_output_string_protected($result['PAYMENTTYPE']) . "\n" .
-                               'Pending Reason: ' . tep_output_string_protected($result['PENDINGREASON']);
+                if ( !isset($pp['Gateway']) ) {
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
 
+                  if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                    $pp_result = 'Transaction ID: ' . tep_output_string_protected($result['TRANSACTIONID']) . "\n" .
+                                 'Payer Status: ' . tep_output_string_protected($result['PAYERSTATUS']) . "\n" .
+                                 'Address Status: ' . tep_output_string_protected($result['ADDRESSSTATUS']) . "\n" .
+                                 'Payment Status: ' . tep_output_string_protected($result['PAYMENTSTATUS']) . "\n" .
+                                 'Payment Type: ' . tep_output_string_protected($result['PAYMENTTYPE']) . "\n" .
+                                 'Pending Reason: ' . tep_output_string_protected($result['PENDINGREASON']);
+                  }
+                } elseif ( $pp['Gateway'] == 'Payflow' ) {
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'PayflowInquiry', array('ORIGID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                  if ( isset($result['RESULT']) && ($result['RESULT'] == '0') ) {
+                    $pp_result = 'Transaction ID: ' . tep_output_string_protected($result['ORIGPNREF']) . "\n" .
+                                 'Gateway: Payflow' . "\n";
+
+                    $pending_reason = $result['TRANSSTATE'];
+                    $payment_status = null;
+
+                    switch ( $result['TRANSSTATE'] ) {
+                      case '3':
+                        $pending_reason = 'authorization';
+                        $payment_status = 'Pending';
+                        break;
+
+                      case '4':
+                        $pending_reason = 'other';
+                        $payment_status = 'In-Progress';
+                        break;
+
+                      case '6':
+                        $pending_reason = 'scheduled';
+                        $payment_status = 'Pending';
+                        break;
+
+                      case '8':
+                      case '9':
+                        $pending_reason = 'None';
+                        $payment_status = 'Completed';
+                        break;
+                    }
+
+                    if ( isset($payment_status) ) {
+                      $pp_result .= 'Payment Status: ' . tep_output_string_protected($payment_status) . "\n";
+                    }
+
+                    $pp_result .= 'Pending Reason: ' . tep_output_string_protected($pending_reason) . "\n";
+
+                    switch ( $result['AVSADDR'] ) {
+                      case 'Y':
+                        $pp_result .= 'AVS Address: Match' . "\n";
+                        break;
+
+                      case 'N':
+                        $pp_result .= 'AVS Address: No Match' . "\n";
+                        break;
+                    }
+
+                    switch ( $result['AVSZIP'] ) {
+                      case 'Y':
+                        $pp_result .= 'AVS ZIP: Match' . "\n";
+                        break;
+
+                      case 'N':
+                        $pp_result .= 'AVS ZIP: No Match' . "\n";
+                        break;
+                    }
+
+                    switch ( $result['IAVS'] ) {
+                      case 'Y':
+                        $pp_result .= 'IAVS: International' . "\n";
+                        break;
+
+                      case 'N':
+                        $pp_result .= 'IAVS: USA' . "\n";
+                        break;
+                    }
+
+                    switch ( $result['CVV2MATCH'] ) {
+                      case 'Y':
+                        $pp_result .= 'CVV2: Match' . "\n";
+                        break;
+
+                      case 'N':
+                        $pp_result .= 'CVV2: No Match' . "\n";
+                        break;
+                    }
+                  }
+                }
+
+                if ( tep_not_null($pp_result) ) {
                   $sql_data_array = array('orders_id' => (int)$HTTP_GET_VARS['oID'],
                                           'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,
                                           'date_added' => 'now()',
@@ -63,6 +148,8 @@
                 break;
 
               case 'doCapture':
+                $pp_pass = false;
+
                 $capture_total = $capture_value = $OSCOM_PayPal->formatCurrencyRaw($o['total'], $o['currency'], $o['currency_value']);
                 $capture_final = true;
 
@@ -71,21 +158,41 @@
                   $capture_final = (isset($HTTP_POST_VARS['ppCatureComplete']) && ($HTTP_POST_VARS['ppCatureComplete'] == 'true')) ? true : false;
                 }
 
-                $params = array('AUTHORIZATIONID' => $pp['Transaction ID'],
-                                'AMT' => $capture_value,
-                                'CURRENCYCODE' => $o['currency'],
-                                'COMPLETETYPE' => ($capture_final === true) ? 'Complete' : 'NotComplete');
+                if ( !isset($pp['Gateway']) ) {
+                  $params = array('AUTHORIZATIONID' => $pp['Transaction ID'],
+                                  'AMT' => $capture_value,
+                                  'CURRENCYCODE' => $o['currency'],
+                                  'COMPLETETYPE' => ($capture_final === true) ? 'Complete' : 'NotComplete');
 
-                $result = $OSCOM_PayPal->getApiResult('APP', 'DoCapture', $params, (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'DoCapture', $params, (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
 
-                if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                  if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                    $transaction_id = $result['TRANSACTIONID'];
+
+                    $pp_pass = true;
+                  }
+                } elseif ( $pp['Gateway'] == 'Payflow' ) {
+                  $params = array('ORIGID' => $pp['Transaction ID'],
+                                  'AMT' => $capture_value,
+                                  'CAPTURECOMPLETE' => ($capture_final === true) ? 'Y' : 'N');
+
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'PayflowCapture', $params, (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                  if ( isset($result['RESULT']) && ($result['RESULT'] == '0') ) {
+                    $transaction_id = $result['PNREF'];
+
+                    $pp_pass = true;
+                  }
+                }
+
+                if ( $pp_pass === true ) {
                   $pp_result = 'PayPal App: Capture (' . $capture_value . ')' . "\n";
 
                   if ( ($capture_value < $capture_total) && ($capture_final === true) ) {
                     $pp_result .= 'PayPal App: Void (' . $OSCOM_PayPal->formatCurrencyRaw($capture_total - $capture_value, $o['currency'], 1) . ')' . "\n";
                   }
 
-                  $pp_result .= 'Transaction ID: ' . tep_output_string_protected($result['TRANSACTIONID']);
+                  $pp_result .= 'Transaction ID: ' . tep_output_string_protected($transaction_id);
 
                   $sql_data_array = array('orders_id' => (int)$HTTP_GET_VARS['oID'],
                                           'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,
@@ -99,9 +206,23 @@
                 break;
 
               case 'doVoid':
-                $result = $OSCOM_PayPal->getApiResult('APP', 'DoVoid', array('AUTHORIZATIONID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+                $pp_pass = false;
 
-                if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                if ( !isset($pp['Gateway']) ) {
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'DoVoid', array('AUTHORIZATIONID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                  if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                    $pp_pass = true;
+                  }
+                } elseif ( $pp['Gateway'] == 'Payflow' ) {
+                  $result = $OSCOM_PayPal->getApiResult('APP', 'PayflowVoid', array('ORIGID' => $pp['Transaction ID']), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                  if ( isset($result['RESULT']) && ($result['RESULT'] == '0') ) {
+                    $pp_pass = true;
+                  }
+                }
+
+                if ( $pp_pass === true ) {
                   $capture_total = $OSCOM_PayPal->formatCurrencyRaw($o['total'], $o['currency'], $o['currency_value']);
 
                   $c_query = tep_db_query("select comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . (int)$o['orders_id'] . "' and orders_status_id = '" . (int)OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID . "' and comments like 'PayPal App: Capture (%'");
@@ -154,11 +275,29 @@
                   }
 
                   foreach ( $rids as $id ) {
-                    $result = $OSCOM_PayPal->getApiResult('APP', 'RefundTransaction', array('TRANSACTIONID' => $id), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+                    $pp_pass = false;
 
-                    if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                    if ( !isset($pp['Gateway']) ) {
+                      $result = $OSCOM_PayPal->getApiResult('APP', 'RefundTransaction', array('TRANSACTIONID' => $id), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                      if ( in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
+                        $transaction_id = $result['REFUNDTRANSACTIONID'];
+
+                        $pp_pass = true;
+                      }
+                    } elseif ( $pp['Gateway'] == 'Payflow' ) {
+                      $result = $OSCOM_PayPal->getApiResult('APP', 'PayflowRefund', array('ORIGID' => $id), (strpos($o['payment_method'], 'Sandbox') === false) ? 'live' : 'sandbox');
+
+                      if ( isset($result['RESULT']) && ($result['RESULT'] == '0') ) {
+                        $transaction_id = $result['PNREF'];
+
+                        $pp_pass = true;
+                      }
+                    }
+
+                    if ( $pp_pass === true ) {
                       $pp_result = 'PayPal App: Refund (' . $tids[$id]['Amount'] . ')' . "\n" .
-                                   'Transaction ID: ' . tep_output_string_protected($result['REFUNDTRANSACTIONID']) . "\n" .
+                                   'Transaction ID: ' . tep_output_string_protected($transaction_id) . "\n" .
                                    'Parent ID: ' . tep_output_string_protected($id);
 
                       $sql_data_array = array('orders_id' => (int)$HTTP_GET_VARS['oID'],
@@ -166,6 +305,7 @@
                                               'date_added' => 'now()',
                                               'customer_notified' => '0',
                                               'comments' => $pp_result);
+
                       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
                     }
                   }

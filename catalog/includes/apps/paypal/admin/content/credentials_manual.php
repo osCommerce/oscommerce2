@@ -11,9 +11,20 @@
 */
 ?>
 
-<form name="paypalCredentialsManual" action="<?php echo tep_href_link('paypal.php', 'action=credentialsManual&subaction=process'); ?>" method="post" class="pp-form">
+<h3>Manage Credentials</h3>
 
-<h3>PayPal Live Account API Credentials</h3>
+<div id="appPayPalToolbar" style="padding-bottom: 15px;">
+  <?php echo $OSCOM_PayPal->drawButton('PayPal', tep_href_link('paypal.php', 'action=credentialsManual&module=PP'), 'info', 'data-module="PP"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('Payflow', tep_href_link('paypal.php', 'action=credentialsManual&module=PF'), 'info', 'data-module="PF"'); ?>
+</div>
+
+<form name="paypalCredentialsManual" action="<?php echo tep_href_link('paypal.php', 'action=credentialsManual&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
+
+<?php
+  if ( $current_module == 'PP' ) {
+?>
+
+<h3>Live Credentials</h3>
 
 <div class="pp-panel pp-panel-warning">
   <table>
@@ -60,7 +71,7 @@
   </table>
 </div>
 
-<h3>PayPal Sandbox Account API Credentials</h3>
+<h3>Sandbox Credentials</h3>
 
 <div class="pp-panel pp-panel-warning">
   <table>
@@ -107,9 +118,87 @@
   </table>
 </div>
 
+<?php
+  } elseif ( $current_module == 'PF' ) {
+?>
+
+<h3>Live Credentials</h3>
+
+<div class="pp-panel pp-panel-warning">
+  <div>
+    <p>
+      <label for="live_partner">Partner</label>
+      <?php echo tep_draw_input_field('live_partner', OSCOM_APP_PAYPAL_PF_LIVE_PARTNER); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="live_vendor">Merchant Login</label>
+      <?php echo tep_draw_input_field('live_vendor', OSCOM_APP_PAYPAL_PF_LIVE_VENDOR); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="live_user">User</label>
+      <?php echo tep_draw_input_field('live_user', OSCOM_APP_PAYPAL_PF_LIVE_USER); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="live_password">Password</label>
+      <?php echo tep_draw_input_field('live_password', OSCOM_APP_PAYPAL_PF_LIVE_PASSWORD); ?>
+    </p>
+  </div>
+</div>
+
+<h3>Sandbox Credentials</h3>
+
+<div class="pp-panel pp-panel-warning">
+  <div>
+    <p>
+      <label for="sandbox_partner">Partner</label>
+      <?php echo tep_draw_input_field('sandbox_partner', OSCOM_APP_PAYPAL_PF_SANDBOX_PARTNER); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="sandbox_vendor">Merchant Login</label>
+      <?php echo tep_draw_input_field('sandbox_vendor', OSCOM_APP_PAYPAL_PF_SANDBOX_VENDOR); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="sandbox_user">User</label>
+      <?php echo tep_draw_input_field('sandbox_user', OSCOM_APP_PAYPAL_PF_SANDBOX_USER); ?>
+    </p>
+  </div>
+
+  <div>
+    <p>
+      <label for="sandbox_password">Password</label>
+      <?php echo tep_draw_input_field('sandbox_password', OSCOM_APP_PAYPAL_PF_SANDBOX_PASSWORD); ?>
+    </p>
+  </div>
+</div>
+
+<?php
+  }
+?>
+
 <p>
   <?php echo $OSCOM_PayPal->drawButton('Save', null, 'success'); ?>
   or <a href="<?php echo tep_href_link('paypal.php'); ?>">cancel</a>
 </p>
 
 </form>
+
+<script>
+$(function() {
+  $('#appPayPalToolbar a[data-module="<?php echo $current_module; ?>"]').addClass('pp-button-primary');
+});
+</script>
