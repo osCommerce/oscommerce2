@@ -61,7 +61,6 @@
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-  require('includes/form_check.js.php');
 ?>
 
 <div class="page-header">
@@ -74,29 +73,37 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('account_password', tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <div>
-    <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo MY_PASSWORD_TITLE; ?></h2>
-  </div>
+  
+  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_CURRENT; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_current') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CURRENT_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_NEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_new') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_confirmation') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputCurrent" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CURRENT; ?></label>
+      <div class="col-xs-9">
+        <?php echo tep_draw_password_field('password_current', NULL, 'required aria-required="true" autofocus="autofocus" id="inputCurrent" placeholder="' . ENTRY_PASSWORD_CURRENT . '"'); ?>
+        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php if (tep_not_null(ENTRY_PASSWORD_CURRENT_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>'; ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputNew" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
+      <div class="col-xs-9">
+        <?php echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputNew" placeholder="' . ENTRY_PASSWORD_NEW . '"'); ?>
+        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php if (tep_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>'; ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
+      <div class="col-xs-9">
+        <?php echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"'); ?>
+        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>'; ?>
+      </div>
+    </div>
   </div>
 
   <div class="row">
