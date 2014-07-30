@@ -71,7 +71,9 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <?php echo TEXT_PASSWORD_RESET_INITIATED; ?>
+    <div class="alert alert-success">
+      <?php echo TEXT_PASSWORD_RESET_INITIATED; ?>
+    </div>
   </div>
 </div>
 
@@ -79,18 +81,24 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('password_forgotten', tep_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=process', 'SSL'), 'post', '', true); ?>
+<?php echo tep_draw_form('password_forgotten', tep_href_link(FILENAME_PASSWORD_FORGOTTEN, 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
-    <div><?php echo TEXT_MAIN; ?></div>
-
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('email_address'); ?></td>
-      </tr>
-    </table>
+    <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
+    
+    <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+    
+    <div class="form-group has-feedback">
+      <label for="inputEmail" class="control-label col-xs-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS . '"', 'email');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+    
   </div>
   
   <div class="row">
