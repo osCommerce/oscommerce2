@@ -53,7 +53,7 @@
   }
 
   if ($error == true) {
-    //tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
+    tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
   }
 
   if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
@@ -85,7 +85,6 @@
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-  require('includes/form_check.js.php');
 ?>
 
 <div class="page-header">
@@ -98,22 +97,35 @@
   }
 ?>
 
-<?php echo tep_draw_form('password_reset', tep_href_link(FILENAME_PASSWORD_RESET, 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'onsubmit="return check_form(password_reset);"', true); ?>
+<?php echo tep_draw_form('password_reset', tep_href_link(FILENAME_PASSWORD_RESET, 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
-    <div><?php echo TEXT_MAIN; ?></div>
+    <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
+    
+    <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
 
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('confirmation'); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD . '"');
+        echo FORM_REQUIRED_INPUT;
+        if (tep_not_null(ENTRY_PASSWORD_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_TEXT . '</span>';
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_password_field('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
+        echo FORM_REQUIRED_INPUT;
+        if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
+        ?>
+      </div>
+    </div>
+    
   </div>
 
   <div class="text-right">

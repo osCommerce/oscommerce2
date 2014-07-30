@@ -62,10 +62,11 @@
   $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
-  require('includes/form_check.js.php');
 ?>
 
-<h1><?php echo MODULE_CONTENT_ACCOUNT_SET_PASSWORD_HEADING_TITLE; ?></h1>
+<div class="page-header">
+  <h1><?php echo MODULE_CONTENT_ACCOUNT_SET_PASSWORD_HEADING_TITLE; ?></h1>
+</div>
 
 <?php
   if ($messageStack->size('account_password') > 0) {
@@ -73,32 +74,40 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'onsubmit="return check_form(account_password);"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <div>
-    <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_TITLE; ?></h2>
-  </div>
+  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_NEW; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_new') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_NEW_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_NEW_TEXT . '</span>': ''); ?></td>
-      </tr>
-      <tr> 
-        <td class="fieldKey"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_password_field('password_confirmation') . '&nbsp;' . (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>': ''); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW . '"');
+        echo FORM_REQUIRED_INPUT;
+        if (tep_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>';
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
+        echo FORM_REQUIRED_INPUT;
+        if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
+        ?>
+      </div>
+    </div>
+    
   </div>
-
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary'); ?></span>
-
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
+  
+  <div class="row">
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></div>
   </div>
+  
 </div>
 
 </form>
