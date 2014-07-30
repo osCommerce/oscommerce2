@@ -104,13 +104,13 @@ define('ENTRY_COMPANY', 'Company Name:');
 define('ENTRY_COMPANY_TEXT', '');
 define('ENTRY_GENDER', 'Gender:');
 define('ENTRY_GENDER_ERROR', 'Please select your Gender.');
-define('ENTRY_GENDER_TEXT', '*');
+define('ENTRY_GENDER_TEXT', '');
 define('ENTRY_FIRST_NAME', 'First Name:');
 define('ENTRY_FIRST_NAME_ERROR', 'Your First Name must contain a minimum of ' . ENTRY_FIRST_NAME_MIN_LENGTH . ' characters.');
-define('ENTRY_FIRST_NAME_TEXT', '*');
+define('ENTRY_FIRST_NAME_TEXT', '');
 define('ENTRY_LAST_NAME', 'Last Name:');
 define('ENTRY_LAST_NAME_ERROR', 'Your Last Name must contain a minimum of ' . ENTRY_LAST_NAME_MIN_LENGTH . ' characters.');
-define('ENTRY_LAST_NAME_TEXT', '*');
+define('ENTRY_LAST_NAME_TEXT', '');
 define('ENTRY_DATE_OF_BIRTH', 'Date of Birth:');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your Date of Birth must be in this format: MM/DD/YYYY (eg 05/21/1970)');
 define('ENTRY_DATE_OF_BIRTH_TEXT', '* (eg. 05/21/1970)');
@@ -118,28 +118,28 @@ define('ENTRY_EMAIL_ADDRESS', 'E-Mail Address:');
 define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your E-Mail Address must contain a minimum of ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Your E-Mail Address does not appear to be valid - please make any necessary corrections.');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', 'Your E-Mail Address already exists in our records - please log in with the e-mail address or create an account with a different address.');
-define('ENTRY_EMAIL_ADDRESS_TEXT', '*');
+define('ENTRY_EMAIL_ADDRESS_TEXT', '');
 define('ENTRY_STREET_ADDRESS', 'Street Address:');
 define('ENTRY_STREET_ADDRESS_ERROR', 'Your Street Address must contain a minimum of ' . ENTRY_STREET_ADDRESS_MIN_LENGTH . ' characters.');
-define('ENTRY_STREET_ADDRESS_TEXT', '*');
+define('ENTRY_STREET_ADDRESS_TEXT', '');
 define('ENTRY_SUBURB', 'Suburb:');
 define('ENTRY_SUBURB_TEXT', '');
 define('ENTRY_POST_CODE', 'Post Code:');
 define('ENTRY_POST_CODE_ERROR', 'Your Post Code must contain a minimum of ' . ENTRY_POSTCODE_MIN_LENGTH . ' characters.');
-define('ENTRY_POST_CODE_TEXT', '*');
+define('ENTRY_POST_CODE_TEXT', '');
 define('ENTRY_CITY', 'City:');
 define('ENTRY_CITY_ERROR', 'Your City must contain a minimum of ' . ENTRY_CITY_MIN_LENGTH . ' characters.');
-define('ENTRY_CITY_TEXT', '*');
+define('ENTRY_CITY_TEXT', '');
 define('ENTRY_STATE', 'State/Province:');
 define('ENTRY_STATE_ERROR', 'Your State must contain a minimum of ' . ENTRY_STATE_MIN_LENGTH . ' characters.');
 define('ENTRY_STATE_ERROR_SELECT', 'Please select a state from the States pull down menu.');
-define('ENTRY_STATE_TEXT', '*');
+define('ENTRY_STATE_TEXT', '');
 define('ENTRY_COUNTRY', 'Country:');
 define('ENTRY_COUNTRY_ERROR', 'You must select a country from the Countries pull down menu.');
-define('ENTRY_COUNTRY_TEXT', '*');
+define('ENTRY_COUNTRY_TEXT', '');
 define('ENTRY_TELEPHONE_NUMBER', 'Telephone Number:');
 define('ENTRY_TELEPHONE_NUMBER_ERROR', 'Your Telephone Number must contain a minimum of ' . ENTRY_TELEPHONE_MIN_LENGTH . ' characters.');
-define('ENTRY_TELEPHONE_NUMBER_TEXT', '*');
+define('ENTRY_TELEPHONE_NUMBER_TEXT', '');
 define('ENTRY_FAX_NUMBER', 'Fax Number:');
 define('ENTRY_FAX_NUMBER_TEXT', '');
 define('ENTRY_NEWSLETTER', 'Newsletter:');
@@ -149,19 +149,19 @@ define('ENTRY_NEWSLETTER_NO', 'Unsubscribed');
 define('ENTRY_PASSWORD', 'Password:');
 define('ENTRY_PASSWORD_ERROR', 'Your Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
 define('ENTRY_PASSWORD_ERROR_NOT_MATCHING', 'The Password Confirmation must match your Password.');
-define('ENTRY_PASSWORD_TEXT', '*');
+define('ENTRY_PASSWORD_TEXT', '');
 define('ENTRY_PASSWORD_CONFIRMATION', 'Password Confirmation:');
-define('ENTRY_PASSWORD_CONFIRMATION_TEXT', '*');
+define('ENTRY_PASSWORD_CONFIRMATION_TEXT', '');
 define('ENTRY_PASSWORD_CURRENT', 'Current Password:');
-define('ENTRY_PASSWORD_CURRENT_TEXT', '*');
+define('ENTRY_PASSWORD_CURRENT_TEXT', '');
 define('ENTRY_PASSWORD_CURRENT_ERROR', 'Your Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
 define('ENTRY_PASSWORD_NEW', 'New Password:');
-define('ENTRY_PASSWORD_NEW_TEXT', '*');
+define('ENTRY_PASSWORD_NEW_TEXT', '');
 define('ENTRY_PASSWORD_NEW_ERROR', 'Your new Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
 define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must match your new Password.');
 define('PASSWORD_HIDDEN', '--HIDDEN--');
 
-define('FORM_REQUIRED_INFORMATION', '* Required information');
+define('FORM_REQUIRED_INFORMATION', '<span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information');
 
 // constants for use in tep_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Result Pages:');
@@ -244,6 +244,9 @@ define('ERROR_TEP_MAIL', '<font face="Verdana, Arial" size="2" color="#ff0000"><
 define('TEXT_CCVAL_ERROR_INVALID_DATE', 'The expiry date entered for the credit card is invalid. Please check the date and try again.');
 define('TEXT_CCVAL_ERROR_INVALID_NUMBER', 'The credit card number entered is invalid. Please check the number and try again.');
 define('TEXT_CCVAL_ERROR_UNKNOWN_CARD', 'The first four digits of the number entered are: %s. If that number is correct, we do not accept that type of credit card. If it is wrong, please try again.');
+
+// message for required inputs
+define('FORM_REQUIRED_INPUT', '<span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>');
 
 define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a><br />Powered by <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>');
 ?>
