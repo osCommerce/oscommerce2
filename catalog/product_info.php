@@ -28,11 +28,13 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <?php echo TEXT_PRODUCT_NOT_FOUND; ?>
+    <div class="alert alert-warning">
+      <?php echo TEXT_PRODUCT_NOT_FOUND; ?>
+    </div>
   </div>
 
-  <div style="float: right;">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT)); ?>
+  <div class="text-right">
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT), null, null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -56,7 +58,7 @@
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div class="page-header">
   <h1 class="pull-right"><?php echo $products_price; ?></h1>
@@ -161,9 +163,12 @@ $(function() {
     if ($products_attributes['total'] > 0) {
 ?>
 
-    <p><?php echo TEXT_PRODUCT_OPTIONS; ?></p>
+    <div class="page-header">
+      <h4><?php echo TEXT_PRODUCT_OPTIONS; ?></h4>
+    </div>
 
-    <p>
+    <div class="row">
+      <div class="col-sm-6">
 <?php
       $products_options_name_query = tep_db_query("select distinct popt.products_options_id, popt.products_options_name from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_ATTRIBUTES . " patrib where patrib.products_id='" . (int)$HTTP_GET_VARS['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$languages_id . "' order by popt.products_options_name");
       while ($products_options_name = tep_db_fetch_array($products_options_name_query)) {
@@ -182,23 +187,29 @@ $(function() {
           $selected_attribute = false;
         }
 ?>
-      <strong><?php echo $products_options_name['products_options_name'] . ':'; ?></strong><br /><?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?><br />
-<?php
+      <div class="form-group">
+        <label class="control-label col-xs-3"><?php echo $products_options_name['products_options_name'] . ':'; ?></label>
+        <div class="col-xs-9">
+          <?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?>
+        </div>
+      </div>
+    <?php
       }
 ?>
-    </p>
+      </div>
+    </div>
 
 <?php
     }
 ?>
 
-    <div style="clear: both;"></div>
+    <div class="clearfix"></div>
 
 <?php
     if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
 ?>
 
-    <p style="text-align: center;"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($product_info['products_date_available'])); ?></p>
+    <div class="alert alert-info"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($product_info['products_date_available'])); ?></div>
 
 <?php
     }

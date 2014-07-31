@@ -153,3 +153,7 @@ s, del {
   font-size: 1em;
 }
 
+.info-box {
+  min-height: 160px;
+}
+
