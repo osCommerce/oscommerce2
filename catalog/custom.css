@@ -157,3 +157,11 @@ s, del {
   min-height: 160px;
 }
 
+.review blockquote p {
+  font-size: small;
+}
+
+.review blockquote footer {
+  margin-top: 10px;
+}
+
