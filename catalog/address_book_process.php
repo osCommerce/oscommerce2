@@ -269,16 +269,24 @@
 ?>
 
 <div class="contentContainer">
-  <h2><?php echo DELETE_ADDRESS_TITLE; ?></h2>
 
-  <div class="contentText">
-    <p><?php echo DELETE_ADDRESS_DESCRIPTION; ?></p>
+  <div class="contentText row">
+    <div class="col-sm-8">
+      <div class="alert alert-danger"><?php echo DELETE_ADDRESS_DESCRIPTION; ?></div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-danger">
+        <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
 
-    <p><?php echo tep_address_label($customer_id, $HTTP_GET_VARS['delete'], true, ' ', '<br />'); ?></p>
+        <div class="panel-body">
+          <?php echo tep_address_label($customer_id, $HTTP_GET_VARS['delete'], true, ' ', '<br />'); ?>
+        </div>
+      </div>
+    </div>
   </div>
-  
+
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $HTTP_GET_VARS['delete'] . '&action=deleteconfirm&formid=' . md5($sessiontoken), 'SSL'), 'primary', null, 'btn-warning'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $HTTP_GET_VARS['delete'] . '&action=deleteconfirm&formid=' . md5($sessiontoken), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
   </div>
   
@@ -288,9 +296,30 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('addressbook', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset($HTTP_GET_VARS['edit']) ? 'edit=' . $HTTP_GET_VARS['edit'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"', true); ?>
+<?php echo tep_draw_form('addressbook', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset($HTTP_GET_VARS['edit']) ? 'edit=' . $HTTP_GET_VARS['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
+
+<?php
+    if (isset($HTTP_GET_VARS['edit']) && is_numeric($HTTP_GET_VARS['edit'])) {
+?>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="alert alert-warning"><?php echo EDIT_ADDRESS_DESCRIPTION; ?></div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-warning">
+        <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
+
+        <div class="panel-body">
+          <?php echo tep_address_label($customer_id, (int)$HTTP_GET_VARS['edit'], true, ' ', '<br />'); ?>
+        </div>
+      </div>
+    </div>
+  </div>
+<?php
+}
+?>
 
 <?php include(DIR_WS_MODULES . 'address_book_details.php'); ?>
 
@@ -298,10 +327,9 @@
     if (isset($HTTP_GET_VARS['edit']) && is_numeric($HTTP_GET_VARS['edit'])) {
 ?>
 
-  <div>
-    <span style="float: right;"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $HTTP_GET_VARS['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary'); ?></span>
-
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?>
+  <div class="row">
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $HTTP_GET_VARS['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
   </div>
 
 <?php
