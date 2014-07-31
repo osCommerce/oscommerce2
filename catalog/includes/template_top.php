@@ -32,20 +32,7 @@
 <!-- Bootstrap -->
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.10.4.min.css" />
 <script type="text/javascript" src="ext/jquery/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.10.4.min.js"></script>
-
-<?php
-  if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
-?>
-<script type="text/javascript" src="ext/jquery/ui/i18n/jquery.ui.datepicker-<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>.js"></script>
-<script type="text/javascript">
-$.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>']);
-</script>
-<?php
-  }
-?>
 
 <script src="ext/bootstrap/js/bootstrap.min.js"></script>
 
