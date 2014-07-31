@@ -154,7 +154,7 @@
                  '  <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
                  '</tr>';
 
-      if ( $this->isCardAccepted('MAESTRO') || $this->isCardAccepted('AMEX') ) {
+      if ( $this->isCardAccepted('MAESTRO') ) {
         $content .= '<tr>' .
                     '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM . '</td>' .
                     '  <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
@@ -695,7 +695,7 @@ $(function() {
     {$test_visa}
 
     if ( $('#paypal_card_date_start').length > 0 ) {
-      if ( selected == 'MAESTRO' || selected == 'AMEX' ) {
+      if ( selected == 'MAESTRO' ) {
         $('#paypal_card_date_start').parent().parent().show();
       } else {
         $('#paypal_card_date_start').parent().parent().hide();
@@ -718,7 +718,7 @@ function paypalShowNewCardFields() {
   {$test_visa}
 
   if ( $('#paypal_card_date_start').length > 0 ) {
-    if ( selected != 'MAESTRO' || selected != 'AMEX' ) {
+    if ( selected != 'MAESTRO' ) {
       $('#paypal_card_date_start').parent().parent().hide();
     }
   }
