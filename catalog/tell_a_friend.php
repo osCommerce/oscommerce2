@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -117,50 +117,74 @@
   }
 ?>
 
-<?php echo tep_draw_form('email_friend', tep_href_link(FILENAME_TELL_A_FRIEND, 'action=process&products_id=' . (int)$HTTP_GET_VARS['products_id']), 'post', '', true); ?>
+<?php echo tep_draw_form('email_friend', tep_href_link(FILENAME_TELL_A_FRIEND, 'action=process&products_id=' . (int)$HTTP_GET_VARS['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
-  <div>
-    <span class="inputRequirement" style="float: right;"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
-    <h2><?php echo FORM_TITLE_CUSTOMER_DETAILS; ?></h2>
+
+  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+
+  <div class="page-header">
+    <h4><?php echo FORM_TITLE_CUSTOMER_DETAILS; ?></h4>
   </div>
 
   <div class="contentText">
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldKey"><?php echo FORM_FIELD_CUSTOMER_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('from_name'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo FORM_FIELD_CUSTOMER_EMAIL; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('from_email_address'); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputFromName" class="control-label col-xs-3"><?php echo FORM_FIELD_CUSTOMER_NAME; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('from_name', NULL, 'required aria-required="true" id="inputFromName" placeholder="' . FORM_FIELD_CUSTOMER_NAME . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputFromEmail" class="control-label col-xs-3"><?php echo FORM_FIELD_CUSTOMER_EMAIL; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('from_email_address', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . FORM_FIELD_CUSTOMER_EMAIL . '"', 'email');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
   </div>
 
-  <h2><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h2>
-
-  <div class="contentText">
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldKey"><?php echo FORM_FIELD_FRIEND_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('to_name') . '&nbsp;<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>'; ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo FORM_FIELD_FRIEND_EMAIL; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('to_email_address') . '&nbsp;<span class="inputRequirement">' . ENTRY_EMAIL_ADDRESS_TEXT . '</span>'; ?></td>
-      </tr>
-    </table>
+  <div class="page-header">
+    <h4><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h4>
   </div>
-
-  <h2><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></h2>
+  
+  <div class="contentText">
+    <div class="form-group has-feedback">
+      <label for="inputToName" class="control-label col-xs-3"><?php echo FORM_FIELD_FRIEND_NAME; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('to_name', NULL, 'required aria-required="true" id="inputToName" placeholder="' . FORM_FIELD_FRIEND_NAME . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputToEmail" class="control-label col-xs-3"><?php echo FORM_FIELD_FRIEND_EMAIL; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('to_email_address', NULL, 'required aria-required="true" id="inputToEmail" placeholder="' . FORM_FIELD_FRIEND_EMAIL . '"', 'email');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+  </div>
+  
+  <hr>
 
   <div class="contentText">
-    <table border="0" cellspacing="2" cellpadding="2" width="100%">
-      <tr>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('message', 'soft', 40, 8); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputMessage" class="control-label col-xs-3"><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_textarea_field('message', 'soft', 40, 8, NULL, 'required aria-required="true" id="inputMessage" placeholder="' . FORM_TITLE_FRIEND_MESSAGE . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
   </div>
   
   <div class="clearfix"></div>

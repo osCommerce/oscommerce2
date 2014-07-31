@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -63,12 +63,12 @@
 ?>
 
 <div class="contentContainer">
-  <div class="contentText">
+  <div class="alert alert-success">
     <?php echo TEXT_SUCCESS; ?>
   </div>
 
-  <div style="float: right;">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT)); ?>
+  <div class="text-right">
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT), 'primary', null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -76,27 +76,43 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', '', true); ?>
+<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
+
+  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+  
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_NAME; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('name'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey"><?php echo ENTRY_EMAIL; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_input_field('email'); ?></td>
-      </tr>
-      <tr>
-        <td class="fieldKey" valign="top"><?php echo ENTRY_ENQUIRY; ?></td>
-        <td class="fieldValue"><?php echo tep_draw_textarea_field('enquiry', 'soft', 50, 15); ?></td>
-      </tr>
-    </table>
+    <div class="form-group has-feedback">
+      <label for="inputFromName" class="control-label col-xs-3"><?php echo ENTRY_NAME; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputFromEmail" class="control-label col-xs-3"><?php echo ENTRY_EMAIL; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_input_field('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL . '"', 'email');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
+    <div class="form-group has-feedback">
+      <label for="inputEnquiry" class="control-label col-xs-3"><?php echo ENTRY_ENQUIRY; ?></label>
+      <div class="col-xs-9">
+        <?php
+        echo tep_draw_textarea_field('enquiry', 'soft', 50, 15, NULL, 'required aria-required="true" id="inputEnquiry" placeholder="' . ENTRY_ENQUIRY . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
   </div>
 
-  <div>
+  <div class="text-right">
     <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
