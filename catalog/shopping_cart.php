@@ -32,11 +32,10 @@
   if ($cart->count_contents() > 0) {
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product'), 'post', 'role="form"'); ?>
 
 <div class="contentContainer">
-  <h2><?php echo TABLE_HEADING_PRODUCTS; ?></h2>
-
+  
   <div class="contentText">
 
 <?php
@@ -68,17 +67,15 @@
     }
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-
+    <table class="table table-striped table-condensed">
+      <tbody>
 <?php
-
+    $products_name = NULL;
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      echo '      <tr>';
+      $products_name .= '<tr>';
 
-      $products_name = '<table border="0" cellspacing="2" cellpadding="2">' .
-                       '  <tr>' .
-                       '    <td align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                       '    <td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
+      $products_name .= '  <td valign="top" align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                        '  <td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
 
       if (STOCK_CHECK == 'true') {
         $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -96,18 +93,16 @@
         }
       }
 
-      $products_name .= '<br /><br />' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'size="4"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh') . '&nbsp;&nbsp;&nbsp;' . TEXT_OR . '<a href="' . tep_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product') . '">' . TEXT_REMOVE . '</a>';
+      $products_name .= '<br><span class="row col-xs-4">' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'class="pull-left form-control"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . '</span>&nbsp;' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info') . '&nbsp;' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', tep_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger');
 
-      $products_name .= '    </td>' .
-                        '  </tr>' .
-                        '</table>';
+      $products_name .= '</td>';
 
-      echo '        <td valign="top">' . $products_name . '</td>' .
-           '        <td align="right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
-           '      </tr>';
+      $products_name .= '  <td class="text-right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
+                        '</tr>';
     }
+    echo $products_name;
 ?>
-
+      </tbody>
     </table>
 
     <p align="right"><strong><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($cart->show_total()); ?></strong></p>
@@ -132,7 +127,7 @@
 
   </div>
 
-  <div>
+  <div class="text-right">
     <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
   </div>
 
