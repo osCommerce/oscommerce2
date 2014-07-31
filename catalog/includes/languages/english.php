@@ -247,6 +247,8 @@ define('TEXT_CCVAL_ERROR_UNKNOWN_CARD', 'The first four digits of the number ent
 
 // message for required inputs
 define('FORM_REQUIRED_INPUT', '<span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>');
+// search placeholder
+define('TEXT_SEARCH_PLACEHOLDER', 'Search Keywords...');
 
 define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a><br />Powered by <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>');
 ?>

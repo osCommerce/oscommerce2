@@ -32,8 +32,6 @@
 <!-- Bootstrap -->
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="ext/bootstrap/js/bootstrap.min.js"></script>
-
 <link rel="stylesheet" type="text/css" href="ext/jquery/ui/redmond/jquery-ui-1.10.4.min.css" />
 <script type="text/javascript" src="ext/jquery/jquery-1.11.1.min.js"></script>
 <script type="text/javascript" src="ext/jquery/ui/jquery-ui-1.10.4.min.js"></script>
@@ -48,6 +46,8 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 <?php
   }
 ?>
+
+<script src="ext/bootstrap/js/bootstrap.min.js"></script>
 
 <script type="text/javascript" src="ext/photoset-grid/jquery.photoset-grid.min.js"></script>
 
