@@ -33,7 +33,9 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <?php echo TEXT_ACCOUNT_CREATED; ?>
+    <div class="alert alert-success">
+      <?php echo TEXT_ACCOUNT_CREATED; ?>
+    </div>
   </div>
 
   <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>

@@ -41,35 +41,47 @@
 
     <br />
 
+    <div class="clearfix"></div>
 <?php
   }
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
+    <div class="row">
 <?php
-    $row = 0;
     $specials_query = tep_db_query($specials_split->sql_query);
     while ($specials = tep_db_fetch_array($specials_query)) {
-      $row++;
-
-      echo '        <td align="center" width="33%"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a><br /><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a><br /><del>' . $currencies->display_price($specials['products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</del><br /><span class="productSpecialPrice">' . $currencies->display_price($specials['specials_new_products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</span></td>' . "\n";
-
-      if ((($row / 3) == floor($row / 3))) {
 ?>
-      </tr>
-      <tr>
+
+      <div class="col-sm-6">
+        <div class="well well-sm">
+           <div class="row">
+              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
+              <div class="col-xs-9 col-md-9 info-box">
+                <h4><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a>'; ?></h4>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-6">
+                    <?php echo '<del>' . $currencies->display_price($specials['products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($specials['specials_new_products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</span>'; ?>
+                  </div>
+                  <div class="col-sm-6 text-right">
+                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $specials['products_id']), null, null, 'btn-success'); ?>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </div>
+      
 <?php
-      }
     }
 ?>
-      </tr>
-    </table>
+    </div>
 
 <?php
   if (($specials_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
-
+    <div class="clearfix"></div>
+    
     <br />
 
     <div>
