@@ -18,15 +18,17 @@
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CURL', 'This module requires cURL to be enabled in PHP and will not load until it has been enabled on this webserver.');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CONFIGURATION', 'This module will not load until the API Credential parameters have been configured. Please edit and configure the settings of this module.');
 
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER', 'Card Owner:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE', 'Card Type:');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER', 'Card Owner Name:');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER', 'Card Number:');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM', 'Card Valid From Date:');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO', '(if available)');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_EXPIRES', 'Card Expiry Date:');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC', 'Card Security Code (CVV2):');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC', 'Card Security Code:');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO_LINK', 'What is this?');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO', 'For Visa and Mastercard, this is the 3 digit security code located at the back of your card. For American Express, it is the 4 digit security code on the front of your card.');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM', 'Card Start Date:');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO', '(if shown on card)');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER', 'Card Issue Number:');
-  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO', '(for Maestro cards only)');
+  define('MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO', '(if shown on card)');
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED', 'Error: All payment information fields are required.');
 
   define('MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_LINK_TITLE', 'Test API Server Connection');

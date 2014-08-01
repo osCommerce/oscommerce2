@@ -141,45 +141,43 @@
       }
 
       $content = '<table id="paypal_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
-                 '<tr>' .
-                 '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE . '</td>' .
-                 '  <td>' . tep_draw_pull_down_menu('cc_type', $types_array, '', 'id="paypal_card_type"') . '</td>' .
-                 '</tr>' .
-                 '<tr>' .
-                 '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER . '</td>' .
-                 '  <td>' . tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
-                 '</tr>' .
-                 '<tr>' .
-                 '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER . '</td>' .
-                 '  <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
-                 '</tr>';
+                 '  <tr>' .
+                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE . '</td>' .
+                 '    <td>' . tep_draw_pull_down_menu('cc_type', $types_array, '', 'id="paypal_card_type"') . '</td>' .
+                 '  </tr>' .
+                 '  <tr>' .
+                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER . '</td>' .
+                 '    <td>' . tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
+                 '  </tr>' .
+                 '  <tr>' .
+                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER . '</td>' .
+                 '    <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
+                 '  </tr>' .
+                 '  <tr>' .
+                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_EXPIRES . '</td>' .
+                 '    <td>' . tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array) . '</td>' .
+                 '  </tr>' .
+                 '  <tr>' .
+                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC . '</td>' .
+                 '    <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . ' <span id="cardSecurityCodeInfo" title="' . tep_output_string(MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO) . '" style="color: #084482; text-decoration: none; border-bottom: 1px dashed #084482; cursor: pointer;">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO_LINK . '</span></td>' .
+                 '  </tr>';
 
       if ( $this->isCardAccepted('MAESTRO') ) {
-        $content .= '<tr>' .
-                    '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM . '</td>' .
-                    '  <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
-                    '</tr>';
+        $content .= '  <tr>' .
+                    '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM . '</td>' .
+                    '    <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
+                    '  </tr>' .
+                    '  <tr>' .
+                    '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER . '</td>' .
+                    '    <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO . '</td>' .
+                    '  </tr>';
       }
 
-      $content .= '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_EXPIRES . '</td>' .
-                  '  <td>' . tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array) . '</td>' .
-                  '</tr>';
+      $content .= '</table>';
 
-      if ( $this->isCardAccepted('MAESTRO') ) {
-        $content .= '<tr>' .
-                    '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER . '</td>' .
-                    '  <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO . '</td>' .
-                    '</tr>';
+      if ( !$this->templateClassExists() ) {
+        $content .= $this->getSubmitCardDetailsJavascript();
       }
-
-      $content .= '<tr>' .
-                  '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC . '</td>' .
-                  '  <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . '</td>' .
-                  '</tr>' .
-                  '</table>';
-
-      $content .= !$this->templateClassExists() ? $this->getSubmitCardDetailsJavascript() : '';
 
       $confirmation = array('title' => $content);
 
@@ -664,16 +662,6 @@ EOD;
     }
 
     function getSubmitCardDetailsJavascript() {
-      $test_visa = '';
-
-      if ( OSCOM_APP_PAYPAL_DP_STATUS == '0' ) {
-        $test_visa = <<<EOD
-    if ( (selected == 'VISA') && ($('#paypal_card_num').val().length < 1) ) {
-      $('#paypal_card_num').val('4641631486853053');
-    }
-EOD;
-      }
-
       $js = <<<EOD
 <script>
 if ( typeof jQuery == 'undefined' ) {
@@ -692,8 +680,6 @@ $(function() {
   $('#paypal_card_type').change(function() {
     var selected = $(this).val();
 
-    {$test_visa}
-
     if ( $('#paypal_card_date_start').length > 0 ) {
       if ( selected == 'MAESTRO' ) {
         $('#paypal_card_date_start').parent().parent().show();
@@ -710,12 +696,12 @@ $(function() {
       }
     }
   });
+
+  $('#cardSecurityCodeInfo').tooltip();
 });
 
 function paypalShowNewCardFields() {
   var selected = $('#paypal_card_type').val();
-
-  {$test_visa}
 
   if ( $('#paypal_card_date_start').length > 0 ) {
     if ( selected != 'MAESTRO' ) {
