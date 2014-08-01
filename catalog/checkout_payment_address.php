@@ -197,54 +197,6 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script type="text/javascript"><!--
-var selected;
-
-function selectRowEffect(object, buttonSelect) {
-  if (!selected) {
-    if (document.getElementById) {
-      selected = document.getElementById('defaultSelected');
-    } else {
-      selected = document.all['defaultSelected'];
-    }
-  }
-
-  if (selected) selected.className = 'moduleRow';
-  object.className = 'moduleRowSelected';
-  selected = object;
-
-// one button is not an array
-  if (document.checkout_address.address[0]) {
-    document.checkout_address.address[buttonSelect].checked=true;
-  } else {
-    document.checkout_address.address.checked=true;
-  }
-}
-
-function rowOverEffect(object) {
-  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
-}
-
-function rowOutEffect(object) {
-  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
-}
-
-function check_form_optional(form_name) {
-  var form = form_name;
-
-  var firstname = form.elements['firstname'].value;
-  var lastname = form.elements['lastname'].value;
-  var street_address = form.elements['street_address'].value;
-
-  if (firstname == '' && lastname == '' && street_address == '') {
-    return true;
-  } else {
-    return check_form(form_name);
-  }
-}
-//--></script>
-<?php require(DIR_WS_INCLUDES . 'form_check.js.php'); ?>
-
 <div class="page-header">
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
@@ -255,7 +207,7 @@ function check_form_optional(form_name) {
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), 'post', 'onsubmit="return check_form_optional(checkout_address);"', true); ?>
+<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -263,38 +215,50 @@ function check_form_optional(form_name) {
   if ($process == false) {
 ?>
 
-  <h2><?php echo TABLE_HEADING_PAYMENT_ADDRESS; ?></h2>
-
-  <div class="contentText">
-    <div class="ui-widget infoBoxContainer" style="float: right;">
-      <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_PAYMENT_ADDRESS; ?></div>
-
-      <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_PAYMENT_ADDRESS; ?></h4>
+  </div>
+  
+  <div class="contentText row">
+    <div class="col-sm-8">
+      <div class="alert alert-warning">
+        <?php echo TEXT_SELECTED_PAYMENT_DESTINATION; ?>
       </div>
     </div>
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading"><?php echo TITLE_PAYMENT_ADDRESS; ?></div>
 
-    <?php echo TEXT_SELECTED_PAYMENT_DESTINATION; ?>
+        <div class="panel-body">
+          <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div style="clear: both;"></div>
+  <div class="clearfix"></div>
 
 <?php
     if ($addresses_count > 1) {
 ?>
 
-  <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
-
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h4>
+  </div>
+  
   <div class="contentText">
-    <div style="float: right;">
-      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
-    </div>
+    <div class="alert alert-warning">
+      <div class="pull-right">
+        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+      </div>
 
-    <?php echo TEXT_SELECT_OTHER_PAYMENT_DESTINATION; ?>
+      <?php echo TEXT_SELECT_OTHER_PAYMENT_DESTINATION; ?>
+    </div>
   </div>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
 
 <?php
       $radio_buttons = 0;
@@ -304,17 +268,17 @@ function check_form_optional(form_name) {
         $format_id = tep_get_address_format_id($addresses['country_id']);
 
        if ($addresses['address_book_id'] == $billto) {
-          echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+          echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
         } else {
-          echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+          echo '      <tr class="moduleRow">' . "\n";
         }
 ?>
 
-        <td><strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong></td>
+        <td>
+          <strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong>
+          <div class="help-block"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></div>
+        </td>
         <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $billto)); ?></td>
-      </tr>
-      <tr>
-        <td colspan="2" style="padding-left: 15px;"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></td>
       </tr>
 
 <?php
@@ -322,6 +286,7 @@ function check_form_optional(form_name) {
       }
 ?>
 
+      </tbody>
     </table>
   </div>
 
@@ -332,10 +297,14 @@ function check_form_optional(form_name) {
   if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-  <h2><?php echo TABLE_HEADING_NEW_PAYMENT_ADDRESS; ?></h2>
-
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_NEW_PAYMENT_ADDRESS; ?></h4>
+  </div>
+  
   <div class="contentText">
-    <?php echo TEXT_CREATE_NEW_PAYMENT_ADDRESS; ?>
+    <div class="alert alert-info">
+      <?php echo TEXT_CREATE_NEW_PAYMENT_ADDRESS; ?>
+    </div>
   </div>
 
   <?php require(DIR_WS_MODULES . 'checkout_new_address.php'); ?>

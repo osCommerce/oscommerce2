@@ -86,45 +86,13 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script type="text/javascript"><!--
-var selected;
-
-function selectRowEffect(object, buttonSelect) {
-  if (!selected) {
-    if (document.getElementById) {
-      selected = document.getElementById('defaultSelected');
-    } else {
-      selected = document.all['defaultSelected'];
-    }
-  }
-
-  if (selected) selected.className = 'moduleRow';
-  object.className = 'moduleRowSelected';
-  selected = object;
-
-// one button is not an array
-  if (document.checkout_payment.payment[0]) {
-    document.checkout_payment.payment[buttonSelect].checked=true;
-  } else {
-    document.checkout_payment.payment.checked=true;
-  }
-}
-
-function rowOverEffect(object) {
-  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
-}
-
-function rowOutEffect(object) {
-  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
-}
-//--></script>
 <?php echo $payment_modules->javascript_validation(); ?>
 
 <div class="page-header">
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('checkout_payment', tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'), 'post', 'onsubmit="return check_form();"', true); ?>
+<?php echo tep_draw_form('checkout_payment', tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -142,36 +110,51 @@ function rowOutEffect(object) {
   }
 ?>
 
-  <h2><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h2>
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h4>
+  </div>
+  
+  <div class="contentText row">
+    <div class="col-sm-8">
+      <div class="alert alert-warning">
+        <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?>
+      </div>
+      <div class="clearfix"></div>
+      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <br>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
 
-  <div class="contentText">
-    <div class="ui-widget infoBoxContainer" style="float: right;">
-      <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
-
-      <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+        <div class="panel-body">
+          <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+        </div>
       </div>
     </div>
-
-    <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL')); ?>
   </div>
 
-  <div style="clear: both;"></div>
-
-  <h2><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h2>
+  <div class="clearfix"></div>
+  
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h4>
+  </div>
 
 <?php
   $selection = $payment_modules->selection();
 
   if (sizeof($selection) > 1) {
 ?>
-
+  
   <div class="contentText">
-    <div style="float: right;">
-      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
-    </div>
+    <div class="alert alert-warning">
+      <div class="pull-right">
+        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+      </div>
 
-    <?php echo TEXT_SELECT_PAYMENT_METHOD; ?>
+      <?php echo TEXT_SELECT_PAYMENT_METHOD; ?>
+    </div>
   </div>
 
 <?php
@@ -179,7 +162,7 @@ function rowOutEffect(object) {
 ?>
 
   <div class="contentText">
-    <?php echo TEXT_ENTER_PAYMENT_INFORMATION; ?>
+    <div class="alert alert-info"><?php echo TEXT_ENTER_PAYMENT_INFORMATION; ?></div>
   </div>
 
 <?php
@@ -188,18 +171,20 @@ function rowOutEffect(object) {
 
   <div class="contentText">
 
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
 <?php
   $radio_buttons = 0;
   for ($i=0, $n=sizeof($selection); $i<$n; $i++) {
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
+
 
 <?php
     if ( ($selection[$i]['id'] == $payment) || ($n == 1) ) {
-      echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+      echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
     } else {
-      echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+      echo '      <tr class="moduleRow">' . "\n";
     }
 ?>
 
@@ -237,8 +222,8 @@ function rowOutEffect(object) {
 ?>
 
           <tr>
-            <td><?php echo $selection[$i]['fields'][$j]['title']; ?></td>
-            <td><?php echo $selection[$i]['fields'][$j]['field']; ?></td>
+            <td>1<?php echo $selection[$i]['fields'][$j]['title']; ?></td>
+            <td>2<?php echo $selection[$i]['fields'][$j]['field']; ?></td>
           </tr>
 
 <?php
@@ -252,19 +237,28 @@ function rowOutEffect(object) {
     }
 ?>
 
-    </table>
+
 
 <?php
     $radio_buttons++;
   }
 ?>
+      </tbody>
+    </table>
 
   </div>
 
-  <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
+  <hr>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5', $comments); ?>
+    <div class="form-group">
+      <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
+      <div class="col-xs-8">
+        <?php
+        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $comments, 'id="inputComments" placeholder="' . TABLE_HEADING_COMMENTS . '"');
+        ?>
+      </div>
+    </div>
   </div>
 
   <div class="contentText">

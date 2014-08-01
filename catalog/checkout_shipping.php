@@ -169,78 +169,60 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script type="text/javascript"><!--
-var selected;
-
-function selectRowEffect(object, buttonSelect) {
-  if (!selected) {
-    if (document.getElementById) {
-      selected = document.getElementById('defaultSelected');
-    } else {
-      selected = document.all['defaultSelected'];
-    }
-  }
-
-  if (selected) selected.className = 'moduleRow';
-  object.className = 'moduleRowSelected';
-  selected = object;
-
-// one button is not an array
-  if (document.checkout_address.shipping[0]) {
-    document.checkout_address.shipping[buttonSelect].checked=true;
-  } else {
-    document.checkout_address.shipping.checked=true;
-  }
-}
-
-function rowOverEffect(object) {
-  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
-}
-
-function rowOutEffect(object) {
-  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
-}
-//--></script>
-
 <div class="page-header">
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'post', '', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
-  <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h4>
+  </div>
+  
+  <div class="contentText row">
+    <div class="col-sm-8">
+      <div class="alert alert-warning">
+        <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
+      </div>
+      <div class="clearfix"></div>
+      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <br>
+      <div class="clearfix"></div>
+    </div>
+    <div class="col-sm-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
-  <div class="contentText">
-    <div class="ui-widget infoBoxContainer" style="float: right;">
-      <div class="ui-widget-header infoBoxHeading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
-
-      <div class="ui-widget-content infoBoxContents">
-        <?php echo tep_address_label($customer_id, $sendto, true, ' ', '<br />'); ?>
+        <div class="panel-body">
+          <?php echo tep_address_label($customer_id, $sendto, true, ' ', '<br />'); ?>
+        </div>
       </div>
     </div>
-
-    <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?><br /><br /><?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL')); ?>
   </div>
 
-  <div style="clear: both;"></div>
+  <div class="clearfix"></div>
 
 <?php
   if (tep_count_shipping_modules() > 0) {
 ?>
 
-  <h2><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
+  <div class="page-header">
+    <h4><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h4>
+  </div>
 
 <?php
     if (sizeof($quotes) > 1 && sizeof($quotes[0]) > 1) {
 ?>
 
   <div class="contentText">
-    <div style="float: right;">
-      <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
-    </div>
+    <div class="alert alert-warning">
+      <div class="pull-right">
+        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+      </div>
 
-    <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
+      <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
+    </div>
   </div>
 
 <?php
@@ -248,7 +230,7 @@ function rowOutEffect(object) {
 ?>
 
   <div class="contentText">
-    <?php echo TEXT_ENTER_SHIPPING_INFORMATION; ?>
+    <div class="alert alert-info"><?php echo TEXT_ENTER_SHIPPING_INFORMATION; ?></div>
   </div>
 
 <?php
@@ -256,64 +238,67 @@ function rowOutEffect(object) {
 ?>
 
   <div class="contentText">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
 
 <?php
     if ($free_shipping == true) {
 ?>
 
-      <tr>
-        <td><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></td>
-      </tr>
-      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, 0)">
-        <td style="padding-left: 15px;"><?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . tep_draw_hidden_field('shipping', 'free_free'); ?></td>
-      </tr>
+      <div class="contentText">
+        <div class="panel panel-success">
+          <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
+          <div class="panel-body">
+            <?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . tep_draw_hidden_field('shipping', 'free_free'); ?>
+          </div>
+        </div>
+      </div>
 
 <?php
     } else {
-      $radio_buttons = 0;
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
-?>
-
-      <tr>
-        <td colspan="3"><strong><?php echo $quotes[$i]['module']; ?></strong>&nbsp;<?php if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) { echo $quotes[$i]['icon']; } ?></td>
-      </tr>
-
-<?php
-        if (isset($quotes[$i]['error'])) {
-?>
-
-      <tr>
-        <td colspan="3"><?php echo $quotes[$i]['error']; ?></td>
-      </tr>
-
-<?php
-        } else {
-          for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
+        for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
-            $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);
+          $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);
 
-            if ( ($checked == true) || ($n == 1 && $n2 == 1) ) {
-              echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
-            } else {
-              echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
-            }
+          echo '      <tr>' . "\n";
+
 ?>
 
-        <td width="75%" style="padding-left: 15px;"><?php echo $quotes[$i]['methods'][$j]['title']; ?></td>
+        <td>
+          <strong><?php echo $quotes[$i]['module']; ?></strong>
+          <?php
+          if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) echo '&nbsp;' . $quotes[$i]['icon'];
+
+          if (isset($quotes[$i]['error'])) {
+            echo '<div class="help-block">' . $quotes[$i]['error'] . '</div>';
+          }
+
+          if (tep_not_null($quotes[$i]['methods'][$j]['title'])) echo '<div class="help-block">' . $quotes[$i]['methods'][$j]['title'] . '</div>';
+          ?>
+          </td>
 
 <?php
             if ( ($n > 1) || ($n2 > 1) ) {
 ?>
 
-        <td><?php echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?></td>
-        <td align="right"><?php echo tep_draw_radio_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked); ?></td>
+        <td align="right">
+          <?php
+          if (isset($quotes[$i]['error'])) {
+            // nothing
+            echo '&nbsp;';
+          }
+          else {
+            echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?>&nbsp;&nbsp;<?php echo tep_draw_radio_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked, 'required aria-required="true"');
+          }
+          ?>
+        </td>
 
 <?php
             } else {
 ?>
 
-        <td align="right" colspan="2"><?php echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))) . tep_draw_hidden_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id']); ?></td>
+        <td align="right"><?php echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))) . tep_draw_hidden_field('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id']); ?></td>
 
 <?php
             }
@@ -322,13 +307,12 @@ function rowOutEffect(object) {
       </tr>
 
 <?php
-            $radio_buttons++;
-          }
         }
       }
     }
 ?>
 
+      </tbody>
     </table>
   </div>
 
@@ -336,10 +320,17 @@ function rowOutEffect(object) {
   }
 ?>
 
-  <h2><?php echo TABLE_HEADING_COMMENTS; ?></h2>
+  <hr>
 
   <div class="contentText">
-    <?php echo tep_draw_textarea_field('comments', 'soft', '60', '5'); ?>
+    <div class="form-group">
+      <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
+      <div class="col-xs-8">
+        <?php
+        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $comments, 'id="inputComments" placeholder="' . TABLE_HEADING_COMMENTS . '"');
+        ?>
+      </div>
+    </div>
   </div>
 
   <div class="contentText">
