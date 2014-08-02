@@ -5,30 +5,25 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
-
-  require(DIR_WS_INCLUDES . 'counter.php');
 ?>
 
-<div class="footer">
-  <p align="center"><?php echo FOOTER_TEXT_BODY; ?></p>
-</div>
+<footer>
+  <div class="container-fluid row-fluid">
+    <div class="col-sm-12 text-center"><?php echo FOOTER_TEXT_BODY; ?></div>
+    <?php
+    if ($banner = tep_banner_exists('dynamic', 'footer')) {
+      ?>
 
-<?php
-  if ($banner = tep_banner_exists('dynamic', 'footer')) {
-?>
+      <div class="col-sm-12 text-center">
+        <?php echo tep_display_banner('static', $banner); ?>
+      </div>
 
-<div style="text-align: center; padding-bottom: 20px;">
-  <?php echo tep_display_banner('static', $banner); ?>
-</div>
-
-<?php
-  }
-?>
-
-<script type="text/javascript">
-$('.productListTable tr:nth-child(even)').addClass('alt');
-</script>
+      <?php
+    }
+    ?>
+  </div>
+</footer>

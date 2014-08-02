@@ -262,27 +262,31 @@
   </div>
 
   <div class="contentText">
-    <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
-
-      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-        <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
-          <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
-        </tr>
-      </table>
-    </div>
-
     <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
-</div>
+  
+  <div class="clearfix"></div>
 
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 66
-});
-</script>
+  <div class="contentText">
+    <div class="stepwizard">
+      <div class="stepwizard-row">
+        <div class="stepwizard-step">
+          <a href="<?php echo tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
+          <p><a href="<?php echo tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-primary btn-circle">2</button>
+          <p><?php echo CHECKOUT_BAR_PAYMENT; ?></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
+          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
 
 </form>
 
