@@ -87,15 +87,25 @@
 ?>
 
 <script type="text/javascript"><!--
-var selected;
+var selected, obj, prev_selected = '<?php echo $payment ?>';
 
-function selectRowEffect(object, buttonSelect) {
+function selectRowEffect(object, buttonSelect, module_code) {
   if (!selected) {
     if (document.getElementById) {
       selected = document.getElementById('defaultSelected');
     } else {
       selected = document.all['defaultSelected'];
     }
+  }
+
+  if (prev_selected) {
+    document.getElementById('collation_' + prev_selected).style.display = 'none';
+  }
+  if (obj = document.getElementById('collation_' + module_code)) {
+    prev_selected = module_code;
+    obj.style.display = 'table';
+  } else {
+    prev_selected = '';
   }
 
   if (selected) selected.className = 'moduleRow';
@@ -197,9 +207,9 @@ function rowOutEffect(object) {
 
 <?php
     if ( ($selection[$i]['id'] == $payment) || ($n == 1) ) {
-      echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+      echo '      <tr id="defaultSelected" class="moduleRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ', \'' . $selection[$i]['id'] . '\')">' . "\n";
     } else {
-      echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ')">' . "\n";
+      echo '      <tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="selectRowEffect(this, ' . $radio_buttons . ', \'' . $selection[$i]['id'] . '\')">' . "\n";
     }
 ?>
 
@@ -230,7 +240,7 @@ function rowOutEffect(object) {
 ?>
 
       <tr>
-        <td colspan="2"><table border="0" cellspacing="0" cellpadding="2">
+        <td colspan="2"><table border="0" cellspacing="0" cellpadding="2" id="collation_<?php echo $selection[$i]['id'] ?>"<?php echo $selection[$i]['id'] != $payment ? ' style="display: none;"' : '' ?>>
 
 <?php
       for ($j=0, $n2=sizeof($selection[$i]['fields']); $j<$n2; $j++) {
