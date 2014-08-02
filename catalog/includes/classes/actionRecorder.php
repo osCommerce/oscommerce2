@@ -10,43 +10,76 @@
   Released under the GNU General Public License
 */
 
-  namespace osCommerce\OM\classes;
-
   class actionRecorder {
-    protected $_module;
+    var $_module;
+    var $_user_id;
+    var $_user_name;
 
-    public function __construct($module, $user_id = null, $user_name = null) {
-      if ( !defined('MODULE_ACTION_RECORDER_INSTALLED') || !in_array($module . '.php', explode(';', MODULE_ACTION_RECORDER_INSTALLED)) ) {
-        return false;
-      }
+    function actionRecorder($module, $user_id = null, $user_name = null) {
+      global $PHP_SELF;
 
-      $class = 'osCommerce\\OM\\modules\\action_recorder\\' . $module;
+      $module = tep_sanitize_string(str_replace(' ', '', $module));
 
-      if ( !class_exists($class, false) ) {
-        if ( file_exists(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
+      if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
+        if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
+          if (!class_exists($module)) {
+            if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              include(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+            } else {
+              return false;
+            }
+          }
+        } else {
+          return false;
         }
-      }
-
-      if ( !is_subclass_of($class, 'actionRecorderAbstract') ) {
+      } else {
         return false;
       }
 
-      $this->_module = new $class();
-      $this->_module->setUserId($user_id);
-      $this->_module->setUserName($user_name);
-      $this->_module->setIdentifier();
+      $this->_module = $module;
+
+      if (!empty($user_id) && is_numeric($user_id)) {
+        $this->_user_id = $user_id;
+      }
+
+      if (!empty($user_name)) {
+        $this->_user_name = $user_name;
+      }
+
+      $GLOBALS[$this->_module] = new $module();
+      $GLOBALS[$this->_module]->setIdentifier();
     }
 
-    public function record($success = true) {
-      if ( isset($this->_module) ) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module->getCode()) . "', '" . (int)$this->_module->getUserId() . "', '" . tep_db_input($this->_module->getUserName()) . "', '" . tep_db_input($this->_module->getIdentifier()) . "', '" . ($success === true ? 1 : 0) . "', now())");
+    function canPerform() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->canPerform($this->_user_id, $this->_user_name);
+      }
+
+      return false;
+    }
+
+    function getTitle() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->title;
       }
     }
 
-    public function __call($name, $arguments) {
-      if ( isset($this->_module) ) {
-        return call_user_func_array(array($this->_module, $name), $arguments);
+    function getIdentifier() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->identifier;
+      }
+    }
+
+    function record($success = true) {
+      if (tep_not_null($this->_module)) {
+        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
+      }
+    }
+
+    function expireEntries() {
+      if (tep_not_null($this->_module)) {
+        return $GLOBALS[$this->_module]->expireEntries();
       }
     }
   }
