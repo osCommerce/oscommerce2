@@ -52,7 +52,7 @@
               $admin = array('id' => $check['id'],
                              'username' => $check['user_name']);
 
-              $actionRecorder->_user_id = $admin['id'];
+              $actionRecorder->setUserId($admin['id']);
               $actionRecorder->record();
 
               if (tep_session_is_registered('redirect_origin')) {

@@ -10,17 +10,20 @@
   Released under the GNU General Public License
 */
 
-  require(DIR_FS_CATALOG . 'includes/classes/action_recorder.php');
+  require(DIR_FS_CATALOG . 'includes/classes/actionRecorder.php');
+  require(DIR_FS_CATALOG . 'includes/classes/actionRecorderAbstract.php');
 
-  class actionRecorderAdmin extends actionRecorder {
+  class actionRecorderAdmin extends \osCommerce\OM\classes\actionRecorder {
     function actionRecorderAdmin($module, $user_id = null, $user_name = null) {
       global $language, $PHP_SELF;
 
       $module = tep_sanitize_string(str_replace(' ', '', $module));
 
+      $class = 'osCommerce\\OM\\modules\\action_recorder\\' . $module;
+
       if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
         if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
-          if (!class_exists($module)) {
+          if (!class_exists($class, false)) {
             if (file_exists(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
               include(DIR_FS_CATALOG . 'includes/languages/' . $language . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
               include(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
@@ -45,7 +48,7 @@
         $this->_user_name = $user_name;
       }
 
-      $GLOBALS[$this->_module] = new $module();
+      $GLOBALS[$this->_module] = new $class();
       $GLOBALS[$this->_module]->setIdentifier();
     }
   }

@@ -66,7 +66,7 @@
       $messageStack->add('friend', ERROR_TO_ADDRESS);
     }
 
-    $actionRecorder = new actionRecorder('ar_tell_a_friend', (tep_session_is_registered('customer_id') ? $customer_id : null), $from_name);
+    $actionRecorder = new osCommerce\OM\classes\actionRecorder('ar_tell_a_friend', (tep_session_is_registered('customer_id') ? $customer_id : null), $from_name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
 
@@ -151,7 +151,7 @@
   <div class="page-header">
     <h4><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h4>
   </div>
-  
+
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputToName" class="control-label col-xs-3"><?php echo FORM_FIELD_FRIEND_NAME; ?></label>
@@ -172,7 +172,7 @@
       </div>
     </div>
   </div>
-  
+
   <hr>
 
   <div class="contentText">
@@ -186,7 +186,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="row">

@@ -27,7 +27,7 @@
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
 
-    $actionRecorder = new actionRecorder('ar_contact_us', (tep_session_is_registered('customer_id') ? $customer_id : null), $name);
+    $actionRecorder = new osCommerce\OM\classes\actionRecorder('ar_contact_us', (tep_session_is_registered('customer_id') ? $customer_id : null), $name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
 
@@ -81,7 +81,7 @@
 <div class="contentContainer">
 
   <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-  
+
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputFromName" class="control-label col-xs-3"><?php echo ENTRY_NAME; ?></label>
