@@ -28,10 +28,6 @@
     abstract public function install();
     abstract public function keys();
 
-    public function getCode() {
-      return $this->code;
-    }
-
     public function getTitle() {
       return $this->title;
     }
