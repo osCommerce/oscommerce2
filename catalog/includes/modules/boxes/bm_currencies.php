@@ -34,10 +34,9 @@
       global $PHP_SELF, $currencies, $request_type, $currency, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
-        if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
-          reset($currencies->currencies);
+        if (isset($currencies) && is_object($currencies) && (count($currencies->getAll()) > 1)) {
           $currencies_array = array();
-          while (list($key, $value) = each($currencies->currencies)) {
+          foreach ( $currencies->getAll() as $key => $value ) {
             $currencies_array[] = array('id' => $key, 'text' => $value['title']);
           }
 
