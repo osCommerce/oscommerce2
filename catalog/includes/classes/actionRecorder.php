@@ -14,12 +14,8 @@
 
   class actionRecorder {
     protected $_module;
-    protected $_user_id;
-    protected $_user_name;
 
     public function __construct($module, $user_id = null, $user_name = null) {
-      $module = tep_sanitize_string(str_replace(' ', '', $module));
-
       if ( !defined('MODULE_ACTION_RECORDER_INSTALLED') || !in_array($module . '.php', explode(';', MODULE_ACTION_RECORDER_INSTALLED)) ) {
         return false;
       }
@@ -28,58 +24,30 @@
 
       if ( !class_exists($class, false) ) {
         if ( file_exists(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php') ) {
-          include(DIR_FS_CATLAOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
+          include(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
         }
       }
 
-      $this->_module = $module;
-
-      if ( is_numeric($user_id) ) {
-        $this->_user_id = $user_id;
+      if ( !is_subclass_of($class, 'actionRecorderAbstract') ) {
+        return false;
       }
 
-      if ( !empty($user_name) ) {
-        $this->_user_name = $user_name;
-      }
-
-      $GLOBALS[$this->_module] = new $class();
-      $GLOBALS[$this->_module]->setIdentifier();
-    }
-
-    public function canPerform() {
-      if ( isset($this->_module) ) {
-        return $GLOBALS[$this->_module]->canPerform($this->_user_id, $this->_user_name);
-      }
-
-      return false;
-    }
-
-    public function getTitle() {
-      if ( isset($this->_module) ) {
-        return $GLOBALS[$this->_module]->getTitle();
-      }
-    }
-
-    public function getIdentifier() {
-      if ( isset($this->_module) ) {
-        return $GLOBALS[$this->_module]->getIdentifier();
-      }
+      $this->_module = new $class();
+      $this->_module->setUserId($user_id);
+      $this->_module->setUserName($user_name);
+      $this->_module->setIdentifier();
     }
 
     public function record($success = true) {
       if ( isset($this->_module) ) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success === true ? 1 : 0) . "', now())");
+        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module->getCode()) . "', '" . (int)$this->_module->getUserId() . "', '" . tep_db_input($this->_module->getUserName()) . "', '" . tep_db_input($this->_module->getIdentifier()) . "', '" . ($success === true ? 1 : 0) . "', now())");
       }
     }
 
-    public function expireEntries() {
+    public function __call($name, $arguments) {
       if ( isset($this->_module) ) {
-        return $GLOBALS[$this->_module]->expireEntries();
+        return call_user_func_array(array($this->_module, $name), $arguments);
       }
-    }
-
-    public function setUserId($id) {
-      $this->_user_id = $id;
     }
   }
 ?>

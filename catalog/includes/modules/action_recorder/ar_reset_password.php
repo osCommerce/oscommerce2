@@ -13,9 +13,8 @@
   namespace osCommerce\OM\modules\action_recorder;
 
   class ar_reset_password extends \osCommerce\OM\classes\actionRecorderAbstract {
-    protected $code = 'ar_reset_password';
+    public $code = 'ar_reset_password';
     protected $minutes = 5;
-    protected $attempts = 1;
 
     public function __construct() {
       $this->title = MODULE_ACTION_RECORDER_RESET_PASSWORD_TITLE;
@@ -27,13 +26,10 @@
       }
     }
 
-    public function canPerform($user_id, $user_name) {
-      $check_query = tep_db_query("select id from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and user_name = '" . tep_db_input($user_name) . "' and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 1 order by date_added desc limit " . (int)$this->attempts);
-      if (tep_db_num_rows($check_query) == $this->attempts) {
-        return false;
-      } else {
-        return true;
-      }
+    public function canPerform() {
+      $check_query = tep_db_query("select id from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and user_name = '" . tep_db_input($this->user_name) . "' and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 1 order by date_added desc limit " . (int)$this->attempts);
+
+      return ( tep_db_num_rows($check_query) < $this->attempts );
     }
 
     public function check() {

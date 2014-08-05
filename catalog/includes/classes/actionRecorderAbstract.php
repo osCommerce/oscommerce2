@@ -13,36 +13,57 @@
   namespace osCommerce\OM\classes;
 
   abstract class actionRecorderAbstract {
-    protected $code;
-    protected $title;
-    protected $description;
-    protected $sort_order = 0;
+// TODO make protected when getters() are created and the admin/modules page calls them instead of the variable directly
+    public $code;
+    public $title;
+    public $description;
+    public $sort_order = 0;
     protected $minutes = 15;
+    protected $attempts = 1;
+    protected $user_id;
+    protected $user_name;
     protected $identifier;
 
     abstract public function check();
     abstract public function install();
     abstract public function keys();
 
+    public function getCode() {
+      return $this->code;
+    }
+
     public function getTitle() {
       return $this->title;
+    }
+
+    public function getUserId() {
+      return $this->user_id;
+    }
+
+    public function getUserName() {
+      return $this->user_name;
     }
 
     public function getIdentifier() {
       return $this->identifier;
     }
 
+    public function setUserId($id) {
+      $this->user_id = $id;
+    }
+
+    public function setUserName($name) {
+      $this->user_name = $name;
+    }
+
     public function setIdentifier() {
       $this->identifier = tep_get_ip_address();
     }
 
-    public function canPerform($user_id, $user_name) {
-      $check_query = tep_db_query("select date_added from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and (" . (!empty($user_id) ? "user_id = '" . (int)$user_id . "' or " : "") . " identifier = '" . tep_db_input($this->identifier) . "') and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 1 order by date_added desc limit 1");
-      if (tep_db_num_rows($check_query)) {
-        return false;
-      } else {
-        return true;
-      }
+    public function canPerform() {
+      $check_query = tep_db_query("select id from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and (" . (is_numeric($this->user_id) ? "user_id = '" . (int)$this->user_id . "' or " : "") . " identifier = '" . tep_db_input($this->identifier) . "') and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 1 order by date_added desc limit " . (int)$this->attempts);
+
+      return ( tep_db_num_rows($check_query) < $this->attempts );
     }
 
     public function expireEntries() {

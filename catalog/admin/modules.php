@@ -23,6 +23,7 @@
   $module_type = $cfgModules->get($set, 'code');
   $module_directory = $cfgModules->get($set, 'directory');
   $module_language_directory = $cfgModules->get($set, 'language_directory');
+  $module_namespace = $cfgModules->get($set, 'namespace');
   $module_key = $cfgModules->get($set, 'key');
   define('HEADING_TITLE', $cfgModules->get($set, 'title'));
   $template_integration = $cfgModules->get($set, 'template_integration');
@@ -42,9 +43,11 @@
       case 'remove':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($HTTP_GET_VARS['module']);
+        $ns_class = ((isset($module_namespace)) ? $module_namespace . '\\' : '') . $class;
+
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
-          $module = new $class;
+          $module = new $ns_class();
           if ($action == 'install') {
             if ($module->check() > 0) { // remove module if already installed
               $module->remove();
@@ -142,8 +145,10 @@
     include($module_directory . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
-      $module = new $class;
+    $ns_class = ((isset($module_namespace)) ? $module_namespace . '\\' : '') . $class;
+
+    if (tep_class_exists($ns_class)) {
+      $module = new $ns_class();
       if ($module->check() > 0) {
         if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
           $installed_modules[$module->sort_order] = $file;

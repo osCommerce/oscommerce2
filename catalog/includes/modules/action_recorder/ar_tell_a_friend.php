@@ -13,7 +13,7 @@
   namespace osCommerce\OM\modules\action_recorder;
 
   class ar_tell_a_friend extends \osCommerce\OM\classes\actionRecorderAbstract {
-    protected $code = 'ar_tell_a_friend';
+    public $code = 'ar_tell_a_friend';
 
     public function __construct() {
       $this->title = MODULE_ACTION_RECORDER_TELL_A_FRIEND_TITLE;

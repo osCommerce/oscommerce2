@@ -14,6 +14,7 @@
     var $code = 'action_recorder';
     var $directory;
     var $language_directory = DIR_FS_CATALOG_LANGUAGES;
+    var $namespace = 'osCommerce\\OM\\modules\\action_recorder';
     var $key = 'MODULE_ACTION_RECORDER_INSTALLED';
     var $title;
     var $template_integration = false;

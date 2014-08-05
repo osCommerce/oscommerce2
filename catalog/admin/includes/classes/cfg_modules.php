@@ -33,6 +33,7 @@
               $this->_modules[] = array('code' => $m->code,
                                         'directory' => $m->directory,
                                         'language_directory' => $m->language_directory,
+                                        'namespace' => (isset($m->namespace)) ? $m->namespace : null,
                                         'key' => $m->key,
                                         'title' => $m->title,
                                         'template_integration' => $m->template_integration);
