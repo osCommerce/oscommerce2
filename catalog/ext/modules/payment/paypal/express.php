@@ -61,7 +61,7 @@
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
   $cartID = $cart->cartID;
 
-  switch ($HTTP_GET_VARS['osC_Action']) {
+  switch ($_GET['osC_Action']) {
     case 'cancel':
       tep_session_unregister('ppe_token');
       tep_session_unregister('ppe_secret');
@@ -81,13 +81,13 @@
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE == 'True') {
         $counter = 0;
 
-        if (isset($HTTP_POST_VARS['CURRENCYCODE']) && $currencies->is_set($HTTP_POST_VARS['CURRENCYCODE']) && ($currency != $HTTP_POST_VARS['CURRENCYCODE'])) {
-          $currency = $HTTP_POST_VARS['CURRENCYCODE'];
+        if (isset($_POST['CURRENCYCODE']) && $currencies->is_set($_POST['CURRENCYCODE']) && ($currency != $_POST['CURRENCYCODE'])) {
+          $currency = $_POST['CURRENCYCODE'];
         }
 
         while (true) {
-          if (isset($HTTP_POST_VARS['L_NUMBER' . $counter])) {
-            $cart->add_cart($HTTP_POST_VARS['L_NUMBER' . $counter], $HTTP_POST_VARS['L_QTY' . $counter]);
+          if (isset($_POST['L_NUMBER' . $counter])) {
+            $cart->add_cart($_POST['L_NUMBER' . $counter], $_POST['L_QTY' . $counter]);
           } else {
             break;
           }
@@ -103,14 +103,14 @@
         $sendto = array('firstname' => '',
                         'lastname' => '',
                         'company' => '',
-                        'street_address' => $HTTP_POST_VARS['SHIPTOSTREET'],
+                        'street_address' => $_POST['SHIPTOSTREET'],
                         'suburb' => '',
-                        'postcode' => $HTTP_POST_VARS['SHIPTOZIP'],
-                        'city' => $HTTP_POST_VARS['SHIPTOCITY'],
+                        'postcode' => $_POST['SHIPTOZIP'],
+                        'city' => $_POST['SHIPTOCITY'],
                         'zone_id' => '',
-                        'zone_name' => $HTTP_POST_VARS['SHIPTOSTATE'],
+                        'zone_name' => $_POST['SHIPTOSTATE'],
                         'country_id' => '',
-                        'country_name' => $HTTP_POST_VARS['SHIPTOCOUNTRY'],
+                        'country_name' => $_POST['SHIPTOCOUNTRY'],
                         'country_iso_code_2' => '',
                         'country_iso_code_3' => '',
                         'address_format_id' => '');
@@ -275,7 +275,7 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      $response_array = $paypal_express->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
+      $response_array = $paypal_express->getExpressCheckoutDetails($_GET['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {

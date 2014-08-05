@@ -66,9 +66,9 @@
   if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
   $cartID = $cart->cartID;
 
-  switch ($HTTP_GET_VARS['osC_Action']) {
+  switch ($_GET['osC_Action']) {
     case 'retrieve':
-      $response_array = $paypal_pro_payflow_ec->getExpressCheckoutDetails($HTTP_GET_VARS['token']);
+      $response_array = $paypal_pro_payflow_ec->getExpressCheckoutDetails($_GET['token']);
 
       if ($response_array['RESULT'] == '0') {
         if ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
