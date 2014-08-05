@@ -43,7 +43,7 @@
 
 // if there is only one payment method, select it as default because in
 // checkout_confirmation.php the $payment variable is being assigned the
-// $HTTP_POST_VARS['payment'] value which will be empty (no radio button selection possible)
+// $_POST['payment'] value which will be empty (no radio button selection possible)
         if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$payment]) || (isset($GLOBALS[$payment]) && !is_object($GLOBALS[$payment]))) ) {
           $payment = $include_modules[0]['class'];
         }
@@ -62,7 +62,7 @@
    The following method is a work-around to implementing the method in all
    payment modules available which would break the modules in the contributions
    section. This should be looked into again post 2.2.
-*/   
+*/
     function update_status() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module])) {

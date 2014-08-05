@@ -131,7 +131,7 @@
     }
 
     function cart() {
-      global $HTTP_POST_VARS, $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
+      global $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
 
       $this->content_type = $cart->get_content_type();
 

@@ -79,7 +79,7 @@
     }
 
     function get_browser_language() {
-      $this->browser_languages = explode(',', getenv('HTTP_ACCEPT_LANGUAGE'));
+      $this->browser_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
 
       for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
         reset($this->languages);
