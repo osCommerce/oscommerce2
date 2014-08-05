@@ -12,11 +12,11 @@
 
   require('includes/application_top.php');
 
-  if (!isset($HTTP_GET_VARS['products_id'])) {
+  if (!isset($_GET['products_id'])) {
     tep_redirect(tep_href_link(FILENAME_REVIEWS));
   }
 
-  $product_info_query = tep_db_query("select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
+  $product_info_query = tep_db_query("select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
   if (!tep_db_num_rows($product_info_query)) {
     tep_redirect(tep_href_link(FILENAME_REVIEWS));
   } else {
@@ -75,11 +75,11 @@
 
       <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
-  
+
     <div class="clearfix"></div>
 
     <hr>
-  
+
     <div class="clearfix"></div>
 
 <?php
@@ -102,7 +102,7 @@
   </div>
 
   <br />
-  
+
   <div class="clearfix"></div>
 
 <?php
@@ -110,7 +110,7 @@
     $reviews_query = tep_db_query($reviews_split->sql_query);
     while ($reviews = tep_db_fetch_array($reviews_query)) {
 ?>
-  
+
   <div class="col-sm-6 review">
     <blockquote>
       <p><?php echo tep_output_string_protected($reviews['reviews_text']); ?></p>
@@ -141,7 +141,7 @@
   if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
   <div class="clearfix"></div>
-  
+
   <div class="contentText">
     <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
 
@@ -153,7 +153,7 @@
 ?>
 
   <div class="clearfix"></div>
-  
+
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'glyphicon glyphicon-comment', tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params())); ?></div>

@@ -30,7 +30,7 @@
 
   $page_content = $oscTemplate->getContent('checkout_success');
 
-  if ( isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'update') ) {
+  if ( isset($_GET['action']) && ($_GET['action'] == 'update') ) {
     tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 

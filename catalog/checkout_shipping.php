@@ -100,17 +100,17 @@
   }
 
 // process the selected shipping method
-  if ( isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken) ) {
+  if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken) ) {
     if (!tep_session_is_registered('comments')) tep_session_register('comments');
-    if (tep_not_null($HTTP_POST_VARS['comments'])) {
-      $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+    if (tep_not_null($_POST['comments'])) {
+      $comments = tep_db_prepare_input($_POST['comments']);
     }
 
     if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
 
     if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
-      if ( (isset($HTTP_POST_VARS['shipping'])) && (strpos($HTTP_POST_VARS['shipping'], '_')) ) {
-        $shipping = $HTTP_POST_VARS['shipping'];
+      if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
+        $shipping = $_POST['shipping'];
 
         list($module, $method) = explode('_', $shipping);
         if ( is_object($$module) || ($shipping == 'free_free') ) {
@@ -143,7 +143,7 @@
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
-    }    
+    }
   }
 
 // get all available shipping quotes
@@ -179,7 +179,7 @@
   <div class="page-header">
     <h4><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h4>
   </div>
-  
+
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
@@ -336,7 +336,7 @@
   <div class="contentText">
     <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="contentText">
@@ -357,7 +357,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 
 </form>

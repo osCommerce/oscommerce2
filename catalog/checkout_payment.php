@@ -67,8 +67,8 @@
   $order = new order;
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
   $total_weight = $cart->show_weight();
@@ -97,7 +97,7 @@
 <div class="contentContainer">
 
 <?php
-  if (isset($HTTP_GET_VARS['payment_error']) && is_object(${$HTTP_GET_VARS['payment_error']}) && ($error = ${$HTTP_GET_VARS['payment_error']}->get_error())) {
+  if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
 ?>
 
   <div class="contentText">
@@ -113,7 +113,7 @@
   <div class="page-header">
     <h4><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h4>
   </div>
-  
+
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
@@ -136,7 +136,7 @@
   </div>
 
   <div class="clearfix"></div>
-  
+
   <div class="page-header">
     <h4><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h4>
   </div>
@@ -146,7 +146,7 @@
 
   if (sizeof($selection) > 1) {
 ?>
-  
+
   <div class="contentText">
     <div class="alert alert-warning">
       <div class="pull-right">
@@ -264,7 +264,7 @@
   <div class="contentText">
     <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="contentText">
@@ -285,7 +285,7 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 
 </form>
