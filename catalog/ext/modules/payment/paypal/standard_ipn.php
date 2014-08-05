@@ -22,12 +22,12 @@
 
   $result = false;
 
-  if ( isset($HTTP_POST_VARS['receiver_email']) && (($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
+  if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
     $paypal_standard = new paypal_standard();
 
     $parameters = 'cmd=_notify-validate';
 
-    foreach ($HTTP_POST_VARS as $key => $value) {
+    foreach ($_POST as $key => $value) {
       $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
     }
 

@@ -57,32 +57,30 @@
   }
 
   function tep_session_start() {
-    global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_COOKIE_VARS;
-
     $sane_session_id = true;
 
-    if ( isset($HTTP_GET_VARS[tep_session_name()]) ) {
-      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_GET_VARS[tep_session_name()]) == false) ) {
-        unset($HTTP_GET_VARS[tep_session_name()]);
+    if ( isset($_GET[tep_session_name()]) ) {
+      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $_GET[tep_session_name()]) == false) ) {
+        unset($_GET[tep_session_name()]);
 
         $sane_session_id = false;
       }
     }
 
-    if ( isset($HTTP_POST_VARS[tep_session_name()]) ) {
-      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_POST_VARS[tep_session_name()]) == false) ) {
-        unset($HTTP_POST_VARS[tep_session_name()]);
+    if ( isset($_POST[tep_session_name()]) ) {
+      if ( (SESSION_FORCE_COOKIE_USE == 'True') || (preg_match('/^[a-zA-Z0-9,-]+$/', $_POST[tep_session_name()]) == false) ) {
+        unset($_POST[tep_session_name()]);
 
         $sane_session_id = false;
       }
     }
 
-    if ( isset($HTTP_COOKIE_VARS[tep_session_name()]) ) {
-      if ( preg_match('/^[a-zA-Z0-9,-]+$/', $HTTP_COOKIE_VARS[tep_session_name()]) == false ) {
+    if ( isset($_COOKIE[tep_session_name()]) ) {
+      if ( preg_match('/^[a-zA-Z0-9,-]+$/', $_COOKIE[tep_session_name()]) == false ) {
         $session_data = session_get_cookie_params();
 
         setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
-        unset($HTTP_COOKIE_VARS[tep_session_name()]);
+        unset($_COOKIE[tep_session_name()]);
 
         $sane_session_id = false;
       }
@@ -156,13 +154,11 @@
   }
 
   function tep_session_destroy() {
-    global $HTTP_COOKIE_VARS;
-
-    if ( isset($HTTP_COOKIE_VARS[tep_session_name()]) ) {
+    if ( isset($_COOKIE[tep_session_name()]) ) {
       $session_data = session_get_cookie_params();
 
       setcookie(tep_session_name(), '', time()-42000, $session_data['path'], $session_data['domain']);
-      unset($HTTP_COOKIE_VARS[tep_session_name()]);
+      unset($_COOKIE[tep_session_name()]);
     }
 
     return session_destroy();

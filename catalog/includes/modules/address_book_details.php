@@ -16,7 +16,7 @@
   <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
 
   <?php
-  if (isset($HTTP_GET_VARS['edit']) && is_numeric($HTTP_GET_VARS['edit'])) {
+  if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     ?>
     <div class="page-header">
       <h4><?php echo EDIT_ADDRESS_TITLE; ?></h4>
@@ -157,7 +157,7 @@
         <label for="inputState" class="control-label col-xs-3"><?php echo ENTRY_STATE; ?></label>
         <div class="col-xs-9">
           <?php
-          
+
           if ($process == true) {
             if ($entry_state_has_zones == true) {
               $zones_array = array();
@@ -197,7 +197,7 @@
       </div>
 
 <?php
-  if ((isset($HTTP_GET_VARS['edit']) && ($customer_default_address_id != $HTTP_GET_VARS['edit'])) || (isset($HTTP_GET_VARS['edit']) == false) ) {
+  if ((isset($_GET['edit']) && ($customer_default_address_id != $_GET['edit'])) || (isset($_GET['edit']) == false) ) {
 ?>
 
       <div class="form-group">

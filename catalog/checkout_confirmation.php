@@ -36,11 +36,11 @@
   }
 
   if (!tep_session_is_registered('payment')) tep_session_register('payment');
-  if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
+  if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
   if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module
@@ -163,9 +163,9 @@
     }
     ?>
   </table>
-  
+
   <div class="clearfix"></div>
-        
+
   <div class="page-header">
     <h4><?php echo HEADING_SHIPPING_INFORMATION; ?></h4>
   </div>
@@ -196,9 +196,9 @@
         <?php
       }
       ?>
-        
+
     </div>
-    
+
     <div class="clearfix"></div>
   </div>
 
@@ -207,7 +207,7 @@
   </div>
 
   <div class="contentText">
-  
+
     <div class="row">
 
       <?php
@@ -270,9 +270,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="clearfix"></div>
-    
+
   </div>
 
 <?php
@@ -306,7 +306,7 @@
 
     </div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="contentText">

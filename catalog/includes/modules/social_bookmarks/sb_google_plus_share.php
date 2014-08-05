@@ -30,7 +30,7 @@
     }
 
     function getOutput() {
-      global $HTTP_GET_VARS, $lng, $languages_id;
+      global $lng, $languages_id;
 
       if (!isset($lng) || (isset($lng) && !is_object($lng))) {
         include(DIR_WS_CLASSES . 'language.php');
@@ -50,7 +50,7 @@
         $button_height = 60;
       }
 
-      $output = '<div class="g-plus" data-action="share" data-href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
+      $output = '<div class="g-plus" data-action="share" data-href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
 
       if ((int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH > 0) {
         $output .= ' data-width="' . (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH . '"';

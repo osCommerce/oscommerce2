@@ -19,7 +19,7 @@
     var $enabled = false;
 
     function cm_paypal_login() {
-      global $HTTP_GET_VARS, $PHP_SELF;
+      global $PHP_SELF;
 
       $this->signature = 'paypal|paypal_login|1.0|2.3';
 
@@ -56,20 +56,20 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $oscTemplate;
+      global $oscTemplate;
 
       if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-        if ( isset($HTTP_GET_VARS['action']) ) {
-          if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
+        if ( isset($_GET['action']) ) {
+          if ( $_GET['action'] == 'paypal_login' ) {
             $this->preLogin();
-          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+          } elseif ( $_GET['action'] == 'paypal_login_process' ) {
             $this->postLogin();
           }
         }
@@ -98,14 +98,14 @@
     }
 
     function preLogin() {
-      global $HTTP_GET_VARS, $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
+      global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
 
       $return_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
 
-      if ( isset($HTTP_GET_VARS['code']) ) {
+      if ( isset($_GET['code']) ) {
         $paypal_login_customer_id = false;
 
-        $params = array('code' => $HTTP_GET_VARS['code']);
+        $params = array('code' => $_GET['code']);
 
         $response_token = $this->getToken($params);
 

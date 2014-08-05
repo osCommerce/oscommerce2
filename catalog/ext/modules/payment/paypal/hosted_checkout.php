@@ -20,7 +20,7 @@
   }
 
   if ( $error === false ) {
-    if ( !isset($HTTP_GET_VARS['key']) || !tep_session_is_registered('pphs_key') || ($HTTP_GET_VARS['key'] != $pphs_key) || !tep_session_is_registered('pphs_result') ) {
+    if ( !isset($_GET['key']) || !tep_session_is_registered('pphs_key') || ($_GET['key'] != $pphs_key) || !tep_session_is_registered('pphs_result') ) {
       $error = true;
     }
   }

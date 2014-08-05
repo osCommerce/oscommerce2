@@ -32,7 +32,7 @@
 ////
 // Redirect to another page or site
   function tep_redirect($url) {
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) { 
+    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
@@ -168,14 +168,12 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
-    global $HTTP_GET_VARS;
-
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
-      reset($HTTP_GET_VARS);
-      while (list($key, $value) = each($HTTP_GET_VARS)) {
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
@@ -261,9 +259,7 @@
 ////
 // Returns the clients browser
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 ////
@@ -1275,68 +1271,56 @@
     }
   }
 
-  function tep_setcookie($name, $value = '', $expire = 0, $path = '/', $domain = '', $secure = 0) {
-    setcookie($name, $value, $expire, $path, (tep_not_null($domain) ? $domain : ''), $secure);
+  function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
+    global $cookie_path, $cookie_domain;
+
+    setcookie($name, $value, $expire, (isset($path)) ? $path : $cookie_path, (isset($domain)) ? $domain : $cookie_domain, $secure);
   }
 
   function tep_validate_ip_address($ip_address) {
-    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
-      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-    }
-
-    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
-      $parts = explode('.', $ip_address);
-
-      foreach ($parts as $ip_parts) {
-        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
-          return false; // number is not within 0-255
-        }
-      }
-
-      return true;
-    }
-
-    return false;
+    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
   }
 
   function tep_get_ip_address() {
-    global $HTTP_SERVER_VARS;
+    static $_ip_address;
 
-    $ip_address = null;
-    $ip_addresses = array();
+    if ( !isset($_ip_address) ) {
+      $_ip_address = null;
+      $ip_addresses = array();
 
-    if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
-      foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
-        $x_ip = trim($x_ip);
+      if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
+        foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+          $x_ip = trim($x_ip);
 
-        if (tep_validate_ip_address($x_ip)) {
-          $ip_addresses[] = $x_ip;
+          if ( tep_validate_ip_address($x_ip) ) {
+            $ip_addresses[] = $x_ip;
+          }
+        }
+      }
+
+      if ( isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']) ) {
+        $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
+      }
+
+      if ( isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) ) {
+        $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+      }
+
+      if ( isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER']) ) {
+        $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
+      }
+
+      $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
+
+      foreach ( $ip_addresses as $ip ) {
+        if ( !empty($ip) && tep_validate_ip_address($ip) ) {
+          $_ip_address = $ip;
+          break;
         }
       }
     }
 
-    if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
-    }
-
-    if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
-    }
-
-    if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
-      $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
-    }
-
-    $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
-
-    foreach ( $ip_addresses as $ip ) {
-      if (!empty($ip) && tep_validate_ip_address($ip)) {
-        $ip_address = $ip;
-        break;
-      }
-    }
-
-    return $ip_address;
+    return $_ip_address;
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {

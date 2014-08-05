@@ -23,9 +23,9 @@
   $newsletter_query = tep_db_query("select customers_newsletter from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
   $newsletter = tep_db_fetch_array($newsletter_query);
 
-  if (isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    if (isset($HTTP_POST_VARS['newsletter_general']) && is_numeric($HTTP_POST_VARS['newsletter_general'])) {
-      $newsletter_general = tep_db_prepare_input($HTTP_POST_VARS['newsletter_general']);
+  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+    if (isset($_POST['newsletter_general']) && is_numeric($_POST['newsletter_general'])) {
+      $newsletter_general = tep_db_prepare_input($_POST['newsletter_general']);
     } else {
       $newsletter_general = '0';
     }
@@ -68,12 +68,12 @@
       </div>
     </div>
   </div>
-  
+
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></div>
   </div>
-  
+
 </div>
 
 </form>

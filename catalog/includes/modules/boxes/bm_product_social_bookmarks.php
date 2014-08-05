@@ -31,9 +31,9 @@
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $language, $oscTemplate;
+      global $language, $oscTemplate;
 
-      if ( isset($HTTP_GET_VARS['products_id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && tep_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
+      if ( isset($_GET['products_id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && tep_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
         $sbm_array = explode(';', MODULE_SOCIAL_BOOKMARKS_INSTALLED);
 
         $social_bookmarks = array();

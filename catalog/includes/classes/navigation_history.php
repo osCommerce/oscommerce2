@@ -23,7 +23,7 @@
     }
 
     function add_current_page() {
-      global $PHP_SELF, $HTTP_GET_VARS, $HTTP_POST_VARS, $request_type, $cPath;
+      global $PHP_SELF, $request_type, $cPath;
 
       $set = 'true';
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
@@ -60,8 +60,8 @@
       if ($set == 'true') {
         $this->path[] = array('page' => $PHP_SELF,
                               'mode' => $request_type,
-                              'get' => $this->filter_parameters($HTTP_GET_VARS),
-                              'post' => $this->filter_parameters($HTTP_POST_VARS));
+                              'get' => $this->filter_parameters($_GET),
+                              'post' => $this->filter_parameters($_POST));
       }
     }
 
@@ -75,7 +75,7 @@
     }
 
     function set_snapshot($page = '') {
-      global $PHP_SELF, $HTTP_GET_VARS, $HTTP_POST_VARS, $request_type;
+      global $PHP_SELF, $request_type;
 
       if (is_array($page)) {
         $this->snapshot = array('page' => $page['page'],
@@ -85,8 +85,8 @@
       } else {
         $this->snapshot = array('page' => $PHP_SELF,
                                 'mode' => $request_type,
-                                'get' => $this->filter_parameters($HTTP_GET_VARS),
-                                'post' => $this->filter_parameters($HTTP_POST_VARS));
+                                'get' => $this->filter_parameters($_GET),
+                                'post' => $this->filter_parameters($_POST));
       }
     }
 

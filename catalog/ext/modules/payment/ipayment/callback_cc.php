@@ -26,7 +26,7 @@
 
     if (tep_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
 // verify ret_param_checksum
-      if ($HTTP_POST_VARS['ret_param_checksum'] == md5(MODULE_PAYMENT_IPAYMENT_CC_USER_ID . $HTTP_POST_VARS['trx_amount'] . $HTTP_POST_VARS['trx_currency'] . $HTTP_POST_VARS['ret_authcode'] . $HTTP_POST_VARS['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
+      if ($_POST['ret_param_checksum'] == md5(MODULE_PAYMENT_IPAYMENT_CC_USER_ID . $_POST['trx_amount'] . $_POST['trx_currency'] . $_POST['ret_authcode'] . $_POST['ret_booknr'] . MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
         $checksum_pass = 1; // true
       } else {
         $checksum_pass = -1; // false

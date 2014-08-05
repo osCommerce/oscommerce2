@@ -31,7 +31,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $currencies, $HTTP_GET_VARS, $request_type, $currency, $oscTemplate;
+      global $PHP_SELF, $currencies, $request_type, $currency, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
@@ -42,8 +42,7 @@
           }
 
           $hidden_get_variables = '';
-          reset($HTTP_GET_VARS);
-          while (list($key, $value) = each($HTTP_GET_VARS)) {
+          foreach ( $_GET as $key => $value ) {
             if ( is_string($value) && ($key != 'currency') && ($key != tep_session_name()) && ($key != 'x') && ($key != 'y') ) {
               $hidden_get_variables .= tep_draw_hidden_field($key, $value);
             }

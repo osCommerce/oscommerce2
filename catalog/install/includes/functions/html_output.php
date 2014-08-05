@@ -32,14 +32,12 @@
   }
 
   function osc_draw_select_menu($name, $values, $default = null, $parameters = null) {
-    global $HTTP_GET_VARS, $HTTP_POST_VARS;
-
     $group = false;
 
-    if ( isset($HTTP_GET_VARS[$name]) ) {
-      $default = $HTTP_GET_VARS[$name];
-    } elseif ( isset($HTTP_POST_VARS[$name]) ) {
-      $default = $HTTP_POST_VARS[$name];
+    if ( isset($_GET[$name]) ) {
+      $default = $_GET[$name];
+    } elseif ( isset($_POST[$name]) ) {
+      $default = $_POST[$name];
     }
 
     $field = '<select name="' . osc_output_string($name) . '"';

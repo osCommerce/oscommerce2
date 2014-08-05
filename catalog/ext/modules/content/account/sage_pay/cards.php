@@ -41,9 +41,9 @@
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
-  if ( isset($HTTP_GET_VARS['action']) ) {
-    if ( ($HTTP_GET_VARS['action'] == 'delete') && isset($HTTP_GET_VARS['id']) && is_numeric($HTTP_GET_VARS['id']) && isset($HTTP_GET_VARS['formid']) && ($HTTP_GET_VARS['formid'] == md5($sessiontoken))) {
-      $token_query = tep_db_query("select id, sagepay_token from customers_sagepay_tokens where id = '" . (int)$HTTP_GET_VARS['id'] . "' and customers_id = '" . (int)$customer_id . "'");
+  if ( isset($_GET['action']) ) {
+    if ( ($_GET['action'] == 'delete') && isset($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['formid']) && ($_GET['formid'] == md5($sessiontoken))) {
+      $token_query = tep_db_query("select id, sagepay_token from customers_sagepay_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
 
       if ( tep_db_num_rows($token_query) ) {
         $token = tep_db_fetch_array($token_query);

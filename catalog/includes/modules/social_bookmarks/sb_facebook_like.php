@@ -30,15 +30,13 @@
     }
 
     function getOutput() {
-      global $HTTP_GET_VARS;
-
       $style = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_STYLE == 'Standard') ? 'standard' : 'button_count';
       $faces = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_FACES == 'True') ? 'true' : 'false';
       $width = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_WIDTH;
       $action = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_VERB == 'Like') ? 'like' : 'recommend';
       $scheme = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_SCHEME == 'Light') ? 'light' : 'dark';
 
-      return '<iframe src="http://www.facebook.com/plugins/like.php?href=' . urlencode(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false)) . '&amp;layout=' . $style . '&amp;show_faces=' . $faces . '&amp;width=' . $width . '&amp;action=' . $action . '&amp;colorscheme=' . $scheme . '&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px; height:35px;" allowTransparency="true"></iframe>';
+      return '<iframe src="http://www.facebook.com/plugins/like.php?href=' . urlencode(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '&amp;layout=' . $style . '&amp;show_faces=' . $faces . '&amp;width=' . $width . '&amp;action=' . $action . '&amp;colorscheme=' . $scheme . '&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px; height:35px;" allowTransparency="true"></iframe>';
     }
 
     function isEnabled() {
