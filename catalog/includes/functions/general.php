@@ -168,14 +168,12 @@
 ////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
-    global $HTTP_GET_VARS;
-
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($HTTP_GET_VARS) && (sizeof($HTTP_GET_VARS) > 0)) {
-      reset($HTTP_GET_VARS);
-      while (list($key, $value) = each($HTTP_GET_VARS)) {
+    if (is_array($_GET) && (sizeof($_GET) > 0)) {
+      reset($_GET);
+      while (list($key, $value) = each($_GET)) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
@@ -261,9 +259,7 @@
 ////
 // Returns the clients browser
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 ////
