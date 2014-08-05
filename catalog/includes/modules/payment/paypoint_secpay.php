@@ -145,17 +145,15 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $HTTP_SERVER_VARS;
-
-      if ( ($HTTP_GET_VARS['valid'] == 'true') && ($HTTP_GET_VARS['code'] == 'A') && !empty($HTTP_GET_VARS['auth_code']) && empty($HTTP_GET_VARS['resp_code']) && !empty($HTTP_GET_VARS[tep_session_name()]) ) {
+      if ( ($_GET['valid'] == 'true') && ($_GET['code'] == 'A') && !empty($_GET['auth_code']) && empty($_GET['resp_code']) && !empty($_GET[tep_session_name()]) ) {
         $DIGEST_PASSWORD = MODULE_PAYMENT_PAYPOINT_SECPAY_READERS_DIGEST;
-        list($REQUEST_URI, $CHECK_SUM) = split('hash=', $HTTP_SERVER_VARS['REQUEST_URI']);
+        list($REQUEST_URI, $CHECK_SUM) = split('hash=', $_SERVER['REQUEST_URI']);
 
-        if ($HTTP_GET_VARS['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $HTTP_GET_VARS[tep_session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
+        if ($_GET['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $_GET[tep_session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $HTTP_GET_VARS[tep_session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, tep_session_name() . '=' . $_GET[tep_session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
       }
     }
 
@@ -164,11 +162,9 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
-      if ($HTTP_GET_VARS['code'] == 'N') {
+      if ($_GET['code'] == 'N') {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE_N;
-      } elseif ($HTTP_GET_VARS['code'] == 'C') {
+      } elseif ($_GET['code'] == 'C') {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE_C;
       } else {
         $error = MODULE_PAYMENT_PAYPOINT_SECPAY_TEXT_ERROR_MESSAGE;
