@@ -55,7 +55,7 @@
           $cart_contents_string .= '</a></li>';
 
           if ((isset($_SESSION['new_products_id_in_cart'])) && ($new_products_id_in_cart == $products[$i]['id'])) {
-            tep_session_unregister('new_products_id_in_cart');
+            unset($_SESSION['new_products_id_in_cart']);
           }
         }
 

@@ -480,7 +480,7 @@
       } elseif ( isset($_SESSION['braintree_error']) ) {
         $message = $braintree_error . ' ' . $message;
 
-        tep_session_unregister('braintree_error');
+        unset($_SESSION['braintree_error']);
       }
 
       $error = array('title' => MODULE_PAYMENT_BRAINTREE_CC_ERROR_TITLE,

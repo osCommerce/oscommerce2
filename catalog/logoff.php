@@ -16,30 +16,30 @@
 
   $breadcrumb->add(NAVBAR_TITLE);
 
-  tep_session_unregister('customer_id');
-  tep_session_unregister('customer_default_address_id');
-  tep_session_unregister('customer_first_name');
-  tep_session_unregister('customer_country_id');
-  tep_session_unregister('customer_zone_id');
+  unset($_SESSION['customer_id']);
+  unset($_SESSION['customer_default_address_id']);
+  unset($_SESSION['customer_first_name']);
+  unset($_SESSION['customer_country_id']);
+  unset($_SESSION['customer_zone_id']);
 
   if ( isset($_SESSION['sendto']) ) {
-    tep_session_unregister('sendto');
+    unset($_SESSION['sendto']);
   }
 
   if ( isset($_SESSION['billto']) ) {
-    tep_session_unregister('billto');
+    unset($_SESSION['billto']);
   }
 
   if ( isset($_SESSION['shipping']) ) {
-    tep_session_unregister('shipping');
+    unset($_SESSION['shipping']);
   }
 
   if ( isset($_SESSION['payment']) ) {
-    tep_session_unregister('payment');
+    unset($_SESSION['payment']);
   }
 
   if ( isset($_SESSION['comments']) ) {
-    tep_session_unregister('comments');
+    unset($_SESSION['comments']);
   }
 
   $cart->reset();

@@ -108,14 +108,6 @@
     return false;
   }
 
-  function tep_session_unregister($variable) {
-    if (PHP_VERSION < 4.3) {
-      return session_unregister($variable);
-    } else {
-      unset($_SESSION[$variable]);
-    }
-  }
-
   function tep_session_destroy() {
     if ( isset($_COOKIE[session_name()]) ) {
       $session_data = session_get_cookie_params();

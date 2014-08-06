@@ -589,9 +589,9 @@
 
         $result['Token Created'] = 'Yes';
 
-        tep_session_unregister('sagepay_token_cc_type');
-        tep_session_unregister('sagepay_token_cc_number');
-        tep_session_unregister('sagepay_token_cc_expiry_date');
+        unset($_SESSION['sagepay_token_cc_type']);
+        unset($_SESSION['sagepay_token_cc_number']);
+        unset($_SESSION['sagepay_token_cc_expiry_date']);
       }
 
       if ( isset($_GET['check']) && ($_GET['check'] == 'PAYPAL') && isset($_POST['Status']) && ($_POST['Status'] == 'PAYPALOK') && isset($_POST['VPSTxId']) && isset($sage_pay_response['VPSTxId']) && ($_POST['VPSTxId'] == $sage_pay_response['VPSTxId']) ) {
@@ -616,9 +616,9 @@
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if (isset($_SESSION['sage_pay_direct_acsurl'])) {
-        tep_session_unregister('sage_pay_direct_acsurl');
-        tep_session_unregister('sage_pay_direct_pareq');
-        tep_session_unregister('sage_pay_direct_md');
+        unset($_SESSION['sage_pay_direct_acsurl']);
+        unset($_SESSION['sage_pay_direct_pareq']);
+        unset($_SESSION['sage_pay_direct_md']);
       }
 
       $sage_pay_response = null;

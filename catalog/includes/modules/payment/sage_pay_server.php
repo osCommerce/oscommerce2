@@ -121,7 +121,7 @@
           if ( tep_db_num_rows($sp_query) ) {
             $sp = tep_db_fetch_array($sp_query);
 
-            tep_session_unregister('sagepay_server_skey_code');
+            unset($_SESSION['sagepay_server_skey_code']);
             tep_db_query('delete from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '"');
 
             if ( $sp['verified'] == '1' ) {
@@ -283,13 +283,13 @@
         $cart->reset(true);
 
 // unregister session variables used during checkout
-        tep_session_unregister('sendto');
-        tep_session_unregister('billto');
-        tep_session_unregister('shipping');
-        tep_session_unregister('payment');
-        tep_session_unregister('comments');
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
+        unset($_SESSION['shipping']);
+        unset($_SESSION['payment']);
+        unset($_SESSION['comments']);
 
-        tep_session_unregister('sage_pay_server_nexturl');
+        unset($_SESSION['sage_pay_server_nexturl']);
 
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
       }

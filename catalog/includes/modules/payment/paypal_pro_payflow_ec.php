@@ -174,7 +174,7 @@
       }
 
       if ( isset($_SESSION['ppeuk_order_total_check']) ) {
-        tep_session_unregister('ppeuk_order_total_check');
+        unset($_SESSION['ppeuk_order_total_check']);
       }
 
       if (empty($comments)) {
@@ -226,11 +226,11 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppeuk_token');
-      tep_session_unregister('ppeuk_payerid');
-      tep_session_unregister('ppeuk_payerstatus');
-      tep_session_unregister('ppeuk_addressstatus');
-      tep_session_unregister('ppeuk_secret');
+      unset($_SESSION['ppeuk_token']);
+      unset($_SESSION['ppeuk_payerid']);
+      unset($_SESSION['ppeuk_payerstatus']);
+      unset($_SESSION['ppeuk_addressstatus']);
+      unset($_SESSION['ppeuk_secret']);
     }
 
     function get_error() {

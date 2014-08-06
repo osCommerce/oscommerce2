@@ -288,11 +288,11 @@
   $cart->reset(true);
 
 // unregister session variables used during checkout
-  tep_session_unregister('sendto');
-  tep_session_unregister('billto');
-  tep_session_unregister('shipping');
-  tep_session_unregister('payment');
-  tep_session_unregister('comments');
+  unset($_SESSION['sendto']);
+  unset($_SESSION['billto']);
+  unset($_SESSION['shipping']);
+  unset($_SESSION['payment']);
+  unset($_SESSION['comments']);
 
   tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 
