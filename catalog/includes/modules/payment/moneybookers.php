@@ -85,7 +85,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister($this->_mbcartID);
+          unset($_SESSION[$this->_mbcartID]);
         }
       }
     }
@@ -522,13 +522,13 @@
         $cart->reset(true);
 
 // unregister session variables used during checkout
-        tep_session_unregister('sendto');
-        tep_session_unregister('billto');
-        tep_session_unregister('shipping');
-        tep_session_unregister('payment');
-        tep_session_unregister('comments');
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
+        unset($_SESSION['shipping']);
+        unset($_SESSION['payment']);
+        unset($_SESSION['comments']);
 
-        tep_session_unregister($this->_mbcartID);
+        unset($_SESSION[$this->_mbcartID]);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
       } else {

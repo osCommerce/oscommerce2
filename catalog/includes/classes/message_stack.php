@@ -29,7 +29,7 @@
         for ($i=0, $n=sizeof($messageToStack); $i<$n; $i++) {
           $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
         }
-        tep_session_unregister('messageToStack');
+        unset($_SESSION['messageToStack']);
       }
     }
 

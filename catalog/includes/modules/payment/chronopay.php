@@ -78,7 +78,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_ChronoPay_ID');
+          unset($_SESSION['cart_ChronoPay_ID']);
         }
       }
 
@@ -489,13 +489,13 @@
       $cart->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_ChronoPay_ID');
+      unset($_SESSION['cart_ChronoPay_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }

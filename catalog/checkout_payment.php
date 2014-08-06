@@ -58,7 +58,7 @@
 
       if ($check_address['total'] != '1') {
         $billto = $customer_default_address_id;
-        if (isset($_SESSION['payment'])) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
       }
     }
   }

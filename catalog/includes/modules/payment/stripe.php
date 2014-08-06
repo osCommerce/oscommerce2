@@ -324,7 +324,7 @@
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if ( isset($_SESSION['stripe_error']) ) {
-        tep_session_unregister('stripe_error');
+        unset($_SESSION['stripe_error']);
       }
     }
 
@@ -336,7 +336,7 @@
       if ( isset($_SESSION['stripe_error']) ) {
         $message = $stripe_error . ' ' . $message;
 
-        tep_session_unregister('stripe_error');
+        unset($_SESSION['stripe_error']);
       }
 
       if ( isset($_GET['error']) && !empty($_GET['error']) ) {

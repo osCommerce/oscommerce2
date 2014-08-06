@@ -58,7 +58,7 @@
 
 // When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
       if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && isset($_SESSION['ppec_right_turn']) ) {
-        tep_session_unregister('ppec_right_turn');
+        unset($_SESSION['ppec_right_turn']);
 
         if ( isset($_SESSION['payment']) && ($payment == $this->code) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
@@ -207,7 +207,7 @@
       }
 
       if ( isset($_SESSION['ppe_order_total_check']) ) {
-        tep_session_unregister('ppe_order_total_check');
+        unset($_SESSION['ppe_order_total_check']);
       }
 
       if (empty($comments)) {
@@ -270,11 +270,11 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppe_token');
-      tep_session_unregister('ppe_payerid');
-      tep_session_unregister('ppe_payerstatus');
-      tep_session_unregister('ppe_addressstatus');
-      tep_session_unregister('ppe_secret');
+      unset($_SESSION['ppe_token']);
+      unset($_SESSION['ppe_payerid']);
+      unset($_SESSION['ppe_payerstatus']);
+      unset($_SESSION['ppe_addressstatus']);
+      unset($_SESSION['ppe_secret']);
     }
 
     function get_error() {

@@ -147,7 +147,7 @@
 
         $billto = tep_db_insert_id();
 
-        if (isset($_SESSION['payment'])) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
@@ -170,10 +170,10 @@
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
-        if ($reset_payment == true) tep_session_unregister('payment');
+        if ($reset_payment == true) unset($_SESSION['payment']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       } else {
-        tep_session_unregister('billto');
+        unset($_SESSION['billto']);
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {

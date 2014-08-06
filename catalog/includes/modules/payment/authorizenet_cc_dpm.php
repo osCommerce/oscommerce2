@@ -264,7 +264,7 @@ EOD;
       }
 
       if ( isset($_SESSION['authorizenet_cc_dpm_error']) ) {
-        tep_session_unregister('authorizenet_cc_dpm_error');
+        unset($_SESSION['authorizenet_cc_dpm_error']);
       }
     }
 
@@ -324,11 +324,11 @@ EOD;
         $cart->reset(true);
 
 // unregister session variables used during checkout
-        tep_session_unregister('sendto');
-        tep_session_unregister('billto');
-        tep_session_unregister('shipping');
-        tep_session_unregister('payment');
-        tep_session_unregister('comments');
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
+        unset($_SESSION['shipping']);
+        unset($_SESSION['payment']);
+        unset($_SESSION['comments']);
 
         $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
 
@@ -370,7 +370,7 @@ EOD;
       if ( ($_GET['error'] != 'verification') && isset($_SESSION['authorizenet_cc_dpm_error']) ) {
         $error_message = $authorizenet_cc_dpm_error;
 
-        tep_session_unregister('authorizenet_cc_dpm_error');
+        unset($_SESSION['authorizenet_cc_dpm_error']);
       }
 
       $error = array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_ERROR_TITLE,

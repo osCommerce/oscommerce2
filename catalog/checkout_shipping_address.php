@@ -160,7 +160,7 @@
 
         $sendto = tep_db_insert_id();
 
-        if (isset($_SESSION['shipping'])) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }
@@ -183,10 +183,10 @@
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
-        if ($reset_shipping == true) tep_session_unregister('shipping');
+        if ($reset_shipping == true) unset($_SESSION['shipping']);
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       } else {
-        tep_session_unregister('sendto');
+        unset($_SESSION['sendto']);
       }
     } else {
       if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
