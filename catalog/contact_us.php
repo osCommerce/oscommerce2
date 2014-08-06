@@ -14,7 +14,7 @@
 
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CONTACT_US);
 
-  if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
     $name = tep_db_prepare_input($_POST['name']);
@@ -81,7 +81,7 @@
 <div class="contentContainer">
 
   <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-  
+
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputFromName" class="control-label col-xs-3"><?php echo ENTRY_NAME; ?></label>

@@ -33,7 +33,7 @@
 
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_TELL_A_FRIEND);
 
-  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
     $to_email_address = tep_db_prepare_input($_POST['to_email_address']);
@@ -151,7 +151,7 @@
   <div class="page-header">
     <h4><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h4>
   </div>
-  
+
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputToName" class="control-label col-xs-3"><?php echo FORM_FIELD_FRIEND_NAME; ?></label>
@@ -172,7 +172,7 @@
       </div>
     </div>
   </div>
-  
+
   <hr>
 
   <div class="contentText">
@@ -186,7 +186,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="row">

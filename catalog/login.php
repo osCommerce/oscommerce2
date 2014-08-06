@@ -54,7 +54,7 @@
     tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$customer_id . "'");
 
 // reset session token
-    $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
     $cart->restore_contents();
