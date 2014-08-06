@@ -230,7 +230,7 @@
       $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-      $cart->restore_contents();
+      $_SESSION['cart']->restore_contents();
 
 // build the message content
       $name = $firstname . ' ' . $lastname;

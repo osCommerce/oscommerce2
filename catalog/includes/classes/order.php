@@ -131,9 +131,9 @@
     }
 
     function cart() {
-      global $customer_id, $sendto, $billto, $cart, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
+      global $customer_id, $sendto, $billto, $languages_id, $currency, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
 
-      $this->content_type = $cart->get_content_type();
+      $this->content_type = $_SESSION['cart']->get_content_type();
 
       if ( ($this->content_type != 'virtual') && ($sendto == false) ) {
         $sendto = $customer_default_address_id;
@@ -279,7 +279,7 @@
                              'format_id' => $billing_address['address_format_id']);
 
       $index = 0;
-      $products = $cart->get_products();
+      $products = $_SESSION['cart']->get_products();
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         $this->products[$index] = array('qty' => $products[$i]['quantity'],
                                         'name' => $products[$i]['name'],
@@ -287,7 +287,7 @@
                                         'tax' => tep_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'tax_description' => tep_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
                                         'price' => $products[$i]['price'],
-                                        'final_price' => $products[$i]['price'] + $cart->attributes_price($products[$i]['id']),
+                                        'final_price' => $products[$i]['price'] + $_SESSION['cart']->attributes_price($products[$i]['id']),
                                         'weight' => $products[$i]['weight'],
                                         'id' => $products[$i]['id']);
 
