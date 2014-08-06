@@ -96,7 +96,7 @@
   require('includes/functions/sessions.php');
 
 // set the session name and save path
-  tep_session_name('osCsid');
+  session_name('osCsid');
   tep_session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters

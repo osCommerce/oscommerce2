@@ -335,7 +335,7 @@
 <?php
     } else {
       if (sizeof($navigation->snapshot) > 0) {
-        $back_link = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(tep_session_name())), $navigation->snapshot['mode']);
+        $back_link = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
       } else {
         $back_link = tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
       }

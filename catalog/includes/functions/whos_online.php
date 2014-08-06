@@ -25,7 +25,7 @@
       $wo_full_name = 'Guest';
     }
 
-    $wo_session_id = tep_session_id();
+    $wo_session_id = session_id();
     $wo_ip_address = tep_get_ip_address();
     $wo_last_page_url = tep_db_prepare_input(getenv('REQUEST_URI'));
 
