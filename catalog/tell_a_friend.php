@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  if (!tep_session_is_registered('customer_id') && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
+  if (!isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -94,7 +94,7 @@
 
       tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']));
     }
-  } elseif (tep_session_is_registered('customer_id')) {
+  } elseif (isset($_SESSION['customer_id'])) {
     $account_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
     $account = tep_db_fetch_array($account_query);
 

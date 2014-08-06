@@ -57,10 +57,10 @@
       }
 
 // When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
-      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && tep_session_is_registered('ppec_right_turn') ) {
+      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && isset($_SESSION['ppec_right_turn']) ) {
         tep_session_unregister('ppec_right_turn');
 
-        if ( tep_session_is_registered('payment') && ($payment == $this->code) ) {
+        if ( isset($_SESSION['payment']) && ($payment == $this->code) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       }
@@ -144,7 +144,7 @@
     function pre_confirmation_check() {
       global $ppe_token, $ppe_secret, $messageStack, $order;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
@@ -152,11 +152,11 @@
 
       if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
-      } elseif ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+      } elseif ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppe_order_total_check') ) {
+      if ( isset($_SESSION['ppe_order_total_check']) ) {
         $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_EXPRESS_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
       }
 
@@ -187,16 +187,16 @@
     function before_process() {
       global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $comments, $response_array;
 
-      if (!tep_session_is_registered('ppe_token')) {
+      if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        if ( !tep_session_is_registered('ppe_secret') || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+        if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !tep_session_is_registered('ppe_order_total_check') ) {
+        } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !isset($_SESSION['ppe_order_total_check']) ) {
           tep_session_register('ppe_order_total_check');
           $ppe_order_total_check = true;
 
@@ -206,7 +206,7 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppe_order_total_check') ) {
+      if ( isset($_SESSION['ppe_order_total_check']) ) {
         tep_session_unregister('ppe_order_total_check');
       }
 

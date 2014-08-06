@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -24,21 +24,21 @@
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
+  if (isset($cart->cartID) && isset($_SESSION['cartID'])) {
     if ($cart->cartID != $cartID) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!tep_session_is_registered('shipping')) {
+  if (!isset($_SESSION['shipping'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('payment')) tep_session_register('payment');
+  if (!isset($_SESSION['payment'])) tep_session_register('payment');
   if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
-  if (!tep_session_is_registered('comments')) tep_session_register('comments');
+  if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
     $comments = tep_db_prepare_input($_POST['comments']);
   }

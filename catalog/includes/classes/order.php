@@ -224,7 +224,7 @@
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
-                          'comments' => (tep_session_is_registered('comments') && !empty($comments) ? $comments : ''));
+                          'comments' => (isset($_SESSION['comments']) && !empty($comments) ? $comments : ''));
 
       if (isset($GLOBALS[$payment]) && is_object($GLOBALS[$payment])) {
         if (isset($GLOBALS[$payment]->public_title)) {

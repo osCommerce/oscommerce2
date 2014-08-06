@@ -34,7 +34,7 @@
     function execute() {
       global $customer_id, $oscTemplate;
 
-      if ( tep_session_is_registered('customer_id') ) {
+      if ( isset($_SESSION['customer_id']) ) {
         $check_query = tep_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
         $check = tep_db_fetch_array($check_query);
 

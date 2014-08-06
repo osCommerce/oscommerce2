@@ -22,23 +22,23 @@
   tep_session_unregister('customer_country_id');
   tep_session_unregister('customer_zone_id');
 
-  if ( tep_session_is_registered('sendto') ) {
+  if ( isset($_SESSION['sendto']) ) {
     tep_session_unregister('sendto');
   }
 
-  if ( tep_session_is_registered('billto') ) {
+  if ( isset($_SESSION['billto']) ) {
     tep_session_unregister('billto');
   }
 
-  if ( tep_session_is_registered('shipping') ) {
+  if ( isset($_SESSION['shipping']) ) {
     tep_session_unregister('shipping');
   }
 
-  if ( tep_session_is_registered('payment') ) {
+  if ( isset($_SESSION['payment']) ) {
     tep_session_unregister('payment');
   }
 
-  if ( tep_session_is_registered('comments') ) {
+  if ( isset($_SESSION['comments']) ) {
     tep_session_unregister('comments');
   }
 

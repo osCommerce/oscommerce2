@@ -34,7 +34,7 @@
       global $customer_id, $PHP_SELF, $request_type, $oscTemplate;
 
       if (isset($_GET['products_id'])) {
-        if (tep_session_is_registered('customer_id')) {
+        if (isset($_SESSION['customer_id'])) {
           $check_query = tep_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$customer_id . "'");
           $check = tep_db_fetch_array($check_query);
 

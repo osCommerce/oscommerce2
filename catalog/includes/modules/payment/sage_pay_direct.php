@@ -95,7 +95,7 @@
     function selection() {
       global $customer_id, $payment;
 
-      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && !tep_session_is_registered('payment') ) {
+      if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && !isset($_SESSION['payment']) ) {
         $tokens_query = tep_db_query("select 1 from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
 
         if ( tep_db_num_rows($tokens_query) ) {
@@ -572,7 +572,7 @@
         $result['3D Secure'] = $sage_pay_response['3DSecureStatus'];
       }
 
-      if ( isset($sage_pay_response['Token']) && tep_session_is_registered('sagepay_token_cc_number') ) {
+      if ( isset($sage_pay_response['Token']) && isset($_SESSION['sagepay_token_cc_number']) ) {
         global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
 
         $check_query = tep_db_query("select id from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' and sagepay_token = '" . tep_db_input($sage_pay_response['Token']) . "' limit 1");
@@ -615,7 +615,7 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      if (tep_session_is_registered('sage_pay_direct_acsurl')) {
+      if (isset($_SESSION['sage_pay_direct_acsurl'])) {
         tep_session_unregister('sage_pay_direct_acsurl');
         tep_session_unregister('sage_pay_direct_pareq');
         tep_session_unregister('sage_pay_direct_md');
