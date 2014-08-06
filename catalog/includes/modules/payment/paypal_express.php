@@ -94,8 +94,6 @@
     }
 
     function checkout_initialization_method() {
-      global $cart;
-
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE == 'Dynamic') {
         if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
           $image_button = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image';
@@ -110,7 +108,7 @@
 
           if (isset($response_array['PAL'])) {
             $params[] = 'pal=' . $response_array['PAL'];
-            $params[] = 'ordertotal=' . $this->format_raw($cart->show_total());
+            $params[] = 'ordertotal=' . $this->format_raw($_SESSION['cart']->show_total());
           }
         }
 

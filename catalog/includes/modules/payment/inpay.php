@@ -104,11 +104,11 @@ class inpay
 
     function pre_confirmation_check()
     {
-        global $cartID, $cart;
+        global $cartID;
 
-        if ( empty($cart->cartID))
+        if ( empty($_SESSION['cart']->cartID))
         {
-            $cartID = $cart->cartID = $cart->generate_cart_id();
+            $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
         }
 
         if (!isset($_SESSION['cartID']))
@@ -376,7 +376,7 @@ class inpay
 
     function before_process()
     {
-        global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_inpay_Standard_ID;
+        global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart_inpay_Standard_ID;
         global $$payment;
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
         $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
@@ -554,7 +554,7 @@ class inpay
         // load the after_process function from the payment modules
         $this->after_process();
 
-        $cart->reset(true);
+        $_SESSION['cart']->reset(true);
 
         // unregister session variables used during checkout
         unset($_SESSION['sendto']);

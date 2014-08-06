@@ -57,7 +57,7 @@
     $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-    $cart->restore_contents();
+    $_SESSION['cart']->restore_contents();
 
     if (sizeof($navigation->snapshot) > 0) {
       $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);

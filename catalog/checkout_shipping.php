@@ -20,7 +20,7 @@
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -48,11 +48,11 @@
 // against alterations in the shopping cart contents
   if (!isset($_SESSION['cartID'])) {
     tep_session_register('cartID');
-  } elseif (($cartID != $cart->cartID) && isset($_SESSION['shipping'])) {
+  } elseif (($cartID != $_SESSION['cart']->cartID) && isset($_SESSION['shipping'])) {
     unset($_SESSION['shipping']);
   }
 
-  $cartID = $cart->cartID = $cart->generate_cart_id();
+  $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
 
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
@@ -63,8 +63,8 @@
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
-  $total_weight = $cart->show_weight();
-  $total_count = $cart->count_contents();
+  $total_weight = $_SESSION['cart']->show_weight();
+  $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
   require(DIR_WS_CLASSES . 'shipping.php');
