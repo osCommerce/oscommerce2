@@ -100,7 +100,7 @@
   }
 
 // process the selected shipping method
-  if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken) ) {
+  if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
     if (!isset($_SESSION['comments'])) tep_session_register('comments');
     if (tep_not_null($_POST['comments'])) {
       $comments = tep_db_prepare_input($_POST['comments']);

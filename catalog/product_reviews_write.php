@@ -33,7 +33,7 @@
   $customer_query = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
   $customer = tep_db_fetch_array($customer_query);
 
-  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $rating = tep_db_prepare_input($_POST['rating']);
     $review = tep_db_prepare_input($_POST['review']);
 
