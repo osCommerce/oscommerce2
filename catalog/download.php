@@ -12,7 +12,7 @@
 
   include('includes/application_top.php');
 
-  if (!tep_session_is_registered('customer_id')) die;
+  if (!isset($_SESSION['customer_id'])) die;
 
 // Check download.php was called with proper GET parameters
   if ((isset($_GET['order']) && !is_numeric($_GET['order'])) || (isset($_GET['id']) && !is_numeric($_GET['id'])) ) {

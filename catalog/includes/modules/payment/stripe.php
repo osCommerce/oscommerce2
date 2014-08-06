@@ -91,7 +91,7 @@
     function selection() {
       global $customer_id, $payment;
 
-      if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !tep_session_is_registered('payment') ) {
+      if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !isset($_SESSION['payment']) ) {
         $tokens_query = tep_db_query("select 1 from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
 
         if ( tep_db_num_rows($tokens_query) ) {
@@ -323,7 +323,7 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      if ( tep_session_is_registered('stripe_error') ) {
+      if ( isset($_SESSION['stripe_error']) ) {
         tep_session_unregister('stripe_error');
       }
     }
@@ -333,7 +333,7 @@
 
       $message = MODULE_PAYMENT_STRIPE_ERROR_GENERAL;
 
-      if ( tep_session_is_registered('stripe_error') ) {
+      if ( isset($_SESSION['stripe_error']) ) {
         $message = $stripe_error . ' ' . $message;
 
         tep_session_unregister('stripe_error');

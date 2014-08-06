@@ -113,7 +113,7 @@
       $error = null;
 
       if (isset($_GET['check']) && ($_GET['check'] == 'PROCESS')) {
-        if ( isset($_GET['skcode']) && tep_session_is_registered('sagepay_server_skey_code') && ($_GET['skcode'] == $sagepay_server_skey_code) ) {
+        if ( isset($_GET['skcode']) && isset($_SESSION['sagepay_server_skey_code']) && ($_GET['skcode'] == $sagepay_server_skey_code) ) {
           $skcode = tep_db_prepare_input($_GET['skcode']);
 
           $sp_query = tep_db_query('select verified, transaction_details from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
@@ -132,7 +132,7 @@
           }
         }
       } else {
-        if ( !tep_session_is_registered('sagepay_server_skey_code') ) {
+        if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
           tep_session_register('sagepay_server_skey_code');
           $sagepay_server_skey_code = tep_create_random_value(16);
         }
@@ -248,7 +248,7 @@
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
             tep_redirect($return['NextURL']);
           } else {
-            if ( !tep_session_is_registered('sage_pay_server_nexturl') ) {
+            if ( !isset($_SESSION['sage_pay_server_nexturl']) ) {
               tep_session_register('sage_pay_server_nexturl');
             }
 

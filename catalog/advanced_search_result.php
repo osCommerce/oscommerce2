@@ -186,7 +186,7 @@
   $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id) left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id";
 
   if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
-    if (!tep_session_is_registered('customer_country_id')) {
+    if (!isset($_SESSION['customer_country_id'])) {
       $customer_country_id = STORE_COUNTRY;
       $customer_zone_id = STORE_ZONE;
     }

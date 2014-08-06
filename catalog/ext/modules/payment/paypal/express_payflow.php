@@ -19,7 +19,7 @@
   }
 
 // initialize variables if the customer is not logged in
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $customer_id = 0;
     $customer_default_address_id = 0;
   }
@@ -34,8 +34,8 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  if ( !tep_session_is_registered('sendto') ) {
-    if ( tep_session_is_registered('customer_id') ) {
+  if ( !isset($_SESSION['sendto']) ) {
+    if ( isset($_SESSION['customer_id']) ) {
       $sendto = $customer_default_address_id;
     } else {
       $country = tep_get_countries(STORE_COUNTRY, true);
@@ -57,13 +57,13 @@
     }
   }
 
-  if ( !tep_session_is_registered('billto') ) {
+  if ( !isset($_SESSION['billto']) ) {
     $billto = $sendto;
   }
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) tep_session_register('cartID');
+  if (!isset($_SESSION['cartID'])) tep_session_register('cartID');
   $cartID = $cart->cartID;
 
   switch ($_GET['osC_Action']) {
@@ -71,29 +71,29 @@
       $response_array = $paypal_pro_payflow_ec->getExpressCheckoutDetails($_GET['token']);
 
       if ($response_array['RESULT'] == '0') {
-        if ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+        if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
 
-        if (!tep_session_is_registered('payment')) tep_session_register('payment');
+        if (!isset($_SESSION['payment'])) tep_session_register('payment');
         $payment = $paypal_pro_payflow_ec->code;
 
-        if (!tep_session_is_registered('ppeuk_token')) tep_session_register('ppeuk_token');
+        if (!isset($_SESSION['ppeuk_token'])) tep_session_register('ppeuk_token');
         $ppeuk_token = $response_array['TOKEN'];
 
-        if (!tep_session_is_registered('ppeuk_payerid')) tep_session_register('ppeuk_payerid');
+        if (!isset($_SESSION['ppeuk_payerid'])) tep_session_register('ppeuk_payerid');
         $ppeuk_payerid = $response_array['PAYERID'];
 
-        if (!tep_session_is_registered('ppeuk_payerstatus')) tep_session_register('ppeuk_payerstatus');
+        if (!isset($_SESSION['ppeuk_payerstatus'])) tep_session_register('ppeuk_payerstatus');
         $ppeuk_payerstatus = $response_array['PAYERSTATUS'];
 
-        if (!tep_session_is_registered('ppeuk_addressstatus')) tep_session_register('ppeuk_addressstatus');
+        if (!isset($_SESSION['ppeuk_addressstatus'])) tep_session_register('ppeuk_addressstatus');
         $ppeuk_addressstatus = $response_array['ADDRESSSTATUS'];
 
         $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
-        if (!tep_session_is_registered('customer_id')) {
+        if (!isset($_SESSION['customer_id'])) {
           $force_login = true;
 
           $email_address = tep_db_prepare_input($response_array['EMAIL']);
@@ -243,11 +243,11 @@ EOD;
 
         $billto = $sendto;
 
-        if ( !tep_session_is_registered('sendto') ) {
+        if ( !isset($_SESSION['sendto']) ) {
           tep_session_register('sendto');
         }
 
-        if ( !tep_session_is_registered('billto') ) {
+        if ( !isset($_SESSION['billto']) ) {
           tep_session_register('billto');
         }
 
@@ -300,7 +300,7 @@ EOD;
             }
           }
 
-          if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+          if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
           $shipping = false;
 
           if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
@@ -352,7 +352,7 @@ EOD;
             }
           }
         } else {
-          if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+          if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
           $shipping = false;
 
           $sendto = false;
@@ -510,7 +510,7 @@ EOD;
           $expensive_rate = $shipping_rate;
         }
 
-        if (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) {
+        if (isset($_SESSION['shipping']) && ($shipping['id'] == $quote['id'])) {
           $default_shipping = $counter;
         }
 
@@ -530,7 +530,7 @@ EOD;
           $shipping = false;
         }
 
-        if ( !tep_session_is_registered('shipping') ) {
+        if ( !isset($_SESSION['shipping']) ) {
           tep_session_register('shipping');
         }
       }
@@ -596,7 +596,7 @@ EOD;
 
       $ppeuk_secret = tep_create_random_value(16, 'digits');
 
-      if ( !tep_session_is_registered('ppeuk_secret') ) {
+      if ( !isset($_SESSION['ppeuk_secret']) ) {
         tep_session_register('ppeuk_secret');
       }
 

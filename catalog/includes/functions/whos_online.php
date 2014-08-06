@@ -13,7 +13,7 @@
   function tep_update_whos_online() {
     global $customer_id;
 
-    if (tep_session_is_registered('customer_id')) {
+    if (isset($_SESSION['customer_id'])) {
       $wo_customer_id = $customer_id;
 
       $customer_query = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");

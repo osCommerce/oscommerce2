@@ -35,7 +35,7 @@
         $this->group = 'header_tags';
       }
 
-      if ( ($PHP_SELF == FILENAME_CHECKOUT_SUCCESS) && tep_session_is_registered('customer_id') ) {
+      if ( ($PHP_SELF == FILENAME_CHECKOUT_SUCCESS) && isset($_SESSION['customer_id']) ) {
         $order_query = tep_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
         if (tep_db_num_rows($order_query) == 1) {

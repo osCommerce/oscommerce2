@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -141,22 +141,22 @@
           }
         }
 
-        if (!tep_session_is_registered('billto')) tep_session_register('billto');
+        if (!isset($_SESSION['billto'])) tep_session_register('billto');
 
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
         $billto = tep_db_insert_id();
 
-        if (tep_session_is_registered('payment')) tep_session_unregister('payment');
+        if (isset($_SESSION['payment'])) tep_session_unregister('payment');
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
 // process the selected billing destination
     } elseif (isset($_POST['address'])) {
       $reset_payment = false;
-      if (tep_session_is_registered('billto')) {
+      if (isset($_SESSION['billto'])) {
         if ($billto != $_POST['address']) {
-          if (tep_session_is_registered('payment')) {
+          if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
@@ -177,7 +177,7 @@
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      if (!tep_session_is_registered('billto')) tep_session_register('billto');
+      if (!isset($_SESSION['billto'])) tep_session_register('billto');
       $billto = $customer_default_address_id;
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -185,7 +185,7 @@
   }
 
 // if no billing destination address was selected, use their own address as default
-  if (!tep_session_is_registered('billto')) {
+  if (!isset($_SESSION['billto'])) {
     $billto = $customer_default_address_id;
   }
 
