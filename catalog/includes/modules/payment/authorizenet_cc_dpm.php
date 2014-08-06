@@ -211,7 +211,7 @@ EOD;
         $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|><|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
-      $process_button_string .= tep_draw_hidden_field(tep_session_name(), tep_session_id());
+      $process_button_string .= tep_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }

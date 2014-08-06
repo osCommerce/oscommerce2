@@ -390,7 +390,7 @@
         $server['path'] = '/';
       }
 
-      $request_id = (isset($order) && is_object($order)) ? md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
+      $request_id = (isset($order) && is_object($order)) ? md5($cartID . session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
 
       $headers = array('X-VPS-REQUEST-ID: ' . $request_id,
                        'X-VPS-CLIENT-TIMEOUT: 45',
