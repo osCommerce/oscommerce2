@@ -124,14 +124,6 @@
     }
   }
 
-  function tep_session_close() {
-    if (PHP_VERSION >= '4.0.4') {
-      return session_write_close();
-    } elseif (function_exists('session_close')) {
-      return session_close();
-    }
-  }
-
   function tep_session_destroy() {
     if ( isset($_COOKIE[session_name()]) ) {
       $session_data = session_get_cookie_params();
