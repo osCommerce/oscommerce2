@@ -72,7 +72,7 @@
     }
 
     function _deletePreparing() {
-      if (tep_session_is_registered($this->_mbcartID)) {
+      if (isset($_SESSION[$this->_mbcartID])) {
         $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
@@ -104,7 +104,7 @@
         $cartID = $cart->cartID = $cart->generate_cart_id();
       }
 
-      if (!tep_session_is_registered('cartID')) {
+      if (!isset($_SESSION['cartID'])) {
         tep_session_register('cartID');
       }
     }
@@ -114,7 +114,7 @@
 
       $insert_order = false;
 
-      if (tep_session_is_registered($this->_mbcartID)) {
+      if (isset($_SESSION[$this->_mbcartID])) {
         $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
@@ -279,7 +279,7 @@
     function confirmation() {
       global $customer_id, $order, $currency;
 
-      if (tep_session_is_registered('cartID')) {
+      if (isset($_SESSION['cartID'])) {
         $this->_prepareOrder();
 
         $parameters = array('pay_to_email' => MODULE_PAYMENT_MONEYBOOKERS_PAY_TO,

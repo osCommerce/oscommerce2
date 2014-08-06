@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
@@ -32,9 +32,9 @@
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
     $shipping = false;
-    if (!tep_session_is_registered('sendto')) tep_session_register('sendto');
+    if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
     $sendto = false;
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
@@ -154,22 +154,22 @@
           }
         }
 
-        if (!tep_session_is_registered('sendto')) tep_session_register('sendto');
+        if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
 
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
         $sendto = tep_db_insert_id();
 
-        if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) tep_session_unregister('shipping');
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
       $reset_shipping = false;
-      if (tep_session_is_registered('sendto')) {
+      if (isset($_SESSION['sendto'])) {
         if ($sendto != $_POST['address']) {
-          if (tep_session_is_registered('shipping')) {
+          if (isset($_SESSION['shipping'])) {
             $reset_shipping = true;
           }
         }
@@ -189,7 +189,7 @@
         tep_session_unregister('sendto');
       }
     } else {
-      if (!tep_session_is_registered('sendto')) tep_session_register('sendto');
+      if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
       $sendto = $customer_default_address_id;
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
@@ -197,7 +197,7 @@
   }
 
 // if no shipping destination address was selected, use their own address as default
-  if (!tep_session_is_registered('sendto')) {
+  if (!isset($_SESSION['sendto'])) {
     $sendto = $customer_default_address_id;
   }
 

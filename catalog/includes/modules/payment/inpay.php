@@ -79,7 +79,7 @@ class inpay
     {
         global $cart_inpay_Standard_ID;
 
-        if (tep_session_is_registered('cart_inpay_Standard_ID'))
+        if (isset($_SESSION['cart_inpay_Standard_ID']))
         {
             $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
 
@@ -111,7 +111,7 @@ class inpay
             $cartID = $cart->cartID = $cart->generate_cart_id();
         }
 
-        if (!tep_session_is_registered('cartID'))
+        if (!isset($_SESSION['cartID']))
         {
             tep_session_register('cartID');
         }
@@ -121,11 +121,11 @@ class inpay
     {
         global $cartID, $cart_inpay_Standard_ID, $customer_id, $languages_id, $order, $order_total_modules;
 
-        if (tep_session_is_registered('cartID'))
+        if (isset($_SESSION['cartID']))
         {
             $insert_order = false;
 
-            if (tep_session_is_registered('cart_inpay_Standard_ID'))
+            if (isset($_SESSION['cart_inpay_Standard_ID']))
             {
                 $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
 

@@ -113,7 +113,7 @@
     function pre_confirmation_check() {
       global $ppeuk_token, $ppeuk_secret, $ppeuk_order_total_check, $messageStack, $order;
 
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
@@ -121,11 +121,11 @@
 
       if ($response_array['RESULT'] != '0') {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
-      } elseif ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+      } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      if (!tep_session_is_registered('ppeuk_order_total_check')) tep_session_register('ppeuk_order_total_check');
+      if (!isset($_SESSION['ppeuk_order_total_check'])) tep_session_register('ppeuk_order_total_check');
       $ppeuk_order_total_check = true;
 
       $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
@@ -157,23 +157,23 @@
     function before_process() {
       global $customer_id, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $ppeuk_secret, $ppeuk_order_total_check, $comments, $response_array;
 
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
 
       if ($response_array['RESULT'] == '0') {
-        if ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+        if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( !tep_session_is_registered('ppeuk_order_total_check') ) {
+        } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppeuk_order_total_check') ) {
+      if ( isset($_SESSION['ppeuk_order_total_check']) ) {
         tep_session_unregister('ppeuk_order_total_check');
       }
 

@@ -66,7 +66,7 @@
     function selection() {
       global $cart_Sofortueberweisung_Direct_ID;
 
-      if (tep_session_is_registered('cart_Sofortueberweisung_Direct_ID')) {
+      if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
         $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
@@ -96,7 +96,7 @@
         $cartID = $cart->cartID = $cart->generate_cart_id();
       }
 
-      if (!tep_session_is_registered('cartID')) {
+      if (!isset($_SESSION['cartID'])) {
         tep_session_register('cartID');
       }
     }
@@ -106,7 +106,7 @@
 
       $insert_order = false;
 
-      if (tep_session_is_registered('cart_Sofortueberweisung_Direct_ID')) {
+      if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
         $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");

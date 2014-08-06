@@ -477,7 +477,7 @@
             $message = MODULE_PAYMENT_BRAINTREE_CC_ERROR_CARDCVV;
             break;
         }
-      } elseif ( tep_session_is_registered('braintree_error') ) {
+      } elseif ( isset($_SESSION['braintree_error']) ) {
         $message = $braintree_error . ' ' . $message;
 
         tep_session_unregister('braintree_error');
