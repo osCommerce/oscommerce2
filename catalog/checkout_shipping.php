@@ -36,7 +36,7 @@
 
       if ($check_address['total'] != '1') {
         $sendto = $customer_default_address_id;
-        if (isset($_SESSION['shipping'])) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
     }
   }
@@ -49,7 +49,7 @@
   if (!isset($_SESSION['cartID'])) {
     tep_session_register('cartID');
   } elseif (($cartID != $cart->cartID) && isset($_SESSION['shipping'])) {
-    tep_session_unregister('shipping');
+    unset($_SESSION['shipping']);
   }
 
   $cartID = $cart->cartID = $cart->generate_cart_id();
@@ -121,7 +121,7 @@
             $quote = $shipping_modules->quote($method, $module);
           }
           if (isset($quote['error'])) {
-            tep_session_unregister('shipping');
+            unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
               $shipping = array('id' => $shipping,
@@ -132,12 +132,12 @@
             }
           }
         } else {
-          tep_session_unregister('shipping');
+          unset($_SESSION['shipping']);
         }
       }
     } else {
       if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') ) {
-        tep_session_unregister('shipping');
+        unset($_SESSION['shipping']);
       } else {
         $shipping = false;
 
