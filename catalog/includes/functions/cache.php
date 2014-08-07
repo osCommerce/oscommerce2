@@ -147,7 +147,7 @@
 //! Cache the also purchased module
 // Cache the also purchased module
   function tep_cache_also_purchased($auto_expire = false, $refresh = false) {
-    global $language, $languages_id;
+    global $language;
 
     $cache_output = '';
 

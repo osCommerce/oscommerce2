@@ -53,8 +53,8 @@
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '" . (int)$value . "'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . (int)$languages_id . "'
-                                       and poval.language_id = '" . (int)$languages_id . "'");
+                                       and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                       and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
           $attributes_values = tep_db_fetch_array($attributes);
 
           $products[$i][$option]['products_options_name'] = $attributes_values['products_options_name'];
