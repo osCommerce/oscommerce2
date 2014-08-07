@@ -105,8 +105,7 @@
     asort($define_list);
 
     $column_list = array();
-    reset($define_list);
-    while (list($key, $value) = each($define_list)) {
+    foreach($define_list as $key => $value) {
       if ($value > 0) $column_list[] = $key;
     }
 
