@@ -36,9 +36,8 @@
     include(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
-    $ns_class = 'osCommerce\\OM\\modules\\action_recorder\\' . $class;
-    if (tep_class_exists($ns_class)) {
-      ${$class} = new $ns_class();
+    if (tep_class_exists($class)) {
+      ${$class} = new $class;
     }
   }
 

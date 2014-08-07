@@ -13,7 +13,7 @@
   namespace osCommerce\OM\modules\action_recorder;
 
   class ar_contact_us extends \osCommerce\OM\classes\actionRecorderAbstract {
-    public $code = 'ar_contact_us';
+    protected $code = 'ar_contact_us';
 
     public function __construct() {
       $this->title = MODULE_ACTION_RECORDER_CONTACT_US_TITLE;

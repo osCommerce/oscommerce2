@@ -41,30 +41,58 @@
 
       if ( !class_exists($class, false) ) {
         if ( file_exists(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
+          include(DIR_FS_CATLAOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
         }
       }
 
-      if ( !is_subclass_of($class, 'actionRecorderAbstract') ) {
-        return false;
+      $this->_module = $module;
+
+      if ( is_numeric($user_id) ) {
+        $this->_user_id = $user_id;
       }
 
-      $this->_module = new $class();
-      $this->_module->setUserId($user_id);
-      $this->_module->setUserName($user_name);
-      $this->_module->setIdentifier();
+      if ( !empty($user_name) ) {
+        $this->_user_name = $user_name;
+      }
+
+      $GLOBALS[$this->_module] = new $class();
+      $GLOBALS[$this->_module]->setIdentifier();
+    }
+
+    public function canPerform() {
+      if ( isset($this->_module) ) {
+        return $GLOBALS[$this->_module]->canPerform($this->_user_id, $this->_user_name);
+      }
+
+      return false;
+    }
+
+    public function getTitle() {
+      if ( isset($this->_module) ) {
+        return $GLOBALS[$this->_module]->getTitle();
+      }
+    }
+
+    public function getIdentifier() {
+      if ( isset($this->_module) ) {
+        return $GLOBALS[$this->_module]->getIdentifier();
+      }
     }
 
     public function record($success = true) {
       if ( isset($this->_module) ) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module->getCode()) . "', '" . (int)$this->_module->getUserId() . "', '" . tep_db_input($this->_module->getUserName()) . "', '" . tep_db_input($this->_module->getIdentifier()) . "', '" . ($success === true ? 1 : 0) . "', now())");
+        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success === true ? 1 : 0) . "', now())");
       }
     }
 
-    public function __call($name, $arguments) {
+    public function expireEntries() {
       if ( isset($this->_module) ) {
-        return call_user_func_array(array($this->_module, $name), $arguments);
+        return $GLOBALS[$this->_module]->expireEntries();
       }
+    }
+
+    public function setUserId($id) {
+      $this->_user_id = $id;
     }
   }
 ?>

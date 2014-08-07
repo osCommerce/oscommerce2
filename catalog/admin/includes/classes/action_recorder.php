@@ -17,24 +17,39 @@
     function actionRecorderAdmin($module, $user_id = null, $user_name = null) {
       global $language, $PHP_SELF;
 
-      if ( !defined('MODULE_ACTION_RECORDER_INSTALLED') || !in_array($module . '.php', explode(';', MODULE_ACTION_RECORDER_INSTALLED)) ) {
-        return false;
-      }
+      $module = tep_sanitize_string(str_replace(' ', '', $module));
 
       $class = 'osCommerce\\OM\\modules\\action_recorder\\' . $module;
 
-      if ( !class_exists($class, false) ) {
-        if ( file_exists(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . basename($_SESSION['language']) . '/modules/action_recorder/' . basename($module) . '.php');
+      if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
+        if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
+          if (!class_exists($class, false)) {
+            if (file_exists(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
+              include(DIR_FS_CATALOG . 'includes/languages/' . $language . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              include(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+            } else {
+              return false;
+            }
+          }
+        } else {
+          return false;
         }
-
-        include(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.php');
+      } else {
+        return false;
       }
 
-      $this->_module = new $class();
-      $this->_module->setUserId($user_id);
-      $this->_module->setUserName($user_name);
-      $this->_module->setIdentifier();
+      $this->_module = $module;
+
+      if (!empty($user_id) && is_numeric($user_id)) {
+        $this->_user_id = $user_id;
+      }
+
+      if (!empty($user_name)) {
+        $this->_user_name = $user_name;
+      }
+
+      $GLOBALS[$this->_module] = new $class();
+      $GLOBALS[$this->_module]->setIdentifier();
     }
   }
 ?>

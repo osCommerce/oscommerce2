@@ -13,7 +13,7 @@
   namespace osCommerce\OM\modules\action_recorder;
 
   class ar_admin_login extends \osCommerce\OM\classes\actionRecorderAbstract {
-    public $code = 'ar_admin_login';
+    protected $code = 'ar_admin_login';
     protected $minutes = 5;
     protected $attempts = 3;
 
@@ -27,10 +27,13 @@
       }
     }
 
-    public function canPerform() {
-      $check_query = tep_db_query("select id from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and (" . (isset($this->user_name) ? "user_name = '" . tep_db_input($this->user_name) . "' or " : "") . " identifier = '" . tep_db_input($this->identifier) . "') and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 0 order by date_added desc limit " . (int)$this->attempts);
-
-      return ( tep_db_num_rows($check_query) < $this->attempts );
+    public function canPerform($user_id, $user_name) {
+      $check_query = tep_db_query("select id from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($this->code) . "' and (" . (!empty($user_name) ? "user_name = '" . tep_db_input($user_name) . "' or " : "") . " identifier = '" . tep_db_input($this->identifier) . "') and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 0 order by date_added desc limit " . (int)$this->attempts);
+      if (tep_db_num_rows($check_query) == $this->attempts) {
+        return false;
+      } else {
+        return true;
+      }
     }
 
     public function check() {
