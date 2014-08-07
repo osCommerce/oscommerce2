@@ -118,7 +118,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $order, $order_total_modules;
 
       $insert_order = false;
 
@@ -249,11 +249,11 @@
                                      and pa.options_id = popt.products_options_id
                                      and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                      and pa.options_values_id = poval.products_options_values_id
-                                     and popt.language_id = '" . $languages_id . "'
-                                     and poval.language_id = '" . $languages_id . "'";
+                                     and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                     and poval.language_id = '" . $_SESSION['languages_id'] . "'";
                 $attributes = tep_db_query($attributes_query);
               } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
               }
               $attributes_values = tep_db_fetch_array($attributes);
 
@@ -287,11 +287,11 @@
     }
 
     function process_button() {
-      global $order, $currency, $languages_id, $language, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $currency, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
@@ -315,8 +315,8 @@
                                tep_draw_hidden_field('MC_callback', tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
                                tep_draw_hidden_field('M_sid', session_id()) .
                                tep_draw_hidden_field('M_cid', $customer_id) .
-                               tep_draw_hidden_field('M_lang', $language) .
-                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                               tep_draw_hidden_field('M_lang', $_SESSION['language']) .
+                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
         $process_button_string .= tep_draw_hidden_field('authMode', 'E');
@@ -330,12 +330,12 @@
     }
 
     function before_process() {
-      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
+      if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
@@ -450,11 +450,11 @@
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . $languages_id . "'
-                                   and poval.language_id = '" . $languages_id . "'";
+                                   and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                   and poval.language_id = '" . $_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 

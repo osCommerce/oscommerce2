@@ -19,8 +19,6 @@
     var $enabled = false;
 
     function cm_account_stripe_cards() {
-      global $language;
-
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -38,7 +36,7 @@
 
       if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('stripe.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
         if ( !class_exists('stripe') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . $language . '/modules/payment/stripe.php');
+          include(DIR_FS_CATALOG . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/stripe.php');
           include(DIR_FS_CATALOG . 'includes/modules/payment/stripe.php');
         }
 

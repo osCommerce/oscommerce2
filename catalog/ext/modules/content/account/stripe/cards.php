@@ -20,7 +20,7 @@
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('stripe.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
     if ( !class_exists('stripe') ) {
-      include(DIR_WS_LANGUAGES . $language . '/modules/payment/stripe.php');
+      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/stripe.php');
       include(DIR_WS_MODULES . 'payment/stripe.php');
     }
 
@@ -33,7 +33,7 @@
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/content/account/cm_account_stripe_cards.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_stripe_cards.php');
   require('includes/modules/content/account/cm_account_stripe_cards.php');
   $stripe_cards = new cm_account_stripe_cards();
 

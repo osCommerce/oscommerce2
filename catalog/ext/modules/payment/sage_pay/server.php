@@ -17,7 +17,7 @@
     exit;
   }
 
-  include(DIR_WS_LANGUAGES . $language . '/modules/payment/sage_pay_server.php');
+  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_server.php');
   include('includes/modules/payment/sage_pay_server.php');
   $sage_pay_server = new sage_pay_server();
 

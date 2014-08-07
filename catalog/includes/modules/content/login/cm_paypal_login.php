@@ -262,7 +262,7 @@
     }
 
     function postLogin() {
-      global $paypal_login_customer_id, $login_customer_id, $language, $payment;
+      global $paypal_login_customer_id, $login_customer_id, $payment;
 
       if ( isset($_SESSION['paypal_login_customer_id']) ) {
         if ( $paypal_login_customer_id !== false ) {
@@ -277,7 +277,7 @@
         if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
               include(DIR_WS_MODULES . 'payment/paypal_express.php');
             }
 

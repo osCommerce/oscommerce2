@@ -78,7 +78,7 @@
     }
 
     function process_button() {
-      global $customer_id, $currencies, $currency, $order, $languages_id, $cartID;
+      global $customer_id, $currencies, $currency, $order, $cartID;
 
       $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
                                tep_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
@@ -116,7 +116,7 @@
 
       $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       switch (strtolower($lang['code'])) {

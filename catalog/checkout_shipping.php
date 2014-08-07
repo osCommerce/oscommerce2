@@ -93,7 +93,7 @@
     if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
 
-      include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
     }
   } else {
     $free_shipping = false;
@@ -155,7 +155,7 @@
 // method if more than one module is now enabled
   if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($shipping == false) && (tep_count_shipping_modules() > 1) ) ) $shipping = $shipping_modules->cheapest();
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_SHIPPING);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING);
 
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && !isset($_SESSION['shipping']) && ($shipping == false) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
