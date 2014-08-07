@@ -37,13 +37,13 @@
         $currency_type = $_SESSION['currency'];
       }
 
+      $rate = 1;
+
       if ( $calculate_currency_value === true ) {
         $rate = (isset($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
-
-        $number = $number * $rate;
       }
 
-      return $this->currencies[$currency_type]['symbol_left'] . number_format(tep_round($number, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
+      return $this->currencies[$currency_type]['symbol_left'] . number_format(tep_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
     }
 
     public function calculate_price($products_price, $products_tax, $quantity = 1) {
