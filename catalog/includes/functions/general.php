@@ -171,9 +171,8 @@
     if (!is_array($exclude_array)) $exclude_array = array();
 
     $get_url = '';
-    if (is_array($_GET) && (sizeof($_GET) > 0)) {
-      reset($_GET);
-      while (list($key, $value) = each($_GET)) {
+    if (is_array($_GET) && (!empty($_GET))) {
+      foreach ($_GET as $key => $value) {
         if ( is_string($value) && (strlen($value) > 0) && ($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
           $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
         }
@@ -940,12 +939,11 @@
     if (is_numeric($prid)) {
       $uprid = (int)$prid;
 
-      if (is_array($params) && (sizeof($params) > 0)) {
+      if (is_array($params) && (!empty($params))) {
         $attributes_check = true;
         $attributes_ids = '';
 
-        reset($params);
-        while (list($option, $value) = each($params)) {
+        foreach ($params as $option => $value) {
           if (is_numeric($option) && is_numeric($value)) {
             $attributes_ids .= '{' . (int)$option . '}' . (int)$value;
           } else {
@@ -969,7 +967,8 @@
 // strpos()+1 to remove up to and including the first { which would create an empty array element in explode()
           $attributes = explode('{', substr($prid, strpos($prid, '{')+1));
 
-          for ($i=0, $n=sizeof($attributes); $i<$n; $i++) {
+          $n=sizeof($attributes);
+          for ($i=0; $i<$n; $i++) {
             $pair = explode('}', $attributes[$i]);
 
             if (is_numeric($pair[0]) && is_numeric($pair[1])) {
@@ -1079,7 +1078,8 @@
 
     $modules_array = explode(';', $modules);
 
-    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
+    $n=sizeof($modules_array);
+    for ($i=0;  $i<$n; $i++) {
       $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
 
       if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
@@ -1147,8 +1147,8 @@
     if (!is_array($exclude)) $exclude = array();
 
     $get_string = '';
-    if (sizeof($array) > 0) {
-      while (list($key, $value) = each($array)) {
+    if (!empty($array)) {
+      foreach ($array as $key => $value) {
         if ( (!in_array($key, $exclude)) && ($key != 'x') && ($key != 'y') ) {
           $get_string .= $key . $equals . $value . $separator;
         }
@@ -1162,7 +1162,7 @@
 
   function tep_not_null($value) {
     if (is_array($value)) {
-      if (sizeof($value) > 0) {
+      if (!empty($value)) {
         return true;
       } else {
         return false;
