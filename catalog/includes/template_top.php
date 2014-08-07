@@ -32,13 +32,13 @@
 <!-- Bootstrap -->
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<script type="text/javascript" src="ext/jquery/jquery-1.11.1.min.js"></script>
+<script src="ext/jquery/jquery-1.11.1.min.js"></script>
 
 <script src="ext/bootstrap/js/bootstrap.min.js"></script>
 
-<script type="text/javascript" src="ext/photoset-grid/jquery.photoset-grid.min.js"></script>
+<script src="ext/photoset-grid/jquery.photoset-grid.min.js"></script>
 
-<link rel="stylesheet" type="text/css" href="ext/colorbox/colorbox.css" />
+<link rel="stylesheet" href="ext/colorbox/colorbox.css" />
 <script type="text/javascript" src="ext/colorbox/jquery.colorbox-min.js"></script>
 
 <!-- Custom -->
