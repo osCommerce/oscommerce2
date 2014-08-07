@@ -1166,7 +1166,7 @@
         return false;
       }
     } else {
-      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
+      if (($value != '') && (strtolower($value) != 'null') && (!empty(trim($value)))) {
         return true;
       } else {
         return false;
