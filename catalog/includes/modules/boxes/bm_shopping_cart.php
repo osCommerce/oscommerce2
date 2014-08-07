@@ -31,13 +31,13 @@
     }
 
     function execute() {
-      global $cart, $new_products_id_in_cart, $currencies, $oscTemplate;
+      global $new_products_id_in_cart, $currencies, $oscTemplate;
 
       $cart_contents_string = '';
 
-      if ($cart->count_contents() > 0) {
+      if ($_SESSION['cart']->count_contents() > 0) {
         $cart_contents_string = '<ul class="list-unstyled">';
-        $products = $cart->get_products();
+        $products = $_SESSION['cart']->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
           $cart_contents_string .= '<li';
@@ -59,7 +59,7 @@
           }
         }
 
-        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($cart->show_total()) . '</li>' .
+        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>' .
                                  '</ul>';
 
       } else {

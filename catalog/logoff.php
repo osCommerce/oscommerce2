@@ -42,7 +42,7 @@
     unset($_SESSION['comments']);
   }
 
-  $cart->reset();
+  $_SESSION['cart']->reset();
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

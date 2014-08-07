@@ -20,13 +20,13 @@
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && isset($_SESSION['cartID'])) {
-    if ($cart->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
+    if ($_SESSION['cart']->cartID != $cartID) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }

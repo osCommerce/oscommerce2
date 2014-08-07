@@ -278,9 +278,7 @@
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Low' ) {
-        global $cart;
-
-        $cart->reset(true);
+        $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
         unset($_SESSION['sendto']);

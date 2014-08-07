@@ -89,11 +89,11 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
+      global $cartID;
 
       // We need the cartID
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
+      if (empty($_SESSION['cart']->cartID)) {
+        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
 
       if (!isset($_SESSION['cartID'])) {
@@ -271,7 +271,7 @@
     }
 
     function process_button() {
-      global $order, $cart, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
+      global $order, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
 
       $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
@@ -307,7 +307,7 @@
       $parameter['kunden_var_0'] = tep_output_string($order_id);  // Eindeutige Identifikation der Zahlung, z.B. Session ID oder Auftragsnummer.
       $parameter['kunden_var_1'] = tep_output_string($customer_id);
       $parameter['kunden_var_2'] = tep_output_string(session_id());
-      $parameter['kunden_var_3'] = tep_output_string($cart->cartID);
+      $parameter['kunden_var_3'] = tep_output_string($_SESSION['cart']->cartID);
       $parameter['kunden_var_4'] = '';
       $parameter['kunden_var_5'] = '';
       // $parameter['Partner'] = '';
@@ -339,7 +339,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_Sofortueberweisung_Direct_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart_Sofortueberweisung_Direct_ID;
       global $$payment;
 
       $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
@@ -517,7 +517,7 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
       unset($_SESSION['sendto']);

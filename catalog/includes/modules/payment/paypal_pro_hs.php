@@ -119,10 +119,10 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
+      global $cartID;
 
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
+      if (empty($_SESSION['cart']->cartID)) {
+        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
 
       if (!isset($_SESSION['cartID'])) {
@@ -403,7 +403,7 @@ EOD;
     }
 
     function before_process() {
-      global $cart_PayPal_Pro_HS_ID, $customer_id, $pphs_result, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $$payment;
+      global $cart_PayPal_Pro_HS_ID, $customer_id, $pphs_result, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $$payment;
 
       $result = false;
 
@@ -591,7 +591,7 @@ EOD;
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
       unset($_SESSION['sendto']);

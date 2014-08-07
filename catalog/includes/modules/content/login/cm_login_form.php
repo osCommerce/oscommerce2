@@ -32,11 +32,11 @@
     }
 
     function execute() {
-      global $sessiontoken, $login_customer_id, $messageStack, $oscTemplate;
+      global $login_customer_id, $messageStack, $oscTemplate;
 
       $error = false;
 
-      if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+      if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
         $email_address = tep_db_prepare_input($_POST['email_address']);
         $password = tep_db_prepare_input($_POST['password']);
 

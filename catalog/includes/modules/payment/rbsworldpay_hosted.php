@@ -106,10 +106,10 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
+      global $cartID;
 
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
+      if (empty($_SESSION['cart']->cartID)) {
+        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
 
       if (!isset($_SESSION['cartID'])) {
@@ -330,7 +330,7 @@
     }
 
     function before_process() {
-      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_RBS_Worldpay_Hosted_ID;
+      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
@@ -517,7 +517,7 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
       unset($_SESSION['sendto']);

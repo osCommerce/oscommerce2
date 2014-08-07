@@ -16,7 +16,7 @@
   require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
 
   $process = false;
-  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $sessiontoken)) {
+  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $process = true;
 
     if (ACCOUNT_GENDER == 'true') {
@@ -227,10 +227,10 @@
       tep_session_register('customer_zone_id');
 
 // reset session token
-      $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+      $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
-      $cart->restore_contents();
+      $_SESSION['cart']->restore_contents();
 
 // build the message content
       $name = $firstname . ' ' . $lastname;

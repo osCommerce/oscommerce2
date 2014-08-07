@@ -14,7 +14,7 @@
   require('includes/application_top.php');
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -64,7 +64,7 @@
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
   if (!isset($_SESSION['cartID'])) tep_session_register('cartID');
-  $cartID = $cart->cartID;
+  $cartID = $_SESSION['cart']->cartID;
 
   switch ($_GET['osC_Action']) {
     case 'retrieve':
@@ -173,7 +173,7 @@ EOD;
           tep_session_register('customer_first_name');
 
 // reset session token
-          $sessiontoken = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+          $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
         }
 
 // check if paypal shipping address exists in the address book
@@ -262,9 +262,9 @@ EOD;
         include(DIR_WS_CLASSES . 'order.php');
         $order = new order;
 
-        if ($cart->get_content_type() != 'virtual') {
-          $total_weight = $cart->show_weight();
-          $total_count = $cart->count_contents();
+        if ($_SESSION['cart']->get_content_type() != 'virtual') {
+          $total_weight = $_SESSION['cart']->show_weight();
+          $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
           include(DIR_WS_CLASSES . 'shipping.php');
@@ -420,9 +420,9 @@ EOD;
         $params['SHIPTOZIP'] = $order->delivery['postcode'];
       }
 
-      if ($cart->get_content_type() != 'virtual') {
-        $total_weight = $cart->show_weight();
-        $total_count = $cart->count_contents();
+      if ($_SESSION['cart']->get_content_type() != 'virtual') {
+        $total_weight = $_SESSION['cart']->show_weight();
+        $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
         include(DIR_WS_CLASSES . 'shipping.php');

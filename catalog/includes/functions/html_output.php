@@ -153,16 +153,14 @@
 // into the parameters on each form
 // as not all forms are horizontal
   function tep_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
-    global $sessiontoken;
-
     $form = '<form name="' . tep_output_string($name) . '" action="' . tep_output_string($action) . '" method="' . tep_output_string($method) . '"';
 
     if (tep_not_null($parameters)) $form .= ' ' . $parameters;
 
     $form .= '>';
 
-    if ( ($tokenize == true) && isset($sessiontoken) ) {
-      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($sessiontoken) . '" />';
+    if ( ($tokenize == true) && isset($_SESSION['sessiontoken']) ) {
+      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($_SESSION['sessiontoken']) . '" />';
     }
 
     return $form;

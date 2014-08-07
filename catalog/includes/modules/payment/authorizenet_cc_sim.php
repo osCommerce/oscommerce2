@@ -275,9 +275,7 @@
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if ( ENABLE_SSL != true ) {
-        global $cart;
-
-        $cart->reset(true);
+        $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
         unset($_SESSION['sendto']);
