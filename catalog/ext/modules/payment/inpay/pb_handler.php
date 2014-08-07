@@ -157,7 +157,7 @@ if ($result == 'VERIFIED')
     if ($invoice_approved)
     {
     	// for email
-		include(DIR_WS_LANGUAGES . $language . '/modules/payment/inpay.php');
+		include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/inpay.php');
         // let's re-create the required arrays
         require (DIR_WS_CLASSES.'order.php');
         $order = new order($_POST['order_id']);

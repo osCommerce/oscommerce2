@@ -20,7 +20,7 @@
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
     if ( !class_exists('sage_pay_direct') ) {
-      include(DIR_WS_LANGUAGES . $language . '/modules/payment/sage_pay_direct.php');
+      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
       include(DIR_WS_MODULES . 'payment/sage_pay_direct.php');
     }
 
@@ -33,7 +33,7 @@
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/content/account/cm_account_sage_pay_cards.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_sage_pay_cards.php');
   require('includes/modules/content/account/cm_account_sage_pay_cards.php');
   $sage_pay_cards = new cm_account_sage_pay_cards();
 

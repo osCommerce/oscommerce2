@@ -70,8 +70,6 @@
     }
 
     function buildBlocks() {
-      global $language;
-
       if ( defined('TEMPLATE_BLOCK_GROUPS') && tep_not_null(TEMPLATE_BLOCK_GROUPS) ) {
         $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
 
@@ -85,8 +83,8 @@
               $class = substr($module, 0, strrpos($module, '.'));
 
               if ( !class_exists($class) ) {
-                if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module) ) {
-                  include(DIR_WS_LANGUAGES . $language . '/modules/' . $group . '/' . $module);
+                if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module) ) {
+                  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
                 }
 
                 if ( file_exists(DIR_WS_MODULES . $group . '/' . $class . '.php') ) {
@@ -116,8 +114,6 @@
     }
 
     function getContent($group) {
-      global $language;
-
       if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
         include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
       }
@@ -131,8 +127,8 @@
       foreach ( $this->getContentModules($group) as $module ) {
         if ( !class_exists($module) ) {
           if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php') ) {
-            if ( file_exists(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module . '.php') ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/content/' . $group . '/' . $module . '.php');
+            if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
             }
 
             include(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php');

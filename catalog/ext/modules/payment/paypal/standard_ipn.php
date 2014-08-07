@@ -17,7 +17,7 @@
     exit;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_standard.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_standard.php');
   require('includes/modules/payment/paypal_standard.php');
 
   $result = false;

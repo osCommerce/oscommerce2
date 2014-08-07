@@ -287,7 +287,7 @@
     }
 
     function process_button() {
-      global $order, $currency, $language, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $currency, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
@@ -315,8 +315,8 @@
                                tep_draw_hidden_field('MC_callback', tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
                                tep_draw_hidden_field('M_sid', session_id()) .
                                tep_draw_hidden_field('M_cid', $customer_id) .
-                               tep_draw_hidden_field('M_lang', $language) .
-                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                               tep_draw_hidden_field('M_lang', $_SESSION['language']) .
+                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
         $process_button_string .= tep_draw_hidden_field('authMode', 'E');
@@ -330,12 +330,12 @@
     }
 
     function before_process() {
-      global $customer_id, $language, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
+      if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));

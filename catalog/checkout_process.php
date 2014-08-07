@@ -39,7 +39,7 @@
     }
   }
 
-  include(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PROCESS);
+  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_PROCESS);
 
 // load selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
