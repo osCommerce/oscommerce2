@@ -144,7 +144,7 @@
 
     $module_title = $actions['module'];
     if (is_object(${$module})) {
-      $module_title = ${$module}->getTitle();
+      $module_title = ${$module}->getTitle;
     }
 
     if ((!isset($HTTP_GET_VARS['aID']) || (isset($HTTP_GET_VARS['aID']) && ($HTTP_GET_VARS['aID'] == $actions['id']))) && !isset($aInfo)) {

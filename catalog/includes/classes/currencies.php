@@ -10,12 +10,15 @@
   Released under the GNU General Public License
 */
 
-  namespace osCommerce\OM\classes;
-
+////
+// Class to handle currencies
+// TABLES: currencies
   class currencies {
-    protected $currencies = array();
+    var $currencies;
 
-    public function __construct() {
+// class constructor
+    function currencies() {
+      $this->currencies = array();
       $currencies_query = tep_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from " . TABLE_CURRENCIES);
       while ($currencies = tep_db_fetch_array($currencies_query)) {
         $this->currencies[$currencies['code']] = array('title' => $currencies['title'],
@@ -28,41 +31,45 @@
       }
     }
 
-    public function getAll() {
-      return $this->currencies;
-    }
+// class methods
+    function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
+      global $currency;
 
-    public function format($number, $calculate_currency_value = true, $currency_type = null, $currency_value = null) {
-      if ( !isset($currency_type) ) {
-        $currency_type = $_SESSION['currency'];
+      if (empty($currency_type)) $currency_type = $currency;
+
+      if ($calculate_currency_value == true) {
+        $rate = (tep_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
+        $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(tep_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
+      } else {
+        $format_string = $this->currencies[$currency_type]['symbol_left'] . number_format(tep_round($number, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
       }
 
-      $rate = 1;
+      return $format_string;
+    }
 
-      if ( $calculate_currency_value === true ) {
-        $rate = (isset($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
+    function calculate_price($products_price, $products_tax, $quantity = 1) {
+      global $currency;
+
+      return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$currency]['decimal_places']) * $quantity;
+    }
+
+    function is_set($code) {
+      if (isset($this->currencies[$code]) && tep_not_null($this->currencies[$code])) {
+        return true;
+      } else {
+        return false;
       }
-
-      return $this->currencies[$currency_type]['symbol_left'] . number_format(tep_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], $this->currencies[$currency_type]['decimal_point'], $this->currencies[$currency_type]['thousands_point']) . $this->currencies[$currency_type]['symbol_right'];
     }
 
-    public function calculate_price($products_price, $products_tax, $quantity = 1) {
-      return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$_SESSION['currency']]['decimal_places']) * $quantity;
-    }
-
-    public function is_set($code) {
-      return isset($this->currencies[$code]) && tep_not_null($this->currencies[$code]);
-    }
-
-    public function get_value($code) {
+    function get_value($code) {
       return $this->currencies[$code]['value'];
     }
 
-    public function get_decimal_places($code) {
+    function get_decimal_places($code) {
       return $this->currencies[$code]['decimal_places'];
     }
 
-    public function display_price($products_price, $products_tax, $quantity = 1) {
+    function display_price($products_price, $products_tax, $quantity = 1) {
       return $this->format($this->calculate_price($products_price, $products_tax, $quantity));
     }
   }
