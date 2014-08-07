@@ -34,7 +34,7 @@
     tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_SUCCESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);

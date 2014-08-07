@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_LOGOFF);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_LOGOFF);
 
   $breadcrumb->add(NAVBAR_TITLE);
 

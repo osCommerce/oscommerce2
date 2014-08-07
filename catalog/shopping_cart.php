@@ -17,7 +17,7 @@
     $payment_modules = new payment;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_SHOPPING_CART);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SHOPPING_CART);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHOPPING_CART));
 

@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_PRODUCT_REVIEWS_WRITE);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCT_REVIEWS_WRITE);
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();

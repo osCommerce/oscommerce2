@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_ADVANCED_SEARCH);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADVANCED_SEARCH);
 
   $error = false;
 

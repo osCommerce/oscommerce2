@@ -24,7 +24,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_PAYMENT_ADDRESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_PAYMENT_ADDRESS);
 
   $error = false;
   $process = false;

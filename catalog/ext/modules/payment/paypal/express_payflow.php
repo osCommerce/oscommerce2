@@ -24,9 +24,9 @@
     $customer_default_address_id = 0;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_pro_payflow_ec.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_payflow_ec.php');
   require('includes/modules/payment/paypal_pro_payflow_ec.php');
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
 
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
@@ -296,7 +296,7 @@ EOD;
             if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
               $free_shipping = true;
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
             }
           }
 
@@ -454,7 +454,7 @@ EOD;
           if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
             $free_shipping = true;
 
-            include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
           }
         }
 

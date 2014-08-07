@@ -31,7 +31,7 @@
     tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_TELL_A_FRIEND);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_TELL_A_FRIEND);
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;

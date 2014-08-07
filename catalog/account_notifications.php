@@ -18,7 +18,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_ACCOUNT_NOTIFICATIONS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_NOTIFICATIONS);
 
   $global_query = tep_db_query("select global_product_notifications from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = '" . (int)$customer_id . "'");
   $global = tep_db_fetch_array($global_query);
