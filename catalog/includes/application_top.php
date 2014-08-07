@@ -33,9 +33,6 @@
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
 
-  require('includes/functions/autoload.php');
-  spl_autoload_register('autoload');
-
 // set the type of request (secure or not)
   $request_type = ($_SERVER['HTTPS'] == 'on') ? 'SSL' : 'NONSSL';
 
@@ -245,6 +242,9 @@
   }
 
   $_SESSION['navigation']->add_current_page();
+
+// action recorder
+  require('includes/classes/action_recorder.php');
 
 // Shopping cart actions
   if ( isset($_GET['action']) ) {

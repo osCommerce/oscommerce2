@@ -23,7 +23,7 @@
     if (tep_db_num_rows($check_customer_query)) {
       $check_customer = tep_db_fetch_array($check_customer_query);
 
-      $actionRecorder = new osCommerce\OM\classes\actionRecorder('ar_reset_password', $check_customer['customers_id'], $email_address);
+      $actionRecorder = new actionRecorder('ar_reset_password', $check_customer['customers_id'], $email_address);
 
       if ($actionRecorder->canPerform()) {
         $actionRecorder->record();
@@ -86,9 +86,9 @@
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
-
+    
     <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-
+    
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-xs-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-9">
@@ -98,14 +98,14 @@
         ?>
       </div>
     </div>
-
+    
   </div>
-
+  
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_LOGIN, '', 'SSL')); ?></div>
   </div>
-
+  
 </div>
 
 </form>
