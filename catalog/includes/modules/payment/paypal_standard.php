@@ -118,7 +118,7 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $_SESSION['cart'], $order;
+      global $cartID, $order;
 
       if (empty($_SESSION['cart']->cartID)) {
         $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
