@@ -34,7 +34,7 @@
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
 
 // set the type of request (secure or not)
-  $request_type = ($_SERVER['HTTPS'] == 'on') ? 'SSL' : 'NONSSL';
+  $request_type = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ? 'SSL' : 'NONSSL';
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
