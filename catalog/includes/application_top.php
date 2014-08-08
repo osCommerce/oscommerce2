@@ -36,19 +36,15 @@
 // set the type of request (secure or not)
   if (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['SERVER_PORT'] == 443) {
     $request_type =  'SSL';
+    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
       } else {
     $request_type =  'NONSSL';
+    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
   }
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
-
-  if ( $request_type == 'NONSSL' ) {
-    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
-  } else {
-    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-  }
 
 // include the list of project filenames
   require('includes/filenames.php');
