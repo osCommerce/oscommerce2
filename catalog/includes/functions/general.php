@@ -37,7 +37,7 @@
     }
 
     if ( ENABLE_SSL == true ) { // We are loading an SSL page
-     if ($_SERVER['HTTPS'] == 'on' || $_SERVER['SERVER_PORT'] == 443) { // on some servers $_SERVER['HTTPS'] can be empty so we check the connection port
+     if (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['SERVER_PORT'] == 443) { // on some servers $_SERVER['HTTPS'] can be empty so we check the connection port
       if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
         $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
       }
