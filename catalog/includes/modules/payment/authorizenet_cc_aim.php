@@ -128,7 +128,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $currency, $response;
+      global $customer_id, $order, $sendto, $response;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -136,7 +136,7 @@
                       'x_type' => ((MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD == 'Capture') ? 'AUTH_CAPTURE' : 'AUTH_ONLY'),
                       'x_method' => 'CC',
                       'x_amount' => substr($this->format_raw($order->info['total']), 0, 15),
-                      'x_currency_code' => substr($currency, 0, 3),
+                      'x_currency_code' => substr($_SESSION['currency'], 0, 3),
                       'x_card_num' => substr(preg_replace('/[^0-9]/', '', $_POST['cc_number_nh-dns']), 0, 22),
                       'x_exp_date' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
                       'x_card_code' => substr($_POST['cc_ccv_nh-dns'], 0, 4),
@@ -760,10 +760,10 @@ EOD;
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

@@ -101,7 +101,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currency, $cartID;
+      global $customer_id, $order, $cartID;
 
       $process_button_string = '';
 
@@ -119,7 +119,7 @@
       $crypt = array('ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                      'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
-                     'Currency' => $currency,
+                     'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
                      'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                      'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'),
@@ -473,10 +473,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

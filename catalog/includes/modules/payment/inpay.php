@@ -309,7 +309,7 @@ class inpay
 
     function process_button()
     {
-        global $customer_id, $order, $sendto, $currency, $cart_inpay_Standard_ID, $shipping;
+        global $customer_id, $order, $sendto, $cart_inpay_Standard_ID, $shipping;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -318,7 +318,7 @@ class inpay
         'tax'=>$this->format_raw($order->info['tax']),
         //'business'=>MODULE_PAYMENT_INPAY_ID,
         'amount'=>$this->format_raw($order->info['total']), //TODO: we do not calculate tax+shipping only gross total -$order->info['shipping_cost']-$order->info['tax']),
-        'currency'=>$currency,
+        'currency'=>$_SESSION['currency'],
         'order_id'=>substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1),
         'custom'=>$customer_id,
         'no_note'=>'1',
@@ -665,11 +665,11 @@ class inpay
     // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '')
     {
-        global $currencies, $currency;
+        global $currencies;
 
         if ( empty($currency_code) || !$this->is_set($currency_code))
         {
-            $currency_code = $currency;
+            $currency_code = $_SESSION['currency'];
         }
 
         if ( empty($currency_value) || !is_numeric($currency_value))

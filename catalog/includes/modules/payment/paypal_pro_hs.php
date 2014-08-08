@@ -131,7 +131,7 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_PayPal_Pro_HS_ID, $customer_id, $order, $order_total_modules, $currency, $sendto, $pphs_result, $pphs_key;
+      global $cartID, $cart_PayPal_Pro_HS_ID, $customer_id, $order, $order_total_modules, $sendto, $pphs_result, $pphs_key;
 
       $pphs_result = array();
 
@@ -304,7 +304,7 @@
                         'bn' => 'OSCOM23_HS',
                         'buyer_email' => $order->customer['email_address'],
                         'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                        'currency_code' => $currency,
+                        'currency_code' => $_SESSION['currency'],
                         'invoice' => $order_id,
                         'custom' => $customer_id,
                         'paymentaction' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD == 'Sale' ? 'sale' : 'authorization',
@@ -873,10 +873,10 @@ EOD;
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

@@ -308,7 +308,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
+      global $customer_id, $order, $sendto, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
 
       $total_tax = $order->info['tax'];
 
@@ -324,7 +324,7 @@
                           'shipping_1' => $this->format_raw($order->info['shipping_cost']),
                           'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
                           'amount_1' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $total_tax),
-                          'currency_code' => $currency,
+                          'currency_code' => $_SESSION['currency'],
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
                           'no_note' => '1',
@@ -932,10 +932,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
