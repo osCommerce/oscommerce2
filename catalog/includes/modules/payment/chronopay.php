@@ -270,7 +270,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currencies, $currency, $cart_ChronoPay_ID;
+      global $customer_id, $order, $currencies, $cart_ChronoPay_ID;
 
       switch ($order->billing['country']['iso_code_3']) {
         case 'USA':
@@ -307,7 +307,7 @@
       $process_button_string = tep_draw_hidden_field('product_id', MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID) .
                                tep_draw_hidden_field('product_name', STORE_NAME) .
                                tep_draw_hidden_field('product_price', $total_price) .
-                               tep_draw_hidden_field('product_price_currency', $currency) .
+                               tep_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('cb_url', urlencode(tep_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
                                tep_draw_hidden_field('cb_type', 'P') .
                                tep_draw_hidden_field('decline_url', urlencode(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .

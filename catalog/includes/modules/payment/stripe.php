@@ -113,7 +113,7 @@
     }
 
     function confirmation() {
-      global $customer_id, $order, $currencies, $currency;
+      global $customer_id, $order, $currencies;
 
       $months_array = array();
 
@@ -220,7 +220,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $currency, $stripe_result, $stripe_error;
+      global $customer_id, $order, $stripe_result, $stripe_error;
 
       $stripe_result = null;
 
@@ -270,7 +270,7 @@
 
       if ( !empty($params) ) {
         $params['amount'] = $this->format_raw($order->info['total']);
-        $params['currency'] = $currency;
+        $params['currency'] = $_SESSION['currency'];
         $params['capture'] = (MODULE_PAYMENT_STRIPE_TRANSACTION_METHOD == 'Capture') ? 'true' : 'false';
 
         $stripe_result = json_decode($this->sendTransactionToGateway('https://api.stripe.com/v1/charges', $params), true);
@@ -663,10 +663,10 @@ EOD;
     }
 
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

@@ -141,7 +141,7 @@ EOD;
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency;
+      global $customer_id, $order, $sendto;
 
       $tstamp = time();
       $sequence = rand(1, 1000);
@@ -164,13 +164,13 @@ EOD;
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
                       'x_amount' => $this->format_raw($order->info['total']),
-                      'x_currency_code' => substr($currency, 0, 3),
+                      'x_currency_code' => substr($_SESSION['currency'], 0, 3),
                       'x_method' => 'CC',
                       'x_type' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TRANSACTION_METHOD == 'Capture' ? 'AUTH_CAPTURE' : 'AUTH_ONLY',
                       'x_freight' => $this->format_raw($order->info['shipping_cost']),
                       'x_fp_sequence' => $sequence,
                       'x_fp_timestamp' => $tstamp,
-                      'x_fp_hash' => $this->_hmac(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TRANSACTION_KEY, MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . '^' . $sequence . '^' . $tstamp . '^' . $this->format_raw($order->info['total']) . '^' . $currency),
+                      'x_fp_hash' => $this->_hmac(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TRANSACTION_KEY, MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . '^' . $sequence . '^' . $tstamp . '^' . $this->format_raw($order->info['total']) . '^' . $_SESSION['currency']),
                       'x_cancel_url' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
                       'x_cancel_url_text' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_RETURN_BUTTON);
 
@@ -543,10 +543,10 @@ EOD;
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
