@@ -37,7 +37,7 @@
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
           reset($currencies->currencies);
           $currencies_array = array();
-          while (list($key, $value) = each($currencies->currencies)) {
+          foreach($currencies->currencies as $key => $val) {
             $currencies_array[] = array('id' => $key, 'text' => $value['title']);
           }
 
