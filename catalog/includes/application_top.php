@@ -24,7 +24,7 @@
     include('includes/configure.php');
   }
 
-  if (strlen(DB_SERVER) < 1) {
+  if (DB_SERVER == '') {
     if (is_dir('install')) {
       header('Location: install/index.php');
     }
