@@ -34,17 +34,17 @@
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
 
 // set the type of request (secure or not)
-  $request_type = ($_SERVER['HTTPS'] == 'on') ? 'SSL' : 'NONSSL';
+  if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
+    $request_type =  'SSL';
+    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
+      } else {
+    $request_type =  'NONSSL';
+    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
+  }
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
-
-  if ( $request_type == 'NONSSL' ) {
-    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
-  } else {
-    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-  }
 
 // include the list of project filenames
   require('includes/filenames.php');
