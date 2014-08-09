@@ -34,7 +34,7 @@
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
 
 // set the type of request (secure or not)
-  if (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['SERVER_PORT'] == 443) {
+  if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['SERVER_PORT'] == 443)) {
     $request_type =  'SSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
       } else {
