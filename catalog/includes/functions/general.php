@@ -42,7 +42,6 @@
       if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
         $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
       }
-     }  
     }
 
     if ( strpos($url, '&amp;') !== false ) {
@@ -1157,13 +1156,11 @@
         return false;
       }
     } elseif(is_object($value)) {
-      
       if (is_null($value)) {
         return false;
       } else {
         return true;
-      } 
-     
+      }
     } else {
       if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
         return true;
@@ -1225,14 +1222,10 @@
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
-    
-// Anonymous function to convert string to integer
-    $int = function($string) {
-        return (int)$string;
-	  };
-
 // make sure the category IDs are integers
-    $cPath_array = array_map($int, explode('_', $cPath));
+    $cPath_array = array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
