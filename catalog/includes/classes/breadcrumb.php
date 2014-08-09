@@ -25,7 +25,7 @@
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
-    function trail($separator = NULL) {
+    function trail() {
       $trail_string = '<ol class="breadcrumb">';
 
       for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
