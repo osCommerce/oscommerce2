@@ -24,7 +24,7 @@
 
 // insert current cart contents in database
       if (is_array($this->contents)) {
-        foreach ($this->contents as $products_id => $value) {
+        foreach ( array_keys($this->contents) as $products_id ) {
           $qty = $this->contents[$products_id]['qty'];
           $product_query = tep_db_query("select products_id from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "'");
           if (!tep_db_num_rows($product_query)) {
@@ -181,7 +181,7 @@
     function cleanup() {
       global $customer_id;
 
-      foreach ($this->contents as $key => $value) {
+      foreach ( array_keys($this->contents) as $key ) {
         if ($this->contents[$key]['qty'] < 1) {
           unset($this->contents[$key]);
 // remove from database
@@ -196,7 +196,7 @@
     function count_contents() {  // get total number of items in cart
       $total_items = 0;
       if (is_array($this->contents)) {
-        foreach ($this->contents as $products_id => $value) {
+        foreach ( array_keys($this->contents) as $products_id ) {
           $total_items += $this->get_quantity($products_id);
         }
       }
@@ -241,7 +241,7 @@
     function get_product_id_list() {
       $product_id_list = '';
       if (is_array($this->contents)) {
-       foreach ($this->contents as $products_id => $value) {
+       foreach ( array_keys($this->contents) as $products_id ) {
           $product_id_list .= ', ' . $products_id;
         }
       }
@@ -256,7 +256,7 @@
       $this->weight = 0;
       if (!is_array($this->contents)) return 0;
 
-      foreach ($this->contents as $products_id => $value) {
+      foreach ( array_keys($this->contents) as $products_id ) {
         $qty = $this->contents[$products_id]['qty'];
 
 // products price
@@ -314,7 +314,7 @@
       if (!is_array($this->contents)) return false;
 
       $products_array = array();
-      foreach ($this->contents as $products_id => $value) {
+      foreach ( array_keys($this->contents) as $products_id ) {
         $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_tax_class_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$products_id . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
         if ($products = tep_db_fetch_array($products_query)) {
           $prid = $products['products_id'];
@@ -362,7 +362,7 @@
       $this->content_type = false;
 
       if ( (DOWNLOAD_ENABLED == 'true') && ($this->count_contents() > 0) ) {
-        foreach ($this->contents as $products_id => $value) {
+        foreach ( array_keys($this->contents) as $products_id ) {
           if (isset($this->contents[$products_id]['attributes'])) {
             foreach ($this->contents[$products_id]['attributes'] as $value) {
               $virtual_check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad where pa.products_id = '" . (int)$products_id . "' and pa.options_values_id = '" . (int)$value . "' and pa.products_attributes_id = pad.products_attributes_id");
