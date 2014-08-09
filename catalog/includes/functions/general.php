@@ -1058,14 +1058,6 @@
     }
   }
 
-////
-// Get the number of times a word/character is present in a string
-  function tep_word_count($string, $needle) {
-    $temp_array = preg_split('/' . $needle . '/', $string);
-
-    return sizeof($temp_array);
-  }
-
   function tep_count_modules($modules = '') {
     $count = 0;
 
@@ -1227,15 +1219,17 @@
     }
   }
 
-  function tep_string_to_int($string) {
-    return (int)$string;
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
+    
+// Anonymous function to convert string to integer
+    $int = function($string) {
+        return (int)$string;
+	  };
+
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map($int, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
