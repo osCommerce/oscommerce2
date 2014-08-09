@@ -30,9 +30,9 @@
 <?php
   }
 
-  $prod_list_contents = '<div class="ui-widget infoBoxContainer">' .
-                        '  <div class="ui-widget-header ui-corner-top infoBoxHeading">' .
-                        '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingHeader">' .
+  $prod_list_contents = '<div class="">' .
+                        '  <div class="infoBoxHeading">' .
+                        '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table">' .
                         '      <tr>';
 
   for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
@@ -88,8 +88,8 @@
     $rows = 0;
     $listing_query = tep_db_query($listing_split->sql_query);
 
-    $prod_list_contents .= '  <div class="ui-widget-content ui-corner-bottom productListTable">' .
-                           '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingData">';
+    $prod_list_contents .= '  <div class="productListTable">' .
+                           '    <table border="0" width="100%" cellspacing="2" cellpadding="2" class="table">';
 
     while ($listing = tep_db_fetch_array($listing_query)) {
       $rows++;
