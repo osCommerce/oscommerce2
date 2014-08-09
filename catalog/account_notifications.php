@@ -39,7 +39,7 @@
     } elseif (sizeof($products) > 0) {
       $products_parsed = array();
       reset($products);
-      while (list(, $value) = each($products)) {
+      foreach ($products as $value) {
         if (is_numeric($value)) {
           $products_parsed[] = $value;
         }
