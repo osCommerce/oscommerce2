@@ -1058,14 +1058,6 @@
     }
   }
 
-////
-// Get the number of times a word/character is present in a string
-  function tep_word_count($string, $needle) {
-    $temp_array = preg_split('/' . $needle . '/', $string);
-
-    return sizeof($temp_array);
-  }
-
   function tep_count_modules($modules = '') {
     $count = 0;
 
