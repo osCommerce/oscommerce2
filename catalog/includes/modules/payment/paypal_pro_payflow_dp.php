@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_pro_payflow_dp() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order;
+      global $PHP_SELF, $order;
 
       $this->signature = 'paypal|paypal_pro_payflow_dp|3.1|2.3';
 
@@ -61,7 +61,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -154,9 +154,9 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
+      global $order, $order_totals, $sendto, $response_array;
 
-      if (isset($HTTP_POST_VARS['cc_owner_firstname']) && !empty($HTTP_POST_VARS['cc_owner_firstname']) && isset($HTTP_POST_VARS['cc_owner_lastname']) && !empty($HTTP_POST_VARS['cc_owner_lastname']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
+      if (isset($_POST['cc_owner_firstname']) && !empty($_POST['cc_owner_firstname']) && isset($_POST['cc_owner_lastname']) && !empty($_POST['cc_owner_lastname']) && isset($_POST['cc_number_nh-dns']) && !empty($_POST['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_SERVER == 'Live') {
           $api_url = 'https://payflowpro.paypal.com';
         } else {
@@ -171,8 +171,8 @@
                         'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                         'AMT' => $this->format_raw($order->info['total']),
                         'CURRENCY' => $order->info['currency'],
-                        'BILLTOFIRSTNAME' => $HTTP_POST_VARS['cc_owner_firstname'],
-                        'BILLTOLASTNAME' => $HTTP_POST_VARS['cc_owner_lastname'],
+                        'BILLTOFIRSTNAME' => $_POST['cc_owner_firstname'],
+                        'BILLTOLASTNAME' => $_POST['cc_owner_lastname'],
                         'BILLTOSTREET' => $order->billing['street_address'],
                         'BILLTOCITY' => $order->billing['city'],
                         'BILLTOSTATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
@@ -180,9 +180,9 @@
                         'BILLTOZIP' => $order->billing['postcode'],
                         'CUSTIP' => tep_get_ip_address(),
                         'EMAIL' => $order->customer['email_address'],
-                        'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
-                        'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns'],
+                        'ACCT' => $_POST['cc_number_nh-dns'],
+                        'EXPDATE' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
+                        'CVV2' => $_POST['cc_cvc_nh-dns'],
                         'BUTTONSOURCE' => 'OSCOM23_DPPF');
 
         if (is_numeric($sendto) && ($sendto > 0)) {
@@ -487,7 +487,7 @@
         $server['path'] = '/';
       }
 
-      $request_id = (isset($order) && is_object($order)) ? md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
+      $request_id = (isset($order) && is_object($order)) ? md5($cartID . session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
 
       $headers = array('X-VPS-REQUEST-ID: ' . $request_id,
                        'X-VPS-CLIENT-TIMEOUT: 45',
@@ -531,10 +531,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -689,8 +689,6 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -698,28 +696,28 @@ EOD;
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          if (isset($HTTP_POST_VARS['cc_number_nh-dns'])) {
-            $HTTP_POST_VARS['cc_number_nh-dns'] = 'XXXX' . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4);
+        if (!empty($_POST)) {
+          if (isset($_POST['cc_number_nh-dns'])) {
+            $_POST['cc_number_nh-dns'] = 'XXXX' . substr($_POST['cc_number_nh-dns'], -4);
           }
 
-          if (isset($HTTP_POST_VARS['cc_cvc_nh-dns'])) {
-            $HTTP_POST_VARS['cc_cvc_nh-dns'] = 'XXX';
+          if (isset($_POST['cc_cvc_nh-dns'])) {
+            $_POST['cc_cvc_nh-dns'] = 'XXX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_expires_month'])) {
-            $HTTP_POST_VARS['cc_expires_month'] = 'XX';
+          if (isset($_POST['cc_expires_month'])) {
+            $_POST['cc_expires_month'] = 'XX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_expires_year'])) {
-            $HTTP_POST_VARS['cc_expires_year'] = 'XX';
+          if (isset($_POST['cc_expires_year'])) {
+            $_POST['cc_expires_year'] = 'XX';
           }
 
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {

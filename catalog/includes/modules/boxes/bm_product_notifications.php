@@ -31,11 +31,11 @@
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $customer_id, $PHP_SELF, $request_type, $oscTemplate;
+      global $customer_id, $PHP_SELF, $request_type, $oscTemplate;
 
-      if (isset($HTTP_GET_VARS['products_id'])) {
-        if (tep_session_is_registered('customer_id')) {
-          $check_query = tep_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and customers_id = '" . (int)$customer_id . "'");
+      if (isset($_GET['products_id'])) {
+        if (isset($_SESSION['customer_id'])) {
+          $check_query = tep_db_query("select count(*) as count from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$customer_id . "'");
           $check = tep_db_fetch_array($check_query);
 
           $notification_exists = (($check['count'] > 0) ? true : false);
@@ -46,9 +46,9 @@
         $notif_contents = '';
 
         if ($notification_exists == true) {
-          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove', $request_type) . '"><span class="glyphicon glyphicon-remove"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, tep_get_products_name($HTTP_GET_VARS['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify_remove', $request_type) . '"><span class="glyphicon glyphicon-remove"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, tep_get_products_name($_GET['products_id'])) .'</a>';
         } else {
-          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify', $request_type) . '"><span class="glyphicon glyphicon-envelope"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, tep_get_products_name($HTTP_GET_VARS['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=notify', $request_type) . '"><span class="glyphicon glyphicon-envelope"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, tep_get_products_name($_GET['products_id'])) .'</a>';
         }
 
         $data = '<div class="panel panel-default">' .

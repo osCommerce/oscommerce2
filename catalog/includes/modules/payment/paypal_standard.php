@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_standard() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order;
+      global $PHP_SELF, $order;
 
       $this->signature = 'paypal|paypal_standard|3.2|2.3';
 
@@ -61,7 +61,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -96,7 +96,7 @@
     function selection() {
       global $cart_PayPal_Standard_ID;
 
-      if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
+      if (isset($_SESSION['cart_PayPal_Standard_ID'])) {
         $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
@@ -109,7 +109,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_PayPal_Standard_ID');
+          unset($_SESSION['cart_PayPal_Standard_ID']);
         }
       }
 
@@ -118,13 +118,13 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart, $order;
+      global $cartID, $order;
 
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
+      if (empty($_SESSION['cart']->cartID)) {
+        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
 
-      if (!tep_session_is_registered('cartID')) {
+      if (!isset($_SESSION['cartID'])) {
         tep_session_register('cartID');
       }
 
@@ -133,12 +133,12 @@
     }
 
     function confirmation() {
-      global $cartID, $cart_PayPal_Standard_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $cartID, $cart_PayPal_Standard_ID, $customer_id, $order, $order_total_modules;
 
-      if (tep_session_is_registered('cartID')) {
+      if (isset($_SESSION['cartID'])) {
         $insert_order = false;
 
-        if (tep_session_is_registered('cart_PayPal_Standard_ID')) {
+        if (isset($_SESSION['cart_PayPal_Standard_ID'])) {
           $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
           $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
@@ -269,11 +269,11 @@
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . $languages_id . "'
-                                       and poval.language_id = '" . $languages_id . "'";
+                                       and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                       and poval.language_id = '" . $_SESSION['languages_id'] . "'";
                   $attributes = tep_db_query($attributes_query);
                 } else {
-                  $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+                  $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
                 }
                 $attributes_values = tep_db_fetch_array($attributes);
 
@@ -308,7 +308,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto, $currency, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
+      global $customer_id, $order, $sendto, $cart_PayPal_Standard_ID, $shipping, $order_total_modules;
 
       $total_tax = $order->info['tax'];
 
@@ -324,7 +324,7 @@
                           'shipping_1' => $this->format_raw($order->info['shipping_cost']),
                           'business' => MODULE_PAYMENT_PAYPAL_STANDARD_ID,
                           'amount_1' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $total_tax),
-                          'currency_code' => $currency,
+                          'currency_code' => $_SESSION['currency'],
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
                           'no_note' => '1',
@@ -495,14 +495,14 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_PayPal_Standard_ID, $$payment, $HTTP_GET_VARS, $HTTP_POST_VARS, $messageStack;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_PayPal_Standard_ID, $$payment, $messageStack;
 
       $result = false;
 
-      if ( isset($HTTP_POST_VARS['receiver_email']) && (($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($HTTP_POST_VARS['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
+      if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
         $parameters = 'cmd=_notify-validate';
 
-        foreach ($HTTP_POST_VARS as $key => $value) {
+        foreach ($_POST as $key => $value) {
           $parameters .= '&' . $key . '=' . urlencode(stripslashes($value));
         }
 
@@ -525,7 +525,7 @@
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query) || ($order_id != $HTTP_POST_VARS['invoice']) || ($customer_id != $HTTP_POST_VARS['custom'])) {
+      if (!tep_db_num_rows($check_query) || ($order_id != $_POST['invoice']) || ($customer_id != $_POST['custom'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
@@ -611,11 +611,11 @@
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . $languages_id . "'
-                                   and poval.language_id = '" . $languages_id . "'";
+                                   and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                   and poval.language_id = '" . $_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -678,16 +678,16 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_PayPal_Standard_ID');
+      unset($_SESSION['cart_PayPal_Standard_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -932,10 +932,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -946,8 +946,6 @@
     }
 
     function sendDebugEmail($response = '', $ipn = false) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -955,12 +953,12 @@
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        if (!empty($_POST)) {
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {
@@ -1056,10 +1054,10 @@ EOD;
     }
 
     function verifyTransaction($is_ipn = false) {
-      global $HTTP_POST_VARS, $currencies;
+      global $currencies;
 
-      if ( isset($HTTP_POST_VARS['invoice']) && is_numeric($HTTP_POST_VARS['invoice']) && ($HTTP_POST_VARS['invoice'] > 0) && isset($HTTP_POST_VARS['custom']) && is_numeric($HTTP_POST_VARS['custom']) && ($HTTP_POST_VARS['custom'] > 0) ) {
-        $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+      if ( isset($_POST['invoice']) && is_numeric($_POST['invoice']) && ($_POST['invoice'] > 0) && isset($_POST['custom']) && is_numeric($_POST['custom']) && ($_POST['custom'] > 0) ) {
+        $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$_POST['invoice'] . "' and customers_id = '" . (int)$_POST['custom'] . "'");
 
         if ( tep_db_num_rows($order_query) === 1 ) {
           $order = tep_db_fetch_array($order_query);
@@ -1073,18 +1071,18 @@ EOD;
           $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class = 'ot_total' limit 1");
           $total = tep_db_fetch_array($total_query);
 
-          $comment_status = 'Transaction ID: ' . $HTTP_POST_VARS['txn_id'] . '; ' .
-                            $HTTP_POST_VARS['payment_status'] . ' (' . ucfirst($HTTP_POST_VARS['payer_status']) . '; ' . $currencies->format($HTTP_POST_VARS['mc_gross'], false, $HTTP_POST_VARS['mc_currency']) . ')';
+          $comment_status = 'Transaction ID: ' . $_POST['txn_id'] . '; ' .
+                            $_POST['payment_status'] . ' (' . ucfirst($_POST['payer_status']) . '; ' . $currencies->format($_POST['mc_gross'], false, $_POST['mc_currency']) . ')';
 
-          if ( $HTTP_POST_VARS['payment_status'] == 'Pending' ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['pending_reason'];
-          } elseif ( ($HTTP_POST_VARS['payment_status'] == 'Reversed') || ($HTTP_POST_VARS['payment_status'] == 'Refunded') ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
+          if ( $_POST['payment_status'] == 'Pending' ) {
+            $comment_status .= '; ' . $_POST['pending_reason'];
+          } elseif ( ($_POST['payment_status'] == 'Reversed') || ($_POST['payment_status'] == 'Refunded') ) {
+            $comment_status .= '; ' . $_POST['reason_code'];
           }
 
-          if ( $HTTP_POST_VARS['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
-            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
-          } elseif ($HTTP_POST_VARS['payment_status'] == 'Completed') {
+          if ( $_POST['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
+            $comment_status .= '; PayPal transaction value (' . $_POST['mc_gross'] . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+          } elseif ($_POST['payment_status'] == 'Completed') {
             $new_order_status = (MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID > 0 ? MODULE_PAYMENT_PAYPAL_STANDARD_ORDER_STATUS_ID : $new_order_status);
           }
 

@@ -12,25 +12,25 @@
 
   require('includes/application_top.php');
 
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_ACCOUNT_NOTIFICATIONS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_NOTIFICATIONS);
 
   $global_query = tep_db_query("select global_product_notifications from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = '" . (int)$customer_id . "'");
   $global = tep_db_fetch_array($global_query);
 
-  if (isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-    if (isset($HTTP_POST_VARS['product_global']) && is_numeric($HTTP_POST_VARS['product_global'])) {
-      $product_global = tep_db_prepare_input($HTTP_POST_VARS['product_global']);
+  if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
+    if (isset($_POST['product_global']) && is_numeric($_POST['product_global'])) {
+      $product_global = tep_db_prepare_input($_POST['product_global']);
     } else {
       $product_global = '0';
     }
 
-    (array)$products = $HTTP_POST_VARS['products'];
+    (array)$products = $_POST['products'];
 
     if ($product_global != $global['global_product_notifications']) {
       $product_global = (($global['global_product_notifications'] == '1') ? '0' : '1');
@@ -39,7 +39,7 @@
     } elseif (sizeof($products) > 0) {
       $products_parsed = array();
       reset($products);
-      while (list(, $value) = each($products)) {
+      foreach ($products as $value) {
         if (is_numeric($value)) {
           $products_parsed[] = $value;
         }
@@ -122,7 +122,7 @@
 
 <?php
       $counter = 0;
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$customer_id . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by pd.products_name");
+      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where pn.customers_id = '" . (int)$customer_id . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
       while ($products = tep_db_fetch_array($products_query)) {
 ?>
       <div class="form-group">
@@ -154,7 +154,7 @@
 <?php
   }
 ?>
-  
+
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></div>

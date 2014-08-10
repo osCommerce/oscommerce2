@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_pro_dp() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order;
+      global $PHP_SELF, $order;
 
       $this->signature = 'paypal|paypal_pro_dp|3.1|2.3';
       $this->api_version = '112';
@@ -62,7 +62,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -190,9 +190,9 @@
     }
 
     function before_process() {
-      global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
+      global $order, $order_totals, $sendto, $response_array;
 
-      if (isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns'])) {
+      if (isset($_POST['cc_owner']) && !empty($_POST['cc_owner']) && isset($_POST['cc_type']) && $this->isCardAccepted($_POST['cc_type']) && isset($_POST['cc_number_nh-dns']) && !empty($_POST['cc_number_nh-dns'])) {
         if (MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER == 'Live') {
           $api_url = 'https://api-3t.paypal.com/nvp';
         } else {
@@ -207,12 +207,12 @@
                         'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
                         'IPADDRESS' => tep_get_ip_address(),
                         'AMT' => $this->format_raw($order->info['total']),
-                        'CREDITCARDTYPE' => $HTTP_POST_VARS['cc_type'],
-                        'ACCT' => $HTTP_POST_VARS['cc_number_nh-dns'],
-                        'EXPDATE' => $HTTP_POST_VARS['cc_expires_month'] . $HTTP_POST_VARS['cc_expires_year'],
-                        'CVV2' => $HTTP_POST_VARS['cc_cvc_nh-dns'],
-                        'FIRSTNAME' => substr($HTTP_POST_VARS['cc_owner'], 0, strpos($HTTP_POST_VARS['cc_owner'], ' ')),
-                        'LASTNAME' => substr($HTTP_POST_VARS['cc_owner'], strpos($HTTP_POST_VARS['cc_owner'], ' ')+1),
+                        'CREDITCARDTYPE' => $_POST['cc_type'],
+                        'ACCT' => $_POST['cc_number_nh-dns'],
+                        'EXPDATE' => $_POST['cc_expires_month'] . $_POST['cc_expires_year'],
+                        'CVV2' => $_POST['cc_cvc_nh-dns'],
+                        'FIRSTNAME' => substr($_POST['cc_owner'], 0, strpos($_POST['cc_owner'], ' ')),
+                        'LASTNAME' => substr($_POST['cc_owner'], strpos($_POST['cc_owner'], ' ')+1),
                         'STREET' => $order->billing['street_address'],
                         'CITY' => $order->billing['city'],
                         'STATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
@@ -223,9 +223,9 @@
                         'CURRENCYCODE' => $order->info['currency'],
                         'BUTTONSOURCE' => 'OSCOM23_DP');
 
-        if ( $HTTP_POST_VARS['cc_type'] == 'MAESTRO' ) {
-          $params['STARTDATE'] = $HTTP_POST_VARS['cc_starts_month'] . $HTTP_POST_VARS['cc_starts_year'];
-          $params['ISSUENUMBER'] = $HTTP_POST_VARS['cc_issue_nh-dns'];
+        if ( $_POST['cc_type'] == 'MAESTRO' ) {
+          $params['STARTDATE'] = $_POST['cc_starts_month'] . $_POST['cc_starts_year'];
+          $params['ISSUENUMBER'] = $_POST['cc_issue_nh-dns'];
         }
 
         if (is_numeric($sendto) && ($sendto > 0)) {
@@ -515,10 +515,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -717,8 +717,6 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -726,40 +724,40 @@ EOD;
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          if (isset($HTTP_POST_VARS['cc_number_nh-dns'])) {
-            $HTTP_POST_VARS['cc_number_nh-dns'] = 'XXXX' . substr($HTTP_POST_VARS['cc_number_nh-dns'], -4);
+        if (!empty($_POST)) {
+          if (isset($_POST['cc_number_nh-dns'])) {
+            $_POST['cc_number_nh-dns'] = 'XXXX' . substr($_POST['cc_number_nh-dns'], -4);
           }
 
-          if (isset($HTTP_POST_VARS['cc_cvc_nh-dns'])) {
-            $HTTP_POST_VARS['cc_cvc_nh-dns'] = 'XXX';
+          if (isset($_POST['cc_cvc_nh-dns'])) {
+            $_POST['cc_cvc_nh-dns'] = 'XXX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_issue_nh-dns'])) {
-            $HTTP_POST_VARS['cc_issue_nh-dns'] = 'XXX';
+          if (isset($_POST['cc_issue_nh-dns'])) {
+            $_POST['cc_issue_nh-dns'] = 'XXX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_expires_month'])) {
-            $HTTP_POST_VARS['cc_expires_month'] = 'XX';
+          if (isset($_POST['cc_expires_month'])) {
+            $_POST['cc_expires_month'] = 'XX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_expires_year'])) {
-            $HTTP_POST_VARS['cc_expires_year'] = 'XX';
+          if (isset($_POST['cc_expires_year'])) {
+            $_POST['cc_expires_year'] = 'XX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_starts_month'])) {
-            $HTTP_POST_VARS['cc_starts_month'] = 'XX';
+          if (isset($_POST['cc_starts_month'])) {
+            $_POST['cc_starts_month'] = 'XX';
           }
 
-          if (isset($HTTP_POST_VARS['cc_starts_year'])) {
-            $HTTP_POST_VARS['cc_starts_year'] = 'XX';
+          if (isset($_POST['cc_starts_year'])) {
+            $_POST['cc_starts_year'] = 'XX';
           }
 
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {

@@ -84,7 +84,7 @@
     function selection() {
       global $cart_RBS_Worldpay_Hosted_ID;
 
-      if (tep_session_is_registered('cart_RBS_Worldpay_Hosted_ID')) {
+      if (isset($_SESSION['cart_RBS_Worldpay_Hosted_ID'])) {
         $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
         $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
@@ -97,7 +97,7 @@
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
-          tep_session_unregister('cart_RBS_Worldpay_Hosted_ID');
+          unset($_SESSION['cart_RBS_Worldpay_Hosted_ID']);
         }
       }
 
@@ -106,23 +106,23 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID, $cart;
+      global $cartID;
 
-      if (empty($cart->cartID)) {
-        $cartID = $cart->cartID = $cart->generate_cart_id();
+      if (empty($_SESSION['cart']->cartID)) {
+        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
 
-      if (!tep_session_is_registered('cartID')) {
+      if (!isset($_SESSION['cartID'])) {
         tep_session_register('cartID');
       }
     }
 
     function confirmation() {
-      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $languages_id, $order, $order_total_modules;
+      global $cartID, $cart_RBS_Worldpay_Hosted_ID, $customer_id, $order, $order_total_modules;
 
       $insert_order = false;
 
-      if (tep_session_is_registered('cart_RBS_Worldpay_Hosted_ID')) {
+      if (isset($_SESSION['cart_RBS_Worldpay_Hosted_ID'])) {
         $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
         $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
@@ -249,11 +249,11 @@
                                      and pa.options_id = popt.products_options_id
                                      and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                      and pa.options_values_id = poval.products_options_values_id
-                                     and popt.language_id = '" . $languages_id . "'
-                                     and poval.language_id = '" . $languages_id . "'";
+                                     and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                     and poval.language_id = '" . $_SESSION['languages_id'] . "'";
                 $attributes = tep_db_query($attributes_query);
               } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
               }
               $attributes_values = tep_db_fetch_array($attributes);
 
@@ -287,17 +287,17 @@
     }
 
     function process_button() {
-      global $order, $currency, $languages_id, $language, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
+      global $order, $customer_id, $cart_RBS_Worldpay_Hosted_ID;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$languages_id . "'");
+      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
                                tep_draw_hidden_field('cartId', $order_id) .
                                tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
-                               tep_draw_hidden_field('currency', $currency) .
+                               tep_draw_hidden_field('currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('desc', STORE_NAME) .
                                tep_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
                                tep_draw_hidden_field('address1', $order->billing['street_address']) .
@@ -311,12 +311,12 @@
                                tep_draw_hidden_field('hideCurrency', 'true') .
                                tep_draw_hidden_field('lang', strtoupper($lang['code'])) .
                                tep_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $currency . ':' . $order_id)) .
+                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
                                tep_draw_hidden_field('MC_callback', tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
-                               tep_draw_hidden_field('M_sid', tep_session_id()) .
+                               tep_draw_hidden_field('M_sid', session_id()) .
                                tep_draw_hidden_field('M_cid', $customer_id) .
-                               tep_draw_hidden_field('M_lang', $language) .
-                               tep_draw_hidden_field('M_hash', md5(tep_session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+                               tep_draw_hidden_field('M_lang', $_SESSION['language']) .
+                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
         $process_button_string .= tep_draw_hidden_field('authMode', 'E');
@@ -330,12 +330,12 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $customer_id, $language, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_RBS_Worldpay_Hosted_ID;
+      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_RBS_Worldpay_Hosted_ID;
       global $$payment;
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      if (!isset($HTTP_GET_VARS['hash']) || ($HTTP_GET_VARS['hash'] != md5(tep_session_id() . $customer_id . $order_id . $language . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
+      if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
@@ -450,11 +450,11 @@
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '" . $languages_id . "'
-                                   and poval.language_id = '" . $languages_id . "'";
+                                   and popt.language_id = '" . $_SESSION['languages_id'] . "'
+                                   and poval.language_id = '" . $_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $languages_id . "' and poval.language_id = '" . $languages_id . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -517,16 +517,16 @@
 // load the after_process function from the payment modules
       $this->after_process();
 
-      $cart->reset(true);
+      $_SESSION['cart']->reset(true);
 
 // unregister session variables used during checkout
-      tep_session_unregister('sendto');
-      tep_session_unregister('billto');
-      tep_session_unregister('shipping');
-      tep_session_unregister('payment');
-      tep_session_unregister('comments');
+      unset($_SESSION['sendto']);
+      unset($_SESSION['billto']);
+      unset($_SESSION['shipping']);
+      unset($_SESSION['payment']);
+      unset($_SESSION['comments']);
 
-      tep_session_unregister('cart_RBS_Worldpay_Hosted_ID');
+      unset($_SESSION['cart_RBS_Worldpay_Hosted_ID']);
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -703,10 +703,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -717,8 +717,6 @@
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -726,12 +724,12 @@
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        if (!empty($_POST)) {
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {

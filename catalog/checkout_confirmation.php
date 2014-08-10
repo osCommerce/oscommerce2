@@ -13,34 +13,34 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
-    if ($cart->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
+    if ($_SESSION['cart']->cartID != $cartID) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!tep_session_is_registered('shipping')) {
+  if (!isset($_SESSION['shipping'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('payment')) tep_session_register('payment');
-  if (isset($HTTP_POST_VARS['payment'])) $payment = $HTTP_POST_VARS['payment'];
+  if (!isset($_SESSION['payment'])) tep_session_register('payment');
+  if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
-  if (!tep_session_is_registered('comments')) tep_session_register('comments');
-  if (isset($HTTP_POST_VARS['comments']) && tep_not_null($HTTP_POST_VARS['comments'])) {
-    $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if (!isset($_SESSION['comments'])) tep_session_register('comments');
+  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+    $comments = tep_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module
@@ -82,7 +82,7 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
@@ -163,9 +163,9 @@
     }
     ?>
   </table>
-  
+
   <div class="clearfix"></div>
-        
+
   <div class="page-header">
     <h4><?php echo HEADING_SHIPPING_INFORMATION; ?></h4>
   </div>
@@ -196,9 +196,9 @@
         <?php
       }
       ?>
-        
+
     </div>
-    
+
     <div class="clearfix"></div>
   </div>
 
@@ -207,7 +207,7 @@
   </div>
 
   <div class="contentText">
-  
+
     <div class="row">
 
       <?php
@@ -270,9 +270,9 @@
         </div>
       </div>
     </div>
-    
+
     <div class="clearfix"></div>
-    
+
   </div>
 
 <?php
@@ -294,18 +294,6 @@
 ?>
 
   <div class="contentText">
-    <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
-
-      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-        <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
-        </tr>
-      </table>
-    </div>
-
     <div>
 
 <?php
@@ -319,13 +307,28 @@
     </div>
   </div>
 
-</div>
+  <div class="clearfix"></div>
 
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 100
-});
-</script>
+  <div class="contentText">
+    <div class="stepwizard">
+      <div class="stepwizard-row">
+        <div class="stepwizard-step">
+          <a href="<?php echo tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
+          <p><a href="<?php echo tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+        </div>
+        <div class="stepwizard-step">
+          <a href="<?php echo tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
+          <p><a href="<?php echo tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-primary btn-circle">3</button>
+          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 </form>
 

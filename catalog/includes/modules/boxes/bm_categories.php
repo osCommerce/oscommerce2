@@ -79,12 +79,12 @@
     }
 
     function getData() {
-      global $categories_string, $tree, $languages_id, $cPath, $cPath_array;
+      global $categories_string, $tree, $cPath, $cPath_array;
 
       $categories_string = '';
       $tree = array();
 
-      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '0' and c.categories_id = cd.categories_id and cd.language_id='" . (int)$languages_id ."' order by sort_order, cd.categories_name");
+      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '0' and c.categories_id = cd.categories_id and cd.language_id='" . (int)$_SESSION['languages_id'] ."' order by sort_order, cd.categories_name");
       while ($categories = tep_db_fetch_array($categories_query))  {
         $tree[$categories['categories_id']] = array('name' => $categories['categories_name'],
                                                     'parent' => $categories['parent_id'],
@@ -105,11 +105,10 @@
 
       if (tep_not_null($cPath)) {
         $new_path = '';
-        reset($cPath_array);
-        while (list($key, $value) = each($cPath_array)) {
+        foreach($cPath_array as $key => $value) {
           unset($parent_id);
           unset($first_id);
-          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$value . "' and c.categories_id = cd.categories_id and cd.language_id='" . (int)$languages_id ."' order by sort_order, cd.categories_name");
+          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$value . "' and c.categories_id = cd.categories_id and cd.language_id='" . (int)$_SESSION['languages_id'] ."' order by sort_order, cd.categories_name");
           if (tep_db_num_rows($categories_query)) {
             $new_path .= $value;
             while ($row = tep_db_fetch_array($categories_query)) {
@@ -143,7 +142,7 @@
       $this->tep_show_category($first_element);
 
 
-              
+
       $data = '<div class="panel panel-default">' .
               '  <div class="panel-heading">' . MODULE_BOXES_CATEGORIES_BOX_TITLE . '</div>' .
               '  <div class="panel-body">' . $categories_string . '</div>' .

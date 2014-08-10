@@ -30,7 +30,7 @@
     }
 
     function getOutput() {
-      global $HTTP_GET_VARS, $lng, $languages_id;
+      global $lng;
 
       if (!isset($lng) || (isset($lng) && !is_object($lng))) {
         include(DIR_WS_CLASSES . 'language.php');
@@ -38,13 +38,13 @@
       }
 
       foreach ($lng->catalog_languages as $lkey => $lvalue) {
-        if ($lvalue['id'] == $languages_id) {
+        if ($lvalue['id'] == $_SESSION['languages_id']) {
           $language_code = $lkey;
           break;
         }
       }
 
-      $output = '<div class="g-plusone" data-href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $HTTP_GET_VARS['products_id'], 'NONSSL', false) . '" data-size="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_SIZE) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION) . '"';
+      $output = '<div class="g-plusone" data-href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-size="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_SIZE) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION) . '"';
 
       if (MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION == 'Inline') {
         $output.= ' data-width="' . (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_WIDTH . '" data-align="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ALIGN) . '"';

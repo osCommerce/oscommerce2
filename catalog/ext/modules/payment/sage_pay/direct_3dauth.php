@@ -14,21 +14,21 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('sage_pay_direct_acsurl')) {
+  if (!isset($_SESSION['sage_pay_direct_acsurl'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('payment') || ($payment != 'sage_pay_direct')) {
+  if (!isset($_SESSION['payment']) || ($payment != 'sage_pay_direct')) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_CONFIRMATION);
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/sage_pay_direct.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>

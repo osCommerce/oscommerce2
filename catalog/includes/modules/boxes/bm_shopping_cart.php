@@ -31,17 +31,17 @@
     }
 
     function execute() {
-      global $cart, $new_products_id_in_cart, $currencies, $oscTemplate;
+      global $new_products_id_in_cart, $currencies, $oscTemplate;
 
       $cart_contents_string = '';
 
-      if ($cart->count_contents() > 0) {
+      if ($_SESSION['cart']->count_contents() > 0) {
         $cart_contents_string = '<ul class="list-unstyled">';
-        $products = $cart->get_products();
+        $products = $_SESSION['cart']->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
           $cart_contents_string .= '<li';
-          if ((tep_session_is_registered('new_products_id_in_cart')) && ($new_products_id_in_cart == $products[$i]['id'])) {
+          if ((isset($_SESSION['new_products_id_in_cart'])) && ($new_products_id_in_cart == $products[$i]['id'])) {
             $cart_contents_string .= ' class="newItemInCart"';
           }
           $cart_contents_string .= '>';
@@ -54,12 +54,12 @@
 
           $cart_contents_string .= '</a></li>';
 
-          if ((tep_session_is_registered('new_products_id_in_cart')) && ($new_products_id_in_cart == $products[$i]['id'])) {
-            tep_session_unregister('new_products_id_in_cart');
+          if ((isset($_SESSION['new_products_id_in_cart'])) && ($new_products_id_in_cart == $products[$i]['id'])) {
+            unset($_SESSION['new_products_id_in_cart']);
           }
         }
 
-        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($cart->show_total()) . '</li>' .
+        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>' .
                                  '</ul>';
 
       } else {

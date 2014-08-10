@@ -15,7 +15,7 @@
 
 // class constructor
     function shipping($module = '') {
-      global $language, $PHP_SELF;
+      global $PHP_SELF;
 
       if (defined('MODULE_SHIPPING_INSTALLED') && tep_not_null(MODULE_SHIPPING_INSTALLED)) {
         $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
@@ -25,15 +25,14 @@
         if ( (tep_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
           $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
         } else {
-          reset($this->modules);
-          while (list(, $value) = each($this->modules)) {
+          foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array('class' => $class, 'file' => $value);
           }
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include(DIR_WS_LANGUAGES . $language . '/modules/shipping/' . $include_modules[$i]['file']);
+          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
           include(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
 
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
@@ -64,8 +63,7 @@
 
         $include_quotes = array();
 
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if (tep_not_null($module)) {
             if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
@@ -90,8 +88,7 @@
       if (is_array($this->modules)) {
         $rates = array();
 
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if ($GLOBALS[$class]->enabled) {
             $quotes = $GLOBALS[$class]->quotes;

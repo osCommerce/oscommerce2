@@ -14,18 +14,18 @@
   require('includes/classes/http_client.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // if no shipping destination address was selected, use the customers own address as default
-  if (!tep_session_is_registered('sendto')) {
+  if (!isset($_SESSION['sendto'])) {
     tep_session_register('sendto');
     $sendto = $customer_default_address_id;
   } else {
@@ -36,7 +36,7 @@
 
       if ($check_address['total'] != '1') {
         $sendto = $customer_default_address_id;
-        if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
+        if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
     }
   }
@@ -46,25 +46,25 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!tep_session_is_registered('cartID')) {
+  if (!isset($_SESSION['cartID'])) {
     tep_session_register('cartID');
-  } elseif (($cartID != $cart->cartID) && tep_session_is_registered('shipping')) {
-    tep_session_unregister('shipping');
+  } elseif (($cartID != $_SESSION['cart']->cartID) && isset($_SESSION['shipping'])) {
+    unset($_SESSION['shipping']);
   }
 
-  $cartID = $cart->cartID = $cart->generate_cart_id();
+  $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
 
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
     $shipping = false;
     $sendto = false;
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
-  $total_weight = $cart->show_weight();
-  $total_count = $cart->count_contents();
+  $total_weight = $_SESSION['cart']->show_weight();
+  $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
   require(DIR_WS_CLASSES . 'shipping.php');
@@ -93,24 +93,24 @@
     if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
 
-      include(DIR_WS_LANGUAGES . $language . '/modules/order_total/ot_shipping.php');
+      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
     }
   } else {
     $free_shipping = false;
   }
 
 // process the selected shipping method
-  if ( isset($HTTP_POST_VARS['action']) && ($HTTP_POST_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken) ) {
-    if (!tep_session_is_registered('comments')) tep_session_register('comments');
-    if (tep_not_null($HTTP_POST_VARS['comments'])) {
-      $comments = tep_db_prepare_input($HTTP_POST_VARS['comments']);
+  if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
+    if (!isset($_SESSION['comments'])) tep_session_register('comments');
+    if (tep_not_null($_POST['comments'])) {
+      $comments = tep_db_prepare_input($_POST['comments']);
     }
 
-    if (!tep_session_is_registered('shipping')) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
 
     if ( (tep_count_shipping_modules() > 0) || ($free_shipping == true) ) {
-      if ( (isset($HTTP_POST_VARS['shipping'])) && (strpos($HTTP_POST_VARS['shipping'], '_')) ) {
-        $shipping = $HTTP_POST_VARS['shipping'];
+      if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
+        $shipping = $_POST['shipping'];
 
         list($module, $method) = explode('_', $shipping);
         if ( is_object($$module) || ($shipping == 'free_free') ) {
@@ -121,7 +121,7 @@
             $quote = $shipping_modules->quote($method, $module);
           }
           if (isset($quote['error'])) {
-            tep_session_unregister('shipping');
+            unset($_SESSION['shipping']);
           } else {
             if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
               $shipping = array('id' => $shipping,
@@ -132,18 +132,18 @@
             }
           }
         } else {
-          tep_session_unregister('shipping');
+          unset($_SESSION['shipping']);
         }
       }
     } else {
       if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') ) {
-        tep_session_unregister('shipping');
+        unset($_SESSION['shipping']);
       } else {
         $shipping = false;
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
       }
-    }    
+    }
   }
 
 // get all available shipping quotes
@@ -153,11 +153,11 @@
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-  if ( !tep_session_is_registered('shipping') || ( tep_session_is_registered('shipping') && ($shipping == false) && (tep_count_shipping_modules() > 1) ) ) $shipping = $shipping_modules->cheapest();
+  if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($shipping == false) && (tep_count_shipping_modules() > 1) ) ) $shipping = $shipping_modules->cheapest();
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_SHIPPING);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING);
 
-  if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && !tep_session_is_registered('shipping') && ($shipping == false) ) {
+  if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && !isset($_SESSION['shipping']) && ($shipping == false) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
@@ -179,7 +179,7 @@
   <div class="page-header">
     <h4><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h4>
   </div>
-  
+
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
@@ -334,27 +334,31 @@
   </div>
 
   <div class="contentText">
-    <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
-
-      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-        <tr>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo CHECKOUT_BAR_DELIVERY; ?></td>
-          <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
-          <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
-        </tr>
-      </table>
-    </div>
-
     <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
-</div>
 
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 33
-});
-</script>
+  <div class="clearfix"></div>
+
+  <div class="contentText">
+    <div class="stepwizard">
+      <div class="stepwizard-row">
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-primary btn-circle">1</button>
+          <p><?php echo CHECKOUT_BAR_DELIVERY; ?></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
+          <p><?php echo CHECKOUT_BAR_PAYMENT; ?></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
+          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 
 </form>
 

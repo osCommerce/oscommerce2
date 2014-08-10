@@ -19,7 +19,7 @@
     var $enabled = false;
 
     function cm_paypal_login() {
-      global $HTTP_GET_VARS, $PHP_SELF;
+      global $PHP_SELF;
 
       $this->signature = 'paypal|paypal_login|1.0|2.3';
 
@@ -56,20 +56,20 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $oscTemplate;
+      global $oscTemplate;
 
       if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-        if ( isset($HTTP_GET_VARS['action']) ) {
-          if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
+        if ( isset($_GET['action']) ) {
+          if ( $_GET['action'] == 'paypal_login' ) {
             $this->preLogin();
-          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+          } elseif ( $_GET['action'] == 'paypal_login_process' ) {
             $this->postLogin();
           }
         }
@@ -98,14 +98,14 @@
     }
 
     function preLogin() {
-      global $HTTP_GET_VARS, $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
+      global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
 
       $return_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
 
-      if ( isset($HTTP_GET_VARS['code']) ) {
+      if ( isset($_GET['code']) ) {
         $paypal_login_customer_id = false;
 
-        $params = array('code' => $HTTP_GET_VARS['code']);
+        $params = array('code' => $_GET['code']);
 
         $response_token = $this->getToken($params);
 
@@ -127,7 +127,7 @@
             $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
-            if ( !tep_session_is_registered('customer_id') ) {
+            if ( !isset($_SESSION['customer_id']) ) {
               $customer_id = 0;
               $customer_default_address_id = 0;
 
@@ -237,17 +237,17 @@
               $paypal_login_customer_id = false;
             }
 
-            if ( !tep_session_is_registered('paypal_login_customer_id') ) {
+            if ( !isset($_SESSION['paypal_login_customer_id']) ) {
               tep_session_register('paypal_login_customer_id');
             }
 
             $billto = $sendto;
 
-            if ( !tep_session_is_registered('sendto') ) {
+            if ( !isset($_SESSION['sendto']) ) {
               tep_session_register('sendto');
             }
 
-            if ( !tep_session_is_registered('billto') ) {
+            if ( !isset($_SESSION['billto']) ) {
               tep_session_register('billto');
             }
 
@@ -262,22 +262,22 @@
     }
 
     function postLogin() {
-      global $paypal_login_customer_id, $login_customer_id, $language, $payment;
+      global $paypal_login_customer_id, $login_customer_id, $payment;
 
-      if ( tep_session_is_registered('paypal_login_customer_id') ) {
+      if ( isset($_SESSION['paypal_login_customer_id']) ) {
         if ( $paypal_login_customer_id !== false ) {
           $login_customer_id = $paypal_login_customer_id;
         }
 
-        tep_session_unregister('paypal_login_customer_id');
+        unset($_SESSION['paypal_login_customer_id']);
       }
 
 // Register PayPal Express Checkout as the default payment method
-      if ( !tep_session_is_registered('payment') || ($payment != 'paypal_express') ) {
+      if ( !isset($_SESSION['payment']) || ($payment != 'paypal_express') ) {
         if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
-              include(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_express.php');
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
               include(DIR_WS_MODULES . 'payment/paypal_express.php');
             }
 

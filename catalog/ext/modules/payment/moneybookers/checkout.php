@@ -14,29 +14,29 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
-  if ($cart->count_contents() < 1) {
+  if ($_SESSION['cart']->count_contents() < 1) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-  if (isset($cart->cartID) && tep_session_is_registered('cartID')) {
-    if ($cart->cartID != $cartID) {
+  if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
+    if ($_SESSION['cart']->cartID != $cartID) {
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
-  if (!tep_session_is_registered('shipping')) {
+  if (!isset($_SESSION['shipping'])) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if (!tep_session_is_registered('payment') || (substr($payment, 0, 12) != 'moneybookers')) {
+  if (!isset($_SESSION['payment']) || (substr($payment, 0, 12) != 'moneybookers')) {
     tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
@@ -79,12 +79,12 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_CONFIRMATION);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_CONFIRMATION);
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $HTTP_POST_VARS['sid'];
+  $iframe_url = 'https://www.moneybookers.com/app/payment.pl?sid=' . $_POST['sid'];
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

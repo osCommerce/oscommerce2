@@ -70,9 +70,7 @@
     }
 
     function confirmation() {
-      global $language;
-
-      include(DIR_FS_CATALOG . 'includes/languages/' . $language . '/modules/payment/moneybookers.php');
+      include(DIR_FS_CATALOG . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/moneybookers.php');
 
       parent::confirmation();
     }

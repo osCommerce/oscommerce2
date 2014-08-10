@@ -17,15 +17,15 @@
     exit;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/modules/payment/paypal_pro_hs.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_hs.php');
   require('includes/modules/payment/paypal_pro_hs.php');
 
   $result = false;
 
-  if ( isset($HTTP_POST_VARS['txn_id']) && !empty($HTTP_POST_VARS['txn_id']) ) {
+  if ( isset($_POST['txn_id']) && !empty($_POST['txn_id']) ) {
     $paypal_pro_hs = new paypal_pro_hs();
 
-    $result = $paypal_pro_hs->getTransactionDetails($HTTP_POST_VARS['txn_id']);
+    $result = $paypal_pro_hs->getTransactionDetails($_POST['txn_id']);
   }
 
   if ( is_array($result) && isset($result['ACK']) && (($result['ACK'] == 'Success') || ($result['ACK'] == 'SuccessWithWarning')) ) {

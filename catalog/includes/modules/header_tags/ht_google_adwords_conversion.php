@@ -29,13 +29,13 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $customer_id, $lng, $languages_id;
+      global $PHP_SELF, $oscTemplate, $customer_id, $lng;
 
       if (MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_JS_PLACEMENT != 'Footer') {
         $this->group = 'header_tags';
       }
 
-      if ( ($PHP_SELF == FILENAME_CHECKOUT_SUCCESS) && tep_session_is_registered('customer_id') ) {
+      if ( ($PHP_SELF == FILENAME_CHECKOUT_SUCCESS) && isset($_SESSION['customer_id']) ) {
         $order_query = tep_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
         if (tep_db_num_rows($order_query) == 1) {
@@ -52,7 +52,7 @@
           $language_code = 'en';
 
           foreach ($lng->catalog_languages as $lkey => $lvalue) {
-            if ($lvalue['id'] == $languages_id) {
+            if ($lvalue['id'] == $_SESSION['languages_id']) {
               $language_code = $lkey;
               break;
             }
@@ -90,10 +90,10 @@ EOD;
     }
 
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -102,7 +102,7 @@ EOD;
 
       return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
-    
+
     function isEnabled() {
       return $this->enabled;
     }

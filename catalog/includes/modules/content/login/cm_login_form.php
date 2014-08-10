@@ -32,13 +32,13 @@
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $HTTP_POST_VARS, $sessiontoken, $login_customer_id, $messageStack, $oscTemplate;
+      global $login_customer_id, $messageStack, $oscTemplate;
 
       $error = false;
 
-      if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'process') && isset($HTTP_POST_VARS['formid']) && ($HTTP_POST_VARS['formid'] == $sessiontoken)) {
-        $email_address = tep_db_prepare_input($HTTP_POST_VARS['email_address']);
-        $password = tep_db_prepare_input($HTTP_POST_VARS['password']);
+      if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
+        $email_address = tep_db_prepare_input($_POST['email_address']);
+        $password = tep_db_prepare_input($_POST['password']);
 
 // Check if email exists
         $customer_query = tep_db_query("select customers_id, customers_password from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' limit 1");

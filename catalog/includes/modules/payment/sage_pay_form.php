@@ -101,7 +101,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $currency, $cartID;
+      global $customer_id, $order, $cartID;
 
       $process_button_string = '';
 
@@ -119,7 +119,7 @@
       $crypt = array('ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                      'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
-                     'Currency' => $currency,
+                     'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
                      'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                      'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'),
@@ -209,10 +209,10 @@
     }
 
     function before_process() {
-      global $HTTP_GET_VARS, $sage_pay_response;
+      global $sage_pay_response;
 
-      if (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->decryptParams($HTTP_GET_VARS['crypt']);
+      if (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->decryptParams($_GET['crypt']);
 
         $string_array = explode('&', $transaction_response);
         $sage_pay_response = array('Status' => null);
@@ -293,16 +293,14 @@
     }
 
     function get_error() {
-      global $HTTP_GET_VARS;
-
       $message = MODULE_PAYMENT_SAGE_PAY_FORM_ERROR_GENERAL;
 
       $error_number = null;
 
-      if ( isset($HTTP_GET_VARS['error']) && is_numeric($HTTP_GET_VARS['error']) && $this->errorMessageNumberExists($HTTP_GET_VARS['error']) ) {
-        $error_number = $HTTP_GET_VARS['error'];
-      } elseif (isset($HTTP_GET_VARS['crypt']) && tep_not_null($HTTP_GET_VARS['crypt'])) {
-        $transaction_response = $this->decryptParams($HTTP_GET_VARS['crypt']);
+      if ( isset($_GET['error']) && is_numeric($_GET['error']) && $this->errorMessageNumberExists($_GET['error']) ) {
+        $error_number = $_GET['error'];
+      } elseif (isset($_GET['crypt']) && tep_not_null($_GET['crypt'])) {
+        $transaction_response = $this->decryptParams($_GET['crypt']);
 
         $string_array = explode('&', $transaction_response);
         $return = array('Status' => null);
@@ -475,10 +473,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -580,8 +578,6 @@
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -589,12 +585,12 @@
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        if (!empty($_POST)) {
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {

@@ -15,7 +15,7 @@
 
 // class constructor
     function payment($module = '') {
-      global $payment, $language, $PHP_SELF;
+      global $payment, $PHP_SELF;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
         $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -27,15 +27,14 @@
 
           $include_modules[] = array('class' => $module, 'file' => $module . '.php');
         } else {
-          reset($this->modules);
-          while (list(, $value) = each($this->modules)) {
+          foreach($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
             $include_modules[] = array('class' => $class, 'file' => $value);
           }
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include(DIR_WS_LANGUAGES . $language . '/modules/payment/' . $include_modules[$i]['file']);
+          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
           include(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
 
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
@@ -43,7 +42,7 @@
 
 // if there is only one payment method, select it as default because in
 // checkout_confirmation.php the $payment variable is being assigned the
-// $HTTP_POST_VARS['payment'] value which will be empty (no radio button selection possible)
+// $_POST['payment'] value which will be empty (no radio button selection possible)
         if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$payment]) || (isset($GLOBALS[$payment]) && !is_object($GLOBALS[$payment]))) ) {
           $payment = $include_modules[0]['class'];
         }
@@ -62,7 +61,7 @@
    The following method is a work-around to implementing the method in all
    payment modules available which would break the modules in the contributions
    section. This should be looked into again post 2.2.
-*/   
+*/
     function update_status() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module])) {
@@ -93,8 +92,7 @@
               '    payment_value = document.checkout_payment.payment.value;' . "\n" .
               '  }' . "\n\n";
 
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if ($GLOBALS[$class]->enabled) {
             $js .= $GLOBALS[$class]->javascript_validation();
@@ -122,8 +120,7 @@
       $initialize_array = array();
 
       if (is_array($this->modules)) {
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'checkout_initialization_method')) {
             $initialize_array[] = $GLOBALS[$class]->checkout_initialization_method();
@@ -138,8 +135,7 @@
       $selection_array = array();
 
       if (is_array($this->modules)) {
-        reset($this->modules);
-        while (list(, $value) = each($this->modules)) {
+        foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
           if ($GLOBALS[$class]->enabled) {
             $selection = $GLOBALS[$class]->selection();

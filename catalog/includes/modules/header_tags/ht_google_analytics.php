@@ -41,7 +41,7 @@
   _gaq.push([\'_setAccount\', \'' . tep_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
   _gaq.push([\'_trackPageview\']);' . "\n";
 
-        if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) && tep_session_is_registered('customer_id') ) {
+        if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) && isset($_SESSION['customer_id']) ) {
           $order_query = tep_db_query("select orders_id, billing_city, billing_state, billing_country from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
           if (tep_db_num_rows($order_query) == 1) {
@@ -96,10 +96,10 @@
     }
 
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {

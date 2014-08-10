@@ -29,10 +29,10 @@
     }
 
     function execute() {
-      global $PHP_SELF, $HTTP_GET_VARS, $oscTemplate, $languages_id, $currencies, $currency;
+      global $PHP_SELF, $oscTemplate, $currencies;
 
-      if ( ($PHP_SELF == FILENAME_PRODUCT_INFO) && isset($HTTP_GET_VARS['products_id']) ) {
-        $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_image, p.products_price, p.products_quantity, p.products_tax_class_id, p.products_date_available from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$HTTP_GET_VARS['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
+      if ( ($PHP_SELF == FILENAME_PRODUCT_INFO) && isset($_GET['products_id']) ) {
+        $product_info_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, p.products_image, p.products_price, p.products_quantity, p.products_tax_class_id, p.products_date_available from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
         if ( tep_db_num_rows($product_info_query) === 1 ) {
           $product_info = tep_db_fetch_array($product_info_query);
@@ -59,7 +59,7 @@
           $products_image = $product_info['products_image'];
 
           $pi_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order limit 1");
-  
+
           if ( tep_db_num_rows($pi_query) === 1 ) {
             $pi = tep_db_fetch_array($pi_query);
 
@@ -75,7 +75,7 @@
           }
 
           $data['data1'] = $products_price;
-          $data['label1'] = $currency;
+          $data['label1'] = $_SESSION['currency'];
 
           if ( $product_info['products_date_available'] > date('Y-m-d H:i:s') ) {
             $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_PRE_ORDER;

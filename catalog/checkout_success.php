@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the shopping cart page
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
@@ -30,11 +30,11 @@
 
   $page_content = $oscTemplate->getContent('checkout_success');
 
-  if ( isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'update') ) {
+  if ( isset($_GET['action']) && ($_GET['action'] == 'update') ) {
     tep_redirect(tep_href_link(FILENAME_DEFAULT));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_CHECKOUT_SUCCESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);

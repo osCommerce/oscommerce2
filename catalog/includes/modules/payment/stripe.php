@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function stripe() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order, $payment;
+      global $PHP_SELF, $order, $payment;
 
       $this->signature = 'stripe|stripe|1.1|2.3';
       $this->api_version = '2014-05-19';
@@ -56,7 +56,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -91,7 +91,7 @@
     function selection() {
       global $customer_id, $payment;
 
-      if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !tep_session_is_registered('payment') ) {
+      if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !isset($_SESSION['payment']) ) {
         $tokens_query = tep_db_query("select 1 from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
 
         if ( tep_db_num_rows($tokens_query) ) {
@@ -113,7 +113,7 @@
     }
 
     function confirmation() {
-      global $customer_id, $order, $currencies, $currency;
+      global $customer_id, $order, $currencies;
 
       $months_array = array();
 
@@ -122,7 +122,7 @@
                                 'text' => tep_output_string_protected(sprintf('%02d', $i)));
       }
 
-      $today = getdate(); 
+      $today = getdate();
       $years_array = array();
 
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
@@ -220,15 +220,15 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $currency, $HTTP_POST_VARS, $stripe_result, $stripe_error;
+      global $customer_id, $order, $stripe_result, $stripe_error;
 
       $stripe_result = null;
 
       $params = array();
 
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
-        if ( isset($HTTP_POST_VARS['stripe_card']) && is_numeric($HTTP_POST_VARS['stripe_card']) && ($HTTP_POST_VARS['stripe_card'] > 0) ) {
-          $token_query = tep_db_query("select stripe_token from customers_stripe_tokens where id = '" . (int)$HTTP_POST_VARS['stripe_card'] . "' and customers_id = '" . (int)$customer_id . "'");
+        if ( isset($_POST['stripe_card']) && is_numeric($_POST['stripe_card']) && ($_POST['stripe_card'] > 0) ) {
+          $token_query = tep_db_query("select stripe_token from customers_stripe_tokens where id = '" . (int)$_POST['stripe_card'] . "' and customers_id = '" . (int)$customer_id . "'");
 
           if ( tep_db_num_rows($token_query) === 1 ) {
             $token = tep_db_fetch_array($token_query);
@@ -243,20 +243,20 @@
         }
       }
 
-      if ( empty($params) && isset($HTTP_POST_VARS['stripeToken']) && !empty($HTTP_POST_VARS['stripeToken']) ) {
-        if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && isset($HTTP_POST_VARS['cc_save']) && ($HTTP_POST_VARS['cc_save'] == 'true') ) {
+      if ( empty($params) && isset($_POST['stripeToken']) && !empty($_POST['stripeToken']) ) {
+        if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && isset($_POST['cc_save']) && ($_POST['cc_save'] == 'true') ) {
           $stripe_customer_id = $this->getCustomerID();
           $stripe_card_id = false;
 
           if ( $stripe_customer_id === false ) {
-            $stripe_customer_array = $this->createCustomer($HTTP_POST_VARS['stripeToken']);
+            $stripe_customer_array = $this->createCustomer($_POST['stripeToken']);
 
             if ( ($stripe_customer_array !== false) && isset($stripe_customer_array['id']) ) {
               $stripe_customer_id = $stripe_customer_array['id'];
               $stripe_card_id = $stripe_customer_array['card_id'];
             }
           } else {
-            $stripe_card_id = $this->addCard($HTTP_POST_VARS['stripeToken'], $stripe_customer_id);
+            $stripe_card_id = $this->addCard($_POST['stripeToken'], $stripe_customer_id);
           }
 
           if ( ($stripe_customer_id !== false) && ($stripe_card_id !== false) ) {
@@ -264,13 +264,13 @@
             $params['card'] = $stripe_card_id;
           }
         } else {
-          $params['card'] = $HTTP_POST_VARS['stripeToken'];
+          $params['card'] = $_POST['stripeToken'];
         }
       }
 
       if ( !empty($params) ) {
         $params['amount'] = $this->format_raw($order->info['total']);
-        $params['currency'] = $currency;
+        $params['currency'] = $_SESSION['currency'];
         $params['capture'] = (MODULE_PAYMENT_STRIPE_TRANSACTION_METHOD == 'Capture') ? 'true' : 'false';
 
         $stripe_result = json_decode($this->sendTransactionToGateway('https://api.stripe.com/v1/charges', $params), true);
@@ -294,7 +294,7 @@
     }
 
     function after_process() {
-      global $insert_id, $customer_id, $stripe_result, $HTTP_POST_VARS;
+      global $insert_id, $customer_id, $stripe_result;
 
       $status_comment = array('Transaction ID: ' . $stripe_result['id'],
                               'CVC: ' . $stripe_result['card']['cvc_check']);
@@ -308,9 +308,9 @@
       }
 
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
-        if ( isset($HTTP_POST_VARS['cc_save']) && ($HTTP_POST_VARS['cc_save'] == 'true') ) {
+        if ( isset($_POST['cc_save']) && ($_POST['cc_save'] == 'true') ) {
           $status_comment[] = 'Token Saved: Yes';
-        } elseif ( isset($HTTP_POST_VARS['stripe_card']) && is_numeric($HTTP_POST_VARS['stripe_card']) && ($HTTP_POST_VARS['stripe_card'] > 0) ) {
+        } elseif ( isset($_POST['stripe_card']) && is_numeric($_POST['stripe_card']) && ($_POST['stripe_card'] > 0) ) {
           $status_comment[] = 'Token Used: Yes';
         }
       }
@@ -323,24 +323,24 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      if ( tep_session_is_registered('stripe_error') ) {
-        tep_session_unregister('stripe_error');
+      if ( isset($_SESSION['stripe_error']) ) {
+        unset($_SESSION['stripe_error']);
       }
     }
 
     function get_error() {
-      global $HTTP_GET_VARS, $stripe_error;
+      global $stripe_error;
 
       $message = MODULE_PAYMENT_STRIPE_ERROR_GENERAL;
 
-      if ( tep_session_is_registered('stripe_error') ) {
+      if ( isset($_SESSION['stripe_error']) ) {
         $message = $stripe_error . ' ' . $message;
 
-        tep_session_unregister('stripe_error');
+        unset($_SESSION['stripe_error']);
       }
 
-      if ( isset($HTTP_GET_VARS['error']) && !empty($HTTP_GET_VARS['error']) ) {
-        switch ($HTTP_GET_VARS['error']) {
+      if ( isset($_GET['error']) && !empty($_GET['error']) ) {
+        switch ($_GET['error']) {
           case 'cardstored':
             $message = MODULE_PAYMENT_STRIPE_ERROR_CARDSTORED;
             break;
@@ -663,10 +663,10 @@ EOD;
     }
 
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$currencies->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -787,8 +787,6 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_STRIPE_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -796,12 +794,12 @@ EOD;
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        if (!empty($_POST)) {
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {

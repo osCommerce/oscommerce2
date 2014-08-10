@@ -12,12 +12,12 @@
 
   require('includes/application_top.php');
 
-  if (!tep_session_is_registered('customer_id')) {
+  if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_ADDRESS_BOOK);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADDRESS_BOOK);
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
@@ -56,11 +56,11 @@
   </div>
 
   <div class="clearfix"></div>
-  
+
   <div class="page-header">
     <h4><?php echo ADDRESS_BOOK_TITLE; ?></h4>
   </div>
-  
+
   <div class="alert alert-warning"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
 
   <div class="contentText row">
@@ -84,7 +84,7 @@
   </div>
 
   <div class="clearfix"></div>
-  
+
   <div class="row">
 <?php
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {

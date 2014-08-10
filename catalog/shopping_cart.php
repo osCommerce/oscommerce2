@@ -12,12 +12,12 @@
 
   require("includes/application_top.php");
 
-  if ($cart->count_contents() > 0) {
+  if ($_SESSION['cart']->count_contents() > 0) {
     include(DIR_WS_CLASSES . 'payment.php');
     $payment_modules = new payment;
   }
 
-  require(DIR_WS_LANGUAGES . $language . '/' . FILENAME_SHOPPING_CART);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SHOPPING_CART);
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHOPPING_CART));
 
@@ -29,22 +29,22 @@
 </div>
 
 <?php
-  if ($cart->count_contents() > 0) {
+  if ($_SESSION['cart']->count_contents() > 0) {
 ?>
 
 <?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product'), 'post', 'role="form"'); ?>
 
 <div class="contentContainer">
-  
+
   <div class="contentText">
 
 <?php
     $any_out_of_stock = 0;
-    $products = $cart->get_products();
+    $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 // Push all attributes information in an array
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach($products[$i]['attributes'] as $option => $value) {
           echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                       from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
@@ -53,8 +53,8 @@
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '" . (int)$value . "'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . (int)$languages_id . "'
-                                       and poval.language_id = '" . (int)$languages_id . "'");
+                                       and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                       and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
           $attributes_values = tep_db_fetch_array($attributes);
 
           $products[$i][$option]['products_options_name'] = $attributes_values['products_options_name'];
@@ -87,8 +87,7 @@
       }
 
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
-        reset($products[$i]['attributes']);
-        while (list($option, $value) = each($products[$i]['attributes'])) {
+        foreach($products[$i]['attributes'] as $option => $value) {
           $products_name .= '<br /><small><i> - ' . $products[$i][$option]['products_options_name'] . ' ' . $products[$i][$option]['products_options_values_name'] . '</i></small>';
         }
       }
@@ -105,7 +104,7 @@
       </tbody>
     </table>
 
-    <p class="text-right"><strong><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($cart->show_total()); ?></strong></p>
+    <p class="text-right"><strong><?php echo SUB_TITLE_SUB_TOTAL; ?> <?php echo $currencies->format($_SESSION['cart']->show_total()); ?></strong></p>
 
 <?php
     if ($any_out_of_stock == 1) {
@@ -140,8 +139,7 @@
   <p align="right" style="clear: both; padding: 15px 50px 0 0;"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></p>
 
 <?php
-      reset($initialize_checkout_methods);
-      while (list(, $value) = each($initialize_checkout_methods)) {
+      foreach($initialize_checkout_methods as $value) {
 ?>
 
   <p align="right"><?php echo $value; ?></p>

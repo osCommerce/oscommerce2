@@ -79,7 +79,7 @@ class inpay
     {
         global $cart_inpay_Standard_ID;
 
-        if (tep_session_is_registered('cart_inpay_Standard_ID'))
+        if (isset($_SESSION['cart_inpay_Standard_ID']))
         {
             $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
 
@@ -94,7 +94,7 @@ class inpay
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_ATTRIBUTES.' where orders_id = "'.(int)$order_id.'"');
                 tep_db_query('delete from '.TABLE_ORDERS_PRODUCTS_DOWNLOAD.' where orders_id = "'.(int)$order_id.'"');
 
-                tep_session_unregister('cart_inpay_Standard_ID');
+                unset($_SESSION['cart_inpay_Standard_ID']);
             }
         }
 
@@ -104,14 +104,14 @@ class inpay
 
     function pre_confirmation_check()
     {
-        global $cartID, $cart;
+        global $cartID;
 
-        if ( empty($cart->cartID))
+        if ( empty($_SESSION['cart']->cartID))
         {
-            $cartID = $cart->cartID = $cart->generate_cart_id();
+            $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
         }
 
-        if (!tep_session_is_registered('cartID'))
+        if (!isset($_SESSION['cartID']))
         {
             tep_session_register('cartID');
         }
@@ -119,13 +119,13 @@ class inpay
 
     function confirmation()
     {
-        global $cartID, $cart_inpay_Standard_ID, $customer_id, $languages_id, $order, $order_total_modules;
+        global $cartID, $cart_inpay_Standard_ID, $customer_id, $order, $order_total_modules;
 
-        if (tep_session_is_registered('cartID'))
+        if (isset($_SESSION['cartID']))
         {
             $insert_order = false;
 
-            if (tep_session_is_registered('cart_inpay_Standard_ID'))
+            if (isset($_SESSION['cart_inpay_Standard_ID']))
             {
                 $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
 
@@ -267,12 +267,12 @@ class inpay
                                        and pa.options_id = popt.products_options_id
                                        and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
                                        and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '".$languages_id."'
-                                       and poval.language_id = '".$languages_id."'";
+                                       and popt.language_id = '".$_SESSION['languages_id']."'
+                                       and poval.language_id = '".$_SESSION['languages_id']."'";
                                 $attributes = tep_db_query($attributes_query);
                             } else
                             {
-                                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$languages_id."' and poval.language_id = '".$languages_id."'");
+                                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                             }
                             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -309,7 +309,7 @@ class inpay
 
     function process_button()
     {
-        global $customer_id, $order, $sendto, $currency, $cart_inpay_Standard_ID, $shipping;
+        global $customer_id, $order, $sendto, $cart_inpay_Standard_ID, $shipping;
 
         $process_button_string = '';
         $parameters = array ('cmd'=>'_xclick',
@@ -318,7 +318,7 @@ class inpay
         'tax'=>$this->format_raw($order->info['tax']),
         //'business'=>MODULE_PAYMENT_INPAY_ID,
         'amount'=>$this->format_raw($order->info['total']), //TODO: we do not calculate tax+shipping only gross total -$order->info['shipping_cost']-$order->info['tax']),
-        'currency'=>$currency,
+        'currency'=>$_SESSION['currency'],
         'order_id'=>substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1),
         'custom'=>$customer_id,
         'no_note'=>'1',
@@ -376,10 +376,10 @@ class inpay
 
     function before_process()
     {
-        global $customer_id, $order, $order_totals, $sendto, $billto, $languages_id, $payment, $currencies, $cart, $cart_inpay_Standard_ID;
+        global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_inpay_Standard_ID;
         global $$payment;
         $order_id = substr($cart_inpay_Standard_ID, strpos($cart_inpay_Standard_ID, '-')+1);
-        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+        $my_status_query = tep_db_query("select orders_status from ".TABLE_ORDERS." where orders_id = '".$order_id."'"); // TODO: fix PB to add all params"' and customers_id = '" . (int)$_POST['custom'] . "'");
         $current_status_id = 0;
         $delivered_status = 3;
         $update_status = true;
@@ -477,12 +477,12 @@ class inpay
                                    and pa.options_id = popt.products_options_id
                                    and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
                                    and pa.options_values_id = poval.products_options_values_id
-                                   and popt.language_id = '".$languages_id."'
-                                   and poval.language_id = '".$languages_id."'";
+                                   and popt.language_id = '".$_SESSION['languages_id']."'
+                                   and poval.language_id = '".$_SESSION['languages_id']."'";
                         $attributes = tep_db_query($attributes_query);
                     } else
                     {
-                        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$languages_id."' and poval.language_id = '".$languages_id."'");
+                        $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from ".TABLE_PRODUCTS_OPTIONS." popt, ".TABLE_PRODUCTS_OPTIONS_VALUES." poval, ".TABLE_PRODUCTS_ATTRIBUTES." pa where pa.products_id = '".$order->products[$i]['id']."' and pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."' and pa.options_id = popt.products_options_id and pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '".$_SESSION['languages_id']."' and poval.language_id = '".$_SESSION['languages_id']."'");
                     }
                     $attributes_values = tep_db_fetch_array($attributes);
 
@@ -554,16 +554,16 @@ class inpay
         // load the after_process function from the payment modules
         $this->after_process();
 
-        $cart->reset(true);
+        $_SESSION['cart']->reset(true);
 
         // unregister session variables used during checkout
-        tep_session_unregister('sendto');
-        tep_session_unregister('billto');
-        tep_session_unregister('shipping');
-        tep_session_unregister('payment');
-        tep_session_unregister('comments');
+        unset($_SESSION['sendto']);
+        unset($_SESSION['billto']);
+        unset($_SESSION['shipping']);
+        unset($_SESSION['payment']);
+        unset($_SESSION['comments']);
 
-        tep_session_unregister('cart_inpay_Standard_ID');
+        unset($_SESSION['cart_inpay_Standard_ID']);
 
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
@@ -607,10 +607,10 @@ class inpay
               foreach ($languages as $lang)
               {
                 tep_db_query("insert into ".TABLE_ORDERS_STATUS." (orders_status_id, language_id, orders_status_name) values ('".$status_id."', '".$lang['id']."', "."'".$order_status."')");
-              }	
+              }
             }
-			
-            
+
+
         } else
         {
             $check = tep_db_fetch_array($check_query);
@@ -630,13 +630,13 @@ class inpay
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your merchant id', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', '', 'Your merchant unique identifier (supplied by inpay)', '6', '".$sort_order++."', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Your secret key', 'MODULE_PAYMENT_INPAY_SECRET_KEY', '', 'Your secret key (supplied by inpay)', '6', '".$sort_order++."', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Flow Layout', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'multi_page', 'Layout for the buyer flow', '6', '".$sort_order++."', now())");
-        
+
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Decrease stock on payment creation', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'False', 'Do you want to decrease stock upon payment creation?', '6', '".$sort_order++."', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Debug E-Mail Address', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', '', 'All parameters of an Invalid IPN notification will be sent to this email address if one is entered.', '6', '".$sort_order++."', now())");
-        
-        
+
+
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_INPAY_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '".$sort_order++."', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-        
+
         //tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('E-Mail Address', 'MODULE_PAYMENT_INPAY_ID', '', 'The inpay seller e-mail address to accept payments for', '6', '4', now())");
         tep_db_query("insert into ".TABLE_CONFIGURATION." (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_INPAY_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '".$sort_order++."', now())");
 
@@ -658,18 +658,18 @@ class inpay
 
     function keys()
     {
-    	//'MODULE_PAYMENT_INPAY_ID', 
+    	//'MODULE_PAYMENT_INPAY_ID',
         return array('MODULE_PAYMENT_INPAY_STATUS', 'MODULE_PAYMENT_INPAY_GATEWAY_SERVER', 'MODULE_PAYMENT_INPAY_MERCHANT_ID', 'MODULE_PAYMENT_INPAY_SECRET_KEY', 'MODULE_PAYMENT_INPAY_FLOW_LAYOUT', 'MODULE_PAYMENT_INPAY_DECREASE_STOCK_ON_CREATION', 'MODULE_PAYMENT_INPAY_DEBUG_EMAIL', 'MODULE_PAYMENT_INPAY_ZONE', 'MODULE_PAYMENT_INPAY_SORT_ORDER', 'MODULE_PAYMENT_INPAY_CREATE_ORDER_STATUS_ID', 'MODULE_PAYMENT_INPAY_SUM_TOO_LOW_ORDER_STATUS_ID', 'MODULE_PAYMENT_INPAY_COMP_ORDER_STATUS_ID');
     }
 
     // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '')
     {
-        global $currencies, $currency;
+        global $currencies;
 
         if ( empty($currency_code) || !$this->is_set($currency_code))
         {
-            $currency_code = $currency;
+            $currency_code = $_SESSION['currency'];
         }
 
         if ( empty($currency_value) || !is_numeric($currency_value))
@@ -684,7 +684,7 @@ class inpay
     //
     function calcInpayMd5Key($order)
     {
-    	
+
         $sk = MODULE_PAYMENT_INPAY_SECRET_KEY;
         $q = http_build_query( array ("merchant_id"=>$order['merchant_id'],
         "order_id"=>$order['order_id'],

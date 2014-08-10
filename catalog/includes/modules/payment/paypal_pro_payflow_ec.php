@@ -14,7 +14,7 @@
     var $code, $title, $description, $enabled;
 
     function paypal_pro_payflow_ec() {
-      global $HTTP_GET_VARS, $PHP_SELF, $order;
+      global $PHP_SELF, $order;
 
       $this->signature = 'paypal|paypal_pro_payflow_ec|3.1|2.3';
 
@@ -61,7 +61,7 @@
         }
       }
 
-      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
+      if ( defined('FILENAME_MODULES') && (basename($PHP_SELF) == FILENAME_MODULES) && isset($_GET['action']) && ($_GET['action'] == 'install') && isset($_GET['subaction']) && ($_GET['subaction'] == 'conntest') ) {
         echo $this->getTestConnectionResult();
         exit;
       }
@@ -113,7 +113,7 @@
     function pre_confirmation_check() {
       global $ppeuk_token, $ppeuk_secret, $ppeuk_order_total_check, $messageStack, $order;
 
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
@@ -121,11 +121,11 @@
 
       if ($response_array['RESULT'] != '0') {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
-      } elseif ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+      } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
-      if (!tep_session_is_registered('ppeuk_order_total_check')) tep_session_register('ppeuk_order_total_check');
+      if (!isset($_SESSION['ppeuk_order_total_check'])) tep_session_register('ppeuk_order_total_check');
       $ppeuk_order_total_check = true;
 
       $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
@@ -155,31 +155,31 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $ppeuk_secret, $ppeuk_order_total_check, $HTTP_POST_VARS, $comments, $response_array;
+      global $customer_id, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $ppeuk_secret, $ppeuk_order_total_check, $comments, $response_array;
 
-      if (!tep_session_is_registered('ppeuk_token')) {
+      if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
 
       if ($response_array['RESULT'] == '0') {
-        if ( !tep_session_is_registered('ppeuk_secret') || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+        if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        } elseif ( !tep_session_is_registered('ppeuk_order_total_check') ) {
+        } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
-      if ( tep_session_is_registered('ppeuk_order_total_check') ) {
-        tep_session_unregister('ppeuk_order_total_check');
+      if ( isset($_SESSION['ppeuk_order_total_check']) ) {
+        unset($_SESSION['ppeuk_order_total_check']);
       }
 
       if (empty($comments)) {
-        if (isset($HTTP_POST_VARS['ppecomments']) && tep_not_null($HTTP_POST_VARS['ppecomments'])) {
-          $comments = tep_db_prepare_input($HTTP_POST_VARS['ppecomments']);
+        if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
+          $comments = tep_db_prepare_input($_POST['ppecomments']);
 
           $order->info['comments'] = $comments;
         }
@@ -226,11 +226,11 @@
 
       tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
-      tep_session_unregister('ppeuk_token');
-      tep_session_unregister('ppeuk_payerid');
-      tep_session_unregister('ppeuk_payerstatus');
-      tep_session_unregister('ppeuk_addressstatus');
-      tep_session_unregister('ppeuk_secret');
+      unset($_SESSION['ppeuk_token']);
+      unset($_SESSION['ppeuk_payerid']);
+      unset($_SESSION['ppeuk_payerstatus']);
+      unset($_SESSION['ppeuk_addressstatus']);
+      unset($_SESSION['ppeuk_secret']);
     }
 
     function get_error() {
@@ -390,7 +390,7 @@
         $server['path'] = '/';
       }
 
-      $request_id = (isset($order) && is_object($order)) ? md5($cartID . tep_session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
+      $request_id = (isset($order) && is_object($order)) ? md5($cartID . session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
 
       $headers = array('X-VPS-REQUEST-ID: ' . $request_id,
                        'X-VPS-CLIENT-TIMEOUT: 45',
@@ -434,10 +434,10 @@
 
 // format prices without currency formatting
     function format_raw($number, $currency_code = '', $currency_value = '') {
-      global $currencies, $currency;
+      global $currencies;
 
       if (empty($currency_code) || !$this->is_set($currency_code)) {
-        $currency_code = $currency;
+        $currency_code = $_SESSION['currency'];
       }
 
       if (empty($currency_value) || !is_numeric($currency_value)) {
@@ -632,8 +632,6 @@
     }
 
     function sendDebugEmail($response = array()) {
-      global $HTTP_POST_VARS, $HTTP_GET_VARS;
-
       if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_DEBUG_EMAIL)) {
         $email_body = '';
 
@@ -641,12 +639,12 @@
           $email_body .= 'RESPONSE:' . "\n\n" . print_r($response, true) . "\n\n";
         }
 
-        if (!empty($HTTP_POST_VARS)) {
-          $email_body .= '$HTTP_POST_VARS:' . "\n\n" . print_r($HTTP_POST_VARS, true) . "\n\n";
+        if (!empty($_POST)) {
+          $email_body .= '$_POST:' . "\n\n" . print_r($_POST, true) . "\n\n";
         }
 
-        if (!empty($HTTP_GET_VARS)) {
-          $email_body .= '$HTTP_GET_VARS:' . "\n\n" . print_r($HTTP_GET_VARS, true) . "\n\n";
+        if (!empty($_GET)) {
+          $email_body .= '$_GET:' . "\n\n" . print_r($_GET, true) . "\n\n";
         }
 
         if (!empty($email_body)) {
