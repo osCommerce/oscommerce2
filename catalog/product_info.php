@@ -109,11 +109,12 @@
 
 <?php
         if ( !empty($pi_html) ) {
-          echo '    <div style="display: none;">' . implode('', $pi_html) . '</div>';
+?>          
+          <div style="display: none;"><?php echo implode('', $pi_html); ?></div>
+<?php          
         }
       } else {
 ?>
-
     <div id="piGal">
       <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
     </div>
