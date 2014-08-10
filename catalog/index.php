@@ -68,16 +68,16 @@
 
     while ($categories = tep_db_fetch_array($categories_query)) {
       $cPath_new = tep_get_path($categories['categories_id']);
-      echo '<div class="col-xs-6 col-sm-4">';
-      echo '  <div class="text-center">';
-      echo '    <a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
-      echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . $categories['categories_name'] . '</a></h5>';
-      echo '    </div>';
-      echo '  </div>';
-      echo '</div>';
-    }
-
+?>  
+      <div class="col-xs-6 col-sm-4">
+        <div class="text-center">
+          <a href="<?php echo tep_href_link(FILENAME_DEFAULT, $cPath_new); ?>"><?php echo tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT); ?></a>
+          <div class="caption text-center">
+            <h5><a href="<?php echo tep_href_link(FILENAME_DEFAULT, $cPath_new); ?>"><?php echo $categories['categories_name']; ?></a></h5>
+          </div>
+        </div>
+      </div>
+<?php }
 
 // needed for the new products module shown below
     $new_products_category_id = $current_category_id;
