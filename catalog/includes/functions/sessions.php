@@ -93,15 +93,12 @@
   function tep_session_register($variable) {
     global $session_started;
 
-    if ($session_started == true) {      
-        return session_register($variable);
-      } else {
-        if (!isset($GLOBALS[$variable])) {
-          $GLOBALS[$variable] = null;
-        }
-        $_SESSION[$variable] =& $GLOBALS[$variable];      
+    if ($session_started == true) {
+      if (!isset($GLOBALS[$variable])) {
+        $GLOBALS[$variable] = null;
+      }
+      $_SESSION[$variable] =& $GLOBALS[$variable];
     }
-
     return false;
   }
 
