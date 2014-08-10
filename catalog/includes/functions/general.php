@@ -170,7 +170,10 @@
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
    
-    $exclude_array =array(session_name(),'error','x','y');
+    $exclude_array[] = session_name();
+    $exclude_array[] = 'error';
+    $exclude_array[] = 'x';
+    $exclude_array[] = 'y';
 
     $get_url = '';
    
