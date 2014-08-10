@@ -80,7 +80,7 @@
             $modules_array = explode(';', constant($module_key));
 
             foreach ( $modules_array as $module ) {
-              $class = basename($module, ".php");
+              $class = basename($module, '.php');
 
               if ( !class_exists($class) ) {
                 if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module) ) {
