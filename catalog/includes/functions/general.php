@@ -1246,10 +1246,6 @@
 
     if (!isset($seeded)) {
       $seeded = true;
-
-      if ( (PHP_VERSION < '4.2.0') ) {
-        mt_srand((double)microtime()*1000000);
-      }
     }
 
     if (isset($min) && isset($max)) {
