@@ -1357,12 +1357,8 @@
     return $addresses['total'];
   }
 
-// nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
-  function tep_convert_linefeeds($from, $to, $string) {
-    if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return preg_replace('/(' . implode('|', $from) . ')/', $to, $string);
-    } else {
+// Convert linefeeds 
+  function tep_convert_linefeeds($from, $to, $string) {    
       return str_replace($from, $to, $string);
-    }
   }
 ?>
