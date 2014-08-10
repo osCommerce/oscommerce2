@@ -1242,7 +1242,6 @@
 ////
 // Return a random value
   function tep_rand($min = null, $max = null) {
-    static $seeded;
 
     if (isset($min) && isset($max)) {
       if ($min >= $max) {
