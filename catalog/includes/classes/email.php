@@ -112,7 +112,8 @@
 
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      foreach($this->image_types as $key => $value) {
+      
+      foreach ( array_keys($this->image_types) as $key ) {
         $extensions[] = $key;
       }
 
