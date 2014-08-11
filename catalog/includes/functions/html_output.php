@@ -305,13 +305,13 @@
       }
     }
 
-    foreach (array_keys($values) as $key ) {
-      $field .= '<option value="' . tep_output_string($values[$key]['id']) . '"';
-      if ($default == $values[$key]['id']) {
+    foreach ($values as $value ) {
+      $field .= '<option value="' . tep_output_string($value['id']) . '"';
+      if ($default == $value['id']) {
         $field .= ' selected="selected"';
     }
 
-      $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
+      $field .= '>' . tep_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
     }
     $field .= '</select>';
 
