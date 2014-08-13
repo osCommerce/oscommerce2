@@ -25,9 +25,8 @@
 ?>
     <h3><?php echo sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')); ?></h3>
     <div class="row">
-<?php        
-    while ($new_products = tep_db_fetch_array($new_products_query)) {
-?>      
+
+<?php while ($new_products = tep_db_fetch_array($new_products_query)) { ?>
     <div class="col-sm-6 col-md-4">
       <div class="thumbnail">
         <a href="<?php echo tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></a>
@@ -37,9 +36,7 @@
         </div>
       </div>
     </div>
-<?php
-    }
-?>
+<?php  } ?>
     </div>
 
 <?php
