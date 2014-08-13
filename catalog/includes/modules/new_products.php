@@ -22,24 +22,25 @@
 
     $new_prods_content = NULL;
 
+?>
+    <h3><?php echo sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')); ?></h3>
+    <div class="row">
+<?php        
     while ($new_products = tep_db_fetch_array($new_products_query)) {
-      $new_prods_content .= '<div class="col-sm-6 col-md-4">';
-      $new_prods_content .= '  <div class="thumbnail">';
-      $new_prods_content .= '    <a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
-      $new_prods_content .= '    <div class="caption">';
-      $new_prods_content .= '      <p class="text-center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . $new_products['products_name'] . '</a></p>';
-      $new_prods_content .= '      <p class="text-center">' . $currencies->display_price($new_products['products_price'], tep_get_tax_rate($new_products['products_tax_class_id'])) . '</p>';
-      $new_prods_content .= '    </div>';
-      $new_prods_content .= '  </div>';
-      $new_prods_content .= '</div>';
+?>      
+    <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <a href="<?php echo tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></a>
+        <div class="caption">';
+          <p class="text-center"><a href="<?php echo tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $new_products['products_id']) . '">' . $new_products['products_name']; ?></a></p>
+          <p class="text-center"><?php echo $currencies->display_price($new_products['products_price'], tep_get_tax_rate($new_products['products_tax_class_id'])); ?></p>
+        </div>
+      </div>
+    </div>
+<?php
     }
 ?>
-
-  <h3><?php echo sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')); ?></h3>
-
-  <div class="row">
-    <?php echo $new_prods_content; ?>
-  </div>
+    </div>
 
 <?php
   }
