@@ -16,24 +16,23 @@
     if ($num_products_ordered >= MIN_DISPLAY_ALSO_PURCHASED) {
 
       $also_pur_prods_content = NULL;
-
-      while ($orders = tep_db_fetch_array($orders_query)) {
-        $also_pur_prods_content .= '<div class="col-sm-6 col-md-4">';
-        $also_pur_prods_content .= '  <div class="thumbnail">';
-        $also_pur_prods_content .= '    <a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
-        $also_pur_prods_content .= '    <div class="caption">';
-        $also_pur_prods_content .= '      <p class="text-center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . $orders['products_name'] . '</a></p>';
-        $also_pur_prods_content .= '    </div>';
-        $also_pur_prods_content .= '  </div>';
-        $also_pur_prods_content .= '</div>';
-      }
 ?>
+    <h3><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
 
-  <h3><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
+    <div class="row">      
 
-  <div class="row">
-    <?php echo $also_pur_prods_content; ?>
-  </div>
+<?php   while ($orders = tep_db_fetch_array($orders_query)) { ?>
+        <div class="col-sm-6 col-md-4">
+          <div class="thumbnail">
+          <a href="<?php echo tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $orders['products_image'], $orders['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></a>
+            <div class="caption">
+              <p class="text-center"><a href="<?php echo tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $orders['products_id']) . '">' . $orders['products_name']; ?></a></p>
+            </div>
+          </div>
+        </div>
+<?php   } ?>
+
+    </div>
 
 <?php
     }
