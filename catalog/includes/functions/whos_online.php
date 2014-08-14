@@ -27,7 +27,7 @@
 
     $wo_session_id = session_id();
     $wo_ip_address = tep_get_ip_address();
-    $wo_last_page_url = tep_db_prepare_input(getenv('REQUEST_URI'));
+    $wo_last_page_url = tep_db_prepare_input($_SERVER['REQUEST_URI']);
 
     $current_time = time();
     $xx_mins_ago = ($current_time - 900);
