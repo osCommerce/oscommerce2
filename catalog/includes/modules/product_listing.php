@@ -15,25 +15,21 @@
 
   <div class="contentText">
 
-<?php
-  if ( ($listing_split->number_of_rows > 0) && ( (PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3') ) ) {
-?>
+<?php if ($listing_split->number_of_rows > 0) {  
+       if ( (PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3') ) { ?>
 
     <div>
       <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
-
       <span><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></span>
     </div>
 
     <br />
 
-<?php
-  }
-  $prod_list_contents = '';
-?>
-  <div class="ui-widget infoBoxContainer">
-    <div class="ui-widget-header ui-corner-top infoBoxHeading">
-      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingHeader">
+<?php } ?>
+  
+  <div class="infoBoxContainer">
+    <div class="infoBoxHeading">
+      <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table">
         <tr>
 <?php
   foreach (array_keys($column_list) as $col) {
@@ -78,18 +74,19 @@
       $lc_text = tep_create_sort_heading($_GET['sort'], $col+1, $lc_text);
     }
 ?>
-          <td<?php echo (tep_not_null($lc_align) ? ' align="' . $lc_align . '"' : '') . '>' . $lc_text; ?></td>
+      <td<?php echo (tep_not_null($lc_align) ? ' align="' . $lc_align . '"' : '') . '>' . $lc_text; ?></td>
 <?php } ?>
         </tr>
       </table>
     </div>
+
 <?php
   if ($listing_split->number_of_rows > 0) {
     $rows = 0;
     $listing_query = tep_db_query($listing_split->sql_query);
 ?>
-      <div class="ui-widget-content ui-corner-bottom productListTable">
-        <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingData">
+      <div class="productListTable">
+        <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table productListingData">
 <?php
     while ($listing = tep_db_fetch_array($listing_query)) {
       $rows++;
@@ -109,7 +106,7 @@
             <?php }
             break;
           case 'PRODUCT_LIST_MANUFACTURER': ?>
-                    <td><a href="<?php echo tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $listing['manufacturers_id']) . '">' . $listing['manufacturers_name']; ?></a></td>
+                     <td><a href="<?php echo tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $listing['manufacturers_id']) . '">' . $listing['manufacturers_name']; ?></a></td>
             <?php break;
           case 'PRODUCT_LIST_PRICE': 
             if (tep_not_null($listing['specials_new_products_price'])) { ?>
@@ -119,10 +116,10 @@
             <?php } 
             break;
           case 'PRODUCT_LIST_QUANTITY': ?>
-                    <td align="right"><?php echo $listing['products_quantity']; ?></td>
+                      <td align="right"><?php echo $listing['products_quantity']; ?></td>
           <?php  break;
           case 'PRODUCT_LIST_WEIGHT': ?>
-                    <td align="right"><?php echo $listing['products_weight']; ?></td>
+                      <td align="right"><?php echo $listing['products_weight']; ?></td>
           <?php  break; 
           case 'PRODUCT_LIST_IMAGE': 
             if (isset($_GET['manufacturers_id'])  && tep_not_null($_GET['manufacturers_id'])) { ?>
@@ -145,27 +142,23 @@
     </div>
 
 <?php  
+    }
   } else {
 ?>
 
     <p><?php echo TEXT_NO_PRODUCTS; ?></p>
 
 <?php
-  }
-
+}
   if ( ($listing_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3')) ) {
 ?>
-
     <br />
 
     <div>
       <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
-
       <span><?php echo $listing_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></span>
     </div>
 
-<?php
-  }
-?>
+<?php  } ?>
 
-  </div>
+</div>
