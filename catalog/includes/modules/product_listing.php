@@ -27,9 +27,10 @@
 
 <?php } ?>
   
-  <div class="infoBoxContainer">
+  <div class="infoBoxContainer table-responsive">
     <div class="infoBoxHeading">
       <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table">
+        <thead class="panel panel-default">
         <tr>
 <?php
   foreach (array_keys($column_list) as $col) {
@@ -76,8 +77,9 @@
 ?>
       <td<?php echo (tep_not_null($lc_align) ? ' align="' . $lc_align . '"' : '') . '>' . $lc_text; ?></td>
 <?php } ?>
+</thead>
         </tr>
-      </table>
+   
     </div>
 
 <?php
@@ -85,8 +87,8 @@
     $rows = 0;
     $listing_query = tep_db_query($listing_split->sql_query);
 ?>
-      <div class="productListTable">
-        <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table productListingData">
+
+       
 <?php
     while ($listing = tep_db_fetch_array($listing_query)) {
       $rows++;
