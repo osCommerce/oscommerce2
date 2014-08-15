@@ -94,17 +94,11 @@
     global $session_started;
 
     if ($session_started == true) {
-      if (PHP_VERSION < 4.3) {
-        return session_register($variable);
-      } else {
-        if (!isset($GLOBALS[$variable])) {
-          $GLOBALS[$variable] = null;
-        }
-
-        $_SESSION[$variable] =& $GLOBALS[$variable];
+      if (!isset($GLOBALS[$variable])) {
+        $GLOBALS[$variable] = null;
       }
+      $_SESSION[$variable] =& $GLOBALS[$variable];
     }
-
     return false;
   }
 
@@ -122,7 +116,6 @@
   function tep_session_recreate() {
     global $SID;
 
-    if (PHP_VERSION >= 5.1) {
       $old_id = session_id();
 
       session_regenerate_id(true);
@@ -132,6 +125,5 @@
       }
 
       tep_whos_online_update_session_id($old_id, session_id());
-    }
   }
 ?>
