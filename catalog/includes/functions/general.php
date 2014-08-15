@@ -32,11 +32,13 @@
 ////
 // Redirect to another page or site
   function tep_redirect($url) {
+    global $request_type;
+
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
-    if ( (ENABLE_SSL == true) && (getenv('HTTPS') == 'on') ) { // We are loading an SSL page
+    if ( (ENABLE_SSL == true) && ($request_type == 'SSL') ) { // We are loading an SSL page
       if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
         $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
       }
@@ -1058,14 +1060,6 @@
     }
   }
 
-////
-// Get the number of times a word/character is present in a string
-  function tep_word_count($string, $needle) {
-    $temp_array = preg_split('/' . $needle . '/', $string);
-
-    return sizeof($temp_array);
-  }
-
   function tep_count_modules($modules = '') {
     $count = 0;
 
@@ -1162,13 +1156,11 @@
         return false;
       }
     } elseif(is_object($value)) {
-      
       if (is_null($value)) {
         return false;
       } else {
         return true;
-      } 
-     
+      }
     } else {
       if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
         return true;
@@ -1227,15 +1219,13 @@
     }
   }
 
-  function tep_string_to_int($string) {
-    return (int)$string;
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
@@ -1252,15 +1242,6 @@
 ////
 // Return a random value
   function tep_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (!isset($seeded)) {
-      $seeded = true;
-
-      if ( (PHP_VERSION < '4.2.0') ) {
-        mt_srand((double)microtime()*1000000);
-      }
-    }
 
     if (isset($min) && isset($max)) {
       if ($min >= $max) {
@@ -1371,12 +1352,8 @@
     return $addresses['total'];
   }
 
-// nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
-  function tep_convert_linefeeds($from, $to, $string) {
-    if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return preg_replace('/(' . implode('|', $from) . ')/', $to, $string);
-    } else {
+// Convert linefeeds 
+  function tep_convert_linefeeds($from, $to, $string) {    
       return str_replace($from, $to, $string);
-    }
   }
 ?>
