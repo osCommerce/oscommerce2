@@ -144,28 +144,6 @@
   }
 
 ////
-// Break a word in a string if it is longer than a specified length ($len)
-  function tep_break_string($string, $len, $break_char = '-') {
-    $l = 0;
-    $output = '';
-    for ($i=0, $n=strlen($string); $i<$n; $i++) {
-      $char = substr($string, $i, 1);
-      if ($char != ' ') {
-        $l++;
-      } else {
-        $l = 0;
-      }
-      if ($l > $len) {
-        $l = 1;
-        $output .= $break_char;
-      }
-      $output .= $char;
-    }
-
-    return $output;
-  }
-
-////
 // Return all HTTP GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
