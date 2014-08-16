@@ -1060,26 +1060,6 @@
     }
   }
 
-  function tep_count_modules($modules = '') {
-    $count = 0;
-
-    if (empty($modules)) return $count;
-
-    $modules_array = explode(';', $modules);
-
-    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
-      $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
-
-      if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-        if ($GLOBALS[$class]->enabled) {
-          $count++;
-        }
-      }
-    }
-
-    return $count;
-  }
-
   function tep_count_payment_modules() {
     return tep_count_modules(MODULE_PAYMENT_INSTALLED);
   }
