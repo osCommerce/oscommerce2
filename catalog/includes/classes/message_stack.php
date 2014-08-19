@@ -17,7 +17,7 @@
   if ($messageStack->size('general') > 0) echo $messageStack->output('general');
 */
 
-  class messageStack extends tableBox {
+  class messageStack extends alertBlock {
 
 // class constructor
     function messageStack() {
@@ -26,8 +26,8 @@
       $this->messages = array();
 
       if (isset($_SESSION['messageToStack'])) {
-        for ($i=0, $n=sizeof($messageToStack); $i<$n; $i++) {
-          $this->add($messageToStack[$i]['class'], $messageToStack[$i]['text'], $messageToStack[$i]['type']);
+        for ($i=0, $n=sizeof($_SESSION['messageToStack']); $i<$n; $i++) {
+          $this->add($_SESSION['messageToStack'][$i]['class'], $_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
         }
         unset($_SESSION['messageToStack']);
       }
@@ -36,25 +36,25 @@
 // class methods
     function add($class, $message, $type = 'error') {
       if ($type == 'error') {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => tep_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-danger"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'warning') {
-        $this->messages[] = array('params' => 'class="messageStackWarning"', 'class' => $class, 'text' => tep_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-warning"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'success') {
-        $this->messages[] = array('params' => 'class="messageStackSuccess"', 'class' => $class, 'text' => tep_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->messages[] = array('params' => 'class="alert alert-success"', 'class' => $class, 'text' => $message);
       } else {
-        $this->messages[] = array('params' => 'class="messageStackError"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-info"', 'class' => $class, 'text' => $message);
       }
     }
 
     function add_session($class, $message, $type = 'error') {
-      global $messageToStack;
+
 
       if (!isset($_SESSION['messageToStack'])) {
-        tep_session_register('messageToStack');
-        $messageToStack = array();
+        $_SESSION['messageToStack'] = array();
+
       }
 
-      $messageToStack[] = array('class' => $class, 'text' => $message, 'type' => $type);
+      $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
     }
 
     function reset() {
@@ -62,7 +62,6 @@
     }
 
     function output($class) {
-      $this->table_data_parameters = 'class="messageBox"';
 
       $output = array();
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
@@ -71,7 +70,7 @@
         }
       }
 
-      return $this->tableBox($output);
+      return $this->alertBlock($output);
     }
 
     function size($class) {
@@ -86,4 +85,3 @@
       return $count;
     }
   }
-?>
