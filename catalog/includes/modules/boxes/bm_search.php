@@ -31,12 +31,12 @@
     }
 
     function execute() {
-      global $request_type, $oscTemplate;
+      global $oscTemplate;
 
       $data = '<div class="panel panel-default">' .
               '  <div class="panel-heading">' . MODULE_BOXES_SEARCH_BOX_TITLE . '</div>' .
               '  <div class="panel-body text-center">' .
-              '    ' . tep_draw_form('quick_find', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get') .
+              '    ' . tep_draw_form('quick_find', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $GLOBALS['request_type'], false), 'get') .
               '    <div class="input-group">' .
               '    ' . tep_draw_input_field('keywords', '', 'required aria-required="true" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"') .
               '      <span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="glyphicon glyphicon-search"></i></button></span>' .
