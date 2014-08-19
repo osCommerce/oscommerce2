@@ -35,16 +35,16 @@
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
-    $request_type =  'SSL';
+    $GLOBALS['request_type'] =  'SSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
       } else {
-    $request_type =  'NONSSL';
+    $GLOBALS['request_type'] =  'NONSSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
   }
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
-  $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
+  $PHP_SELF = substr($req['path'], ($GLOBALS['request_type'] == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
 // include the list of project filenames
   require('includes/filenames.php');
@@ -80,8 +80,8 @@
   require('includes/functions/html_output.php');
 
 // set the cookie domain
-  $cookie_domain = ($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN;
-  $cookie_path = ($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH;
+  $cookie_domain = ($GLOBALS['request_type'] == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN;
+  $cookie_path = ($GLOBALS['request_type'] == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH;
 
 // include cache functions if enabled
   if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
@@ -158,7 +158,7 @@
   $SID = (defined('SID') ? SID : '');
 
 // verify the ssl_session_id if the feature is enabled
-  if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started === true) ) {
+  if ( ($GLOBALS['request_type'] == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started === true) ) {
     if ( !isset($_SESSION['SSL_SESSION_ID']) ) {
       $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
     }
