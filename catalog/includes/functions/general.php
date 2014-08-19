@@ -32,13 +32,12 @@
 ////
 // Redirect to another page or site
   function tep_redirect($url) {
-    global $request_type;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
-    if ( (ENABLE_SSL == true) && ($request_type == 'SSL') ) { // We are loading an SSL page
+    if ( (ENABLE_SSL == true) && ($GLOBALS['request_type'] == 'SSL') ) { // We are loading an SSL page
       if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
         $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
       }
