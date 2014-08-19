@@ -35,13 +35,19 @@
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
 
-    <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
+    <div class="clearfix"></div>
 
-      <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
+    <div class="row">
+      <div class="col-sm-6 pagenumber hidden-xs">
+        <?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      </div>
+      <div class="col-sm-6">
+        <div class="pull-right pagenav"><ul class="pagination"><?php echo $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></ul></div>
+        <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+      </div>
     </div>
 
-    <br />
+   <div class="clearfix"></div>
 
 <?php
   }
@@ -103,13 +109,20 @@
   if (($products_new_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
 
-    <br />
+    <div class="clearfix"></div>
 
-    <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
-
-      <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
+    <div class="row">
+      <div class="col-sm-6 pagenumber hidden-xs">
+        <?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      </div>
+      <div class="col-sm-6">
+        <div class="pull-right pagenav"><ul class="pagination"><?php echo $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></ul></div>
+        <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+      </div>
     </div>
+
+   <div class="clearfix"></div>
+   
 
 <?php
   }

@@ -217,4 +217,15 @@ s, del {
   border-radius: 15px;
 }
 
+/* Pagination  ------------------------------------------------------- */
+.pagenav {
+   position: relative;
+   top:-25px;
+   left:3px;
+   height: 40px !important;
+}
+.pagenumber {
+  margin-bottom:7px;
+}
+
 

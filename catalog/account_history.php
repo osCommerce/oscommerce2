@@ -70,11 +70,20 @@
     }
 ?>
 
-  <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></p>
+  <div class="clearfix"></div>
 
-    <p><?php echo $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></p>
+  <div class="row">
+    <div class="col-sm-6 pagenumber hidden-xs">
+      <?php echo $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?>
+    </div>
+    <div class="col-sm-6">
+      <div class="pull-right pagenav"><ul class="pagination"><?php echo $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></div>
+      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    </div>
   </div>
+  
+  <div class="clearfix"></div>
+    
 
 <?php
   } else {
