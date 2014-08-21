@@ -37,11 +37,16 @@
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
     $request_type =  'SSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
+    // set the cookie domain
+    $cookie_domain = HTTPS_COOKIE_DOMAIN;
+    $cookie_path = HTTPS_COOKIE_PATH;
       } else {
     $request_type =  'NONSSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
+    $cookie_domain = HTTP_COOKIE_DOMAIN;
+    $cookie_path = HTTP_COOKIE_PATH;
   }
-
+  
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
@@ -78,10 +83,6 @@
 // define general functions used application-wide
   require('includes/functions/general.php');
   require('includes/functions/html_output.php');
-
-// set the cookie domain
-  $cookie_domain = ($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN;
-  $cookie_path = ($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH;
 
 // include cache functions if enabled
   if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
