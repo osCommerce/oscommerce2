@@ -37,10 +37,10 @@
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
     $request_type =  'SSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-    // set the cookie domain
+// set the cookie domain
     $cookie_domain = HTTPS_COOKIE_DOMAIN;
     $cookie_path = HTTPS_COOKIE_PATH;
-      } else {
+  } else {
     $request_type =  'NONSSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
     $cookie_domain = HTTP_COOKIE_DOMAIN;
