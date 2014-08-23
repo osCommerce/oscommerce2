@@ -55,18 +55,14 @@
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
-  function tep_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
-
-  function tep_output_string($string, $translate = false, $protected = false) {
+    function tep_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string);
     } else {
       if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
+        return strtr(trim($string), array('"' => '&quot;'));
       } else {
-        return tep_parse_input_field_data($string, $translate);
+        return strtr(trim($string), $translate);
       }
     }
   }
@@ -1072,8 +1068,8 @@
 
     $modules_array = explode(';', $modules);
 
-    foreach ($modules_array as $value) {
-      $class = basename($value, '.php');
+    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
+      $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
 
       if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
         if ($GLOBALS[$class]->enabled) {
@@ -1161,7 +1157,7 @@
         return false;
       }
     } elseif(is_object($value)) {
-      if (is_null($value)) {
+      if (count(get_object_vars($value)) === 0) {
         return false;
       } else {
         return true;
@@ -1234,10 +1230,10 @@
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
-  
-    foreach ($cPath_array as $value)  {
-      if (!in_array($value, $tmp_array)) {
-        $tmp_array[] = $value;
+    $n = sizeof($cPath_array);
+    for ($i=0; $i<$n; $i++) {
+      if (!in_array($cPath_array[$i], $tmp_array)) {
+        $tmp_array[] = $cPath_array[$i];
       }
     }
 
