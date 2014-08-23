@@ -1230,9 +1230,9 @@
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
   
-    foreach (array_keys($cPath_array) as $key)  {
-      if (!in_array($cPath_array[$key], $tmp_array)) {
-        $tmp_array[] = $cPath_array[$key];
+    foreach ($cPath_array as $value)  {
+      if (!in_array($value, $tmp_array)) {
+        $tmp_array[] = $value;
       }
     }
 
