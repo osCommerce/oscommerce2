@@ -38,7 +38,7 @@
   foreach ($column_list as $key => $value) {
     $lc_align = '';
 
-    switch ($column_list[$key]) {
+    switch ($value) {
       case 'PRODUCT_LIST_MODEL':
         $lc_text = TABLE_HEADING_MODEL;
         $lc_align = '';
