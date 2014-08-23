@@ -37,11 +37,16 @@
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
     $request_type =  'SSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-      } else {
+// set the cookie domain
+    $cookie_domain = HTTPS_COOKIE_DOMAIN;
+    $cookie_path = HTTPS_COOKIE_PATH;
+  } else {
     $request_type =  'NONSSL';
     define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
+    $cookie_domain = HTTP_COOKIE_DOMAIN;
+    $cookie_path = HTTP_COOKIE_PATH;
   }
-
+  
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
@@ -78,10 +83,6 @@
 // define general functions used application-wide
   require('includes/functions/general.php');
   require('includes/functions/html_output.php');
-
-// set the cookie domain
-  $cookie_domain = ($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN;
-  $cookie_path = ($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH;
 
 // include cache functions if enabled
   if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
@@ -245,6 +246,10 @@
 
 // action recorder
   require('includes/classes/action_recorder.php');
+// initialize the message stack for output messages
+  require('includes/classes/alertbox.php');
+  require('includes/classes/message_stack.php');
+  $messageStack = new messageStack();
 
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
@@ -271,9 +276,11 @@
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
                                 if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
                                   $_SESSION['cart']->remove($_POST['products_id'][$i]);
+                                  $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($HTTP_POST_VARS['products_id'][$i])), 'warning');
                                 } else {
                                   $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
                                   $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
+                                  $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'][$i])), 'success');
                                 }
                               }
                               tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
@@ -282,12 +289,14 @@
       case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
                                 $attributes = isset($_POST['id']) ? $_POST['id'] : '';
                                 $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
+                                $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'])), 'success');
                               }
                               tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
                               break;
       // customer removes a product from their shopping cart
       case 'remove_product' : if (isset($_GET['products_id'])) {
                                 $_SESSION['cart']->remove($_GET['products_id']);
+                                $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($_GET['products_id'])), 'warning');
                               }
                               tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
                               break;
@@ -297,6 +306,7 @@
                                   tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id']));
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
+                                  $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_GET['products_id'])), 'success');
                                 }
                               }
                               tep_redirect(tep_href_link($goto, tep_get_all_get_params($parameters)));
@@ -317,6 +327,7 @@
                                   $check = tep_db_fetch_array($check_query);
                                   if ($check['count'] < 1) {
                                     tep_db_query("insert into " . TABLE_PRODUCTS_NOTIFICATIONS . " (products_id, customers_id, date_added) values ('" . (int)$notify[$i] . "', '" . (int)$_SESSION['customer_id'] . "', now())");
+                                    $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
                                 tep_redirect(tep_href_link($PHP_SELF, tep_get_all_get_params(array('action', 'notify'))));
@@ -330,6 +341,7 @@
                                 $check = tep_db_fetch_array($check_query);
                                 if ($check['count'] > 0) {
                                   tep_db_query("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+                                  $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
                                 tep_redirect(tep_href_link($PHP_SELF, tep_get_all_get_params(array('action'))));
                               } else {
@@ -435,12 +447,7 @@
     }
   }
 
-// initialize the message stack for output messages
-  require('includes/classes/message_stack.php');
-  $messageStack = new messageStack();
-
 // TODO remove when no more global sessions exist
   if ( $session_started == true ) {
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
   }
-?>
