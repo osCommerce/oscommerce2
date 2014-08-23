@@ -1161,7 +1161,7 @@
         return false;
       }
     } elseif(is_object($value)) {
-      if (is_null($value)) {
+      if (count(get_object_vars($value)) === 0) {
         return false;
       } else {
         return true;
