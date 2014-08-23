@@ -1068,8 +1068,8 @@
 
     $modules_array = explode(';', $modules);
 
-    for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
-      $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
+    foreach ($modules_array as $value) {
+      $class = basename($value, '.php');
 
       if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
         if ($GLOBALS[$class]->enabled) {
@@ -1230,10 +1230,10 @@
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
-    $n = sizeof($cPath_array);
-    for ($i=0; $i<$n; $i++) {
-      if (!in_array($cPath_array[$i], $tmp_array)) {
-        $tmp_array[] = $cPath_array[$i];
+  
+    foreach (array_keys($cPath_array) as $key)  {
+      if (!in_array($cPath_array[$key], $tmp_array)) {
+        $tmp_array[] = $cPath_array[$key];
       }
     }
 

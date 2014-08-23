@@ -33,7 +33,7 @@
         <tr>
           <td><strong>PHP Version</strong></td>
           <td align="right"><?php echo PHP_VERSION; ?></td>
-          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+          <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 5.3) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
         </tr>
       </table>
 
@@ -159,8 +159,7 @@
       <table border="0" width="100%" cellspacing="0" cellpadding="2" style="background: #fffbdf; border: 1px solid #ffc20b; padding: 2px;">
 
 <?php
-      reset($warning_array);
-      while (list($key, $value) = each($warning_array)) {
+      foreach ($warning_array as $key => $value) {
         echo '        <tr>' . "\n" .
              '          <td valign="top"><strong>' . $key . '</strong></td>' . "\n" .
              '          <td valign="top">' . $value . '</td>' . "\n" .
@@ -172,7 +171,7 @@
 <?php
     }
 
-    if (sizeof($configfile_array) > 0) {
+    if (!empty($configfile_array)) {
 ?>
 
       <p>The webserver is not able to save the installation parameters to its configuration files.</p>
@@ -206,7 +205,7 @@
     <p>Please correct the above errors and retry the installation procedure with the changes in place.</p>
 
 <?php
-    if (sizeof($warning_array) > 0) {
+    if (!empty($warning_array)) {
       echo '    <p><i>Changing webserver configuration parameters may require the webserver service to be restarted before the changes take affect.</i></p>' . "\n";
     }
 ?>
