@@ -13,7 +13,7 @@
 ////
 // The HTML href link wrapper function
   function tep_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
-    global $request_type;
+    global $request_type, $SID;
 
     $page = tep_output_string($page);
 
