@@ -166,21 +166,26 @@
   }
 
 ////
-// Return all HTTP GET variables, except those passed as a parameter
+// Return all $_GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
+   
+    $exclude_array[] = session_name();
+    $exclude_array[] = 'error';
+    $exclude_array[] = 'x';
+    $exclude_array[] = 'y';
 
     $get_url = '';
+   
     if (is_array($_GET) && (!empty($_GET))) {
       foreach ($_GET as $key => $value) {
-        if ( is_string($value) && (strlen($value) > 0) && ($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)) && ($key != 'x') && ($key != 'y') ) {
-          $get_url .= $key . '=' . rawurlencode(stripslashes($value)) . '&';
+        if ( !in_array($key, $exclude_array) ) {
+          $get_url .= $key . '=' . rawurlencode($value) . '&';
         }
-      }
-    }
-
-    return $get_url;
+     }
   }
+    return $get_url;
+}
 
 ////
 // Returns an array with countries
