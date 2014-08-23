@@ -91,64 +91,101 @@
 
 //-->
 </script>
+<div class="row">
+  <div class="col-sm-9">
+    <div class="alert alert-info">
+      <h1>New Installation</h1>
 
-<div class="mainBlock">
-  <div class="stepsBox">
-    <ol>
-      <li style="font-weight: bold;">Database Server</li>
-      <li>Web Server</li>
-      <li>Online Store Settings</li>
-      <li>Finished!</li>
-    </ol>
+      <p>This web-based installation routine will correctly setup and configure osCommerce Online Merchant to run on this server.</p>
+      <p>Please follow the on-screen instructions that will take you through the database server, web server, and store configuration options. If help is needed at any stage, please consult the documentation or seek help at the community support forums.</p>
+    </div>
   </div>
-
-  <h1>New Installation</h1>
-
-  <p>This web-based installation routine will correctly setup and configure osCommerce Online Merchant to run on this server.</p>
-  <p>Please follow the on-screen instructions that will take you through the database server, web server, and store configuration options. If help is needed at any stage, please consult the documentation or seek help at the community support forums.</p>
+  <div class="col-sm-3">
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <ol>
+          <li class="text-success"><strong>Database Server</strong></li>
+          <li class="text-muted">Web Server</li>
+          <li class="text-muted">Online Store Settings</li>
+          <li class="text-muted">Finished!</li>
+        </ol>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" style="width: 25%">25%</div>
+    </div>
+  </div>
 </div>
+  
+<div class="clearfix"></div>
 
-<div class="contentBlock">
-  <div class="infoPane">
-    <h3>Step 1: Database Server</h3>
+<div class="row">
+  <div class="col-xs-12 col-sm-push-3 col-sm-9">
 
-    <div class="infoPaneContents">
-      <p>The database server stores the content of the online store such as product information, customer information, and the orders that have been made.</p>
-      <p>Please consult your server administrator if your database server parameters are not yet known.</p>
-    </div>
-
-  </div>
-
-  <div class="contentPane">
     <div id="mBox">
-      <div id="mBoxContents"></div>
+      <div class="alert alert-danger">
+        <div id="mBoxContents"></div>
+      </div>
     </div>
+    
+    <div class="page-header">
+      <p class="inputRequirement pull-right text-right"><span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information</p>
+      <h2>Database Server</h2>
+    </div>
+    
+    <form name="install" id="installForm" action="install.php?step=2" method="post" class="form-horizontal" role="form">
+    
+      <div class="form-group has-feedback">
+        <label for="dbServer" class="control-label col-xs-3">Database Server</label>
+        <div class="col-xs-9">
+          <?php echo osc_draw_input_field('DB_SERVER', NULL, 'required aria-required="true" id="dbServer" placeholder="localhost"'); ?>
+          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="help-block">The address of the database server in the form of a hostname or IP address.</span>
+        </div>
+      </div>
+    
+      <div class="form-group has-feedback">
+        <label for="userName" class="control-label col-xs-3">Username</label>
+        <div class="col-xs-9">
+          <?php echo osc_draw_input_field('DB_SERVER_USERNAME', NULL, 'required aria-required="true" id="userName" placeholder="Username"'); ?>
+          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="help-block">The username used to connect to the database server.</span>
+        </div>
+      </div>
+    
+      <div class="form-group has-feedback">
+        <label for="passWord" class="control-label col-xs-3">Password</label>
+        <div class="col-xs-9">
+          <?php echo osc_draw_password_field('DB_SERVER_PASSWORD', NULL, 'required aria-required="true" id="passWord"'); ?>
+          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="help-block">The password that is used together with the username to connect to the database server.</span>
+        </div>
+      </div>
+    
+      <div class="form-group has-feedback">
+        <label for="dbName" class="control-label col-xs-3">Database Name</label>
+        <div class="col-xs-9">
+          <?php echo osc_draw_input_field('DB_DATABASE', NULL, 'required aria-required="true" id="dbName" placeholder="Database"'); ?>
+          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="help-block">The name of the database to hold the data in.</span>
+        </div>
+      </div>
 
-    <h2>Database Server</h2>
-
-    <form name="install" id="installForm" action="install.php?step=2" method="post">
-
-    <table border="0" width="99%" cellspacing="0" cellpadding="5" class="inputForm">
-      <tr>
-        <td class="inputField"><?php echo 'Database Server<br />' . osc_draw_input_field('DB_SERVER', 'localhost', 'class="text"'); ?></td>
-        <td class="inputDescription">The address of the database server in the form of a hostname or IP address.</td>
-      </tr>
-      <tr>
-        <td class="inputField"><?php echo 'Username<br />' . osc_draw_input_field('DB_SERVER_USERNAME', null, 'class="text"'); ?></td>
-        <td class="inputDescription">The username used to connect to the database server.</td>
-      </tr>
-      <tr>
-        <td class="inputField"><?php echo 'Password<br />' . osc_draw_password_field('DB_SERVER_PASSWORD', 'class="text"'); ?></td>
-        <td class="inputDescription">The password that is used together with the username to connect to the database server.</td>
-      </tr>
-      <tr>
-        <td class="inputField"><?php echo 'Database Name<br />' . osc_draw_input_field('DB_DATABASE', null, 'class="text"'); ?></td>
-        <td class="inputDescription">The name of the database to hold the data in.</td>
-      </tr>
-    </table>
-
-    <p><?php echo osc_draw_button('Continue', 'triangle-1-e', null, 'primary'); ?></p>
+      <p><?php echo osc_draw_button('Continue To Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
     </form>
+    
   </div>
+  <div class="col-xs-12 col-sm-pull-9 col-sm-3">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        Step 1: Database Server
+      </div>
+      <div class="panel-body">
+        <p>The database server stores the content of the online store such as product information, customer information, and the orders that have been made.</p>
+        <p>Please consult your server administrator if your database server parameters are not yet known.</p>
+      </div>
+    </div>
+  </div>
+  
 </div>
