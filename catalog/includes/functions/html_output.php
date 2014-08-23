@@ -13,7 +13,7 @@
 ////
 // The HTML href link wrapper function
   function tep_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
-    global $request_type, $session_started, $SID;
+    global $session_started, $SID;
 
     $page = tep_output_string($page);
 
@@ -47,7 +47,7 @@
     if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
       if (tep_not_null($SID)) {
         $_sid = $SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+      } elseif ( ( ($GLOBALS['request_type'] == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($GLOBALS['request_type'] == 'SSL') && ($connection == 'NONSSL') ) ) {
         if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
           $_sid = session_name() . '=' . session_id();
         }
