@@ -55,18 +55,14 @@
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
-  function tep_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
-
-  function tep_output_string($string, $translate = false, $protected = false) {
+    function tep_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string);
     } else {
       if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
+        return strtr(trim($string), array('"' => '&quot;'));
       } else {
-        return tep_parse_input_field_data($string, $translate);
+        return strtr(trim($string), $translate);
       }
     }
   }
@@ -1161,7 +1157,7 @@
         return false;
       }
     } elseif(is_object($value)) {
-      if (is_null($value)) {
+      if (count(get_object_vars($value)) === 0) {
         return false;
       } else {
         return true;

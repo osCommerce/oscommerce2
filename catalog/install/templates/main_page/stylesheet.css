@@ -11,49 +11,7 @@
 
 body {
   margin: 0 20px 20px 20px;
-  background: #FFFFFF;
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 12px;
-  color: #000000;
   line-height: 1.5;
-}
-
-#pageHeader {
-}
-
-#pageContent {
-  margin-top: 10px;
-}
-
-#pageFooter {
-  clear: both;
-  text-align: center;
-  margin-top: 30px;
-}
-
-.mainBlock {
-  background: #dfecf8;
-  padding: 10px 20px 10px 20px;
-}
-
-.contentBlock {
-  padding: 15px 15px 15px 0px;
-}
-
-.infoPane {
-  float: left;
-  width: 250px;
-  background: #e7ffe7;
-  border: 1px #6da96d solid;
-  margin-bottom: 15px;
-}
-
-.infoPaneContents {
-  padding: 0px 10px 10px 10px;
-}
-
-.contentPane {
-  margin-left: 270px;
 }
 
 h1 {
@@ -64,7 +22,6 @@ h1 {
 h2 {
   font-size: 16px;
   margin-top: 0px;
-  border-bottom: 1px solid #e0e0e0;
 }
 
 h3 {
@@ -78,56 +35,15 @@ h3 {
   padding: 5px 10px 5px 10px;
 }
 
-.stepsBox {
-  float: right;
-  background: #f0f6fc;
-  border: 1px #ffffff solid;
-  padding: 10px 15px 10px 0px;
-  margin-right: -5px;
-}
-
-.stepsBox ol {
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-
 #mBox {
   margin-bottom: 10px;
   display: none;
 }
 
-#mBoxContents {
-  background: #ffedd1;
-  border: 1px #f0a42a solid;
-  padding: 10px;
+#headerShortcuts {
+  margin-top: 20px;
 }
 
-.noticeBox {
-  background: #FFD6D3;
-  border: 1px #FF958C solid;
-  padding: 10px;
-}
-
-#pageHeader A:link, #pageHeader A:visited { color: #000000; text-decoration: none; }
-#pageHeader A:hover { color: #000000; text-decoration: underline; }
-
-.inputForm {
-  background-color: #e7ebf5;
-  border: 1px #d0d7e8 solid;
-}
-
-.inputField {
-  font-weight: bold;
-  width: 40%;
-}
-
-.inputDescription {
-  background-color: #f5f7fc;
-  width: 60%;
-}
-
-input.text { color: #000000; width: 95%; }
-
-img {
-  border: 0;
+.inputRequirement {
+  color: red;
 }

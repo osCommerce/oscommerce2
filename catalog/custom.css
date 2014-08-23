@@ -217,4 +217,12 @@ s, del {
   border-radius: 15px;
 }
 
+/* Responsive Images  ------------------------------------------------------- */
+/* the inbuilt bootstrap responsive images class breaks the text-center class */
+
+#bodyContent .img-responsive, #columnLeft .img-responsive, #columnRight .img-responsive, footer .img-responsive {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 

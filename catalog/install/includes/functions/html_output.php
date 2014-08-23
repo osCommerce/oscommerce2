@@ -11,7 +11,7 @@
 */
 
   function osc_draw_input_field($name, $value = null, $parameters = null, $override = true, $type = 'text') {
-    $field = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '" id="' . osc_output_string($name) . '"';
+    $field = '<input type="' . osc_output_string($type) . '" class="form-control" name="' . osc_output_string($name) . '" id="' . osc_output_string($name) . '"';
     if ( ($key = $GLOBALS[$name]) || ($key = $GLOBALS['HTTP_GET_VARS'][$name]) || ($key = $GLOBALS['HTTP_POST_VARS'][$name]) || ($key = $GLOBALS['HTTP_SESSION_VARS'][$name]) && ($override) ) {
       $field .= ' value="' . osc_output_string($key) . '"';
     } elseif ($value != '') {
@@ -40,7 +40,7 @@
       $default = $_POST[$name];
     }
 
-    $field = '<select name="' . osc_output_string($name) . '"';
+    $field = '<select class="form-control" name="' . osc_output_string($name) . '"';
 
     if ( strpos($parameters, 'id=') === false ) {
       $field .= ' id="' . osc_output_string($name) . '"';
@@ -115,7 +115,7 @@
 
 ////
 // Output a jQuery UI Button
-  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
+  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null,  $class = null) {
     static $button_counter = 1;
 
     $types = array('submit', 'button', 'reset');
@@ -151,6 +151,10 @@
     if ( isset($params['params']) ) {
       $button .= ' ' . $params['params'];
     }
+    
+    $button .= ' class="btn ';
+    $button .= (isset($class)) ? $class : 'btn-default';
+    $button .= '"';
 
     $button .= '>' . $title;
 
