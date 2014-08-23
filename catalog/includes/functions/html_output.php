@@ -73,7 +73,7 @@
 
 ////
 // The HTML image wrapper function
-  function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
+  function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '') {
     if ( (empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false') ) {
       return false;
     }
@@ -106,6 +106,16 @@
     if (tep_not_null($width) && tep_not_null($height)) {
       $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
     }
+    
+    $image .= ' class="';
+
+    if (tep_not_null($responsive) && ($responsive === true)) {
+      $image .= 'img-responsive';
+    }
+
+    if (tep_not_null($bootstrap_css)) $image .= ' ' . $bootstrap_css;
+
+    $image .= '"';
 
     if (tep_not_null($parameters)) $image .= ' ' . $parameters;
 
@@ -305,13 +315,13 @@
       }
     }
 
-    foreach ($values as $value ) {
-      $field .= '<option value="' . tep_output_string($value['id']) . '"';
-      if ($default == $value['id']) {
+    for ($i=0, $n=sizeof($values); $i<$n; $i++) {
+      $field .= '<option value="' . tep_output_string($values[$i]['id']) . '"';
+      if ($default == $values[$i]['id']) {
         $field .= ' selected="selected"';
-    }
+      }
 
-      $field .= '>' . tep_output_string($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
+      $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
     }
     $field .= '</select>';
 
