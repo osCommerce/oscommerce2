@@ -238,8 +238,6 @@ $(function() {
 
 </div>
 
-</form>
-
 <?php
   }
 
