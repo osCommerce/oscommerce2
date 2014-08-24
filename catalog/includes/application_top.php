@@ -396,14 +396,13 @@
     $cPath = tep_get_product_path($_GET['products_id']);
   } else {
     $cPath = '';
+    $current_category_id = 0;
   }
 
   if ( !empty($cPath) ) {
     $cPath_array = tep_parse_category_path($cPath);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
-  } else {
-    $current_category_id = 0;
-  }
+  } 
 
 // include the breadcrumb class and start the breadcrumb trail
   require('includes/classes/breadcrumb.php');
