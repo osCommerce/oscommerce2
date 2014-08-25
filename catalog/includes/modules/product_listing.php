@@ -73,7 +73,7 @@
         break;
     }
 
-   if ( ($column_list[$key] != 'PRODUCT_LIST_BUY_NOW') && ($column_list[$key] != 'PRODUCT_LIST_IMAGE') ) {
+   if ( ($value != 'PRODUCT_LIST_BUY_NOW') && ($value != 'PRODUCT_LIST_IMAGE') ) {
       $lc_text = tep_create_sort_heading($_GET['sort'], $key+1, $lc_text);
     }
 
@@ -97,7 +97,7 @@
       $prod_list_contents .= '      <tr>';
 
       foreach ($column_list as $key => $value) {
-        switch ($column_list[$key]) {
+        switch ($value) {
           case 'PRODUCT_LIST_MODEL':
             $prod_list_contents .= '        <td>' . $listing['products_model'] . '</td>';
             break;
