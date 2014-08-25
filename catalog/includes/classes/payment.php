@@ -28,7 +28,7 @@
           $include_modules[] = array('class' => $module, 'file' => $module . '.php');
         } else {
           foreach($this->modules as $value) {
-            $class = substr($value, 0, strrpos($value, '.'));
+            $class = basename($value, '.php');
             $include_modules[] = array('class' => $class, 'file' => $value);
           }
         }
@@ -93,7 +93,7 @@
               '  }' . "\n\n";
 
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           if ($GLOBALS[$class]->enabled) {
             $js .= $GLOBALS[$class]->javascript_validation();
           }
@@ -121,7 +121,7 @@
 
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'checkout_initialization_method')) {
             $initialize_array[] = $GLOBALS[$class]->checkout_initialization_method();
           }
@@ -136,7 +136,7 @@
 
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           if ($GLOBALS[$class]->enabled) {
             $selection = $GLOBALS[$class]->selection();
             if (is_array($selection)) $selection_array[] = $selection;
