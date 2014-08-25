@@ -17,7 +17,7 @@
 
   if (isset($cPath) && tep_not_null($cPath)) {
   
-    if (tep_count_products_in_category($current_category_id, false) > 0) {
+    if (tep_count_products_in_category($current_category_id, false, false) > 0) {
       $category_depth = 'products'; // display products
     } 
 
