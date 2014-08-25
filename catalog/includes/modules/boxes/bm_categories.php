@@ -103,7 +103,7 @@
         }
       }
 
-      if (tep_not_null($cPath) && ($cPath > 0)) {
+      if (tep_not_null($cPath)) {
         $new_path = '';
         foreach($cPath_array as $key => $value) {
           unset($parent_id);
