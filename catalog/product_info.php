@@ -29,6 +29,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 
   if (empty($product_info)) {
+    header('HTTP/1.0 404 Not Found');  
 ?>
 
 <div class="contentContainer">
