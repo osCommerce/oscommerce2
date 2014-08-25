@@ -156,7 +156,7 @@
     if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
       foreach($column_list as $value) {
         if ($value == 'PRODUCT_LIST_NAME') {
-          $_GET['sort'] = $i+1 . 'a';
+          $_GET['sort'] = $value+1 . 'a';
           $listing_sql .= " order by pd.products_name";
           break;
         }
