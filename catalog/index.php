@@ -21,7 +21,7 @@
       $category_depth = 'products'; // display products
     } 
 
-    if (tep_has_category_subcategories($current_category_id) == true) {
+    if (tep_has_category_subcategories($current_category_id)) {
         $category_depth = 'nested'; // navigate through the categories
       } else {
         $category_depth = 'products'; // category has no products, but display the 'no products' message
