@@ -112,9 +112,8 @@
 
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      foreach($this->image_types as $key => $value) {
-        $extensions[] = $key;
-      }
+      
+      $extensions[] = array_keys( $this->image_types);
 
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);
 
