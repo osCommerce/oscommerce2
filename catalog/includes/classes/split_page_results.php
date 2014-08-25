@@ -79,10 +79,10 @@
       if ($this->current_page_number > 1) $display_links_string .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" class="pageResults" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' "><u>' . PREVNEXT_BUTTON_PREV . '</u></a>&nbsp;&nbsp;';
 
 // check if number_of_pages > $max_page_links
-      $cur_window_num = intval($this->current_page_number / $max_page_links);
+      $cur_window_num = (int)($this->current_page_number / $max_page_links);
       if ($this->current_page_number % $max_page_links) $cur_window_num++;
 
-      $max_window_num = intval($this->number_of_pages / $max_page_links);
+      $max_window_num = (int)($this->number_of_pages / $max_page_links);
       if ($this->number_of_pages % $max_page_links) $max_window_num++;
 
 // previous window of pages
