@@ -562,6 +562,36 @@
   }
 
 ////
+// Returns the address_format_id for the given country
+// TABLES: categories,categories_description;  
+ function tep_path_tree() {
+
+    $categories_query = tep_db_query("select c.categories_id,c.parent_id,cd.categories_name,c.categories_image from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd  where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    
+    $refs = array();
+    $tree = array();
+    
+    while ($categories = tep_db_fetch_array($categories_query)) {
+      $arr_ref = & $refs[$categories['categories_id']];
+                
+      $arr_ref['id'] = $categories['categories_id'];
+      $arr_ref['parent_id'] = $categories['parent_id'];
+      $arr_ref['name'] = $categories['categories_name'];
+      $arr_ref['image'] = $categories['categories_image'];
+                
+    if ($categories['parent_id'] == 0) {           
+        //Root node
+        $tree[$categories['categories_id']] = & $arr_ref;
+    } else {
+        //Children node
+        $refs[$categories['parent_id']]['children'][$categories['categories_id']] = & $arr_ref;
+      }
+    }        
+       unset($arr_ref);
+       return $tree;
+   }
+
+////
 // Return all subcategory IDs
 // TABLES: categories
   function tep_get_subcategories(&$subcategories_array, $parent_id = 0) {
