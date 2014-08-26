@@ -134,7 +134,7 @@
       $lines = file('includes/spiders.txt');
       foreach ( $lines as $spider ) {
         if ( !empty($spider) ) {
-          if ( strpos($user_agent, $spider) !== false ) {
+          if ( strpos($user_agent, $spider) ) {
             $spider_flag = true;
             break;
           }
