@@ -12,9 +12,6 @@
 
   $compat_register_globals = true;
 
-  if (function_exists('ini_get') && (PHP_VERSION < 4.3) && ((int)ini_get('register_globals') == 0)) {
-    $compat_register_globals = false;
-  }
 ?>
 
 <div class="alert alert-info">
@@ -165,7 +162,7 @@ $(function() {
           <tr>
             <td><strong>PHP Version</strong></td>
             <td align="right"><?php echo PHP_VERSION; ?></td>
-            <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 4) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 5.3) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
           </tr>
         </table>
 
