@@ -562,7 +562,7 @@
   }
 
 ////
-// Returns the address_format_id for the given country
+// Returns the categories tree as array
 // TABLES: categories,categories_description;  
  function tep_path_tree() {
 
