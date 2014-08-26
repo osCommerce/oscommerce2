@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2013 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -96,17 +96,15 @@
       </div>
       
       <div class="form-group has-feedback">
-        <label for="adminPassword" class="control-label col-xs-3">Administrator Username</label>
+        <label for="adminPassword" class="control-label col-xs-3">Administrator Password</label>
         <div class="col-xs-9">
           <?php echo osc_draw_input_field('CFG_ADMINISTRATOR_PASSWORD', NULL, 'required aria-required="true" id="adminPassword"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The password to use for the administrator account.</span>
         </div>
       </div>
-      
-      
-      
-      <?php
+
+<?php
   if (osc_is_writable($dir_fs_document_root) && osc_is_writable($dir_fs_document_root . 'admin')) {
 ?>
       <div class="form-group has-feedback">
@@ -120,7 +118,6 @@
 <?php
   }
 
-  if (PHP_VERSION >= '5.2') {
 ?>
       <div class="form-group has-feedback">
         <label for="Zulu" class="control-label col-xs-3">Time Zone</label>
@@ -130,9 +127,6 @@
           <span class="help-block">The time zone to base the date and time on.</span>
         </div>
       </div>
-<?php
-  }
-?>
 
       <p><?php echo osc_draw_button('Continue To Step 4', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
