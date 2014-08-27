@@ -32,7 +32,16 @@
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set the type of request (secure or not)
-  $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
+  if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
+    $request_type =  'SSL';
+// set the cookie domain
+    $cookie_domain = HTTPS_COOKIE_DOMAIN;
+    $cookie_path = HTTPS_COOKIE_PATH;
+  } else {
+    $request_type =  'NONSSL';
+    $cookie_domain = HTTP_COOKIE_DOMAIN;
+    $cookie_path = HTTP_COOKIE_PATH;
+  }
 
 // set php_self in the local scope
   $req = parse_url($HTTP_SERVER_VARS['SCRIPT_NAME']);
@@ -79,10 +88,6 @@
 
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
-
-// set the cookie domain
-  $cookie_domain = (($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN);
-  $cookie_path = (($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH);
 
 // set the session name and save path
   tep_session_name('osCAdminID');
