@@ -23,7 +23,7 @@
         $include_modules = array();
 
         if ( (tep_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
-          $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . basename($PHP_SELF, '.php')+1)));
+          $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . basename($PHP_SELF, '.php')+1));
         } else {
           foreach ($this->modules as $value) {
             $class = basename($value, '.php'));
