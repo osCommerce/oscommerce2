@@ -26,7 +26,7 @@
           $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . basename($PHP_SELF, '.php')+1));
         } else {
           foreach ($this->modules as $value) {
-            $class = basename($value, '.php'));
+            $class = basename($value, '.php');
             $include_modules[] = array('class' => $class, 'file' => $value);
           }
         }
