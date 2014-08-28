@@ -181,14 +181,12 @@ $(function() {
 
 //take all options of the products attributes                                           
     $products_options_query = tep_db_query("select pa.options_id, pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov where pa.products_id = '" . (int)$_GET['products_id'] . "' and pa.options_id in (" .  implode(',', array_flip($products_options_name_arr)) . ") and pa.options_values_id = pov.products_options_values_id and pov.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-         
-                                   
+    
     while ($products_options = tep_db_fetch_array($products_options_query)) {
       $products_options_array[$products_options['options_id']][] = array('id' => $products_options['products_options_values_id'], 
                                                                          'text' => $products_options['products_options_values_name'] . ' ' . $products_options['price_prefix'] . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product->getProducts_tax_class_id())));
     }
          
-
     if (is_string($_GET['products_id']) && isset($_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options])) {
       $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']];
     } else {
