@@ -22,7 +22,7 @@
           include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $value);
           include(DIR_WS_MODULES . 'order_total/' . $value);
 
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           $GLOBALS[$class] = new $class;
         }
       }
@@ -32,7 +32,7 @@
       $order_total_array = array();
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           if ($GLOBALS[$class]->enabled) {
             $GLOBALS[$class]->output = array();
             $GLOBALS[$class]->process();
@@ -57,7 +57,7 @@
       $output_string = '';
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = substr($value, 0, strrpos($value, '.'));
+          $class = basename($value, '.php');
           if ($GLOBALS[$class]->enabled) {
             $size = sizeof($GLOBALS[$class]->output);
             for ($i=0; $i<$size; $i++) {
