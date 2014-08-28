@@ -25,7 +25,7 @@
           if (!class_exists($module)) {
             if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
               include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
-              include(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              include(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . basename($PHP_SELF, '.php')+1);
             } else {
               return false;
             }
