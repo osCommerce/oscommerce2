@@ -113,7 +113,7 @@
 	  if ($dir = @dir(DIR_FS_CATALOG)) {
 	    while ($file = $dir->read()) {
 	      if (!is_dir(DIR_FS_CATALOG . $file)) {
-	        if (substr($file, strrpos($file, '.')) == $file_extension) {
+	        if (basename($file, '.php') == $file_extension) {
             $files_array[] = $file;
           }
         }
