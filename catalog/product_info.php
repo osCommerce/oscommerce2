@@ -173,7 +173,6 @@ $(function() {
     <div class="row">
       <div class="col-sm-6">
 <?php
-                                   
   while($products_options_name_array = tep_db_fetch_array($products_attributes_query)) {
     $products_options_name_arr[$products_options_name_array['products_options_name']] = (int)$products_options_name_array['products_options_id'];
   }                              
