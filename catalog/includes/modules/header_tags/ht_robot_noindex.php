@@ -108,12 +108,12 @@
   function ht_robot_noindex_edit_pages($values, $key) {
     global $PHP_SELF;
 
-    $file_extension = '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION);
+    $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
     $files_array = array();
 	  if ($dir = @dir(DIR_FS_CATALOG)) {
 	    while ($file = $dir->read()) {
 	      if (!is_dir(DIR_FS_CATALOG . $file)) {
-	        if ('.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION) == $file_extension) {
+	        if (pathinfo($PHP_SELF, PATHINFO_EXTENSION) == $file_extension) {
             $files_array[] = $file;
           }
         }
