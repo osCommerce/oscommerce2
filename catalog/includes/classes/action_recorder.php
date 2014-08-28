@@ -24,7 +24,7 @@
         if (tep_not_null($module) && in_array($module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION), explode(';', MODULE_ACTION_RECORDER_INSTALLED)) {
           if (!class_exists($module)) {
             if (file_exists(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION))) {
-              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION)));
+              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION));
               include(DIR_WS_MODULES . 'action_recorder/' . $module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION));
             } else {
               return false;
