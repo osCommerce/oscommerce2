@@ -190,20 +190,19 @@ $(function() {
   
           $products_options_array[$products_options['options_id']][] = array('id' => $products_options['products_options_values_id'], 
                                                                    'text' => $text);
+          if (is_string($_GET['products_id']) && !empty($_SESSION['cart']->contents[$_GET['products_id']]['attributes'])) {
+            $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'];
+          } else {
+          $selected_attribute = false;
+          }                                                         
         }
          
-        if (is_string($_GET['products_id']) && isset($_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options])) {
-          $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']];
-        } else {
-          $selected_attribute = false;
-        }
-    
   foreach ( $products_options_name_arr as $key => $value )  {
 ?>
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $key . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $value . ']', $products_options_array[$value], $selected_attribute); ?>
+          <?php echo tep_draw_pull_down_menu('id[' . $value . ']', $products_options_array[$value], $selected_attribute[$value]); ?>
         </div>
       </div>
     <?php
