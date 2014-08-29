@@ -131,7 +131,7 @@
 
         for ($i=0; $i<count($html_images); $i++) {
           if ($image = $this->get_file($images_dir . $html_images[$i])) {
-            $content_type = $this->image_types[substr($html_images[$i], strrpos($html_images[$i], '.') + 1)];
+            $content_type = $this->image_types[pathinfo($html_images[$i], PATHINFO_EXTENSION)];
             $this->add_html_image($image, basename($html_images[$i]), $content_type);
           }
         }
