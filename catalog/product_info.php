@@ -180,10 +180,15 @@ $(function() {
   $products_options_array = array();
 //take all options of the products attributes                                           
   $products_options_query = tep_db_query("select pa.options_id, pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov where pa.products_id = '" . (int)$_GET['products_id'] . "' and pa.options_id in (" .  implode(',', $products_options_name_arr) . ") and pa.options_values_id = pov.products_options_values_id and pov.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+  
+  $text =  $products_options['products_options_values_name'];
+  if ($products_options['options_values_price'] != '0') {
+     $text .= ' ' . $products_options['price_prefix'] . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+  } 
         
   while ($products_options = tep_db_fetch_array($products_options_query)) {
   $products_options_array[$products_options['options_id']][] = array('id' => $products_options['products_options_values_id'], 
-                                                                   'text' => $products_options['products_options_values_name'] . ' ' . $products_options['price_prefix'] . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product_info['products_tax_class_id'])));
+                                                                   'text' => $text);
  }
          
   if (is_string($_GET['products_id']) && isset($_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options])) {
@@ -193,12 +198,11 @@ $(function() {
   }
     
   foreach ( $products_options_name_arr as $key => $value )  {
-  $array_split = $products_options_array[$value]; 
 ?>
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $key . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $value . ']', $array_split, $selected_attribute); ?>
+          <?php echo tep_draw_pull_down_menu('id[' . $value . ']', $products_options_array[$value], $selected_attribute); ?>
         </div>
       </div>
     <?php
