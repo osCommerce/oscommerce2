@@ -91,7 +91,7 @@
   function ht_datepicker_jquery_edit_pages($values, $key) {
     global $PHP_SELF;
 
-    $file_extension = pathinfo($path, PATHINFO_EXTENSION);
+    $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
     $files_array = array();
 	  if ($dir = @dir(DIR_FS_CATALOG)) {
 	    while ($file = $dir->read()) {
@@ -104,7 +104,7 @@
       sort($files_array);
       $dir->close();
     }
-
+pa
     $values_array = explode(';', $values);
 
     $output = '';
