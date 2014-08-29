@@ -104,7 +104,7 @@
       sort($files_array);
       $dir->close();
     }
-pa
+
     $values_array = explode(';', $values);
 
     $output = '';
