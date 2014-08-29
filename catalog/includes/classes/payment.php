@@ -22,7 +22,7 @@
 
         $include_modules = array();
 
-        if ( (tep_not_null($module)) && (in_array($module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION)), $this->modules)) ) {
+        if ( (tep_not_null($module)) && (in_array($module . '.' . pathinfo($PHP_SELF, PATHINFO_EXTENSION)), $this->modules)) {
           $this->selected_module = $module;
 
           $include_modules[] = array('class' => $module, 'file' => $module . '.php');
