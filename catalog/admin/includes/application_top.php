@@ -16,11 +16,6 @@
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
 
-// check support for register_globals
-  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION < 4.3) ) {
-    exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
-  }
-
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
     include('includes/local/configure.php');
@@ -107,9 +102,9 @@
 // lets start our session
   tep_session_start();
 
-  if ( (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
+// TODO remove when no more global sessions exist
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
+
 
 // set the language
   if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {
