@@ -37,7 +37,7 @@
         $OSCOM_PayPal->addAlert('Could not initiate the start account procedure. Please try again in a short while.', 'error');
       }
     } else {
-      $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website. Please try again in a short while.', 'error');
+      $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website to initiate the start account procedure. Please try again in a short while.', 'error');
     }
   } else {
     $OSCOM_PayPal->addAlert('Please select to start with a Live or Sandbox account.', 'error');

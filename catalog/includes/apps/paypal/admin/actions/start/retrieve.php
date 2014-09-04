@@ -26,11 +26,27 @@
         $result[$key[0]] = $key[1];
       }
     }
-  }
 
-  echo '<pre>';
-  var_dump($result);
-  echo '</pre>';
-  echo '<p><a href="' . tep_href_link('paypal.php') . '">Back</a></p>';
-  exit;
+    if ( isset($result['rpcStatus']) && ($result['rpcStatus'] === '1') && isset($result['account_type']) && in_array($result['account_type'], array('live', 'sandbox')) && isset($result['api_username']) && isset($result['api_password']) && isset($result['api_signature']) ) {
+      if ( $result['account_type'] == 'live' ) {
+        $param_prefix = 'OSCOM_APP_PAYPAL_LIVE_';
+      } else {
+        $param_prefix = 'OSCOM_APP_PAYPAL_SANDBOX_';
+      }
+
+      $OSCOM_PayPal->saveParameter($param_prefix . 'SELLER_EMAIL', str_replace('_api1.', '@', $result['api_username']));
+      $OSCOM_PayPal->saveParameter($param_prefix . 'SELLER_EMAIL_PRIMARY', str_replace('_api1.', '@', $result['api_username']));
+      $OSCOM_PayPal->saveParameter($param_prefix . 'API_USERNAME', $result['api_username']);
+      $OSCOM_PayPal->saveParameter($param_prefix . 'API_PASSWORD', $result['api_password']);
+      $OSCOM_PayPal->saveParameter($param_prefix . 'API_SIGNATURE', $result['api_signature']);
+
+      $OSCOM_PayPal->addAlert('PayPal account credentials have been successfully configured.', 'success');
+
+      tep_redirect(tep_href_link('paypal.php', 'action=credentialsManual'));
+    } else {
+      $OSCOM_PayPal->addAlert('Could not retrieve the account credentials. Please try again in a short while.', 'error');
+    }
+  } else {
+    $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website to retrieve the PayPal account credentials. Please try again in a short while.', 'error');
+  }
 ?>
