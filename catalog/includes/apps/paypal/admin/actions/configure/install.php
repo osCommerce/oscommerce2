@@ -40,7 +40,7 @@
 
     $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
 
-    $messageStack->add_session('Module successfully installed.', 'success');
+    $OSCOM_PayPal->addAlert('Module has been successfully installed.', 'success');
 
     tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
   }

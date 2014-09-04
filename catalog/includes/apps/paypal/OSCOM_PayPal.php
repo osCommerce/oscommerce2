@@ -190,12 +190,20 @@
         $result = array();
 
         if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/') ) {
+          $files = array();
+
           while ( $file = $dir->read() ) {
             if ( !is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/' . $file) ) {
               if ( substr($file, strrpos($file, '.')) == '.php' ) {
-                $result[] = 'OSCOM_APP_PAYPAL_' . strtoupper(substr($file, 0, strrpos($file, '.')));
+                $files[] = $file;
               }
             }
+          }
+
+          natsort($files);
+
+          foreach ( $files as $file ) {
+            $result[] = 'OSCOM_APP_PAYPAL_' . strtoupper(substr($file, 0, strrpos($file, '.')));
           }
         }
       } else {
@@ -489,6 +497,55 @@
 
     function getApiVersion() {
       return $this->_api_version;
+    }
+
+    function hasAlert() {
+      return tep_session_is_registered('OSCOM_PayPal_Alerts');
+    }
+
+    function addAlert($message, $type) {
+      global $OSCOM_PayPal_Alerts;
+
+      if ( in_array($type, array('error', 'warning', 'success')) ) {
+        if ( !tep_session_is_registered('OSCOM_PayPal_Alerts') ) {
+          $OSCOM_PayPal_Alerts = array();
+          tep_session_register('OSCOM_PayPal_Alerts');
+        }
+
+        $OSCOM_PayPal_Alerts[$type][] = $message;
+      }
+    }
+
+    function getAlerts() {
+      global $OSCOM_PayPal_Alerts;
+
+      $output = '';
+
+      if ( tep_session_is_registered('OSCOM_PayPal_Alerts') && !empty($OSCOM_PayPal_Alerts) ) {
+        $result = array();
+
+        foreach ( $OSCOM_PayPal_Alerts as $type => $messages ) {
+          if ( in_array($type, array('error', 'warning', 'success')) ) {
+            $m = '<ul class="pp-alerts-' . $type . '">';
+
+            foreach ( $messages as $message ) {
+              $m .= '<li>' . tep_output_string_protected($message) . '</li>';
+            }
+
+            $m .= '</ul>';
+
+            $result[] = $m;
+          }
+        }
+
+        if ( !empty($result) ) {
+          $output .= '<div class="pp-alerts">' . implode("\n", $result) . '</div>';
+        }
+      }
+
+      tep_session_unregister('OSCOM_PayPal_Alerts');
+
+      return $output;
     }
   }
 ?>

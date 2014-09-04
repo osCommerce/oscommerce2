@@ -12,7 +12,7 @@
 
   tep_db_query('delete from oscom_app_paypal_log');
 
-  $messageStack->add_session('All log entries have been successfully deleted.', 'success');
+  $OSCOM_PayPal->addAlert('Log entries have been successfully deleted.', 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=log'));
 ?>

@@ -26,7 +26,7 @@
     }
   }
 
-  $messageStack->add_session('Configuration parameters have been successfully saved.', 'success');
+  $OSCOM_PayPal->addAlert('Configuration parameters have been successfully saved.', 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
 ?>

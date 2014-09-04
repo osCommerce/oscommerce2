@@ -38,13 +38,13 @@
 </div>
 
 <p>
-  <?php echo $OSCOM_PayPal->drawButton('Save', null, 'success'); ?>
-  or <a href="<?php echo tep_href_link('paypal.php'); ?>">cancel</a>
 
 <?php
-    if ( $current_module != 'G' ) {
-      echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton('Uninstall &hellip;', '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
-    }
+  echo $OSCOM_PayPal->drawButton('Save', null, 'success');
+
+  if ( $current_module != 'G' ) {
+    echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton('Uninstall &hellip;', '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
+  }
 ?>
 
 </p>
@@ -59,6 +59,7 @@
 <div id="paypal-dialog-uninstall" title="Uninstall Module">
   <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Are you sure you want to uninstall this module?</p>
 </div>
+
 <script>
 $(function() {
   $('#paypal-dialog-uninstall').dialog({
@@ -86,13 +87,7 @@ $(function() {
 <?php
     }
   } else {
-?>
-
-<p>
-  <?php echo $OSCOM_PayPal->drawButton('Install Module', tep_href_link('paypal.php', 'action=configure&subaction=install&module=' . $current_module), 'success'); ?>
-</p>
-
-<?php
+    include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $current_module . '/content/install.php');
   }
 ?>
 

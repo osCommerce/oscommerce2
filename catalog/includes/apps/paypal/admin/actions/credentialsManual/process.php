@@ -38,7 +38,7 @@
     $OSCOM_PayPal->saveParameter($key, $value);
   }
 
-  $messageStack->add_session('API Credentials have been successfully saved.', 'success');
+  $OSCOM_PayPal->addAlert('Account credentials have been successfully saved.', 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=credentialsManual&module=' . $current_module));
 ?>

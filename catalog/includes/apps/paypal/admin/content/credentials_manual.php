@@ -190,10 +190,7 @@
   }
 ?>
 
-<p>
-  <?php echo $OSCOM_PayPal->drawButton('Save', null, 'success'); ?>
-  or <a href="<?php echo tep_href_link('paypal.php'); ?>">cancel</a>
-</p>
+<p><?php echo $OSCOM_PayPal->drawButton('Save', null, 'success'); ?></p>
 
 </form>
 

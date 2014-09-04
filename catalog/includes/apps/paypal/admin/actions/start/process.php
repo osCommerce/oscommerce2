@@ -27,13 +27,19 @@
           $result[$key[0]] = $key[1];
         }
       }
-    }
 
-    if ( isset($result['rpcStatus']) && ($result['rpcStatus'] === '1') && isset($result['merchant_id']) && (preg_match('/^[A-Za-z0-9]{32}$/', $result['merchant_id']) === 1) && isset($result['redirect_url']) && isset($result['secret']) ) {
-      $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID', $result['merchant_id']);
-      $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_SECRET', $result['secret']);
+      if ( isset($result['rpcStatus']) && ($result['rpcStatus'] === '1') && isset($result['merchant_id']) && (preg_match('/^[A-Za-z0-9]{32}$/', $result['merchant_id']) === 1) && isset($result['redirect_url']) && isset($result['secret']) ) {
+        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID', $result['merchant_id']);
+        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_START_SECRET', $result['secret']);
 
-      tep_redirect($result['redirect_url']);
+        tep_redirect($result['redirect_url']);
+      } else {
+        $OSCOM_PayPal->addAlert('Could not initiate the start account procedure. Please try again in a short while.', 'error');
+      }
+    } else {
+      $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website. Please try again in a short while.', 'error');
     }
+  } else {
+    $OSCOM_PayPal->addAlert('Please select to start with a Live or Sandbox account.', 'error');
   }
 ?>
