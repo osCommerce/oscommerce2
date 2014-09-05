@@ -117,7 +117,7 @@
     function cleanup() {
       global $customer_id;
 
-      foreah( array_keys($this->contents) as $key ) {
+      foreach( array_keys($this->contents) as $key ) {
         if ($this->contents[$key]['qty'] < 1) {
           unset($this->contents[$key]);
 // remove from database
