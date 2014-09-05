@@ -16,11 +16,6 @@
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
 
-// check support for register_globals
-  if (function_exists('ini_get') && (ini_get('register_globals') == false) && (PHP_VERSION < 4.3) ) {
-    exit('Server Requirement Error: register_globals is disabled in your PHP configuration. This can be enabled in your php.ini configuration file or in the .htaccess file in your catalog directory. Please use PHP 4.3+ if register_globals cannot be enabled on the server.');
-  }
-
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
     include('includes/local/configure.php');
@@ -28,14 +23,20 @@
     include('includes/configure.php');
   }
 
-// Define the project version --- obsolete, now retrieved with tep_get_version()
-  define('PROJECT_VERSION', 'osCommerce Online Merchant v2.3');
-
 // some code to solve compatibility issues
   require(DIR_WS_FUNCTIONS . 'compatibility.php');
 
 // set the type of request (secure or not)
-  $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
+  if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
+    $request_type =  'SSL';
+// set the cookie domain
+    $cookie_domain = HTTPS_COOKIE_DOMAIN;
+    $cookie_path = HTTPS_COOKIE_PATH;
+  } else {
+    $request_type =  'NONSSL';
+    $cookie_domain = HTTP_COOKIE_DOMAIN;
+    $cookie_path = HTTP_COOKIE_PATH;
+  }
 
 // set php_self in the local scope
   $req = parse_url($HTTP_SERVER_VARS['SCRIPT_NAME']);
@@ -83,10 +84,6 @@
 // define how the session functions will be used
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
-// set the cookie domain
-  $cookie_domain = (($request_type == 'NONSSL') ? HTTP_COOKIE_DOMAIN : HTTPS_COOKIE_DOMAIN);
-  $cookie_path = (($request_type == 'NONSSL') ? HTTP_COOKIE_PATH : HTTPS_COOKIE_PATH);
-
 // set the session name and save path
   tep_session_name('osCAdminID');
   tep_session_save_path(SESSION_WRITE_DIRECTORY);
@@ -105,9 +102,9 @@
 // lets start our session
   tep_session_start();
 
-  if ( (PHP_VERSION >= 4.3) && function_exists('ini_get') && (ini_get('register_globals') == false) ) {
+// TODO remove when no more global sessions exist
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
+
 
 // set the language
   if (!tep_session_is_registered('language') || isset($HTTP_GET_VARS['language'])) {
