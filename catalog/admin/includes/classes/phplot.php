@@ -820,7 +820,7 @@ class PHPlot{
 		$mine = 0; //Maximum value for the -error bar (assume error bars always > 0) 
 		$maxe = 0; //Maximum value for the +error bar (assume error bars always > 0) 
 
-		foreach ( $this->data_values $dat_key => $dat ) { //for each X barchart setting
+		foreach ( $this->data_values as $dat_key => $dat ) { //for each X barchart setting
 			$tmp = 0;
 			$total_records += count($dat) - 1; // -1 for label
 
