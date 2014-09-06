@@ -112,7 +112,7 @@
 
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      foreach (array_keys($this->image_types) as $key ) {
+      foreach ( array_keys($this->image_types) as $key ) {
         $extensions[] = $key;
       }
 
@@ -321,7 +321,7 @@
       if ($params == '') $params = array();
 
       if (count($params) > 0) {
-        foreach ( $params as $key => $value) {
+        foreach ( $params as $key => $value ) {
           $this->build_params[$key] = $value;
         }
       }
