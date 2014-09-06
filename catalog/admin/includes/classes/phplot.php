@@ -2050,7 +2050,7 @@ class PHPlot{
 
 		foreach ( $this->data_values as $row ) {
 			$color_index = 0;
-			foreach( $row $k => $v ) {
+			foreach ( $row as $k => $v ) {
 				if ($k == 0) {
 						$xlab = $v;
 				} elseif ($k == 1) {
@@ -2165,7 +2165,7 @@ class PHPlot{
 			$i++;
 		}
 
-		foreah ( $this->data_valuesas $j => $row ) {
+		foreach ( $this->data_values as $j => $row ) {
 			$color_index = 0;
 			foreach ($row as $k => $v) {
 				if ($k == 0) {
@@ -2264,7 +2264,7 @@ class PHPlot{
 
 			$color_index = 0;
 			$i = 0; 
-			foreach ($row as $k => $v) {
+			foreach ( $row as $k => $v ) {
 				if ($k == 0) { 
 					$xlab = SubStr($v,0,$this->x_datalabel_maxlength);
 				} elseif (($k == 1) && ($this->data_type == "data-data"))  { 
