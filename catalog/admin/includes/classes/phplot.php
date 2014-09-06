@@ -1984,7 +1984,7 @@ class PHPlot{
 
 	function DrawDotsError() {
 		//Draw Dots - data comes in as array("title",x,y,error+,error-,y2,error2+,error2-,...);
-		foreach( $this->data_values a $row) {
+		foreach( $this->data_values as $row) {
 			$color_index = 0;
 			foreach ($row as $key => $val) { 
 				if ($key == 0) {
