@@ -101,8 +101,8 @@ class PHPlot{
 	var $line_width = 2;
 	var $line_style = array('solid','solid','solid','dashed','dashed','solid'); //Solid or dashed lines
 
-	var $data_color = ''; //array('blue','green','yellow',array(0,0,0));
-	var $data_border_color = '';
+	var $data_color = array(); //array('blue','green','yellow',array(0,0,0));
+	var $data_border_color = array();
 
 	var $label_scale_position = '.5';  //1 = top, 0 = bottom
 	var $group_frac_width = '.7'; //value from 0 to 1 = width of bar
@@ -132,7 +132,7 @@ class PHPlot{
 
 //Labels
 	var $draw_data_labels = '0';  
-	var $legend = '';  //an array
+	var $legend = array();
 	var $legend_x_pos = '';
 	var $legend_y_pos = '';
 	var $title_txt = "";
