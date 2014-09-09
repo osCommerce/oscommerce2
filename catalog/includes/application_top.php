@@ -49,7 +49,7 @@
   
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
-  $PHP_SELF = substr($req['path'], strlen(DIR_WS_CATALOG));
+  $PHP_SELF = str_replace(DIR_WS_CATALOG, '', $req['path']);
 
 // include the list of project filenames
   require('includes/filenames.php');
