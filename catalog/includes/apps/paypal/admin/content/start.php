@@ -38,5 +38,3 @@
     </td>
   </tr>
 </table>
-
-<p style="text-align: center;"><?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' | <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>'; ?></p>

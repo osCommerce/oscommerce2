@@ -65,7 +65,15 @@ EOD;
 }
 
 .pp-header {
-  padding: 15px 0 15px 15px;
+  padding: 15px;
+}
+
+#ppAppInfo, #ppAppInfo a {
+  color: #898989;
+}
+
+#ppAppInfo:hover, #ppAppInfo:hover a {
+  color: #000;
 }
 
 .pp-button {
@@ -238,6 +246,10 @@ if ( typeof jQuery.ui == 'undefined' ) {
 
 <div class="pp-container">
   <div class="pp-header">
+    <div id="ppAppInfo" style="float: right;">
+      <?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' (<a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23" target="_blank">Documentation</a> | <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>)'; ?>
+    </div>
+
     <a href="<?php echo tep_href_link('paypal.php'); ?>"><img src="<?php echo tep_catalog_href_link('images/apps/paypal/paypal.png', '', 'SSL'); ?>" /></a>
   </div>
 
