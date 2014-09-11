@@ -64,6 +64,10 @@ EOD;
   line-height: 1.5;
 }
 
+.pp-header {
+  padding: 15px 0 15px 15px;
+}
+
 .pp-button {
   font-size: 14px;
   color: white;
@@ -77,6 +81,7 @@ EOD;
   white-space: nowrap;
   vertical-align: baseline;
   text-align: center;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
 }
 
 small .pp-button {
@@ -94,39 +99,68 @@ small .pp-button {
 
 .pp-button:hover {
   text-decoration: none;
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.01) 100%, rgba(0, 0, 0, 0.1));
 }
 
 .pp-button.pp-button-success {
   background-color: #1cb841;
+  border-left: 1px solid #097c20;
+  border-bottom: 1px solid #097c20;
 }
 
 .pp-button.pp-button-error {
   background-color: #ca3c3c;
+  border-left: 1px solid #610404;
+  border-bottom: 1px solid #610404;
 }
 
 .pp-button.pp-button-warning {
   background-color: #ebaa16;
+  border-left: 1px solid #986008;
+  border-bottom: 1px solid #986008;
 }
 
 .pp-button.pp-button-info {
-  background-color: #42B8DD;
+  background-color: #42b8dd;
+  border-left: 1px solid #177a93;
+  border-bottom: 1px solid #177a93;
 }
 
 .pp-button.pp-button-primary {
-  background-color: #0078E7;
+  background-color: #0078e7;
+  border-left: 1px solid #023c63;
+  border-bottom: 1px solid #023c63;
 }
 
 .pp-panel {
-  padding: 5px 10px;
+  padding: 1px 10px;
+  margin-bottom: 15px;
 }
 
 .pp-panel.pp-panel-info {
-  background-color: #e7f6ff;
+  background-color: #e2f2f8;
+  border-left: 2px solid #97c5dd;
+  color: #20619a;
 }
 
 .pp-panel.pp-panel-warning {
   background-color: #fff4dd;
+  border-left: 2px solid #e2ab62;
+  color: #cd7c20;
+}
+
+.pp-panel-header-info {
+  background-color: #97c5dd;
+  color: #fff;
+  margin: 0;
+  padding: 3px 15px;
+}
+
+.pp-panel-header-warning {
+  background-color: #e2ab62;
+  color: #fff;
+  margin: 0;
+  padding: 3px 15px;
 }
 
 .pp-form input, .pp-form select {
@@ -146,28 +180,38 @@ small .pp-button {
 }
 
 .pp-table {
-  border: 0;
+  background-color: #e2f2f8;
+  border-left: 2px solid #97c5dd;
   border-spacing: 0;
-  width: 100%;
   line-height: 2;
+  margin-bottom: 15px;
+  color: #20619a;
 }
 
 .pp-table thead, .pp-table-header {
-  background-color: #5091cc;
-  color: #fff;
+  background-color: #97c5dd;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  color: #fff;
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .pp-table thead th, .pp-table-header th {
   text-align: left;
+  padding: 3px 15px;
+}
+
+.pp-table tbody tr td {
+  padding: 3px 15px;
 }
 
 .pp-table.pp-table-hover tbody tr:hover:not(.pp-table-header) {
-  background-color: #e1f2fa;
+  background-color: #fff;
 }
 
-.logSuccess { font-weight: bold; color: #3fad3b; background-color: #fff; border: 1px solid #3fad3b; padding: 3px; }
-.logError { font-weight: bold; color: #d32828; background-color: #fff; border: 1px solid #d32828; padding: 3px; }
+.logSuccess { font-weight: bold; color: #fff; background-color: #3fad3b; padding: 4px; }
+.logError { font-weight: bold; color: #fff; background-color: #d32828; padding: 4px; }
 
 .pp-alerts ul { list-style-type: none; padding: 15px; margin: 10px; }
 .pp-alerts .pp-alerts-error { background-color: #f2dede; border: 1px solid #ebccd1; border-radius: 4px; color: #a94442; }
@@ -188,7 +232,7 @@ if ( typeof jQuery.ui == 'undefined' ) {
 </script>
 
 <div class="pp-container">
-  <div style="padding: 10px 0 0 10px;">
+  <div class="pp-header">
     <a href="<?php echo tep_href_link('paypal.php'); ?>"><img src="<?php echo tep_catalog_href_link('images/apps/paypal/paypal.png', '', 'SSL'); ?>" /></a>
   </div>
 

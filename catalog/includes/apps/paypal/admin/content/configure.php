@@ -11,8 +11,6 @@
 */
 ?>
 
-<h3>PayPal Configuration</h3>
-
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
   <?php echo $OSCOM_PayPal->drawButton('Express Checkout', tep_href_link('paypal.php', 'action=configure&module=EC'), 'info', 'data-module="EC"'); ?>
   <?php echo $OSCOM_PayPal->drawButton('Direct Payment', tep_href_link('paypal.php', 'action=configure&module=DP'), 'info', 'data-module="DP"'); ?>

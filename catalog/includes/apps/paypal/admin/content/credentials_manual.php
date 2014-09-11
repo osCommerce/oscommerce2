@@ -11,8 +11,6 @@
 */
 ?>
 
-<h3>Manage Credentials</h3>
-
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
   <?php echo $OSCOM_PayPal->drawButton('PayPal', tep_href_link('paypal.php', 'action=credentialsManual&module=PP'), 'info', 'data-module="PP"'); ?>
   <?php echo $OSCOM_PayPal->drawButton('Payflow', tep_href_link('paypal.php', 'action=credentialsManual&module=PF'), 'info', 'data-module="PF"'); ?>
@@ -24,8 +22,7 @@
   if ( $current_module == 'PP' ) {
 ?>
 
-<h3>Live Credentials</h3>
-
+<h3 class="pp-panel-header-warning">Live Credentials</h3>
 <div class="pp-panel pp-panel-warning">
   <table>
     <tr>
@@ -71,8 +68,7 @@
   </table>
 </div>
 
-<h3>Sandbox Credentials</h3>
-
+<h3 class="pp-panel-header-warning">Sandbox Credentials</h3>
 <div class="pp-panel pp-panel-warning">
   <table>
     <tr>
@@ -122,8 +118,7 @@
   } elseif ( $current_module == 'PF' ) {
 ?>
 
-<h3>Live Credentials</h3>
-
+<h3 class="pp-panel-header-warning">Live Credentials</h3>
 <div class="pp-panel pp-panel-warning">
   <div>
     <p>
@@ -154,8 +149,7 @@
   </div>
 </div>
 
-<h3>Sandbox Credentials</h3>
-
+<h3 class="pp-panel-header-warning">Sandbox Credentials</h3>
 <div class="pp-panel pp-panel-warning">
   <div>
     <p>
