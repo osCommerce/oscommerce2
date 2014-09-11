@@ -69,9 +69,10 @@ EOD;
 }
 
 .pp-button {
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: bold;
   color: white;
-  padding: 8px 16px;
+  padding: 6px 10px;
   border: 0;
   border-radius: 4px;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
@@ -85,7 +86,7 @@ EOD;
 }
 
 small .pp-button {
-  font-size: 12px;
+  font-size: 11px;
   padding: 4px 8px;
 }
 
@@ -151,6 +152,7 @@ small .pp-button {
 
 .pp-panel-header-info {
   background-color: #97c5dd;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   color: #fff;
   margin: 0;
   padding: 3px 15px;
@@ -158,6 +160,7 @@ small .pp-button {
 
 .pp-panel-header-warning {
   background-color: #e2ab62;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   color: #fff;
   margin: 0;
   padding: 3px 15px;
@@ -168,8 +171,8 @@ small .pp-button {
 }
 
 .pp-form .pp-panel div p label {
-  font-size: 13px;
   display: block;
+  font-size: 12px;
   font-weight: bold;
   padding-top: 15px;
   padding-bottom: 10px;
@@ -194,7 +197,7 @@ small .pp-button {
   color: #fff;
   margin: 0;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .pp-table thead th, .pp-table-header th {
@@ -210,8 +213,8 @@ small .pp-button {
   background-color: #fff;
 }
 
-.logSuccess { font-weight: bold; color: #fff; background-color: #3fad3b; padding: 4px; }
-.logError { font-weight: bold; color: #fff; background-color: #d32828; padding: 4px; }
+.logSuccess { font-size: 11px; font-weight: bold; color: #fff; background-color: #3fad3b; padding: 4px; }
+.logError { font-size: 11px; font-weight: bold; color: #fff; background-color: #d32828; padding: 4px; }
 
 .pp-alerts ul { list-style-type: none; padding: 15px; margin: 10px; }
 .pp-alerts .pp-alerts-error { background-color: #f2dede; border: 1px solid #ebccd1; border-radius: 4px; color: #a94442; }
