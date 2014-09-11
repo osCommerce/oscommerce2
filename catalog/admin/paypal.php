@@ -153,6 +153,7 @@ small .pp-button {
 .pp-panel-header-info {
   background-color: #97c5dd;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  font-size: 12px;
   color: #fff;
   margin: 0;
   padding: 3px 15px;
@@ -161,6 +162,7 @@ small .pp-button {
 .pp-panel-header-warning {
   background-color: #e2ab62;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  font-size: 12px;
   color: #fff;
   margin: 0;
   padding: 3px 15px;
