@@ -11,6 +11,8 @@
 */
 
   class OSCOM_PayPal {
+    var $_code = 'paypal';
+    var $_title = 'PayPal App';
     var $_version = '4.0';
     var $_api_version = '112';
 
@@ -489,6 +491,14 @@
       }
 
       return number_format(tep_round($total * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+    }
+
+    function getCode() {
+      return $this->_code;
+    }
+
+    function getTitle() {
+      return $this->_title;
     }
 
     function getVersion() {

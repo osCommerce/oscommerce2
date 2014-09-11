@@ -16,7 +16,7 @@
     <td width="50%" valign="top">
       <h3 class="pp-panel-header-info">For Starters</h3>
       <div class="pp-panel pp-panel-info">
-        <p>Start selling and earning faster by allowing osCommerce to automatically and securely configure your online store with your PayPal account credentials.</p>
+        <p>Start selling and earning faster by allowing osCommerce to automatically and securely configure your online store with your PayPal API credentials.</p>
 
         <p>Don't have a PayPal Account? We can do this for new and existing PayPal sellers.</p>
 
@@ -39,4 +39,4 @@
   </tr>
 </table>
 
-<p style="text-align: center;">PayPal App v4.0 | <a href="#">Privacy</a></p>
+<p style="text-align: center;"><?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' | <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>'; ?></p>
