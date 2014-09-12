@@ -12,19 +12,67 @@
 ?>
 
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
-  <?php echo $OSCOM_PayPal->drawButton('Express Checkout', tep_href_link('paypal.php', 'action=configure&module=EC'), 'info', 'data-module="EC"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Direct Payment', tep_href_link('paypal.php', 'action=configure&module=DP'), 'info', 'data-module="DP"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Hosted Solution', tep_href_link('paypal.php', 'action=configure&module=HS'), 'info', 'data-module="HS"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Payments Standard', tep_href_link('paypal.php', 'action=configure&module=PS'), 'info', 'data-module="PS"'); ?>
+
+<?php
+  foreach ( array_keys($OSCOM_PayPal->_map) as $m ) {
+    if ( $OSCOM_PayPal->isInstalled($m) ) {
+      echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getModuleShortTitle($m), tep_href_link('paypal.php', 'action=configure&module=' . $m), 'info', 'data-module="' . $m . '"') . "\n";
+    }
+  }
+?>
+
   <?php echo $OSCOM_PayPal->drawButton('General', tep_href_link('paypal.php', 'action=configure&module=G'), 'info', 'data-module="G"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('+', '#', 'info', 'data-module="appPayPalToolbarMoreButton"'); ?>
 </div>
+
+<ul id="appPayPalToolbarMore" class="pp-button-menu">
+
+<?php
+  foreach ( array_keys($OSCOM_PayPal->_map) as $m ) {
+    if ( !$OSCOM_PayPal->isInstalled($m) ) {
+      echo '<li><a href="' . tep_href_link('paypal.php', 'action=configure&module=' . $m) . '">' . $OSCOM_PayPal->getModuleTitle($m) . '</a></li>';
+    }
+  }
+?>
+
+</ul>
+
+<script>
+$(function() {
+  $('#appPayPalToolbarMore').hide();
+
+  if ( $('#appPayPalToolbarMore li').size() > 0 ) {
+    $('#appPayPalToolbarMore').menu().hover(function() {
+      $(this).show();
+    }, function() {
+      $(this).hide();
+    });
+
+    $('#appPayPalToolbar a[data-module="appPayPalToolbarMoreButton"]').click(function() {
+      return false;
+    }).hover(function() {
+      $('#appPayPalToolbarMore').show().position({
+        my: 'left top',
+        at: 'left bottom',
+        of: this
+      });
+    }, function() {
+      $('#appPayPalToolbarMore').hide();
+    });
+  } else {
+    $('#appPayPalToolbar a[data-module="appPayPalToolbarMoreButton"]').hide();
+  }
+});
+</script>
 
 <?php
   if ( $OSCOM_PayPal->isInstalled($current_module) || ($current_module == 'G') ) {
+    $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleTitle($current_module) : 'General';
 ?>
 
 <form name="paypalConfigure" action="<?php echo tep_href_link('paypal.php', 'action=configure&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
 
+<h3 class="pp-panel-header-info"><?php echo $current_module_title; ?></h3>
 <div class="pp-panel pp-panel-info" style="padding-bottom: 15px;">
 
 <?php

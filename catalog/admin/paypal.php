@@ -230,6 +230,15 @@ small .pp-button {
 .pp-alerts .pp-alerts-error { background-color: #f2dede; border: 1px solid #ebccd1; border-radius: 4px; color: #a94442; }
 .pp-alerts .pp-alerts-success { background-color: #dff0d8; border: 1px solid #d6e9c6; border-radius: 4px; color: #3c763d; }
 .pp-alerts .pp-alerts-warning { background-color: #fcf8e3; border: 1px solid #faebcc; border-radius: 4px; color: #8a6d3b; }
+
+.pp-button-menu {
+  position: absolute;
+  width: 300px;
+  z-index: 100;
+}
+
+.pp-button-menu li > a {
+  display: block;
 }
 </style>
 

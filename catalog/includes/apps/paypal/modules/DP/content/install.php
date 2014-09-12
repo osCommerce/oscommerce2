@@ -11,7 +11,7 @@
 */
 ?>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="4">
+<table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td width="60%" valign="top">
       <h3 class="pp-panel-header-warning">PayPal Payments Pro (Direct Payment)</h3>
@@ -29,7 +29,7 @@
         <?php echo $OSCOM_PayPal->drawButton('Install Module', tep_href_link('paypal.php', 'action=configure&subaction=install&module=' . $current_module), 'success'); ?>
       </p>
     </td>
-    <td width="40%" valign="top">
+    <td width="40%" valign="top" style="padding-left: 5px;">
       <img src="<?php echo tep_catalog_href_link('images/apps/paypal/video_placeholder.png', '', 'SSL'); ?>" width="100%" />
     </td>
   </tr>

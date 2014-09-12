@@ -106,6 +106,38 @@
       return false;
     }
 
+    function getModuleTitle($module) {
+      if ( !isset($this->_map[$module]['title']) ) {
+        $class = 'OSCOM_PayPal_' . $module;
+
+        if ( !class_exists($class) ) {
+          include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
+        }
+
+        $m = new $class();
+
+        $this->_map[$module]['title'] = $m->getTitle();
+      }
+
+      return $this->_map[$module]['title'];
+    }
+
+    function getModuleShortTitle($module) {
+      if ( !isset($this->_map[$module]['title_short']) ) {
+        $class = 'OSCOM_PayPal_' . $module;
+
+        if ( !class_exists($class) ) {
+          include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
+        }
+
+        $m = new $class();
+
+        $this->_map[$module]['title_short'] = $m->getShortTitle();
+      }
+
+      return $this->_map[$module]['title_short'];
+    }
+
     function canMigrate($code) {
       if ( array_key_exists($code, $this->_map) && file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $this->_map[$code]['code'] . '.php') ) {
         if ( !class_exists($this->_map[$code]['code']) ) {

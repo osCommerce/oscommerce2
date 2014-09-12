@@ -12,8 +12,19 @@
 
   $content = 'configure.php';
 
-  $modules = array('EC', 'DP', 'HS', 'PS', 'G');
-  $current_module = (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules) ? $HTTP_GET_VARS['module'] : $modules[0]);
+  $modules = array_keys($OSCOM_PayPal->_map);
+  $modules[] = 'G';
+
+  $default_module = 'G';
+
+  foreach ( $modules as $m ) {
+    if ( $OSCOM_PayPal->isInstalled($m) ) {
+      $default_module = $m;
+      break;
+    }
+  }
+
+  $current_module = (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules)) ? $HTTP_GET_VARS['module'] : $default_module;
 
   if ( !defined('OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID') ) {
     $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
