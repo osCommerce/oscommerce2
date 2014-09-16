@@ -614,7 +614,7 @@
       $m = new $m_class();
 
       if ( method_exists($m, 'install') ) {
-        $m->install();
+        $m->install($this);
       }
     }
 
@@ -630,7 +630,7 @@
       $m = new $m_class();
 
       if ( method_exists($m, 'uninstall') ) {
-        $m->uninstall();
+        $m->uninstall($this);
       }
     }
   }

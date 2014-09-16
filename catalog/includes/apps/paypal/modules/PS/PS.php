@@ -24,6 +24,24 @@
       return $this->_short_title;
     }
 
+    function install($OSCOM_PayPal) {
+      $installed = explode(';', MODULE_PAYMENT_INSTALLED);
+      $installed[] = $this->_pm_code . '.php';
+
+      $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
+    }
+
+    function uninstall($OSCOM_PayPal) {
+      $installed = explode(';', MODULE_PAYMENT_INSTALLED);
+      $installed_pos = array_search($this->_pm_code . '.php', $installed);
+
+      if ( $installed_pos !== false ) {
+        unset($installed[$installed_pos]);
+
+        $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
+      }
+    }
+
     function canMigrate() {
       $class = $this->_pm_code;
 
