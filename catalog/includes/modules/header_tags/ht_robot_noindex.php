@@ -35,9 +35,8 @@
         $pages_array = array();
 
         foreach (explode(';', MODULE_HEADER_TAGS_ROBOT_NOINDEX_PAGES) as $page) {
-          $page = trim($page);
 
-          if (!empty($page)) {
+          if (!empty(trim($page))) {
             $pages_array[] = $page;
           }
         }
