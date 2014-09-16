@@ -65,25 +65,23 @@
     function migrate() {
       $migrated = false;
 
-      if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/') ) {
-        while ( $file = $dir->read() ) {
-          if ( !in_array($file, array('.', '..')) && is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file . '/' . $file . '.php') && !defined('OSCOM_APP_PAYPAL_' . $file . '_STATUS') ) {
-            $this->saveParameter('OSCOM_APP_PAYPAL_' . $file . '_STATUS', '');
+      foreach ( $this->getModules() as $module ) {
+        if ( !defined('OSCOM_APP_PAYPAL_' . $module . '_STATUS') ) {
+          $this->saveParameter('OSCOM_APP_PAYPAL_' . $module . '_STATUS', '');
 
-            $class = 'OSCOM_PayPal_' . $file;
+          $class = 'OSCOM_PayPal_' . $module;
 
-            if ( !class_exists($class) ) {
-              include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file . '/' . $file . '.php');
-            }
+          if ( !class_exists($class) ) {
+            include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
+          }
 
-            $m = new $class();
+          $m = new $class();
 
-            if ( method_exists($m, 'canMigrate') && $m->canMigrate() ) {
-              $m->migrate($this);
+          if ( method_exists($m, 'canMigrate') && $m->canMigrate() ) {
+            $m->migrate($this);
 
-              if ( $migrated === false ) {
-                $migrated = true;
-              }
+            if ( $migrated === false ) {
+              $migrated = true;
             }
           }
         }
