@@ -78,18 +78,25 @@
     function migrate() {
       $migrated = false;
 
-      foreach ( $this->_map as $key => $value ) {
-        if ( !defined('OSCOM_APP_PAYPAL_' . $key . '_STATUS') ) {
-          $this->saveParameter('OSCOM_APP_PAYPAL_' . $key . '_STATUS', '');
+      if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/') ) {
+        while ( $file = $dir->read() ) {
+          if ( !in_array($file, array('.', '..')) && is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file . '/' . $file . '.php') && !defined('OSCOM_APP_PAYPAL_' . $file . '_STATUS') ) {
+            $this->saveParameter('OSCOM_APP_PAYPAL_' . $file . '_STATUS', '');
 
-          if ( defined($value['migrate_status']) && $this->canMigrate($key) ) {
-            $class = 'OSCOM_PayPal_' . $key . '_Migrate';
-            include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $key . '/Migrate.php');
+            $class = 'OSCOM_PayPal_' . $file;
 
-            $migrate = new $class($this);
+            if ( !class_exists($class) ) {
+              include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file . '/' . $file . '.php');
+            }
 
-            if ( $migrated === false ) {
-              $migrated = true;
+            $m = new $class();
+
+            if ( method_exists($m, 'canMigrate') && $m->canMigrate() ) {
+              $m->migrate($this);
+
+              if ( $migrated === false ) {
+                $migrated = true;
+              }
             }
           }
         }
@@ -136,27 +143,6 @@
       }
 
       return $this->_map[$module]['title_short'];
-    }
-
-    function canMigrate($code) {
-      if ( array_key_exists($code, $this->_map) && file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $this->_map[$code]['code'] . '.php') ) {
-        if ( !class_exists($this->_map[$code]['code']) ) {
-          include(DIR_FS_CATALOG . 'includes/modules/payment/' . $this->_map[$code]['code'] . '.php');
-        }
-
-        $class = $this->_map[$code]['code'];
-        $module = new $class();
-
-        if ( isset($module->signature) ) {
-          $sig = explode('|', $module->signature);
-
-          if ( isset($sig[0]) && ($sig[0] == 'paypal') && isset($sig[1]) && ($sig[1] == $this->_map[$code]['code']) && isset($sig[2]) ) {
-            return version_compare($sig[2], $this->_map[$code]['minversion']) >= 0;
-          }
-        }
-      }
-
-      return false;
     }
 
     function hasCredentials($module, $type = null) {
