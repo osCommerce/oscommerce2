@@ -12,7 +12,7 @@
 
   $content = 'configure.php';
 
-  $modules = array_keys($OSCOM_PayPal->_map);
+  $modules = $OSCOM_PayPal->getModules();
   $modules[] = 'G';
 
   $default_module = 'G';

@@ -13,6 +13,8 @@
   class OSCOM_PayPal_EC {
     var $_title = 'PayPal Express Checkout';
     var $_short_title = 'Express Checkout';
+    var $_pm_code = 'paypal_express';
+    var $_sort_order = 100;
 
     function getTitle() {
       return $this->_title;
@@ -23,7 +25,7 @@
     }
 
     function canMigrate() {
-      $class = 'paypal_express';
+      $class = $this->_pm_code;
 
       if ( file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $class . '.php') ) {
         if ( !class_exists($class) ) {

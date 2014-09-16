@@ -13,6 +13,8 @@
   class OSCOM_PayPal_DP {
     var $_title = 'PayPal Payments Pro (Direct Payment)';
     var $_short_title = 'Direct Payment';
+    var $_pm_code = 'paypal_pro_dp';
+    var $_sort_order = 200;
 
     function getTitle() {
       return $this->_title;
@@ -23,7 +25,7 @@
     }
 
     function canMigrate() {
-      $class = 'paypal_pro_dp';
+      $class = $this->_pm_code;
 
       if ( file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $class . '.php') ) {
         if ( !class_exists($class) ) {

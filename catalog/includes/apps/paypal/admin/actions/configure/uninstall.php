@@ -13,7 +13,7 @@
   $OSCOM_PayPal->uninstall($current_module);
 
   $installed = explode(';', MODULE_PAYMENT_INSTALLED);
-  $installed_pos = array_search($OSCOM_PayPal->_map[$current_module]['code'] . '.php', $installed);
+  $installed_pos = array_search($OSCOM_PayPal->getModuleInfo($current_module, 'pm_code') . '.php', $installed);
 
   if ( $installed_pos !== false ) {
     unset($installed[$installed_pos]);

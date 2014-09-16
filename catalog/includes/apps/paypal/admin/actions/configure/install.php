@@ -13,7 +13,7 @@
   $OSCOM_PayPal->install($current_module);
 
   $installed = explode(';', MODULE_PAYMENT_INSTALLED);
-  $installed[] = $OSCOM_PayPal->_map[$current_module]['code'] . '.php';
+  $installed[] = $OSCOM_PayPal->getModuleInfo($current_module, 'pm_code') . '.php';
 
   $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
 

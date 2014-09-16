@@ -16,19 +16,6 @@
     var $_version = '4.0';
     var $_api_version = '112';
 
-    var $_map = array('EC' => array('code' => 'paypal_express',
-                                    'minversion' => '4.0',
-                                    'migrate_status' => 'MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS'),
-                      'DP' => array('code' => 'paypal_pro_dp',
-                                    'minversion' => '4.0',
-                                    'migrate_status' => 'MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS'),
-                      'HS' => array('code' => 'paypal_pro_hs',
-                                    'minversion' => '4.0',
-                                    'migrate_status' => 'MODULE_PAYMENT_PAYPAL_PRO_HS_STATUS'),
-                      'PS' => array('code' => 'paypal_standard',
-                                    'minversion' => '4.0',
-                                    'migrate_status' => 'MODULE_PAYMENT_PAYPAL_STANDARD_STATUS'));
-
     function log($module, $action, $result, $request, $response, $server, $is_ipn = false) {
       global $customer_id;
 
@@ -105,44 +92,62 @@
       return $migrated;
     }
 
+    function getModules() {
+      static $result;
+
+      if ( !isset($result) ) {
+        $result = array();
+
+        if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/') ) {
+          while ( $file = $dir->read() ) {
+            if ( !in_array($file, array('.', '..')) && is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $file . '/' . $file . '.php') ) {
+              $sort_order = $this->getModuleInfo($file, 'sort_order');
+
+              if ( is_numeric($sort_order) ) {
+                $counter = (int)$sort_order;
+              } else {
+                $counter = count($result);
+              }
+
+              while ( true ) {
+                if ( isset($result[$counter]) ) {
+                  $counter++;
+
+                  continue;
+                }
+
+                $result[$counter] = $file;
+
+                break;
+              }
+            }
+          }
+
+          ksort($result, SORT_NUMERIC);
+        }
+      }
+
+      return $result;
+    }
+
     function isInstalled($module) {
-      if ( array_key_exists($module, $this->_map) ) {
-        return defined('OSCOM_APP_PAYPAL_' . $module . '_STATUS') && tep_not_null(constant('OSCOM_APP_PAYPAL_' . $module . '_STATUS'));
+      if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . basename($module) . '/' . basename($module) . '.php') ) {
+        return defined('OSCOM_APP_PAYPAL_' . basename($module) . '_STATUS') && tep_not_null(constant('OSCOM_APP_PAYPAL_' . basename($module) . '_STATUS'));
       }
 
       return false;
     }
 
-    function getModuleTitle($module) {
-      if ( !isset($this->_map[$module]['title']) ) {
-        $class = 'OSCOM_PayPal_' . $module;
+    function getModuleInfo($module, $info) {
+      $class = 'OSCOM_PayPal_' . $module;
 
-        if ( !class_exists($class) ) {
-          include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
-        }
-
-        $m = new $class();
-
-        $this->_map[$module]['title'] = $m->getTitle();
+      if ( !class_exists($class) ) {
+        include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
       }
 
-      return $this->_map[$module]['title'];
-    }
+      $m = new $class();
 
-    function getModuleShortTitle($module) {
-      if ( !isset($this->_map[$module]['title_short']) ) {
-        $class = 'OSCOM_PayPal_' . $module;
-
-        if ( !class_exists($class) ) {
-          include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
-        }
-
-        $m = new $class();
-
-        $this->_map[$module]['title_short'] = $m->getShortTitle();
-      }
-
-      return $this->_map[$module]['title_short'];
+      return $m->{'_' . $info};
     }
 
     function hasCredentials($module, $type = null) {

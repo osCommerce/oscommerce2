@@ -14,9 +14,9 @@
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
 
 <?php
-  foreach ( array_keys($OSCOM_PayPal->_map) as $m ) {
+  foreach ( $OSCOM_PayPal->getModules() as $m ) {
     if ( $OSCOM_PayPal->isInstalled($m) ) {
-      echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getModuleShortTitle($m), tep_href_link('paypal.php', 'action=configure&module=' . $m), 'info', 'data-module="' . $m . '"') . "\n";
+      echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getModuleInfo($m, 'short_title'), tep_href_link('paypal.php', 'action=configure&module=' . $m), 'info', 'data-module="' . $m . '"') . "\n";
     }
   }
 ?>
@@ -28,9 +28,9 @@
 <ul id="appPayPalToolbarMore" class="pp-button-menu">
 
 <?php
-  foreach ( array_keys($OSCOM_PayPal->_map) as $m ) {
+  foreach ( $OSCOM_PayPal->getModules() as $m ) {
     if ( !$OSCOM_PayPal->isInstalled($m) ) {
-      echo '<li><a href="' . tep_href_link('paypal.php', 'action=configure&module=' . $m) . '">' . $OSCOM_PayPal->getModuleTitle($m) . '</a></li>';
+      echo '<li><a href="' . tep_href_link('paypal.php', 'action=configure&module=' . $m) . '">' . $OSCOM_PayPal->getModuleInfo($m, 'title') . '</a></li>';
     }
   }
 ?>
@@ -67,7 +67,7 @@ $(function() {
 
 <?php
   if ( $OSCOM_PayPal->isInstalled($current_module) || ($current_module == 'G') ) {
-    $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleTitle($current_module) : 'General';
+    $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleInfo($current_module, 'title') : 'General';
 ?>
 
 <form name="paypalConfigure" action="<?php echo tep_href_link('paypal.php', 'action=configure&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">

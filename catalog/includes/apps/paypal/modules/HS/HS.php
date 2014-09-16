@@ -13,6 +13,8 @@
   class OSCOM_PayPal_HS {
     var $_title = 'PayPal Payments Pro (Hosted Solution)';
     var $_short_title = 'Hosted Solution';
+    var $_pm_code = 'paypal_pro_hs';
+    var $_sort_order = 300;
 
     function getTitle() {
       return $this->_title;
@@ -23,7 +25,7 @@
     }
 
     function canMigrate() {
-      $class = 'paypal_pro_hs';
+      $class = $this->_pm_code;
 
       if ( file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $class . '.php') ) {
         if ( !class_exists($class) ) {

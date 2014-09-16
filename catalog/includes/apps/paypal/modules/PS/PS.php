@@ -13,6 +13,8 @@
   class OSCOM_PayPal_PS {
     var $_title = 'PayPal Payments Standard';
     var $_short_title = 'Payments Standard';
+    var $_pm_code = 'paypal_standard';
+    var $_sort_order = 400;
 
     function getTitle() {
       return $this->_title;
@@ -23,7 +25,7 @@
     }
 
     function canMigrate() {
-      $class = 'paypal_standard';
+      $class = $this->_pm_code;
 
       if ( file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $class . '.php') ) {
         if ( !class_exists($class) ) {
