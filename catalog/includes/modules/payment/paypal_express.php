@@ -301,30 +301,12 @@ EOD;
       tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=install&module=EC'));
     }
 
-    function remove($fromApp = false) {
-      if ( !$fromApp ) {
-        tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=EC'));
-      }
-
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", array_merge($this->keys(), $this->keys(true))) . "')");
+    function remove() {
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=EC'));
     }
 
-    function keys($fromApp = false) {
-      $params = array('OSCOM_APP_PAYPAL_EC_STATUS',
-                      'OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW',
-                      'OSCOM_APP_PAYPAL_EC_ACCOUNT_OPTIONAL',
-                      'OSCOM_APP_PAYPAL_EC_INSTANT_UPDATE',
-                      'OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE',
-                      'OSCOM_APP_PAYPAL_EC_PAGE_STYLE',
-                      'OSCOM_APP_PAYPAL_EC_TRANSACTION_METHOD',
-                      'OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID',
-                      'OSCOM_APP_PAYPAL_EC_ZONE');
-
-      if ( $fromApp == false ) {
-        $params = array('OSCOM_APP_PAYPAL_EC_SORT_ORDER');
-      }
-
-      return $params;
+    function keys() {
+      return array('OSCOM_APP_PAYPAL_EC_SORT_ORDER');
     }
 
     function getProductType($id, $attributes) {

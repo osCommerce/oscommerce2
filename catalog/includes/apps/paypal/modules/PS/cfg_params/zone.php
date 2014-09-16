@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_PS_Cfg_zone {
     var $default = '0';
+    var $sort_order = 600;
 
     function getSetField() {
       $zone_class_array = array(array('id' => '0', 'text' => TEXT_NONE));

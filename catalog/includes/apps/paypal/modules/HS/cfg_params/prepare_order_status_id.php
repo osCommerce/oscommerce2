@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_HS_Cfg_prepare_order_status_id {
     var $default = '0';
+    var $sort_order = 300;
 
     function OSCOM_PayPal_HS_Cfg_prepare_order_status_id() {
       if ( !defined('OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID') ) {

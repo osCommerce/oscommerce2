@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_checkout_image {
     var $default = '0';
+    var $sort_order = 500;
 
     function getSetField() {
       $input = '<input type="radio" id="checkoutImageSelectionStatic" name="checkout_image" value="0"' . (OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE == '0' ? ' checked="checked"' : '') . '><label for="checkoutImageSelectionStatic">Static</label>' .

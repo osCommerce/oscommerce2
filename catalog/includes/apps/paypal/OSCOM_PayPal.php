@@ -220,35 +220,24 @@
     }
 
     function getParameters($module) {
+      $result = array();
+
       if ( $module == 'G' ) {
-        $result = array();
-
         if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/') ) {
-          $files = array();
-
           while ( $file = $dir->read() ) {
-            if ( !is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/' . $file) ) {
-              if ( substr($file, strrpos($file, '.')) == '.php' ) {
-                $files[] = $file;
-              }
+            if ( !is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/' . $file) && (substr($file, strrpos($file, '.')) == '.php') ) {
+              $result[] = 'OSCOM_APP_PAYPAL_' . strtoupper(substr($file, 0, strrpos($file, '.')));
             }
-          }
-
-          natsort($files);
-
-          foreach ( $files as $file ) {
-            $result[] = 'OSCOM_APP_PAYPAL_' . strtoupper(substr($file, 0, strrpos($file, '.')));
           }
         }
       } else {
-        $class = $this->_map[$module]['code'];
-
-        if ( !class_exists($class) ) {
-          include(DIR_FS_CATALOG . 'includes/modules/payment/' . $class . '.php');
+        if ( $dir = @dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/cfg_params/') ) {
+          while ( $file = $dir->read() ) {
+            if ( !is_dir(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/cfg_params/' . $file) && (substr($file, strrpos($file, '.')) == '.php') ) {
+              $result[] = 'OSCOM_APP_PAYPAL_' . $module . '_' . strtoupper(substr($file, 0, strrpos($file, '.')));
+            }
+          }
         }
-
-        $m = new $class();
-        $result = $m->keys(true);
       }
 
       return $result;
@@ -288,8 +277,28 @@
           $this->saveParameter($key, $cfg->default);
         }
 
-        $result[] = $cfg->getSetField();
+        if ( !isset($cfg->app_configured) || ($cfg->app_configured !== false) ) {
+          if ( isset($cfg->sort_order) && is_numeric($cfg->sort_order) ) {
+            $counter = (int)$cfg->sort_order;
+          } else {
+            $counter = count($result);
+          }
+
+          while ( true ) {
+            if ( isset($result[$counter]) ) {
+              $counter++;
+
+              continue;
+            }
+
+            $result[$counter] = $cfg->getSetField();
+
+            break;
+          }
+        }
       }
+
+      ksort($result, SORT_NUMERIC);
 
       return $result;
     }
@@ -588,6 +597,52 @@
       tep_session_unregister('OSCOM_PayPal_Alerts');
 
       return $output;
+    }
+
+    function install($module) {
+      $cut_length = strlen('OSCOM_APP_PAYPAL_' . $module . '_');
+
+      foreach ( $this->getParameters($module) as $key ) {
+        $p = strtolower(substr($key, $cut_length));
+
+        $cfg_class = 'OSCOM_PayPal_' . $module . '_Cfg_' . $p;
+
+        if ( !class_exists($cfg_class) ) {
+          include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/cfg_params/' . $p . '.php');
+        }
+
+        $cfg = new $cfg_class();
+
+        $this->saveParameter($key, $cfg->default, isset($cfg->title) ? $cfg->title : null, isset($cfg->description) ? $cfg->description : null);
+      }
+
+      $m_class = 'OSCOM_PayPal_' . $module;
+
+      if ( !class_exists($m_class) ) {
+        include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
+      }
+
+      $m = new $m_class();
+
+      if ( method_exists($m, 'install') ) {
+        $m->install();
+      }
+    }
+
+    function uninstall($module) {
+      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key like 'OSCOM_APP_PAYPAL_" . tep_db_input($module) . "_%'");
+
+      $m_class = 'OSCOM_PayPal_' . $module;
+
+      if ( !class_exists($m_class) ) {
+        include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
+      }
+
+      $m = new $m_class();
+
+      if ( method_exists($m, 'uninstall') ) {
+        $m->uninstall();
+      }
     }
   }
 ?>

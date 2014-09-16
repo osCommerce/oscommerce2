@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_PS_Cfg_ewp_openssl {
     var $default = '/usr/bin/openssl';
+    var $sort_order = 1300;
 
     function getSetField() {
       $input = tep_draw_input_field('ewp_openssl', OSCOM_APP_PAYPAL_PS_EWP_OPENSSL, 'id="inputPsEwpOpenSsl"');

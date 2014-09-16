@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_transaction_method {
     var $default = '1';
+    var $sort_order = 700;
 
     function getSetField() {
       $input = '<input type="radio" id="transactionMethodSelectionAuthorize" name="transaction_method" value="0"' . (OSCOM_APP_PAYPAL_EC_TRANSACTION_METHOD == '0' ? ' checked="checked"' : '') . '><label for="transactionMethodSelectionAuthorize">Authorize</label>' .

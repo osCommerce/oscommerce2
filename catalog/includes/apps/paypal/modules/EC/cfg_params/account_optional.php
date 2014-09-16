@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_account_optional {
     var $default = '0';
+    var $sort_order = 300;
 
     function getSetField() {
       $input = '<input type="radio" id="accountOptionalSelectionTrue" name="account_optional" value="1"' . (OSCOM_APP_PAYPAL_EC_ACCOUNT_OPTIONAL == '1' ? ' checked="checked"' : '') . '><label for="accountOptionalSelectionTrue">True</label>' .

@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_PS_Cfg_page_style {
     var $default = '';
+    var $sort_order = 200;
 
     function getSetField() {
       $input = tep_draw_input_field('page_style', OSCOM_APP_PAYPAL_PS_PAGE_STYLE, 'id="inputPsPageStyle"');

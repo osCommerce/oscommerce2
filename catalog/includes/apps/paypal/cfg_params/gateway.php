@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_Cfg_gateway {
     var $default = '1';
+    var $sort_order = 100;
 
     function getSetField() {
       $input = '<input type="radio" id="gatewaySelectionPayPal" name="gateway" value="1"' . (OSCOM_APP_PAYPAL_GATEWAY == '1' ? ' checked="checked"' : '') . '><label for="gatewaySelectionPayPal">PayPal</label>' .

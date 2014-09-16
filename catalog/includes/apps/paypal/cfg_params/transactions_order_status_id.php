@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_Cfg_transactions_order_status_id {
     var $default = '0';
+    var $sort_order = 200;
 
     function getSetField() {
       global $languages_id;

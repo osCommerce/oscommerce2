@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_PS_Cfg_ewp_private_key {
     var $default = '';
+    var $sort_order = 800;
 
     function getSetField() {
       $input = tep_draw_input_field('ewp_private_key', OSCOM_APP_PAYPAL_PS_EWP_PRIVATE_KEY, 'id="inputPsEwpPrivateKey"');

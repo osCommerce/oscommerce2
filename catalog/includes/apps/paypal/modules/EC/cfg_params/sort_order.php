@@ -14,6 +14,7 @@
     var $default = '0';
     var $title = 'Sort Order';
     var $description = 'The sort order location of the module shown in the available payment methods listing (lowest is displayed first).';
+    var $app_configured = false;
 
     function getSetField() {
       $input = tep_draw_input_field('sort_order', OSCOM_APP_PAYPAL_EC_SORT_ORDER, 'id="inputEcSortOrder"');

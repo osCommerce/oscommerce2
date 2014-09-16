@@ -622,26 +622,12 @@ EOD;
       tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=install&module=HS'));
     }
 
-    function remove($fromApp = false) {
-      if ( !$fromApp ) {
-        tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=HS'));
-      }
-
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", array_merge($this->keys(), $this->keys(true))) . "')");
+    function remove() {
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=HS'));
     }
 
-    function keys($fromApp = false) {
-      $params = array('OSCOM_APP_PAYPAL_HS_STATUS',
-                      'OSCOM_APP_PAYPAL_HS_TRANSACTION_METHOD',
-                      'OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID',
-                      'OSCOM_APP_PAYPAL_HS_ORDER_STATUS_ID',
-                      'OSCOM_APP_PAYPAL_HS_ZONE');
-
-      if ( $fromApp == false ) {
-        $params = array('OSCOM_APP_PAYPAL_HS_SORT_ORDER');
-      }
-
-      return $params;
+    function keys() {
+      return array('OSCOM_APP_PAYPAL_HS_SORT_ORDER');
     }
 
     function getTestLinkInfo() {

@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_Cfg_proxy {
     var $default = '';
+    var $sort_order = 400;
 
     function getSetField() {
       $input = tep_draw_input_field('proxy', OSCOM_APP_PAYPAL_PROXY, 'id="inputProxy"');

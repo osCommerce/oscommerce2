@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_DP_Cfg_cards {
     var $default = 'visa;mastercard;discover;amex;maestro';
+    var $sort_order = 200;
     var $cards = array('visa' => 'Visa', 'mastercard' => 'MasterCard', 'discover' => 'Discover Card', 'amex' => 'American Express', 'maestro' => 'Maestro');
 
     function getSetField() {

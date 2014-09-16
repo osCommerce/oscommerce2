@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_checkout_flow {
     var $default = '0';
+    var $sort_order = 200;
 
     function getSetField() {
       $input = '<input type="radio" id="checkoutFlowSelectionDefault" name="checkout_flow" value="0"' . (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '0' ? ' checked="checked"' : '') . '><label for="checkoutFlowSelectionDefault">Default</label>' .

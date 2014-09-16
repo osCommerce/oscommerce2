@@ -10,27 +10,18 @@
   Released under the GNU General Public License
 */
 
-  if ( file_exists(DIR_FS_CATALOG . 'includes/modules/payment/' . $OSCOM_PayPal->_map[$current_module]['code'] . '.php') ) {
-    if ( !class_exists($OSCOM_PayPal->_map[$current_module]['code']) ) {
-      include(DIR_FS_CATALOG . 'includes/modules/payment/' . $OSCOM_PayPal->_map[$current_module]['code'] . '.php');
-    }
+  $OSCOM_PayPal->uninstall($current_module);
 
-    $class = $OSCOM_PayPal->_map[$current_module]['code'];
-    $module = new $class();
+  $installed = explode(';', MODULE_PAYMENT_INSTALLED);
+  $installed_pos = array_search($OSCOM_PayPal->_map[$current_module]['code'] . '.php', $installed);
 
-    $module->remove(true);
+  if ( $installed_pos !== false ) {
+    unset($installed[$installed_pos]);
 
-    $installed = explode(';', MODULE_PAYMENT_INSTALLED);
-    $installed_pos = array_search($OSCOM_PayPal->_map[$current_module]['code'] . '.php', $installed);
-
-    if ( $installed_pos !== false ) {
-      unset($installed[$installed_pos]);
-
-      $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
-
-      $OSCOM_PayPal->addAlert('Module has been successfully uninstalled.', 'success');
-    }
-
-    tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
+    $OSCOM_PayPal->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
   }
+
+  $OSCOM_PayPal->addAlert('Module has been successfully uninstalled.', 'success');
+
+  tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
 ?>

@@ -734,34 +734,12 @@
       tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=install&module=PS'));
     }
 
-    function remove($fromApp = false) {
-      if ( !$fromApp ) {
-        tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=PS'));
-      }
-
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", array_merge($this->keys(), $this->keys(true))) . "')");
+    function remove() {
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=PS'));
     }
 
-    function keys($fromApp = false) {
-      $params = array('OSCOM_APP_PAYPAL_PS_STATUS',
-                      'OSCOM_APP_PAYPAL_PS_PAGE_STYLE',
-                      'OSCOM_APP_PAYPAL_PS_TRANSACTION_METHOD',
-                      'OSCOM_APP_PAYPAL_PS_PREPARE_ORDER_STATUS_ID',
-                      'OSCOM_APP_PAYPAL_PS_ORDER_STATUS_ID',
-                      'OSCOM_APP_PAYPAL_PS_ZONE',
-                      'OSCOM_APP_PAYPAL_PS_EWP_STATUS',
-                      'OSCOM_APP_PAYPAL_PS_EWP_PRIVATE_KEY',
-                      'OSCOM_APP_PAYPAL_PS_EWP_PUBLIC_CERT',
-                      'OSCOM_APP_PAYPAL_PS_EWP_PUBLIC_CERT_ID',
-                      'OSCOM_APP_PAYPAL_PS_EWP_PAYPAL_CERT',
-                      'OSCOM_APP_PAYPAL_PS_EWP_WORKING_DIRECTORY',
-                      'OSCOM_APP_PAYPAL_PS_EWP_OPENSSL');
-
-      if ( $fromApp == false ) {
-        $params = array('OSCOM_APP_PAYPAL_PS_SORT_ORDER');
-      }
-
-      return $params;
+    function keys() {
+      return array('OSCOM_APP_PAYPAL_PS_SORT_ORDER');
     }
 
     function getTestLinkInfo() {

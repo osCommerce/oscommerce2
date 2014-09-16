@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_instant_update {
     var $default = '1';
+    var $sort_order = 400;
 
     function getSetField() {
       $input = '<input type="radio" id="instantUpdateSelectionEnabled" name="instant_update" value="1"' . (OSCOM_APP_PAYPAL_EC_INSTANT_UPDATE == '1' ? ' checked="checked"' : '') . '><label for="instantUpdateSelectionEnabled">Enabled</label>' .

@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_PS_Cfg_ewp_status {
     var $default = '-1';
+    var $sort_order = 700;
 
     function getSetField() {
       $input = '<input type="radio" id="ewpStatusSelectionTrue" name="ewp_status" value="1"' . (OSCOM_APP_PAYPAL_PS_EWP_STATUS == '1' ? ' checked="checked"' : '') . '><label for="ewpStatusSelectionTrue">True</label>' .

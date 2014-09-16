@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_DP_Cfg_status {
     var $default = '1';
+    var $sort_order = 100;
 
     function getSetField() {
       $input = '<input type="radio" id="statusSelectionLive" name="status" value="1"' . (OSCOM_APP_PAYPAL_DP_STATUS == '1' ? ' checked="checked"' : '') . '><label for="statusSelectionLive">Live</label>' .

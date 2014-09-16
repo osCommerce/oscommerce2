@@ -12,6 +12,7 @@
 
   class OSCOM_PayPal_EC_Cfg_zone {
     var $default = '0';
+    var $sort_order = 900;
 
     function getSetField() {
 
