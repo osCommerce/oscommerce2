@@ -179,7 +179,7 @@
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address() ) {
       tep_session_destroy();
-      tep_redirect(tep_;ef_link(FILENAME_LOGIN));
+      tep_redirect(tep_href_link(FILENAME_LOGIN));
     }
   }
 
