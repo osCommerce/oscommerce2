@@ -189,7 +189,7 @@
     include 'includes/classes/language.php';
     $lng = new language();
 
-    ( isset($_GET['language']) && !empty($_GET['language']) ) ? $lng->set_language($_GET['language'] : $lng->get_browser_language();
+    (isset($_GET['language']) && !empty($_GET['language']) ? $lng->set_language($_GET['language'] : $lng->get_browser_language();
 
     $_SESSION['language'] = $lng->language['directory'];
     $_SESSION['languages_id'] = $lng->language['id'];
