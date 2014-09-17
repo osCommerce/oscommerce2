@@ -119,7 +119,7 @@
 
     if ( !empty($user_agent) ) {
       foreach ( file('includes/spiders.txt') as $spider ) {
-        if ( !empty($spider) &&  strpos($user_agent, $spider) !== false ) {
+        if ( !empty($spider) && strpos($user_agent, $spider) !== false ) {
             $spider_flag = true;
             break;
         }
