@@ -224,9 +224,7 @@
   }
 
 // navigation history
-  if ( !isset($_SESSION['navigation']) || !is_object($_SESSION['navigation']) || (get_class($_SESSION['navigation']) != 'navigationHistory') ) {
-    $_SESSION['navigation'] = new navigationHistory();
-  }
+  if ( !isset($_SESSION['navigation']) || !is_object($_SESSION['navigation']) || (get_class($_SESSION['navigation']) != 'navigationHistory') ) $_SESSION['navigation'] = new navigationHistory();
 
   $_SESSION['navigation']->add_current_page();
 
