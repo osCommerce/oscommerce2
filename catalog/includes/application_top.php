@@ -102,9 +102,7 @@
 // set the session cookie parameters
   session_set_cookie_params(0, $cookie_path, $cookie_domain);
 
-  if ( function_exists('ini_set') ) {
-    ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-  }
+  if ( function_exists('ini_set') ) ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // set the session ID if it exists
   if ( SESSION_FORCE_COOKIE_USE == 'False' ) {
