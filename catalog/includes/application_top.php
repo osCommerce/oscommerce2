@@ -71,9 +71,7 @@
 // if gzip_compression is enabled, start to buffer the output
   if ( (GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent() ) {
     if ( (int)ini_get('zlib.output_compression') < 1 ) {
-      if ( (PHP_VERSION < '5.4') || (PHP_VERSION > '5.4.5') ) { // see PHP bug 55544
-        ob_start('ob_gzhandler');
-      }
+      if ( (PHP_VERSION < '5.4') || (PHP_VERSION > '5.4.5') ) ob_start('ob_gzhandler'); // see PHP bug 55544
     } elseif ( function_exists('ini_set') ) {
       ini_set('zlib.output_compression_level', GZIP_LEVEL);
     }
@@ -106,8 +104,7 @@
 
 // set the session ID if it exists
   if ( SESSION_FORCE_COOKIE_USE == 'False' ) {
-    if ( isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()])) ) {
-      session_id($_GET[session_name()]);
+    if ( isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()])) ) session_id($_GET[session_name()]);
     } elseif ( isset($_POST[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_POST[session_name()])) ) {
       session_id($_POST[session_name()]);
     }
