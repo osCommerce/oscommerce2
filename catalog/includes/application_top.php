@@ -140,7 +140,6 @@
     $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
   }
 
-
 // set SID once, even if empty
   $SID = (defined('SID') ? SID : '');
 
@@ -190,11 +189,7 @@
     include 'includes/classes/language.php';
     $lng = new language();
 
-    if ( isset($_GET['language']) && !empty($_GET['language']) ) {
-      $lng->set_language($_GET['language']);
-    } else {
-      $lng->get_browser_language();
-    }
+    ( isset($_GET['language']) && !empty($_GET['language']) ) ? $lng->set_language($_GET['language'] : $lng->get_browser_language();
 
     $_SESSION['language'] = $lng->language['directory'];
     $_SESSION['languages_id'] = $lng->language['id'];
