@@ -24,10 +24,9 @@
     include('includes/configure.php');
   }
 
-  if (DB_SERVER == '') {
-    if (is_dir('install')) {
+// if the database server is not defined, redirect to installation app    
+  if ( DB_SERVER == '' && is_dir('install') ) {
       header('Location: install/index.php');
-    }
   }
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
@@ -132,11 +131,9 @@
 
     if ( !empty($user_agent) ) {
       foreach ( file('includes/spiders.txt') as $spider ) {
-        if ( !empty($spider) ) {
-          if ( strpos($user_agent, $spider) !== false ) {
+        if ( !empty($spider) ||  strpos($user_agent, $spider) !== false ) {
             $spider_flag = true;
             break;
-          }
         }
       }
     }
@@ -386,25 +383,25 @@
   require('includes/functions/specials.php');
   tep_expire_specials();
 
+// template class
   require('includes/classes/osc_template.php');
   $oscTemplate = new oscTemplate();
 
 // calculate category path
+  $cPath = '';
+  $current_category_id = 0;
+
   if ( isset($_GET['cPath']) ) {
     $cPath = $_GET['cPath'];
   } elseif ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) {
     $cPath = tep_get_product_path($_GET['products_id']);
-  } else {
-    $cPath = '';
-  }
+  } 
 
   if ( !empty($cPath) ) {
     $cPath_array = tep_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
-  } else {
-    $current_category_id = 0;
-  }
+  } 
 
 // include the breadcrumb class and start the breadcrumb trail
   require('includes/classes/breadcrumb.php');
