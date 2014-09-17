@@ -19,9 +19,9 @@
 
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
+    include 'includes/local/configure.php';
   } else {
-    include('includes/configure.php');
+    include 'includes/configure.php';
   }
 
 // if the database server is not defined, redirect to installation app    
@@ -51,13 +51,13 @@
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
 // include the list of project filenames
-  require('includes/filenames.php');
+  require 'includes/filenames.php';
 
 // include the list of project database tables
-  require('includes/database_tables.php');
+  require 'includes/database_tables.php';
 
 // include the database functions
-  require('includes/functions/database.php');
+  require 'includes/functions/database.php';
 
 // make a connection to the database... now
   tep_db_connect() or die('Unable to connect to database server!');
@@ -78,20 +78,20 @@
   }
 
 // define general functions used application-wide
-  require('includes/functions/general.php');
-  require('includes/functions/html_output.php');
+  require 'includes/functions/general.php';
+  require 'includes/functions/html_output.php';
 
 // include cache functions if enabled
-  if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
+  if ( USE_CACHE == 'true' ) include 'includes/functions/cache.php';
 
 // include shopping cart class
-  require('includes/classes/shopping_cart.php');
+  require 'includes/classes/shopping_cart.php';
 
 // include navigation history class
-  require('includes/classes/navigation_history.php');
+  require 'includes/classes/navigation_history.php';
 
 // define how the session functions will be used
-  require('includes/functions/sessions.php');
+  require 'includes/functions/sessions.php';
 
 // set the session name and save path
   session_name('osCsid');
@@ -181,16 +181,16 @@
   if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) $_SESSION['cart'] = new shoppingCart();
 
 // include currencies class and create an instance
-  require('includes/classes/currencies.php');
+  require 'includes/classes/currencies.php';
   $currencies = new currencies();
 
 // include the mail classes
-  require('includes/classes/mime.php');
-  require('includes/classes/email.php');
+  require 'includes/classes/mime.php';
+  require 'includes/classes/email.php';
 
 // set the language
   if ( !isset($_SESSION['language']) || isset($_GET['language']) ) {
-    include('includes/classes/language.php');
+    include 'includes/classes/language.php';
     $lng = new language();
 
     if ( isset($_GET['language']) && !empty($_GET['language']) ) {
@@ -223,11 +223,11 @@
   $_SESSION['navigation']->add_current_page();
 
 // action recorder
-  require('includes/classes/action_recorder.php');
+  require 'includes/classes/action_recorder.php';
 
 // initialize the message stack for output messages
-  require('includes/classes/alertbox.php');
-  require('includes/classes/message_stack.php');
+  require 'includes/classes/alertbox.php';
+  require 'includes/classes/message_stack.php';
   $messageStack = new messageStack();
 
 // Shopping cart actions
@@ -339,32 +339,32 @@
   }
 
 // include the who's online functions
-  require('includes/functions/whos_online.php');
+  require 'includes/functions/whos_online.php';
   tep_update_whos_online();
 
 // include the password crypto functions
-  require('includes/functions/password_funcs.php');
+  require 'includes/functions/password_funcs.php';
 
 // include validation functions (right now only email address)
-  require('includes/functions/validations.php');
+  require 'includes/functions/validations.php';
 
 // split-page-results
-  require('includes/classes/split_page_results.php');
+  require 'includes/classes/split_page_results.php';
 
 // infobox
-  require('includes/classes/boxes.php');
+  require 'includes/classes/boxes.php';
 
 // auto activate and expire banners
-  require('includes/functions/banner.php');
+  require 'includes/functions/banner.php';
   tep_activate_banners();
   tep_expire_banners();
 
 // auto expire special products
-  require('includes/functions/specials.php');
+  require 'includes/functions/specials.php';
   tep_expire_specials();
 
 // template class
-  require('includes/classes/osc_template.php');
+  require 'includes/classes/osc_template.php';
   $oscTemplate = new oscTemplate();
 
 // calculate category path
@@ -384,7 +384,7 @@
   } 
 
 // include the breadcrumb class and start the breadcrumb trail
-  require('includes/classes/breadcrumb.php');
+  require 'includes/classes/breadcrumb.php';
   $breadcrumb = new breadcrumb;
 
   $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
