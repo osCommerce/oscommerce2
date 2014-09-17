@@ -108,7 +108,6 @@
     } elseif ( isset($_POST[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_POST[session_name()])) ) {
       session_id($_POST[session_name()]);
     }
-  }
 
 // start the session
   $session_started = false;
