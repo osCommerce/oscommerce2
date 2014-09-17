@@ -487,7 +487,7 @@
       return $value;
     }
 
-    function saveParameter($key, $value, $title = null, $description = null) {
+    function saveParameter($key, $value, $title = null, $description = null, $set_func = null) {
       if ( !defined($key) ) {
         if ( !isset($title) ) {
           $title = 'PayPal App Parameter';
@@ -498,6 +498,10 @@
         }
 
         tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('" . tep_db_input($title) . "', '" . tep_db_input($key) . "', '" . tep_db_input($value) . "', '" . tep_db_input($description) . "', '6', '0', now())");
+
+        if ( isset($set_func) ) {
+          tep_db_query("update " . TABLE_CONFIGURATION . " set set_function = '" . tep_db_input($set_func) . "' where configuration_key = '" . tep_db_input($key) . "'");
+        }
 
         define($key, $value);
       } else {
@@ -602,7 +606,7 @@
 
         $cfg = new $cfg_class();
 
-        $this->saveParameter($key, $cfg->default, isset($cfg->title) ? $cfg->title : null, isset($cfg->description) ? $cfg->description : null);
+        $this->saveParameter($key, $cfg->default, isset($cfg->title) ? $cfg->title : null, isset($cfg->description) ? $cfg->description : null, isset($cfg->set_func) ? $cfg->set_func : null);
       }
 
       $m_class = 'OSCOM_PayPal_' . $module;
