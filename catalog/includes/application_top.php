@@ -137,7 +137,7 @@
 
 // initialize a session token
   if ( !isset($_SESSION['sessiontoken']) ) {
-     $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
   }
 
 
@@ -238,7 +238,7 @@
     } else {
       $goto = $PHP_SELF;
 
-      $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
+     $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
      
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
