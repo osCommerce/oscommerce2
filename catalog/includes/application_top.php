@@ -18,12 +18,10 @@
   ini_set('display_errors', true); // TODO remove on release
 
 // load server configuration parameters
-    file_exists('includes/local/configure.php') ? include 'includes/local/configure.php': include 'includes/configure.php';
+    file_exists('includes/local/configure.php') ? include 'includes/local/configure.php' : include 'includes/configure.php';
 
 // if the database server is not defined, redirect to installation app    
-  if ( DB_SERVER == '' && is_dir('install') ) {
-      header('Location: install/index.php');
-  }
+  if ( DB_SERVER == '' && is_dir('install') )   header('Location: install/index.php');
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
@@ -237,13 +235,8 @@
     } else {
       $goto = $PHP_SELF;
 
-      if ( $_GET['action'] == 'buy_now') {
-        $parameters = array('action', 'pid', 'products_id');
-      } else {
-        $parameters = array('action', 'pid');
-      }
-    }
-
+      $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
+     
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
@@ -367,7 +360,7 @@
   $cPath = '';
   $current_category_id = 0;
 
-  if ( isset($_GET['cPath']) ) {
+  If ( isset($_GET['cPath']) ) {
     $cPath = $_GET['cPath'];
   } elseif ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) {
     $cPath = tep_get_product_path($_GET['products_id']);
