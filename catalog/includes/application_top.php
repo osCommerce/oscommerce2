@@ -417,6 +417,4 @@
   }
 
 // TODO remove when no more global sessions exist
-  if ( $session_started == true ) {
-    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
+  if ( $session_started == true ) extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
