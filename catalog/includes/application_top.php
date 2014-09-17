@@ -224,6 +224,7 @@
 
 // action recorder
   require('includes/classes/action_recorder.php');
+
 // initialize the message stack for output messages
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');
