@@ -148,31 +148,24 @@
   }
 
 // initialize a session token
-  if ( !isset($_SESSION['sessiontoken']) ) {
-    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
-  }
+  if ( !isset($_SESSION['sessiontoken']) ) $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // set SID once, even if empty
   $SID = (defined('SID') ? SID : '');
 
 // verify the ssl_session_id if the feature is enabled
   if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started === true) ) {
-    if ( !isset($_SESSION['SSL_SESSION_ID']) ) {
-      $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
-    }
+    if ( !isset($_SESSION['SSL_SESSION_ID']) ) $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
 
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
       tep_session_destroy();
-
       tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
     }
   }
 
 // verify the browser user agent if the feature is enabled
   if ( SESSION_CHECK_USER_AGENT == 'True' ) {
-    if ( !isset($_SESSION['SESSION_USER_AGENT']) ) {
-      $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-    }
+    if ( !isset($_SESSION['SESSION_USER_AGENT']) ) $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
     if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
       tep_session_destroy();
@@ -182,20 +175,16 @@
 
 // verify the IP address if the feature is enabled
   if ( SESSION_CHECK_IP_ADDRESS == 'True' ) {
-    if ( !isset($_SESSION['SESSION_IP_ADDRESS']) ) {
-      $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
-    }
+    if ( !isset($_SESSION['SESSION_IP_ADDRESS']) ) $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address() ) {
       tep_session_destroy();
-      tep_redirect(tep_href_link(FILENAME_LOGIN));
+      tep_redirect(tep_;ef_link(FILENAME_LOGIN));
     }
   }
 
 // create the shopping cart
-  if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) {
-    $_SESSION['cart'] = new shoppingCart();
-  }
+  if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) $_SESSION['cart'] = new shoppingCart();
 
 // include currencies class and create an instance
   require('includes/classes/currencies.php');
@@ -251,9 +240,7 @@
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( $session_started == false ) {
-      tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
-    }
+    if ( $session_started == false ) tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
 
     if ( DISPLAY_CART == 'true' ) {
       $goto =  FILENAME_SHOPPING_CART;
