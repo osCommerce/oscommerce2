@@ -21,7 +21,7 @@
     file_exists('includes/local/configure.php') ? include 'includes/local/configure.php' : include 'includes/configure.php';
 
 // if the database server is not defined, redirect to installation app    
-  if ( DB_SERVER == '' && is_dir('install') )   header('Location: install/index.php');
+  if ( DB_SERVER == '' && is_dir('install') ) header('Location: install/index.php');
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
