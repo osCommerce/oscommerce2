@@ -18,7 +18,7 @@
   ini_set('display_errors', true); // TODO remove on release
 
 // load server configuration parameters
-    file_exists('includes/local/configure.php') ? include 'includes/local/configure.php' : include 'includes/configure.php';
+  file_exists('includes/local/configure.php') ? include 'includes/local/configure.php' : include 'includes/configure.php';
 
 // if the database server is not defined, redirect to installation app    
   if ( DB_SERVER == '' && is_dir('install') ) header('Location: install/index.php');
