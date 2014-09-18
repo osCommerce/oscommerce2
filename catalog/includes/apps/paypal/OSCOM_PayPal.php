@@ -323,7 +323,7 @@
       return $result['res'];
     }
 
-    function makeApiCall($url, $parameters) {
+    function makeApiCall($url, $parameters = null) {
       $server = parse_url($url);
 
       if ( !isset($server['port']) ) {
@@ -340,8 +340,12 @@
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
       curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+      curl_setopt($curl, CURLOPT_ENCODING, ''); // disable gzip
+
+      if ( isset($parameters) ) {
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+      }
 
       if ( isset($server['user']) && isset($server['pass']) ) {
         curl_setopt($curl, CURLOPT_USERPWD, $server['user'] . ':' . $server['pass']);
