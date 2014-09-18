@@ -65,4 +65,8 @@
   if ( !defined('OSCOM_APP_PAYPAL_GATEWAY') ) {
     $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_GATEWAY', '1');
   }
+
+  if ( !defined('OSCOM_APP_PAYPAL_LOG_TRANSACTIONS') ) {
+    $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_LOG_TRANSACTIONS', '1');
+  }
 ?>

@@ -21,10 +21,10 @@
 
       $do_log = false;
 
-      if ( !defined('OSCOM_APP_PAYPAL_' . $module . '_LOG') || in_array(constant('OSCOM_APP_PAYPAL_' . $module . '_LOG'), array('1', '0')) ) {
+      if ( in_array(OSCOM_APP_PAYPAL_LOG_TRANSACTIONS, array('1', '0')) ) {
         $do_log = true;
 
-        if ( defined('OSCOM_APP_PAYPAL_' . $module . '_LOG') && (constant('OSCOM_APP_PAYPAL_' . $module . '_LOG') == '0') && ($result === 1) ) {
+        if ( (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '0') && ($result === 1) ) {
           $do_log = false;
         }
       }
