@@ -64,9 +64,7 @@
     }
 
     function getBlocks($group) {
-      if ($this->hasBlocks($group)) {
-        return implode("\n", $this->_blocks[$group]);
-      }
+      if ($this->hasBlocks($group)) return implode("\n", $this->_blocks[$group]);
     }
 
     function buildBlocks() {
@@ -159,9 +157,7 @@
       foreach ( explode(';', MODULE_CONTENT_INSTALLED) as $m ) {
         $module = explode('/', $m, 2);
 
-        if ( $module[0] == $group ) {
-          $result[] = $module[1];
-        }
+        if ( $module[0] == $group ) $result[] = $module[1];
       }
 
       return $result;
