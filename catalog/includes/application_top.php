@@ -194,7 +194,7 @@
     } else {
       $lng->get_browser_language();
     }
-    
+
     $_SESSION['language'] = $lng->language['directory'];
     $_SESSION['languages_id'] = $lng->language['id'];
   }
