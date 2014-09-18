@@ -54,9 +54,7 @@
       }
     }
 
-    if (isset($_sid)) {
-      $link .= $separator . tep_output_string($_sid);
-    }
+    if (isset($_sid)) $link .= $separator . tep_output_string($_sid);
 
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
@@ -82,9 +80,7 @@
 // the image filename as default
     $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
-    if (tep_not_null($alt)) {
-      $image .= ' title="' . tep_output_string($alt) . '"';
-    }
+    if (tep_not_null($alt)) $image .= ' title="' . tep_output_string($alt) . '"';
 
     if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
@@ -103,15 +99,11 @@
       }
     }
 
-    if (tep_not_null($width) && tep_not_null($height)) {
-      $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
-    }
+    if (tep_not_null($width) && tep_not_null($height)) $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
     
     $image .= ' class="';
 
-    if (tep_not_null($responsive) && ($responsive === true)) {
-      $image .= 'img-responsive';
-    }
+    if (tep_not_null($responsive) && ($responsive === true)) $image .= 'img-responsive';
 
     if (tep_not_null($bootstrap_css)) $image .= ' ' . $bootstrap_css;
 
