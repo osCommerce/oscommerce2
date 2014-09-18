@@ -43,8 +43,6 @@
         $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=LOGIN'), 'primary', null, true) . '</div><br />' . $this->description;
 
         if ( basename($GLOBALS['PHP_SELF']) == 'modules_content.php' ) {
-          $this->description .= $this->getShowUrlsInfo();
-
           if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '0' ) {
             $this->title .= ' [Sandbox]';
           }
@@ -107,20 +105,21 @@
       if ( isset($HTTP_GET_VARS['code']) ) {
         $paypal_login_customer_id = false;
 
-        $params = array('code' => $HTTP_GET_VARS['code']);
+        $params = array('code' => $HTTP_GET_VARS['code'],
+                        'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
 
-        $response_token = $this->getToken($params);
+        $response_token = $this->_app->getApiResult('LOGIN', 'GrantToken', $params);
 
         if ( !isset($response_token['access_token']) && isset($response_token['refresh_token']) ) {
           $params = array('refresh_token' => $response_token['refresh_token']);
 
-          $response_token = $this->getRefreshToken($params);
+          $response_token = $this->_app->getApiResult('LOGIN', 'RefreshToken', $params);
         }
 
         if ( isset($response_token['access_token']) ) {
           $params = array('access_token' => $response_token['access_token']);
 
-          $response = $this->getUserInfo($params);
+          $response = $this->_app->getApiResult('LOGIN', 'UserInfo', $params);
 
           if ( isset($response['email']) ) {
             $paypal_login_access_token = $response_token['access_token'];
@@ -314,121 +313,6 @@
       return array('OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH', 'OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER');
     }
 
-    function sendRequest($url, $parameters = null) {
-      $server = parse_url($url);
-
-      if ( !isset($server['port']) ) {
-        $server['port'] = ($server['scheme'] == 'https') ? 443 : 80;
-      }
-
-      if ( !isset($server['path']) ) {
-        $server['path'] = '/';
-      }
-
-      $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
-      curl_setopt($curl, CURLOPT_PORT, $server['port']);
-      curl_setopt($curl, CURLOPT_HEADER, false);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
-      curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
-      curl_setopt($curl, CURLOPT_ENCODING, '');
-
-      if ( OSCOM_APP_PAYPAL_VERIFY_SSL == '1' ) {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
-        }
-      } else {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-      }
-
-      if ( tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
-        curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
-        curl_setopt($curl, CURLOPT_PROXY, OSCOM_APP_PAYPAL_PROXY);
-      }
-
-      $result = curl_exec($curl);
-
-      curl_close($curl);
-
-      return $result;
-    }
-
-    function getToken($params) {
-      if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '1' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $parameters = array('client_id' => OSCOM_APP_PAYPAL_LOGIN_CLIENT_ID,
-                          'client_secret' => OSCOM_APP_PAYPAL_LOGIN_SECRET,
-                          'grant_type' => 'authorization_code',
-                          'code' => $params['code'],
-                          'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
-
-      $post_string = '';
-
-      foreach ($parameters as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/tokenservice', $post_string);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
-    function getRefreshToken($params) {
-      if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '1' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $parameters = array('client_id' => OSCOM_APP_PAYPAL_LOGIN_CLIENT_ID,
-                          'client_secret' => OSCOM_APP_PAYPAL_LOGIN_SECRET,
-                          'grant_type' => 'refresh_token',
-                          'refresh_token' => $params['refresh_token']);
-
-      $post_string = '';
-
-      foreach ($parameters as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/tokenservice', $post_string);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
-    function getUserInfo($params) {
-      if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '1' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/userinfo/?schema=openid&access_token=' . $params['access_token']);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
     function getTestLinkInfo() {
       $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE;
       $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_BUTTON_CLOSE;
@@ -578,99 +462,5 @@ EOD;
                                     'locale' => 'profile',
                                     'language' => 'profile'),
                  'checkout' => array('seamless_checkout' => 'https://uri.paypal.com/services/expresscheckout'));
-  }
-
-  function cm_paypal_login_get_required_attributes() {
-    return array('full_name',
-                 'email_address',
-                 'street_address',
-                 'city',
-                 'state',
-                 'country',
-                 'zip_code');
-  }
-
-  function cm_paypal_login_show_attributes($text) {
-    $active = explode(';', $text);
-
-    $output = '';
-
-    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
-      foreach ( $attributes as $attribute => $scope ) {
-        if ( in_array($attribute, $active) ) {
-          $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
-        }
-      }
-    }
-
-    if ( !empty($output) ) {
-      $output = substr($output, 0, -6);
-    }
-
-    return $output;
-  }
-
-  function cm_paypal_login_edit_attributes($values, $key) {
-    $values_array = explode(';', $values);
-
-    $required_array = cm_paypal_login_get_required_attributes();
-
-    $output = '';
-
-    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
-      $output .= '<strong>' . constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
-
-      foreach ( $attributes as $attribute => $scope ) {
-        if ( in_array($attribute, $required_array) ) {
-          $output .= tep_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
-        } else {
-          $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
-        }
-
-        $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
-      }
-    }
-
-    if (!empty($output)) {
-      $output = '<br />' . substr($output, 0, -6);
-    }
-
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
-
-    $output .= '<script type="text/javascript">
-                function cmpl_update_cfg_value() {
-                  var cmpl_selected_attributes = \'\';
-
-                  if ($(\'input[name^="cm_paypal_login_attributes_tmp_"]\').length > 0) {
-                    $(\'input[name^="cm_paypal_login_attributes_tmp_"]\').each(function() {
-                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
-                    });
-                  }
-
-                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
-                    $(\'input[name="cm_paypal_login_attributes[]"]:checked\').each(function() {
-                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
-                    });
-                  }
-
-                  if (cmpl_selected_attributes.length > 0) {
-                    cmpl_selected_attributes = cmpl_selected_attributes.substring(0, cmpl_selected_attributes.length - 1);
-                  }
-
-                  $(\'#cmpl_attributes\').val(cmpl_selected_attributes);
-                }
-
-                $(function() {
-                  cmpl_update_cfg_value();
-
-                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
-                    $(\'input[name="cm_paypal_login_attributes[]"]\').change(function() {
-                      cmpl_update_cfg_value();
-                    });
-                  }
-                });
-                </script>';
-
-    return $output;
   }
 ?>
