@@ -39,7 +39,11 @@
 
       if ( is_array($response) ) {
         foreach ( $response as $key => $value ) {
-          if ( (strpos($key, '_nh-dns') !== false) || in_array($key, $filter) ) {
+          if ( is_array($value) ) {
+            if ( function_exists('http_build_query') ) {
+              $value = http_build_query($value);
+            }
+          } elseif ( (strpos($key, '_nh-dns') !== false) || in_array($key, $filter) ) {
             $value = '**********';
           }
 
