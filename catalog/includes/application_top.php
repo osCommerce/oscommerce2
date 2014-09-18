@@ -136,7 +136,7 @@
   }
 
 // initialize a session token
-  if ( !isset($_SESSION['sessiontoken']) )  $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+  if ( !isset($_SESSION['sessiontoken']) ) $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // set SID once, even if empty
   $SID = (defined('SID') ? SID : '');
