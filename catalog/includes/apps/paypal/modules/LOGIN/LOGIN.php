@@ -100,7 +100,7 @@
       }
 
       if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH') ) {
-        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH', MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH);
+        $OSCOM_PayPal->saveParameter('OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH', MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH, 'Content Width', 'Should the content be shown in a full or half width container?', 'tep_cfg_select_option(array(\'Full\', \'Half\'), ');
         $OSCOM_PayPal->deleteParameter('MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH');
       }
 
