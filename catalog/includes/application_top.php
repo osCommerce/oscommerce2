@@ -238,7 +238,7 @@
       $goto = $PHP_SELF;
       $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
     }
-     
+
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
