@@ -357,15 +357,11 @@
   $oscTemplate = new oscTemplate();
 
 // calculate category path
-  $cPath = '';
-  $current_category_id = 0;
-
-  If ( isset($_GET['cPath']) ) {
-    $cPath = $_GET['cPath'];
-  } elseif ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) {
-    $cPath = tep_get_product_path($_GET['products_id']);
-  } 
-
+  $cPath = isset($_GET['cPath']) ? $_GET['cPath'] : '';
+  if ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) $cPath = tep_get_product_path($_GET['products_id']);
+  
+  $current_category_id = 0;  
+  
   if ( !empty($cPath) ) {
     $cPath_array = tep_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
