@@ -51,7 +51,6 @@
 
       if (!isset($_SESSION['messageToStack'])) {
         $_SESSION['messageToStack'] = array();
-
       }
 
       $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
