@@ -19,6 +19,20 @@
     function log($module, $action, $result, $request, $response, $server, $is_ipn = false) {
       global $customer_id;
 
+      $do_log = false;
+
+      if ( !defined('OSCOM_APP_PAYPAL_' . $module . '_LOG') || in_array(constant('OSCOM_APP_PAYPAL_' . $module . '_LOG'), array('1', '0')) ) {
+        $do_log = true;
+
+        if ( defined('OSCOM_APP_PAYPAL_' . $module . '_LOG') && (constant('OSCOM_APP_PAYPAL_' . $module . '_LOG') == '0') && ($result === 1) ) {
+          $do_log = false;
+        }
+      }
+
+      if ( $do_log !== true ) {
+        return false;
+      }
+
       $filter = array('ACCT', 'CVV2', 'ISSUENUMBER');
 
       $request_string = '';
