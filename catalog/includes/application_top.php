@@ -236,8 +236,8 @@
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = $PHP_SELF;
-
-     $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
+      $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
+    }
      
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
