@@ -372,8 +372,6 @@
 
     $button .= ' class="btn ' . ((isset($class)) ? $class : 'btn-default') . '">';
 
-    $button .= '>';
-
     if (isset($icon) && tep_not_null($icon)) {
       $button .= ' <span class="' . $icon . '"></span> ';
     }
