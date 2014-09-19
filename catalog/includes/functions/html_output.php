@@ -299,7 +299,7 @@
 
     $field .= '>';
 
-    if (empty($default))  {
+    if (empty($default)) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $default = stripslashes($_GET[$name]);
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
