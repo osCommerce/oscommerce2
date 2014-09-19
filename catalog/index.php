@@ -29,6 +29,21 @@
       }
     }
   }
+  
+// add category names or the manufacturer name to the breadcrumb trail
+  if ( isset($cPath_array) ) {
+    for ( $i=0, $n=sizeof($cPath_array); $i<$n; $i++ ) {
+      $categories_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+
+      if ( tep_db_num_rows($categories_query) > 0 ) {
+        $categories = tep_db_fetch_array($categories_query);
+
+        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+      } else {
+        break;
+      }
+    }
+  }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT);
 
