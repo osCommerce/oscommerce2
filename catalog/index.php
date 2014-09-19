@@ -20,8 +20,7 @@
     if ($categories_products['total'] > 0) {
       $category_depth = 'products'; // display products
     } else {
-      $category_parent = tep_has_category_subcategories($current_category_id);
-      $category_depth = ($category_parent == true) ? 'nested' : 'products'; // if category has no products, display the 'no products' message
+      $category_depth = (tep_has_category_subcategories($current_category_id)) ? 'nested' : 'products'; // if category has no products, display the 'no products' message
     } 
   }  
 
