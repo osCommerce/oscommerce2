@@ -240,7 +240,7 @@
 
     $field .= '>';
 
-    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
+    if ($reinsert_value == true) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $field .= tep_output_string_protected(stripslashes($_GET[$name]));
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
