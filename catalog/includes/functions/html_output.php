@@ -336,7 +336,7 @@
   }
 
 ////
-// Output a jQuery UI Button
+// Outputs a Bootstrap Button
   function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;
 
@@ -354,7 +354,7 @@
       $params['type'] = 'button';
     }
 
-    $button = NULL;
+    $button = '';
 
     if ( ($params['type'] == 'button') && isset($link) ) {
       $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
