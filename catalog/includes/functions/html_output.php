@@ -370,9 +370,7 @@
       $button .= ' ' . $params['params'];
     }
 
-    $button .= ' class="btn ';
-    $button .= (isset($class)) ? $class : 'btn-default';
-    $button .= '"';
+    $button .= ' class="btn ' . ((isset($class)) ? $class : 'btn-default') . '">';
 
     $button .= '>';
 
