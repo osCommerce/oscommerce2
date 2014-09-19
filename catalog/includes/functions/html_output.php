@@ -262,7 +262,7 @@
 
     if (tep_not_null($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
-    } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
+    } else {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
         $field .= ' value="' . tep_output_string(stripslashes($_GET[$name])) . '"';
       } elseif ( (isset($_POST[$name]) && is_string($_POST[$name])) ) {
