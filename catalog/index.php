@@ -14,21 +14,16 @@
 
 // the following cPath references come from application_top.php
   $category_depth = 'top';
-  if (isset($cPath) && tep_not_null($cPath)) {
+  if ($current_category_id > 0) {
     $categories_products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
     $categories_products = tep_db_fetch_array($categories_products_query);
     if ($categories_products['total'] > 0) {
       $category_depth = 'products'; // display products
     } else {
-      $category_parent_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$current_category_id . "'");
-      $category_parent = tep_db_fetch_array($category_parent_query);
-      if ($category_parent['total'] > 0) {
-        $category_depth = 'nested'; // navigate through the categories
-      } else {
-        $category_depth = 'products'; // category has no products, but display the 'no products' message
-      }
-    }
-  }
+      $category_parent = tep_has_category_subcategories($current_category_id);
+      $category_depth = ($category_parent == true) ?  'nested' : 'products'; // if category has no products, display the 'no products' message
+    } 
+  }  
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT);
 
