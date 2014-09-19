@@ -170,7 +170,7 @@
   function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
-    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
+    if ($reinsert_value == true) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $value = stripslashes($_GET[$name]);
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
