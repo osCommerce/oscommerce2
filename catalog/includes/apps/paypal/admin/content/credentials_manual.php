@@ -14,6 +14,20 @@
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
   <?php echo $OSCOM_PayPal->drawButton('PayPal', tep_href_link('paypal.php', 'action=credentialsManual&module=PP'), 'info', 'data-module="PP"'); ?>
   <?php echo $OSCOM_PayPal->drawButton('Payflow', tep_href_link('paypal.php', 'action=credentialsManual&module=PF'), 'info', 'data-module="PF"'); ?>
+
+<?php
+  if ( $current_module == 'PP' ) {
+?>
+
+  <span style="float: right;">
+    <?php echo $OSCOM_PayPal->drawButton('Retrieve Live Credentials', tep_href_link('paypal.php', 'action=start&subaction=process&type=live'), 'warning'); ?>
+    <?php echo $OSCOM_PayPal->drawButton('Retrieve Sandbox Credentials', tep_href_link('paypal.php', 'action=start&subaction=process&type=sandbox'), 'warning'); ?>
+  </span>
+
+<?php
+  }
+?>
+
 </div>
 
 <form name="paypalCredentialsManual" action="<?php echo tep_href_link('paypal.php', 'action=credentialsManual&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
