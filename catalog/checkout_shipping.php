@@ -238,13 +238,9 @@
 ?>
 
   <div class="contentText">
-    <table class="table table-striped table-condensed table-hover">
-      <tbody>
-
 <?php
     if ($free_shipping == true) {
 ?>
-
       <div class="contentText">
         <div class="panel panel-success">
           <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
@@ -255,7 +251,11 @@
       </div>
 
 <?php
-    } else {
+  } else {
+ ?>
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
+ <?php
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
@@ -304,16 +304,19 @@
             }
 ?>
 
-      </tr>
-
+        </tr>
 <?php
-        }
-      }
-    }
+     }
 ?>
 
       </tbody>
     </table>
+<?php
+      }
+    }
+?>
+
+
   </div>
 
 <?php
