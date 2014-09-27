@@ -264,7 +264,7 @@
             tep_db_query($sql_array[$i]);
           }
 
-          tep_session_close();
+          session_write_close();
 
           tep_db_query("delete from " . TABLE_WHOS_ONLINE);
           tep_db_query("delete from " . TABLE_SESSIONS);
