@@ -40,6 +40,9 @@
       $OSCOM_PayPal->saveParameter($param_prefix . 'API_PASSWORD', $result['api_password']);
       $OSCOM_PayPal->saveParameter($param_prefix . 'API_SIGNATURE', $result['api_signature']);
 
+      $OSCOM_PayPal->deleteParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID');
+      $OSCOM_PayPal->deleteParameter('OSCOM_APP_PAYPAL_START_SECRET');
+
       $OSCOM_PayPal->addAlert('PayPal account credentials have been successfully configured.', 'success');
 
       tep_redirect(tep_href_link('paypal.php', 'action=credentialsManual'));
