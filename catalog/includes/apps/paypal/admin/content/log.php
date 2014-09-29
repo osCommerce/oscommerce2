@@ -53,7 +53,7 @@
       <td><?php echo long2ip($log['ip_address']); ?></td>
       <td><?php echo (!empty($customers_name)) ? tep_output_string_protected($customers_name) : '<i>Guest</i>'; ?></td>
       <td><?php echo date(PHP_DATE_TIME_FORMAT, $log['date_added']); ?></td>
-      <td class="ppTableAction" style="text-align: right;"><small><?php echo $OSCOM_PayPal->drawButton('View', tep_href_link('paypal.php', 'action=log&page=' . $HTTP_GET_VARS['page'] . '&lID=' . $log['id'] . '&subaction=view'), 'info'); ?></small></td>
+      <td class="pp-table-action"><small><?php echo $OSCOM_PayPal->drawButton('View', tep_href_link('paypal.php', 'action=log&page=' . $HTTP_GET_VARS['page'] . '&lID=' . $log['id'] . '&subaction=view'), 'info'); ?></small></td>
     </tr>
 
 <?php
@@ -105,19 +105,5 @@ $(function() {
 
     $('#delLogs-dialog-confirm').dialog('open');
   });
-
-  $('#ppTableLog tbody tr td.ppTableAction').css({
-    visibility: 'hidden',
-    display: 'block'
-  });
-
-  $('#ppTableLog tbody tr').hover(
-    function() {
-      $('td.ppTableAction', this).css('visibility', 'visible');
-    },
-    function() {
-      $('td.ppTableAction', this).css('visibility', 'hidden');
-    }
-  );
 });
 </script>

@@ -253,6 +253,16 @@ small .pp-button {
   padding: 3px 15px;
 }
 
+.pp-table tbody tr td.pp-table-action {
+  text-align: right;
+  visibility: hidden;
+  display: block;
+}
+
+.pp-table tbody tr:hover td.pp-table-action {
+  visibility: visible;
+}
+
 .pp-table.pp-table-hover tbody tr:hover:not(.pp-table-header) {
   background-color: #fff;
 }
