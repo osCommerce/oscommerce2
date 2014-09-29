@@ -45,22 +45,28 @@ EOD;
   require(DIR_FS_CATALOG . 'includes/apps/paypal/OSCOM_PayPal.php');
   $OSCOM_PayPal = new OSCOM_PayPal();
 
-  if ( $OSCOM_PayPal->migrate() ) {
-    tep_redirect(tep_href_link('paypal.php', tep_get_all_get_params()));
-  }
-
   $content = 'start.php';
+  $action = 'start';
+  $subaction = '';
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : 'start');
-
-  if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($action) . '.php') ) {
-    include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($action) . '.php');
+  if ( isset($HTTP_GET_VARS['action']) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($HTTP_GET_VARS['action']) . '.php') ) {
+    $action = basename($HTTP_GET_VARS['action']);
   }
 
-  $subaction = (isset($HTTP_GET_VARS['subaction']) ? $HTTP_GET_VARS['subaction'] : '');
+  if ( $action == 'start' ) {
+    if ( $OSCOM_PayPal->migrate() ) {
+      tep_redirect(tep_href_link('paypal.php', tep_get_all_get_params()));
+    }
+  }
 
-  if ( !empty($subaction) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($action) . '/' . basename($subaction) . '.php') ) {
-    include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($action) . '/' . basename($subaction) . '.php');
+  include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . $action . '.php');
+
+  if ( isset($HTTP_GET_VARS['subaction']) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . $action . '/' . basename($HTTP_GET_VARS['subaction']) . '.php') ) {
+    $subaction = basename($HTTP_GET_VARS['subaction']);
+  }
+
+  if ( !empty($subaction) ) {
+    include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . $action . '/' . $subaction . '.php');
   }
 
   include(DIR_WS_INCLUDES . 'template_top.php');
@@ -76,11 +82,16 @@ EOD;
   padding: 15px;
 }
 
-#ppAppInfo, #ppAppInfo a {
+#ppAppInfo {
   color: #898989;
 }
 
-#ppAppInfo:hover, #ppAppInfo:hover a {
+#ppAppInfo a {
+  color: #000;
+  padding-left: 10px;
+}
+
+#ppAppInfo a:hover {
   color: #000;
 }
 
@@ -166,6 +177,12 @@ small .pp-button {
   color: #cd7c20;
 }
 
+.pp-panel.pp-panel-success {
+  background-color: #e8ffe1;
+  border-left: 2px solid #a0e097;
+  color: #349a20;
+}
+
 .pp-panel-header-info {
   background-color: #97c5dd;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
@@ -177,6 +194,15 @@ small .pp-button {
 
 .pp-panel-header-warning {
   background-color: #e2ab62;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  font-size: 12px;
+  color: #fff;
+  margin: 0;
+  padding: 3px 15px;
+}
+
+.pp-panel-header-success {
+  background-color: #a0e097;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   font-size: 12px;
   color: #fff;
@@ -261,13 +287,70 @@ if ( typeof jQuery.ui == 'undefined' ) {
 }
 </script>
 
+<script>
+var OSCOM = {
+  dateNow: new Date(),
+  htmlSpecialChars: function(string) {
+    if ( string == null ) {
+      string = '';
+    }
+
+    return $('<span />').text(string).html();
+  },
+  nl2br: function(string) {
+    return string.replace(/\n/g, '<br />');
+  },
+  APP: {
+    PAYPAL: {
+      version: '<?php echo $OSCOM_PayPal->getVersion(); ?>',
+      versionCheckResult: <?php echo (defined('OSCOM_APP_PAYPAL_VERSION_CHECK')) ? '"' . OSCOM_APP_PAYPAL_VERSION_CHECK . '"' : 'undefined'; ?>,
+      action: '<?php echo $action; ?>',
+      doOnlineVersionCheck: false,
+      versionCheck: function() {
+        $.getJSON('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
+          if ( ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
+            var versions = [];
+
+            for ( var i = 0; i < data['releases'].length; i++ ) {
+              versions.push(data['releases'][i]['version']);
+            }
+
+            OSCOM.APP.PAYPAL.versionCheckResult = [ OSCOM.dateNow.getDate(), Math.max.apply(Math, versions) ];
+
+            OSCOM.APP.PAYPAL.versionCheckNotify();
+          }
+        });
+      },
+      versionCheckNotify: function() {
+        if ( (typeof this.versionCheckResult[0] != 'undefined') && (typeof this.versionCheckResult[1] != 'undefined') ) {
+          if ( this.versionCheckResult[1] > this.version ) {
+            $('#ppAppUpdateNotice').show();
+          }
+        }
+      }
+    }
+  }
+};
+
+if ( typeof OSCOM.APP.PAYPAL.versionCheckResult != 'undefined' ) {
+  OSCOM.APP.PAYPAL.versionCheckResult = OSCOM.APP.PAYPAL.versionCheckResult.split('-', 2);
+}
+</script>
+
 <div class="pp-container">
   <div class="pp-header">
     <div id="ppAppInfo" style="float: right;">
-      <?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' (<a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23" target="_blank">Documentation</a> | <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>)'; ?>
+      <?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' <a href="' . tep_href_link('paypal.php', 'action=info') . '">Info/Help</a> <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>'; ?>
     </div>
 
-    <a href="<?php echo tep_href_link('paypal.php'); ?>"><img src="<?php echo tep_catalog_href_link('images/apps/paypal/paypal.png', '', 'SSL'); ?>" /></a>
+    <a href="<?php echo tep_href_link('paypal.php', 'action=' . $action); ?>"><img src="<?php echo tep_catalog_href_link('images/apps/paypal/paypal.png', '', 'SSL'); ?>" /></a>
+  </div>
+
+  <div id="ppAppUpdateNotice" style="padding: 0 12px 0 12px; display: none;">
+    <div class="pp-panel pp-panel-success">
+      <p>An update is available for this App!</p>
+      <p><small><?php echo $OSCOM_PayPal->drawButton('View Update', tep_href_link('paypal.php', 'action=update'), 'success'); ?></small></p>
+    </div>
   </div>
 
 <?php
@@ -280,6 +363,28 @@ if ( typeof jQuery.ui == 'undefined' ) {
     <?php include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/content/' . basename($content)); ?>
   </div>
 </div>
+
+<script>
+$(function() {
+  if ( OSCOM.APP.PAYPAL.action != 'update' ) {
+    if ( typeof OSCOM.APP.PAYPAL.versionCheckResult == 'undefined' ) {
+      OSCOM.APP.PAYPAL.doOnlineVersionCheck = true;
+    } else {
+      if ( typeof OSCOM.APP.PAYPAL.versionCheckResult[0] != 'undefined' ) {
+        if ( OSCOM.dateNow.getDate() != OSCOM.APP.PAYPAL.versionCheckResult[0] ) {
+          OSCOM.APP.PAYPAL.doOnlineVersionCheck = true;
+        }
+      }
+    }
+
+    if ( OSCOM.APP.PAYPAL.doOnlineVersionCheck == true ) {
+      OSCOM.APP.PAYPAL.versionCheck();
+    } else {
+      OSCOM.APP.PAYPAL.versionCheckNotify();
+    }
+  }
+});
+</script>
 
 <?php
   include(DIR_WS_INCLUDES . 'template_bottom.php');

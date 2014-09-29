@@ -13,8 +13,29 @@
   class OSCOM_PayPal {
     var $_code = 'paypal';
     var $_title = 'PayPal App';
-    var $_version = '4.0';
+    var $_version = '4.000';
     var $_api_version = '112';
+
+    function isReqApiCountrySupported($country_id) {
+      static $countries;
+
+      if ( !isset($countries) ) {
+        $countries = array();
+
+        foreach ( file(DIR_FS_CATALOG . 'includes/apps/paypal/req_api_countries.txt') as $c ) {
+          $c = trim($c);
+
+          if ( !empty($c) ) {
+            $countries[]= $c;
+          }
+        }
+      }
+
+      $country_query = tep_db_query("select countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
+      $country = tep_db_fetch_array($country_query);
+
+      return in_array($country['countries_iso_code_2'], $countries);
+    }
 
     function log($module, $action, $result, $request, $response, $server, $is_ipn = false) {
       global $customer_id;
