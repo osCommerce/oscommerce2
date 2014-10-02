@@ -13,7 +13,7 @@
   class OSCOM_PayPal {
     var $_code = 'paypal';
     var $_title = 'PayPal App';
-    var $_version = '4.000';
+    var $_version = '3.000';
     var $_api_version = '112';
 
     function isReqApiCountrySupported($country_id) {
