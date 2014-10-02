@@ -680,5 +680,39 @@
         $m->uninstall($this);
       }
     }
+
+    function logUpdate($message, $version) {
+      if ( is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work') ) {
+        file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/work/update-' . $version . '.txt', '[' . date('d-M-Y H:i:s') . '] ' . $message . "\n", FILE_APPEND);
+      }
+    }
+
+    function isWritable($location) {
+      if ( !file_exists($location) ) {
+        while ( true ) {
+          $location = dirname($location);
+
+          if ( file_exists($location) ) {
+            break;
+          }
+        }
+      }
+
+      return is_writable($location);
+    }
+
+    function rmdir($dir) {
+      foreach ( scandir($dir) as $file ) {
+        if ( !in_array($file, array('.', '..')) ) {
+          if ( is_dir($dir . '/' . $file) ) {
+            $this->rmdir($dir . '/' . $file);
+          } else {
+            unlink($dir . '/' . $file);
+          }
+        }
+      }
+
+      return rmdir($dir);
+    }
   }
 ?>
