@@ -102,6 +102,7 @@ $(function() {
 
     var releases = OSCOM.APP.PAYPAL.versionHistory['releases'];
     var versions = [];
+    var updateError = false;
 
     for ( var i = 0; i < releases.length; i++ ) {
       if ( releases[i]['version'] > OSCOM.APP.PAYPAL.version ) {
@@ -113,8 +114,12 @@ $(function() {
 
     if ( versions.length > 0 ) {
       var runQueueInOrder = function(i) {
+        if ( updateError == true ) {
+          return;
+        }
+
         if ( i >= versions.length ) {
-          $('#ppUpdateInfo div').append('<p>-- Updates have been applied successfully! --</p>');
+          $('#ppUpdateInfo').after('<div class="pp-panel pp-panel-success"><p>Updates have been applied successfully!</p></div>');
 
           $('#ppUpdate-dialog-confirm').dialog('open');
 
@@ -130,19 +135,51 @@ $(function() {
             $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=apply&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
               if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
               } else {
-                alert('343434');
+                updateError = true;
+
+                OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
+
+                $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+
+                $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Could not apply v' + versions[i] + '!</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>lalala</p></div>');
+
+                $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=log&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
+                  if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
+                    $('#ppUpdateErrorLog').append('<p>' + OSCOM.nl2br(OSCOM.htmlSpecialChars(data['log'])) + '</p>');
+                  }
+                });
               }
             }).fail(function() {
-              alert('fail 222');
+              OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
+
+              $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Could not apply v' + versions[i] + '!</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>lalala</p></div>');
+
+              $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=log&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
+                if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
+                  $('#ppUpdateErrorLog').append('<p>' + OSCOM.nl2br(OSCOM.htmlSpecialChars(data['log'])) + '</p>');
+                }
+              });
             }).then(function() {
               i++;
               runQueueInOrder(i);
             });
           } else {
-            alert('12121212');
+            updateError = true;
+
+            OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
+
+            $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+
+            $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not download v' + versions[i] + '.</p></div>');
           }
         }).fail(function() {
-          alert('fail');
+          OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
+
+          $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+
+          $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not download v' + versions[i] + '.</p></div>');
         });
       }
 
