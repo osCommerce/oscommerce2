@@ -183,6 +183,12 @@ small .pp-button {
   color: #349a20;
 }
 
+.pp-panel.pp-panel-error {
+  background-color: #fceaea;
+  border-left: 2px solid #df9a9a;
+  color: #9a2020;
+}
+
 .pp-panel-header-info {
   background-color: #97c5dd;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
@@ -203,6 +209,15 @@ small .pp-button {
 
 .pp-panel-header-success {
   background-color: #a0e097;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
+  font-size: 12px;
+  color: #fff;
+  margin: 0;
+  padding: 3px 15px;
+}
+
+.pp-panel-header-error {
+  background-color: #df9a9a;
   background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05) 40%, rgba(0, 0, 0, 0.1));
   font-size: 12px;
   color: #fff;
