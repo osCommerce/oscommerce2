@@ -132,6 +132,12 @@
                   }
                 }
               }
+
+              if ( empty($errors) ) {
+                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' COMPLETED', $update_version);
+              } else {
+                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' FAILED', $update_version);
+              }
             }
           }
 
