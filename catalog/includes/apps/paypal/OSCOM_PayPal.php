@@ -17,6 +17,13 @@
     var $_api_version = '112';
 
     function isReqApiCountrySupported($country_id) {
+      $country_query = tep_db_query("select countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
+      $country = tep_db_fetch_array($country_query);
+
+      return in_array($country['countries_iso_code_2'], $this->getReqApiCountries());
+    }
+
+    function getReqApiCountries() {
       static $countries;
 
       if ( !isset($countries) ) {
@@ -31,10 +38,7 @@
         }
       }
 
-      $country_query = tep_db_query("select countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
-      $country = tep_db_fetch_array($country_query);
-
-      return in_array($country['countries_iso_code_2'], $countries);
+      return $countries;
     }
 
     function log($module, $action, $result, $request, $response, $server, $is_ipn = false) {

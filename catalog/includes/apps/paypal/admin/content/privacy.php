@@ -13,9 +13,9 @@
 
 <h2>Privacy Policy</h2>
 
-<h3>API Credentials</h3>
+<h3>API Credentials <small>(available for <?php echo implode(', ', $OSCOM_PayPal->getReqApiCountries()); ?> countries only)</small></h3>
 
-<p>The PayPal App for osCommerce Online Merchant allows store owners to automatically setup and configure the App with their PayPal API credientials without the need to enter them in manually. This is performed securely by granting osCommerce access to retrieve the API credentials from the store owners PayPal account.</p>
+<p>The PayPal App for osCommerce Online Merchant allows store owners to automatically setup and configure the App with their PayPal API credientials without the need to enter them manually. This is performed securely by granting osCommerce access to retrieve the API credentials from the store owners PayPal account.</p>
 
 <p>Granting osCommerce access allows the following limited information to be retrieved from the store owners PayPal account:</p>
 
