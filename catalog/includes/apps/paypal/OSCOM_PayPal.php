@@ -323,7 +323,11 @@
               continue;
             }
 
-            $result[$counter] = $cfg->getSetField();
+            $set_field = $cfg->getSetField();
+
+            if ( !empty($set_field) ) {
+              $result[$counter] = $set_field;
+            }
 
             break;
           }

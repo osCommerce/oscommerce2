@@ -15,6 +15,10 @@
     var $sort_order = 200;
 
     function getSetField() {
+      if ( !file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/with_beta.txt') ) {
+        return false;
+      }
+
       $input = '<input type="radio" id="checkoutFlowSelectionDefault" name="checkout_flow" value="0"' . (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '0' ? ' checked="checked"' : '') . '><label for="checkoutFlowSelectionDefault">Default</label>' .
                '<input type="radio" id="checkoutFlowSelectionInContext" name="checkout_flow" value="1"' . (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1' ? ' checked="checked"' : '') . '><label for="checkoutFlowSelectionInContext">In-Context (Beta)</label>';
 
