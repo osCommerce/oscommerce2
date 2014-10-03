@@ -101,3 +101,9 @@
 <div class="pp-panel pp-panel-info">
   <p>The parameters of each transaction sent to and recieved from PayPal can be inspected on the <a href="<?php echo tep_href_link('paypal.php', 'action=log'); ?>">PayPal App Log</a> page.</p>
 </div>
+
+<h3>App Updates</h3>
+
+<p>The PayPal App for osCommerce Online Merchant automatically checks the osCommerce website for updates that are available to the App. This check is performed once every 24 hours and if an update is available, a notification is shown to allow the App to download and apply the update.</p>
+
+<p>A manual check for available updates is also performed on the PayPal App Info page.</p>

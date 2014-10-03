@@ -333,7 +333,7 @@ var OSCOM = {
       doOnlineVersionCheck: false,
       versionCheck: function() {
         $.getJSON('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
-          if ( ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
+          if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
             var versions = [];
 
             for ( var i = 0; i < data['releases'].length; i++ ) {
@@ -391,7 +391,7 @@ if ( typeof OSCOM.APP.PAYPAL.versionCheckResult != 'undefined' ) {
 
 <script>
 $(function() {
-  if ( OSCOM.APP.PAYPAL.action != 'update' ) {
+  if ( (OSCOM.APP.PAYPAL.action != 'update') && (OSCOM.APP.PAYPAL.action != 'info') ) {
     if ( typeof OSCOM.APP.PAYPAL.versionCheckResult == 'undefined' ) {
       OSCOM.APP.PAYPAL.doOnlineVersionCheck = true;
     } else {
