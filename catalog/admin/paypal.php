@@ -365,7 +365,7 @@ if ( typeof OSCOM.APP.PAYPAL.versionCheckResult != 'undefined' ) {
 <div class="pp-container">
   <div class="pp-header">
     <div id="ppAppInfo" style="float: right;">
-      <?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' <a href="' . tep_href_link('paypal.php', 'action=info') . '">Info/Help</a> <a href="http://library.oscommerce.com/Package&amp;' . $OSCOM_PayPal->getCode() . '&amp;oscom23&amp;privacy" target="_blank">Privacy</a>'; ?>
+      <?php echo $OSCOM_PayPal->getTitle() . ' v' . $OSCOM_PayPal->getVersion() . ' <a href="' . tep_href_link('paypal.php', 'action=info') . '">Info/Help</a> <a href="' . tep_href_link('paypal.php', 'action=privacy') . '">Privacy</a>'; ?>
     </div>
 
     <a href="<?php echo tep_href_link('paypal.php', 'action=' . $action); ?>"><img src="<?php echo tep_catalog_href_link('images/apps/paypal/paypal.png', '', 'SSL'); ?>" /></a>
