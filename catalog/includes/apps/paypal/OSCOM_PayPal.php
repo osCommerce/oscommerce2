@@ -691,7 +691,7 @@
 
     function logUpdate($message, $version) {
       if ( is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work') ) {
-        file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/work/update-' . $version . '.txt', '[' . date('d-M-Y H:i:s') . '] ' . $message . "\n", FILE_APPEND);
+        file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $version . '.php', '[' . date('d-M-Y H:i:s') . '] ' . $message . "\n", FILE_APPEND);
       }
     }
 

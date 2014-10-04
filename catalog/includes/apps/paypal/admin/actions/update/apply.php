@@ -73,8 +73,8 @@
 
             if ( empty($errors) ) {
 // reset the log
-              if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update-' . $update_version . '.txt') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update-' . $update_version . '.txt') ) {
-                unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update-' . $update_version . '.txt');
+              if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') ) {
+                unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php');
               }
 
               $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' STARTED', $update_version);
