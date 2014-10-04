@@ -331,15 +331,39 @@ var OSCOM = {
       versionCheckResult: <?php echo (defined('OSCOM_APP_PAYPAL_VERSION_CHECK')) ? '"' . OSCOM_APP_PAYPAL_VERSION_CHECK . '"' : 'undefined'; ?>,
       action: '<?php echo $action; ?>',
       doOnlineVersionCheck: false,
+      hasJson: <?php echo function_exists('json_encode') ? 'true' : 'false'; ?>,
       versionCheck: function() {
-        $.getJSON('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
-          if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
-            var versions = [];
+        $.get('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
+          var versions = [];
 
-            for ( var i = 0; i < data['releases'].length; i++ ) {
-              versions.push(data['releases'][i]['version']);
+          if ( OSCOM.APP.PAYPAL.hasJson == true ) {
+            try {
+              data = $.parseJSON(data);
+            } catch (ex) {
             }
 
+            if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
+              for ( var i = 0; i < data['releases'].length; i++ ) {
+                versions.push(data['releases'][i]['version']);
+              }
+            }
+          } else {
+            if ( (typeof data == 'string') && (data.indexOf('rpcStatus') > -1) ) {
+              var result = data.split("\n", 2);
+
+              if ( result.length == 2 ) {
+                var rpcStatus = result[0].split('=', 2);
+
+                if ( rpcStatus[1] == 1 ) {
+                  var release = result[1].split('=', 2);
+
+                  versions.push(release[1]);
+                }
+              }
+            }
+          }
+
+          if ( versions.length > 0 ) {
             OSCOM.APP.PAYPAL.versionCheckResult = [ OSCOM.dateNow.getDate(), Math.max.apply(Math, versions) ];
 
             OSCOM.APP.PAYPAL.versionCheckNotify();
