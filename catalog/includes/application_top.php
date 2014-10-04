@@ -274,7 +274,7 @@
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
-                                if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
+                                if (in_array($_POST['products_id'][$i], (is_array(isset($_POST['cart_delete']) ? $_POST['cart_delete'] : '') ? $_POST['cart_delete'] : array()))) {
                                   $_SESSION['cart']->remove($_POST['products_id'][$i]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($HTTP_POST_VARS['products_id'][$i])), 'warning');
                                 } else {
