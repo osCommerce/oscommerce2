@@ -34,7 +34,7 @@
     function execute() {
       global $oscTemplate, $customer_id;
       
-     $content_width = round(rtrim(MODULE_FOOTER_ACCOUNT_BREADCRUMB_CONTENT_WIDTH, '%') / 8.3);
+     $content_width = round(rtrim(MODULE_FOOTER_ACCOUNT_CONTENT_WIDTH, '%') / 8.3);
       
       if ( isset($_SESSION['customer_id']) ) {
         $account_content = '<li><a href="' . tep_href_link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
