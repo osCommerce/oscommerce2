@@ -24,15 +24,13 @@
 
 // insert current cart contents in database
       if ($this->contents) {
-        reset($this->contents);
-        while (list($products_id, ) = each($this->contents)) {
+        foreach( array_keys($this->contents) as $products_id ) {
           $qty = $this->contents[$products_id]['qty'];
           $product_query = tep_db_query("select products_id from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "'");
           if (!tep_db_num_rows($product_query)) {
             tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id) . "', '" . tep_db_input($qty) . "', '" . date('Ymd') . "')");
             if ($this->contents[$products_id]['attributes']) {
-              reset($this->contents[$products_id]['attributes']);
-              while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+              foreach ( $this->contents[$products_id]['attributes'] as $option => $value ) {
                 tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "')");
               }
             }
@@ -86,8 +84,7 @@
         if ($customer_id) tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id) . "', '" . tep_db_input($qty) . "', '" . date('Ymd') . "')");
 
         if (is_array($attributes)) {
-          reset($attributes);
-          while (list($option, $value) = each($attributes)) {
+          foreach( $attributes as $option => $value ) {
             $this->contents[$products_id]['attributes'][$option] = $value;
 // insert into database
             if ($customer_id) tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " (customers_id, products_id, products_options_id, products_options_value_id) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id) . "', '" . (int)$option . "', '" . (int)$value . "')");
@@ -109,8 +106,7 @@
       if ($customer_id) tep_db_query("update " . TABLE_CUSTOMERS_BASKET . " set customers_basket_quantity = '" . tep_db_input($quantity) . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "'");
 
       if (is_array($attributes)) {
-        reset($attributes);
-        while (list($option, $value) = each($attributes)) {
+        foreach( $attributes as $option => $value ) {
           $this->contents[$products_id]['attributes'][$option] = $value;
 // update database
           if ($customer_id) tep_db_query("update " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " set products_options_value_id = '" . (int)$value . "' where customers_id = '" . (int)$customer_id . "' and products_id = '" . tep_db_input($products_id) . "' and products_options_id = '" . (int)$option . "'");
@@ -121,8 +117,7 @@
     function cleanup() {
       global $customer_id;
 
-      reset($this->contents);
-      while (list($key,) = each($this->contents)) {
+      foreach( array_keys($this->contents) as $key ) {
         if ($this->contents[$key]['qty'] < 1) {
           unset($this->contents[$key]);
 // remove from database
@@ -137,8 +132,7 @@
     function count_contents() {  // get total number of items in cart 
         $total_items = 0;
         if (is_array($this->contents)) {
-            reset($this->contents);
-            while (list($products_id, ) = each($this->contents)) {
+            foreach ( array_keys($this->contents) as $products_id ) {
                 $total_items += $this->get_quantity($products_id);
             }
         }
@@ -180,8 +174,7 @@
       $product_id_list = '';
       if (is_array($this->contents))
       {
-        reset($this->contents);
-        while (list($products_id, ) = each($this->contents)) {
+        foreach ( array_keys($this->contents) as $products_id ) {
           $product_id_list .= ', ' . $products_id;
         }
       }
@@ -193,8 +186,7 @@
       $this->weight = 0;
       if (!is_array($this->contents)) return 0;
 
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach ( array_keys($this->contents) as $products_id ) {
         $qty = $this->contents[$products_id]['qty'];
 
 // products price
@@ -217,8 +209,7 @@
 
 // attributes price
         if (isset($this->contents[$products_id]['attributes'])) {
-          reset($this->contents[$products_id]['attributes']);
-          while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+          foreach ( $this->contents[$products_id]['attributes'] as $option => $value ) {
             $attribute_price_query = tep_db_query("select options_values_price, price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$prid . "' and options_id = '" . (int)$option . "' and options_values_id = '" . (int)$value . "'");
             $attribute_price = tep_db_fetch_array($attribute_price_query);
             if ($attribute_price['price_prefix'] == '+') {
@@ -235,8 +226,7 @@
       $attributes_price = 0;
 
       if (isset($this->contents[$products_id]['attributes'])) {
-        reset($this->contents[$products_id]['attributes']);
-        while (list($option, $value) = each($this->contents[$products_id]['attributes'])) {
+        foreach ( $this->contents[$products_id]['attributes'] as $option => $value ) {
           $attribute_price_query = tep_db_query("select options_values_price, price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$products_id . "' and options_id = '" . (int)$option . "' and options_values_id = '" . (int)$value . "'");
           $attribute_price = tep_db_fetch_array($attribute_price_query);
           if ($attribute_price['price_prefix'] == '+') {
@@ -255,8 +245,7 @@
 
       if (!is_array($this->contents)) return 0;
       $products_array = array();
-      reset($this->contents);
-      while (list($products_id, ) = each($this->contents)) {
+      foreach ( array_keys($this->contents) as $products_id ) {
         $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_model, p.products_price, p.products_weight, p.products_tax_class_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id='" . (int)tep_get_prid($products_id) . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "'");
         if ($products = tep_db_fetch_array($products_query)) {
           $prid = $products['products_id'];
