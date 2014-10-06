@@ -27,6 +27,7 @@
       global $order, $currencies;
 
       if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
+      	$pass = false;
         switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
           case 'national':
             if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true; break;
