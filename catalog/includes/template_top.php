@@ -45,7 +45,10 @@
 <link href="custom.css" rel="stylesheet">
 <!-- Custom -->
 <link href="user.css" rel="stylesheet">
- 
+
+<!-- font awesome -->
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
 </head>
 <body>
