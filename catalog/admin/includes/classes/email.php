@@ -68,8 +68,7 @@
 
       $this->headers[] = 'MIME-Version: 1.0';
 
-      reset($headers);
-      while (list(,$value) = each($headers)) {
+      foreach ( $headers as $value ) {
         if (tep_not_null($value)) {
           $this->headers[] = $value;
         }
@@ -113,7 +112,7 @@
 
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      while (list($key, ) = each($this->image_types)) {
+      foreach ( array_keys($this->image_types) as $key ) {
         $extensions[] = $key;
       }
 
@@ -322,15 +321,13 @@
       if ($params == '') $params = array();
 
       if (count($params) > 0) {
-        reset($params);
-        while(list($key, $value) = each($params)) {
+        foreach ( $params as $key => $value ) {
           $this->build_params[$key] = $value;
         }
       }
 
       if (tep_not_null($this->html_images)) {
-        reset($this->html_images);
-        while (list(,$value) = each($this->html_images)) {
+        foreach ( $this->html_images as $value ) {
           $this->html = str_replace($value['name'], 'cid:' . $value['cid'], $this->html);
         }
       }
@@ -453,8 +450,7 @@
         $output = $message->encode();
         $this->output = $output['body'];
 
-        reset($output['headers']);
-        while (list($key, $value) = each($output['headers'])) {
+        foreach ($output['headers'] as $key => $value ) {
           $headers[] = $key . ': ' . $value;
         }
 
