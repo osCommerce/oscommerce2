@@ -259,4 +259,3 @@ define('PRODUCT_UNSUBSCRIBED', '%s has been removed from your Notification List'
 define('PRODUCT_ADDED', '%s has been added to your Cart');
 define('PRODUCT_REMOVED', '%s has been removed from your Cart');
 
-define('FOOTER_TEXT_BODY', 'Copyright &copy; ' . date('Y') . ' <a href="' . tep_href_link(FILENAME_DEFAULT) . '">' . STORE_NAME . '</a><br />Powered by <a href="http://www.oscommerce.com" target="_blank">osCommerce</a>');
