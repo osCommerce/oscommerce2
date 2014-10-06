@@ -10,20 +10,23 @@
   Released under the GNU General Public License
 */
 ?>
-
 <footer>
-  <div class="container-fluid row-fluid">
-    <div class="col-sm-12 text-center"><?php echo FOOTER_TEXT_BODY; ?></div>
-    <?php
-    if ($banner = tep_banner_exists('dynamic', 'footer')) {
-      ?>
-
-      <div class="col-sm-12 text-center">
-        <?php echo tep_display_banner('static', $banner); ?>
+  <div class="footer">
+    <div class="container-fluid">
+      <div class="row">
+        <?php
+        echo $oscTemplate->getContent('footer');
+        ?>
       </div>
-
-      <?php
-    }
-    ?>
+    </div>
+  </div>
+  <div class="footer-extra">
+    <div class="container-fluid">
+      <div class="row">
+        <?php
+        echo $oscTemplate->getContent('footer_extra');
+        ?>
+      </div>
+    </div>
   </div>
 </footer>
