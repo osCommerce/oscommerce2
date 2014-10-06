@@ -225,4 +225,20 @@ s, del {
   margin-right: auto;
 }
 
+/* Footer  ------------------------------------------------------------------ */
+
+footer .footer {
+  background: #eee;
+}
+
+footer .footer h2 {
+  font-size: 1.5em;
+}
+
+footer .footer-extra {
+  background: #3D3D3D;
+  border-top: 1px solid #1f1f1f;
+  color: white;
+  padding-top: 10px;
+}
 

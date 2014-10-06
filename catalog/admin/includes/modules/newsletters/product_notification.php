@@ -208,8 +208,7 @@ function selectAll(FormName, SelectBox) {
 
       $mimemessage->build_message();
 
-      reset($audience);
-      while (list($key, $value) = each ($audience)) {
+      foreach ( $audience as $key => $value ) {
         $mimemessage->send($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], '', EMAIL_FROM, $this->title);
       }
 
