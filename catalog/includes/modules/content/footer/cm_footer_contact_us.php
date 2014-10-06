@@ -34,7 +34,7 @@
     function execute() {
       global $oscTemplate;
       
-      $content_width = round(rtrim(MODULE_FOOTER_ACCOUNT_BREADCRUMB_CONTENT_WIDTH, '%') / 8.3);
+      $content_width = round(rtrim(MODULE_FOOTER_CONTACT_US_CONTENT_WIDTH, '%') / 8.3);
       
       ob_start();
       include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/contact_us.php');
