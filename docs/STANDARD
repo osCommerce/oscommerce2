@@ -450,13 +450,6 @@ while loops should be written as:
 Walking through an array should be written as:
 
 <?php
-// for php3 compatibility
-  reset($array);
-  while (list($key, $value) = each($array)) {
-    ....
-  }
-
-// the php4 way
   foreach ($array as $key => $value) {
     ....
   }
