@@ -34,29 +34,7 @@
     function execute() {
       global $oscTemplate;
       
-      switch (MODULE_CONTENT_HEADER_LOGO_CONTENT_WIDTH) {
-        case "100%":
-        $content_width = 12;
-        break;
-        case "75%":
-        $content_width = 9;
-        break;
-        case "66%":
-        $content_width = 8;
-        break;
-        case "50%":
-        $content_width = 6;
-        break;
-        case "33%":
-        $content_width = 4;
-        break;
-        case "25%":
-        $content_width = 3;
-        break;
-        case "20%":
-        default:
-        $content_width = 2;
-      }
+      $content_width = round(rtrim(MODULE_CONTENT_HEADER_LOGO_CONTENT_WIDTH, '%') / 8.3);
       
       ob_start();
       include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/logo.php');
