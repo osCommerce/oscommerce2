@@ -32,8 +32,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
-        reset($HTTP_POST_VARS['configuration']);
-        while (list($key, $value) = each($HTTP_POST_VARS['configuration'])) {
+        foreach( $HTTP_POST_VARS['configuration'] as $key => $value ) {
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $HTTP_GET_VARS['module']));
@@ -236,8 +235,7 @@
   switch ($action) {
     case 'edit':
       $keys = '';
-      reset($mInfo->keys);
-      while (list($key, $value) = each($mInfo->keys)) {
+      foreach( $mInfo->keys as $key => $value ) {
         $keys .= '<strong>' . $value['title'] . '</strong><br />' . $value['description'] . '<br />';
 
         if ($value['set_function']) {
@@ -260,8 +258,7 @@
 
       if (in_array($mInfo->code . $file_extension, $modules_installed) && ($mInfo->status > 0)) {
         $keys = '';
-        reset($mInfo->keys);
-        while (list(, $value) = each($mInfo->keys)) {
+        foreach( $mInfo->keys as $value ) {
           $keys .= '<strong>' . $value['title'] . '</strong><br />';
           if ($value['use_function']) {
             $use_function = $value['use_function'];

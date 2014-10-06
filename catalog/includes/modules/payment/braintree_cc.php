@@ -36,10 +36,6 @@
 
       $braintree_error = null;
 
-      if ( version_compare(PHP_VERSION, '5.2.1', '<') ) {
-        $braintree_error = sprintf(MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_PHP, '5.2.1');
-      }
-
       if ( !isset($braintree_error) ) {
         $requiredExtensions = array('xmlwriter', 'SimpleXML', 'openssl', 'dom', 'hash', 'curl');
 
