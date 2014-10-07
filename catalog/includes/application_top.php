@@ -20,8 +20,10 @@
 // load server configuration parameters
   include (file_exists('includes/local/configure.php') ? 'includes/local/configure.php' : 'includes/configure.php');
 
-// if the database server is not defined, redirect to installation app    
-  if ( DB_SERVER == '' && is_dir('install') ) header('Location: install/index.php');
+  if ( DB_SERVER == '' && is_dir('install') )  {
+      header('Location: install/index.php');
+      exit;
+  }
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
@@ -112,7 +114,13 @@
       $session_started = true;
     }
   } elseif ( SESSION_BLOCK_SPIDERS == 'True' ) {
-    $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    
+    $user_agent = '';
+    
+    if (isset($_SERVER['HTTP_USER_AGENT'])) {
+      $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+    }
+
     $spider_flag = false;
 
     if ( !empty($user_agent) ) {
@@ -240,7 +248,7 @@
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
                                 if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
                                   $_SESSION['cart']->remove($_POST['products_id'][$i]);
-                                  $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($HTTP_POST_VARS['products_id'][$i])), 'warning');
+                                  $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($_POST['products_id'][$i])), 'warning');
                                 } else {
                                   $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
                                   $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);

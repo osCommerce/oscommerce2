@@ -26,8 +26,7 @@
     function process() {
       global $order, $currencies;
 
-      reset($order->info['tax_groups']);
-      while (list($key, $value) = each($order->info['tax_groups'])) {
+      foreach ( $order->info['tax_groups'] as $key => $value ) {
         if ($value > 0) {
           $this->output[] = array('title' => $key . ':',
                                   'text' => $currencies->format($value, true, $order->info['currency'], $order->info['currency_value']),
