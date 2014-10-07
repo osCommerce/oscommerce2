@@ -1230,17 +1230,18 @@
 
 ////
 // Return a random value
-   function tep_rand($min = null, $max = null) {
+  function tep_rand($min = null, $max = null) {
 
-     if (isset($min) && isset($max)) {
-       if ($min >= $max) {
-         return $min;
-       } else {
-         return mt_rand($min, $max);
+    if (isset($min) && isset($max)) {
+      if ($min >= $max) {
+        return $min;
+      } else {
+        return mt_rand($min, $max);
       }
     } else {
-      return mt_rand();
+     return mt_rand();
     }
+  }
     
   function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
     global $cookie_path, $cookie_domain;
