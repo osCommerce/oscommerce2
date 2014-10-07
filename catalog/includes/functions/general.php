@@ -1239,7 +1239,7 @@
         return mt_rand($min, $max);
       }
     } else {
-    return mt_rand();
+      return mt_rand();
     }
   }
 
