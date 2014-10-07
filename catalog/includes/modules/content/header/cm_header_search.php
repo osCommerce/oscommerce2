@@ -34,29 +34,7 @@
     function execute() {
       global $oscTemplate, $request_type;
       
-      switch (MODULE_CONTENT_HEADER_SEARCH_CONTENT_WIDTH) {
-        case "100%":
-        $content_width = 12;
-        break;
-        case "75%":
-        $content_width = 9;
-        break;
-        case "66%":
-        $content_width = 8;
-        break;
-        case "50%":
-        $content_width = 6;
-        break;
-        case "33%":
-        $content_width = 4;
-        break;
-        case "25%":
-        $content_width = 3;
-        break;
-        case "20%":
-        default:
-        $content_width = 2;
-      }
+      $content_width = round(rtrim(MODULE_CONTENT_HEADER_SEARCH_CONTENT_WIDTH, '%') / 8.3);
       
       $search_box = '<div class="searchbox-margin">';
       $search_box .= tep_draw_form('quick_find', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'class="form-horizontal"');
