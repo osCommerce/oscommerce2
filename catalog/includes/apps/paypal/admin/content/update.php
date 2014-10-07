@@ -47,6 +47,8 @@ $(function() {
       OSCOM.APP.PAYPAL.getUpdates();
     } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'update' ) {
       OSCOM.APP.PAYPAL.doUpdate();
+    } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'manualDownload' ) {
+      window.open('http://apps.oscommerce.com/index.php?Info&paypal&app');
     }
   });
 
@@ -57,30 +59,81 @@ $(function() {
 
     $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>Retrieving update availability list &hellip;</p></div>');
 
-    $.getJSON('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
+    $.get('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
+      var error = false;
+
       $('#ppUpdateInfo').empty();
 
-      if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
-        if ( data['releases'].length > 0 ) {
-          OSCOM.APP.PAYPAL.getUpdatesProgress = 'update';
-          OSCOM.APP.PAYPAL.versionHistory = data;
+      if ( OSCOM.APP.PAYPAL.hasJson == true ) {
+        try {
+          data = $.parseJSON(data);
+        } catch (ex) {
+        }
 
-          $('a[data-button="ppUpdateButton"]').html('Apply Update').removeClass('pp-button-info').addClass('pp-button-success');
+        if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
+          if ( data['releases'].length > 0 ) {
+            OSCOM.APP.PAYPAL.getUpdatesProgress = 'update';
+            OSCOM.APP.PAYPAL.versionHistory = data;
 
-          for ( var i = 0; i < data['releases'].length; i++ ) {
-            var record = data['releases'][i];
+            $('a[data-button="ppUpdateButton"]').html('Apply Update').removeClass('pp-button-info').addClass('pp-button-success');
 
-            $('#ppUpdateInfo').append('<h3 class="pp-panel-header-info">v' + OSCOM.htmlSpecialChars(record['version']) + ' <small>(' + OSCOM.htmlSpecialChars(record['date_added']) + ')</small></h3><div class="pp-panel pp-panel-info"><p>' + OSCOM.nl2br(OSCOM.htmlSpecialChars(record['changelog'])) + '</p></div>');
+            for ( var i = 0; i < data['releases'].length; i++ ) {
+              var record = data['releases'][i];
+
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-info">v' + OSCOM.htmlSpecialChars(record['version']) + ' <small>(' + OSCOM.htmlSpecialChars(record['date_added']) + ')</small></h3><div class="pp-panel pp-panel-info"><p>' + OSCOM.nl2br(OSCOM.htmlSpecialChars(record['changelog'])) + '</p></div>');
+            }
+          } else {
+            error = 'NO_UPDATE';
           }
         } else {
-          $('a[data-button="ppUpdateButton"]').html('Check for Updates');
-
-          $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>No updates are currently available.</p></div>');
+          error = 'INVALID_FORMAT';
         }
       } else {
-        $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+        if ( (typeof data == 'string') && (data.indexOf('rpcStatus') > -1) ) {
+          var result = data.split("\n", 2);
 
-        $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>Could not read the update availability list. Please try again.</p></div>');
+          if ( result.length == 2 ) {
+            var rpcStatus = result[0].split('=', 2);
+
+            if ( rpcStatus[1] == 1 ) {
+              var release = result[1].split('=', 2);
+
+              if ( release[1] > OSCOM.APP.PAYPAL.version ) {
+                OSCOM.APP.PAYPAL.getUpdatesProgress = 'manualDownload';
+
+                $('a[data-button="ppUpdateButton"]').html('Visit App at osCommerce').removeClass('pp-button-info').addClass('pp-button-warning');
+
+                $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-warning"><p>The update must be applied manually. The update can be downloaded at the osCommerce Apps site.</p></div>');
+              } else {
+                error = 'NO_UPDATE';
+              }
+            } else {
+              error = 'INVALID_FORMAT';
+            }
+          } else {
+            error = 'INVALID_FORMAT';
+          }
+        } else {
+          error = 'INVALID_FORMAT';
+        }
+      }
+
+      if ( error != false ) {
+        switch ( error ) {
+          case 'NO_UPDATE':
+            $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+
+            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>No updates are currently available.</p></div>');
+
+            break;
+
+          case 'INVALID_FORMAT':
+            $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+
+            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>Could not read the update availability list. Please try again.</p></div>');
+
+            break;
+        }
       }
     }).fail(function() {
       $('#ppUpdateInfo').empty();
