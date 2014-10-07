@@ -49,7 +49,10 @@
     function add_session($class, $message, $type = 'error') {
 
 
-      if (!isset($_SESSION['messageToStack'])) $_SESSION['messageToStack'] = array();
+      if (!isset($_SESSION['messageToStack'])) {
+        $_SESSION['messageToStack'] = array();
+
+      }
 
       $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
     }
@@ -62,7 +65,9 @@
 
       $output = array();
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-        if ($this->messages[$i]['class'] == $class) $output[] = $this->messages[$i];
+        if ($this->messages[$i]['class'] == $class) {
+          $output[] = $this->messages[$i];
+        }
       }
 
       return $this->alertBlock($output);
@@ -72,7 +77,9 @@
       $count = 0;
 
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-        if ($this->messages[$i]['class'] == $class) $count++;
+        if ($this->messages[$i]['class'] == $class) {
+          $count++;
+        }
       }
 
       return $count;
