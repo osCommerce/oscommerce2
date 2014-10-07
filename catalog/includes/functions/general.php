@@ -1221,37 +1221,11 @@
   }
 
 ////
-// Parse and secure the cPath parameter values
+// Parse and secure the cPath parameter values and make sure the category IDs are integers
   function tep_parse_category_path($cPath) {
-// make sure the category IDs are integers
-    $cPath_array = array_map(function ($string) {
-      return (int)$string;
-    }, explode('_', $cPath));
-
-// make sure no duplicate category IDs exist which could lock the server in a loop
-    $tmp_array = array();
-    foreach($cPath_array as $value) {
-      if (!in_array($value, $tmp_array)) {
-        $tmp_array[] = $value;
-      }
-    }
-
-    return $tmp_array;
-  }
-
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
+    return array_keys(array_flip(array_map (function ($string) {
+    return (int)$string;
+    }, explode('_', $cPath))));
   }
 
   function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
