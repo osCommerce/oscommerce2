@@ -54,7 +54,9 @@
       }
     }
 
-    if (isset($_sid)) $link .= $separator . tep_output_string($_sid);
+    if (isset($_sid)) {
+      $link .= $separator . tep_output_string($_sid);
+    }
 
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
 
@@ -80,7 +82,9 @@
 // the image filename as default
     $image = '<img src="' . tep_output_string($src) . '" alt="' . tep_output_string($alt) . '"';
 
-    if (tep_not_null($alt)) $image .= ' title="' . tep_output_string($alt) . '"';
+    if (tep_not_null($alt)) {
+      $image .= ' title="' . tep_output_string($alt) . '"';
+    }
 
     if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
@@ -99,11 +103,15 @@
       }
     }
 
-    if (tep_not_null($width) && tep_not_null($height)) $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
+    if (tep_not_null($width) && tep_not_null($height)) {
+      $image .= ' width="' . tep_output_string($width) . '" height="' . tep_output_string($height) . '"';
+    }
     
     $image .= ' class="';
 
-    if (tep_not_null($responsive) && ($responsive === true)) $image .= 'img-responsive';
+    if (tep_not_null($responsive) && ($responsive === true)) {
+      $image .= 'img-responsive';
+    }
 
     if (tep_not_null($bootstrap_css)) $image .= ' ' . $bootstrap_css;
 
@@ -170,7 +178,7 @@
   function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
-    if ($reinsert_value == true) {
+    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $value = stripslashes($_GET[$name]);
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
@@ -240,7 +248,7 @@
 
     $field .= '>';
 
-    if ($reinsert_value == true) {
+    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $field .= tep_output_string_protected(stripslashes($_GET[$name]));
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
@@ -262,7 +270,7 @@
 
     if (tep_not_null($value)) {
       $field .= ' value="' . tep_output_string($value) . '"';
-    } else {
+    } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
       if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
         $field .= ' value="' . tep_output_string(stripslashes($_GET[$name])) . '"';
       } elseif ( (isset($_POST[$name]) && is_string($_POST[$name])) ) {
@@ -299,7 +307,7 @@
 
     $field .= '>';
 
-    if (empty($default)) {
+    if (empty($default) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
         $default = stripslashes($_GET[$name]);
       } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
@@ -336,7 +344,7 @@
   }
 
 ////
-// Outputs a Bootstrap Button
+// Output a jQuery UI Button
   function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;
 
@@ -354,7 +362,7 @@
       $params['type'] = 'button';
     }
 
-    $button = '';
+    $button = NULL;
 
     if ( ($params['type'] == 'button') && isset($link) ) {
       $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
@@ -370,7 +378,11 @@
       $button .= ' ' . $params['params'];
     }
 
-    $button .= ' class="btn ' . ((isset($class)) ? $class : 'btn-default') . '">';
+    $button .= ' class="btn ';
+    $button .= (isset($class)) ? $class : 'btn-default';
+    $button .= '"';
+
+    $button .= '>';
 
     if (isset($icon) && tep_not_null($icon)) {
       $button .= ' <span class="' . $icon . '"></span> ';
