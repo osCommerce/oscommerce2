@@ -64,7 +64,7 @@ $(function() {
 
       $('#ppUpdateInfo').empty();
 
-      if ( OSCOM.APP.PAYPAL.hasJson == true ) {
+      if ( OSCOM.APP.PAYPAL.canApplyOnlineUpdates == true ) {
         try {
           data = $.parseJSON(data);
         } catch (ex) {
