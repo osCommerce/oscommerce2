@@ -1221,7 +1221,7 @@
   }
 
 ////
-// Parse and secure the cPath parameter values and make sure the category IDs are integers
+// Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
     return array_keys(array_flip(array_map (function ($string) {
     return (int)$string;
@@ -1239,10 +1239,10 @@
         return mt_rand($min, $max);
       }
     } else {
-     return mt_rand();
+    return mt_rand();
     }
   }
-    
+
   function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
     global $cookie_path, $cookie_domain;
 
