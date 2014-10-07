@@ -422,18 +422,14 @@
 
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
-    for ( $i=0, $n=sizeof($cPath_array); $i<$n; $i++ ) {
-      $categories_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
-
-      if ( tep_db_num_rows($categories_query) > 0 ) {
-        $categories = tep_db_fetch_array($categories_query);
-
-        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
-      } else {
-        break;
+    $categories_query = tep_db_query("select categories_name, categories_id from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id IN (" .  implode(',', $cPath_array) . ") and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    
+    while ($categories = tep_db_fetch_array($categories_query)) {
+      $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . $categories['categories_id']));
       }
     }
-  } elseif ( isset($_GET['manufacturers_id']) ) {
+    
+  if ( isset($_GET['manufacturers_id']) ) {
     $manufacturers_query = tep_db_query("select manufacturers_name from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
 
     if ( tep_db_num_rows($manufacturers_query) ) {
