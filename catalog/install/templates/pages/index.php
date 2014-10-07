@@ -70,7 +70,8 @@
         <table class="table table-condensed">
 
 <?php
-        foreach ($warning_array as $key => $value) {
+        reset($warning_array);
+        while (list($key, $value) = each($warning_array)) {
           echo '        <tr>' . "\n" .
                '          <td valign="top"><strong>' . $key . '</strong></td>' . "\n" .
                '          <td valign="top">' . $value . '</td>' . "\n" .
