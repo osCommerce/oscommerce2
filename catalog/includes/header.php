@@ -32,7 +32,7 @@
   </div>
 
 <div class="clearfix"></div>
-<div class="col-xs-12"><?php echo $breadcrumb->trail(); ?></div>
+<div class="col-xs-12"><?php echo $breadcrumb->trail(' &raquo '); ?></div>
 
 <?php
   if (isset($_GET['error_message']) && tep_not_null($_GET['error_message'])) {
