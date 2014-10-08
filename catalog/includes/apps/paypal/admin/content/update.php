@@ -28,6 +28,8 @@ $(function() {
       OSCOM.APP.PAYPAL.getUpdates();
     } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'update' ) {
       OSCOM.APP.PAYPAL.doUpdate();
+    } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'retrieveFresh' ) {
+      window.location('<?php echo tep_href_link('paypal.php', 'action=update'); ?>');
     } else if ( OSCOM.APP.PAYPAL.getUpdatesProgress == 'manualDownload' ) {
       window.open('http://apps.oscommerce.com/index.php?Info&paypal&app');
     }
@@ -153,7 +155,7 @@ $(function() {
         }
 
         if ( i >= versions.length ) {
-          OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
+          OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieveFresh';
 
           $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
 
