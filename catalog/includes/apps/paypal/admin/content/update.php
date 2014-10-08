@@ -210,14 +210,18 @@ $(function() {
 
             $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
 
-            $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not download v' + OSCOM.htmlSpecialChars(versions[i]) + '.</p></div>');
+            if ( (typeof data == 'object') && ('error' in data) ) {
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>' + data['error'] + '</p></div>');
+            } else {
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not start the procedure to download v' + OSCOM.htmlSpecialChars(versions[i]) + '. Please try again.</p></div>');
+            }
           }
         }).fail(function() {
           OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
           $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
 
-          $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not download v' + OSCOM.htmlSpecialChars(versions[i]) + '.</p></div>');
+          $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not start the procedure to download v' + OSCOM.htmlSpecialChars(versions[i]) + '. Please try again.</p></div>');
         });
       }
 
