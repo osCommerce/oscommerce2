@@ -29,11 +29,11 @@
       <ol class="breadcrumb">
 <?php
       foreach ($this->_trail as $trail ) { 
-      if (isset($trail['link']) && tep_not_null($trail['link'])) { ?>
-
+        if (isset($trail['link']) && tep_not_null($trail['link'])) { 
+?>
           <li><a href="<?php echo $trail['link'] . '">' . $trail['title']; ?></a></li>
 <?php      } else { ?>
-           <li><?php echo $trail['title']; ?></li>
+          <li><?php echo $trail['title']; ?></li>
 <?php       }
     }
 ?>
