@@ -17,27 +17,8 @@
 
 <div id="ppUpdateInfo"></div>
 
-<div id="ppUpdate-dialog-confirm" title="Success!">
-  <p><span class="ui-icon ui-icon-check" style="float:left; margin:0 7px 20px 0;"></span>Updates have been applied successfully!</p>
-</div>
-
 <script>
 $(function() {
-  $('#ppUpdate-dialog-confirm').dialog({
-    autoOpen: false,
-    resizable: false,
-    height: 140,
-    modal: true,
-    close: function() {
-      window.location = '<?php echo tep_href_link('paypal.php', 'action=info'); ?>';
-    },
-    buttons: {
-      "Ok": function() {
-        window.location = '<?php echo tep_href_link('paypal.php', 'action=info'); ?>';
-      }
-    }
-  });
-
   OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
   $('a[data-button="ppUpdateButton"]').click(function(e) {
@@ -172,9 +153,11 @@ $(function() {
         }
 
         if ( i >= versions.length ) {
-          $('#ppUpdateInfo').after('<div class="pp-panel pp-panel-success"><p>Updates have been applied successfully!</p></div>');
+          OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-          $('#ppUpdate-dialog-confirm').dialog('open');
+          $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+
+          $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-success"><p>Updates have been applied successfully!</p></div>');
 
           return;
         }
