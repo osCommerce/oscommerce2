@@ -265,17 +265,12 @@
       tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
     }
 
-    if ( DISPLAY_CART == 'true' ) {
+     if ( DISPLAY_CART == 'true' ) {
       $goto =  FILENAME_SHOPPING_CART;
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = $PHP_SELF;
-
-      if ( $_GET['action'] == 'buy_now') {
-        $parameters = array('action', 'pid', 'products_id');
-      } else {
-        $parameters = array('action', 'pid');
-      }
+      $parameters = array('action', 'pid', ( $_GET['action'] == 'buy_now') ? 'products_id' : '');
     }
 
     switch ( $_GET['action'] ) {
