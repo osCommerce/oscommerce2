@@ -13,23 +13,16 @@
   $ppUpdateApplyResult = array('rpcStatus' => -1);
 
   if ( isset($HTTP_GET_VARS['v']) && is_numeric($HTTP_GET_VARS['v']) && ($HTTP_GET_VARS['v'] > $OSCOM_PayPal->getVersion()) ) {
-    $with_compress = array_search('GZ', Phar::getSupportedCompression()) !== false;
+    $update_version = basename($HTTP_GET_VARS['v']);
 
-    $filename = 'update.phar' . ($with_compress === true ? '.gz' : '');
-    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/' . $filename;
-
-    if ( file_exists($filepath) ) {
-      $update_version = basename($HTTP_GET_VARS['v']);
+    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.phar';
 
 // reset the log
-      if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') ) {
-        unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php');
-      }
+    if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') ) {
+      unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php');
+    }
 
-      $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' STARTED', $update_version);
-
-      $files = array();
-
+    if ( file_exists($filepath) ) {
       $phar_can_open = true;
 
       try {
@@ -49,10 +42,6 @@
         $check_diff = array_diff_assoc($meta, $check_against);
 
         if ( empty($check_diff) ) {
-          $update_version = $meta['version'];
-
-          $errors = array();
-
           $work_dir = DIR_FS_CATALOG . 'includes/apps/paypal/work/phar_contents';
 
           if ( file_exists($work_dir) ) {
@@ -63,6 +52,8 @@
 
           if ( $phar->extractTo($work_dir) ) {
             unset($phar);
+
+            $errors = array();
 
             $contents = new RecursiveDirectoryIterator($work_dir, FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS);
 
@@ -81,6 +72,8 @@
             }
 
             if ( empty($errors) ) {
+              $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' STARTED', $update_version);
+
               foreach ( new RecursiveIteratorIterator($contents) as $i ) {
                 $pathname = substr($i->getPathName(), strlen($work_dir . '/'));
 
@@ -102,8 +95,6 @@
                   if ( copy($i->getPathName(), DIR_FS_CATALOG . $target . basename($pathname)) ) {
                     $OSCOM_PayPal->logUpdate('Updated: ' . DIR_FS_CATALOG . substr($pathname, 8), $update_version);
                   } else {
-                    $OSCOM_PayPal->logUpdate('*** Could not update: ' . DIR_FS_CATALOG . substr($pathname, 8), $update_version);
-
                     $errors[] = DIR_FS_CATALOG . substr($pathname, 8);
 
                     break;
@@ -126,15 +117,23 @@
                   if ( copy($i->getPathName(), DIR_FS_ADMIN . $target . basename($pathname)) ) {
                     $OSCOM_PayPal->logUpdate('Updated: ' . DIR_FS_ADMIN . substr($pathname, 6), $update_version);
                   } else {
-                    $OSCOM_PayPal->logUpdate('*** Could not update: ' . DIR_FS_ADMIN . substr($pathname, 6), $update_version);
-
                     $errors[] = DIR_FS_ADMIN . substr($pathname, 6);
 
                     break;
                   }
                 }
               }
-            } else {
+
+              if ( empty($errors) ) {
+                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' COMPLETED', $update_version);
+
+                $ppUpdateApplyResult['rpcStatus'] = 1;
+              } else {
+                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' FAILED', $update_version);
+              }
+            }
+
+            if ( !empty($errors) ) {
               $OSCOM_PayPal->logUpdate('*** Could not update the following files. Please update the file and directory permissions to allow write access.', $update_version);
 
               foreach ( $errors as $e ) {
@@ -144,18 +143,16 @@
           }
 
           $OSCOM_PayPal->rmdir($work_dir);
-
-          if ( empty($errors) ) {
-            $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' COMPLETED', $update_version);
-
-            $ppUpdateApplyResult['rpcStatus'] = 1;
-          } else {
-            $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' FAILED', $update_version);
-          }
+        } else {
+          $OSCOM_PayPal->logUpdate('Update Package Validation Failed', $update_version);
         }
+      } else {
+        $OSCOM_PayPal->logUpdate('Update Package Verification Failed', $update_version);
       }
 
       unlink($filepath);
+    } else {
+      $OSCOM_PayPal->logUpdate('Update Package Does Not Exist: '. $filepath, $update_version);
     }
   }
 

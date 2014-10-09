@@ -86,7 +86,7 @@ $(function() {
 
                 $('a[data-button="ppUpdateButton"]').html('Visit App at osCommerce').removeClass('pp-button-info').addClass('pp-button-warning');
 
-                $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-warning"><p>The update must be applied manually. The update can be downloaded at the osCommerce Apps site.</p></div>');
+                $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-warning"><p>v' + OSCOM.htmlSpecialChars(release[1]) + ' is available as an update! This can be downloaded and applied manually from the osCommerce Apps site.</p></div>');
               } else {
                 error = 'NO_UPDATE';
               }
