@@ -265,7 +265,7 @@
       tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
     }
 
-     if ( DISPLAY_CART == 'true' ) {
+    if ( DISPLAY_CART == 'true' ) {
       $goto =  FILENAME_SHOPPING_CART;
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
