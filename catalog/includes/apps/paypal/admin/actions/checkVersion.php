@@ -15,19 +15,21 @@
 
     $ppUpdateReleasesResponse = @json_decode($OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3))), true);
 
-    if ( is_array($ppUpdateReleasesResponse) && isset($ppUpdateReleasesResponse['rpcStatus']) && ($ppUpdateReleasesResponse['rpcStatus'] === 1) && isset($ppUpdateReleasesResponse['app']['releases']) ) {
+    if ( is_array($ppUpdateReleasesResponse) && isset($ppUpdateReleasesResponse['rpcStatus']) && ($ppUpdateReleasesResponse['rpcStatus'] === 1) ) {
       $ppUpdateReleasesResult['rpcStatus'] = 1;
 
-      $ppMaxVersion = 0;
+      if ( isset($ppUpdateReleasesResponse['app']['releases']) ) {
+        $ppMaxVersion = 0;
 
-      foreach ( $ppUpdateReleasesResponse['app']['releases'] as $ppUpdateRelease ) {
-        if ( is_numeric($ppUpdateRelease['version']) ) {
-          $ppUpdateReleasesResult['releases'][] = $ppUpdateRelease;
+        foreach ( $ppUpdateReleasesResponse['app']['releases'] as $ppUpdateRelease ) {
+          if ( is_numeric($ppUpdateRelease['version']) ) {
+            $ppUpdateReleasesResult['releases'][] = $ppUpdateRelease;
 
-          if ( $ppUpdateRelease['version'] > $ppMaxVersion ) {
-            $ppMaxVersion = $ppUpdateRelease['version'];
+            if ( $ppUpdateRelease['version'] > $ppMaxVersion ) {
+              $ppMaxVersion = $ppUpdateRelease['version'];
+            }
           }
-       }
+        }
       }
     }
 
@@ -40,11 +42,14 @@
     if ( !empty($ppUpdateReleasesResponse) && (strpos($ppUpdateReleasesResponse, 'rpcStatus') !== false) ) {
       parse_str($ppUpdateReleasesResponse, $ppUpdateRelease);
 
-      if ( isset($ppUpdateRelease['rpcStatus']) && ($ppUpdateRelease['rpcStatus'] == '1') && isset($ppUpdateRelease['version']) && is_numeric($ppUpdateRelease['version']) ) {
-        $ppUpdateReleasesResult = 'rpcStatus=1' . "\n" .
-                                  'release=' . $ppUpdateRelease['version'];
+      if ( isset($ppUpdateRelease['rpcStatus']) && ($ppUpdateRelease['rpcStatus'] == '1') ) {
+        $ppUpdateReleasesResult = 'rpcStatus=1' . "\n";
 
-        $ppMaxVersion = $ppUpdateRelease['version'];
+        if ( isset($ppUpdateRelease['version']) && is_numeric($ppUpdateRelease['version']) ) {
+          $ppUpdateReleasesResult .= 'release=' . $ppUpdateRelease['version'];
+
+          $ppMaxVersion = $ppUpdateRelease['version'];
+        }
       }
     }
 

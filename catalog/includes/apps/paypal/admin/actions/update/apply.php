@@ -62,6 +62,10 @@
 
             $errors = array();
 
+            if ( !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt') ) {
+              $errors[] = realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
+            }
+
             $contents = new RecursiveDirectoryIterator($work_dir, FilesystemIterator::SKIP_DOTS | FilesystemIterator::UNIX_PATHS);
 
             foreach ( new RecursiveIteratorIterator($contents) as $i ) {
@@ -129,6 +133,12 @@
                     break;
                   }
                 }
+              }
+
+              if ( file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt', $HTTP_GET_VARS['v']) ) {
+                $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
+              } else {
+                $errors[] = realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
               }
 
               if ( empty($errors) ) {

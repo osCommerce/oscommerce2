@@ -54,7 +54,7 @@ $(function() {
         }
 
         if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
-          if ( data['releases'].length > 0 ) {
+          if ( ('releases' in data) && (data['releases'].length > 0) ) {
             OSCOM.APP.PAYPAL.getUpdatesProgress = 'update';
             OSCOM.APP.PAYPAL.versionHistory = data;
 

@@ -13,7 +13,7 @@
   class OSCOM_PayPal {
     var $_code = 'paypal';
     var $_title = 'PayPal App';
-    var $_version = '3.000';
+    var $_version;
     var $_api_version = '112';
 
     function isReqApiCountrySupported($country_id) {
@@ -587,6 +587,16 @@
     }
 
     function getVersion() {
+      if ( !isset($this->_version) ) {
+        $version = trim(file_get_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'));
+
+        if ( is_numeric($version) ) {
+          $this->_version = $version;
+        } else {
+          trigger_error('OSCOM APP [PAYPAL]: Could not read App version number.');
+        }
+      }
+
       return $this->_version;
     }
 
