@@ -331,7 +331,7 @@ var OSCOM = {
       versionCheckResult: <?php echo (defined('OSCOM_APP_PAYPAL_VERSION_CHECK')) ? '"' . OSCOM_APP_PAYPAL_VERSION_CHECK . '"' : 'undefined'; ?>,
       action: '<?php echo $action; ?>',
       doOnlineVersionCheck: false,
-      canApplyOnlineUpdates: <?php echo function_exists('json_encode') && class_exists('Phar') ? 'true' : 'false'; ?>,
+      canApplyOnlineUpdates: <?php echo class_exists('PharData') && function_exists('json_encode') && function_exists('openssl_verify') ? 'true' : 'false'; ?>,
       versionCheck: function() {
         $.get('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
           var versions = [];

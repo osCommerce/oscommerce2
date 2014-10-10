@@ -15,18 +15,38 @@
   if ( isset($HTTP_GET_VARS['v']) && is_numeric($HTTP_GET_VARS['v']) && ($HTTP_GET_VARS['v'] > $OSCOM_PayPal->getVersion()) ) {
     $update_version = basename($HTTP_GET_VARS['v']);
 
-    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.phar';
+    $with_compress = array_search('GZ', Phar::getSupportedCompression()) !== false;
+
+    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.osc';
 
 // reset the log
     if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') ) {
       unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php');
     }
 
+    if ( $with_compress === true ) {
+      if ( file_exists($filepath . '.gz') ) {
+        $phar_can_open = true;
+
+        try {
+          $phar = new PharData($filepath . '.gz');
+          $phar->decompress('osc');
+        } catch ( Exception $e ) {
+          $phar_can_open = false;
+        }
+
+        if ( $phar_can_open === true ) {
+          unset($phar);
+          unlink($filepath . '.gz');
+        }
+      }
+    }
+
     if ( file_exists($filepath) ) {
       $phar_can_open = true;
 
       try {
-        $phar = new Phar($filepath);
+        $phar = new PharData($filepath);
       } catch ( Exception $e ) {
         $phar_can_open = false;
       }
@@ -49,7 +69,17 @@
         }
 
         if ( $meta_pass === true ) {
-          $work_dir = DIR_FS_CATALOG . 'includes/apps/paypal/work/phar_contents';
+          $meta_pass = false;
+
+          if ( isset($meta['sig']) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/paypal.pubkey') ) {
+            if ( @openssl_verify($check_against['provider'] . '-' . $check_against['code'] . '-' . $check_against['version'] . '-' . $check_against['req'], base64_decode($meta['sig']), file_get_contents(DIR_FS_CATALOG . 'includes/apps/paypal/work/paypal.pubkey')) === 1 ) {
+              $meta_pass = true;
+            }
+          }
+        }
+
+        if ( $meta_pass === true ) {
+          $work_dir = DIR_FS_CATALOG . 'includes/apps/paypal/work/update_contents';
 
           if ( file_exists($work_dir) ) {
             $OSCOM_PayPal->rmdir($work_dir);
@@ -163,10 +193,10 @@
 
           $OSCOM_PayPal->rmdir($work_dir);
         } else {
-          $OSCOM_PayPal->logUpdate('Update Package Validation Failed', $update_version);
+          $OSCOM_PayPal->logUpdate('Update Package Verification Failed', $update_version);
         }
       } else {
-        $OSCOM_PayPal->logUpdate('Update Package Verification Failed', $update_version);
+        $OSCOM_PayPal->logUpdate('Invalid Update Package Format', $update_version);
       }
 
       unlink($filepath);

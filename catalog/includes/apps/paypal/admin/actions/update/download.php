@@ -22,13 +22,17 @@
 
       $ppUpdateDownloadFile = $OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?Download&paypal&app&2_300&' . str_replace('.', '_', $HTTP_GET_VARS['v']) . '&update' . ($with_compress === true ? '&gz' : ''));
 
-      $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.phar';
+      $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.osc';
 
       if ( file_exists($filepath) && is_writable($filepath) ) {
         unlink($filepath);
       }
 
-      $save_result = @file_put_contents($filepath, $ppUpdateDownloadFile);
+      if ( file_exists($filepath . '.gz') && is_writable($filepath . '.gz') ) {
+        unlink($filepath . '.gz');
+      }
+
+      $save_result = @file_put_contents($filepath . ($with_compress === true ? '.gz' : ''), $ppUpdateDownloadFile);
 
       if ( ($save_result !== false) && ($save_result > 0) ) {
         $ppUpdateDownloadResult['rpcStatus'] = 1;
