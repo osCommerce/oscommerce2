@@ -192,13 +192,7 @@ $(function() {
 
               $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
 
-              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + OSCOM.htmlSpecialChars('Could not apply v' + versions[i] + '!') + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>An error occured during this update.</p></div>');
-
-              $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=log&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
-                if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
-                  $('#ppUpdateErrorLog').append('<p>' + OSCOM.nl2br(OSCOM.htmlSpecialChars(data['log'])) + '</p>');
-                }
-              });
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + OSCOM.htmlSpecialChars('Could not apply v' + versions[i] + '!') + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>Could not start the procedure to apply the update. Please try again.</p></div>');
             }).then(function() {
               i++;
               runQueueInOrder(i);

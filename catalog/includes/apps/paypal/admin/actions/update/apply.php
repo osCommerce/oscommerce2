@@ -32,6 +32,8 @@
       }
 
       if ( $phar_can_open === true ) {
+        $meta_pass = true;
+
         $meta = $phar->getMetadata();
 
         $check_against = array('provider' => 'paypal',
@@ -39,9 +41,14 @@
                                'version' => $HTTP_GET_VARS['v'],
                                'req' => '2.300');
 
-        $check_diff = array_diff_assoc($meta, $check_against);
+        foreach ( $check_against as $key => $value ) {
+          if ( !isset($meta[$key]) || ($meta[$key] != $value) ) {
+            $meta_pass = false;
+            break;
+          }
+        }
 
-        if ( empty($check_diff) ) {
+        if ( $meta_pass === true ) {
           $work_dir = DIR_FS_CATALOG . 'includes/apps/paypal/work/phar_contents';
 
           if ( file_exists($work_dir) ) {
@@ -62,11 +69,11 @@
 
               if ( substr($pathname, 0, 8) == 'catalog/' ) {
                 if ( !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . substr($pathname, 8)) || !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . dirname(substr($pathname, 8))) ) {
-                  $errors[] = DIR_FS_CATALOG . substr($pathname, 8);
+                  $errors[] = realpath(DIR_FS_CATALOG . substr($pathname, 8));
                 }
               } elseif ( substr($pathname, 0, 6) == 'admin/' ) {
                 if ( !$OSCOM_PayPal->isWritable(DIR_FS_ADMIN . substr($pathname, 6)) || !$OSCOM_PayPal->isWritable(DIR_FS_ADMIN . dirname(substr($pathname, 6))) ) {
-                  $errors[] = DIR_FS_ADMIN . substr($pathname, 6);
+                  $errors[] = realpath(DIR_FS_ADMIN . substr($pathname, 6));
                 }
               }
             }
@@ -93,9 +100,9 @@
                   }
 
                   if ( copy($i->getPathName(), DIR_FS_CATALOG . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . DIR_FS_CATALOG . substr($pathname, 8), $update_version);
+                    $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_CATALOG . substr($pathname, 8)), $update_version);
                   } else {
-                    $errors[] = DIR_FS_CATALOG . substr($pathname, 8);
+                    $errors[] = realpath(DIR_FS_CATALOG . substr($pathname, 8));
 
                     break;
                   }
@@ -115,9 +122,9 @@
                   }
 
                   if ( copy($i->getPathName(), DIR_FS_ADMIN . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . DIR_FS_ADMIN . substr($pathname, 6), $update_version);
+                    $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_ADMIN . substr($pathname, 6)), $update_version);
                   } else {
-                    $errors[] = DIR_FS_ADMIN . substr($pathname, 6);
+                    $errors[] = realpath(DIR_FS_ADMIN . substr($pathname, 6));
 
                     break;
                   }
@@ -140,6 +147,8 @@
                 $OSCOM_PayPal->logUpdate($e, $update_version);
               }
             }
+          } else {
+            $OSCOM_PayPal->logUpdate('Update Package Extraction Failed', $update_version);
           }
 
           $OSCOM_PayPal->rmdir($work_dir);

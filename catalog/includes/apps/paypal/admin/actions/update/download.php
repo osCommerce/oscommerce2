@@ -33,10 +33,10 @@
       if ( ($save_result !== false) && ($save_result > 0) ) {
         $ppUpdateDownloadResult['rpcStatus'] = 1;
       } else {
-        $ppUpdateDownloadResult['error'] = 'Could not download the update package to the following location. Please delete the file if it exists.<br /><br />' . $filepath;
+        $ppUpdateDownloadResult['error'] = 'Could not download the update package to the following location. Please delete the file if it exists.<br /><br />' . realpath($filepath);
       }
     } else {
-      $ppUpdateDownloadResult['error'] = 'The required permissions on the following directory is not correctly set. Please update the permissions to allow write access.<br /><br />' . DIR_FS_CATALOG . 'includes/apps/paypal/work';
+      $ppUpdateDownloadResult['error'] = 'The required permissions on the following directory is not correctly set. Please update the permissions to allow write access.<br /><br />' . realpath(DIR_FS_CATALOG . 'includes/apps/paypal/work');
     }
   }
 
