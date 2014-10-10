@@ -20,7 +20,7 @@
     }
 
     function choose_audience() {
-      global $_GET, $languages_id;
+      global $languages_id;
 
       $products_array = array();
       $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.language_id = '" . $languages_id . "' and pd.products_id = p.products_id and p.products_status = '1' order by pd.products_name");
@@ -89,7 +89,6 @@ function selectAll(FormName, SelectBox) {
     }
 
     function confirm() {
-      global $_GET, $_POST;
 
       $audience = array();
 
@@ -158,7 +157,6 @@ function selectAll(FormName, SelectBox) {
     }
 
     function send($newsletter_id) {
-      global $_POST;
 
       $audience = array();
 

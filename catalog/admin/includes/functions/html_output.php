@@ -195,7 +195,6 @@
 ////
 // Output a form input field
   function tep_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
-    global $_GET, $_POST;
 
     $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
@@ -239,7 +238,6 @@
 ////
 // Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
   function tep_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '') {
-    global $_GET, $_POST;
 
     $selection = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
 
@@ -270,7 +268,6 @@
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
   function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
-    global $_GET, $_POST;
 
     $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
 
@@ -296,7 +293,6 @@
 ////
 // Output a form hidden field
   function tep_draw_hidden_field($name, $value = '', $parameters = '') {
-    global $_GET, $_POST;
 
     $field = '<input type="hidden" name="' . tep_output_string($name) . '"';
 
@@ -332,7 +328,6 @@
 ////
 // Output a form pull down menu
   function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
-    global $_GET, $_POST;
 
     $field = '<select name="' . tep_output_string($name) . '"';
 

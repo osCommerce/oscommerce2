@@ -412,7 +412,7 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_yearly($banner_id) {
-    global $banner, $_GET;
+    global $banner;
 
     $banner_stats_query = tep_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year(banners_history_date)");
     while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
@@ -458,7 +458,7 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_monthly($banner_id) {
-    global $banner, $_GET;
+    global $banner;
 
     $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
 
@@ -512,7 +512,7 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_daily($banner_id) {
-    global $banner, $_GET;
+    global $banner;
 
     $year = (isset($_GET['year']) ? $_GET['year'] : date('Y'));
     $month = (isset($_GET['month']) ? $_GET['month'] : date('n'));

@@ -33,7 +33,7 @@
     }
 
     function parse() {
-      global $_FILES, $messageStack;
+      global $messageStack;
 
       $file = array();
 

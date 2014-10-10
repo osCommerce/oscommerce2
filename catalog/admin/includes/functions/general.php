@@ -118,7 +118,6 @@
   }
 
   function tep_get_all_get_params($exclude_array = '') {
-    global $_GET;
 
     if ($exclude_array == '') $exclude_array = array();
 
@@ -820,7 +819,6 @@
 ////
 // Retreive server information
   function tep_get_system_information() {
-    global $_SERVER;
 
     $db_query = tep_db_query("select now() as datetime");
     $db = tep_db_fetch_array($db_query);
@@ -1389,7 +1387,6 @@
   }
 
   function tep_get_ip_address() {
-    global $_SERVER;
 
     $ip_address = null;
     $ip_addresses = array();

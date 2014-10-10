@@ -24,7 +24,6 @@
     }
 
     function confirm() {
-      global $_GET;
 
       $mail_query = tep_db_query("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
       $mail = tep_db_fetch_array($mail_query);
