@@ -17,29 +17,11 @@
 
     $with_compress = array_search('GZ', Phar::getSupportedCompression()) !== false;
 
-    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.osc';
+    $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.osc' . ($with_compress === true ? '.gz' : '');
 
 // reset the log
     if ( file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') && is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php') ) {
       unlink(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $update_version . '.php');
-    }
-
-    if ( $with_compress === true ) {
-      if ( file_exists($filepath . '.gz') ) {
-        $phar_can_open = true;
-
-        try {
-          $phar = new PharData($filepath . '.gz');
-          $phar->decompress('osc');
-        } catch ( Exception $e ) {
-          $phar_can_open = false;
-        }
-
-        if ( $phar_can_open === true ) {
-          unset($phar);
-          unlink($filepath . '.gz');
-        }
-      }
     }
 
     if ( file_exists($filepath) ) {
