@@ -12,7 +12,7 @@
 
   include(DIR_WS_CLASSES . 'phplot.php');
 
-  $year = (($HTTP_GET_VARS['year']) ? $HTTP_GET_VARS['year'] : date('Y'));
+  $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
 
   $stats = array();
   for ($i=1; $i<13; $i++) {

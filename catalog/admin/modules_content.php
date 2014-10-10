@@ -88,16 +88,16 @@
     tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
   }
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
-        $class = basename($HTTP_GET_VARS['module']);
+        $class = basename($_GET['module']);
 
         foreach ( $modules['installed'] as $m ) {
           if ( $m['code'] == $class ) {
-            foreach ($HTTP_POST_VARS['configuration'] as $key => $value) {
+            foreach ($_POST['configuration'] as $key => $value) {
               $key = tep_db_prepare_input($key);
               $value = tep_db_prepare_input($value);
 
@@ -113,7 +113,7 @@
         break;
 
       case 'install':
-        $class = basename($HTTP_GET_VARS['module']);
+        $class = basename($_GET['module']);
 
         foreach ( $modules['new'] as $m ) {
           if ( $m['code'] == $class ) {
@@ -134,7 +134,7 @@
         break;
 
       case 'remove':
-        $class = basename($HTTP_GET_VARS['module']);
+        $class = basename($_GET['module']);
 
         foreach ( $modules['installed'] as $m ) {
           if ( $m['code'] == $class ) {
@@ -196,7 +196,7 @@
     foreach ( $modules['new'] as $m ) {
       $module = new $m['code']();
 
-      if ((!isset($HTTP_GET_VARS['module']) || (isset($HTTP_GET_VARS['module']) && ($HTTP_GET_VARS['module'] == $module->code))) && !isset($mInfo)) {
+      if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $module->code))) && !isset($mInfo)) {
         $module_info = array('code' => $module->code,
                              'title' => $module->title,
                              'description' => $module->description,
@@ -234,7 +234,7 @@
     foreach ( $modules['installed'] as $m ) {
       $module = new $m['code']();
 
-      if ((!isset($HTTP_GET_VARS['module']) || (isset($HTTP_GET_VARS['module']) && ($HTTP_GET_VARS['module'] == $module->code))) && !isset($mInfo)) {
+      if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $module->code))) && !isset($mInfo)) {
         $module_info = array('code' => $module->code,
                              'title' => $module->title,
                              'description' => $module->description,
