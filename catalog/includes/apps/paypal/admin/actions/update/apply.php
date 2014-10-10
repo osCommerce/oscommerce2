@@ -28,7 +28,7 @@
       $phar_can_open = true;
 
       try {
-        $phar = new PharData($filepath);
+        $phar = @new PharData($filepath);
       } catch ( Exception $e ) {
         $phar_can_open = false;
       }
