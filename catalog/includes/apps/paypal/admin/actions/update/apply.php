@@ -63,7 +63,7 @@
           $meta_pass = true;
 
           if ( file_exists($work_dir . '/' . $update_version . '/oscom_update.json') ) {
-            $meta = json_decode(file_get_contents($work_dir . '/' . $update_version . '/oscom_update.json'), true);
+            $meta = @json_decode(file_get_contents($work_dir . '/' . $update_version . '/oscom_update.json'), true);
           }
 
           $check_against = array('provider' => 'paypal',
@@ -82,19 +82,21 @@
             $errors = array();
 
             if ( !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt') ) {
-              $errors[] = realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
+              $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
             }
 
-            foreach ( $OSCOM_PayPal->getDirectoryContents($work_dir . '/' . $update_version) as $file ) {
+            $update_pkg_contents = $OSCOM_PayPal->getDirectoryContents($work_dir . '/' . $update_version);
+
+            foreach ( $update_pkg_contents as $file ) {
               $pathname = substr($file, strlen($work_dir . '/' . $update_version . '/'));
 
               if ( substr($pathname, 0, 8) == 'catalog/' ) {
                 if ( !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . substr($pathname, 8)) || !$OSCOM_PayPal->isWritable(DIR_FS_CATALOG . dirname(substr($pathname, 8))) ) {
-                  $errors[] = realpath(DIR_FS_CATALOG . substr($pathname, 8));
+                  $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . substr($pathname, 8));
                 }
               } elseif ( substr($pathname, 0, 6) == 'admin/' ) {
                 if ( !$OSCOM_PayPal->isWritable(DIR_FS_ADMIN . substr($pathname, 6)) || !$OSCOM_PayPal->isWritable(DIR_FS_ADMIN . dirname(substr($pathname, 6))) ) {
-                  $errors[] = realpath(DIR_FS_ADMIN . substr($pathname, 6));
+                  $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . substr($pathname, 6));
                 }
               }
             }
@@ -102,7 +104,7 @@
             if ( empty($errors) ) {
               $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' STARTED', $update_version);
 
-              foreach ( $OSCOM_PayPal->getDirectoryContents($work_dir . '/' . $update_version) as $file ) {
+              foreach ( $update_pkg_contents as $file ) {
                 $pathname = substr($file, strlen($work_dir . '/' . $update_version . '/'));
 
                 if ( substr($pathname, 0, 8) == 'catalog/' ) {
@@ -116,14 +118,14 @@
                     mkdir(DIR_FS_CATALOG . $target, 0777, true);
                   }
 
-                  if ( substr($target, -1) != '/' ) {
-                    $target .= '/';
+                  if ( !empty($target) && (substr($target, -1) != DIRECTORY_SEPARATOR) ) {
+                    $target .= DIRECTORY_SEPARATOR;
                   }
 
                   if ( copy($file, DIR_FS_CATALOG . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_CATALOG . substr($pathname, 8)), $update_version);
+                    $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . $target . basename($pathname)), $update_version);
                   } else {
-                    $errors[] = realpath(DIR_FS_CATALOG . substr($pathname, 8));
+                    $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . $target . basename($pathname));
 
                     break;
                   }
@@ -138,14 +140,14 @@
                     mkdir(DIR_FS_ADMIN . $target, 0777, true);
                   }
 
-                  if ( substr($target, -1) != '/' ) {
-                    $target .= '/';
+                  if ( !empty($target) && (substr($target, -1) != DIRECTORY_SEPARATOR) ) {
+                    $target .= DIRECTORY_SEPARATOR;
                   }
 
                   if ( copy($file, DIR_FS_ADMIN . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_ADMIN . substr($pathname, 6)), $update_version);
+                    $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . $target . basename($pathname)), $update_version);
                   } else {
-                    $errors[] = realpath(DIR_FS_ADMIN . substr($pathname, 6));
+                    $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . $target . basename($pathname));
 
                     break;
                   }
@@ -153,9 +155,9 @@
               }
 
               if ( file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt', $update_version) ) {
-                $OSCOM_PayPal->logUpdate('Updated: ' . realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
+                $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
               } else {
-                $errors[] = realpath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
+                $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
               }
 
               if ( empty($errors) ) {
@@ -181,7 +183,7 @@
           $OSCOM_PayPal->logUpdate('Update Package Verification Failed', $update_version);
         }
       } else {
-        $OSCOM_PayPal->logUpdate('Invalid Update Package Format', $update_version);
+        $OSCOM_PayPal->logUpdate('Invalid Update Package Contents', $update_version);
       }
 
       $OSCOM_PayPal->rmdir($work_dir);

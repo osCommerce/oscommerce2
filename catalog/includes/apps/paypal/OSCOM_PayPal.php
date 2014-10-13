@@ -750,5 +750,13 @@
 
       return rmdir($dir);
     }
+
+    function displayPath($pathname) {
+      if ( DIRECTORY_SEPARATOR == '/' ) {
+        return $pathname;
+      }
+
+      return str_replace('/', DIRECTORY_SEPARATOR, $pathname);
+    }
   }
 ?>
