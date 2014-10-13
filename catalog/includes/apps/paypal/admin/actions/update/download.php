@@ -18,26 +18,20 @@
         mkdir(DIR_FS_CATALOG . 'includes/apps/paypal/work', 0777, true);
       }
 
-      $with_compress = array_search('GZ', Phar::getSupportedCompression()) !== false;
+      $ppUpdateDownloadFile = $OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?Download&paypal&app&2_300&' . str_replace('.', '_', $HTTP_GET_VARS['v']) . '&update');
 
-      $ppUpdateDownloadFile = $OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?Download&paypal&app&2_300&' . str_replace('.', '_', $HTTP_GET_VARS['v']) . '&update' . ($with_compress === true ? '&gz' : ''));
-
-      $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.osc';
+      $filepath = DIR_FS_CATALOG . 'includes/apps/paypal/work/update.zip';
 
       if ( file_exists($filepath) && is_writable($filepath) ) {
         unlink($filepath);
       }
 
-      if ( file_exists($filepath . '.gz') && is_writable($filepath . '.gz') ) {
-        unlink($filepath . '.gz');
-      }
-
-      $save_result = @file_put_contents($filepath . ($with_compress === true ? '.gz' : ''), $ppUpdateDownloadFile);
+      $save_result = @file_put_contents($filepath, $ppUpdateDownloadFile);
 
       if ( ($save_result !== false) && ($save_result > 0) ) {
         $ppUpdateDownloadResult['rpcStatus'] = 1;
       } else {
-        $ppUpdateDownloadResult['error'] = 'Could not download the update package to the following location. Please delete the file if it exists.<br /><br />' . realpath($filepath);
+        $ppUpdateDownloadResult['error'] = 'Could not download the update package to the following location. Please delete the file if it exists.<br /><br />' . $filepath;
       }
     } else {
       $ppUpdateDownloadResult['error'] = 'The required permissions on the following directory is not correctly set. Please update the permissions to allow write access.<br /><br />' . realpath(DIR_FS_CATALOG . 'includes/apps/paypal/work');

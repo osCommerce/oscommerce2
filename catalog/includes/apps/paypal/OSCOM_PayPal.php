@@ -705,6 +705,24 @@
       }
     }
 
+    function getDirectoryContents($base, &$result = array()) {
+      foreach ( scandir($base) as $file ) {
+        if ( ($file == '.') || ($file == '..') ) {
+          continue;
+        }
+
+        $pathname = realpath($base . '/' . $file);
+
+        if ( is_dir($pathname) ) {
+          $this->getDirectoryContents($pathname, $result);
+        } else {
+          $result[] = str_replace('\\', '/', $pathname); // Unix style directory separator "/"
+        }
+      }
+
+      return $result;
+    }
+
     function isWritable($location) {
       if ( !file_exists($location) ) {
         while ( true ) {

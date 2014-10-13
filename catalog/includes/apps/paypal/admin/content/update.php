@@ -146,7 +146,9 @@ $(function() {
       }
     }
 
-    versions.sort(function(a, b) { return a-b; });
+    versions.sort(function(a, b) {
+      return a - b;
+    });
 
     if ( versions.length > 0 ) {
       var runQueueInOrder = function(i) {

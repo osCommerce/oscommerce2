@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if ( function_exists('json_encode') && class_exists('Phar') ) {
+  if ( class_exists('ZipArchive') && function_exists('json_encode') && function_exists('openssl_verify') ) {
     $ppUpdateReleasesResult = array('rpcStatus' => -1);
 
     $ppUpdateReleasesResponse = @json_decode($OSCOM_PayPal->makeApiCall('http://apps.oscommerce.com/index.php?RPC&GetUpdates&paypal&app&2_3&' . str_replace('.', '_', number_format($OSCOM_PayPal->getVersion(), 3))), true);
