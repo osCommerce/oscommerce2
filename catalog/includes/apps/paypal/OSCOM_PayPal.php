@@ -711,7 +711,7 @@
           continue;
         }
 
-        $pathname = realpath($base . '/' . $file);
+        $pathname = $base . '/' . $file;
 
         if ( is_dir($pathname) ) {
           $this->getDirectoryContents($pathname, $result);

@@ -154,10 +154,12 @@
                 }
               }
 
-              if ( file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt', $update_version) ) {
-                $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
-              } else {
-                $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
+              if ( empty($errors) ) {
+                if ( file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt', $update_version) ) {
+                  $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
+                } else {
+                  $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
+                }
               }
 
               if ( empty($errors) ) {
