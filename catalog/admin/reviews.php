@@ -166,8 +166,8 @@
 <?php
     if (tep_not_null($HTTP_POST_VARS)) {
 /* Re-Post all POST'ed variables */
-      reset($HTTP_POST_VARS);
-      while (list($key, $value) = each($HTTP_POST_VARS)) echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
+      
+      foreach ( $HTTP_POST_VARS as $key => $value ) echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $HTTP_GET_VARS['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
