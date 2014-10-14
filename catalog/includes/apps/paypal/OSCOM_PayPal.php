@@ -15,6 +15,7 @@
     var $_title = 'PayPal App';
     var $_version;
     var $_api_version = '112';
+    var $_definitions = array();
 
     function isReqApiCountrySupported($country_id) {
       $country_query = tep_db_query("select countries_iso_code_2 from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
@@ -703,6 +704,63 @@
       if ( is_writable(DIR_FS_CATALOG . 'includes/apps/paypal/work') ) {
         file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/work/update_log-' . $version . '.php', '[' . date('d-M-Y H:i:s') . '] ' . $message . "\n", FILE_APPEND);
       }
+    }
+
+    public function loadLanguageFile($filename, $lang = null) {
+      global $language;
+
+      $lang = isset($lang) ? basename($lang) : basename($language);
+
+      if ( $lang != 'english' ) {
+        $this->loadLanguageFile($filename, 'english');
+      }
+
+      $pathname = DIR_FS_CATALOG . 'includes/apps/paypal/languages/' . $language . '/' . $filename;
+
+      if ( file_exists($pathname) ) {
+        $contents = file($pathname);
+
+        $ini_array = array();
+
+        foreach ( $contents as $line ) {
+          $line = trim($line);
+
+          if ( !empty($line) && (substr($line, 0, 1) != '#') ) {
+            $delimiter = strpos($line, '=');
+
+            if ( ($delimiter !== false) && (preg_match('/^[A-Za-z0-9_-]/', substr($line, 0, $delimiter)) === 1) && (substr_count(substr($line, 0, $delimiter), ' ') == 1) ) {
+              $key = trim(substr($line, 0, $delimiter));
+              $value = trim(substr($line, $delimiter + 1));
+
+              $ini_array[$key] = $value;
+            } elseif ( isset($key) ) {
+              $ini_array[$key] .= "\n" . $line;
+            }
+          }
+        }
+
+        unset($contents);
+
+        $this->_definitions = array_merge($this->_definitions, $ini_array);
+
+        unset($ini_array);
+      }
+    }
+
+    function getDef($key, $values = null) {
+      $def = isset($this->_definitions[$key]) ? $this->_definitions[$key] : $key;
+
+      if ( is_array($values) ) {
+        $keys = array_keys($values);
+
+        foreach ( $keys as &$k ) {
+          $k = ':' . $k;
+        }
+
+        $def = str_replace($keys, array_values($values), $def);
+      }
+
+      return $def;
     }
 
     function getDirectoryContents($base, &$result = array()) {

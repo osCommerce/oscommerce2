@@ -49,9 +49,13 @@ EOD;
   $action = 'start';
   $subaction = '';
 
+  $OSCOM_PayPal->loadLanguageFile('global.php');
+
   if ( isset($HTTP_GET_VARS['action']) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($HTTP_GET_VARS['action']) . '.php') ) {
     $action = basename($HTTP_GET_VARS['action']);
   }
+
+  $OSCOM_PayPal->loadLanguageFile('admin/' . $action . '.php');
 
   if ( $action == 'start' ) {
     if ( $OSCOM_PayPal->migrate() ) {

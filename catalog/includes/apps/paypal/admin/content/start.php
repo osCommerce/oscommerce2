@@ -19,18 +19,9 @@
 
   <div style="float: left; width: 50%;">
     <div style="padding: 2px;">
-      <h3 class="pp-panel-header-info">Retrieve API Credentials</h3>
+      <h3 class="pp-panel-header-info"><?php echo $OSCOM_PayPal->getDef('onboarding_intro_title'); ?></h3>
       <div class="pp-panel pp-panel-info">
-        <p>Start selling and earning faster by allowing osCommerce to automatically and securely configure your online store with your PayPal API credentials.</p>
-
-        <p>Don't have a PayPal Account? We can do this for new and existing PayPal sellers.</p>
-
-        <p style="text-align: center;">
-          <?php echo $OSCOM_PayPal->drawButton('Retrieve Live Credentials', tep_href_link('paypal.php', 'action=start&subaction=process&type=live'), 'info'); ?>
-          <?php echo $OSCOM_PayPal->drawButton('Retrieve Sandbox Credentials', tep_href_link('paypal.php', 'action=start&subaction=process&type=sandbox'), 'info'); ?>
-        </p>
-
-        <p>Live PayPal Accounts are for live shops ready to accept payments. Sandbox PayPal Accounts are used for testing purposes where orders are processed but no actual payments are made.</p>
+        <?php echo $OSCOM_PayPal->getDef('onboarding_intro_body', array('button_retrieve_live_credentials' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_retrieve_live_credentials'), tep_href_link('paypal.php', 'action=start&subaction=process&type=live'), 'info'), 'button_retrieve_sandbox_credentials' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_retrieve_sandbox_credentials'), tep_href_link('paypal.php', 'action=start&subaction=process&type=sandbox'), 'info'))); ?>
       </div>
     </div>
   </div>
@@ -41,18 +32,10 @@
 
   <div style="float: left; width: 50%;">
     <div style="padding: 2px;">
-      <h3 class="pp-panel-header-warning">Manage API Credentials</h3>
+      <h3 class="pp-panel-header-warning"><?php echo $OSCOM_PayPal->getDef('manage_credentials_title'); ?></h3>
       <div class="pp-panel pp-panel-warning">
-        <p>Enter your PayPal API Credentials and start selling with PayPal.</p>
-
-        <p style="padding-top: 10px;"><?php echo $OSCOM_PayPal->drawButton('Manage Your API Credentials', tep_href_link('paypal.php', 'action=credentialsManual'), 'warning'); ?></p>
+        <?php echo $OSCOM_PayPal->getDef('manage_credentials_body', array('button_manage_credentials' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_manage_credentials'), tep_href_link('paypal.php', 'action=credentialsManual'), 'warning'))); ?>
       </div>
-    </div>
-  </div>
-
-  <div style="float: left; width: 50%;">
-    <div style="padding: 2px;">
-      <img src="<?php echo tep_catalog_href_link('images/apps/paypal/video_placeholder.png', '', 'SSL'); ?>" width="100%" />
     </div>
   </div>
 </div>

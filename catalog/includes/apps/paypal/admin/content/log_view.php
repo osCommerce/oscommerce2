@@ -12,13 +12,13 @@
 ?>
 
 <div style="text-align: right; padding-bottom: 15px;">
-  <?php echo $OSCOM_PayPal->drawButton(IMAGE_BACK, tep_href_link('paypal.php', 'action=log&page=' . $HTTP_GET_VARS['page']), 'info'); ?>
+  <?php echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_back'), tep_href_link('paypal.php', 'action=log&page=' . $HTTP_GET_VARS['page']), 'info'); ?>
 </div>
 
 <table class="pp-table pp-table-hover" width="100%">
   <thead>
     <tr>
-      <th colspan="2">Request</th>
+      <th colspan="2"><?php echo $OSCOM_PayPal->getDef('table_heading_entries_request'); ?></th>
     </tr>
   </thead>
   <tbody>
@@ -42,7 +42,7 @@
 <table class="pp-table pp-table-hover" width="100%">
   <thead>
     <tr>
-      <th colspan="2">Response</th>
+      <th colspan="2"><?php echo $OSCOM_PayPal->getDef('table_heading_entries_response'); ?></th>
     </tr>
   </thead>
   <tbody>
