@@ -715,7 +715,7 @@
         $this->loadLanguageFile($filename, 'english');
       }
 
-      $pathname = DIR_FS_CATALOG . 'includes/apps/paypal/languages/' . $language . '/' . $filename;
+      $pathname = DIR_FS_CATALOG . 'includes/apps/paypal/languages/' . $lang . '/' . $filename;
 
       if ( file_exists($pathname) ) {
         $contents = file($pathname);
