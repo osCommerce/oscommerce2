@@ -49,7 +49,7 @@ EOD;
   $action = 'start';
   $subaction = '';
 
-  $OSCOM_PayPal->loadLanguageFile('global.php');
+  $OSCOM_PayPal->loadLanguageFile('admin.php');
 
   if ( isset($HTTP_GET_VARS['action']) && file_exists(DIR_FS_CATALOG . 'includes/apps/paypal/admin/actions/' . basename($HTTP_GET_VARS['action']) . '.php') ) {
     $action = basename($HTTP_GET_VARS['action']);

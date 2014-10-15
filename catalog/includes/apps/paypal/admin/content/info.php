@@ -14,22 +14,18 @@
 <div id="ppStartDashboard" style="width: 100%;">
   <div style="float: left; width: 50%;">
     <div style="padding: 2px;">
-      <h3 class="pp-panel-header-info">Online Documentation</h3>
+      <h3 class="pp-panel-header-info"><?php echo $OSCOM_PayPal->getDef('online_documentation_title'); ?></h3>
       <div class="pp-panel pp-panel-info">
-        <p>Online documentation is available at the osCommerce Library website:</p>
-
-        <p><?php echo $OSCOM_PayPal->drawButton('Online Documentation', 'http://library.oscommerce.com/Package&paypal&oscom23', 'info', 'target="_blank"'); ?></p>
+        <?php echo $OSCOM_PayPal->getDef('online_documentation_body', array('button_online_documentation' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_online_documentation'), 'http://library.oscommerce.com/Package&paypal&oscom23', 'info', 'target="_blank"'))); ?>
       </div>
     </div>
   </div>
 
   <div style="float: left; width: 50%;">
     <div style="padding: 2px;">
-      <h3 class="pp-panel-header-warning">Online Forum</h3>
+      <h3 class="pp-panel-header-warning"><?php echo $OSCOM_PayPal->getDef('online_forum_title'); ?></h3>
       <div class="pp-panel pp-panel-warning">
-        <p>Support enquiries can be posted at the osCommerce Support Forum PayPal Channel:</p>
-
-        <p><?php echo $OSCOM_PayPal->drawButton('osCommerce Support Forums', 'http://forums.oscommerce.com/forum/54-paypal/', 'warning', 'target="_blank"'); ?></p>
+        <?php echo $OSCOM_PayPal->getDef('online_forum_body', array('button_online_forum' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_online_forum'), 'http://forums.oscommerce.com/forum/54-paypal/', 'warning', 'target="_blank"'))); ?>
       </div>
     </div>
   </div>
