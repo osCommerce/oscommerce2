@@ -9,11 +9,7 @@
 
   Released under the GNU General Public License
 */
-?>
 
-<h3>PayPal Balance</h3>
-
-<?php
   $result = $OSCOM_PayPal->getApiResult('APP', 'GetBalance', null, 'sandbox');
 
   $counter = 0;
