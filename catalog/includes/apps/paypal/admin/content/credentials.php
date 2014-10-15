@@ -12,8 +12,8 @@
 ?>
 
 <div id="appPayPalToolbar" style="padding-bottom: 15px;">
-  <?php echo $OSCOM_PayPal->drawButton('PayPal', tep_href_link('paypal.php', 'action=credentialsManual&module=PP'), 'info', 'data-module="PP"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('Payflow', tep_href_link('paypal.php', 'action=credentialsManual&module=PF'), 'info', 'data-module="PF"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('PayPal', tep_href_link('paypal.php', 'action=credentials&module=PP'), 'info', 'data-module="PP"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton('Payflow', tep_href_link('paypal.php', 'action=credentials&module=PF'), 'info', 'data-module="PF"'); ?>
 
 <?php
   if ( ($current_module == 'PP') && $OSCOM_PayPal->isReqApiCountrySupported(STORE_COUNTRY) ) {
@@ -30,7 +30,7 @@
 
 </div>
 
-<form name="paypalCredentialsManual" action="<?php echo tep_href_link('paypal.php', 'action=credentialsManual&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
+<form name="paypalCredentials" action="<?php echo tep_href_link('paypal.php', 'action=credentials&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
 
 <?php
   if ( $current_module == 'PP' ) {

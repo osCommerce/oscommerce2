@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  $content = 'credentials_manual.php';
+  $content = 'credentials.php';
 
   $modules = array('PP', 'PF');
   $current_module = (isset($HTTP_GET_VARS['module']) && in_array($HTTP_GET_VARS['module'], $modules) ? $HTTP_GET_VARS['module'] : $modules[0]);

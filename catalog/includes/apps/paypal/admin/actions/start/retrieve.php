@@ -45,7 +45,7 @@
 
       $OSCOM_PayPal->addAlert('PayPal account credentials have been successfully configured.', 'success');
 
-      tep_redirect(tep_href_link('paypal.php', 'action=credentialsManual'));
+      tep_redirect(tep_href_link('paypal.php', 'action=credentials'));
     } else {
       $OSCOM_PayPal->addAlert('Could not retrieve the account credentials. Please try again in a short while.', 'error');
     }

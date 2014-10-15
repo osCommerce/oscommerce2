@@ -34,7 +34,7 @@
               'link' => tep_href_link('paypal.php', 'action=configure')),
         array('code' => 'paypal.php',
               'title' => MODULES_ADMIN_MENU_PAYPAL_MANAGE_CREDENTIALS,
-              'link' => tep_href_link('paypal.php', 'action=credentialsManual')),
+              'link' => tep_href_link('paypal.php', 'action=credentials')),
         array('code' => 'paypal.php',
               'title' => MODULES_ADMIN_MENU_PAYPAL_LOG,
               'link' => tep_href_link('paypal.php', 'action=log'))

@@ -34,7 +34,7 @@
     <div style="padding: 2px;">
       <h3 class="pp-panel-header-warning"><?php echo $OSCOM_PayPal->getDef('manage_credentials_title'); ?></h3>
       <div class="pp-panel pp-panel-warning">
-        <?php echo $OSCOM_PayPal->getDef('manage_credentials_body', array('button_manage_credentials' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_manage_credentials'), tep_href_link('paypal.php', 'action=credentialsManual'), 'warning'))); ?>
+        <?php echo $OSCOM_PayPal->getDef('manage_credentials_body', array('button_manage_credentials' => $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_manage_credentials'), tep_href_link('paypal.php', 'action=credentials'), 'warning'))); ?>
       </div>
     </div>
   </div>
