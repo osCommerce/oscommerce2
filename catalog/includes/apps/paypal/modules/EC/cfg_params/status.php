@@ -12,19 +12,30 @@
 
   class OSCOM_PayPal_EC_Cfg_status {
     var $default = '1';
+    var $title;
+    var $description;
     var $sort_order = 100;
 
+    function OSCOM_PayPal_EC_Cfg_status() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_ec_status_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_ec_status_desc');
+    }
+
     function getSetField() {
-      $input = '<input type="radio" id="statusSelectionLive" name="status" value="1"' . (OSCOM_APP_PAYPAL_EC_STATUS == '1' ? ' checked="checked"' : '') . '><label for="statusSelectionLive">Live</label>' .
-               '<input type="radio" id="statusSelectionSandbox" name="status" value="0"' . (OSCOM_APP_PAYPAL_EC_STATUS == '0' ? ' checked="checked"' : '') . '><label for="statusSelectionSandbox">Sandbox</label>' .
-               '<input type="radio" id="statusSelectionDisabled" name="status" value="-1"' . (OSCOM_APP_PAYPAL_EC_STATUS == '-1' ? ' checked="checked"' : '') . '><label for="statusSelectionDisabled">Disabled</label>';
+      global $OSCOM_PayPal;
+
+      $input = '<input type="radio" id="statusSelectionLive" name="status" value="1"' . (OSCOM_APP_PAYPAL_EC_STATUS == '1' ? ' checked="checked"' : '') . '><label for="statusSelectionLive">' . $OSCOM_PayPal->getDef('cfg_ec_status_live') . '</label>' .
+               '<input type="radio" id="statusSelectionSandbox" name="status" value="0"' . (OSCOM_APP_PAYPAL_EC_STATUS == '0' ? ' checked="checked"' : '') . '><label for="statusSelectionSandbox">' . $OSCOM_PayPal->getDef('cfg_ec_status_sandbox') . '</label>' .
+               '<input type="radio" id="statusSelectionDisabled" name="status" value="-1"' . (OSCOM_APP_PAYPAL_EC_STATUS == '-1' ? ' checked="checked"' : '') . '><label for="statusSelectionDisabled">' . $OSCOM_PayPal->getDef('cfg_ec_status_disabled') . '</label>';
 
       $result = <<<EOT
 <div>
   <p>
-    <label>Status</label>
+    <label>{$this->title}</label>
 
-    Set this to Live to start accepting payments or to Sandbox to perform test orders.
+    {$this->description}
   </p>
 
   <div id="statusSelection">

@@ -300,6 +300,8 @@
           $cfg_class = 'OSCOM_PayPal_' . $module . '_Cfg_' . $p;
 
           if ( !class_exists($cfg_class) ) {
+            $this->loadLanguageFile('modules/' . $module . '/' . $p . '.php');
+
             include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/cfg_params/' . $p . '.php');
           }
         }
@@ -663,6 +665,8 @@
         $cfg_class = 'OSCOM_PayPal_' . $module . '_Cfg_' . $p;
 
         if ( !class_exists($cfg_class) ) {
+          $this->loadLanguageFile('modules/' . $module . '/' . $p . '.php');
+
           include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/cfg_params/' . $p . '.php');
         }
 
