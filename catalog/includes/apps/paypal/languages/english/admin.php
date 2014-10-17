@@ -9,6 +9,8 @@ button_cancel = Cancel
 button_delete = Delete
 button_dialog_delete = Delete &hellip;
 button_save = Save
+button_uninstall = Uninstall
+button_dialog_uninstall = Uninstall &hellip;
 button_view = View
 button_view_update = View Update
 

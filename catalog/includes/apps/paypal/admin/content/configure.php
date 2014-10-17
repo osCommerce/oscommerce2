@@ -21,8 +21,8 @@
   }
 ?>
 
-  <?php echo $OSCOM_PayPal->drawButton('General', tep_href_link('paypal.php', 'action=configure&module=G'), 'info', 'data-module="G"'); ?>
-  <?php echo $OSCOM_PayPal->drawButton('+', '#', 'info', 'data-module="appPayPalToolbarMoreButton"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('section_general'), tep_href_link('paypal.php', 'action=configure&module=G'), 'info', 'data-module="G"'); ?>
+  <?php echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('section_more'), '#', 'info', 'data-module="appPayPalToolbarMoreButton"'); ?>
 </div>
 
 <ul id="appPayPalToolbarMore" class="pp-button-menu">
@@ -67,7 +67,7 @@ $(function() {
 
 <?php
   if ( $OSCOM_PayPal->isInstalled($current_module) || ($current_module == 'G') ) {
-    $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleInfo($current_module, 'title') : 'General';
+    $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleInfo($current_module, 'title') : $OSCOM_PayPal->getDef('section_general');
 ?>
 
 <form name="paypalConfigure" action="<?php echo tep_href_link('paypal.php', 'action=configure&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">
@@ -86,10 +86,10 @@ $(function() {
 <p>
 
 <?php
-  echo $OSCOM_PayPal->drawButton('Save', null, 'success');
+  echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_save'), null, 'success');
 
   if ( $current_module != 'G' ) {
-    echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton('Uninstall &hellip;', '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
+    echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_dialog_uninstall'), '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
   }
 ?>
 
@@ -99,11 +99,10 @@ $(function() {
 
 <?php
     if ( $current_module != 'G' ) {
-      $uninstall_link = tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=' . $current_module);
 ?>
 
-<div id="paypal-dialog-uninstall" title="Uninstall Module">
-  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Are you sure you want to uninstall this module?</p>
+<div id="paypal-dialog-uninstall" title="<?php echo tep_output_string_protected($OSCOM_PayPal->getDef('dialog_uninstall_title')); ?>">
+  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span><?php echo $OSCOM_PayPal->getDef('dialog_uninstall_body'); ?></p>
 </div>
 
 <script>
@@ -113,10 +112,10 @@ $(function() {
     resizable: false,
     modal: true,
     buttons: {
-      "Uninstall Module": function() {
-        window.location = '<?php echo $uninstall_link; ?>';
+      "<?php echo addslashes($OSCOM_PayPal->getDef('button_uninstall')); ?>": function() {
+        window.location = '<?php echo tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=' . $current_module); ?>';
       },
-      "Cancel": function() {
+      "<?php echo addslashes($OSCOM_PayPal->getDef('button_cancel')); ?>": function() {
         $(this).dialog('close');
       }
     }
