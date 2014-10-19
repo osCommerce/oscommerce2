@@ -12,10 +12,22 @@
 
   class OSCOM_PayPal_HS_Cfg_zone {
     var $default = '0';
+    var $title;
+    var $description;
     var $sort_order = 500;
 
+    function OSCOM_PayPal_HS_Cfg_zone() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_hs_zone_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_hs_zone_desc');
+    }
+
     function getSetField() {
-      $zone_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
+      global $OSCOM_PayPal;
+
+      $zone_class_array = array(array('id' => '0', 'text' => $OSCOM_PayPal->getDef('cfg_hs_zone_global')));
+
       $zone_class_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
       while ($zone_class = tep_db_fetch_array($zone_class_query)) {
         $zone_class_array[] = array('id' => $zone_class['geo_zone_id'],
@@ -27,9 +39,9 @@
       $result = <<<EOT
 <div>
   <p>
-    <label for="inputHsZone">Payment Zone</label>
+    <label for="inputHsZone">{$this->title}</label>
 
-    Enable this payment module globally or limit it to customers shipping to the selected zone only.
+    {$this->description}
   </p>
 
   <div>

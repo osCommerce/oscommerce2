@@ -12,9 +12,16 @@
 
   class OSCOM_PayPal_HS_Cfg_prepare_order_status_id {
     var $default = '0';
+    var $title;
+    var $description;
     var $sort_order = 300;
 
     function OSCOM_PayPal_HS_Cfg_prepare_order_status_id() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_hs_prepare_order_status_id_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_hs_prepare_order_status_id_desc');
+
       if ( !defined('OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID') ) {
         $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [PayPal Pro HS]' limit 1");
 
@@ -47,9 +54,10 @@
     }
 
     function getSetField() {
-      global $languages_id;
+      global $OSCOM_PayPal, $languages_id;
 
-      $statuses_array = array(array('id' => '0', 'text' => TEXT_DEFAULT));
+      $statuses_array = array(array('id' => '0', 'text' => $OSCOM_PayPal->getDef('cfg_hs_prepare_order_status_id_default')));
+
       $statuses_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_name");
       while ($statuses = tep_db_fetch_array($statuses_query)) {
         $statuses_array[] = array('id' => $statuses['orders_status_id'],
@@ -61,9 +69,9 @@
       $result = <<<EOT
 <div>
   <p>
-    <label for="inputHsPrepareOrderStatusId">Preparing Order Status</label>
+    <label for="inputHsPrepareOrderStatusId">{$this->title}</label>
 
-    Set this to the order status level that customer prepared orders are assigned to.
+    {$this->description}
   </p>
 
   <div>
