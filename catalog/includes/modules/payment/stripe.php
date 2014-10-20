@@ -594,7 +594,7 @@ EOD;
       $dialog_error = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = tep_href_link('modules.php', 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>
