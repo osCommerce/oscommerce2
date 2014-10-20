@@ -14,17 +14,26 @@
     var $default = '1';
     var $sort_order = 500;
 
+    function OSCOM_PayPal_Cfg_log_transactions() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_log_transactions_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_log_transactions_desc');
+    }
+
     function getSetField() {
-      $input = '<input type="radio" id="logTransactionsSelectionAll" name="log_transactions" value="1"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '1' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionAll">All</label>' .
-               '<input type="radio" id="logTransactionsSelectionErrors" name="log_transactions" value="0"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '0' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionErrors">Errors</label>' .
-               '<input type="radio" id="logTransactionsSelectionDisabled" name="log_transactions" value="-1"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '-1' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionDisabled">Disabled</label>';
+      global $OSCOM_PayPal;
+
+      $input = '<input type="radio" id="logTransactionsSelectionAll" name="log_transactions" value="1"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '1' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionAll">' . $OSCOM_PayPal->getDef('cfg_log_transactions_all') . '</label>' .
+               '<input type="radio" id="logTransactionsSelectionErrors" name="log_transactions" value="0"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '0' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionErrors">' . $OSCOM_PayPal->getDef('cfg_log_transactions_errors') . '</label>' .
+               '<input type="radio" id="logTransactionsSelectionDisabled" name="log_transactions" value="-1"' . (OSCOM_APP_PAYPAL_LOG_TRANSACTIONS == '-1' ? ' checked="checked"' : '') . '><label for="logTransactionsSelectionDisabled">' . $OSCOM_PayPal->getDef('cfg_log_transactions_disabled') . '</label>';
 
       $result = <<<EOT
 <div>
   <p>
-    <label>Log Transactions</label>
+    <label>{$this->title}</label>
 
-    Set this to the level of transactions that should be logged.
+    {$this->description}
   </p>
 
   <div id="logSelection">

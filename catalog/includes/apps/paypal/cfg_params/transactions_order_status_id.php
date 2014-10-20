@@ -12,7 +12,16 @@
 
   class OSCOM_PayPal_Cfg_transactions_order_status_id {
     var $default = '0';
+    var $title;
+    var $description;
     var $sort_order = 200;
+
+    function OSCOM_PayPal_Cfg_transactions_order_status_id() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_transactions_order_status_id_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_transactions_order_status_id_desc');
+    }
 
     function getSetField() {
       global $languages_id;
@@ -37,9 +46,9 @@
       $result = <<<EOT
 <div>
   <p>
-    <label for="inputTransactionsOrderStatusId">Transactions Order Status</label>
+    <label for="inputTransactionsOrderStatusId">{$this->title}</label>
 
-    Set this to the private order status level where transaction information should be stored.
+    {$this->description}
   </p>
 
   <div>

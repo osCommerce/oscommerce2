@@ -294,6 +294,8 @@
           $cfg_class = 'OSCOM_PayPal_Cfg_' . $p;
 
           if ( !class_exists($cfg_class) ) {
+            $this->loadLanguageFile('cfg_params/' . $p . '.php');
+
             include(DIR_FS_CATALOG . 'includes/apps/paypal/cfg_params/' . $p . '.php');
           }
         } else {
