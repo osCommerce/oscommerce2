@@ -12,7 +12,7 @@
 
   $OSCOM_PayPal->uninstall($current_module);
 
-  $OSCOM_PayPal->addAlert('Module has been successfully uninstalled.', 'success');
+  $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_module_uninstall_success'), 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
 ?>

@@ -28,3 +28,5 @@ payflow_sandbox_partner = Partner
 payflow_sandbox_merchant_login = Merchant Login
 payflow_sandbox_user = User
 payflow_sandbox_password = Password
+
+alert_credentials_saved_success = Account credentials have been successfully saved.

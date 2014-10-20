@@ -14,3 +14,5 @@ dialog_delete_body = Are you sure you want to delete all log entries?
 
 table_heading_entries_request = Request
 table_heading_entries_response = Response
+
+alert_delete_success = Log entries have been successfully deleted.

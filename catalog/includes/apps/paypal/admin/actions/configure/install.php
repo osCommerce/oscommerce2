@@ -12,7 +12,7 @@
 
   $OSCOM_PayPal->install($current_module);
 
-  $OSCOM_PayPal->addAlert('Module has been successfully installed.', 'success');
+  $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_module_install_success'), 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
 ?>

@@ -26,7 +26,7 @@
     }
   }
 
-  $OSCOM_PayPal->addAlert('Configuration parameters have been successfully saved.', 'success');
+  $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_cfg_saved_success'), 'success');
 
   tep_redirect(tep_href_link('paypal.php', 'action=configure&module=' . $current_module));
 ?>
