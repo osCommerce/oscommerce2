@@ -14,15 +14,22 @@
     var $default = '';
     var $sort_order = 500;
 
+    function OSCOM_PayPal_LOGIN_Cfg_sandbox_secret() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_login_sandbox_secret_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_login_sandbox_secret_desc');
+    }
+
     function getSetField() {
       $input = tep_draw_input_field('sandbox_secret', OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET, 'id="inputLogInSandboxSecret"');
 
       $result = <<<EOT
 <div>
   <p>
-    <label for="inputLogInSandboxSecret">Test Secret</label>
+    <label for="inputLogInSandboxSecret">{$this->title}</label>
 
-    The Secret of the PayPal REST App Test Credentials.
+    {$this->description}
   </p>
 
   <div>

@@ -12,6 +12,8 @@
 
   class OSCOM_PayPal_LOGIN_Cfg_attributes {
     var $default = ''; // set in classs constructor
+    var $title;
+    var $description;
     var $sort_order = 700;
 
     var $attributes = array(
@@ -54,16 +56,23 @@
                     );
 
     function OSCOM_PayPal_LOGIN_Cfg_attributes() {
+      global $OSCOM_PayPal;
+
       $this->default = implode(';', $this->getAttributes());
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_login_attributes_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_login_attributes_desc');
     }
 
     function getSetField() {
+      global $OSCOM_PayPal;
+
       $values_array = explode(';', OSCOM_APP_PAYPAL_LOGIN_ATTRIBUTES);
 
       $input = '';
 
       foreach ( $this->attributes as $group => $attributes ) {
-        $input .= '<strong>' . $group /*constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group)*/ . '</strong><br />';
+        $input .= '<strong>' . $OSCOM_PayPal->getDef('cfg_login_attributes_group_' . $group) . '</strong><br />';
 
         foreach ( $attributes as $attribute => $scope ) {
           if ( in_array($attribute, $this->required) ) {
@@ -72,7 +81,7 @@
             $input .= '<input type="checkbox" id="ppLogInAttributesSelection' . ucfirst($attribute) . '" name="ppLogInAttributes[]" value="' . $attribute . '"' . (in_array($attribute, $values_array) ? ' checked="checked"' : '') . ' />';
           }
 
-          $input .= '&nbsp;<label for="ppLogInAttributesSelection' . ucfirst($attribute) . '">' . $attribute /*constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute)*/ . '</label><br />';
+          $input .= '&nbsp;<label for="ppLogInAttributesSelection' . ucfirst($attribute) . '">' . $OSCOM_PayPal->getDef('cfg_login_attributes_attribute_' . $attribute) . '</label><br />';
         }
       }
 
@@ -85,9 +94,9 @@
       $result = <<<EOT
 <div>
   <p>
-    <label>Information Requested From Customers</label>
+    <label>{$this->title}</label>
 
-    The attributes the customer must share with you.
+    {$this->description}
   </p>
 
   <div id="attributesSelection">

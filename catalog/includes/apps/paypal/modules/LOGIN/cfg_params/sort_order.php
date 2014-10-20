@@ -12,9 +12,16 @@
 
   class OSCOM_PayPal_LOGIN_Cfg_sort_order {
     var $default = '0';
-    var $title = 'Sort Order';
-    var $description = 'The sort order location of the module shown in the available payment methods listing (lowest is displayed first).';
+    var $title;
+    var $description;
     var $app_configured = false;
+
+    function OSCOM_PayPal_LOGIN_Cfg_sort_order() {
+      global $OSCOM_PayPal;
+
+      $this->title = $OSCOM_PayPal->getDef('cfg_login_sort_order_title');
+      $this->description = $OSCOM_PayPal->getDef('cfg_login_sort_order_desc');
+    }
 
     function getSetField() {
       $input = tep_draw_input_field('sort_order', OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER, 'id="inputLogInSortOrder"');
