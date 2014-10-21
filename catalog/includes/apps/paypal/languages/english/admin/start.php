@@ -11,3 +11,11 @@ manage_credentials_body = <p>Enter your PayPal API Credentials and start selling
 <p>:button_manage_credentials</p>
 
 button_manage_credentials = Manage Your API Credentials
+
+alert_onboarding_initialization_error = Could not initiate the start account procedure. Please try again in a short while.
+alert_onboarding_connection_error = Could not connect to the osCommerce website to initiate the start account procedure. Please try again in a short while.
+alert_onboarding_account_type_error = Please select to start with a Live or Sandbox account.
+alert_onboarding_retrieve_error = Could not retrieve the account credentials. Please try again in a short while.
+alert_onboarding_retrieve_connection_error = Could not connect to the osCommerce website to retrieve the PayPal account credentials. Please try again in a short while.
+
+alert_onboarding_success = PayPal account credentials have been successfully configured.

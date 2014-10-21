@@ -43,13 +43,13 @@
       $OSCOM_PayPal->deleteParameter('OSCOM_APP_PAYPAL_START_MERCHANT_ID');
       $OSCOM_PayPal->deleteParameter('OSCOM_APP_PAYPAL_START_SECRET');
 
-      $OSCOM_PayPal->addAlert('PayPal account credentials have been successfully configured.', 'success');
+      $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_success'), 'success');
 
       tep_redirect(tep_href_link('paypal.php', 'action=credentials'));
     } else {
-      $OSCOM_PayPal->addAlert('Could not retrieve the account credentials. Please try again in a short while.', 'error');
+      $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_retrieve_error'), 'error');
     }
   } else {
-    $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website to retrieve the PayPal account credentials. Please try again in a short while.', 'error');
+    $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_retrieve_connection_error'), 'error');
   }
 ?>

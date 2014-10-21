@@ -34,12 +34,12 @@
 
         tep_redirect($result['redirect_url']);
       } else {
-        $OSCOM_PayPal->addAlert('Could not initiate the start account procedure. Please try again in a short while.', 'error');
+        $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_initialization_error'), 'error');
       }
     } else {
-      $OSCOM_PayPal->addAlert('Could not connect to the osCommerce website to initiate the start account procedure. Please try again in a short while.', 'error');
+      $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_connection_error'), 'error');
     }
   } else {
-    $OSCOM_PayPal->addAlert('Please select to start with a Live or Sandbox account.', 'error');
+    $OSCOM_PayPal->addAlert($OSCOM_PayPal->getDef('alert_onboarding_account_type_error'), 'error');
   }
 ?>
