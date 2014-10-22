@@ -1,0 +1,21 @@
+button_apply_update = Apply Update
+button_applying_updates_progress = Applying Updates &hellip;
+button_check_for_updates = Check for Updates
+button_retrieving_progress = Retrieving &hellip;
+button_visit_app_page = Visit App at osCommerce
+
+retrieving_update_list = Retrieving update availability list &hellip;
+manual_update_available = v:version is available as an update! This can be downloaded and applied manually from the osCommerce Apps site.
+no_updates_available = No updates are currently available.
+invalid_update_list_format = Could not read the update availability list. Please try again.
+could_not_request_update_list = The update availability list could not be requested. Please try again.
+applying_updates_heading = Applying Updates
+applying_updates_success = Updates have been applied successfully!
+downloading_version_progress = Downloading v:version &hellip;
+applying_version_progress = Applying v:version &hellip;
+error_applying_heading = Error: Could not apply v:version!
+error_applying = An error occured during this update.
+error_applying_start = Could not start the procedure to apply the update. Please try again.
+error_heading = Error!
+error_download_start = Could not start the procedure to download v:version. Please try again.
+no_updates_found = No versions could be found to update to. Please try again.

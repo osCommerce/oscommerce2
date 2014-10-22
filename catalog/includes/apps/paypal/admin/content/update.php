@@ -36,11 +36,23 @@ $(function() {
   });
 
   (OSCOM.APP.PAYPAL.getUpdates = function() {
+    var def = {
+      'button_apply_update': '<?php echo addslashes($OSCOM_PayPal->getDef('button_apply_update')); ?>',
+      'button_check_for_updates': '<?php echo addslashes($OSCOM_PayPal->getDef('button_check_for_updates')); ?>',
+      'button_retrieving_progress': '<?php echo addslashes($OSCOM_PayPal->getDef('button_retrieving_progress')); ?>',
+      'button_visit_app_page': '<?php echo addslashes($OSCOM_PayPal->getDef('button_visit_app_page')); ?>',
+      'could_not_request_update_list': '<?php echo addslashes($OSCOM_PayPal->getDef('could_not_request_update_list')); ?>',
+      'invalid_update_list_format': '<?php echo addslashes($OSCOM_PayPal->getDef('invalid_update_list_format')); ?>',
+      'manual_update_available': '<?php echo addslashes($OSCOM_PayPal->getDef('manual_update_available')); ?>',
+      'no_updates_available': '<?php echo addslashes($OSCOM_PayPal->getDef('no_updates_available')); ?>',
+      'retrieving_update_list': '<?php echo addslashes($OSCOM_PayPal->getDef('retrieving_update_list')); ?>'
+    };
+
     $('#ppUpdateInfo').empty();
 
-    $('a[data-button="ppUpdateButton"]').html('Retrieving &hellip;');
+    $('a[data-button="ppUpdateButton"]').html(def['button_retrieving_progress']);
 
-    $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>Retrieving update availability list &hellip;</p></div>');
+    $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>' + def['retrieving_update_list'] + '</p></div>');
 
     $.get('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
       var error = false;
@@ -58,7 +70,7 @@ $(function() {
             OSCOM.APP.PAYPAL.getUpdatesProgress = 'update';
             OSCOM.APP.PAYPAL.versionHistory = data;
 
-            $('a[data-button="ppUpdateButton"]').html('Apply Update').removeClass('pp-button-info').addClass('pp-button-success');
+            $('a[data-button="ppUpdateButton"]').html(def['button_apply_update']).removeClass('pp-button-info').addClass('pp-button-success');
 
             for ( var i = 0; i < data['releases'].length; i++ ) {
               var record = data['releases'][i];
@@ -84,9 +96,9 @@ $(function() {
               if ( release[1] > OSCOM.APP.PAYPAL.version ) {
                 OSCOM.APP.PAYPAL.getUpdatesProgress = 'manualDownload';
 
-                $('a[data-button="ppUpdateButton"]').html('Visit App at osCommerce').removeClass('pp-button-info').addClass('pp-button-warning');
+                $('a[data-button="ppUpdateButton"]').html(def['button_visit_app_page']).removeClass('pp-button-info').addClass('pp-button-warning');
 
-                $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-warning"><p>v' + OSCOM.htmlSpecialChars(release[1]) + ' is available as an update! This can be downloaded and applied manually from the osCommerce Apps site.</p></div>');
+                $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-warning"><p>' + def['manual_update_available'].replace(':version', OSCOM.htmlSpecialChars(release[1])) + '</p></div>');
               } else {
                 error = 'NO_UPDATE';
               }
@@ -104,16 +116,16 @@ $(function() {
       if ( error != false ) {
         switch ( error ) {
           case 'NO_UPDATE':
-            $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+            $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']);
 
-            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>No updates are currently available.</p></div>');
+            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-info"><p>' + def['no_updates_available'] + '</p></div>');
 
             break;
 
           case 'INVALID_FORMAT':
-            $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+            $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']);
 
-            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>Could not read the update availability list. Please try again.</p></div>');
+            $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>' + lang['invalid_update_list_format'] + '</p></div>');
 
             break;
         }
@@ -121,20 +133,35 @@ $(function() {
     }).fail(function() {
       $('#ppUpdateInfo').empty();
 
-      $('a[data-button="ppUpdateButton"]').html('Check for Updates');
+      $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']);
 
-      $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>The update availability list could not be requested. Please try again.</p></div>');
+      $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-error"><p>' + lang['could_not_request_update_list'] + '</p></div>');
     });
   })();
 
   OSCOM.APP.PAYPAL.doUpdate = function() {
+    var def = {
+      'button_applying_updates_progress': '<?php echo addslashes($OSCOM_PayPal->getDef('button_applying_updates_progress')); ?>',
+      'button_check_for_updates': '<?php echo addslashes($OSCOM_PayPal->getDef('button_check_for_updates')); ?>',
+      'applying_updates_heading': '<?php echo addslashes($OSCOM_PayPal->getDef('applying_updates_heading')); ?>',
+      'applying_updates_success': '<?php echo addslashes($OSCOM_PayPal->getDef('applying_updates_success')); ?>',
+      'downloading_version_progress': '<?php echo addslashes($OSCOM_PayPal->getDef('downloading_version_progress')); ?>',
+      'applying_version_progress': '<?php echo addslashes($OSCOM_PayPal->getDef('applying_version_progress')); ?>',
+      'error_applying_heading': '<?php echo addslashes($OSCOM_PayPal->getDef('error_applying_heading')); ?>',
+      'error_applying': '<?php echo addslashes($OSCOM_PayPal->getDef('error_applying')); ?>',
+      'error_applying_start': '<?php echo addslashes($OSCOM_PayPal->getDef('error_applying_start')); ?>',
+      'error_heading': '<?php echo addslashes($OSCOM_PayPal->getDef('error_heading')); ?>',
+      'error_download_start': '<?php echo addslashes($OSCOM_PayPal->getDef('error_download_start')); ?>',
+      'no_updates_found': '<?php echo addslashes($OSCOM_PayPal->getDef('no_updates_found')); ?>'
+    }
+
     $('#ppUpdateInfo').empty();
 
     OSCOM.APP.PAYPAL.getUpdatesProgress = 'updating';
 
-    $('a[data-button="ppUpdateButton"]').html('Applying Updates &hellip;');
+    $('a[data-button="ppUpdateButton"]').html(def['button_applying_updates_progress']);
 
-    $('#ppUpdateInfo').append('<h3 class="pp-panel-header-info">Applying Updates</h3><div class="pp-panel pp-panel-info"></div>');
+    $('#ppUpdateInfo').append('<h3 class="pp-panel-header-info">' + def['applying_updates_heading'] + '</h3><div class="pp-panel pp-panel-info"></div>');
 
     var releases = OSCOM.APP.PAYPAL.versionHistory['releases'];
     var versions = [];
@@ -159,18 +186,18 @@ $(function() {
         if ( i >= versions.length ) {
           OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieveFresh';
 
-          $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+          $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
-          $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-success"><p>Updates have been applied successfully!</p></div>');
+          $('#ppUpdateInfo').append('<div class="pp-panel pp-panel-success"><p>' + def['applying_updates_success'] + '</p></div>');
 
           return;
         }
 
-        $('#ppUpdateInfo div').append('<p>' + OSCOM.htmlSpecialChars('Downloading v' + versions[i]) + ' &hellip;</p>');
+        $('#ppUpdateInfo div').append('<p>' + def['downloading_version_progress'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</p>');
 
         $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=download&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
           if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
-            $('#ppUpdateInfo div').append('<p>' + OSCOM.htmlSpecialChars('Applying v' + versions[i]) + ' &hellip;</p>');
+            $('#ppUpdateInfo div').append('<p>' + def['applying_version_progress'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</p>');
 
             $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=apply&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
               if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
@@ -179,9 +206,9 @@ $(function() {
 
                 OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-                $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+                $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
-                $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + OSCOM.htmlSpecialChars('Could not apply v' + versions[i] + '!') + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>An error occured during this update.</p></div>');
+                $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + def['error_applying_heading'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>' + def['error_applying'] + '</p></div>');
 
                 $.getJSON('<?php echo tep_href_link('paypal.php', 'action=update&subaction=log&v=APPDLV'); ?>'.replace('APPDLV', versions[i]), function (data) {
                   if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) ) {
@@ -192,9 +219,9 @@ $(function() {
             }).fail(function() {
               OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-              $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+              $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
-              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + OSCOM.htmlSpecialChars('Could not apply v' + versions[i] + '!') + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>Could not start the procedure to apply the update. Please try again.</p></div>');
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + def['error_applying_heading'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</h3><div id="ppUpdateErrorLog" class="pp-panel pp-panel-error"><p>' + def['error_applying_start'] + '</p></div>');
             }).then(function() {
               i++;
               runQueueInOrder(i);
@@ -204,20 +231,20 @@ $(function() {
 
             OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-            $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+            $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
             if ( (typeof data == 'object') && ('error' in data) ) {
-              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>' + data['error'] + '</p></div>');
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + def['error_heading'] + '</h3><div class="pp-panel pp-panel-error"><p>' + data['error'] + '</p></div>');
             } else {
-              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not start the procedure to download v' + OSCOM.htmlSpecialChars(versions[i]) + '. Please try again.</p></div>');
+              $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + def['error_heading'] + '</h3><div class="pp-panel pp-panel-error"><p>' + def['error_download_start'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</p></div>');
             }
           }
         }).fail(function() {
           OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-          $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+          $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
-          $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">Error!</h3><div class="pp-panel pp-panel-error"><p>Could not start the procedure to download v' + OSCOM.htmlSpecialChars(versions[i]) + '. Please try again.</p></div>');
+          $('#ppUpdateInfo').append('<h3 class="pp-panel-header-error">' + def['error_heading'] + '</h3><div class="pp-panel pp-panel-error"><p>' + def['error_download_start'].replace(':version', OSCOM.htmlSpecialChars(versions[i])) + '</p></div>');
         });
       }
 
@@ -225,9 +252,9 @@ $(function() {
     } else {
       OSCOM.APP.PAYPAL.getUpdatesProgress = 'retrieve';
 
-      $('a[data-button="ppUpdateButton"]').html('Check for Updates').removeClass('pp-button-success').addClass('pp-button-info');
+      $('a[data-button="ppUpdateButton"]').html(def['button_check_for_updates']).removeClass('pp-button-success').addClass('pp-button-info');
 
-      $('#ppUpdateInfo div').append('<p>No versions could be found to update to. Please try again.</p>');
+      $('#ppUpdateInfo div').append('<p>' + def['no_updates_found'] + '</p>');
     }
   }
 });
