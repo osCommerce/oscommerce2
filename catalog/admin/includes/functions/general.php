@@ -268,7 +268,7 @@
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
     if (tep_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+      $image = tep_image(tep_catalog_href_link(DIR_WS_IMAGES . $image, '', $request_type), $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
