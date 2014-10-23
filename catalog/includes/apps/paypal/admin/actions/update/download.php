@@ -31,10 +31,10 @@
       if ( ($save_result !== false) && ($save_result > 0) ) {
         $ppUpdateDownloadResult['rpcStatus'] = 1;
       } else {
-        $ppUpdateDownloadResult['error'] = 'Could not download the update package to the following location. Please delete the file if it exists.<br /><br />' . $OSCOM_PayPal->displayPath($filepath);
+        $ppUpdateDownloadResult['error'] = $OSCOM_PayPal->getDef('error_saving_download', array('filepath' => $OSCOM_PayPal->displayPath($filepath)));
       }
     } else {
-      $ppUpdateDownloadResult['error'] = 'The required permissions on the following directory is not correctly set. Please update the permissions to allow write access.<br /><br />' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/work');
+      $ppUpdateDownloadResult['error'] = $OSCOM_PayPal->getDef('error_download_directory_permissions', array('filepath' => $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/work')));
     }
   }
 

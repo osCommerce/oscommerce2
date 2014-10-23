@@ -11,10 +11,19 @@
 */
 
   class OSCOM_PayPal_DP {
-    var $_title = 'PayPal Payments Pro (Direct Payment)';
-    var $_short_title = 'Direct Payment';
+    var $_title;
+    var $_short_title;
+    var $_introduction;
     var $_pm_code = 'paypal_pro_dp';
     var $_sort_order = 200;
+
+    function OSCOM_PayPal_DP() {
+      global $OSCOM_PayPal;
+
+      $this->_title = $OSCOM_PayPal->getDef('module_dp_title');
+      $this->_short_title = $OSCOM_PayPal->getDef('module_dp_short_title');
+      $this->_introduction = $OSCOM_PayPal->getDef('module_dp_introduction');
+    }
 
     function getTitle() {
       return $this->_title;

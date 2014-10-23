@@ -11,10 +11,19 @@
 */
 
   class OSCOM_PayPal_HS {
-    var $_title = 'PayPal Payments Pro (Hosted Solution)';
-    var $_short_title = 'Hosted Solution';
+    var $_title;
+    var $_short_title;
+    var $_introduction;
     var $_pm_code = 'paypal_pro_hs';
     var $_sort_order = 300;
+
+    function OSCOM_PayPal_HS() {
+      global $OSCOM_PayPal;
+
+      $this->_title = $OSCOM_PayPal->getDef('module_hs_title');
+      $this->_short_title = $OSCOM_PayPal->getDef('module_hs_short_title');
+      $this->_introduction = $OSCOM_PayPal->getDef('module_hs_introduction');
+    }
 
     function getTitle() {
       return $this->_title;

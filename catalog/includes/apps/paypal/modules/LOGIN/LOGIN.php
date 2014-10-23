@@ -11,10 +11,19 @@
 */
 
   class OSCOM_PayPal_LOGIN {
-    var $_title = 'Log In with PayPal';
-    var $_short_title = 'Log In';
+    var $_title;
+    var $_short_title;
+    var $_introduction;
     var $_cm_code = 'login/cm_paypal_login';
     var $_sort_order = 1000;
+
+    function OSCOM_PayPal_LOGIN() {
+      global $OSCOM_PayPal;
+
+      $this->_title = $OSCOM_PayPal->getDef('module_login_title');
+      $this->_short_title = $OSCOM_PayPal->getDef('module_login_short_title');
+      $this->_introduction = $OSCOM_PayPal->getDef('module_login_introduction');
+    }
 
     function getTitle() {
       return $this->_title;

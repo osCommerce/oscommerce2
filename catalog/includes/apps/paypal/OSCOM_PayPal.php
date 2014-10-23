@@ -184,6 +184,8 @@
       $class = 'OSCOM_PayPal_' . $module;
 
       if ( !class_exists($class) ) {
+        $this->loadLanguageFile('modules/' . $module . '/' . $module . '.php');
+
         include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $module . '/' . $module . '.php');
       }
 

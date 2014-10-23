@@ -86,11 +86,11 @@ $(function() {
 <p>
 
 <?php
-  echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_save'), null, 'success');
+    echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_save'), null, 'success');
 
-  if ( $current_module != 'G' ) {
-    echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_dialog_uninstall'), '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
-  }
+    if ( $current_module != 'G' ) {
+      echo '  <span style="float: right;">' . $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_dialog_uninstall'), '#', 'warning', 'data-button="paypalButtonUninstallModule"') . '</span>';
+    }
 ?>
 
 </p>
@@ -132,7 +132,18 @@ $(function() {
 <?php
     }
   } else {
-    include(DIR_FS_CATALOG . 'includes/apps/paypal/modules/' . $current_module . '/content/install.php');
+?>
+
+<h3 class="pp-panel-header-warning"><?php echo $OSCOM_PayPal->getModuleInfo($current_module, 'title'); ?></h3>
+<div class="pp-panel pp-panel-warning">
+  <?php echo $OSCOM_PayPal->getModuleInfo($current_module, 'introduction'); ?>
+</div>
+
+<p>
+  <?php echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('button_install_title', array('title' => $OSCOM_PayPal->getModuleInfo($current_module, 'title'))), tep_href_link('paypal.php', 'action=configure&subaction=install&module=' . $current_module), 'success'); ?>
+</p>
+
+<?php
   }
 ?>
 

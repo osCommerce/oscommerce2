@@ -11,10 +11,19 @@
 */
 
   class OSCOM_PayPal_EC {
-    var $_title = 'PayPal Express Checkout';
-    var $_short_title = 'Express Checkout';
+    var $_title;
+    var $_short_title;
+    var $_introduction;
     var $_pm_code = 'paypal_express';
     var $_sort_order = 100;
+
+    function OSCOM_PayPal_EC() {
+      global $OSCOM_PayPal;
+
+      $this->_title = $OSCOM_PayPal->getDef('module_ec_title');
+      $this->_short_title = $OSCOM_PayPal->getDef('module_ec_short_title');
+      $this->_introduction = $OSCOM_PayPal->getDef('module_ec_introduction');
+    }
 
     function getTitle() {
       return $this->_title;

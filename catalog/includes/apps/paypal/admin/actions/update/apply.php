@@ -102,7 +102,7 @@
             }
 
             if ( empty($errors) ) {
-              $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' STARTED', $update_version);
+              $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_update_started', array('version' => $update_version)), $update_version);
 
               foreach ( $update_pkg_contents as $file ) {
                 $pathname = substr($file, strlen($work_dir . '/' . $update_version . '/'));
@@ -123,7 +123,7 @@
                   }
 
                   if ( copy($file, DIR_FS_CATALOG . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . $target . basename($pathname)), $update_version);
+                    $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_updated_file', array('filepath' => $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . $target . basename($pathname)))), $update_version);
                   } else {
                     $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . $target . basename($pathname));
 
@@ -145,7 +145,7 @@
                   }
 
                   if ( copy($file, DIR_FS_ADMIN . $target . basename($pathname)) ) {
-                    $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . $target . basename($pathname)), $update_version);
+                    $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_updated_file', array('filepath' => $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . $target . basename($pathname)))), $update_version);
                   } else {
                     $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_ADMIN . $target . basename($pathname));
 
@@ -156,41 +156,41 @@
 
               if ( empty($errors) ) {
                 if ( file_put_contents(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt', $update_version) ) {
-                  $OSCOM_PayPal->logUpdate('Updated: ' . $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'), $update_version);
+                  $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_updated_file', array('filepath' => $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt'))), $update_version);
                 } else {
                   $errors[] = $OSCOM_PayPal->displayPath(DIR_FS_CATALOG . 'includes/apps/paypal/version.txt');
                 }
               }
 
               if ( empty($errors) ) {
-                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' COMPLETED', $update_version);
+                $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_update_success', array('version' => $update_version)), $update_version);
 
                 $ppUpdateApplyResult['rpcStatus'] = 1;
               } else {
-                $OSCOM_PayPal->logUpdate('##### UPDATE TO ' . $update_version . ' FAILED', $update_version);
+                $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_update_failed', array('version' => $update_version)), $update_version);
               }
             }
 
             if ( !empty($errors) ) {
-              $OSCOM_PayPal->logUpdate('*** Could not update the following files. Please update the file and directory permissions to allow write access.', $update_version);
+              $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('log_error_files'), $update_version);
 
               foreach ( $errors as $e ) {
                 $OSCOM_PayPal->logUpdate($e, $update_version);
               }
             }
           } else {
-            $OSCOM_PayPal->logUpdate('Update Package Extraction Failed', $update_version);
+            $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('error_log_extraction'), $update_version);
           }
         } else {
-          $OSCOM_PayPal->logUpdate('Update Package Verification Failed', $update_version);
+          $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('error_log_verification'), $update_version);
         }
       } else {
-        $OSCOM_PayPal->logUpdate('Invalid Update Package Contents', $update_version);
+        $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('error_log_invalid'), $update_version);
       }
 
       $OSCOM_PayPal->rmdir($work_dir);
     } else {
-      $OSCOM_PayPal->logUpdate('Update Package Does Not Exist: '. $update_zip, $update_version);
+      $OSCOM_PayPal->logUpdate($OSCOM_PayPal->getDef('error_log_nonexisting', array('filepath' => $update_zip)), $update_version);
     }
   }
 

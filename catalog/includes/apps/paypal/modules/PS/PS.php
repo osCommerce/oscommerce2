@@ -11,10 +11,19 @@
 */
 
   class OSCOM_PayPal_PS {
-    var $_title = 'PayPal Payments Standard';
-    var $_short_title = 'Payments Standard';
+    var $_title;
+    var $_short_title;
+    var $_introduction;
     var $_pm_code = 'paypal_standard';
     var $_sort_order = 400;
+
+    function OSCOM_PayPal_PS() {
+      global $OSCOM_PayPal;
+
+      $this->_title = $OSCOM_PayPal->getDef('module_ps_title');
+      $this->_short_title = $OSCOM_PayPal->getDef('module_ps_short_title');
+      $this->_introduction = $OSCOM_PayPal->getDef('module_ps_introduction');
+    }
 
     function getTitle() {
       return $this->_title;
