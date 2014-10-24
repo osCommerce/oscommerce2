@@ -248,6 +248,28 @@
       }
     }
 
+    function hasApiCredentials($server, $type = null) {
+      $server = ($server == 'live') ? 'LIVE' : 'SANDBOX';
+
+      if ( $type == 'email') {
+        $creds = array('OSCOM_APP_PAYPAL_' . $server . '_SELLER_EMAIL');
+      } elseif ( substr($type, 0, 7) == 'payflow' ) {
+        $creds = array('OSCOM_APP_PAYPAL_PF_' . $server . '_' . strtoupper(substr($type, 8)));
+      } else {
+        $creds = array('OSCOM_APP_PAYPAL_' . $server . '_API_USERNAME',
+                       'OSCOM_APP_PAYPAL_' . $server . '_API_PASSWORD',
+                       'OSCOM_APP_PAYPAL_' . $server . '_API_SIGNATURE');
+      }
+
+      foreach ( $creds as $c ) {
+        if ( !defined($c) || (strlen(trim(constant($c))) < 1) ) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
     function getApiCredentials($server, $type) {
       if ( $server == 'live' ) {
         return constant('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type));

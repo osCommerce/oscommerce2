@@ -10,8 +10,5 @@
   Released under the GNU General Public License
 */
 
-  require(DIR_FS_ADMIN . 'includes/classes/currencies.php');
-  $currencies = new currencies();
-
   $content = 'balance.php';
 ?>

@@ -336,6 +336,10 @@ var OSCOM = {
       action: '<?php echo $action; ?>',
       doOnlineVersionCheck: false,
       canApplyOnlineUpdates: <?php echo class_exists('ZipArchive') && function_exists('json_encode') && function_exists('openssl_verify') ? 'true' : 'false'; ?>,
+      accountTypes: {
+        live: <?php echo ($OSCOM_PayPal->hasApiCredentials('live') === true) ? 'true' : 'false'; ?>,
+        sandbox: <?php echo ($OSCOM_PayPal->hasApiCredentials('sandbox') === true) ? 'true' : 'false'; ?>
+      },
       versionCheck: function() {
         $.get('<?php echo tep_href_link('paypal.php', 'action=checkVersion'); ?>', function (data) {
           var versions = [];
