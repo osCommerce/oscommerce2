@@ -204,7 +204,7 @@
  /**
   * Adds a text subpart to a mime_part object
   *
-  * @param string $obj
+  * @param object $obj
   * @param string $text
   * @return \mime
   */
@@ -223,7 +223,7 @@
  /**
   * Adds a html subpart to a mime_part object
   *
-  * @param string $obj
+  * @param object $obj
   * @return \mime
   */
     function add_html_part(&$obj) {
@@ -252,7 +252,7 @@
  /**
   * Adds an alternative part to a mime_part object
   *
-  * @param string $obj
+  * @param object $obj
   * @return \mime
   */
     function add_alternative_part(&$obj) {
@@ -269,7 +269,7 @@
   * Adds a html subpart to a mime_part object
   *
   * 
-  * @param string $obj
+  * @param object $obj
   * @return \mime
   */
     function add_related_part(&$obj) {
@@ -285,7 +285,7 @@
  /**
   * Adds an html image subpart to a mime_part object
   *
-  * @param stringe $obj
+  * @param object $obj
   * @param string $value
   */
     function add_html_image_part(&$obj, $value) {
@@ -300,7 +300,7 @@
 
  /**
   * Adds an attachment subpart to a mime_part object
-  * @param string $obj
+  * @param object $obj
   * @param string $value
   */
     function add_attachment_part(&$obj, $value) {
