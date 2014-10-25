@@ -60,31 +60,10 @@ Variable Scope*
 
 All variables must be accessed and set within their scope as:
 
-$HTTP_GET_VARS['variable']
-$HTTP_POST_VARS['variable']
-$HTTP_COOKIE_VARS['variable']
-$variable (either local, or session)
-
-* This needs to be updated when the codebase has been made compatible with
-the register_global parameter. Session variables are then accessed and set
-within its scope as:
-
-$HTTP_SESSION_VARS['variable']
-
-When PHP3 support is dropped, the following scope will be used:
-
 $_GET['variable']
 $_POST['variable']
 $_COOKIE['variable']
 $_SESSION['variable']
-
-PHP 4.0.x does not support the above scope which was introduced in PHP 4.1.x.
-The following can be used which is not compatible with PHP 3.x:
-
-$_GET =& $HTTP_GET_VARS;
-$_POST =& $HTTP_POST_VARS;
-$_COOKIE =& $HTTP_COOKIE_VARS;
-$_SESSION =& $HTTP_SESSION_VARS;
 
 include() vs require()
 ----------------------
