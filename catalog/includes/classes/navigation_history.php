@@ -13,15 +13,21 @@
   class navigationHistory {
     var $path, $snapshot;
 
-    function navigationHistory() {
-      $this->reset();
-    }
-
+/**
+ * reset the navigation history
+ */
     function reset() {
       $this->path = array();
       $this->snapshot = array();
     }
-
+    
+/**
+ * Adds current page to the navigation history
+ * 
+ * @global string $PHP_SELF
+ * @global string $request_type
+ * @global string $cPath
+ */
     function add_current_page() {
       global $PHP_SELF, $request_type, $cPath;
 
@@ -64,7 +70,12 @@
                               'post' => $this->filter_parameters($_POST));
       }
     }
-
+    
+/**
+ * Removes the current page from the navigation history
+ * 
+ * @global string $PHP_SELF
+ */
     function remove_current_page() {
       global $PHP_SELF;
 
@@ -73,7 +84,14 @@
         unset($this->path[$last_entry_position]);
       }
     }
-
+    
+/**
+ * Takes a snapshot of current page
+ * 
+ * @global string $PHP_SELF
+ * @global string $request_type
+ * @param mixed $page
+ */
     function set_snapshot($page = '') {
       global $PHP_SELF, $request_type;
 
@@ -89,11 +107,18 @@
                                 'post' => $this->filter_parameters($_POST));
       }
     }
-
+    
+/**
+ * Clears the snapshot array
+ */
     function clear_snapshot() {
       $this->snapshot = array();
     }
-
+/**
+ * Sets the given path as snapshot
+ * 
+ * @param int $history
+ */
     function set_path_as_snapshot($history = 0) {
       $pos = (sizeof($this->path)-1-$history);
       $this->snapshot = array('page' => $this->path[$pos]['page'],
@@ -101,7 +126,10 @@
                               'get' => $this->path[$pos]['get'],
                               'post' => $this->path[$pos]['post']);
     }
-
+    
+/**
+ * Debug
+ */
     function debug() {
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
         echo $this->path[$i]['page'] . '?';
@@ -124,6 +152,12 @@
       }
     }
 
+    /**
+     * Filters the parameters
+     * 
+     * @param array $parameters
+     * @return array
+     */
     function filter_parameters($parameters) {
       $clean = array();
 
@@ -138,6 +172,12 @@
       return $clean;
     }
 
+    /**
+     * Unserialize
+     * 
+     * @todo remove as it is not used
+     * @param type $broken
+     */
     function unserialize($broken) {
       for(reset($broken);$kv=each($broken);) {
         $key=$kv['key'];
