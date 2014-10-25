@@ -10,21 +10,44 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class breadcrumb
+ * 
+ * the main breadcrumb class
+ */
   class breadcrumb {
     var $_trail;
 
+ /**
+  * 
+  */
     function breadcrumb() {
       $this->reset();
     }
-
+    
+/**
+ * reset the breadcrumb
+ */
     function reset() {
       $this->_trail = array();
     }
 
+/**
+ * Adds title and link to the breadcrumb
+ * 
+ * @param string $title
+ * @param string $link
+ */    
     function add($title, $link = '') {
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
+/**
+ * Ouputs the breadcrumb
+ * 
+ * @param string $separator
+ * @return string
+ */    
     function trail($separator = NULL) {
       $trail_string = '<ol class="breadcrumb">';
 
