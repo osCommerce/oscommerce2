@@ -146,7 +146,7 @@ An example custom function style:
 
 <?php
   function tep_my_function($parameter, $optional = '') {
-    global $HTTP_GET_VARS, $another_variable;
+    global $another_variable;
 
     ....
 
@@ -253,7 +253,7 @@ attacks residing in the user input. The data is first prepared and then protecte
 when inserting it into the table. The following structure is used:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
 
   tep_db_query("update table set column = '" . tep_db_input($value1) . "' where id = '" . (int)$id . "'");
 ?>
@@ -265,9 +265,9 @@ Multiple values can be parsed, protected and inserted into the table in an easie
 fashion:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
-  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
-  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
+  $value2 = tep_db_prepare_input($_POST['value2']);
+  $value3 = tep_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
@@ -279,9 +279,9 @@ fashion:
 A similar structure can be used for updating values in a table:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
-  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
-  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
+  $value2 = tep_db_prepare_input($_POST['value2']);
+  $value3 = tep_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
