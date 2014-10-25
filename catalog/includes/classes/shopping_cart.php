@@ -103,7 +103,7 @@
  * @global int $customer_id
  * @param int $products_id
  * @param int $qty
- * @param array $attributes
+ * @param mixed $attributes
  * @param boolean $notify
  */    
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
