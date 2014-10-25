@@ -10,13 +10,17 @@
   Released under the GNU General Public License
 */
 
-////
-// Class to handle currencies
-// TABLES: currencies
+ /**
+ * Class currencies
+ * 
+ * Class for currencies calculation
+ */
   class currencies {
     var $currencies;
 
-// class constructor
+  /**
+  * Class constructor
+  */
     function currencies() {
       $this->currencies = array();
       $currencies_query = tep_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from " . TABLE_CURRENCIES);
@@ -31,7 +35,13 @@
       }
     }
 
-// class methods
+  /** 
+   * @param integer $number
+   * @param boolean $calculate_currency_value
+   * @param string $currency_type
+   * @param string $currency_value
+   * @return string
+   */
     function format($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
       if (empty($currency_type)) $currency_type = $_SESSION['currency'];
 
@@ -44,11 +54,22 @@
 
       return $format_string;
     }
-
+  
+  /**
+   * @param decimal $products_price
+   * @param string $products_tax
+   * @param integer $quantity
+   * @return boolean
+   */
     function calculate_price($products_price, $products_tax, $quantity = 1) {
       return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$_SESSION['currency']]['decimal_places']) * $quantity;
     }
 
+  /**
+   * 
+   * @param string $code
+   * @return boolean
+   */
     function is_set($code) {
       if (isset($this->currencies[$code]) && tep_not_null($this->currencies[$code])) {
         return true;
@@ -56,15 +77,30 @@
         return false;
       }
     }
-
+  
+  /**
+   * @param string $code
+   * @return string
+   */
     function get_value($code) {
       return $this->currencies[$code]['value'];
     }
-
+  
+  /**
+   * @param string $code
+   * @return string
+   */
     function get_decimal_places($code) {
       return $this->currencies[$code]['decimal_places'];
     }
-
+    
+    /**
+     * 
+     * @param string $products_price
+     * @param string $products_tax
+     * @param string $quantity
+     * @return string
+     */
     function display_price($products_price, $products_tax, $quantity = 1) {
       return $this->format($this->calculate_price($products_price, $products_tax, $quantity));
     }
