@@ -13,7 +13,7 @@
   function osc_draw_input_field($name, $value = null, $parameters = null, $override = true, $type = 'text') {
     $field = '<input type="' . osc_output_string($type) . '" class="form-control" name="' . osc_output_string($name) . '" id="' . osc_output_string($name) . '"';
 
-    if ( ($key = $GLOBALS[$name]) || ($key = $_GET[$name]) || ($key = $_POST[$name]) || ($key = $_SESSION[$name]) && ($override) ) {
+    if ( ($key = $_GET[$name]) || ($key = $_POST[$name]) || ($key = $_SESSION[$name]) && ($override) ) {
       $field .= ' value="' . osc_output_string($key) . '"';
     } elseif ($value != '') {
       $field .= ' value="' . osc_output_string($value) . '"';
