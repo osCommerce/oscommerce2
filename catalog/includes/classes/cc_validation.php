@@ -10,9 +10,22 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class cc_calidation
+ * 
+ * Validates credit card credentials
+ */
   class cc_validation {
     var $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
 
+/**
+ * Credit card validate method
+ * 
+ * @param string $number
+ * @param string $expiry_m
+ * @param string $expiry_y
+ * @return mixed
+ */    
     function validate($number, $expiry_m, $expiry_y) {
       $this->cc_number = preg_replace('/[^0-9]/', '', $number);
 
@@ -57,6 +70,11 @@
       return $this->is_valid();
     }
 
+/**
+ * Cehck if the credit card credentials are valid
+ * 
+ * @return boolean
+ */    
     function is_valid() {
       $cardNumber = strrev($this->cc_number);
       $numSum = 0;
