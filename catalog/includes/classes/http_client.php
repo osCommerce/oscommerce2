@@ -34,6 +34,11 @@
   $http->disconnect();
 */
 
+/*
+ * Class httpclient
+ * 
+ *  
+ */
   class httpClient {
     var $url; // array containg server URL, similar to parseurl() returned array
     var $reply; // response code
@@ -49,7 +54,9 @@
  * httpClient constructor
  * Note: when host and port are defined, the connection is immediate
  * @seeAlso connect
- **/
+ * @param string $host
+ * @param integer $port
+ */
     function httpClient($host = '', $port = '') {
       if (tep_not_null($host)) {
         $this->connect($host, $port);
@@ -60,7 +67,10 @@
  * turn on proxy support
  * @param proxyHost proxy host address eg "proxy.mycorp.com"
  * @param proxyPort proxy port usually 80 or 8080
- **/
+ *
+ * @param string $proxyHost
+ * @param integer $proxyPort
+ */
     function setProxy($proxyHost, $proxyPort) {
       $this->useProxy = true;
       $this->proxyHost = $proxyHost;
@@ -72,8 +82,10 @@
  * define the HTTP protocol version to use
  * @param version string the version number with one decimal: "0.9", "1.0", "1.1"
  * when using 1.1, you MUST set the mandatory headers "Host"
+ *
+ * @param string $version
  * @return boolean false if the version number is bad, true if ok
- **/
+ */
     function setProtocolVersion($version) {
       if ( ($version > 0) && ($version <= 1.1) ) {
         $this->protocolVersion = $version;
@@ -86,8 +98,9 @@
 /**
  * set a username and password to access a protected resource
  * Only "Basic" authentication scheme is supported yet
- * @param username string - identifier
- * @param password string - clear password
+ * 
+ * @param string username - identifier
+ * @param string password - clear password
  **/
     function setCredentials($username, $password) {
       $this->addHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $password));
@@ -96,8 +109,8 @@
 /**
  * define a set of HTTP headers to be sent to the server
  * header names are lowercased to avoid duplicated headers
- * @param headers hash array containing the headers as headerName => headerValue pairs
- **/
+ * @param array headers hash array containing the headers as headerName => headerValue pairs
+ */
     function setHeaders($headers) {
       if (is_array($headers)) {
         foreach($headers as $name => $value) {
@@ -109,8 +122,8 @@
 /**
  * addHeader
  * set a unique request header
- * @param headerName the header name
- * @param headerValue the header value, ( unencoded)
+ * @param string headerName the header name
+ * @param string headerValue the header value, ( unencoded)
  **/
     function addHeader($headerName, $headerValue) {
       $this->requestHeaders[$headerName] = $headerValue;
@@ -119,7 +132,7 @@
 /**
  * removeHeader
  * unset a request header
- * @param headerName the header name
+ * @param string headerName the header name
  **/
     function removeHeader($headerName) {
       unset($this->requestHeaders[$headerName]);
@@ -128,8 +141,8 @@
 /**
  * Connect
  * open the connection to the server
- * @param host string server address (or IP)
- * @param port string server listening port - defaults to 80
+ * @param string host string server address (or IP)
+ * @param string port string server listening port - defaults to 80
  * @return boolean false is connection failed, true otherwise
  **/
     function Connect($host, $port = '') {
@@ -143,7 +156,7 @@
 /**
  * Disconnect
  * close the connection to the  server
- **/
+ */
     function Disconnect() {
       if ($this->socket) fclose($this->socket);
     }
@@ -151,7 +164,7 @@
 /**
  * head
  * issue a HEAD request
- * @param uri string URI of the document
+ * @param srting uri URI of the document
  * @return string response status code (200 if ok)
  * @seeAlso getHeaders()
  **/
@@ -189,11 +202,10 @@
 /**
  * Post
  * issue a POST http request
- * @param uri string URI of the document
- * @param query_params array parameters to send in the form "parameter name" => value
+ * @param string uri URI of the document
+ * @param array query_params parameters to send in the form "parameter name" => value
  * @return string response status code (200 if ok)
- * @example 
- * $params = array( "login" => "tiger", "password" => "secret" );
+ * @example $params  array( "login" => "tiger", "password" => "secret" );
  * $http->post( "/login.php", $params );
  **/
     function Post($uri, $query_params = '') {
@@ -226,8 +238,8 @@
  * Put
  * Send a PUT request
  * PUT is the method to sending a file on the server. it is *not* widely supported
- * @param uri the location of the file on the server. dont forget the heading "/"
- * @param filecontent the content of the file. binary content accepted
+ * @param string uri the location of the file on the server. dont forget the heading "/"
+ * @param binary filecontent the content of the file. binary content accepted
  * @return string response status code 201 (Created) if ok
  * @see RFC2518 "HTTP Extensions for Distributed Authoring WEBDAV"
  **/
@@ -256,8 +268,8 @@
 /**
  * getHeader
  * return the response header "headername"
- * @param headername the name of the header
- * @return header value or NULL if no such header is defined
+ * @param sring headername the name of the header
+ * @return string header value or NULL if no such header is defined
  **/
     function getHeader($headername) {
       return $this->responseHeaders[$headername];
@@ -298,7 +310,7 @@
     }
 
 /**
- * @scope only protected or private methods below
+ * @todo only protected or private methods below
  **/
 
 /** 
@@ -307,8 +319,9 @@
  * a) the command
  * b) the request headers if they are defined
  * c) the request body if defined
- * @return string the server repsonse status code
- **/
+ * @param string $command
+ * @return string the server response status code
+ */
     function sendCommand($command) {
       $this->responseHeaders = array();
       $this->responseBody = '';
@@ -372,8 +385,8 @@
 
 /**
  * processHeader() reads header lines from socket until the line equals $lastLine
- * @scope protected
- * @return array of headers with header names as keys and header content as values
+ * @scope public
+ * @return array Array of headers with header names as keys and header content as values
  **/
     function processHeader($lastLine = "\r\n") {
       $headers = array();
@@ -400,7 +413,7 @@
  * processBody() reads the body from the socket
  * the body is the "real" content of the reply
  * @return string body content 
- * @scope private
+ * @scope public
  **/
     function processBody() {
       $data = '';
@@ -429,9 +442,9 @@
 
 /**
  * Calculate and return the URI to be sent ( proxy purpose )
- * @param the local URI
- * @return URI to be used in the HTTP request
- * @scope private
+ * @param string $uri the local URI
+ * @return string URI to be used in the HTTP request
+ * @scope public
  **/
     function makeUri($uri) {
       $a = parse_url($uri);
