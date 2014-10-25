@@ -17,6 +17,7 @@
  */
   class order {
     var $info, $totals, $products, $customer, $delivery, $content_type;
+
 /**
  * Class constructor
  * 
@@ -35,6 +36,7 @@
         $this->cart();
       }
     }
+
 /**
  * Queries the database to get order data
  * 
@@ -140,6 +142,7 @@
         $index++;
       }
     }
+
 /**
  * Build the cart info
  * 
