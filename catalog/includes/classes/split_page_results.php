@@ -78,7 +78,7 @@
  * @global string $PHP_SELF
  * @global string $request_type
  * @param int $max_page_links
- * @param array $parameters
+ * @param string $parameters
  * @return string
  */
     function display_links($max_page_links, $parameters = '') {
