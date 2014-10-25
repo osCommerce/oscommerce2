@@ -11,11 +11,21 @@
 
   browser language detection logic Copyright phpMyAdmin (select_lang.lib.php3 v1.24 04/19/2002)
                                    Copyright Stephane Garin <sgarin@sgarin.com> (detect_language.php v0.1 04/02/2002)
-*/
 
+ */
+
+/**
+ * Class Language
+ *  
+ * checks the catalog language and browser language
+ */
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
+ /**
+ * 
+ * @param string $lng
+ */
     function language($lng = '') {
       $this->languages = array('ar' => 'ar([-_][[:alpha:]]{2})?|arabic',
                                'bg' => 'bg|bulgarian',
@@ -70,14 +80,23 @@
       $this->set_language($lng);
     }
 
+/**
+ * Sets the catalog language
+ * @param string $language The current catalog language
+ */
     function set_language($language) {
       if ( (tep_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
         $this->language = $this->catalog_languages[$language];
       } else {
+          $this->
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
       }
     }
-
+    
+/**
+ * Returns the current browser language
+ * @return boolean Returns false if $_SERVER['HTTP_ACCEPT_LANGUAGE'] is no set or empty
+ */
     function get_browser_language() {
       if ( isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ){
         $this->browser_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
