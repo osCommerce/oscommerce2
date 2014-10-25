@@ -10,9 +10,18 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class order
+ * 
+ * contains all order methods
+ */
   class order {
     var $info, $totals, $products, $customer, $delivery, $content_type;
-
+/**
+ * Class constructor
+ * 
+ * @param int $order_id The order ID
+ */
     function order($order_id = '') {
       $this->info = array();
       $this->totals = array();
@@ -26,7 +35,11 @@
         $this->cart();
       }
     }
-
+/**
+ * Queries the database to get order data
+ * 
+ * @param int $order_id The order ID
+ */
     function query($order_id) {
       $order_id = tep_db_prepare_input($order_id);
 
@@ -127,7 +140,18 @@
         $index++;
       }
     }
-
+/**
+ * Build the cart info
+ * 
+ * @global int $customer_id
+ * @global string $sendto
+ * @global string $billto
+ * @global string $currencies
+ * @global string $shipping
+ * @global string $payment
+ * @global string $comments
+ * @global int $customer_default_address_id
+ */
     function cart() {
       global $customer_id, $sendto, $billto, $currencies, $shipping, $payment, $comments, $customer_default_address_id;
 
