@@ -9,7 +9,20 @@
 
   Released under the GNU General Public License
 */
+
+/**
+ * Class alertBlock
+ * 
+ */
+
   class alertBlock {    
+/**
+ * Builds a alert block
+ * 
+ * @param sreing $contents
+ * @param boolean $alert_output
+ * @return string
+ */
     function alertBlock($contents, $alert_output = false) {
 	  $alertBox_string = '';
 		  
@@ -29,4 +42,3 @@
         return $alertBox_string;
      }
   }
-
