@@ -10,10 +10,20 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class shipping
+ * 
+ * Contains the shipping methods
+ */
   class shipping {
     var $modules;
 
-// class constructor
+/**
+ * Class constructor
+ * 
+ * @global string $PHP_SELF
+ * @param array $module
+ */
     function shipping($module = '') {
       global $PHP_SELF;
 
@@ -40,6 +50,17 @@
       }
     }
 
+/**
+ * Gets the shipping quote array
+ * 
+ * @global float $total_weight
+ * @global float $shipping_weight
+ * @global string $shipping_quoted
+ * @global int $shipping_num_boxes
+ * @param string $method
+ * @param string $module
+ * @return array
+ */    
     function quote($method = '', $module = '') {
       global $total_weight, $shipping_weight, $shipping_quoted, $shipping_num_boxes;
 
@@ -84,6 +105,11 @@
       return $quotes_array;
     }
 
+/**
+ * return cheapest shipping method
+ * 
+ * @return array
+ */    
     function cheapest() {
       if (is_array($this->modules)) {
         $rates = array();
