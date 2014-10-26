@@ -14,6 +14,7 @@
  * Class breadcrumb
  * 
  * the main breadcrumb class
+ *
  */
   class breadcrumb {
     var $_trail;
