@@ -19,7 +19,7 @@
 /**
  * Builds a alert block
  * 
- * @param sreing $contents
+ * @param string $contents
  * @param boolean $alert_output
  * @return string
  */
