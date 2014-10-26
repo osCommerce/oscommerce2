@@ -63,7 +63,7 @@
  * @param float $products_price
  * @param string $products_tax
  * @param int $quantity
- * @return boolean
+ * @return float
  */
     function calculate_price($products_price, $products_tax, $quantity = 1) {
       return tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$_SESSION['currency']]['decimal_places']) * $quantity;
