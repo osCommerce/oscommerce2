@@ -70,7 +70,7 @@
  * @param proxyPort proxy port usually 80 or 8080
  *
  * @param string $proxyHost
- * @param integer $proxyPort
+ * @param int $proxyPort
  */
     function setProxy($proxyHost, $proxyPort) {
       $this->useProxy = true;
@@ -275,7 +275,7 @@
  * getHeader
  * return the response header "headername"
  *
- * @param sring $headername the name of the header
+ * @param string $headername the name of the header
  * @return string header value or NULL if no such header is defined
  **/
     function getHeader($headername) {

@@ -15,7 +15,7 @@
   Renamed and Modified by Jan Wildeboer for osCommerce
 */
 
-/*
+/**
  * Class Mime 
  * 
  * a class to assist in building mime-HTML eMails
@@ -142,7 +142,7 @@
     }
 
 /**
- * &addSubPart()
+ * addSubPart()
  * 
  * Adds a subpart to current mime part and returns
  * a reference to it

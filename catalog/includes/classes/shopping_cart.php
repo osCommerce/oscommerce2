@@ -375,7 +375,7 @@
 /**
  * returns the attributes price
  * 
- * @param type $products_id
+ * @param int $products_id
  * @return array
  */    
     function attributes_price($products_id) {

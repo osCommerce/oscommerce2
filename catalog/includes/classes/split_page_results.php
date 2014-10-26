@@ -20,6 +20,11 @@
 
 /**
  *  class constructor
+ *
+ * @param string $query
+ * @param int $max_rows
+ * @param string $count_key
+ * @param string $page_holder
  */
     function splitPageResults($query, $max_rows, $count_key = '*', $page_holder = 'page') {
       $this->sql_query = $query;

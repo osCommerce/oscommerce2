@@ -194,12 +194,12 @@
       return (isset($this->_content[$group]) && !empty($this->_content[$group]));
     }
 
- /**
-  * Gets the content of the group
-  * 
-  * @param string $group
-  * @return string
-  */
+/**
+ * Gets the content of the group
+ * 
+ * @param string $group
+ * @return string
+ */
     function getContent($group) {
       if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
         include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');

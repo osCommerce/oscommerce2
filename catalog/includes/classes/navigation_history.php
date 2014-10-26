@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class navigationHistory
+ *
+ * records user navigation history
+ */
   class navigationHistory {
     var $path, $snapshot;
 
@@ -114,6 +119,7 @@
     function clear_snapshot() {
       $this->snapshot = array();
     }
+
 /**
  * Sets the given path as snapshot
  * 
@@ -152,12 +158,12 @@
       }
     }
 
-    /**
-     * Filters the parameters
-     * 
-     * @param array $parameters
-     * @return array
-     */
+/**
+ * Filters the parameters
+ * 
+ * @param array $parameters
+ * @return array
+ */
     function filter_parameters($parameters) {
       $clean = array();
 
@@ -172,12 +178,12 @@
       return $clean;
     }
 
-    /**
-     * Unserialize
-     * 
-     * @todo remove as it is not used
-     * @param type $broken
-     */
+/**
+ * Unserialize
+ * 
+ * @todo remove as it is not used
+ * @param type $broken
+ */
     function unserialize($broken) {
       for(reset($broken);$kv=each($broken);) {
         $key=$kv['key'];

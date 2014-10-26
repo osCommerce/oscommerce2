@@ -172,14 +172,14 @@
       if (isset($images_dir)) $this->find_html_images($images_dir);
     }
 
-  /**
-   * Adds an image to the list of embedded
-   * images.
-   *
-   * @param string $file
-   * @param string $name
-   * @param string $c_type
-  */
+/**
+ * Adds an image to the list of embedded
+ * images.
+ *
+ * @param string $file
+ * @param string $name
+ * @param string $c_type
+ */
     function add_html_image($file, $name = '', $c_type='application/octet-stream') {
       $this->html_images[] = array('body' => $file,
                                    'name' => $name,
@@ -187,7 +187,7 @@
                                    'cid' => md5(uniqid(time())));
     }
 
- /**
+/**
  * Adds a file to the list of attachments.
  *
  * @param string $file
@@ -202,13 +202,13 @@
                                    'encoding' => $encoding);
     }
 
- /**
-  * Adds a text subpart to a mime_part object
-  *
-  * @param object $obj
-  * @param string $text
-  * @return \mime
-  */
+/**
+ * Adds a text subpart to a mime_part object
+ *
+ * @param object $obj
+ * @param string $text
+ * @return object|\mime
+ */
     function add_text_part(&$obj, $text) {
       $params['content_type'] = 'text/plain';
       $params['encoding'] = $this->build_params['text_encoding'];
@@ -221,12 +221,12 @@
       }
     }
 
- /**
-  * Adds a html subpart to a mime_part object
-  *
-  * @param object $obj
-  * @return \mime
-  */
+/**
+ * Adds a html subpart to a mime_part object
+ *
+ * @param object $obj
+ * @return object|\mime
+ */
     function add_html_part(&$obj) {
       $params['content_type'] = 'text/html';
       $params['encoding'] = $this->build_params['html_encoding'];
@@ -239,23 +239,23 @@
       }
     }
 
- /**
-  * Starts a message with a mixed part
-  *
-  * @return \mime
-  */
+/**
+ * Starts a message with a mixed part
+ *
+ * @return object|\mime
+ */
     function add_mixed_part() {
       $params['content_type'] = 'multipart/mixed';
 
       return new mime('', $params);
     }
 
- /**
-  * Adds an alternative part to a mime_part object
-  *
-  * @param object $obj
-  * @return \mime
-  */
+/**
+ * Adds an alternative part to a mime_part object
+ *
+ * @param object $obj
+ * @return object|\mime
+ */
     function add_alternative_part(&$obj) {
       $params['content_type'] = 'multipart/alternative';
 
@@ -266,13 +266,12 @@
       }
     }
 
- /**
-  * Adds a html subpart to a mime_part object
-  *
-  * 
-  * @param object $obj
-  * @return \mime
-  */
+/**
+ * Adds a html subpart to a mime_part object
+ * 
+ * @param object $obj
+ * @return object|\mime
+ */
     function add_related_part(&$obj) {
       $params['content_type'] = 'multipart/related';
 
@@ -283,12 +282,12 @@
       }
     }
 
- /**
-  * Adds an html image subpart to a mime_part object
-  *
-  * @param object $obj
-  * @param string $value
-  */
+/**
+ * Adds an html image subpart to a mime_part object
+ *
+ * @param object $obj
+ * @param string $value
+ */
     function add_html_image_part(&$obj, $value) {
       $params['content_type'] = $value['c_type'];
       $params['encoding'] = 'base64';
@@ -299,11 +298,11 @@
       $obj->addSubpart($value['body'], $params);
     }
 
- /**
-  * Adds an attachment subpart to a mime_part object
-  * @param object $obj
-  * @param string $value
-  */
+/**
+ * Adds an attachment subpart to a mime_part object
+ * @param object $obj
+ * @param string $value
+ */
     function add_attachment_part(&$obj, $value) {
       $params['content_type'] = $value['c_type'];
       $params['encoding'] = $value['encoding'];
@@ -313,27 +312,27 @@
       $obj->addSubpart($value['body'], $params);
     }
 
- /**
-  * Builds the multipart message from the
-  * list ($this->_parts). $params is an
-  * array of parameters that shape the building
-  * of the message. Currently supported are:
-  *
-  * $params['html_encoding'] - The type of encoding to use on html. Valid options are
-  *                            "7bit", "quoted-printable" or "base64" (all without quotes).
-  *                            7bit is EXPRESSLY NOT RECOMMENDED. Default is quoted-printable
-  * $params['text_encoding'] - The type of encoding to use on plain text Valid options are
-  *                            "7bit", "quoted-printable" or "base64" (all without quotes).
-  *                            Default is 7bit
-  * $params['text_wrap']     - The character count at which to wrap 7bit encoded data.
-  *                            Default this is 998.
-  * $params['html_charset']  - The character set to use for a html section.
-  *                            Default is iso-8859-1
-  * $params['text_charset']  - The character set to use for a text section.
-  *                          - Default is iso-8859-1
-  * @param array $params
-  * @return boolean
-  */
+/**
+ * Builds the multipart message from the
+ * list ($this->_parts). $params is an
+ * array of parameters that shape the building
+ * of the message. Currently supported are:
+ *
+ * $params['html_encoding'] - The type of encoding to use on html. Valid options are
+ *                            "7bit", "quoted-printable" or "base64" (all without quotes).
+ *                            7bit is EXPRESSLY NOT RECOMMENDED. Default is quoted-printable
+ * $params['text_encoding'] - The type of encoding to use on plain text Valid options are
+ *                            "7bit", "quoted-printable" or "base64" (all without quotes).
+ *                            Default is 7bit
+ * $params['text_wrap']     - The character count at which to wrap 7bit encoded data.
+ *                            Default this is 998.
+ * $params['html_charset']  - The character set to use for a html section.
+ *                            Default is iso-8859-1
+ * $params['text_charset']  - The character set to use for a text section.
+ *                          - Default is iso-8859-1
+ * @param array $params
+ * @return boolean
+ */
     function build_message($params = '') {
       if ($params == '') $params = array();
 
@@ -459,7 +458,7 @@
   * @param string $from_addr
   * @param string $subject
   * @param string $headers
-  * @return function
+  * @return callable
   */
     function send($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
       if ((strstr($to_name, "\n") != false) || (strstr($to_name, "\r") != false)) {
@@ -514,28 +513,23 @@
       }
     }
 
- /**
-  * Use this method to return the email
-  * in message/rfc822 format. Useful for
-  * adding an email to another email as
-  * an attachment. there's a commented
-  * out example in example.php.
-  *
-  * string get_rfc822(string To name,
-  *       string To email,
-  *       string From name,
-  *       string From email,
-  *       [string Subject,
-  *        string Extra headers])
-  *
-  * @param string $to_name
-  * @param string $to_addr
-  * @param string $from_name
-  * @param string $from_addr
-  * @param string $subject
-  * @param string $headers
-  * @return string
-  */
+/**
+ * Use this method to return the email
+ * in message/rfc822 format. Useful for
+ * adding an email to another email as
+ * an attachment. there's a commented
+ * out example in example.php.
+ *
+ * @example get_rfc822(string To name, string To email, string From name, string From email,[string Subject, string Extra headers]);
+ *
+ * @param string $to_name
+ * @param string $to_addr
+ * @param string $from_name
+ * @param string $from_addr
+ * @param string $subject
+ * @param string $headers
+ * @return string
+ */
     function get_rfc822($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
 // Make up the date header as according to RFC822
       $date = 'Date: ' . date('D, d M y H:i:s');

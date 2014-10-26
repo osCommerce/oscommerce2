@@ -17,7 +17,7 @@
 
   class alertBlock {    
 /**
- * Builds a alert block
+ * Builds an alert block
  * 
  * @param string $contents
  * @param boolean $alert_output
