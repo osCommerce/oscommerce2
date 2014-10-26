@@ -34,13 +34,13 @@
  * Sets up the object
  *
  * @param string $body   - The body of the mime part if any.
- * @param array  $params - An associative array of parameters:
- *                  content_type - The content type for this part eg multipart/mixed
- *                  encoding     - The encoding to use, 7bit, base64, or quoted-printable
- *                  cid          - Content ID to apply
- *                  disposition  - Content disposition, inline or attachment
- *                  dfilename    - Optional filename parameter for content disposition
- *                  description  - Content description
+ * @param array $params - An associative array of parameters:
+ *                 content_type - The content type for this part eg multipart/mixed
+ *                 encoding     - The encoding to use, 7bit, base64, or quoted-printable
+ *                 cid          - Content ID to apply
+ *                 disposition  - Content disposition, inline or attachment
+ *                 dfilename    - Optional filename parameter for content disposition
+ *                 description  - Content description
  * @access public
  */
 
