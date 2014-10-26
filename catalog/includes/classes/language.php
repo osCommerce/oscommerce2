@@ -22,8 +22,9 @@
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
- /**
- * 
+/**
+ * Class constructor
+ *
  * @param string $lng
  */
     function language($lng = '') {
@@ -82,6 +83,7 @@
 
 /**
  * Sets the catalog language
+ *
  * @param string $language The current catalog language
  */
     function set_language($language) {
@@ -95,6 +97,7 @@
     
 /**
  * Returns the current browser language
+ *
  * @return boolean Returns false if $_SERVER['HTTP_ACCEPT_LANGUAGE'] is no set or empty
  */
     function get_browser_language() {

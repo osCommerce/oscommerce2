@@ -21,10 +21,10 @@
 /**
  * Credit card validate method
  * 
- * @param string $number
- * @param string $expiry_m
- * @param string $expiry_y
- * @return mixed
+ * @param string $number credit card number
+ * @param string $expiry_m credit card month expiration
+ * @param string $expiry_y credit card year expiration
+ * @return int|boolean
  */    
     function validate($number, $expiry_m, $expiry_y) {
       $this->cc_number = preg_replace('/[^0-9]/', '', $number);
@@ -71,7 +71,7 @@
     }
 
 /**
- * Cehck if the credit card credentials are valid
+ * Check if the credit card credentials are valid
  * 
  * @return boolean
  */    

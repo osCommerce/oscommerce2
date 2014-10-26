@@ -19,9 +19,9 @@
   class breadcrumb {
     var $_trail;
 
- /**
-  * 
-  */
+/**
+ * Class constructor 
+ */
     function breadcrumb() {
       $this->reset();
     }
@@ -36,8 +36,8 @@
 /**
  * Adds title and link to the breadcrumb
  * 
- * @param string $title
- * @param string $link
+ * @param string $title breadcrumb title
+ * @param string $link breadrcrumb link
  */    
     function add($title, $link = '') {
       $this->_trail[] = array('title' => $title, 'link' => $link);
@@ -46,7 +46,7 @@
 /**
  * Ouputs the breadcrumb
  * 
- * @param string $separator
+ * @param string $separator breadcrumb separator
  * @return string
  */    
     function trail($separator = NULL) {

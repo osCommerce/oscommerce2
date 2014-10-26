@@ -23,7 +23,7 @@
 /**
  * Class constructor
  * 
- * @global type $messageToStack
+ * @global string $messageToStack
  */
     function messageStack() {
       global $messageToStack;
@@ -86,7 +86,7 @@
  * Message output
  * 
  * @param string $class
- * @return functon alertbock()
+ * @return string
  */
     function output($class) {
 

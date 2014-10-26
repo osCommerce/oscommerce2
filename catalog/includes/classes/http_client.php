@@ -37,7 +37,7 @@
 /*
  * Class httpclient
  * 
- *  
+ * A http client utility class 
  */
   class httpClient {
     var $url; // array containg server URL, similar to parseurl() returned array
@@ -54,8 +54,9 @@
  * httpClient constructor
  * Note: when host and port are defined, the connection is immediate
  * @seeAlso connect
+ *
  * @param string $host
- * @param integer $port
+ * @param int $port
  */
     function httpClient($host = '', $port = '') {
       if (tep_not_null($host)) {
@@ -99,8 +100,8 @@
  * set a username and password to access a protected resource
  * Only "Basic" authentication scheme is supported yet
  * 
- * @param string username - identifier
- * @param string password - clear password
+ * @param string $username - identifier
+ * @param string $password - clear password
  **/
     function setCredentials($username, $password) {
       $this->addHeader('Authorization', 'Basic ' . base64_encode($username . ':' . $password));
@@ -109,7 +110,7 @@
 /**
  * define a set of HTTP headers to be sent to the server
  * header names are lowercased to avoid duplicated headers
- * @param array headers hash array containing the headers as headerName => headerValue pairs
+ * @param array $headers hash array containing the headers as headerName => headerValue pairs
  */
     function setHeaders($headers) {
       if (is_array($headers)) {
@@ -122,8 +123,8 @@
 /**
  * addHeader
  * set a unique request header
- * @param string headerName the header name
- * @param string headerValue the header value, ( unencoded)
+ * @param string $headerName the header name
+ * @param string $headerValue the header value, ( unencoded)
  **/
     function addHeader($headerName, $headerValue) {
       $this->requestHeaders[$headerName] = $headerValue;
@@ -132,7 +133,7 @@
 /**
  * removeHeader
  * unset a request header
- * @param string headerName the header name
+ * @param string $headerName the header name
  **/
     function removeHeader($headerName) {
       unset($this->requestHeaders[$headerName]);
@@ -141,9 +142,9 @@
 /**
  * Connect
  * open the connection to the server
- * @param string host string server address (or IP)
- * @param string port string server listening port - defaults to 80
- * @return boolean false is connection failed, true otherwise
+ * @param string $host string server address (or IP)
+ * @param int $port string server listening port - defaults to 80
+ * @return boolean false if connection failed, true otherwise
  **/
     function Connect($host, $port = '') {
       $this->url['scheme'] = 'http';
@@ -164,8 +165,9 @@
 /**
  * head
  * issue a HEAD request
- * @param srting uri URI of the document
- * @return string response status code (200 if ok)
+ *
+ * @param string $uri URI of the document
+ * @return int response status code (200 if ok)
  * @seeAlso getHeaders()
  **/
     function Head($uri) {
@@ -183,8 +185,9 @@
 /**
  * get
  * issue a GET http request
- * @param uri URI (path on server) or full URL of the document
- * @return string response status code (200 if ok)
+ *
+ * @param $url URI (path on server) or full URL of the document
+ * @return int response status code (200 if ok)
  * @seeAlso getHeaders(), getBody()
  **/
     function Get($url) {
@@ -202,9 +205,10 @@
 /**
  * Post
  * issue a POST http request
- * @param string uri URI of the document
- * @param array query_params parameters to send in the form "parameter name" => value
- * @return string response status code (200 if ok)
+ *
+ * @param string $uri URI of the document
+ * @param array $query_params parameters to send in the form "parameter name" => value
+ * @return int response status code (200 if ok)
  * @example $params  array( "login" => "tiger", "password" => "secret" );
  * $http->post( "/login.php", $params );
  **/
@@ -238,9 +242,10 @@
  * Put
  * Send a PUT request
  * PUT is the method to sending a file on the server. it is *not* widely supported
- * @param string uri the location of the file on the server. dont forget the heading "/"
- * @param binary filecontent the content of the file. binary content accepted
- * @return string response status code 201 (Created) if ok
+ *
+ * @param string $uri the location of the file on the server. dont forget the heading "/"
+ * @param binary $filecontent the content of the file. binary content accepted
+ * @return int $response status code 201 (Created) if ok
  * @see RFC2518 "HTTP Extensions for Distributed Authoring WEBDAV"
  **/
     function Put($uri, $filecontent) {
@@ -258,6 +263,7 @@
  * getHeaders
  * return the response headers
  * to be called after a Get() or Head() call
+ *
  * @return array headers received from server in the form headername => value
  * @seeAlso get, head
  **/
@@ -268,7 +274,8 @@
 /**
  * getHeader
  * return the response header "headername"
- * @param sring headername the name of the header
+ *
+ * @param sring $headername the name of the header
  * @return string header value or NULL if no such header is defined
  **/
     function getHeader($headername) {
@@ -279,6 +286,7 @@
  * getBody
  * return the response body
  * invoke it after a Get() call for instance, to retrieve the response
+ *
  * @return string body content
  * @seeAlso get, head
  **/
@@ -288,7 +296,8 @@
 
 /**
  * getStatus return the server response's status code
- * @return string a status code
+ *
+ * @return int a status code
  * code are divided in classes (where x is a digit)
  *  - 20x : request processed OK
  *  - 30x : document moved
@@ -303,6 +312,7 @@
 /** 
  * getStatusMessage return the full response status, of the form "CODE Message"
  * eg. "404 Document not found"
+ *
  * @return string the message 
  **/
     function getStatusMessage() {
@@ -319,8 +329,9 @@
  * a) the command
  * b) the request headers if they are defined
  * c) the request body if defined
+ *
  * @param string $command
- * @return string the server response status code
+ * @return int the server response status code
  */
     function sendCommand($command) {
       $this->responseHeaders = array();
@@ -385,6 +396,7 @@
 
 /**
  * processHeader() reads header lines from socket until the line equals $lastLine
+ *
  * @scope public
  * @return array Array of headers with header names as keys and header content as values
  **/
@@ -412,6 +424,7 @@
 /**
  * processBody() reads the body from the socket
  * the body is the "real" content of the reply
+ *
  * @return string body content 
  * @scope public
  **/
@@ -442,6 +455,7 @@
 
 /**
  * Calculate and return the URI to be sent ( proxy purpose )
+ *
  * @param string $uri the local URI
  * @return string URI to be used in the HTTP request
  * @scope public

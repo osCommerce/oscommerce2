@@ -83,16 +83,16 @@
       }
     }
 
- /**
-  * This function will read a file in
-  * from a supplied filename and return
-  * it. This can then be given as the first
-  * argument of the the functions
-  * add_html_image() or add_attachment().
-  * 
-  * @param string $filename
-  * @return boolean
-  */
+/**
+ * This function will read a file in
+ * from a supplied filename and return
+ * it. This can then be given as the first
+ * argument of the the functions
+ * add_html_image() or add_attachment().
+ * 
+ * @param string $filename
+ * @return boolean
+ */
     function get_file($filename) {
       $return = '';
 
@@ -108,18 +108,18 @@
       }
     }
 
- /**
-  * Function for extracting images from
-  * html source. This function will look
-  * through the html code supplied by add_html()
-  * and find any file that ends in one of the
-  * extensions defined in $obj->image_types.
-  * If the file exists it will read it in and
-  * embed it, (not an attachment).
-  *
-  * @author Dan Allen
-  * @param string $images_dir
-  */
+/**
+ * Function for extracting images from
+ * html source. This function will look
+ * through the html code supplied by add_html()
+ * and find any file that ends in one of the
+ * extensions defined in $obj->image_types.
+ * If the file exists it will read it in and
+ * embed it, (not an attachment).
+ *
+ * @author Dan Allen
+ * @param string $images_dir
+ */
     function find_html_images($images_dir) {
 // Build the list of image extensions
       $extensions[] = array_keys( $this->image_types);
@@ -147,23 +147,24 @@
       }
     }
 
-  /**
-  * Adds plain text. Use this function
-  * when NOT sending html email
-  * @param string $text
-  */
+/**
+ * Adds plain text. Use this function
+ * when NOT sending html email
+ * @param string $text
+ */
     function add_text($text = '') {
       $this->text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
     }
 
- /**
-  * Adds a html part to the mail.
-  * Also replaces image names with
-  * content-id's.
-  * @param string $html
-  * @param string $text
-  * @param string $images_dir
-  */
+/**
+ * Adds a html part to the mail.
+ * Also replaces image names with
+ * content-id's.
+ *
+ * @param string $html
+ * @param string $text
+ * @param string $images_dir
+ */
     function add_html($html, $text = NULL, $images_dir = NULL) {
       $this->html = tep_convert_linefeeds(array("\r\n", "\n", "\r"), '<br />', $html);
       $this->html_text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
