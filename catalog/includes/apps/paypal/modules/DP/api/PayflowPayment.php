@@ -30,6 +30,14 @@
       $params = array_merge($params, $extra_params);
     }
 
+    $headers = array();
+
+    if ( isset($params['_headers']) ) {
+      $headers = $params['_headers'];
+
+      unset($params['_headers']);
+    }
+
     $post_string = '';
 
     foreach ($params as $key => $value) {
@@ -38,7 +46,7 @@
 
     $post_string = substr($post_string, 0, -1);
 
-    $response = $OSCOM_PayPal->makeApiCall($api_url, $post_string);
+    $response = $OSCOM_PayPal->makeApiCall($api_url, $post_string, $headers);
     parse_str($response, $response_array);
 
     return array('res' => $response_array,

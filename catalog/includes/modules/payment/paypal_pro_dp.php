@@ -21,27 +21,26 @@
       global $order;
 
       $this->_app = new OSCOM_PayPal();
+      $this->_app->loadLanguageFile('modules/DP/DP.php');
 
       $this->signature = 'paypal|paypal_pro_dp|' . $this->_app->getVersion() . '|2.3';
       $this->api_version = $this->_app->getApiVersion();
 
       $this->code = 'paypal_pro_dp';
-      $this->title = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_PAYPAL_PRO_DP_TEXT_DESCRIPTION;
+      $this->title = $this->_app->getDef('module_dp_title');
+      $this->public_title = $this->_app->getDef('module_dp_public_title');
+      $this->description = '<div align="center">' . $this->_app->drawButton($this->_app->getDef('module_dp_legacy_admin_app_button'), tep_href_link('paypal.php', 'action=configure&module=DP'), 'primary', null, true) . '</div>';
       $this->sort_order = defined('OSCOM_APP_PAYPAL_DP_SORT_ORDER') ? OSCOM_APP_PAYPAL_DP_SORT_ORDER : 0;
       $this->enabled = defined('OSCOM_APP_PAYPAL_DP_STATUS') && in_array(OSCOM_APP_PAYPAL_DP_STATUS, array('1', '0')) ? true : false;
       $this->order_status = defined('OSCOM_APP_PAYPAL_DP_ORDER_STATUS_ID') && ((int)OSCOM_APP_PAYPAL_DP_ORDER_STATUS_ID > 0) ? (int)OSCOM_APP_PAYPAL_DP_ORDER_STATUS_ID : 0;
 
       if ( !defined('MODULE_PAYMENT_INSTALLED') || !tep_not_null(MODULE_PAYMENT_INSTALLED) || !in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) || !defined('OSCOM_APP_PAYPAL_EC_STATUS') || !in_array(OSCOM_APP_PAYPAL_EC_STATUS, array('1', '0')) ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_EXPRESS_MODULE . '</div>' . $this->description;
+        $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_express_module') . '</div>';
 
         $this->enabled = false;
       }
 
       if ( defined('OSCOM_APP_PAYPAL_DP_STATUS') ) {
-        $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=DP'), 'primary', null, true) . '</div><br />' . $this->description;
-
         if ( OSCOM_APP_PAYPAL_DP_STATUS == '0' ) {
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
@@ -49,14 +48,14 @@
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_curl') . '</div>';
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
         if ( !$this->_app->hasCredentials('DP') ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_credentials') . '</div>';
 
           $this->enabled = false;
         }
@@ -142,34 +141,34 @@
 
       $content = '<table id="paypal_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                  '  <tr>' .
-                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE . '</td>' .
+                 '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_type') . '</td>' .
                  '    <td>' . tep_draw_pull_down_menu('cc_type', $types_array, '', 'id="paypal_card_type"') . '</td>' .
                  '  </tr>' .
                  '  <tr>' .
-                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER . '</td>' .
+                 '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_owner') . '</td>' .
                  '    <td>' . tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
                  '  </tr>' .
                  '  <tr>' .
-                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER . '</td>' .
+                 '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_number') . '</td>' .
                  '    <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
                  '  </tr>' .
                  '  <tr>' .
-                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_EXPIRES . '</td>' .
+                 '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_expires') . '</td>' .
                  '    <td>' . tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array) . '</td>' .
                  '  </tr>' .
                  '  <tr>' .
-                 '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC . '</td>' .
-                 '    <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . ' <span id="cardSecurityCodeInfo" title="' . tep_output_string(MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO) . '" style="color: #084482; text-decoration: none; border-bottom: 1px dashed #084482; cursor: pointer;">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC_INFO_LINK . '</span></td>' .
+                 '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_cvc') . '</td>' .
+                 '    <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . ' <span id="cardSecurityCodeInfo" title="' . tep_output_string($this->_app->getDef('module_dp_field_card_cvc_info')) . '" style="color: #084482; text-decoration: none; border-bottom: 1px dashed #084482; cursor: pointer;">' . $this->_app->getDef('module_dp_field_card_cvc_info_link') . '</span></td>' .
                  '  </tr>';
 
       if ( $this->isCardAccepted('MAESTRO') ) {
         $content .= '  <tr>' .
-                    '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM . '</td>' .
-                    '    <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
+                    '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_valid_from') . '</td>' .
+                    '    <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . $this->_app->getDef('module_dp_field_card_valid_from_info') . '</td>' .
                     '  </tr>' .
                     '  <tr>' .
-                    '    <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER . '</td>' .
-                    '    <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO . '</td>' .
+                    '    <td width="30%">' . $this->_app->getDef('module_dp_field_card_issue_number') . '</td>' .
+                    '    <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . $this->_app->getDef('module_dp_field_card_issue_number_info') . '</td>' .
                     '  </tr>';
       }
 
@@ -270,12 +269,12 @@
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . $this->_app->getDef('module_dp_error_all_fields_required'), 'SSL'));
       }
     }
 
     function before_process_payflow() {
-      global $HTTP_POST_VARS, $order, $order_totals, $sendto, $response_array;
+      global $HTTP_POST_VARS, $cartID, $order, $order_totals, $sendto, $response_array;
 
       if ( isset($HTTP_POST_VARS['cc_owner']) && !empty($HTTP_POST_VARS['cc_owner']) && isset($HTTP_POST_VARS['cc_type']) && $this->isCardAccepted($HTTP_POST_VARS['cc_type']) && isset($HTTP_POST_VARS['cc_number_nh-dns']) && !empty($HTTP_POST_VARS['cc_number_nh-dns']) ) {
         $params = array('AMT' => $this->_app->formatCurrencyRaw($order->info['total']),
@@ -336,37 +335,42 @@
           $params = array_merge($params, $item_params);
         }
 
+        $params['_headers'] = array('X-VPS-REQUEST-ID: ' . md5($cartID . tep_session_id() . $this->_app->formatCurrencyRaw($order->info['total'])),
+                                    'X-VPS-CLIENT-TIMEOUT: 45',
+                                    'X-VPS-VIT-INTEGRATION-PRODUCT: OSCOM',
+                                    'X-VPS-VIT-INTEGRATION-VERSION: 2.3');
+
         $response_array = $this->_app->getApiResult('DP', 'PayflowPayment', $params);
 
         if ( $response_array['RESULT'] != '0' ) {
           switch ( $response_array['RESULT'] ) {
             case '1':
             case '26':
-              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_CFG_ERROR;
+              $error_message = $this->_app->getDef('module_dp_error_configuration');
               break;
 
             case '7':
-              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ADDRESS;
+              $error_message = $this->_app->getDef('module_dp_error_address');
               break;
 
             case '12':
-              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_DECLINED;
+              $error_message = $this->_app->getDef('module_dp_error_declined');
               break;
 
             case '23':
             case '24':
-              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_INVALID_CREDIT_CARD;
+              $error_message = $this->_app->getDef('module_dp_error_invalid_card');
               break;
 
             default:
-              $error_message = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_GENERAL;
+              $error_message = $this->_app->getDef('module_dp_error_general');
               break;
           }
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . urlencode($error_message), 'SSL'));
+          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . $error_message, 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . $this->_app->getDef('module_dp_error_all_fields_required'), 'SSL'));
       }
     }
 
@@ -533,114 +537,6 @@
       }
 
       return isset($this->cc_types[$card]) && in_array(strtolower($card), $cards);
-    }
-
-    function getTestLinkInfo() {
-      $dialog_title = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_TIME;
-
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
-
-      $js = <<<EOD
-<script>
-if ( typeof jQuery == 'undefined' ) {
-  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
-  document.write('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css" />');
-  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></scr' + 'ipt>');
-}
-</script>
-
-<script>
-$(function() {
-  $('#tcdprogressbar').progressbar({
-    value: false
-  });
-});
-
-function openTestConnectionDialog() {
-  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    }
-  });
-
-  var timeStart = new Date().getTime();
-
-  $.ajax({
-    url: '{$test_url}'
-  }).done(function(data) {
-    if ( data == '1' ) {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
-    } else {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
-    }
-  }).fail(function() {
-    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
-  }).always(function() {
-    var timeEnd = new Date().getTime();
-    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
-
-    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
-  });
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>';
-
-      if ( OSCOM_APP_PAYPAL_DP_STATUS == '1' ) {
-        $info .= 'Live Server:<br />https://api-3t.paypal.com/nvp';
-      } else {
-        $info .= 'Sandbox Server:<br />https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
-               $js;
-
-      return $info;
-    }
-
-    function getTestConnectionResult() {
-      if (OSCOM_APP_PAYPAL_DP_STATUS == '1') {
-        $api_url = 'https://api-3t.paypal.com/nvp';
-      } else {
-        $api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-      }
-
-      $params = array('USER' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME,
-                      'PWD' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD,
-                      'VERSION' => $this->api_version,
-                      'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE,
-                      'METHOD' => 'DoDirectPayment',
-                      'PAYMENTACTION' => (OSCOM_APP_PAYPAL_DP_TRANSACTION_METHOD == '1') ? 'Sale' : 'Authorization',
-                      'IPADDRESS' => tep_get_ip_address());
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->sendTransactionToGateway($api_url, $post_string);
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      if ( is_array($response_array) && isset($response_array['ACK']) ) {
-        return 1;
-      }
-
-      return -1;
     }
 
     function templateClassExists() {

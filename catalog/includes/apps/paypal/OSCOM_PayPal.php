@@ -397,7 +397,7 @@
       return $result['res'];
     }
 
-    function makeApiCall($url, $parameters = null) {
+    function makeApiCall($url, $parameters = null, $headers = null) {
       $server = parse_url($url);
 
       if ( !isset($server['port']) ) {
@@ -419,6 +419,10 @@
       if ( isset($parameters) ) {
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
+      }
+
+      if ( isset($headers) && is_array($headers) && !empty($headers) ) {
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
       }
 
       if ( isset($server['user']) && isset($server['pass']) ) {
