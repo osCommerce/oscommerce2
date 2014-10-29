@@ -94,3 +94,7 @@ privacy_body = <h3>API Credentials <small>(available for :api_req_countries coun
 <p>The PayPal App for osCommerce Online Merchant automatically checks the osCommerce website for updates that are available to the App. This check is performed once every 24 hours and if an update is available, a notification is shown to allow the App to download and apply the update.</p>
 
 <p>A manual check for available updates is also performed on the PayPal App Info page.</p>
+
+<h3>Google Hosted Libraries (jQuery and jQuery UI)</h3>
+
+<p>If jQuery or jQuery UI are not already loaded in the Administration Tool, the PayPal App administration pages automatically load the libraries securely through Google Hosted Libraries.</p>
