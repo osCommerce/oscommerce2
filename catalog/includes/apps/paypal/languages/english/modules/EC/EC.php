@@ -1,5 +1,8 @@
 module_ec_title = PayPal Express Checkout
 module_ec_short_title = Express Checkout
+module_ec_public_title = PayPal (including Credit and Debit Cards)
+
+module_ec_legacy_admin_app_button = Manage App
 
 module_ec_introduction = <ul>
   <li>Adds PayPal to your online store checkout.</li>
@@ -10,3 +13,16 @@ module_ec_introduction = <ul>
 </ul>
 
 <p>Express Checkout offers the ease of convenience and security of PayPal, can be set up in minutes, and turns more shoppers into buyers.</p>
+
+module_ec_email_account_password = An account has automatically been created for you with the following e-mail address and password:
+
+Store Account E-Mail Address: :email_address
+Store Account Password: :password
+
+module_ec_error_general = Error: A general problem has occurred with the transaction. Please try again.
+module_ec_error_configuration = Error: Payment module configuration error. Please verify the login credentials.
+module_ec_error_express_disabled = Error: PayPal Express Checkout has been disabled for this merchant. Please contact PayPal Customer Service.
+module_ec_error_address = Error: A match of the Shipping Address City, State, and Postal Code failed. Please try again.
+module_ec_error_declined = Error: This transaction has been declined. Please try again.
+module_ec_error_local_login_required = Please log into your account to verify the order.
+module_ec_error_no_shipping_available = Shipping is currently not available for the selected shipping address. Please select or create a new shipping address to use with your purchase.
