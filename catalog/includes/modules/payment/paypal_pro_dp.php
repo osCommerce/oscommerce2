@@ -54,10 +54,18 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !$this->_app->hasCredentials('DP') ) {
-          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_credentials') . '</div>';
+        if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) { // PayPal
+          if ( !$this->_app->hasCredentials('DP') ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_credentials') . '</div>';
 
-          $this->enabled = false;
+            $this->enabled = false;
+          }
+        } else { // Payflow
+          if ( !$this->_app->hasCredentials('DP', 'payflow') ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_dp_error_credentials_payflow') . '</div>';
+
+            $this->enabled = false;
+          }
         }
       }
 

@@ -27,16 +27,14 @@
       $this->api_version = $this->_app->getApiVersion();
 
       $this->code = 'paypal_express';
-      $this->title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_DESCRIPTION;
+      $this->title = $this->_app->getDef('module_ec_title');
+      $this->public_title = $this->_app->getDef('module_ec_public_title');
+      $this->description = '<div align="center">' . $this->_app->drawButton($this->_app->getDef('module_ec_legacy_admin_app_button'), tep_href_link('paypal.php', 'action=configure&module=EC'), 'primary', null, true) . '</div>';
       $this->sort_order = defined('OSCOM_APP_PAYPAL_EC_SORT_ORDER') ? OSCOM_APP_PAYPAL_EC_SORT_ORDER : 0;
       $this->enabled = defined('OSCOM_APP_PAYPAL_EC_STATUS') && in_array(OSCOM_APP_PAYPAL_EC_STATUS, array('1', '0')) ? true : false;
       $this->order_status = defined('OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID') && ((int)OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID > 0) ? (int)OSCOM_APP_PAYPAL_EC_ORDER_STATUS_ID : 0;
 
       if ( defined('OSCOM_APP_PAYPAL_EC_STATUS') ) {
-        $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=EC'), 'primary', null, true) . '</div><br />' . $this->description;
-
         if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
@@ -44,16 +42,24 @@
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_ec_error_curl') . '</div>';
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
-        if ( !$this->_app->hasCredentials('EC') ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+        if ( OSCOM_APP_PAYPAL_GATEWAY == '1' ) { // PayPal
+          if ( !$this->_app->hasCredentials('EC') ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_ec_error_credentials') . '</div>';
 
-          $this->enabled = false;
+            $this->enabled = false;
+          }
+        } else { // Payflow
+          if ( !$this->_app->hasCredentials('EC', 'payflow') ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_ec_error_credentials_payflow') . '</div>';
+
+            $this->enabled = false;
+          }
         }
       }
 
@@ -64,7 +70,7 @@
       }
 
       if ( defined('FILENAME_SHOPPING_CART') && (basename($PHP_SELF) == FILENAME_SHOPPING_CART) ) {
-        if ( OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1' ) {
+        if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1') ) {
           if ( isset($request_type) && ($request_type != 'SSL') && (ENABLE_SSL == true) ) {
             tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, tep_get_all_get_params(), 'SSL'));
           }
@@ -115,25 +121,25 @@
           $image_button = 'https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image';
         }
 
-        $params = array('locale=' . MODULE_PAYMENT_PAYPAL_EXPRESS_LANGUAGE_LOCALE);
+        $params = array('locale=' . $this->_app->getDef('module_ec_button_locale'));
 
         if ( $this->_app->hasCredentials('EC') ) {
           $response_array = $this->_app->getApiResult('EC', 'GetPalDetails');
 
-          if (isset($response_array['PAL'])) {
+          if ( isset($response_array['PAL']) ) {
             $params[] = 'pal=' . $response_array['PAL'];
             $params[] = 'ordertotal=' . $this->_app->formatCurrencyRaw($cart->show_total());
           }
         }
 
-        if (!empty($params)) {
+        if ( !empty($params) ) {
           $image_button .= '&' . implode('&', $params);
         }
       } else {
-        $image_button = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
+        $image_button = $this->_app->getDef('module_ec_button_url');
       }
 
-      $button_title = tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON);
+      $button_title = tep_output_string_protected($this->_app->getDef('module_ec_button_title'));
 
       if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
         $button_title .= ' (' . $this->code . '; Sandbox)';
@@ -202,7 +208,7 @@ EOD;
       $confirmation = false;
 
       if (empty($comments)) {
-        $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
+        $confirmation = array('fields' => array(array('title' => $this->_app->getDef('module_ec_field_comments'),
                                                       'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
       }
 

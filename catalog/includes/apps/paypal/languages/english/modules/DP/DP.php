@@ -14,8 +14,8 @@ module_dp_introduction = <ul>
 
 module_dp_error_express_module = The PayPal Express Checkout payment module must be enabled if this module is to be activated. This module will not load until the PayPal Express Checkout module has been installed.
 module_dp_error_curl = This module requires cURL to be enabled in PHP and will not load until it has been enabled on this webserver.
-module_dp_error_credentials = This module will not load until the API Credential parameters have been configured. Please edit and configure the settings of this module.
-module_dp_error_credentials_payflow = This module will not load until the Vendor and Password parameters have been configured. Please edit and configure the settings of this module.
+module_dp_error_credentials = This module will not load until the API credentials have been configured. Please edit and configure the settings of the PayPal App.
+module_dp_error_credentials_payflow = This module will not load until the Vendor, Password, and Partner credentials have been configured. Please edit and configure the settings of the PayPal App.
 
 module_dp_field_card_type = Card Type:
 module_dp_field_card_owner = Card Owner Name:
@@ -31,7 +31,7 @@ module_dp_field_card_issue_number_info = (if shown on card)
 
 module_dp_error_all_fields_required = Error: All payment information fields are required.
 module_dp_error_general = Error: A general problem has occurred with the transaction. Please try again.
-module_dp_error_configuration = Error: Payment module configuration error. Please verify the login credentials.
+module_dp_error_configuration = Error: Payment module configuration error. Please verify the PayPal App credentials.
 module_dp_error_address = Error: A match of the Shipping Address City, State, and Postal Code failed. Please try again.
 module_dp_error_declined = Error: This transaction has been declined. Please try again.
 module_dp_error_invalid_card = Error: The provided card information is invalid. Please try again.

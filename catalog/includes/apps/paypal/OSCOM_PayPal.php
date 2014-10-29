@@ -208,7 +208,13 @@
       if ( $type == 'email') {
         $creds = array('OSCOM_APP_PAYPAL_' . $server . '_SELLER_EMAIL');
       } elseif ( substr($type, 0, 7) == 'payflow' ) {
-        $creds = array('OSCOM_APP_PAYPAL_PF_' . $server . '_' . strtoupper(substr($type, 8)));
+        if ( strlen($type) > 7 ) {
+          $creds = array('OSCOM_APP_PAYPAL_PF_' . $server . '_' . strtoupper(substr($type, 8)));
+        } else {
+          $creds = array('OSCOM_APP_PAYPAL_PF_' . $server . '_VENDOR',
+                         'OSCOM_APP_PAYPAL_PF_' . $server . '_PASSWORD',
+                         'OSCOM_APP_PAYPAL_PF_' . $server . '_PARTNER');
+        }
       } else {
         $creds = array('OSCOM_APP_PAYPAL_' . $server . '_API_USERNAME',
                        'OSCOM_APP_PAYPAL_' . $server . '_API_PASSWORD',
