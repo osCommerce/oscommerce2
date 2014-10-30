@@ -11,7 +11,6 @@
 */
 
   require('includes/application_top.php');
-ini_set('display_errors', '1');
 
   if ( tep_db_num_rows(tep_db_query("show tables like 'oscom_app_paypal_log'")) != 1 ) {
     $sql = <<<EOD
