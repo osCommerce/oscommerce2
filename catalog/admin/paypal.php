@@ -32,14 +32,6 @@ CREATE TABLE oscom_app_paypal_log (
 EOD;
 
     tep_db_query($sql);
-  } else {
-// TODO remove
-    $check_query = tep_db_query("select CHARACTER_MAXIMUM_LENGTH from information_schema.columns where table_schema = DATABASE() and table_name = 'oscom_app_paypal_log' and column_name = 'module'");
-    $check = tep_db_fetch_array($check_query);
-
-    if ( $check['CHARACTER_MAXIMUM_LENGTH'] < 8 ) {
-      tep_db_query("alter table oscom_app_paypal_log modify module varchar(8) NOT NULL");
-    }
   }
 
   require(DIR_FS_CATALOG . 'includes/apps/paypal/OSCOM_PayPal.php');
