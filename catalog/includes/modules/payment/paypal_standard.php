@@ -338,7 +338,7 @@
 
       $return_link_title = $this->_app->getDef('module_ps_button_return_to_store', array('storename' => STORE_NAME));
 
-      if (strlen($return_link_title) <= 60 ) {
+      if ( strlen($return_link_title) <= 60 ) {
         $parameters['cbt'] = $return_link_title;
       }
 

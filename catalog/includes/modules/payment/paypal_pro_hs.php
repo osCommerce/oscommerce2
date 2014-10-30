@@ -21,21 +21,20 @@
       global $order;
 
       $this->_app = new OSCOM_PayPal();
+      $this->_app->loadLanguageFile('modules/HS/HS.php');
 
       $this->signature = 'paypal|paypal_pro_hs|' . $this->_app->getVersion() . '|2.3';
       $this->api_version = $this->_app->getApiVersion();
 
       $this->code = 'paypal_pro_hs';
-      $this->title = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_TITLE;
-      $this->public_title = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PUBLIC_TITLE;
-      $this->description = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_DESCRIPTION;
+      $this->title = $this->_app->getDef('module_hs_title');
+      $this->public_title = $this->_app->getDef('module_hs_public_title');
+      $this->description = '<div align="center">' . $this->_app->drawButton($this->_app->getDef('module_hs_legacy_admin_app_button'), tep_href_link('paypal.php', 'action=configure&module=HS'), 'primary', null, true) . '</div>';
       $this->sort_order = defined('OSCOM_APP_PAYPAL_HS_SORT_ORDER') ? OSCOM_APP_PAYPAL_HS_SORT_ORDER : 0;
       $this->enabled = defined('OSCOM_APP_PAYPAL_HS_STATUS') && in_array(OSCOM_APP_PAYPAL_HS_STATUS, array('1', '0')) ? true : false;
       $this->order_status = defined('OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID') && ((int)OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID > 0) ? (int)OSCOM_APP_PAYPAL_HS_PREPARE_ORDER_STATUS_ID : 0;
 
       if ( defined('OSCOM_APP_PAYPAL_HS_STATUS') ) {
-        $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=HS'), 'primary', null, true) . '</div><br />' . $this->description;
-
         if ( OSCOM_APP_PAYPAL_HS_STATUS == '0' ) {
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
@@ -49,14 +48,14 @@
       }
 
       if ( !function_exists('curl_init') ) {
-        $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_hs_error_curl') . '</div>';
 
         $this->enabled = false;
       }
 
       if ( $this->enabled === true ) {
         if ( !$this->_app->hasCredentials('HS') ) {
-          $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
+          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_hs_error_credentials') . '</div>';
 
           $this->enabled = false;
         }
@@ -337,8 +336,10 @@
           $params['country'] = $order->delivery['country']['iso_code_2'];
         }
 
-        if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) <= 60) ) {
-          $params['cbt'] = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON;
+        $return_link_title = $this->_app->getDef('module_hs_button_return_to_store', array('storename' => STORE_NAME));
+
+        if ( strlen($return_link_title) <= 60 ) {
+          $params['cbt'] = $return_link_title;
         }
 
         $pphs_result = $this->_app->getApiResult('APP', 'BMCreateButton', $params, (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
@@ -595,8 +596,8 @@ EOD;
     function get_error() {
       global $pphs_error_msg;
 
-      $error = array('title' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_TITLE,
-                     'error' => MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_GENERAL);
+      $error = array('title' => $this->_app->getDef('module_hs_error_general_title'),
+                     'error' => $this->_app->getDef('module_hs_error_general'));
 
       if ( tep_session_is_registered('pphs_error_msg') ) {
         $error['error'] = $pphs_error_msg;
@@ -628,110 +629,6 @@ EOD;
 
     function keys() {
       return array('OSCOM_APP_PAYPAL_HS_SORT_ORDER');
-    }
-
-    function getTestLinkInfo() {
-      $dialog_title = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TIME;
-
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
-
-// include jquery if it doesn't exist in the template
-      $js = <<<EOD
-<script>
-if ( typeof jQuery == 'undefined' ) {
-  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
-  document.write('<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/redmond/jquery-ui.css" />');
-  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></scr' + 'ipt>');
-}
-</script>
-
-<script>
-$(function() {
-  $('#tcdprogressbar').progressbar({
-    value: false
-  });
-});
-
-function openTestConnectionDialog() {
-  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    }
-  });
-
-  var timeStart = new Date().getTime();
-
-  $.ajax({
-    url: '{$test_url}'
-  }).done(function(data) {
-    if ( data == '1' ) {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
-    } else {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
-    }
-  }).fail(function() {
-    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
-  }).always(function() {
-    var timeEnd = new Date().getTime();
-    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
-
-    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
-  });
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>';
-
-      if ( OSCOM_APP_PAYPAL_HS_STATUS == '1' ) {
-        $info .= 'Live Server:<br />' . $this->api_url;
-      } else {
-        $info .= 'Sandbox Server:<br />' . $this->api_url;
-      }
-
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
-               $js;
-
-      return $info;
-    }
-
-    function getTestConnectionResult() {
-      $params = array('USER' => $this->_app->getCredentials('HS', 'username'),
-                      'PWD' => $this->_app->getCredentials('HS', 'password'),
-                      'SIGNATURE' => $this->_app->getCredentials('HS', 'signature'),
-                      'VERSION' => $paypal_pro_hs->api_version,
-                      'METHOD' => 'BMCreateButton');
-
-      $post_string = '';
-
-      foreach ($params as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $response = $this->_app->makeApiCall($this->api_url, $post_string);
-
-      $response_array = array();
-      parse_str($response, $response_array);
-
-      $this->_app->log('HS', 'BMCreateButton', isset($response_array['ACK']) ? 1 : -1, $params, $response_array);
-
-      if ( is_array($response_array) && isset($response_array['ACK']) ) {
-        return 1;
-      }
-
-      return -1;
     }
 
     function verifyTransaction($is_ipn = false) {
