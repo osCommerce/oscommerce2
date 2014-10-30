@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -24,16 +24,19 @@
     }
 
     function query($order_id) {
-      $order_query = tep_db_query("select customers_name, customers_company, customers_street_address, customers_suburb, customers_city, customers_postcode, customers_state, customers_country, customers_telephone, customers_email_address, customers_address_format_id, delivery_name, delivery_company, delivery_street_address, delivery_suburb, delivery_city, delivery_postcode, delivery_state, delivery_country, delivery_address_format_id, billing_name, billing_company, billing_street_address, billing_suburb, billing_city, billing_postcode, billing_state, billing_country, billing_address_format_id, payment_method, cc_type, cc_owner, cc_number, cc_expires, currency, currency_value, date_purchased, orders_status, last_modified from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+      global $languages_id;
+
+      $order_query = tep_db_query("select o.*, s.orders_status_name from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_STATUS . " s where o.orders_id = '" . (int)$order_id . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "'");
       $order = tep_db_fetch_array($order_query);
 
-      $totals_query = tep_db_query("select title, text from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "' order by sort_order");
+      $totals_query = tep_db_query("select title, text, class from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "' order by sort_order");
       while ($totals = tep_db_fetch_array($totals_query)) {
-        $this->totals[] = array('title' => $totals['title'],
-                                'text' => $totals['text']);
+        $this->totals[$totals['class']] = array('title' => $totals['title'],
+                                                'text' => $totals['text']);
       }
 
-      $this->info = array('currency' => $order['currency'],
+      $this->info = array('total' => $this->totals['ot_total']['text'],
+                          'currency' => $order['currency'],
                           'currency_value' => $order['currency_value'],
                           'payment_method' => $order['payment_method'],
                           'cc_type' => $order['cc_type'],
@@ -41,6 +44,7 @@
                           'cc_number' => $order['cc_number'],
                           'cc_expires' => $order['cc_expires'],
                           'date_purchased' => $order['date_purchased'],
+                          'status' => $order['orders_status_name'],
                           'orders_status' => $order['orders_status'],
                           'last_modified' => $order['last_modified']);
 

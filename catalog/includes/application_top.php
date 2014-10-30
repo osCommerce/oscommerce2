@@ -490,4 +490,7 @@
 // initialize the message stack for output messages
   require(DIR_WS_CLASSES . 'message_stack.php');
   $messageStack = new messageStack;
+
+  require(DIR_FS_CATALOG . 'includes/classes/hooks.php');
+  $OSCOM_Hooks = new hooks('shop');
 ?>
