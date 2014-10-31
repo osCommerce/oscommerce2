@@ -27,36 +27,35 @@
       global $PHP_SELF;
 
       $this->_app = new OSCOM_PayPal();
+      $this->_app->loadLanguageFile('modules/LOGIN/LOGIN.php');
 
       $this->signature = 'paypal|paypal_login|4.0|2.3';
 
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE;
-      $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
+      $this->title = $this->_app->getDef('module_login_title');
+      $this->description = '<div align="center">' . $this->_app->drawButton($this->_app->getDef('module_login_legacy_admin_app_button'), tep_href_link('paypal.php', 'action=configure&module=LOGIN'), 'primary', null, true) . '</div>';
 
       if ( defined('OSCOM_APP_PAYPAL_LOGIN_STATUS') ) {
         $this->sort_order = OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER;
         $this->enabled = in_array(OSCOM_APP_PAYPAL_LOGIN_STATUS, array('1', '0'));
 
-        $this->description = '<div align="center">' . $this->_app->drawButton('Manage App', tep_href_link('paypal.php', 'action=configure&module=LOGIN'), 'primary', null, true) . '</div><br />' . $this->description;
+        if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '0' ) {
+          $this->title .= ' [Sandbox]';
+        }
 
-        if ( basename($GLOBALS['PHP_SELF']) == 'modules_content.php' ) {
-          if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '0' ) {
-            $this->title .= ' [Sandbox]';
-          }
+        if ( !function_exists('curl_init') ) {
+          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_login_error_curl') . '</div>';
 
-          if ( !function_exists('curl_init') ) {
-            $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CURL . '</div>' . $this->description;
+          $this->enabled = false;
+        }
+
+        if ( $this->enabled === true ) {
+          if ( ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_SECRET))) || ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '0') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET))) ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_login_error_credentials') . '</div>';
 
             $this->enabled = false;
-          }
-
-          if ( $this->enabled === true ) {
-            if ( !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SECRET) ) {
-              $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
-            }
           }
         }
       }
@@ -65,36 +64,36 @@
     function execute() {
       global $HTTP_GET_VARS, $oscTemplate;
 
-      if ( tep_not_null(OSCOM_APP_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SECRET) ) {
-        if ( isset($HTTP_GET_VARS['action']) ) {
-          if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
-            $this->preLogin();
-          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
-            $this->postLogin();
-          }
+      if ( isset($HTTP_GET_VARS['action']) ) {
+        if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
+          $this->preLogin();
+        } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+          $this->postLogin();
         }
+      }
 
-        $scopes = cm_paypal_login_get_attributes();
-        $use_scopes = array('openid');
+      $scopes = cm_paypal_login_get_attributes();
+      $use_scopes = array('openid');
 
-        foreach ( explode(';', OSCOM_APP_PAYPAL_LOGIN_ATTRIBUTES) as $a ) {
-          foreach ( $scopes as $group => $attributes ) {
-            foreach ( $attributes as $attribute => $scope ) {
-              if ( $a == $attribute ) {
-                if ( !in_array($scope, $use_scopes) ) {
-                  $use_scopes[] = $scope;
-                }
+      foreach ( explode(';', OSCOM_APP_PAYPAL_LOGIN_ATTRIBUTES) as $a ) {
+        foreach ( $scopes as $group => $attributes ) {
+          foreach ( $attributes as $attribute => $scope ) {
+            if ( $a == $attribute ) {
+              if ( !in_array($scope, $use_scopes) ) {
+                $use_scopes[] = $scope;
               }
             }
           }
         }
-
-        ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
-        $template = ob_get_clean();
-
-        $oscTemplate->addContent($template, $this->group);
       }
+
+      $cm_paypal_login = $this;
+
+      ob_start();
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
+      $template = ob_get_clean();
+
+      $oscTemplate->addContent($template, $this->group);
     }
 
     function preLogin() {
@@ -311,119 +310,6 @@
 
     function keys() {
       return array('OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH', 'OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER');
-    }
-
-    function getTestLinkInfo() {
-      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TIME;
-
-      $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
-
-      $js = <<<EOD
-<script type="text/javascript">
-$(function() {
-  $('#tcdprogressbar').progressbar({
-    value: false
-  });
-});
-
-function openTestConnectionDialog() {
-  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    }
-  });
-
-  var timeStart = new Date().getTime();
-
-  $.ajax({
-    url: '{$test_url}'
-  }).done(function(data) {
-    if ( data == '1' ) {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
-    } else {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
-    }
-  }).fail(function() {
-    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
-  }).always(function() {
-    var timeEnd = new Date().getTime();
-    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
-
-    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
-  });
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>';
-
-      if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '1' ) {
-        $info .= 'Live Server:<br />https://api.paypal.com';
-      } else {
-        $info .= 'Sandbox Server:<br />https://api.sandbox.paypal.com';
-      }
-
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
-               $js;
-
-      return $info;
-    }
-
-    function getTestConnectionResult() {
-      $params = array('code' => 'oscom2_conn_test');
-
-      $response = $this->getToken($params);
-
-      if ( is_array($response) && isset($response['error']) ) {
-        return 1;
-      }
-
-      return -1;
-    }
-
-    function getShowUrlsInfo() {
-      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TITLE;
-      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_BUTTON_CLOSE;
-
-      $js = <<<EOD
-<script type="text/javascript">
-function openShowUrlsDialog() {
-  var d = $('<div>').html($('#showUrlsDialog').html()).dialog({
-    autoOpen: false,
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    },
-    width: 600
-  });
-
-  d.dialog('open');
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icon_info.gif" border="0">&nbsp;<a href="javascript:openShowUrlsDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE . '</a></p>' .
-              '<div id="showUrlsDialog" style="display: none;">' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
-              '</div>' .
-              $js;
-
-      return $info;
     }
 
     function hasAttribute($attribute) {

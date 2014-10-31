@@ -1,15 +1,15 @@
 <div class="contentContainer <?php echo (OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH == 'Half') ? 'grid_8' : 'grid_16'; ?>">
-  <h2><?php echo MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_TITLE; ?></h2>
+  <h2><?php echo $cm_paypal_login->_app->getDef('module_login_template_title'); ?></h2>
 
   <div class="contentText">
 
 <?php
   if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '0' ) {
-    echo '    <p class="messageStackError">' . MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_SANDBOX . '</p>';
+    echo '    <p class="messageStackError">' . $cm_paypal_login->_app->getDef('module_login_template_sandbox_alert') . '</p>';
   }
 ?>
 
-    <p><?php echo MODULE_CONTENT_PAYPAL_LOGIN_TEMPLATE_CONTENT; ?></p>
+    <p><?php echo $cm_paypal_login->_app->getDef('module_login_template_content'); ?></p>
 
     <div id="PayPalLoginButton" style="text-align: right; padding-top: 5px;"></div>
   </div>
@@ -28,12 +28,9 @@ paypal.use( ["login"], function(login) {
   if ( OSCOM_APP_PAYPAL_LOGIN_THEME == 'Neutral' ) {
     echo '    "theme": "neutral",';
   }
-
-  if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE') && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE) ) {
-    echo '    "locale": "' . MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE . '",';
-  }
 ?>
 
+    "locale": "<?php echo $cm_paypal_login->_app->getDef('module_login_language_locale'); ?>",
     "appid": "<?php echo (OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') ? OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID : OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID; ?>",
     "scopes": "<?php echo implode(' ', $use_scopes); ?>",
     "containerid": "PayPalLoginButton",
