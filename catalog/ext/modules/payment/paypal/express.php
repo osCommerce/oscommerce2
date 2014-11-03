@@ -237,21 +237,34 @@
           $params['OFFERINSURANCEOPTION'] = 'false';
 
           $counter = 0;
+          $cheapest_rate = null;
+          $cheapest_counter = $counter;
 
           foreach ($quotes_array as $quote) {
+            $shipping_rate = $paypal_express->_app->formatCurrencyRaw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+
             $params['L_SHIPPINGOPTIONNAME' . $counter] = $quote['name'];
             $params['L_SHIPPINGOPTIONLABEL' . $counter] = $quote['label'];
-            $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $paypal_express->_app->formatCurrencyRaw($quote['cost'] + tep_calculate_tax($quote['cost'], $quote['tax']));
+            $params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
             $params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
             if ( DISPLAY_PRICE_WITH_TAX == 'false' ) {
               $params['L_TAXAMT' . $counter] = $paypal_express->_app->formatCurrencyRaw($order->info['tax']);
             }
 
+            if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
+              $cheapest_rate = $shipping_rate;
+              $cheapest_counter = $counter;
+            }
+
             $counter++;
           }
 
-          $params['L_SHIPPINGOPTIONISDEFAULT0'] = 'true';
+          if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
+            $params['L_SHIPPINGOPTIONISDEFAULT0'] = 'true';
+          } else { // select cheapest shipping method
+            $params['L_SHIPPINGOPTIONISDEFAULT' . $cheapest_counter] = 'true';
+          }
         } else {
           $params['NO_SHIPPING_OPTION_DETAILS'] = '1';
         }
@@ -570,8 +583,12 @@ EOD;
               }
 
               if ($shipping_set == false) {
-// select first shipping method
-                $shipping = $shipping_modules->get_first();
+                if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
+                  $shipping = $shipping_modules->get_first();
+                } else { // select cheapest shipping method
+                  $shipping = $shipping_modules->cheapest();
+                }
+
                 $shipping = $shipping['id'];
               }
             }
@@ -814,7 +831,9 @@ EOD;
         }
 
         $counter = 0;
+        $cheapest_rate = null;
         $expensive_rate = 0;
+        $cheapest_counter = $counter;
         $default_shipping = null;
 
         foreach ($quotes_array as $quote) {
@@ -824,15 +843,36 @@ EOD;
           $item_params['L_SHIPPINGOPTIONAMOUNT' . $counter] = $shipping_rate;
           $item_params['L_SHIPPINGOPTIONISDEFAULT' . $counter] = 'false';
 
+          if (is_null($cheapest_rate) || ($shipping_rate < $cheapest_rate)) {
+            $cheapest_rate = $shipping_rate;
+            $cheapest_counter = $counter;
+          }
+
           if ($shipping_rate > $expensive_rate) {
             $expensive_rate = $shipping_rate;
           }
 
-          if ( (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) || ($counter === 0) ) {
+          if (tep_session_is_registered('shipping') && ($shipping['id'] == $quote['id'])) {
             $default_shipping = $counter;
           }
 
           $counter++;
+        }
+
+        if ( !isset($default_shipping) && !empty($quotes_array) ) {
+          if ( method_exists($shipping_modules, 'get_first') ) { // select first shipping method
+            $cheapest_counter = 0;
+          }
+
+          $shipping = array('id' => $quotes_array[$cheapest_counter]['id'],
+                            'title' => $item_params['L_SHIPPINGOPTIONNAME' . $cheapest_counter],
+                            'cost' => $paypal_express->_app->formatCurrencyRaw($quotes_array[$cheapest_counter]['cost']));
+
+          if ( !tep_session_is_registered('shipping') ) {
+            tep_session_register('shipping');
+          }
+
+          $default_shipping = $cheapest_counter;
         }
 
         if ( !isset($default_shipping) ) {
