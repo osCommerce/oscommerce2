@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -13,7 +13,7 @@
 define('HEADING_TITLE', 'Store Logo');
 
 define('TEXT_LOGO_IMAGE', 'New Logo:');
-define('TEXT_FORMAT_AND_LOCATION', 'The store logo must be in PNG format and will be saved as:');
+define('TEXT_FORMAT_AND_LOCATION', 'The store logo must be in .png or .jpg or .gif format and will be saved into:');
 
 define('SUCCESS_LOGO_UPDATED', 'Success: The store logo has successfully been updated!');
 
