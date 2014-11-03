@@ -11,7 +11,7 @@
 */
 
 /**
- * Class cc_calidation
+ * Class cc_validation
  * 
  * Validates credit card credentials
  * 
