@@ -14,6 +14,8 @@
  * Class currencies
  * 
  * Class for currencies calculation
+ * 
+ * @var array $currencies Currencies array
  */
   class currencies {
     var $currencies;
