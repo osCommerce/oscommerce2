@@ -40,7 +40,7 @@
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
-  $PHP_SELF = str_replace(DIR_WS_CATALOG, '', $req['path']);
+  $PHP_SELF = str_replace(($request_type == 'SSL') ? DIR_WS_HTTPS_ADMIN : DIR_WS_ADMIN, '', $req['path']);
 
 // Used in the "Backup Manager" to compress backups
   define('LOCAL_EXE_GZIP', 'gzip');
