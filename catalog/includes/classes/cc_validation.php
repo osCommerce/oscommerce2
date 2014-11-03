@@ -14,6 +14,11 @@
  * Class cc_calidation
  * 
  * Validates credit card credentials
+ * 
+ * @var string $cc_type Credit Card Type
+ * @var int $cc_number
+ * @var string $cc_expiry_month
+ * @var string $cc_expiry_year
  */
   class cc_validation {
     var $cc_type, $cc_number, $cc_expiry_month, $cc_expiry_year;
