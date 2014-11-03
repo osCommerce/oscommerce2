@@ -15,6 +15,7 @@
  * 
  * the main breadcrumb class
  *
+ * @var string $_trail The breadcrumb trail
  */
   class breadcrumb {
     var $_trail;
