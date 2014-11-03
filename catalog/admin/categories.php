@@ -168,6 +168,8 @@
           tep_reset_cache_block('also_purchased');
         }
 
+        $OSCOM_Hooks->call('products', 'productActionDelete');
+
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
         break;
       case 'move_category_confirm':
@@ -206,6 +208,8 @@
           tep_reset_cache_block('categories');
           tep_reset_cache_block('also_purchased');
         }
+
+        $OSCOM_Hooks->call('products', 'productActionMove');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id));
         break;
@@ -329,6 +333,8 @@
           tep_reset_cache_block('also_purchased');
         }
 
+        $OSCOM_Hooks->call('products', 'productActionSave');
+
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id));
         break;
       case 'copy_to_confirm':
@@ -372,6 +378,8 @@
             tep_reset_cache_block('also_purchased');
           }
         }
+
+        $OSCOM_Hooks->call('products', 'productActionCopy');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id));
         break;
