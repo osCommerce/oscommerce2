@@ -5,14 +5,14 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
 
   require('includes/application_top.php');
 
-  $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
@@ -20,7 +20,7 @@
         $error = false;
 
         $store_logo = new upload('store_logo');
-        $store_logo->set_extensions('png');
+        $store_logo->set_extensions(array('png', 'gif', 'jpg'));
         $store_logo->set_destination(DIR_FS_CATALOG_IMAGES);
 
         $store_favicon = new upload('store_favicon');
@@ -28,10 +28,9 @@
         $store_favicon->set_destination(DIR_FS_CATALOG);      
       
         if ($store_logo->parse()) {
-          $store_logo->set_filename('store_logo.png');
-
           if ($store_logo->save()) {
             $messageStack->add_session(SUCCESS_LOGO_UPDATED, 'success');
+            tep_db_query("update configuration set configuration_value = '" . tep_db_input($store_logo->filename) . "', last_modified = now() where configuration_value = '" . STORE_LOGO . "'");
           } else {
             $error = true;
           }
@@ -75,7 +74,7 @@
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'store_logo.png'); ?></td>
+        <td><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO); ?></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -106,7 +105,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . 'store_logo.png'; ?></td>
+        <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . STORE_LOGO; ?></td>
       </tr>
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
