@@ -12,10 +12,14 @@
 
   require('includes/application_top.php');
 
+  $OSCOM_Hooks->register('products');
+
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $action = (isset($HTTP_GET_VARS['action']) ? $HTTP_GET_VARS['action'] : '');
+
+  $OSCOM_Hooks->call('products', 'productPreAction');
 
   if (tep_not_null($action)) {
     switch ($action) {
@@ -374,6 +378,8 @@
     }
   }
 
+  $OSCOM_Hooks->call('products', 'productPostAction');
+
 // check if the catalog image directory exists
   if (is_dir(DIR_FS_CATALOG_IMAGES)) {
     if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) $messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
@@ -670,6 +676,11 @@ function showPiDelConfirm(piId) {
 }
 </script>
   </div>
+
+<?php
+    echo $OSCOM_Hooks->call('products', 'productTab');
+?>
+
 </div>
 
 <script>
