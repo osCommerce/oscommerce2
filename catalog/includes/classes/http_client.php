@@ -34,13 +34,21 @@
   $http->disconnect();
 */
 
-/*
+/**
  * Class httpclient
  * 
  * A http client utility class 
+ *
+ * @var array $url  array containg server URL, similar to parseurl() returned array
+ * @var int $reply response code
+ * @var string $replyString full response
+ * @var string $protocolVersion
+ * @var string $requestHeaders
+ * @var string $requestBody
+ * @var boolean $socket
  */
   class httpClient {
-    var $url; // array containg server URL, similar to parseurl() returned array
+    var $url;
     var $reply; // response code
     var $replyString; // full response
     var $protocolVersion = '1.1';
