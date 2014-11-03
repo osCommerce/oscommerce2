@@ -60,31 +60,10 @@ Variable Scope*
 
 All variables must be accessed and set within their scope as:
 
-$HTTP_GET_VARS['variable']
-$HTTP_POST_VARS['variable']
-$HTTP_COOKIE_VARS['variable']
-$variable (either local, or session)
-
-* This needs to be updated when the codebase has been made compatible with
-the register_global parameter. Session variables are then accessed and set
-within its scope as:
-
-$HTTP_SESSION_VARS['variable']
-
-When PHP3 support is dropped, the following scope will be used:
-
 $_GET['variable']
 $_POST['variable']
 $_COOKIE['variable']
 $_SESSION['variable']
-
-PHP 4.0.x does not support the above scope which was introduced in PHP 4.1.x.
-The following can be used which is not compatible with PHP 3.x:
-
-$_GET =& $HTTP_GET_VARS;
-$_POST =& $HTTP_POST_VARS;
-$_COOKIE =& $HTTP_COOKIE_VARS;
-$_SESSION =& $HTTP_SESSION_VARS;
 
 include() vs require()
 ----------------------
@@ -167,7 +146,7 @@ An example custom function style:
 
 <?php
   function tep_my_function($parameter, $optional = '') {
-    global $HTTP_GET_VARS, $another_variable;
+    global $another_variable;
 
     ....
 
@@ -274,7 +253,7 @@ attacks residing in the user input. The data is first prepared and then protecte
 when inserting it into the table. The following structure is used:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
 
   tep_db_query("update table set column = '" . tep_db_input($value1) . "' where id = '" . (int)$id . "'");
 ?>
@@ -286,9 +265,9 @@ Multiple values can be parsed, protected and inserted into the table in an easie
 fashion:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
-  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
-  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
+  $value2 = tep_db_prepare_input($_POST['value2']);
+  $value3 = tep_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
@@ -300,9 +279,9 @@ fashion:
 A similar structure can be used for updating values in a table:
 
 <?php
-  $value1 = tep_db_prepare_input($HTTP_POST_VARS['value1']);
-  $value2 = tep_db_prepare_input($HTTP_POST_VARS['value2']);
-  $value3 = tep_db_prepare_input($HTTP_POST_VARS['value3']);
+  $value1 = tep_db_prepare_input($_POST['value1']);
+  $value2 = tep_db_prepare_input($_POST['value2']);
+  $value3 = tep_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
@@ -450,13 +429,6 @@ while loops should be written as:
 Walking through an array should be written as:
 
 <?php
-// for php3 compatibility
-  reset($array);
-  while (list($key, $value) = each($array)) {
-    ....
-  }
-
-// the php4 way
   foreach ($array as $key => $value) {
     ....
   }
