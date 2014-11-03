@@ -64,7 +64,7 @@
   $header_redir_url = tep_catalog_href_link('checkout_process.php', OSC_CATALOG_SESSION_ID . '=-KUNDEN_VAR_2-&sovar3=-KUNDEN_VAR_3-&sovar4=-KUNDEN_VAR_3_MD5_PASS-&betrag_integer=-BETRAG_INTEGER-','SSL', false, false);
   $alert_http_url = tep_catalog_href_link('ext/modules/payment/sofortueberweisung/callback.php','' ,'SSL', false, false);
 
-  if (isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install')) {
+  if (isset($_GET['action']) && ($_GET['action'] == 'install')) {
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $class = 'sofortueberweisung_direct';
 
