@@ -20,7 +20,7 @@
     switch ($action) {
       case 'setflag':
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
-          tep_set_banner_status($_GET['bID'], $_GET['flag']);
+          osc_set_banner_status($_GET['bID'], $_GET['flag']);
 
           $messageStack->add_session(SUCCESS_BANNER_STATUS_UPDATED, 'success');
         } else {

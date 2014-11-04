@@ -730,7 +730,7 @@
 
 ////
 // Sets the status of a banner
-  function tep_set_banner_status($banners_id, $status) {
+  function osc_set_banner_status($banners_id, $status) {
     if ($status == '1') {
       return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . $banners_id . "'");
     } elseif ($status == '0') {
