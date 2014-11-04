@@ -20,7 +20,7 @@
   if (osc_not_null($action)) {
     switch ($action) {
       case 'setflag':
-        tep_set_specials_status($_GET['id'], $_GET['flag']);
+        osc_set_specials_status($_GET['id'], $_GET['flag']);
 
         osc_redirect(osc_href_link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id']));
         break;

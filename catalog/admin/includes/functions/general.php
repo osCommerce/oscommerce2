@@ -766,7 +766,7 @@
 
 ////
 // Sets the status of a product on special
-  function tep_set_specials_status($specials_id, $status) {
+  function osc_set_specials_status($specials_id, $status) {
     if ($status == '1') {
       return osc_db_query("update " . TABLE_SPECIALS . " set status = '1', expires_date = NULL, date_status_change = NULL where specials_id = '" . (int)$specials_id . "'");
     } elseif ($status == '0') {

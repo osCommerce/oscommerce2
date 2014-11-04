@@ -391,7 +391,7 @@
 
 // auto expire special products
   require('includes/functions/specials.php');
-  tep_expire_specials();
+  osc_expire_specials();
 
   require('includes/classes/osc_template.php');
   $oscTemplate = new oscTemplate();
