@@ -303,13 +303,13 @@
         $params = array('business' => MODULE_PAYMENT_PAYPAL_PRO_HS_ID,
                         'bn' => 'OSCOM23_HS',
                         'buyer_email' => $order->customer['email_address'],
-                        'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                        'cancel_return' => osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                         'currency_code' => $_SESSION['currency'],
                         'invoice' => $order_id,
                         'custom' => $customer_id,
                         'paymentaction' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD == 'Sale' ? 'sale' : 'authorization',
-                        'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-                        'notify_url' => tep_href_link('ext/modules/payment/paypal/pro_hosted_ipn.php', '', 'SSL', false, false),
+                        'return' => osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                        'notify_url' => osc_href_link('ext/modules/payment/paypal/pro_hosted_ipn.php', '', 'SSL', false, false),
                         'shipping' => $this->format_raw($order->info['shipping_cost']),
                         'tax' => $this->format_raw($order->info['tax']),
                         'subtotal' => $this->format_raw($order->info['total'] - $order->info['shipping_cost'] - $order->info['tax']),
@@ -373,8 +373,8 @@
         tep_session_register('pphs_key');
       }
 
-      $iframe_url = tep_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');
-      $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
+      $iframe_url = osc_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');
+      $form_url = osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
 
 // include jquery if it doesn't exist in the template
       $output = <<<EOD
@@ -414,7 +414,7 @@ EOD;
       }
 
       if ( !is_array($result) || !isset($result['ACK']) || (($result['ACK'] != 'Success') && ($result['ACK'] != 'SuccessWithWarning')) ) {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
       }
 
       $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
@@ -426,7 +426,7 @@ EOD;
       }
 
       if ( !isset($result['RECEIVERBUSINESS']) || !in_array($result['RECEIVERBUSINESS'], $seller_accounts) || ($result['INVNUM'] != $order_id) || ($result['CUSTOM'] != $customer_id) ) {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $pphs_result = $result;
@@ -437,7 +437,7 @@ EOD;
       $tx_customer_id = $pphs_result['CUSTOM'];
 
       if (!osc_db_num_rows($check_query) || ($order_id != $tx_order_id) || ($customer_id != $tx_customer_id)) {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = osc_db_fetch_array($check_query);
@@ -547,7 +547,7 @@ EOD;
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -604,7 +604,7 @@ EOD;
       unset($_SESSION['pphs_result']);
       unset($_SESSION['pphs_key']);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {
@@ -894,7 +894,7 @@ EOD;
       $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_HS_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
 // include jquery if it doesn't exist in the template
       $js = <<<EOD

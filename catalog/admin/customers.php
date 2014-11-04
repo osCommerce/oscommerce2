@@ -189,7 +189,7 @@
 
         osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
 
-        osc_redirect(tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
+        osc_redirect(osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
 
         } else if ($error == true) {
           $cInfo = new objectInfo($_POST);
@@ -218,7 +218,7 @@
         osc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customers_id . "'");
         osc_db_query("delete from " . TABLE_WHOS_ONLINE . " where customer_id = '" . (int)$customers_id . "'");
 
-        osc_redirect(tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action'))));
+        osc_redirect(osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action'))));
         break;
       default:
         if ($action != 'confirm') {
@@ -341,14 +341,14 @@ function check_form() {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
-      <tr><?php echo tep_draw_form('customers', FILENAME_CUSTOMERS, osc_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form();"') . tep_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id); ?>
+      <tr><?php echo osc_draw_form('customers', FILENAME_CUSTOMERS, osc_get_all_get_params(array('action')) . 'action=update', 'post', 'onsubmit="return check_form();"') . osc_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id); ?>
         <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
       </tr>
       <tr>
@@ -362,13 +362,13 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_gender_error == true) {
-        echo tep_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . tep_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . ENTRY_GENDER_ERROR;
+        echo osc_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . osc_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . ENTRY_GENDER_ERROR;
       } else {
         echo ($cInfo->customers_gender == 'm') ? MALE : FEMALE;
-        echo tep_draw_hidden_field('customers_gender');
+        echo osc_draw_hidden_field('customers_gender');
       }
     } else {
-      echo tep_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . tep_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE;
+      echo osc_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . osc_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE;
     }
 ?></td>
           </tr>
@@ -381,12 +381,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_firstname_error == true) {
-      echo tep_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . ENTRY_FIRST_NAME_ERROR;
+      echo osc_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . ENTRY_FIRST_NAME_ERROR;
     } else {
-      echo $cInfo->customers_firstname . tep_draw_hidden_field('customers_firstname');
+      echo $cInfo->customers_firstname . osc_draw_hidden_field('customers_firstname');
     }
   } else {
-    echo tep_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"', true);
+    echo osc_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"', true);
   }
 ?></td>
           </tr>
@@ -396,12 +396,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_lastname_error == true) {
-      echo tep_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . ENTRY_LAST_NAME_ERROR;
+      echo osc_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . ENTRY_LAST_NAME_ERROR;
     } else {
-      echo $cInfo->customers_lastname . tep_draw_hidden_field('customers_lastname');
+      echo $cInfo->customers_lastname . osc_draw_hidden_field('customers_lastname');
     }
   } else {
-    echo tep_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"', true);
+    echo osc_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"', true);
   }
 ?></td>
           </tr>
@@ -414,12 +414,12 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_date_of_birth_error == true) {
-        echo tep_draw_input_field('customers_dob', osc_date_short($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
+        echo osc_draw_input_field('customers_dob', osc_date_short($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
       } else {
-        echo $cInfo->customers_dob . tep_draw_hidden_field('customers_dob');
+        echo $cInfo->customers_dob . osc_draw_hidden_field('customers_dob');
       }
     } else {
-      echo tep_draw_input_field('customers_dob', osc_date_short($cInfo->customers_dob), 'maxlength="10" id="customers_dob"', true);
+      echo osc_draw_input_field('customers_dob', osc_date_short($cInfo->customers_dob), 'maxlength="10" id="customers_dob"', true);
     }
 ?>
               <script type="text/javascript">$('#customers_dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
@@ -434,16 +434,16 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_email_address_error == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR;
+      echo osc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR;
     } elseif ($entry_email_address_check_error == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      echo osc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
     } elseif ($entry_email_address_exists == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+      echo osc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
     } else {
-      echo $customers_email_address . tep_draw_hidden_field('customers_email_address');
+      echo $customers_email_address . osc_draw_hidden_field('customers_email_address');
     }
   } else {
-    echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"', true);
+    echo osc_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"', true);
   }
 ?></td>
           </tr>
@@ -453,7 +453,7 @@ function check_form() {
     if (ACCOUNT_COMPANY == 'true') {
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_COMPANY; ?></td>
@@ -465,9 +465,9 @@ function check_form() {
             <td class="main">
 <?php
     if ($error == true) {
-      echo $cInfo->entry_company . tep_draw_hidden_field('entry_company');
+      echo $cInfo->entry_company . osc_draw_hidden_field('entry_company');
     } else {
-      echo tep_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="32"');
+      echo osc_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="32"');
     }
 ?></td>
           </tr>
@@ -477,7 +477,7 @@ function check_form() {
     }
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></td>
@@ -490,12 +490,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_street_address_error == true) {
-      echo tep_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
+      echo osc_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
     } else {
-      echo $cInfo->entry_street_address . tep_draw_hidden_field('entry_street_address');
+      echo $cInfo->entry_street_address . osc_draw_hidden_field('entry_street_address');
     }
   } else {
-    echo tep_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"', true);
+    echo osc_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"', true);
   }
 ?></td>
           </tr>
@@ -507,9 +507,9 @@ function check_form() {
             <td class="main">
 <?php
     if ($error == true) {
-      echo $cInfo->entry_suburb . tep_draw_hidden_field('entry_suburb');
+      echo $cInfo->entry_suburb . osc_draw_hidden_field('entry_suburb');
     } else {
-      echo tep_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
+      echo osc_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
     }
 ?></td>
           </tr>
@@ -522,12 +522,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_post_code_error == true) {
-      echo tep_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
+      echo osc_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
     } else {
-      echo $cInfo->entry_postcode . tep_draw_hidden_field('entry_postcode');
+      echo $cInfo->entry_postcode . osc_draw_hidden_field('entry_postcode');
     }
   } else {
-    echo tep_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"', true);
+    echo osc_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"', true);
   }
 ?></td>
           </tr>
@@ -537,12 +537,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_city_error == true) {
-      echo tep_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . ENTRY_CITY_ERROR;
+      echo osc_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . ENTRY_CITY_ERROR;
     } else {
-      echo $cInfo->entry_city . tep_draw_hidden_field('entry_city');
+      echo $cInfo->entry_city . osc_draw_hidden_field('entry_city');
     }
   } else {
-    echo tep_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"', true);
+    echo osc_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"', true);
   }
 ?></td>
           </tr>
@@ -562,15 +562,15 @@ function check_form() {
           while ($zones_values = osc_db_fetch_array($zones_query)) {
             $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
           }
-          echo tep_draw_pull_down_menu('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo osc_draw_pull_down_menu('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
         } else {
-          echo tep_draw_input_field('entry_state', osc_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo osc_draw_input_field('entry_state', osc_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
         }
       } else {
-        echo $entry_state . tep_draw_hidden_field('entry_zone_id') . tep_draw_hidden_field('entry_state');
+        echo $entry_state . osc_draw_hidden_field('entry_zone_id') . osc_draw_hidden_field('entry_state');
       }
     } else {
-      echo tep_draw_input_field('entry_state', osc_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
+      echo osc_draw_input_field('entry_state', osc_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
     }
 
 ?></td>
@@ -584,19 +584,19 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_country_error == true) {
-      echo tep_draw_pull_down_menu('entry_country_id', osc_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+      echo osc_draw_pull_down_menu('entry_country_id', osc_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
     } else {
-      echo osc_get_country_name($cInfo->entry_country_id) . tep_draw_hidden_field('entry_country_id');
+      echo osc_get_country_name($cInfo->entry_country_id) . osc_draw_hidden_field('entry_country_id');
     }
   } else {
-    echo tep_draw_pull_down_menu('entry_country_id', osc_get_countries(), $cInfo->entry_country_id);
+    echo osc_draw_pull_down_menu('entry_country_id', osc_get_countries(), $cInfo->entry_country_id);
   }
 ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_CONTACT; ?></td>
@@ -609,12 +609,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_telephone_error == true) {
-      echo tep_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . ENTRY_TELEPHONE_NUMBER_ERROR;
+      echo osc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . ENTRY_TELEPHONE_NUMBER_ERROR;
     } else {
-      echo $cInfo->customers_telephone . tep_draw_hidden_field('customers_telephone');
+      echo $cInfo->customers_telephone . osc_draw_hidden_field('customers_telephone');
     }
   } else {
-    echo tep_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', true);
+    echo osc_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', true);
   }
 ?></td>
           </tr>
@@ -623,16 +623,16 @@ function check_form() {
             <td class="main">
 <?php
   if ($processed == true) {
-    echo $cInfo->customers_fax . tep_draw_hidden_field('customers_fax');
+    echo $cInfo->customers_fax . osc_draw_hidden_field('customers_fax');
   } else {
-    echo tep_draw_input_field('customers_fax', $cInfo->customers_fax, 'maxlength="32"');
+    echo osc_draw_input_field('customers_fax', $cInfo->customers_fax, 'maxlength="32"');
   }
 ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_OPTIONS; ?></td>
@@ -649,30 +649,30 @@ function check_form() {
     } else {
       echo ENTRY_NEWSLETTER_NO;
     }
-    echo tep_draw_hidden_field('customers_newsletter');
+    echo osc_draw_hidden_field('customers_newsletter');
   } else {
-    echo tep_draw_pull_down_menu('customers_newsletter', $newsletter_array, (($cInfo->customers_newsletter == '1') ? '1' : '0'));
+    echo osc_draw_pull_down_menu('customers_newsletter', $newsletter_array, (($cInfo->customers_newsletter == '1') ? '1' : '0'));
   }
 ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('action')))); ?></td>
+        <td align="right" class="smallText"><?php echo osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('action')))); ?></td>
       </tr></form>
 <?php
   } else {
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><?php echo tep_draw_form('search', FILENAME_CUSTOMERS, '', 'get'); ?>
+          <tr><?php echo osc_draw_form('search', FILENAME_CUSTOMERS, '', 'get'); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . tep_draw_input_field('search'); ?></td>
-          <?php echo tep_hide_session_id(); ?></form></tr>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . osc_draw_input_field('search'); ?></td>
+          <?php echo osc_hide_session_id(); ?></form></tr>
         </table></td>
       </tr>
       <tr>
@@ -712,15 +712,15 @@ function check_form() {
       }
 
       if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
-        echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit') . '\'">' . "\n";
+        echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $customers['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customers['customers_firstname']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo osc_date_short($info['date_account_created']); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo osc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . osc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -735,7 +735,7 @@ function check_form() {
     if (isset($_GET['search']) && osc_not_null($_GET['search'])) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo tep_draw_button(IMAGE_RESET, 'arrowrefresh-1-w', tep_href_link(FILENAME_CUSTOMERS)); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo osc_draw_button(IMAGE_RESET, 'arrowrefresh-1-w', osc_href_link(FILENAME_CUSTOMERS)); ?></td>
                   </tr>
 <?php
     }
@@ -751,16 +751,16 @@ function check_form() {
     case 'confirm':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CUSTOMER . '</strong>');
 
-      $contents = array('form' => tep_draw_form('customers', FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=deleteconfirm'));
+      $contents = array('form' => osc_draw_form('customers', FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=deleteconfirm'));
       $contents[] = array('text' => TEXT_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
-      if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0) $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('delete_reviews', 'on', true) . ' ' . sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
+      if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0) $contents[] = array('text' => '<br />' . osc_draw_checkbox_field('delete_reviews', 'on', true) . ' ' . sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . tep_draw_button(IMAGE_ORDERS, 'cart', tep_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . tep_draw_button(IMAGE_EMAIL, 'mail-closed', tep_href_link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
+        $contents[] = array('align' => 'center', 'text' => osc_draw_button(IMAGE_EDIT, 'document', osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . osc_draw_button(IMAGE_DELETE, 'trash', osc_href_link(FILENAME_CUSTOMERS, osc_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . osc_draw_button(IMAGE_ORDERS, 'cart', osc_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . osc_draw_button(IMAGE_EMAIL, 'mail-closed', osc_href_link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_CREATED . ' ' . osc_date_short($cInfo->date_account_created));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . osc_date_short($cInfo->date_account_last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . osc_date_short($cInfo->date_last_logon));

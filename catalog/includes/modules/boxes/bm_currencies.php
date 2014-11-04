@@ -44,15 +44,15 @@
           $hidden_get_variables = '';
           foreach ( $_GET as $key => $value ) {
             if ( is_string($value) && ($key != 'currency') && ($key != session_name()) && ($key != 'x') && ($key != 'y') ) {
-              $hidden_get_variables .= tep_draw_hidden_field($key, $value);
+              $hidden_get_variables .= osc_draw_hidden_field($key, $value);
             }
           }
 
           $data = '<div class="panel panel-default">' .
                   '  <div class="panel-heading">' . MODULE_BOXES_CURRENCIES_BOX_TITLE . '</div>' .
                   '  <div class="panel-body">' .
-                  '    ' . tep_draw_form('currencies', tep_href_link($PHP_SELF, '', $request_type, false), 'get') .
-                  '    ' . tep_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . tep_hide_session_id() . '</form>' .
+                  '    ' . osc_draw_form('currencies', osc_href_link($PHP_SELF, '', $request_type, false), 'get') .
+                  '    ' . osc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();" style="width: 100%"') . $hidden_get_variables . osc_hide_session_id() . '</form>' .
                   '  </div>' .
                   '</div>';
 

@@ -41,11 +41,11 @@
 
       $actionRecorder->record();
 
-      osc_redirect(tep_href_link(FILENAME_CONTACT_US, 'action=success'));
+      osc_redirect(osc_href_link(FILENAME_CONTACT_US, 'action=success'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_CONTACT_US));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_CONTACT_US));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -68,7 +68,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT), 'primary', null, 'btn-default btn-block'); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', osc_href_link(FILENAME_DEFAULT), 'primary', null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -76,7 +76,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo osc_draw_form('contact_us', osc_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -87,7 +87,7 @@
       <label for="inputFromName" class="control-label col-xs-3"><?php echo ENTRY_NAME; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME . '"');
+        echo osc_draw_input_field('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -96,7 +96,7 @@
       <label for="inputFromEmail" class="control-label col-xs-3"><?php echo ENTRY_EMAIL; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL . '"', 'email');
+        echo osc_draw_input_field('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -105,7 +105,7 @@
       <label for="inputEnquiry" class="control-label col-xs-3"><?php echo ENTRY_ENQUIRY; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_textarea_field('enquiry', 'soft', 50, 15, NULL, 'required aria-required="true" id="inputEnquiry" placeholder="' . ENTRY_ENQUIRY . '"');
+        echo osc_draw_textarea_field('enquiry', 'soft', 50, 15, NULL, 'required aria-required="true" id="inputEnquiry" placeholder="' . ENTRY_ENQUIRY . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -113,7 +113,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
 

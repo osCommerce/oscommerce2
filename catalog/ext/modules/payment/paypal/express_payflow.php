@@ -15,7 +15,7 @@
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
   }
 
 // initialize variables if the customer is not logged in
@@ -31,7 +31,7 @@
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
   if (!$paypal_pro_payflow_ec->check() || !$paypal_pro_payflow_ec->enabled) {
-    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
   }
 
   if ( !isset($_SESSION['sendto']) ) {
@@ -72,7 +72,7 @@
 
       if ($response_array['RESULT'] == '0') {
         if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-          osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
 
         if (!isset($_SESSION['payment'])) tep_session_register('payment');
@@ -108,7 +108,7 @@
 
               $navigation->set_snapshot();
 
-              $login_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
+              $login_url = osc_href_link(FILENAME_LOGIN, '', 'SSL');
               $login_email_address = osc_output_string($response_array['EMAIL']);
 
       $output = <<<EOD
@@ -323,7 +323,7 @@ EOD;
               tep_session_register('ppecuk_right_turn');
               $ppecuk_right_turn = true;
 
-              osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+              osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
             }
           }
 
@@ -341,7 +341,7 @@ EOD;
               if (isset($quote['error'])) {
                 unset($_SESSION['shipping']);
 
-                osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+                osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
               } else {
                 if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
                   $shipping = array('id' => $shipping,
@@ -359,9 +359,9 @@ EOD;
         }
 
 /* useraction=commit       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')); */
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       break;
@@ -487,7 +487,7 @@ EOD;
 
             $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-            osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+            osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
           }
         }
       }
@@ -607,13 +607,13 @@ EOD;
       if ($response_array['RESULT'] == '0') {
         osc_redirect($paypal_url . '&token=' . $response_array['TOKEN'] /*. '&useraction=commit'*/);
       } else {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       break;
   }
 
-  osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

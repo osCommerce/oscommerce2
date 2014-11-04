@@ -56,7 +56,7 @@
 
           if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD == 'True' ) {
             $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_LINK_TITLE,
-                                                                        'link' => tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'),
+                                                                        'link' => osc_href_link('ext/modules/content/account/set_password.php', '', 'SSL'),
                                                                         'icon' => 'key'));
           }
 

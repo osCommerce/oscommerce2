@@ -12,7 +12,7 @@
 
 ////
 // The HTML href link wrapper function
-  function tep_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
+  function osc_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
     global $request_type, $SID;
 
     $page = osc_output_string($page);
@@ -88,7 +88,7 @@
 
 ////
 // The HTML image wrapper function
-  function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
+  function osc_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
     $image = '<img src="' . osc_output_string($src) . '" border="0" alt="' . osc_output_string($alt) . '"';
 
     if (osc_not_null($alt)) {
@@ -109,7 +109,7 @@
 ////
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
-  function tep_image_submit($image, $alt = '', $parameters = '') {
+  function osc_image_submit($image, $alt = '', $parameters = '') {
     global $language;
 
     $image_submit = '<input type="image" src="' . osc_output_string(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image) . '" border="0" alt="' . osc_output_string($alt) . '"';
@@ -126,21 +126,21 @@
 ////
 // Draw a 1 pixel black line
   function tep_black_line() {
-    return tep_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
+    return osc_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
   }
 
 ////
 // Output a separator either through whitespace, or with an image
-  function tep_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return tep_image(DIR_WS_IMAGES . $image, '', $width, $height);
+  function osc_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
+    return osc_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
 ////
 // Output a function button in the selected language
-  function tep_image_button($image, $alt = '', $params = '') {
+  function osc_image_button($image, $alt = '', $params = '') {
     global $language;
 
-    return tep_image(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image, $alt, '', '', $params);
+    return osc_image(DIR_WS_LANGUAGES . $language . '/images/buttons/' . $image, $alt, '', '', $params);
   }
 
 ////
@@ -176,12 +176,12 @@
 
 ////
 // Output a form
-  function tep_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
+  function osc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
     $form = '<form name="' . osc_output_string($name) . '" action="';
     if (osc_not_null($parameters)) {
-      $form .= tep_href_link($action, $parameters);
+      $form .= osc_href_link($action, $parameters);
     } else {
-      $form .= tep_href_link($action);
+      $form .= osc_href_link($action);
     }
     $form .= '" method="' . osc_output_string($method) . '"';
     if (osc_not_null($params)) {
@@ -194,7 +194,7 @@
 
 ////
 // Output a form input field
-  function tep_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
+  function osc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
 
     $field = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '"';
 
@@ -221,8 +221,8 @@
 
 ////
 // Output a form password field
-  function tep_draw_password_field($name, $value = '', $required = false) {
-    $field = tep_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function osc_draw_password_field($name, $value = '', $required = false) {
+    $field = osc_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
 
     return $field;
   }
@@ -230,14 +230,14 @@
 ////
 // Output a form filefield
   function tep_draw_file_field($name, $required = false) {
-    $field = tep_draw_input_field($name, '', '', $required, 'file');
+    $field = osc_draw_input_field($name, '', '', $required, 'file');
 
     return $field;
   }
 
 ////
 // Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
-  function tep_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '') {
+  function osc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '') {
 
     $selection = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '"';
 
@@ -254,20 +254,20 @@
 
 ////
 // Output a form checkbox field
-  function tep_draw_checkbox_field($name, $value = '', $checked = false, $compare = '') {
-    return tep_draw_selection_field($name, 'checkbox', $value, $checked, $compare);
+  function osc_draw_checkbox_field($name, $value = '', $checked = false, $compare = '') {
+    return osc_draw_selection_field($name, 'checkbox', $value, $checked, $compare);
   }
 
 ////
 // Output a form radio field
-  function tep_draw_radio_field($name, $value = '', $checked = false, $compare = '') {
-    return tep_draw_selection_field($name, 'radio', $value, $checked, $compare);
+  function osc_draw_radio_field($name, $value = '', $checked = false, $compare = '') {
+    return osc_draw_selection_field($name, 'radio', $value, $checked, $compare);
   }
 
 ////
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
+  function osc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true) {
 
     $field = '<textarea name="' . osc_output_string($name) . '" cols="' . osc_output_string($width) . '" rows="' . osc_output_string($height) . '"';
 
@@ -292,7 +292,7 @@
 
 ////
 // Output a form hidden field
-  function tep_draw_hidden_field($name, $value = '', $parameters = '') {
+  function osc_draw_hidden_field($name, $value = '', $parameters = '') {
 
     $field = '<input type="hidden" name="' . osc_output_string($name) . '"';
 
@@ -315,11 +315,11 @@
 
 ////
 // Hide form elements
-  function tep_hide_session_id() {
+  function osc_hide_session_id() {
     $string = '';
 
     if (defined('SID') && osc_not_null(SID)) {
-      $string = tep_draw_hidden_field(tep_session_name(), tep_session_id());
+      $string = osc_draw_hidden_field(tep_session_name(), tep_session_id());
     }
 
     return $string;
@@ -327,7 +327,7 @@
 
 ////
 // Output a form pull down menu
-  function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
+  function osc_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false) {
 
     $field = '<select name="' . osc_output_string($name) . '"';
 
@@ -360,7 +360,7 @@
 
 ////
 // Output a jQuery UI Button
-  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
+  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null) {
     static $button_counter = 1;
 
     $types = array('submit', 'button', 'reset');

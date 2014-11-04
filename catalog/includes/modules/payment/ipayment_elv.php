@@ -78,13 +78,13 @@
       global $order;
 
       $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_IPAYMENT_ELV_TEXT_BANK_ACCOUNT_OWNER,
-                                                    'field' => tep_draw_input_field('addr_name', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
+                                                    'field' => osc_draw_input_field('addr_name', $order->billing['firstname'] . ' ' . $order->billing['lastname'])),
                                               array('title' => MODULE_PAYMENT_IPAYMENT_ELV_TEXT_BANK_ACCOUNT_NUMBER,
-                                                    'field' => tep_draw_input_field('bank_accountnumber')),
+                                                    'field' => osc_draw_input_field('bank_accountnumber')),
                                               array('title' => MODULE_PAYMENT_IPAYMENT_ELV_TEXT_BANK_CODE,
-                                                    'field' => tep_draw_input_field('bank_code')),
+                                                    'field' => osc_draw_input_field('bank_code')),
                                               array('title' => MODULE_PAYMENT_IPAYMENT_ELV_TEXT_BANK_NAME,
-                                                    'field' => tep_draw_input_field('bank_name'))));
+                                                    'field' => osc_draw_input_field('bank_name'))));
 
       return $confirmation;
     }
@@ -103,29 +103,29 @@
         }
       }
 
-      $process_button_string = tep_draw_hidden_field('silent', '1') .
-                               tep_draw_hidden_field('trx_paymenttyp', 'elv') .
-                               tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_ELV_USER_ID) .
-                               tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD) .
-                               tep_draw_hidden_field('from_ip', osc_get_ip_address()) .
-                               tep_draw_hidden_field('trx_currency', $_SESSION['currency']) .
-                               tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
-                               tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_ELV_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
-                               tep_draw_hidden_field('addr_email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('addr_street', $order->billing['street_address']) .
-                               tep_draw_hidden_field('addr_city', $order->billing['city']) .
-                               tep_draw_hidden_field('addr_zip', $order->billing['postcode']) .
-                               tep_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
-                               tep_draw_hidden_field('addr_state', $zone_code) .
-                               tep_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
-                               tep_draw_hidden_field('redirect_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
-                               tep_draw_hidden_field('silent_error_url', tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true)) .
-                               tep_draw_hidden_field('hidden_trigger_url', tep_href_link('ext/modules/payment/ipayment/callback_elv.php', '', 'SSL', false)) .
-                               tep_draw_hidden_field('client_name', 'oscommerce') .
-                               tep_draw_hidden_field('client_version', $this->signature);
+      $process_button_string = osc_draw_hidden_field('silent', '1') .
+                               osc_draw_hidden_field('trx_paymenttyp', 'elv') .
+                               osc_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_ELV_USER_ID) .
+                               osc_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD) .
+                               osc_draw_hidden_field('from_ip', osc_get_ip_address()) .
+                               osc_draw_hidden_field('trx_currency', $_SESSION['currency']) .
+                               osc_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
+                               osc_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_ELV_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
+                               osc_draw_hidden_field('addr_email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('addr_street', $order->billing['street_address']) .
+                               osc_draw_hidden_field('addr_city', $order->billing['city']) .
+                               osc_draw_hidden_field('addr_zip', $order->billing['postcode']) .
+                               osc_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
+                               osc_draw_hidden_field('addr_state', $zone_code) .
+                               osc_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
+                               osc_draw_hidden_field('redirect_url', osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
+                               osc_draw_hidden_field('silent_error_url', osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true)) .
+                               osc_draw_hidden_field('hidden_trigger_url', osc_href_link('ext/modules/payment/ipayment/callback_elv.php', '', 'SSL', false)) .
+                               osc_draw_hidden_field('client_name', 'oscommerce') .
+                               osc_draw_hidden_field('client_version', $this->signature);
 
       if (osc_not_null(MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
-        $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD));
+        $process_button_string .= osc_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_ELV_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . MODULE_PAYMENT_IPAYMENT_ELV_PASSWORD . MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD));
       }
 
       return $process_button_string;
@@ -135,7 +135,7 @@
       global $order;
 
       if ($_GET['ret_errorcode'] != '0') {
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . osc_output_string_protected($_GET['ret_errormsg'])));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . osc_output_string_protected($_GET['ret_errormsg'])));
       }
 
       if (osc_not_null(MODULE_PAYMENT_IPAYMENT_ELV_SECRET_HASH_PASSWORD)) {
@@ -154,7 +154,7 @@
         }
 
         if ($pass != true) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
         }
       }
 

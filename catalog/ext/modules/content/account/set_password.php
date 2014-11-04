@@ -14,18 +14,18 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
   if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {
-    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   $check_customer_query = osc_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
   $check_customer = osc_db_fetch_array($check_customer_query);
 
   if ( !empty($check_customer['customers_password']) ) {
-    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -54,12 +54,12 @@
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 
-      osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_1, osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, osc_href_link('ext/modules/content/account/set_password.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -74,7 +74,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo osc_draw_form('account_password', osc_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . osc_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
   <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
@@ -84,7 +84,7 @@
       <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW . '"');
+        echo osc_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW . '"');
         echo FORM_REQUIRED_INPUT;
         if (osc_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>';
         ?>
@@ -94,7 +94,7 @@
       <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
+        echo osc_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
         echo FORM_REQUIRED_INPUT;
         if (osc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
         ?>
@@ -104,8 +104,8 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?></div>
   </div>
 
 </div>

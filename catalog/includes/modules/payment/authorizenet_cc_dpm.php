@@ -106,7 +106,7 @@
         $expiry_field .= '<option value="' . strftime('%y',mktime(0,0,0,1,1,$i)) . '">' . strftime('%Y',mktime(0,0,0,1,1,$i)) . '</option>';
       }
 
-      $expiry_field .= '</select>' . tep_draw_hidden_field('x_exp_date');
+      $expiry_field .= '</select>' . osc_draw_hidden_field('x_exp_date');
 
       $js = <<<EOD
 <script>
@@ -127,15 +127,15 @@ EOD;
       $expiry_field .= $js;
 
       $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_CREDIT_CARD_OWNER_FIRSTNAME,
-                                                    'field' => tep_draw_input_field('x_first_name', $order->billing['firstname'])),
+                                                    'field' => osc_draw_input_field('x_first_name', $order->billing['firstname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_CREDIT_CARD_OWNER_LASTNAME,
-                                                    'field' => tep_draw_input_field('x_last_name', $order->billing['lastname'])),
+                                                    'field' => osc_draw_input_field('x_last_name', $order->billing['lastname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_CREDIT_CARD_NUMBER,
-                                                    'field' => tep_draw_input_field('x_card_num')),
+                                                    'field' => osc_draw_input_field('x_card_num')),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_CREDIT_CARD_EXPIRES,
                                                     'field' => $expiry_field),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_CREDIT_CARD_CCV,
-                                                    'field' => tep_draw_input_field('x_card_code', '', 'size="5" maxlength="4"'))));
+                                                    'field' => osc_draw_input_field('x_card_code', '', 'size="5" maxlength="4"'))));
 
       return $confirmation;
     }
@@ -151,7 +151,7 @@ EOD;
                       'x_show_form' => 'PAYMENT_FORM',
                       'x_delim_data' => 'FALSE',
                       'x_relay_response' => 'TRUE',
-                      'x_relay_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
+                      'x_relay_url' => osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
                       'x_company' => substr($order->billing['company'], 0, 50),
                       'x_address' => substr($order->billing['street_address'], 0, 60),
                       'x_city' => substr($order->billing['city'], 0, 40),
@@ -171,7 +171,7 @@ EOD;
                       'x_fp_sequence' => $sequence,
                       'x_fp_timestamp' => $tstamp,
                       'x_fp_hash' => $this->_hmac(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TRANSACTION_KEY, MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . '^' . $sequence . '^' . $tstamp . '^' . $this->format_raw($order->info['total']) . '^' . $_SESSION['currency']),
-                      'x_cancel_url' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
+                      'x_cancel_url' => osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
                       'x_cancel_url_text' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_RETURN_BUTTON);
 
       if (is_numeric($sendto) && ($sendto > 0)) {
@@ -204,14 +204,14 @@ EOD;
       $process_button_string = '';
 
       foreach ( $params as $key => $value ) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= osc_draw_hidden_field($key, $value);
       }
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|><|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
+        $process_button_string .= osc_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|><|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
-      $process_button_string .= tep_draw_hidden_field(session_name(), session_id());
+      $process_button_string .= osc_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }
@@ -260,7 +260,7 @@ EOD;
         $authorizenet_cc_dpm_error = $_POST['x_response_reason_text'];
         tep_session_register('authorizenet_cc_dpm_error');
 
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
 
       if ( isset($_SESSION['authorizenet_cc_dpm_error']) ) {
@@ -328,7 +328,7 @@ EOD;
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $redirect_url = osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
 
         echo <<<EOD
 <form name="redirect" action="{$redirect_url}" method="post" target="_top">

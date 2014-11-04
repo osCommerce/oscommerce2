@@ -28,7 +28,7 @@
     global $logger;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      osc_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
+      osc_redirect(osc_href_link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
     if ( strpos($url, '&amp;') !== false ) {
@@ -267,7 +267,7 @@
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
     if (osc_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+      $image = osc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -691,11 +691,11 @@
 ////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_pull_down_country_list($country_id) {
-    return tep_draw_pull_down_menu('configuration_value', osc_get_countries(), $country_id);
+    return osc_draw_pull_down_menu('configuration_value', osc_get_countries(), $country_id);
   }
 
   function tep_cfg_pull_down_zone_list($zone_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
+    return osc_draw_pull_down_menu('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
   }
 
   function tep_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
@@ -708,13 +708,13 @@
                                  'text' => $tax_class['tax_class_title']);
     }
 
-    return tep_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
+    return osc_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
   }
 
 ////
 // Function to read in text area in admin
  function tep_cfg_textarea($text) {
-    return tep_draw_textarea_field('configuration_value', false, 35, 5, $text);
+    return osc_draw_textarea_field('configuration_value', false, 35, 5, $text);
   }
 
   function tep_cfg_get_zone_name($zone_id) {
@@ -1292,7 +1292,7 @@
                                   'text' => $zone_class['geo_zone_name']);
     }
 
-    return tep_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
+    return osc_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
   }
 
   function tep_cfg_pull_down_order_statuses($order_status_id, $key = '') {
@@ -1307,7 +1307,7 @@
                                 'text' => $statuses['orders_status_name']);
     }
 
-    return tep_draw_pull_down_menu($name, $statuses_array, $order_status_id);
+    return osc_draw_pull_down_menu($name, $statuses_array, $order_status_id);
   }
 
   function tep_get_order_status_name($order_status_id, $language_id = '') {

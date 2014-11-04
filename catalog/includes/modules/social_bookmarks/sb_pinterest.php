@@ -58,11 +58,11 @@
           }
         }
 
-        $params['media'] = tep_href_link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
+        $params['media'] = osc_href_link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
       }
 
 // url
-      $params['url'] = tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false);
+      $params['url'] = osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false);
 
       $output = '<a href="http://pinterest.com/pin/create/button/?';
 

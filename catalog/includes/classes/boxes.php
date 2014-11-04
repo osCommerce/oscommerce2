@@ -85,14 +85,14 @@
       $this->table_cellpadding = '3';
       $this->table_parameters = 'class="infoBoxContents"';
       $info_box_contents = array();
-      $info_box_contents[] = array(array('text' => tep_draw_separator('pixel_trans.gif', '100%', '1')));
+      $info_box_contents[] = array(array('text' => osc_draw_separator('pixel_trans.gif', '100%', '1')));
       for ($i=0, $n=sizeof($contents); $i<$n; $i++) {
         $info_box_contents[] = array(array('align' => (isset($contents[$i]['align']) ? $contents[$i]['align'] : ''),
                                            'form' => (isset($contents[$i]['form']) ? $contents[$i]['form'] : ''),
                                            'params' => 'class="boxText"',
                                            'text' => (isset($contents[$i]['text']) ? $contents[$i]['text'] : '')));
       }
-      $info_box_contents[] = array(array('text' => tep_draw_separator('pixel_trans.gif', '100%', '1')));
+      $info_box_contents[] = array(array('text' => osc_draw_separator('pixel_trans.gif', '100%', '1')));
       return $this->tableBox($info_box_contents);
     }
   }
@@ -102,19 +102,19 @@
       $this->table_cellpadding = '0';
 
       if ($left_corner == true) {
-        $left_corner = tep_image(DIR_WS_IMAGES . 'infobox/corner_left.gif');
+        $left_corner = osc_image(DIR_WS_IMAGES . 'infobox/corner_left.gif');
       } else {
-        $left_corner = tep_image(DIR_WS_IMAGES . 'infobox/corner_right_left.gif');
+        $left_corner = osc_image(DIR_WS_IMAGES . 'infobox/corner_right_left.gif');
       }
       if ($right_arrow == true) {
-        $right_arrow = '<a href="' . $right_arrow . '">' . tep_image(DIR_WS_IMAGES . 'infobox/arrow_right.gif', ICON_ARROW_RIGHT) . '</a>';
+        $right_arrow = '<a href="' . $right_arrow . '">' . osc_image(DIR_WS_IMAGES . 'infobox/arrow_right.gif', ICON_ARROW_RIGHT) . '</a>';
       } else {
         $right_arrow = '';
       }
       if ($right_corner == true) {
-        $right_corner = $right_arrow . tep_image(DIR_WS_IMAGES . 'infobox/corner_right.gif');
+        $right_corner = $right_arrow . osc_image(DIR_WS_IMAGES . 'infobox/corner_right.gif');
       } else {
-        $right_corner = $right_arrow . tep_draw_separator('pixel_trans.gif', '11', '14');
+        $right_corner = $right_arrow . osc_draw_separator('pixel_trans.gif', '11', '14');
       }
 
       $info_box_contents = array();
@@ -152,11 +152,11 @@
 
       $info_box_contents = array();
       $info_box_contents[] = array(array('params' => 'height="14" class="infoBoxHeading"',
-                                         'text' => tep_image(DIR_WS_IMAGES . 'infobox/corner_left.gif')),
+                                         'text' => osc_image(DIR_WS_IMAGES . 'infobox/corner_left.gif')),
                                    array('params' => 'height="14" class="infoBoxHeading" width="100%"',
                                          'text' => $contents[0]['text']),
                                    array('params' => 'height="14" class="infoBoxHeading"',
-                                         'text' => tep_image(DIR_WS_IMAGES . 'infobox/corner_right_left.gif')));
+                                         'text' => osc_image(DIR_WS_IMAGES . 'infobox/corner_right_left.gif')));
 
       $this->tableBox($info_box_contents, true);
     }

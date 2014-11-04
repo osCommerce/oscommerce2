@@ -16,16 +16,16 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
   if (!isset($_GET['products_id'])) {
-    osc_redirect(tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
+    osc_redirect(osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
   }
 
   $product_info_query = osc_db_query("select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
   if (!osc_db_num_rows($product_info_query)) {
-    osc_redirect(tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
+    osc_redirect(osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
   } else {
     $product_info = osc_db_fetch_array($product_info_query);
   }
@@ -57,7 +57,7 @@
       osc_db_query("insert into " . TABLE_REVIEWS_DESCRIPTION . " (reviews_id, languages_id, reviews_text) values ('" . (int)$insert_id . "', '" . (int)$_SESSION['languages_id'] . "', '" . osc_db_input($review) . "')");
 
       $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
-      osc_redirect(tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
+      osc_redirect(osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('action'))));
     }
   }
 
@@ -73,7 +73,7 @@
     $products_name = $product_info['products_name'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params()));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params()));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -89,7 +89,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&products_id=' . $_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo osc_draw_form('product_reviews_write', osc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&products_id=' . $_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -98,9 +98,9 @@
 ?>
 
     <div class="col-sm-4 text-center pull-right">
-      <?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product_info['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $product_info['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
+      <p><?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
 
     <div class="clearfix"></div>
@@ -122,7 +122,7 @@
       <label for="inputReview" class="control-label col-xs-3"><?php echo SUB_TITLE_REVIEW; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_textarea_field('review', 'soft', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . SUB_TITLE_REVIEW . '"');
+        echo osc_draw_textarea_field('review', 'soft', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . SUB_TITLE_REVIEW . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -132,27 +132,27 @@
       <div class="col-xs-9">
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '5') . tep_draw_stars(5, false) . ' ' . TEXT_GOOD; ?>
+            <?php echo osc_draw_radio_field('rating', '5') . osc_draw_stars(5, false) . ' ' . TEXT_GOOD; ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '4') . tep_draw_stars(4, false); ?>
+            <?php echo osc_draw_radio_field('rating', '4') . osc_draw_stars(4, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '3') . tep_draw_stars(3, false); ?>
+            <?php echo osc_draw_radio_field('rating', '3') . osc_draw_stars(3, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '2') . tep_draw_stars(2, false); ?>
+            <?php echo osc_draw_radio_field('rating', '2') . osc_draw_stars(2, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '1', null, 'required aria-required="true"') . tep_draw_stars(1, false) . ' ' . TEXT_BAD; ?>
+            <?php echo osc_draw_radio_field('rating', '1', null, 'required aria-required="true"') . osc_draw_stars(1, false) . ' ' . TEXT_BAD; ?>
           </label>
         </div>
       </div>
@@ -164,8 +164,8 @@
   <div class="clearfix"></div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params(array('reviews_id', 'action')))); ?></div>
   </div>
 
 </div>

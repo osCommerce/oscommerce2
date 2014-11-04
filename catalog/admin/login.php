@@ -65,9 +65,9 @@
 
                 tep_session_unregister('redirect_origin');
 
-                osc_redirect(tep_href_link($page, $get_string));
+                osc_redirect(osc_href_link($page, $get_string));
               } else {
-                osc_redirect(tep_href_link(FILENAME_DEFAULT));
+                osc_redirect(osc_href_link(FILENAME_DEFAULT));
               }
             }
           }
@@ -93,7 +93,7 @@
           $auth_ignore = true;
         }
 
-        osc_redirect(tep_href_link(FILENAME_DEFAULT));
+        osc_redirect(osc_href_link(FILENAME_DEFAULT));
 
         break;
 
@@ -109,7 +109,7 @@
           }
         }
 
-        osc_redirect(tep_href_link(FILENAME_LOGIN));
+        osc_redirect(osc_href_link(FILENAME_LOGIN));
 
         break;
     }
@@ -144,7 +144,7 @@
   if (sizeof($languages_array) > 1) {
 ?>
 
-        <td class="pageHeading" align="right"><?php echo tep_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . tep_hide_session_id() . '</form>'; ?></td>
+        <td class="pageHeading" align="right"><?php echo osc_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . osc_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . osc_hide_session_id() . '</form>'; ?></td>
 
 <?php
   }
@@ -163,18 +163,18 @@
   if (osc_db_num_rows($admins_check_query) > 0) {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
-    $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=process'));
-    $contents[] = array('text' => TEXT_USERNAME . '<br />' . tep_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . tep_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_LOGIN, 'key'));
+    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=process'));
+    $contents[] = array('text' => TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_LOGIN, 'key'));
   } else {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
-    $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=create'));
+    $contents = array('form' => osc_draw_form('login', FILENAME_LOGIN, 'action=create'));
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
-    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . tep_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . tep_draw_password_field('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
+    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . osc_draw_input_field('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . osc_draw_password_field('password'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
   }
 
   $box = new box;

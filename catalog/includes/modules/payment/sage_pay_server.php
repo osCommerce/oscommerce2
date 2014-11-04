@@ -144,7 +144,7 @@
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(tep_href_link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $sagepay_server_skey_code, 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(osc_href_link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $sagepay_server_skey_code, 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -254,7 +254,7 @@
 
             $sage_pay_server_nexturl = $return['NextURL'];
 
-            osc_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
+            osc_redirect(osc_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -263,7 +263,7 @@
         }
       }
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
 
     function after_process() {
@@ -289,7 +289,7 @@
 
         unset($_SESSION['sage_pay_server_nexturl']);
 
-        osc_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
+        osc_redirect(osc_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
       }
     }
 
@@ -586,7 +586,7 @@ EOD;
       $dialog_error = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_SAGE_PAY_SERVER_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

@@ -96,7 +96,7 @@
         $button_title .= ' (' . $this->code . '; Sandbox)';
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL') . '"><img src="' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_BUTTON . '" border="0" alt="" title="' . $button_title . '" /></a>';
+      $string = '<a href="' . osc_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL') . '"><img src="' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_BUTTON . '" border="0" alt="" title="' . $button_title . '" /></a>';
 
       return $string;
     }
@@ -114,15 +114,15 @@
       global $ppeuk_token, $ppeuk_secret, $ppeuk_order_total_check, $messageStack, $order;
 
       if (!isset($_SESSION['ppeuk_token'])) {
-        osc_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
+        osc_redirect(osc_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
 
       if ($response_array['RESULT'] != '0') {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
       if (!isset($_SESSION['ppeuk_order_total_check'])) tep_session_register('ppeuk_order_total_check');
@@ -144,7 +144,7 @@
 
       if (empty($comments)) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => osc_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
       }
 
       return $confirmation;
@@ -158,19 +158,19 @@
       global $customer_id, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $ppeuk_secret, $ppeuk_order_total_check, $comments, $response_array;
 
       if (!isset($_SESSION['ppeuk_token'])) {
-        osc_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
+        osc_redirect(osc_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
 
       if ($response_array['RESULT'] == '0') {
         if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-          osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       if ( isset($_SESSION['ppeuk_order_total_check']) ) {
@@ -203,7 +203,7 @@
       $response_array = $this->doExpressCheckoutPayment($params);
 
       if ($response_array['RESULT'] != '0') {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
     }
 
@@ -461,8 +461,8 @@
                       'TENDER' => 'P',
                       'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                       'ACTION' => 'S',
-                      'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL'),
-                      'CANCELURL' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+                      'RETURNURL' => osc_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL'),
+                      'CANCELURL' => osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
 
       if (is_array($parameters) && !empty($parameters)) {
         $params = array_merge($params, $parameters);
@@ -661,7 +661,7 @@
       $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

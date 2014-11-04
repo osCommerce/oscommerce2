@@ -116,30 +116,30 @@
       $trans_id_string = STORE_NAME . date('Ymdhis');
       $trans_id = str_replace(' ', '_', $trans_id_string);
 
-      $process_button_string = tep_draw_hidden_field('merchant', MODULE_PAYMENT_PAYPOINT_SECPAY_MERCHANT_ID) .
-                               tep_draw_hidden_field('trans_id', $trans_id) .
-                               tep_draw_hidden_field('amount', number_format($order->info['total'] * $currencies->get_value($sec_currency), $currencies->currencies[$sec_currency]['decimal_places'], '.', '')) .
-                               tep_draw_hidden_field('bill_name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               tep_draw_hidden_field('bill_addr_1', $order->billing['street_address']) .
-                               tep_draw_hidden_field('bill_addr_2', $order->billing['suburb']) .
-                               tep_draw_hidden_field('bill_city', $order->billing['city']) .
-                               tep_draw_hidden_field('bill_state', $order->billing['state']) .
-                               tep_draw_hidden_field('bill_post_code', $order->billing['postcode']) .
-                               tep_draw_hidden_field('bill_country', $order->billing['country']['title']) .
-                               tep_draw_hidden_field('bill_tel', $order->customer['telephone']) .
-                               tep_draw_hidden_field('bill_email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('ship_name', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
-                               tep_draw_hidden_field('ship_addr_1', $order->delivery['street_address']) .
-                               tep_draw_hidden_field('ship_addr_2', $order->delivery['suburb']) .
-                               tep_draw_hidden_field('ship_city', $order->delivery['city']) .
-                               tep_draw_hidden_field('ship_state', $order->delivery['state']) .
-                               tep_draw_hidden_field('ship_post_code', $order->delivery['postcode']) .
-                               tep_draw_hidden_field('ship_country', $order->delivery['country']['title']) .
-                               tep_draw_hidden_field('currency', $sec_currency) .
-                               tep_draw_hidden_field('callback', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false) . ';' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', false)) .
-                               tep_draw_hidden_field(session_name(), session_id()) .
-                               tep_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . session_name()) .
-                               tep_draw_hidden_field('digest', $digest);
+      $process_button_string = osc_draw_hidden_field('merchant', MODULE_PAYMENT_PAYPOINT_SECPAY_MERCHANT_ID) .
+                               osc_draw_hidden_field('trans_id', $trans_id) .
+                               osc_draw_hidden_field('amount', number_format($order->info['total'] * $currencies->get_value($sec_currency), $currencies->currencies[$sec_currency]['decimal_places'], '.', '')) .
+                               osc_draw_hidden_field('bill_name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
+                               osc_draw_hidden_field('bill_addr_1', $order->billing['street_address']) .
+                               osc_draw_hidden_field('bill_addr_2', $order->billing['suburb']) .
+                               osc_draw_hidden_field('bill_city', $order->billing['city']) .
+                               osc_draw_hidden_field('bill_state', $order->billing['state']) .
+                               osc_draw_hidden_field('bill_post_code', $order->billing['postcode']) .
+                               osc_draw_hidden_field('bill_country', $order->billing['country']['title']) .
+                               osc_draw_hidden_field('bill_tel', $order->customer['telephone']) .
+                               osc_draw_hidden_field('bill_email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('ship_name', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
+                               osc_draw_hidden_field('ship_addr_1', $order->delivery['street_address']) .
+                               osc_draw_hidden_field('ship_addr_2', $order->delivery['suburb']) .
+                               osc_draw_hidden_field('ship_city', $order->delivery['city']) .
+                               osc_draw_hidden_field('ship_state', $order->delivery['state']) .
+                               osc_draw_hidden_field('ship_post_code', $order->delivery['postcode']) .
+                               osc_draw_hidden_field('ship_country', $order->delivery['country']['title']) .
+                               osc_draw_hidden_field('currency', $sec_currency) .
+                               osc_draw_hidden_field('callback', osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false) . ';' . osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', false)) .
+                               osc_draw_hidden_field(session_name(), session_id()) .
+                               osc_draw_hidden_field('options', 'test_status=' . $test_status . ',dups=false,cb_flds=' . session_name()) .
+                               osc_draw_hidden_field('digest', $digest);
 
       return $process_button_string;
     }
@@ -150,10 +150,10 @@
         list($REQUEST_URI, $CHECK_SUM) = split('hash=', $_SERVER['REQUEST_URI']);
 
         if ($_GET['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
         }
       } else {
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
       }
     }
 

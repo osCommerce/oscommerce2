@@ -110,15 +110,15 @@
       }
 
       $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER_FIRSTNAME,
-                                                    'field' => tep_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
+                                                    'field' => osc_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER_LASTNAME,
-                                                    'field' => tep_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
+                                                    'field' => osc_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_NUMBER,
-                                                    'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                                    'field' => osc_draw_input_field('cc_number_nh-dns')),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_EXPIRES,
-                                                    'field' => tep_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $expires_year)),
+                                                    'field' => osc_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . osc_draw_pull_down_menu('cc_expires_year', $expires_year)),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CCV,
-                                                    'field' => tep_draw_input_field('cc_ccv_nh-dns', '', 'size="5" maxlength="4"'))));
+                                                    'field' => osc_draw_input_field('cc_ccv_nh-dns', '', 'size="5" maxlength="4"'))));
 
       return $confirmation;
     }
@@ -318,7 +318,7 @@
       if ($error !== false) {
         $this->sendDebugEmail($response);
 
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
     }
 
@@ -649,7 +649,7 @@
       $dialog_error = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

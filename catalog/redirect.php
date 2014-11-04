@@ -61,5 +61,5 @@
       break;
   }
 
-  osc_redirect(tep_href_link(FILENAME_DEFAULT));
+  osc_redirect(osc_href_link(FILENAME_DEFAULT));
 ?>

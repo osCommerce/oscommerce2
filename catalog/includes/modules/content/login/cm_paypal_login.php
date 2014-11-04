@@ -100,7 +100,7 @@
     function preLogin() {
       global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
 
-      $return_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
+      $return_url = osc_href_link(FILENAME_LOGIN, '', 'SSL');
 
       if ( isset($_GET['code']) ) {
         $paypal_login_customer_id = false;
@@ -251,7 +251,7 @@
               tep_session_register('billto');
             }
 
-            $return_url = tep_href_link(FILENAME_LOGIN, 'action=paypal_login_process', 'SSL');
+            $return_url = osc_href_link(FILENAME_LOGIN, 'action=paypal_login_process', 'SSL');
           }
         }
       }
@@ -446,7 +446,7 @@
                           'client_secret' => MODULE_CONTENT_PAYPAL_LOGIN_SECRET,
                           'grant_type' => 'authorization_code',
                           'code' => $params['code'],
-                          'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
+                          'redirect_uri' => str_replace('&amp;', '&', osc_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
 
       $post_string = '';
 
@@ -512,7 +512,7 @@
       $dialog_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -697,9 +697,9 @@ EOD;
 
       foreach ( $attributes as $attribute => $scope ) {
         if ( in_array($attribute, $required_array) ) {
-          $output .= tep_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
+          $output .= osc_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
         } else {
-          $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
+          $output .= osc_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
         }
 
         $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
@@ -710,7 +710,7 @@ EOD;
       $output = '<br />' . substr($output, 0, -6);
     }
 
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
+    $output .= osc_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
 
     $output .= '<script type="text/javascript">
                 function cmpl_update_cfg_value() {

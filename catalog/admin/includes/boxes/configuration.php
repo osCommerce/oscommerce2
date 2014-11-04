@@ -16,12 +16,12 @@
       array(
         'code' => FILENAME_ADMINISTRATORS,
         'title' => BOX_CONFIGURATION_ADMINISTRATORS,
-        'link' => tep_href_link(FILENAME_ADMINISTRATORS)
+        'link' => osc_href_link(FILENAME_ADMINISTRATORS)
       ),
       array(
         'code' => FILENAME_STORE_LOGO,
         'title' => BOX_CONFIGURATION_STORE_LOGO,
-        'link' => tep_href_link(FILENAME_STORE_LOGO)
+        'link' => osc_href_link(FILENAME_STORE_LOGO)
       )
     )
   );
@@ -31,7 +31,7 @@
     $cl_box_groups[sizeof($cl_box_groups)-1]['apps'][] = array(
       'code' => FILENAME_CONFIGURATION,
       'title' => $configuration_groups['cgTitle'],
-      'link' => tep_href_link(FILENAME_CONFIGURATION, 'gID=' . $configuration_groups['cgID'])
+      'link' => osc_href_link(FILENAME_CONFIGURATION, 'gID=' . $configuration_groups['cgID'])
     );
   }
 ?>

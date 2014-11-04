@@ -46,7 +46,7 @@
           $customer_orders_string = '<ul class="list-unstyled">';
           $products_query = osc_db_query("select products_id, products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id in (" . $product_ids . ") and language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_name");
           while ($products = osc_db_fetch_array($products_query)) {
-            $customer_orders_string .= '<li><span class="pull-right"><a href="' . tep_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></li>';
+            $customer_orders_string .= '<li><span class="pull-right"><a href="' . osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products['products_id']) . '">' . $products['products_name'] . '</a></li>';
           }
           $customer_orders_string .= '</ul>';
 

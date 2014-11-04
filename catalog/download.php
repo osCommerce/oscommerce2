@@ -91,7 +91,7 @@ function tep_unlink_temp_dir($dir)
     mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
     symlink(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'], DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']);
     if (file_exists(DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename'])) {
-      osc_redirect(tep_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']));
+      osc_redirect(osc_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']));
     }
   }
 

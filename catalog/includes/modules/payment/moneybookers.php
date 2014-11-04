@@ -38,7 +38,7 @@
       if (is_object($order)) $this->update_status();
 
       if (defined('MODULE_PAYMENT_MONEYBOOKERS_IFRAME') && (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'True')) {
-        $this->form_action_url = tep_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
+        $this->form_action_url = osc_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
       } else {
         $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
       }
@@ -94,7 +94,7 @@
       $this->_deletePreparing();
 
       return array('id' => $this->code,
-                   'module' => $this->public_title . (!empty($this->_payment_method_image) ? '<br />' . tep_image('ext/modules/payment/moneybookers/logos/' . $this->_payment_method_image, $this->public_title) : ''));
+                   'module' => $this->public_title . (!empty($this->_payment_method_image) ? '<br />' . osc_image('ext/modules/payment/moneybookers/logos/' . $this->_payment_method_image, $this->public_title) : ''));
     }
 
     function pre_confirmation_check() {
@@ -285,12 +285,12 @@
         $parameters = array('pay_to_email' => MODULE_PAYMENT_MONEYBOOKERS_PAY_TO,
                             'recipient_description' => STORE_NAME,
                             'transaction_id' => substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1),
-                            'return_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]), 'SSL'),
+                            'return_url' => osc_href_link(FILENAME_CHECKOUT_PROCESS, 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]), 'SSL'),
                             'return_url_text' => MODULE_PAYMENT_MONEYBOOKERS_RETURN_TEXT,
                             'return_url_target' => 1,
-                            'cancel_url' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                            'cancel_url' => osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                             'cancel_url_target' => 1,
-                            'status_url' => tep_href_link('ext/modules/payment/moneybookers/callback.php', '', 'SSL', false, false),
+                            'status_url' => osc_href_link('ext/modules/payment/moneybookers/callback.php', '', 'SSL', false, false),
                             'language' => MODULE_PAYMENT_MONEYBOOKERS_LANGUAGE_CODE,
                             'prepare_only' => '1',
                             'pay_from_email' => $order->customer['email_address'],
@@ -344,7 +344,7 @@
 
     function process_button() {
       if ( isset($this->_sid) ) {
-        return tep_draw_hidden_field('sid', $this->_sid);
+        return osc_draw_hidden_field('sid', $this->_sid);
       }
     }
 
@@ -475,7 +475,7 @@
         $email_order = STORE_NAME . "\n" .
                        EMAIL_SEPARATOR . "\n" .
                        EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                       EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                       EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                        EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
         if ($order->info['comments']) {
           $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -530,9 +530,9 @@
 
         unset($_SESSION[$this->_mbcartID]);
 
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
       } else {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
     }
 
@@ -554,7 +554,7 @@
 
     function install() {
       if ( !isset($_GET['active']) || ($_GET['active'] != 'true') ) {
-        osc_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'selected_box=modules&set=payment'));
+        osc_redirect(osc_href_link('ext/modules/payment/moneybookers/activation.php', 'selected_box=modules&set=payment'));
       }
 
 // Preparing order status

@@ -12,7 +12,7 @@
 
 ////
 // The HTML href link wrapper function
-  function tep_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
+  function osc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
     global $request_type, $session_started, $SID;
 
     $page = osc_output_string($page);
@@ -73,7 +73,7 @@
 
 ////
 // The HTML image wrapper function
-  function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '') {
+  function osc_image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '') {
     if ( (empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false') ) {
       return false;
     }
@@ -128,7 +128,7 @@
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
 // 2.4 DEPRECATED
-  function tep_image_submit($image, $alt = '', $parameters = '') {
+  function osc_image_submit($image, $alt = '', $parameters = '') {
     $image_submit = '<input type="image" src="' . osc_output_string(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image) . '" alt="' . osc_output_string($alt) . '"';
 
     if (osc_not_null($alt)) $image_submit .= ' title=" ' . osc_output_string($alt) . ' "';
@@ -142,14 +142,14 @@
 
 ////
 // Output a function button in the selected language
-  function tep_image_button($image, $alt = '', $parameters = '') {
-    return tep_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $parameters);
+  function osc_image_button($image, $alt = '', $parameters = '') {
+    return osc_image(DIR_WS_LANGUAGES . $_SESSION['language'] . '/images/buttons/' . $image, $alt, '', '', $parameters);
   }
 
 ////
 // Output a separator either through whitespace, or with an image
-  function tep_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
-    return tep_image(DIR_WS_IMAGES . $image, '', $width, $height);
+  function osc_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
+    return osc_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
 ////
@@ -158,7 +158,7 @@
 // class="form-horizontal" role="form"
 // into the parameters on each form
 // as not all forms are horizontal
-  function tep_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
+  function osc_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
     $form = '<form name="' . osc_output_string($name) . '" action="' . osc_output_string($action) . '" method="' . osc_output_string($method) . '"';
 
     if (osc_not_null($parameters)) $form .= ' ' . $parameters;
@@ -175,7 +175,7 @@
 ////
 // Output a form input field
 // 2.4 - automatically pass form-control css class
-  function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
+  function osc_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
     $field = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '"';
 
     if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
@@ -201,13 +201,13 @@
 
 ////
 // Output a form password field
-  function tep_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
-    return tep_draw_input_field($name, $value, $parameters, 'password', false);
+  function osc_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
+    return osc_draw_input_field($name, $value, $parameters, 'password', false);
   }
 
 ////
 // Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
-  function tep_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
+  function osc_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
     $selection = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '"';
 
     if (osc_not_null($value)) $selection .= ' value="' . osc_output_string($value) . '"';
@@ -225,21 +225,21 @@
 
 ////
 // Output a form checkbox field
-  function tep_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
-    return tep_draw_selection_field($name, 'checkbox', $value, $checked, $parameters);
+  function osc_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
+    return osc_draw_selection_field($name, 'checkbox', $value, $checked, $parameters);
   }
 
 ////
 // Output a form radio field
-  function tep_draw_radio_field($name, $value = '', $checked = false, $parameters = '') {
-    return tep_draw_selection_field($name, 'radio', $value, $checked, $parameters);
+  function osc_draw_radio_field($name, $value = '', $checked = false, $parameters = '') {
+    return osc_draw_selection_field($name, 'radio', $value, $checked, $parameters);
   }
 
 ////
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
 // 2.4 - automatically pass form-control css class
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control') {
+  function osc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control') {
     $field = '<textarea name="' . osc_output_string($name) . '" cols="' . osc_output_string($width) . '" rows="' . osc_output_string($height) . '"';
 
     if (osc_not_null($parameters)) $field .= ' ' . $parameters;
@@ -265,7 +265,7 @@
 
 ////
 // Output a form hidden field
-  function tep_draw_hidden_field($name, $value = '', $parameters = '') {
+  function osc_draw_hidden_field($name, $value = '', $parameters = '') {
     $field = '<input type="hidden" name="' . osc_output_string($name) . '"';
 
     if (osc_not_null($value)) {
@@ -287,18 +287,18 @@
 
 ////
 // Hide form elements
-  function tep_hide_session_id() {
+  function osc_hide_session_id() {
     global $session_started, $SID;
 
     if (($session_started == true) && osc_not_null($SID)) {
-      return tep_draw_hidden_field(session_name(), session_id());
+      return osc_draw_hidden_field(session_name(), session_id());
     }
   }
 
 ////
 // Output a form pull down menu
 // 2.4 - automatically pass form-control css class
-  function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {
+  function osc_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {
     $field = '<select name="' . osc_output_string($name) . '"';
 
     if (osc_not_null($parameters)) $field .= ' ' . $parameters;
@@ -332,7 +332,7 @@
 
 ////
 // Creates a pull-down list of countries
-  function tep_get_country_list($name, $selected = '', $parameters = '') {
+  function osc_get_country_list($name, $selected = '', $parameters = '') {
     $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
     $countries = osc_get_countries();
 
@@ -340,12 +340,12 @@
       $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
     }
 
-    return tep_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
+    return osc_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
   }
 
 ////
 // Output a jQuery UI Button
-  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
+  function osc_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;
 
     $types = array('submit', 'button', 'reset');
@@ -402,7 +402,7 @@
   }
 
   // review stars
-  function tep_draw_stars($rating = 0, $empty = true) {
+  function osc_draw_stars($rating = 0, $empty = true) {
     $stars = str_repeat('<span class="glyphicon glyphicon-star"></span>', (int)$rating);
     if ($empty === true) $stars .= str_repeat('<span class="glyphicon glyphicon-star-empty"></span>', 5-(int)$rating);
 

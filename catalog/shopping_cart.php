@@ -19,7 +19,7 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SHOPPING_CART);
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHOPPING_CART));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_SHOPPING_CART));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -32,7 +32,7 @@
   if ($_SESSION['cart']->count_contents() > 0) {
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_SHOPPING_CART, 'action=update_product'), 'post', 'role="form"'); ?>
+<?php echo osc_draw_form('cart_quantity', osc_href_link(FILENAME_SHOPPING_CART, 'action=update_product'), 'post', 'role="form"'); ?>
 
 <div class="contentContainer">
 
@@ -45,7 +45,7 @@
 // Push all attributes information in an array
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         foreach($products[$i]['attributes'] as $option => $value) {
-          echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
+          echo osc_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                       from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
                                       where pa.products_id = '" . (int)$products[$i]['id'] . "'
@@ -74,8 +74,8 @@
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $products_name .= '<tr>';
 
-      $products_name .= '  <td valign="top" align="center"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                        '  <td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
+      $products_name .= '  <td valign="top" align="center"><a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">' . osc_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                        '  <td valign="top"><a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
 
       if (STOCK_CHECK == 'true') {
         $stock_check = osc_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -92,7 +92,7 @@
         }
       }
 
-      $products_name .= '<br><span class="row col-xs-4">' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'class="pull-left form-control"') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . '</span>&nbsp;' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info') . '&nbsp;' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', tep_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger');
+      $products_name .= '<br><span class="row col-xs-4">' . osc_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'class="pull-left form-control"') . osc_draw_hidden_field('products_id[]', $products[$i]['id']) . '</span>&nbsp;' . osc_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info') . '&nbsp;' . osc_draw_button(NULL, 'glyphicon glyphicon-remove', osc_href_link(FILENAME_SHOPPING_CART, 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger');
 
       $products_name .= '</td>';
 
@@ -127,7 +127,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', osc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
   </div>
 
 <?php
@@ -161,7 +161,7 @@
   <div class="contentText">
     <?php echo TEXT_CART_EMPTY; ?>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT)); ?></p>
+    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', osc_href_link(FILENAME_DEFAULT)); ?></p>
   </div>
 </div>
 

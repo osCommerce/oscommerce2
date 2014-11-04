@@ -75,12 +75,12 @@
     function process_button() {
       global $order, $currencies, $customer_id;
 
-      $process_button_string = tep_draw_hidden_field('cmd', '_xclick') .
-                               tep_draw_hidden_field('email', MODULE_PAYMENT_NOCHEX_ID) .
-                               tep_draw_hidden_field('amount', number_format($order->info['total'] * $currencies->currencies['GBP']['value'], $currencies->currencies['GBP']['decimal_places'])) .
-                               tep_draw_hidden_field('ordernumber', $customer_id . '-' . date('Ymdhis')) .
-                               tep_draw_hidden_field('returnurl', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')) .
-                               tep_draw_hidden_field('cancel_return', tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+      $process_button_string = osc_draw_hidden_field('cmd', '_xclick') .
+                               osc_draw_hidden_field('email', MODULE_PAYMENT_NOCHEX_ID) .
+                               osc_draw_hidden_field('amount', number_format($order->info['total'] * $currencies->currencies['GBP']['value'], $currencies->currencies['GBP']['decimal_places'])) .
+                               osc_draw_hidden_field('ordernumber', $customer_id . '-' . date('Ymdhis')) .
+                               osc_draw_hidden_field('returnurl', osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')) .
+                               osc_draw_hidden_field('cancel_return', osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
       return $process_button_string;
     }

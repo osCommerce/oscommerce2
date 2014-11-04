@@ -66,7 +66,7 @@
         $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
       }
 
-      osc_redirect(tep_href_link(FILENAME_SERVER_INFO));
+      osc_redirect(osc_href_link(FILENAME_SERVER_INFO));
     break;
 
     case 'save':
@@ -92,7 +92,7 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -105,21 +105,21 @@
             <td class="smallText" colspan="2"><?php echo TEXT_EXPORT_INTRO; ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2"><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_textarea_field('server configuration', 'soft', '100', '15', tep_format_system_info_array($info)); ?></td>
+            <td colspan="2"><?php echo osc_draw_textarea_field('server configuration', 'soft', '100', '15', tep_format_system_info_array($info)); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2"><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-          <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SEND, 'arrowreturnthick-1-n', tep_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . tep_draw_button(IMAGE_SAVE, 'disk', tep_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
+          <td align="right" class="smallText"><?php echo osc_draw_button(IMAGE_SEND, 'arrowreturnthick-1-n', osc_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . osc_draw_button(IMAGE_SAVE, 'disk', osc_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
       </tr>
   <?php
   } else {
@@ -152,7 +152,7 @@
                 <td colspan="3" class="smallText"><?php echo $info['system']['uptime']; ?></td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+                <td colspan="4"><?php echo osc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TITLE_HTTP_SERVER; ?></strong></td>
@@ -165,15 +165,15 @@
             </table></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td class="smallText"><?php echo tep_draw_button(IMAGE_EXPORT, 'triangle-1-nw', tep_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
+            <td class="smallText"><?php echo osc_draw_button(IMAGE_EXPORT, 'triangle-1-nw', osc_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td>

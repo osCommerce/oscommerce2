@@ -163,7 +163,7 @@
     }
 
     if ($redirect == true) {
-      osc_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      osc_redirect(osc_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);

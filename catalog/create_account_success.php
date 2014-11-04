@@ -18,10 +18,10 @@
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   if (sizeof($navigation->snapshot) > 0) {
-    $origin_href = tep_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
+    $origin_href = osc_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
     $navigation->clear_snapshot();
   } else {
-    $origin_href = tep_href_link(FILENAME_DEFAULT);
+    $origin_href = osc_href_link(FILENAME_DEFAULT);
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -38,7 +38,7 @@
     </div>
   </div>
 
-  <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>
+  <div><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>
 </div>
 
 <?php

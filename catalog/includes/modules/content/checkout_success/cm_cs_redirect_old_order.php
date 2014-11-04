@@ -38,7 +38,7 @@
         $check_query = osc_db_query("select 1 from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and date_purchased < date_sub(now(), interval '" . (int)MODULE_CONTENT_CHECKOUT_SUCCESS_REDIRECT_OLD_ORDER_MINUTES . "' minute)");
 
         if ( osc_db_num_rows($check_query) ) {
-          osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
         }
       }
     }

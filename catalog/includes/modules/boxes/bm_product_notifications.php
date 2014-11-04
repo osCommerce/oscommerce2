@@ -46,13 +46,13 @@
         $notif_contents = '';
 
         if ($notification_exists == true) {
-          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=notify_remove', $request_type) . '"><span class="glyphicon glyphicon-remove"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, osc_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=notify_remove', $request_type) . '"><span class="glyphicon glyphicon-remove"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY_REMOVE, osc_get_products_name($_GET['products_id'])) .'</a>';
         } else {
-          $notif_contents = '<a href="' . tep_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=notify', $request_type) . '"><span class="glyphicon glyphicon-envelope"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, osc_get_products_name($_GET['products_id'])) .'</a>';
+          $notif_contents = '<a href="' . osc_href_link(basename($PHP_SELF), osc_get_all_get_params(array('action')) . 'action=notify', $request_type) . '"><span class="glyphicon glyphicon-envelope"></span> ' . sprintf(MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_NOTIFY, osc_get_products_name($_GET['products_id'])) .'</a>';
         }
 
         $data = '<div class="panel panel-default">' .
-                '  <div class="panel-heading"><a href="' . tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
+                '  <div class="panel-heading"><a href="' . osc_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
                 '  <div class="panel-body">' . $notif_contents . '</div>' .
                 '</div>';
 

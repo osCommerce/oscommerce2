@@ -121,8 +121,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-                     'FailureURL' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'),
+                     'SuccessURL' => osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                     'FailureURL' => osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -202,7 +202,7 @@
       $params['Crypt'] = $this->encryptParams($crypt_string);
 
       foreach ($params as $key => $value) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= osc_draw_hidden_field($key, $value);
       }
 
       return $process_button_string;
@@ -229,10 +229,10 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
         }
       } else {
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
       }
     }
 
@@ -609,6 +609,6 @@
   }
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return osc_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
   }
 ?>

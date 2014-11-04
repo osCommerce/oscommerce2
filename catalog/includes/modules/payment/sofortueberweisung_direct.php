@@ -332,7 +332,7 @@
       $process_button_string = '';
       reset($parameter);
       while (list($key, $value) = each($parameter)) {
-        $process_button_string .= tep_draw_hidden_field($key, $value). "\n";
+        $process_button_string .= osc_draw_hidden_field($key, $value). "\n";
       }
 
       return $process_button_string;
@@ -473,7 +473,7 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -528,7 +528,7 @@
 
       unset($_SESSION['cart_Sofortueberweisung_Direct_ID']);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {

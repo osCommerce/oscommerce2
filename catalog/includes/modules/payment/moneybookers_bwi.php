@@ -85,7 +85,7 @@
 
     function install() {
       if (!defined('MODULE_PAYMENT_MONEYBOOKERS_STATUS')) {
-        osc_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
+        osc_redirect(osc_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
       }
 
       osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Moneybookers Bank Transfer', 'MODULE_PAYMENT_MONEYBOOKERS_BWI_STATUS', 'False', 'Do you want to accept Moneybookers Bank Transfer payments?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");

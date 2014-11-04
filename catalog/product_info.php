@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
   if (!isset($_GET['products_id'])) {
-    osc_redirect(tep_href_link(FILENAME_DEFAULT));
+    osc_redirect(osc_href_link(FILENAME_DEFAULT));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCT_INFO);
@@ -23,7 +23,7 @@
 
   if (isset($product_info['products_model'])) {
 // add the products model to the breadcrumb trail
-  $breadcrumb->add($product_info['products_model'], tep_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
+  $breadcrumb->add($product_info['products_model'], osc_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
   }
   
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -40,7 +40,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT), null, null, 'btn-default btn-block'); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', osc_href_link(FILENAME_DEFAULT), null, null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -62,7 +62,7 @@
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, osc_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo osc_draw_form('cart_quantity', osc_href_link(FILENAME_PRODUCT_INFO, osc_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div class="page-header">
   <h1 class="pull-right"><?php echo $products_price; ?></h1>
@@ -105,7 +105,7 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $pi['htmlcontent'] . '</div>';
           }
 
-          echo tep_image(DIR_WS_IMAGES . $pi['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"');
+          echo osc_image(DIR_WS_IMAGES . $pi['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"');
         }
 ?>
 
@@ -119,7 +119,7 @@
 ?>
 
     <div id="piGal">
-      <?php echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
+      <?php echo osc_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name'])); ?>
     </div>
 
 <?php
@@ -192,7 +192,7 @@ $(function() {
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $products_options_name['products_options_name'] . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?>
+          <?php echo osc_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?>
         </div>
       </div>
     <?php
@@ -225,8 +225,8 @@ $(function() {
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'glyphicon glyphicon-comment', tep_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params())); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_hidden_field('products_id', $product_info['products_id']) . osc_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'glyphicon glyphicon-comment', osc_href_link(FILENAME_PRODUCT_REVIEWS, osc_get_all_get_params())); ?></div>
   </div>
 
 <?php

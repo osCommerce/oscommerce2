@@ -41,7 +41,7 @@
       $form_url = 'https://securepayments.sandbox.paypal.com/webapps/HostedSoleSolutionApp/webflow/sparta/hostedSoleSolutionProcess';
     }
   } else {
-    $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
+    $form_url = osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
   }
 ?>
 <!DOCTYPE html>
@@ -54,7 +54,7 @@
 <body>
 
 <div style="text-align: center;">
-  <?php echo tep_image('ext/modules/payment/paypal/images/hss_load.gif');?>
+  <?php echo osc_image('ext/modules/payment/paypal/images/hss_load.gif');?>
 </div>
 
 <form name="pphs" action="<?php echo $form_url; ?>" method="post" <?php echo ($error == true ? 'target="_top"' : ''); ?>>

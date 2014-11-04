@@ -70,7 +70,7 @@
       $table_headers = array(TABLE_HEADING_TABLE,
                              TABLE_HEADING_MSG_TYPE,
                              TABLE_HEADING_MSG,
-                             tep_draw_checkbox_field('masterblaster'));
+                             osc_draw_checkbox_field('masterblaster'));
 
       $table_data = array();
 
@@ -82,7 +82,7 @@
           $table_data[] = array(($table != $current_table) ? osc_output_string_protected($table) : '',
                                 osc_output_string_protected($sql['Msg_type']),
                                 osc_output_string_protected($sql['Msg_text']),
-                                ($table != $current_table) ? tep_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
+                                ($table != $current_table) ? osc_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
 
           $current_table = $table;
         }
@@ -107,7 +107,7 @@
       }
 
       if ( $charset_pass === false ) {
-        osc_redirect(tep_href_link('database_tables.php'));
+        osc_redirect(osc_href_link('database_tables.php'));
       }
 
       tep_set_time_limit(0);
@@ -117,7 +117,7 @@
       } else {
         $table_headers = array(TABLE_HEADING_TABLE,
                                TABLE_HEADING_MSG,
-                               tep_draw_checkbox_field('masterblaster'));
+                               osc_draw_checkbox_field('masterblaster'));
       }
 
       $table_data = array();
@@ -165,7 +165,7 @@
         if ( !isset($_POST['dryrun']) ) {
           $table_data[] = array(osc_output_string_protected($table),
                                 osc_output_string_protected($result),
-                                tep_draw_checkbox_field('id[]', $table, true));
+                                osc_draw_checkbox_field('id[]', $table, true));
         }
       }
 
@@ -177,7 +177,7 @@
                              TABLE_HEADING_SIZE,
                              TABLE_HEADING_ENGINE,
                              TABLE_HEADING_COLLATION,
-                             tep_draw_checkbox_field('masterblaster'));
+                             osc_draw_checkbox_field('masterblaster'));
 
       $table_data = array();
 
@@ -188,7 +188,7 @@
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
                               osc_output_string_protected($sql['Engine']),
                               osc_output_string_protected($sql['Collation']),
-                              tep_draw_checkbox_field('id[]', $sql['Name']));
+                              osc_draw_checkbox_field('id[]', $sql['Name']));
       }
   }
 
@@ -197,14 +197,14 @@
 
 <?php
   if ( isset($action) ) {
-    echo '<div style="float: right;">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link('database_tables.php')) . '</div>';
+    echo '<div style="float: right;">' . osc_draw_button(IMAGE_BACK, 'triangle-1-w', osc_href_link('database_tables.php')) . '</div>';
   }
 ?>
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  echo tep_draw_form('sql', 'database_tables.php');
+  echo osc_draw_form('sql', 'database_tables.php');
 ?>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -236,7 +236,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, tep_draw_checkbox_field('dryrun')) . '</span>' . tep_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . tep_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, osc_draw_checkbox_field('dryrun')) . '</span>' . osc_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . osc_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . osc_draw_button(BUTTON_ACTION_GO); ?>
 </div>
 
 <?php

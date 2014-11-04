@@ -36,14 +36,14 @@
     <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td class="pageHeading"><?php echo STORE_NAME . '<br>' . nl2br(STORE_ADDRESS) . '<br>' . STORE_PHONE; ?></td>
-        <td class="pageHeading" align="right"><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO, STORE_NAME); ?></td>
+        <td class="pageHeading" align="right"><?php echo osc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO, STORE_NAME); ?></td>
       </tr>
     </table></td>
   </tr>
   <tr>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator(); ?></td>
+        <td colspan="2"><?php echo osc_draw_separator(); ?></td>
       </tr>
       <tr>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
@@ -54,7 +54,7 @@
             <td class="main"><?php echo osc_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+            <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo $order->customer['telephone']; ?></td>
@@ -75,7 +75,7 @@
     </table></td>
   </tr>
   <tr>
-    <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+    <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
   </tr>
   <tr>
     <td><table border="0" cellspacing="0" cellpadding="2">
@@ -86,7 +86,7 @@
     </table></td>
   </tr>
   <tr>
-    <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+    <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
   </tr>
   <tr>
     <td><table border="0" width="100%" cellspacing="0" cellpadding="2">

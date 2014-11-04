@@ -174,7 +174,7 @@
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
       tep_session_destroy();
 
-      osc_redirect(tep_href_link(FILENAME_SSL_CHECK));
+      osc_redirect(osc_href_link(FILENAME_SSL_CHECK));
     }
   }
 
@@ -186,7 +186,7 @@
 
     if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
       tep_session_destroy();
-      osc_redirect(tep_href_link(FILENAME_LOGIN));
+      osc_redirect(osc_href_link(FILENAME_LOGIN));
     }
   }
 
@@ -198,7 +198,7 @@
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != osc_get_ip_address() ) {
       tep_session_destroy();
-      osc_redirect(tep_href_link(FILENAME_LOGIN));
+      osc_redirect(osc_href_link(FILENAME_LOGIN));
     }
   }
 
@@ -262,7 +262,7 @@
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
     if ( $session_started == false ) {
-      osc_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+      osc_redirect(osc_href_link(FILENAME_COOKIE_USAGE));
     }
 
     if ( DISPLAY_CART == 'true' ) {
@@ -290,7 +290,7 @@
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, osc_get_products_name((int)$_POST['products_id'][$i])), 'success');
                                 }
                               }
-                              osc_redirect(tep_href_link($goto, osc_get_all_get_params($parameters)));
+                              osc_redirect(osc_href_link($goto, osc_get_all_get_params($parameters)));
                               break;
       // customer adds a product from the products page
       case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
@@ -298,25 +298,25 @@
                                 $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(osc_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, osc_get_products_name((int)$_POST['products_id'])), 'success');
                               }
-                              osc_redirect(tep_href_link($goto, osc_get_all_get_params($parameters)));
+                              osc_redirect(osc_href_link($goto, osc_get_all_get_params($parameters)));
                               break;
       // customer removes a product from their shopping cart
       case 'remove_product' : if (isset($_GET['products_id'])) {
                                 $_SESSION['cart']->remove($_GET['products_id']);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, osc_get_products_name($_GET['products_id'])), 'warning');
                               }
-                              osc_redirect(tep_href_link($goto, osc_get_all_get_params($parameters)));
+                              osc_redirect(osc_href_link($goto, osc_get_all_get_params($parameters)));
                               break;
       // performed by the 'buy now' button in product listings and review page
       case 'buy_now' :        if (isset($_GET['products_id'])) {
                                 if (osc_has_product_attributes($_GET['products_id'])) {
-                                  osc_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id']));
+                                  osc_redirect(osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id']));
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, osc_get_products_name((int)$_GET['products_id'])), 'success');
                                 }
                               }
-                              osc_redirect(tep_href_link($goto, osc_get_all_get_params($parameters)));
+                              osc_redirect(osc_href_link($goto, osc_get_all_get_params($parameters)));
                               break;
       case 'notify' :         if ( isset($_SESSION['customer_id']) ) {
                                 if (isset($_GET['products_id'])) {
@@ -326,7 +326,7 @@
                                 } elseif (isset($_POST['notify'])) {
                                   $notify = $_POST['notify'];
                                 } else {
-                                  osc_redirect(tep_href_link($PHP_SELF, osc_get_all_get_params(array('action', 'notify'))));
+                                  osc_redirect(osc_href_link($PHP_SELF, osc_get_all_get_params(array('action', 'notify'))));
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
                                 for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
@@ -337,10 +337,10 @@
                                     $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, osc_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
-                                osc_redirect(tep_href_link($PHP_SELF, osc_get_all_get_params(array('action', 'notify'))));
+                                osc_redirect(osc_href_link($PHP_SELF, osc_get_all_get_params(array('action', 'notify'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -350,20 +350,20 @@
                                   osc_db_query("delete from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, osc_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
-                                osc_redirect(tep_href_link($PHP_SELF, osc_get_all_get_params(array('action'))));
+                                osc_redirect(osc_href_link($PHP_SELF, osc_get_all_get_params(array('action'))));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+                                osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {
                                 if (osc_has_product_attributes($_GET['pid'])) {
-                                  osc_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['pid']));
+                                  osc_redirect(osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['pid']));
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['pid'], $_SESSION['cart']->get_quantity($_GET['pid'])+1);
                                 }
                               }
-                              osc_redirect(tep_href_link($goto, osc_get_all_get_params($parameters)));
+                              osc_redirect(osc_href_link($goto, osc_get_all_get_params($parameters)));
                               break;
     }
   }
@@ -418,7 +418,7 @@
   $breadcrumb = new breadcrumb;
 
   $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
-  $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link(FILENAME_DEFAULT));
+  $breadcrumb->add(HEADER_TITLE_CATALOG, osc_href_link(FILENAME_DEFAULT));
 
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
@@ -428,7 +428,7 @@
       if ( osc_db_num_rows($categories_query) > 0 ) {
         $categories = osc_db_fetch_array($categories_query);
 
-        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+        $breadcrumb->add($categories['categories_name'], osc_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
       } else {
         break;
       }
@@ -439,7 +439,7 @@
     if ( osc_db_num_rows($manufacturers_query) ) {
       $manufacturers = osc_db_fetch_array($manufacturers_query);
 
-      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id']));
+      $breadcrumb->add($manufacturers['manufacturers_name'], osc_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
 

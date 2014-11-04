@@ -83,7 +83,7 @@
     }
 
     if ($sane_session_id == false) {
-      osc_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
+      osc_redirect(osc_href_link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
     register_shutdown_function('session_write_close');

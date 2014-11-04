@@ -66,7 +66,7 @@
             $products_image = $pi['image'];
           }
 
-          $data['image:src'] = tep_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
+          $data['image:src'] = osc_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
 
           if ($new_price = osc_get_products_special_price($product_info['products_id'])) {
             $products_price = $currencies->display_price($new_price, osc_get_tax_rate($product_info['products_tax_class_id']));

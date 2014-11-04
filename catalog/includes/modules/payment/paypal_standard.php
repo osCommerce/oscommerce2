@@ -328,10 +328,10 @@
                           'invoice' => substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1),
                           'custom' => $customer_id,
                           'no_note' => '1',
-                          'notify_url' => tep_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
+                          'notify_url' => osc_href_link('ext/modules/payment/paypal/standard_ipn.php', '', 'SSL', false, false),
                           'rm' => '2',
-                          'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-                          'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                          'return' => osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                          'cancel_return' => osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
                           'bn' => 'OSCOM23_PS',
                           'paymentaction' => ((MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
 
@@ -481,13 +481,13 @@
           unlink(MODULE_PAYMENT_PAYPAL_STANDARD_EWP_WORKING_DIRECTORY . '/' . $random_string . 'encrypted.txt');
         }
 
-        $process_button_string = tep_draw_hidden_field('cmd', '_s-xclick') .
-                                 tep_draw_hidden_field('encrypted', $data);
+        $process_button_string = osc_draw_hidden_field('cmd', '_s-xclick') .
+                                 osc_draw_hidden_field('encrypted', $data);
 
         unset($data);
       } else {
         foreach ($parameters as $key => $value) {
-          $process_button_string .= tep_draw_hidden_field($key, $value);
+          $process_button_string .= osc_draw_hidden_field($key, $value);
         }
       }
 
@@ -516,7 +516,7 @@
 
         $this->sendDebugEmail($result);
 
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $this->verifyTransaction();
@@ -526,7 +526,7 @@
       $check_query = osc_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
       if (!osc_db_num_rows($check_query) || ($order_id != $_POST['invoice']) || ($customer_id != $_POST['custom'])) {
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = osc_db_fetch_array($check_query);
@@ -634,7 +634,7 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -689,7 +689,7 @@
 
       unset($_SESSION['cart_PayPal_Standard_ID']);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {
@@ -975,7 +975,7 @@
       $dialog_error = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_PAYPAL_STANDARD_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

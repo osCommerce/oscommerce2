@@ -121,11 +121,11 @@
   }
 
   if ($error == true) {
-    osc_redirect(tep_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(), 'NONSSL', true, false));
+    osc_redirect(osc_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(), 'NONSSL', true, false));
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ADVANCED_SEARCH));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, osc_get_all_get_params(), 'NONSSL', true, false));
+  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link(FILENAME_ADVANCED_SEARCH));
+  $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, osc_get_all_get_params(), 'NONSSL', true, false));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -318,7 +318,7 @@
   <br />
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
   </div>
 </div>
 

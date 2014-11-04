@@ -42,7 +42,7 @@
       if (is_object($order)) $this->update_status();
 
       if (defined('MODULE_PAYMENT_MONEYBOOKERS_IFRAME') && (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'True')) {
-        $this->form_action_url = tep_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
+        $this->form_action_url = osc_href_link('ext/modules/payment/moneybookers/checkout.php', '', 'SSL');
       } else {
         $this->form_action_url = 'https://www.moneybookers.com/app/payment.pl';
       }
@@ -89,7 +89,7 @@
 
     function install() {
       if (!defined('MODULE_PAYMENT_MONEYBOOKERS_STATUS')) {
-        osc_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
+        osc_redirect(osc_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
       }
 
       osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Moneybookers Credit Cards', 'MODULE_PAYMENT_MONEYBOOKERS_ACC_STATUS', 'False', 'Do you want to accept Moneybookers Credit Cards payments?', '6', '3', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");

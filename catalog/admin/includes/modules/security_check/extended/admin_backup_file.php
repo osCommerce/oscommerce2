@@ -54,7 +54,7 @@
       $result = true;
 
       if ( isset($backup_file) ) {
-        $request = $this->getHttpRequest(tep_href_link('backups/' . $backup_file));
+        $request = $this->getHttpRequest(osc_href_link('backups/' . $backup_file));
 
         $result = ($request['http_code'] != 200);
       }

@@ -63,7 +63,7 @@
       global $oscTemplate;
 
       $oscTemplate->_data['account']['account']['links']['sage_pay_cards'] = array('title' => $this->public_title,
-                                                                                   'link' => tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
+                                                                                   'link' => osc_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
                                                                                    'icon' => 'newwin');
     }
 

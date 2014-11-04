@@ -80,60 +80,60 @@
     function process_button() {
       global $customer_id, $currencies, $order, $cartID;
 
-      $process_button_string = tep_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
-                               tep_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
-                               tep_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $customer_id . '-' . $cartID) .
-                               tep_draw_hidden_field('fixed', 'Y') .
-                               tep_draw_hidden_field('first_name', $order->billing['firstname']) .
-                               tep_draw_hidden_field('last_name', $order->billing['lastname']) .
-                               tep_draw_hidden_field('street_address', $order->billing['street_address']) .
-                               tep_draw_hidden_field('city', $order->billing['city']) .
-                               tep_draw_hidden_field('state', $order->billing['state']) .
-                               tep_draw_hidden_field('zip', $order->billing['postcode']) .
-                               tep_draw_hidden_field('country', $order->billing['country']['title']) .
-                               tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('phone', $order->customer['telephone']) .
-                               tep_draw_hidden_field('ship_name', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
-                               tep_draw_hidden_field('ship_street_address', $order->delivery['street_address']) .
-                               tep_draw_hidden_field('ship_city', $order->delivery['city']) .
-                               tep_draw_hidden_field('ship_state', $order->delivery['state']) .
-                               tep_draw_hidden_field('ship_zip', $order->delivery['postcode']) .
-                               tep_draw_hidden_field('ship_country', $order->delivery['country']['title']);
+      $process_button_string = osc_draw_hidden_field('sid', MODULE_PAYMENT_2CHECKOUT_LOGIN) .
+                               osc_draw_hidden_field('total', $this->format_raw($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY)) .
+                               osc_draw_hidden_field('cart_order_id', date('YmdHis') . '-' . $customer_id . '-' . $cartID) .
+                               osc_draw_hidden_field('fixed', 'Y') .
+                               osc_draw_hidden_field('first_name', $order->billing['firstname']) .
+                               osc_draw_hidden_field('last_name', $order->billing['lastname']) .
+                               osc_draw_hidden_field('street_address', $order->billing['street_address']) .
+                               osc_draw_hidden_field('city', $order->billing['city']) .
+                               osc_draw_hidden_field('state', $order->billing['state']) .
+                               osc_draw_hidden_field('zip', $order->billing['postcode']) .
+                               osc_draw_hidden_field('country', $order->billing['country']['title']) .
+                               osc_draw_hidden_field('email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('phone', $order->customer['telephone']) .
+                               osc_draw_hidden_field('ship_name', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
+                               osc_draw_hidden_field('ship_street_address', $order->delivery['street_address']) .
+                               osc_draw_hidden_field('ship_city', $order->delivery['city']) .
+                               osc_draw_hidden_field('ship_state', $order->delivery['state']) .
+                               osc_draw_hidden_field('ship_zip', $order->delivery['postcode']) .
+                               osc_draw_hidden_field('ship_country', $order->delivery['country']['title']);
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $process_button_string .= tep_draw_hidden_field('c_prod_' . ($i+1), (int)$order->products[$i]['id'] . ',' . (int)$order->products[$i]['qty']) .
-                                  tep_draw_hidden_field('c_name_' . ($i+1), $order->products[$i]['name']) .
-                                  tep_draw_hidden_field('c_description_' . ($i+1), $order->products[$i]['name']) .
-                                  tep_draw_hidden_field('c_price_' . ($i+1), $this->format_raw(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), MODULE_PAYMENT_2CHECKOUT_CURRENCY));
+        $process_button_string .= osc_draw_hidden_field('c_prod_' . ($i+1), (int)$order->products[$i]['id'] . ',' . (int)$order->products[$i]['qty']) .
+                                  osc_draw_hidden_field('c_name_' . ($i+1), $order->products[$i]['name']) .
+                                  osc_draw_hidden_field('c_description_' . ($i+1), $order->products[$i]['name']) .
+                                  osc_draw_hidden_field('c_price_' . ($i+1), $this->format_raw(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), MODULE_PAYMENT_2CHECKOUT_CURRENCY));
       }
 
-      $process_button_string .= tep_draw_hidden_field('id_type', '1') .
-                                tep_draw_hidden_field('skip_landing', '1');
+      $process_button_string .= osc_draw_hidden_field('id_type', '1') .
+                                osc_draw_hidden_field('skip_landing', '1');
 
       if (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Test') {
-        $process_button_string .= tep_draw_hidden_field('demo', 'Y');
+        $process_button_string .= osc_draw_hidden_field('demo', 'Y');
       }
 
-      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
+      $process_button_string .= osc_draw_hidden_field('return_url', osc_href_link(FILENAME_SHOPPING_CART));
 
       $lang_query = osc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = osc_db_fetch_array($lang_query);
 
       switch (strtolower($lang['code'])) {
         case 'es':
-          $process_button_string .= tep_draw_hidden_field('lang', 'sp');
+          $process_button_string .= osc_draw_hidden_field('lang', 'sp');
           break;
       }
 
-      $process_button_string .= tep_draw_hidden_field('cart_brand_name', 'oscommerce') .
-                                tep_draw_hidden_field('cart_version_name', PROJECT_VERSION);
+      $process_button_string .= osc_draw_hidden_field('cart_brand_name', 'oscommerce') .
+                                osc_draw_hidden_field('cart_version_name', PROJECT_VERSION);
 
       return $process_button_string;
     }
 
     function before_process() {
       if ( ($_POST['credit_card_processed'] != 'Y') && ($_POST['credit_card_processed'] != 'K') ){
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
       }
     }
 
@@ -225,7 +225,7 @@
                                     'text' => $currencies['title']);
       }
 
-      return tep_draw_pull_down_menu($name, $currencies_array, $value);
+      return osc_draw_pull_down_menu($name, $currencies_array, $value);
     }
   }
 ?>

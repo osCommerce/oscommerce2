@@ -64,7 +64,7 @@
               $products_displayed[$products['products_id']] .= '  <label class="control-label col-xs-3">' . $products['products_name'] . '</label>';
               $products_displayed[$products['products_id']] .= '  <div class="col-xs-9">';
               $products_displayed[$products['products_id']] .= '    <div class="checkbox">';
-              $products_displayed[$products['products_id']] .= '      <label>' . tep_draw_checkbox_field('notify[]', $products['products_id']) . '&nbsp;</label>';
+              $products_displayed[$products['products_id']] .= '      <label>' . osc_draw_checkbox_field('notify[]', $products['products_id']) . '&nbsp;</label>';
               $products_displayed[$products['products_id']] .= '    </div>';
               $products_displayed[$products['products_id']] .= '  </div>';
               $products_displayed[$products['products_id']] .= '</div>';

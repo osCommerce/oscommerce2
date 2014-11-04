@@ -304,26 +304,26 @@
       $total_price = number_format($order->info['total'] * $currencies->get_value('USD'), $currencies->currencies['USD']['decimal_places'], '.', '');
       $order_id = substr($cart_ChronoPay_ID, strpos($cart_ChronoPay_ID, '-')+1);
 
-      $process_button_string = tep_draw_hidden_field('product_id', MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID) .
-                               tep_draw_hidden_field('product_name', STORE_NAME) .
-                               tep_draw_hidden_field('product_price', $total_price) .
-                               tep_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
-                               tep_draw_hidden_field('cb_url', urlencode(tep_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
-                               tep_draw_hidden_field('cb_type', 'P') .
-                               tep_draw_hidden_field('decline_url', urlencode(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .
-                               tep_draw_hidden_field('language', $language_code) .
-                               tep_draw_hidden_field('f_name', $order->billing['firstname']) .
-                               tep_draw_hidden_field('s_name', $order->billing['lastname']) .
-                               tep_draw_hidden_field('street', $order->billing['street_address']) .
-                               tep_draw_hidden_field('city', $order->billing['city']) .
-                               tep_draw_hidden_field('state', $state_code) .
-                               tep_draw_hidden_field('zip', $order->billing['postcode']) .
-                               tep_draw_hidden_field('country', $order->billing['country']['iso_code_3']) .
-                               tep_draw_hidden_field('phone', $order->customer['telephone']) .
-                               tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('cs1', $customer_id) .
-                               tep_draw_hidden_field('cs2', $order_id) .
-                               tep_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $customer_id . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
+      $process_button_string = osc_draw_hidden_field('product_id', MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID) .
+                               osc_draw_hidden_field('product_name', STORE_NAME) .
+                               osc_draw_hidden_field('product_price', $total_price) .
+                               osc_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
+                               osc_draw_hidden_field('cb_url', urlencode(osc_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
+                               osc_draw_hidden_field('cb_type', 'P') .
+                               osc_draw_hidden_field('decline_url', urlencode(osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .
+                               osc_draw_hidden_field('language', $language_code) .
+                               osc_draw_hidden_field('f_name', $order->billing['firstname']) .
+                               osc_draw_hidden_field('s_name', $order->billing['lastname']) .
+                               osc_draw_hidden_field('street', $order->billing['street_address']) .
+                               osc_draw_hidden_field('city', $order->billing['city']) .
+                               osc_draw_hidden_field('state', $state_code) .
+                               osc_draw_hidden_field('zip', $order->billing['postcode']) .
+                               osc_draw_hidden_field('country', $order->billing['country']['iso_code_3']) .
+                               osc_draw_hidden_field('phone', $order->customer['telephone']) .
+                               osc_draw_hidden_field('email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('cs1', $customer_id) .
+                               osc_draw_hidden_field('cs2', $order_id) .
+                               osc_draw_hidden_field('cs3', md5(MODULE_PAYMENT_CHRONOPAY_PRODUCT_ID . $order_id . $customer_id . $total_price . MODULE_PAYMENT_CHRONOPAY_MD5_HASH));
 
       return $process_button_string;
     }
@@ -442,7 +442,7 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -497,7 +497,7 @@
 
       unset($_SESSION['cart_ChronoPay_ID']);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {

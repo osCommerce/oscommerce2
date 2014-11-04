@@ -294,36 +294,36 @@
       $lang_query = osc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = osc_db_fetch_array($lang_query);
 
-      $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
-                               tep_draw_hidden_field('cartId', $order_id) .
-                               tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
-                               tep_draw_hidden_field('currency', $_SESSION['currency']) .
-                               tep_draw_hidden_field('desc', STORE_NAME) .
-                               tep_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               tep_draw_hidden_field('address1', $order->billing['street_address']) .
-                               tep_draw_hidden_field('town', $order->billing['city']) .
-                               tep_draw_hidden_field('region', $order->billing['state']) .
-                               tep_draw_hidden_field('postcode', $order->billing['postcode']) .
-                               tep_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
-                               tep_draw_hidden_field('tel', $order->customer['telephone']) .
-                               tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('fixContact', 'Y') .
-                               tep_draw_hidden_field('hideCurrency', 'true') .
-                               tep_draw_hidden_field('lang', strtoupper($lang['code'])) .
-                               tep_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
-                               tep_draw_hidden_field('MC_callback', tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
-                               tep_draw_hidden_field('M_sid', session_id()) .
-                               tep_draw_hidden_field('M_cid', $customer_id) .
-                               tep_draw_hidden_field('M_lang', $_SESSION['language']) .
-                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+      $process_button_string = osc_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
+                               osc_draw_hidden_field('cartId', $order_id) .
+                               osc_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
+                               osc_draw_hidden_field('currency', $_SESSION['currency']) .
+                               osc_draw_hidden_field('desc', STORE_NAME) .
+                               osc_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
+                               osc_draw_hidden_field('address1', $order->billing['street_address']) .
+                               osc_draw_hidden_field('town', $order->billing['city']) .
+                               osc_draw_hidden_field('region', $order->billing['state']) .
+                               osc_draw_hidden_field('postcode', $order->billing['postcode']) .
+                               osc_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
+                               osc_draw_hidden_field('tel', $order->customer['telephone']) .
+                               osc_draw_hidden_field('email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('fixContact', 'Y') .
+                               osc_draw_hidden_field('hideCurrency', 'true') .
+                               osc_draw_hidden_field('lang', strtoupper($lang['code'])) .
+                               osc_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
+                               osc_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
+                               osc_draw_hidden_field('MC_callback', osc_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
+                               osc_draw_hidden_field('M_sid', session_id()) .
+                               osc_draw_hidden_field('M_cid', $customer_id) .
+                               osc_draw_hidden_field('M_lang', $_SESSION['language']) .
+                               osc_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
-        $process_button_string .= tep_draw_hidden_field('authMode', 'E');
+        $process_button_string .= osc_draw_hidden_field('authMode', 'E');
       }
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
-        $process_button_string .= tep_draw_hidden_field('testMode', '100');
+        $process_button_string .= osc_draw_hidden_field('testMode', '100');
       }
 
       return $process_button_string;
@@ -338,7 +338,7 @@
       if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check_query = osc_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
@@ -346,7 +346,7 @@
       if (!osc_db_num_rows($check_query)) {
         $this->sendDebugEmail();
 
-        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = osc_db_fetch_array($check_query);
@@ -473,7 +473,7 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
         $email_order .= osc_db_output($order->info['comments']) . "\n\n";
@@ -528,7 +528,7 @@
 
       unset($_SESSION['cart_RBS_Worldpay_Hosted_ID']);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {

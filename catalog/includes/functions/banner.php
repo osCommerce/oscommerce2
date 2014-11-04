@@ -83,7 +83,7 @@
     if (osc_not_null($banner['banners_html_text'])) {
       $banner_string = $banner['banners_html_text'];
     } else {
-      $banner_string = '<a href="' . tep_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '" target="_blank">' . tep_image(DIR_WS_IMAGES . $banner['banners_image'], $banner['banners_title']) . '</a>';
+      $banner_string = '<a href="' . osc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '" target="_blank">' . osc_image(DIR_WS_IMAGES . $banner['banners_image'], $banner['banners_title']) . '</a>';
     }
 
     osc_update_banner_display_count($banner['banners_id']);

@@ -17,10 +17,10 @@
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = osc_get_all_get_params();
 
-      osc_redirect(tep_href_link(FILENAME_LOGIN, $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_LOGIN, $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
     }
 
-    osc_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+    osc_redirect(osc_href_link(FILENAME_COOKIE_USAGE));
   }
 
 // login content module must return $login_customer_id as an integer after successful customer authentication
@@ -60,17 +60,17 @@
     $_SESSION['cart']->restore_contents();
 
     if (sizeof($navigation->snapshot) > 0) {
-      $origin_href = tep_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
+      $origin_href = osc_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
       $navigation->clear_snapshot();
       osc_redirect($origin_href);
     }
 
-    osc_redirect(tep_href_link(FILENAME_DEFAULT));
+    osc_redirect(osc_href_link(FILENAME_DEFAULT));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_LOGIN);
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_LOGIN, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

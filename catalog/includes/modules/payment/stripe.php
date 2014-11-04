@@ -190,7 +190,7 @@
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
         $content .= '<tr>' .
                     '  <td width="30%">&nbsp;</td>' .
-                    '  <td>' . tep_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_STRIPE_CREDITCARD_SAVE . '</td>' .
+                    '  <td>' . osc_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_STRIPE_CREDITCARD_SAVE . '</td>' .
                     '</tr>';
       }
 
@@ -238,7 +238,7 @@
             $params['customer'] = $stripe_token_array[0];
             $params['card'] = $stripe_token_array[1];
           } else {
-            osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
+            osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
           }
         }
       }
@@ -290,7 +290,7 @@
 
       $this->sendDebugEmail($stripe_result);
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
 
     function after_process() {
@@ -594,7 +594,7 @@ EOD;
       $dialog_error = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

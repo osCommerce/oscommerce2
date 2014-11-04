@@ -30,7 +30,7 @@
     }
 
     function getOutput() {
-      return '<a href="http://twitter.com/home?status=' . urlencode(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '" target="_blank"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . osc_output_string_protected($this->public_title) . '" alt="' . osc_output_string_protected($this->public_title) . '" /></a>';
+      return '<a href="http://twitter.com/home?status=' . urlencode(osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '" target="_blank"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . osc_output_string_protected($this->public_title) . '" alt="' . osc_output_string_protected($this->public_title) . '" /></a>';
     }
 
     function isEnabled() {

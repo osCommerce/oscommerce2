@@ -36,7 +36,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
+      return '<a href="' . osc_href_link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
     }
   }
 ?>

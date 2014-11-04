@@ -49,7 +49,7 @@
   }
 ?>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="get" template="<?php echo tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords={searchTerms}', 'NONSSL', false); ?>" />
+  <Url type="text/html" method="get" template="<?php echo osc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords={searchTerms}', 'NONSSL', false); ?>" />
 </OpenSearchDescription>
 <?php
   require('includes/application_bottom.php');

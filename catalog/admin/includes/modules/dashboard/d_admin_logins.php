@@ -38,8 +38,8 @@
       $logins_query = osc_db_query("select id, user_name, success, date_added from " . TABLE_ACTION_RECORDER . " where module = 'ar_admin_login' order by date_added desc limit 6");
       while ($logins = osc_db_fetch_array($logins_query)) {
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent" align="center">' . tep_image(DIR_WS_IMAGES . 'icons/' . (($logins['success'] == '1') ? 'tick.gif' : 'cross.gif')) . '</td>' .
-                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . (int)$logins['id']) . '">' . osc_output_string_protected($logins['user_name']) . '</a></td>' .
+                   '    <td class="dataTableContent" align="center">' . osc_image(DIR_WS_IMAGES . 'icons/' . (($logins['success'] == '1') ? 'tick.gif' : 'cross.gif')) . '</td>' .
+                   '    <td class="dataTableContent"><a href="' . osc_href_link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . (int)$logins['id']) . '">' . osc_output_string_protected($logins['user_name']) . '</a></td>' .
                    '    <td class="dataTableContent" align="right">' . osc_date_short($logins['date_added']) . '</td>' .
                    '  </tr>';
       }

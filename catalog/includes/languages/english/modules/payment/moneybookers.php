@@ -12,7 +12,7 @@
 
   $moneybookers_ping_button = '';
   if (defined('MODULE_PAYMENT_MONEYBOOKERS_STATUS') && osc_not_null(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD)) {
-    $moneybookers_ping_button = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href=' . tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=testSecretWord', 'SSL') . ' style="text-decoration: underline; font-weight: bold;">Test Secret Word</a></p>';
+    $moneybookers_ping_button = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href=' . osc_href_link('ext/modules/payment/moneybookers/activation.php', 'action=testSecretWord', 'SSL') . ' style="text-decoration: underline; font-weight: bold;">Test Secret Word</a></p>';
   }
 
   define('MODULE_PAYMENT_MONEYBOOKERS_TEXT_TITLE', 'Moneybookers - Core Module');

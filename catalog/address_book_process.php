@@ -14,7 +14,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -29,7 +29,7 @@
       $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
     }
 
-    osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   }
 
 // error checking when updating or adding an entry
@@ -195,7 +195,7 @@
         }
       }
 
-      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
   }
 
@@ -205,7 +205,7 @@
     if (!osc_db_num_rows($entry_query)) {
       $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
 
     $entry = osc_db_fetch_array($entry_query);
@@ -213,7 +213,7 @@
     if ($_GET['delete'] == $customer_default_address_id) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
-      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     } else {
       $check_query = osc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . (int)$_GET['delete'] . "' and customers_id = '" . (int)$customer_id . "'");
       $check = osc_db_fetch_array($check_query);
@@ -221,7 +221,7 @@
       if ($check['total'] < 1) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-        osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
       }
     }
   } else {
@@ -232,19 +232,19 @@
     if (osc_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
       $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
 
-      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 
   if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-    $breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $_GET['edit'], 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY, osc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $_GET['edit'], 'SSL'));
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'], 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY, osc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'], 'SSL'));
   } else {
-    $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, osc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -286,8 +286,8 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', osc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
   </div>
 
 </div>
@@ -296,7 +296,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('addressbook', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo osc_draw_form('addressbook', osc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -328,22 +328,22 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $_GET['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_hidden_field('action', 'update') . osc_draw_hidden_field('edit', $_GET['edit']) . osc_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL')); ?></div>
   </div>
 
 <?php
     } else {
       if (sizeof($navigation->snapshot) > 0) {
-        $back_link = tep_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
+        $back_link = osc_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
       } else {
-        $back_link = tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
+        $back_link = osc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
       }
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo osc_draw_hidden_field('action', 'process') . osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
   </div>
 
 <?php

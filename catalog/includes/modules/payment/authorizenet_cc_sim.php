@@ -105,7 +105,7 @@
                       'x_show_form' => 'PAYMENT_FORM',
                       'x_delim_data' => 'FALSE',
                       'x_relay_response' => 'TRUE',
-                      'x_relay_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
+                      'x_relay_url' => osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
                       'x_first_name' => substr($order->billing['firstname'], 0, 50),
                       'x_last_name' => substr($order->billing['lastname'], 0, 50),
                       'x_company' => substr($order->billing['company'], 0, 50),
@@ -127,7 +127,7 @@
                       'x_fp_sequence' => $sequence,
                       'x_fp_timestamp' => $tstamp,
                       'x_fp_hash' => $this->_hmac(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY, MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . '^' . $sequence . '^' . $tstamp . '^' . $this->format_raw($order->info['total']) . '^' . $_SESSION['currency']),
-                      'x_cancel_url' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
+                      'x_cancel_url' => osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
                       'x_cancel_url_text' => MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_RETURN_BUTTON);
 
       if (is_numeric($sendto) && ($sendto > 0)) {
@@ -160,14 +160,14 @@
       $process_button_string = '';
 
       foreach ( $params as $key => $value ) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= osc_draw_hidden_field($key, $value);
       }
 
       for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-        $process_button_string .= tep_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|><|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
+        $process_button_string .= osc_draw_hidden_field('x_line_item', ($i+1) . '<|>' . substr($order->products[$i]['name'], 0, 31) . '<|><|>' . $order->products[$i]['qty'] . '<|>' . $this->format_raw($order->products[$i]['final_price']) . '<|>' . ($order->products[$i]['tax'] > 0 ? 'YES' : 'NO'));
       }
 
-      $process_button_string .= tep_draw_hidden_field(session_name(), session_id());
+      $process_button_string .= osc_draw_hidden_field(session_name(), session_id());
 
       return $process_button_string;
     }
@@ -216,7 +216,7 @@
         $authorizenet_cc_sim_error = $_POST['x_response_reason_text'];
         tep_session_register('authorizenet_cc_sim_error');
 
-        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
 
       if ( isset($_SESSION['authorizenet_cc_sim_error']) ) {
@@ -284,7 +284,7 @@
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $redirect_url = osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
 
         echo <<<EOD
 <form name="redirect" action="{$redirect_url}" method="post" target="_top">

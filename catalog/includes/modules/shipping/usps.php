@@ -132,7 +132,7 @@
                               'error' => MODULE_SHIPPING_USPS_TEXT_ERROR);
       }
 
-      if (osc_not_null($this->icon)) $this->quotes['icon'] = tep_image($this->icon, $this->title);
+      if (osc_not_null($this->icon)) $this->quotes['icon'] = osc_image($this->icon, $this->title);
 
       return $this->quotes;
     }

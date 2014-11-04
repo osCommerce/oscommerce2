@@ -190,7 +190,7 @@
       $content .= '<table id="braintree_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_OWNER . '</td>' .
-                  '  <td>' . tep_draw_input_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
+                  '  <td>' . osc_draw_input_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
                   '</tr>' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_NUMBER . '</td>' .
@@ -198,7 +198,7 @@
                   '</tr>' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_EXPIRY . '</td>' .
-                  '  <td>' . tep_draw_pull_down_menu('month', $months_array) . ' / ' . tep_draw_pull_down_menu('year', $years_array) . '</td>' .
+                  '  <td>' . osc_draw_pull_down_menu('month', $months_array) . ' / ' . osc_draw_pull_down_menu('year', $years_array) . '</td>' .
                   '</tr>';
 
       if ( MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV == 'True' ) {
@@ -211,7 +211,7 @@
       if ( MODULE_PAYMENT_BRAINTREE_CC_TOKENS == 'True' ) {
         $content .= '<tr>' .
                     '  <td width="30%">&nbsp;</td>' .
-                    '  <td>' . tep_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_SAVE . '</td>' .
+                    '  <td>' . osc_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_SAVE . '</td>' .
                     '</tr>';
       }
 
@@ -253,7 +253,7 @@
               }
 
               if ( !isset($braintree_token_cvv) || empty($braintree_token_cvv) ) {
-                osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
+                osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
               }
             }
           }
@@ -284,28 +284,28 @@
         }
 
         if ( !isset($cc_owner) || empty($cc_owner) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
         }
 
         if ( !isset($cc_number) || empty($cc_number) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
         }
 
         if ( !isset($cc_expires_month) || !in_array($cc_expires_month, $months_array) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( !isset($cc_expires_year) || !in_array($cc_expires_year, $years_array) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( ($cc_expires_year == date('Y')) && ($cc_expires_month < date('m')) ) {
-          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV == 'True' ) {
           if ( !isset($cc_cvv) || empty($cc_cvv) ) {
-            osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
+            osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
           }
         }
       }
@@ -410,7 +410,7 @@
         }
       }
 
-      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
 
     function after_process() {
@@ -788,7 +788,7 @@ EOD;
   }
 
   function tep_cfg_braintree_cc_set_client_key($value, $name) {
-    return tep_draw_textarea_field('configuration[' . $name . ']', '', '50', '12', $value);
+    return osc_draw_textarea_field('configuration[' . $name . ']', '', '50', '12', $value);
   }
 
   function tep_cfg_braintree_cc_show_client_key($key) {
@@ -832,14 +832,14 @@ EOD;
         $result .= '</strong>';
       }
 
-      $result .= '&nbsp;' . tep_draw_input_field('braintree_ma[' . $c . ']', (isset($data[$c]) ? $data[$c] : '')) . '<br />';
+      $result .= '&nbsp;' . osc_draw_input_field('braintree_ma[' . $c . ']', (isset($data[$c]) ? $data[$c] : '')) . '<br />';
     }
 
     if ( !empty($result) ) {
       $result = substr($result, 0, -6);
     }
 
-    $result .= tep_draw_hidden_field('configuration[' . $key . ']', $value);
+    $result .= osc_draw_hidden_field('configuration[' . $key . ']', $value);
 
     $result .= <<<EOD
 <script type="text/javascript">

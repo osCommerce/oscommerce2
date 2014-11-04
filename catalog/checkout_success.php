@@ -14,14 +14,14 @@
 
 // if the customer is not logged on, redirect them to the shopping cart page
   if (!isset($_SESSION['customer_id'])) {
-    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
   }
 
   $orders_query = osc_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
 // redirect to shopping cart page if no orders exist
   if ( !osc_db_num_rows($orders_query) ) {
-    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
   }
 
   $orders = osc_db_fetch_array($orders_query);
@@ -31,7 +31,7 @@
   $page_content = $oscTemplate->getContent('checkout_success');
 
   if ( isset($_GET['action']) && ($_GET['action'] == 'update') ) {
-    osc_redirect(tep_href_link(FILENAME_DEFAULT));
+    osc_redirect(osc_href_link(FILENAME_DEFAULT));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
@@ -46,13 +46,13 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('order', tep_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL'), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo osc_draw_form('order', osc_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div class="contentContainer">
   <?php echo $page_content; ?>
 </div>
 
-<div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+<div><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
 
 </form>
 
