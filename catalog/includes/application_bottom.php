@@ -22,6 +22,6 @@
   }
 
   if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_output_compression < 1) ) {
-      tep_gzip_output(GZIP_LEVEL);
+      osc_gzip_output(GZIP_LEVEL);
   }
 ?>

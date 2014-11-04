@@ -16,7 +16,7 @@
       array(
         'code' => FILENAME_ORDERS,
         'title' => BOX_ORDERS_ORDERS,
-        'link' => tep_href_link(FILENAME_ORDERS)
+        'link' => osc_href_link(FILENAME_ORDERS)
       )
     )
   );

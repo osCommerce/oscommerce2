@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !tep_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !osc_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_STRIPE_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -67,8 +67,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_STRIPE_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_STRIPE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_STRIPE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -92,11 +92,11 @@
       global $customer_id, $payment;
 
       if ( (MODULE_PAYMENT_STRIPE_TOKENS == 'True') && !isset($_SESSION['payment']) ) {
-        $tokens_query = tep_db_query("select 1 from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
+        $tokens_query = osc_db_query("select 1 from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
 
-        if ( tep_db_num_rows($tokens_query) ) {
+        if ( osc_db_num_rows($tokens_query) ) {
           $payment = $this->code;
-          tep_session_register('payment');
+          osc_session_register('payment');
         }
       }
 
@@ -118,42 +118,42 @@
       $months_array = array();
 
       for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => tep_output_string(sprintf('%02d', $i)),
-                                'text' => tep_output_string_protected(sprintf('%02d', $i)));
+        $months_array[] = array('id' => osc_output_string(sprintf('%02d', $i)),
+                                'text' => osc_output_string_protected(sprintf('%02d', $i)));
       }
 
       $today = getdate();
       $years_array = array();
 
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $years_array[] = array('id' => tep_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
-                               'text' => tep_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
+        $years_array[] = array('id' => osc_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
+                               'text' => osc_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
       }
 
       $months_string = '<select data-stripe="exp_month">';
       foreach ( $months_array as $m ) {
-        $months_string .= '<option value="' . tep_output_string($m['id']) . '">' . tep_output_string($m['text']) . '</option>';
+        $months_string .= '<option value="' . osc_output_string($m['id']) . '">' . osc_output_string($m['text']) . '</option>';
       }
       $months_string .= '</select>';
 
       $years_string = '<select data-stripe="exp_year">';
       foreach ( $years_array as $y ) {
-        $years_string .= '<option value="' . tep_output_string($y['id']) . '">' . tep_output_string($y['text']) . '</option>';
+        $years_string .= '<option value="' . osc_output_string($y['id']) . '">' . osc_output_string($y['text']) . '</option>';
       }
       $years_string .= '</select>';
 
       $content = '';
 
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
-        $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+        $tokens_query = osc_db_query("select id, card_type, number_filtered, expiry_date from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
 
-        if ( tep_db_num_rows($tokens_query) > 0 ) {
+        if ( osc_db_num_rows($tokens_query) > 0 ) {
           $content .= '<table id="stripe_table" border="0" width="100%" cellspacing="0" cellpadding="2">';
 
-          while ( $tokens = tep_db_fetch_array($tokens_query) ) {
+          while ( $tokens = osc_db_fetch_array($tokens_query) ) {
             $content .= '<tr class="moduleRow" id="stripe_card_' . (int)$tokens['id'] . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="stripe_card" value="' . (int)$tokens['id'] . '" /></td>' .
-                        '  <td valign="top"><strong>' . tep_output_string_protected($tokens['card_type']) . '</strong>&nbsp;&nbsp;****' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '</td>' .
+                        '  <td valign="top"><strong>' . osc_output_string_protected($tokens['card_type']) . '</strong>&nbsp;&nbsp;****' . osc_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . osc_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '</td>' .
                         '</tr>';
           }
 
@@ -169,7 +169,7 @@
                   '<table id="stripe_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_STRIPE_CREDITCARD_OWNER . '</td>' .
-                  '  <td><input type="text" data-stripe="name" value="' . tep_output_string($order->billing['firstname'] . ' ' . $order->billing['lastname']) . '" /></td>' .
+                  '  <td><input type="text" data-stripe="name" value="' . osc_output_string($order->billing['firstname'] . ' ' . $order->billing['lastname']) . '" /></td>' .
                   '</tr>' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_STRIPE_CREDITCARD_NUMBER . '</td>' .
@@ -190,7 +190,7 @@
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
         $content .= '<tr>' .
                     '  <td width="30%">&nbsp;</td>' .
-                    '  <td>' . tep_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_STRIPE_CREDITCARD_SAVE . '</td>' .
+                    '  <td>' . osc_draw_checkbox_field('cc_save', 'true') . ' ' . MODULE_PAYMENT_STRIPE_CREDITCARD_SAVE . '</td>' .
                     '</tr>';
       }
 
@@ -199,11 +199,11 @@
       $address = array('address_line1' => $order->billing['street_address'],
                        'address_city' => $order->billing['city'],
                        'address_zip' => $order->billing['postcode'],
-                       'address_state' => tep_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
+                       'address_state' => osc_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
                        'address_country' => $order->billing['country']['iso_code_2']);
 
       foreach ( $address as $k => $v ) {
-        $content .= '<input type="hidden" data-stripe="' . tep_output_string($k) . '" value="' . tep_output_string($v) . '" />';
+        $content .= '<input type="hidden" data-stripe="' . osc_output_string($k) . '" value="' . osc_output_string($v) . '" />';
       }
 
       if ( !$this->templateClassExists() ) {
@@ -228,17 +228,17 @@
 
       if ( MODULE_PAYMENT_STRIPE_TOKENS == 'True' ) {
         if ( isset($_POST['stripe_card']) && is_numeric($_POST['stripe_card']) && ($_POST['stripe_card'] > 0) ) {
-          $token_query = tep_db_query("select stripe_token from customers_stripe_tokens where id = '" . (int)$_POST['stripe_card'] . "' and customers_id = '" . (int)$customer_id . "'");
+          $token_query = osc_db_query("select stripe_token from customers_stripe_tokens where id = '" . (int)$_POST['stripe_card'] . "' and customers_id = '" . (int)$customer_id . "'");
 
-          if ( tep_db_num_rows($token_query) === 1 ) {
-            $token = tep_db_fetch_array($token_query);
+          if ( osc_db_num_rows($token_query) === 1 ) {
+            $token = osc_db_fetch_array($token_query);
 
             $stripe_token_array = explode(':|:', $token['stripe_token'], 2);
 
             $params['customer'] = $stripe_token_array[0];
             $params['card'] = $stripe_token_array[1];
           } else {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
+            osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
           }
         }
       }
@@ -283,14 +283,14 @@
       }
 
       if ( isset($stripe_result['error']['message']) ) {
-        tep_session_register('stripe_error');
+        osc_session_register('stripe_error');
 
         $stripe_error = $stripe_result['error']['message'];
       }
 
       $this->sendDebugEmail($stripe_result);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
 
     function after_process() {
@@ -321,7 +321,7 @@
                               'customer_notified' => '0',
                               'comments' => implode("\n", $status_comment));
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if ( isset($_SESSION['stripe_error']) ) {
         unset($_SESSION['stripe_error']);
@@ -355,8 +355,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_STRIPE_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_STRIPE_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -389,12 +389,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -412,7 +412,7 @@
     }
 
     function getParams() {
-      if ( tep_db_num_rows(tep_db_query("show tables like 'customers_stripe_tokens'")) != 1 ) {
+      if ( osc_db_num_rows(osc_db_query("show tables like 'customers_stripe_tokens'")) != 1 ) {
         $sql = <<<EOD
 CREATE TABLE customers_stripe_tokens (
   id int NOT NULL auto_increment,
@@ -428,30 +428,30 @@ CREATE TABLE customers_stripe_tokens (
 );
 EOD;
 
-        tep_db_query($sql);
+        osc_db_query($sql);
       }
 
       if (!defined('MODULE_PAYMENT_STRIPE_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Stripe [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Stripe [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Stripe [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Stripe [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }
@@ -462,7 +462,7 @@ EOD;
       $params = array('MODULE_PAYMENT_STRIPE_STATUS' => array('title' => 'Enable Stripe Module',
                                                               'desc' => 'Do you want to accept Stripe payments?',
                                                               'value' => 'True',
-                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                              'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY' => array('title' => 'Publishable API Key',
                                                                        'desc' => 'The Stripe account publishable API key to use.',
                                                                        'value' => ''),
@@ -472,38 +472,38 @@ EOD;
                       'MODULE_PAYMENT_STRIPE_TOKENS' => array('title' => 'Create Tokens',
                                                               'desc' => 'Create and store tokens for card payments customers can use on their next purchase?',
                                                               'value' => 'False',
-                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                              'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_STRIPE_VERIFY_WITH_CVC' => array('title' => 'Verify With CVC',
                                                                        'desc' => 'Verify the credit card billing address with the Card Verification Code (CVC)?',
                                                                        'value' => 'True',
-                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                       'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_STRIPE_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                           'desc' => 'The processing method to use for each transaction.',
                                                                           'value' => 'Authorize',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'Authorize\', \'Capture\'), '),
+                                                                          'set_func' => 'osc_cfg_select_option(array(\'Authorize\', \'Capture\'), '),
                       'MODULE_PAYMENT_STRIPE_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                        'desc' => 'Set the status of orders made with this payment module to this value',
                                                                        'value' => '0',
-                                                                       'use_func' => 'tep_get_order_status_name',
-                                                                       'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                       'use_func' => 'osc_get_order_status_name',
+                                                                       'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_STRIPE_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
                                                                                    'desc' => 'Include transaction information in this order status level',
                                                                                    'value' => $status_id,
-                                                                                   'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                   'use_func' => 'tep_get_order_status_name'),
+                                                                                   'set_func' => 'osc_cfg_pull_down_order_statuses(',
+                                                                                   'use_func' => 'osc_get_order_status_name'),
                       'MODULE_PAYMENT_STRIPE_ZONE' => array('title' => 'Payment Zone',
                                                             'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                             'value' => '0',
-                                                            'use_func' => 'tep_get_zone_class_title',
-                                                            'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                                                            'use_func' => 'osc_get_zone_class_title',
+                                                            'set_func' => 'osc_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_STRIPE_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                           'desc' => 'Perform transactions on the production server or on the testing server.',
                                                                           'value' => 'Live',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                                                                          'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Test\'), '),
                       'MODULE_PAYMENT_STRIPE_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                   'desc' => 'Verify gateway server SSL certificate on connection?',
                                                                   'value' => 'True',
-                                                                  'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                  'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_STRIPE_PROXY' => array('title' => 'Proxy Server',
                                                              'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_STRIPE_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
@@ -527,7 +527,7 @@ EOD;
       }
 
       $header = array('Stripe-Version: ' . $this->api_version,
-                      'User-Agent: OSCOM ' . tep_get_version());
+                      'User-Agent: OSCOM ' . osc_get_version());
 
       if ( is_array($parameters) && !empty($parameters) ) {
         $post_string = '';
@@ -568,7 +568,7 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_STRIPE_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_STRIPE_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_STRIPE_PROXY);
       }
@@ -594,7 +594,7 @@ EOD;
       $dialog_error = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_STRIPE_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>
@@ -673,7 +673,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
     }
 
     function templateClassExists() {
@@ -787,7 +787,7 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_STRIPE_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_STRIPE_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -803,7 +803,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_STRIPE_DEBUG_EMAIL, 'Stripe Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_STRIPE_DEBUG_EMAIL, 'Stripe Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }
@@ -811,10 +811,10 @@ EOD;
     function getCustomerID() {
       global $customer_id;
 
-      $token_check_query = tep_db_query("select stripe_token from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
+      $token_check_query = osc_db_query("select stripe_token from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
 
-      if ( tep_db_num_rows($token_check_query) === 1 ) {
-        $token_check = tep_db_fetch_array($token_check_query);
+      if ( osc_db_num_rows($token_check_query) === 1 ) {
+        $token_check = osc_db_fetch_array($token_check_query);
 
         $stripe_token_array = explode(':|:', $token_check['stripe_token'], 2);
 
@@ -832,10 +832,10 @@ EOD;
       $result = json_decode($this->sendTransactionToGateway('https://api.stripe.com/v1/customers', $params), true);
 
       if ( is_array($result) && !empty($result) && isset($result['object']) && ($result['object'] == 'customer') ) {
-        $token = tep_db_prepare_input($result['id'] . ':|:' . $result['cards']['data'][0]['id']);
-        $type = tep_db_prepare_input($result['cards']['data'][0]['type']);
-        $number = tep_db_prepare_input($result['cards']['data'][0]['last4']);
-        $expiry = tep_db_prepare_input(str_pad($result['cards']['data'][0]['exp_month'], 2, '0', STR_PAD_LEFT) . $result['cards']['data'][0]['exp_year']);
+        $token = osc_db_prepare_input($result['id'] . ':|:' . $result['cards']['data'][0]['id']);
+        $type = osc_db_prepare_input($result['cards']['data'][0]['type']);
+        $number = osc_db_prepare_input($result['cards']['data'][0]['last4']);
+        $expiry = osc_db_prepare_input(str_pad($result['cards']['data'][0]['exp_month'], 2, '0', STR_PAD_LEFT) . $result['cards']['data'][0]['exp_year']);
 
         $sql_data_array = array('customers_id' => (int)$customer_id,
                                 'stripe_token' => $token,
@@ -844,7 +844,7 @@ EOD;
                                 'expiry_date' => $expiry,
                                 'date_added' => 'now()');
 
-        tep_db_perform('customers_stripe_tokens', $sql_data_array);
+        osc_db_perform('customers_stripe_tokens', $sql_data_array);
 
         return array('id' => $result['id'],
                      'card_id' => $result['cards']['data'][0]['id']);
@@ -863,10 +863,10 @@ EOD;
       $result = json_decode($this->sendTransactionToGateway('https://api.stripe.com/v1/customers/' . $customer . '/cards', $params), true);
 
       if ( is_array($result) && !empty($result) && isset($result['object']) && ($result['object'] == 'card') ) {
-        $token = tep_db_prepare_input($customer . ':|:' . $result['id']);
-        $type = tep_db_prepare_input($result['type']);
-        $number = tep_db_prepare_input($result['last4']);
-        $expiry = tep_db_prepare_input(str_pad($result['exp_month'], 2, '0', STR_PAD_LEFT) . $result['exp_year']);
+        $token = osc_db_prepare_input($customer . ':|:' . $result['id']);
+        $type = osc_db_prepare_input($result['type']);
+        $number = osc_db_prepare_input($result['last4']);
+        $expiry = osc_db_prepare_input(str_pad($result['exp_month'], 2, '0', STR_PAD_LEFT) . $result['exp_year']);
 
         $sql_data_array = array('customers_id' => (int)$customer_id,
                                 'stripe_token' => $token,
@@ -875,7 +875,7 @@ EOD;
                                 'expiry_date' => $expiry,
                                 'date_added' => 'now()');
 
-        tep_db_perform('customers_stripe_tokens', $sql_data_array);
+        osc_db_perform('customers_stripe_tokens', $sql_data_array);
 
         return $result['id'];
       }
@@ -894,9 +894,9 @@ EOD;
         $this->sendDebugEmail($result);
       }
 
-      tep_db_query("delete from customers_stripe_tokens where id = '" . (int)$token_id . "' and customers_id = '" . (int)$customer_id . "' and stripe_token = '" . tep_db_prepare_input(tep_db_input($customer . ':|:' . $card)) . "'");
+      osc_db_query("delete from customers_stripe_tokens where id = '" . (int)$token_id . "' and customers_id = '" . (int)$customer_id . "' and stripe_token = '" . osc_db_prepare_input(osc_db_input($customer . ':|:' . $card)) . "'");
 
-      return (tep_db_affected_rows() === 1);
+      return (osc_db_affected_rows() === 1);
     }
   }
 ?>

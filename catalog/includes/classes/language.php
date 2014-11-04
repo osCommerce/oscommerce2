@@ -56,8 +56,8 @@
                                'zh' => 'zh|chinese simplified');
 
       $this->catalog_languages = array();
-      $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
-      while ($languages = tep_db_fetch_array($languages_query)) {
+      $languages_query = osc_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
+      while ($languages = osc_db_fetch_array($languages_query)) {
         $this->catalog_languages[$languages['code']] = array('id' => $languages['languages_id'],
                                                              'name' => $languages['name'],
                                                              'image' => $languages['image'],
@@ -71,7 +71,7 @@
     }
 
     function set_language($language) {
-      if ( (tep_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
+      if ( (osc_not_null($language)) && (isset($this->catalog_languages[$language])) ) {
         $this->language = $this->catalog_languages[$language];
       } else {
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];

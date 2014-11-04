@@ -14,17 +14,17 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     if ($action == 'reset') {
-      tep_reset_cache_block($_GET['block']);
+      osc_reset_cache_block($_GET['block']);
     }
 
-    tep_redirect(tep_href_link(FILENAME_CACHE));
+    osc_redirect(osc_href_link(FILENAME_CACHE));
   }
 
 // check if the cache directory exists
   if (is_dir(DIR_FS_CACHE)) {
-    if (!tep_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+    if (!osc_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
     $messageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
@@ -37,7 +37,7 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -52,7 +52,7 @@
               </tr>
 <?php
   if ($messageStack->size < 1) {
-    $languages = tep_get_languages();
+    $languages = osc_get_languages();
 
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
       if ($languages[$i]['code'] == DEFAULT_LANGUAGE) {
@@ -84,7 +84,7 @@
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo $cache_blocks[$i]['title']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $cache_mtime; ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . tep_href_link(FILENAME_CACHE, 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . osc_href_link(FILENAME_CACHE, 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . osc_image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?>&nbsp;</td>
               </tr>
 <?php
     }

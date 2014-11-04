@@ -49,7 +49,7 @@
           }
 
           if ( $this->enabled === true ) {
-            if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+            if ( !osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
               $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
             }
           }
@@ -65,7 +65,7 @@
     function execute() {
       global $oscTemplate;
 
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+      if ( osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
         if ( isset($_GET['action']) ) {
           if ( $_GET['action'] == 'paypal_login' ) {
             $this->preLogin();
@@ -100,7 +100,7 @@
     function preLogin() {
       global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
 
-      $return_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
+      $return_url = osc_href_link(FILENAME_LOGIN, '', 'SSL');
 
       if ( isset($_GET['code']) ) {
         $paypal_login_customer_id = false;
@@ -122,7 +122,7 @@
 
           if ( isset($response['email']) ) {
             $paypal_login_access_token = $response_token['access_token'];
-            tep_session_register('paypal_login_access_token');
+            osc_session_register('paypal_login_access_token');
 
             $force_login = false;
 
@@ -133,16 +133,16 @@
 
               $force_login = true;
 
-              $email_address = tep_db_prepare_input($response['email']);
+              $email_address = osc_db_prepare_input($response['email']);
 
-              $check_query = tep_db_query("select customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' limit 1");
-              if (tep_db_num_rows($check_query)) {
-                $check = tep_db_fetch_array($check_query);
+              $check_query = osc_db_query("select customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "' limit 1");
+              if (osc_db_num_rows($check_query)) {
+                $check = osc_db_fetch_array($check_query);
 
                 $customer_id = (int)$check['customers_id'];
               } else {
-                $customers_firstname = tep_db_prepare_input($response['given_name']);
-                $customers_lastname = tep_db_prepare_input($response['family_name']);
+                $customers_firstname = osc_db_prepare_input($response['given_name']);
+                $customers_lastname = osc_db_prepare_input($response['family_name']);
 
                 $sql_data_array = array('customers_firstname' => $customers_firstname,
                                         'customers_lastname' => $customers_lastname,
@@ -152,52 +152,52 @@
                                         'customers_newsletter' => '0',
                                         'customers_password' => '');
 
-                if ($this->hasAttribute('phone') && isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
-                  $customers_telephone = tep_db_prepare_input($response['phone_number']);
+                if ($this->hasAttribute('phone') && isset($response['phone_number']) && osc_not_null($response['phone_number'])) {
+                  $customers_telephone = osc_db_prepare_input($response['phone_number']);
 
                   $sql_data_array['customers_telephone'] = $customers_telephone;
                 }
 
-                tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+                osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-                $customer_id = (int)tep_db_insert_id();
+                $customer_id = (int)osc_db_insert_id();
 
-                tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+                osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
               }
             }
 
 // check if paypal shipping address exists in the address book
-            $ship_firstname = tep_db_prepare_input($response['given_name']);
-            $ship_lastname = tep_db_prepare_input($response['family_name']);
-            $ship_address = tep_db_prepare_input($response['address']['street_address']);
-            $ship_city = tep_db_prepare_input($response['address']['locality']);
-            $ship_zone = tep_db_prepare_input($response['address']['region']);
+            $ship_firstname = osc_db_prepare_input($response['given_name']);
+            $ship_lastname = osc_db_prepare_input($response['family_name']);
+            $ship_address = osc_db_prepare_input($response['address']['street_address']);
+            $ship_city = osc_db_prepare_input($response['address']['locality']);
+            $ship_zone = osc_db_prepare_input($response['address']['region']);
             $ship_zone_id = 0;
-            $ship_postcode = tep_db_prepare_input($response['address']['postal_code']);
-            $ship_country = tep_db_prepare_input($response['address']['country']);
+            $ship_postcode = osc_db_prepare_input($response['address']['postal_code']);
+            $ship_country = osc_db_prepare_input($response['address']['country']);
             $ship_country_id = 0;
             $ship_address_format_id = 1;
 
-            $country_query = tep_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($ship_country) . "' limit 1");
-            if (tep_db_num_rows($country_query)) {
-              $country = tep_db_fetch_array($country_query);
+            $country_query = osc_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . osc_db_input($ship_country) . "' limit 1");
+            if (osc_db_num_rows($country_query)) {
+              $country = osc_db_fetch_array($country_query);
 
               $ship_country_id = $country['countries_id'];
               $ship_address_format_id = $country['address_format_id'];
             }
 
             if ($ship_country_id > 0) {
-              $zone_query = tep_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . tep_db_input($ship_zone) . "' or zone_code = '" . tep_db_input($ship_zone) . "') limit 1");
-              if (tep_db_num_rows($zone_query)) {
-                $zone = tep_db_fetch_array($zone_query);
+              $zone_query = osc_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . osc_db_input($ship_zone) . "' or zone_code = '" . osc_db_input($ship_zone) . "') limit 1");
+              if (osc_db_num_rows($zone_query)) {
+                $zone = osc_db_fetch_array($zone_query);
 
                 $ship_zone_id = $zone['zone_id'];
               }
             }
 
-            $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
-            if (tep_db_num_rows($check_query)) {
-              $check = tep_db_fetch_array($check_query);
+            $check_query = osc_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . osc_db_input($ship_firstname) . "' and entry_lastname = '" . osc_db_input($ship_lastname) . "' and entry_street_address = '" . osc_db_input($ship_address) . "' and entry_postcode = '" . osc_db_input($ship_postcode) . "' and entry_city = '" . osc_db_input($ship_city) . "' and (entry_state = '" . osc_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+            if (osc_db_num_rows($check_query)) {
+              $check = osc_db_fetch_array($check_query);
 
               $sendto = $check['address_book_id'];
             } else {
@@ -219,14 +219,14 @@
                 }
               }
 
-              tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+              osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-              $address_id = tep_db_insert_id();
+              $address_id = osc_db_insert_id();
 
               $sendto = $address_id;
 
               if ($customer_default_address_id < 1) {
-                tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+                osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
                 $customer_default_address_id = $address_id;
               }
             }
@@ -238,20 +238,20 @@
             }
 
             if ( !isset($_SESSION['paypal_login_customer_id']) ) {
-              tep_session_register('paypal_login_customer_id');
+              osc_session_register('paypal_login_customer_id');
             }
 
             $billto = $sendto;
 
             if ( !isset($_SESSION['sendto']) ) {
-              tep_session_register('sendto');
+              osc_session_register('sendto');
             }
 
             if ( !isset($_SESSION['billto']) ) {
-              tep_session_register('billto');
+              osc_session_register('billto');
             }
 
-            $return_url = tep_href_link(FILENAME_LOGIN, 'action=paypal_login_process', 'SSL');
+            $return_url = osc_href_link(FILENAME_LOGIN, 'action=paypal_login_process', 'SSL');
           }
         }
       }
@@ -274,7 +274,7 @@
 
 // Register PayPal Express Checkout as the default payment method
       if ( !isset($_SESSION['payment']) || ($payment != 'paypal_express') ) {
-        if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
+        if (defined('MODULE_PAYMENT_INSTALLED') && osc_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
               include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
@@ -285,7 +285,7 @@
 
             if ( $ppe->enabled ) {
               $payment = 'paypal_express';
-              tep_session_register('payment');
+              osc_session_register('payment');
             }
           }
         }
@@ -328,12 +328,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -354,7 +354,7 @@
       $params = array('MODULE_CONTENT_PAYPAL_LOGIN_STATUS' => array('title' => 'Enable Log In with PayPal',
                                                                     'desc' => 'Do you want to enable the Log In with PayPal module?',
                                                                     'value' => 'True',
-                                                                    'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                    'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID' => array('title' => 'Client ID',
                                                                        'desc' => 'Your PayPal Application Client ID.'),
                       'MODULE_CONTENT_PAYPAL_LOGIN_SECRET' => array('title' => 'Secret',
@@ -362,7 +362,7 @@
                       'MODULE_CONTENT_PAYPAL_LOGIN_THEME' => array('title' => 'Theme',
                                                                    'desc' => 'Which theme should be used for the button?',
                                                                    'value' => 'Blue',
-                                                                   'set_func' => 'tep_cfg_select_option(array(\'Blue\', \'Neutral\'), '),
+                                                                   'set_func' => 'osc_cfg_select_option(array(\'Blue\', \'Neutral\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES' => array('title' => 'Information Requested From Customers',
                                                                     'desc' => 'The attributes the customer must share with you.',
                                                                     'value' => implode(';', $this->get_default_attributes()),
@@ -371,17 +371,17 @@
                       'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE' => array('title' => 'Server Type',
                                                                          'desc' => 'Which server should be used? Live for production or Sandbox for testing.',
                                                                          'value' => 'Live',
-                                                                         'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                                                                         'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                         'desc' => 'Verify gateway server SSL certificate on connection?',
                                                                         'value' => 'True',
-                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                        'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_PROXY' => array('title' => 'Proxy Server',
                                                                    'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH' => array('title' => 'Content Width',
                                                                            'desc' => 'Should the content be shown in a full or half width container?',
                                                                            'value' => 'Full',
-                                                                           'set_func' => 'tep_cfg_select_option(array(\'Full\', \'Half\'), '),
+                                                                           'set_func' => 'osc_cfg_select_option(array(\'Full\', \'Half\'), '),
                       'MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER' => array('title' => 'Sort order of display',
                                                                         'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                         'value' => '0'));
@@ -423,7 +423,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_PROXY) ) {
+      if ( osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_CONTENT_PAYPAL_LOGIN_PROXY);
       }
@@ -446,7 +446,7 @@
                           'client_secret' => MODULE_CONTENT_PAYPAL_LOGIN_SECRET,
                           'grant_type' => 'authorization_code',
                           'code' => $params['code'],
-                          'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
+                          'redirect_uri' => str_replace('&amp;', '&', osc_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
 
       $post_string = '';
 
@@ -512,7 +512,7 @@
       $dialog_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script type="text/javascript">
@@ -608,9 +608,9 @@ EOD;
 
       $info = '<p><img src="images/icon_info.gif" border="0">&nbsp;<a href="javascript:openShowUrlsDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE . '</a></p>' .
               '<div id="showUrlsDialog" style="display: none;">' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
               '</div>' .
               $js;
 
@@ -697,9 +697,9 @@ EOD;
 
       foreach ( $attributes as $attribute => $scope ) {
         if ( in_array($attribute, $required_array) ) {
-          $output .= tep_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
+          $output .= osc_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
         } else {
-          $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
+          $output .= osc_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
         }
 
         $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
@@ -710,7 +710,7 @@ EOD;
       $output = '<br />' . substr($output, 0, -6);
     }
 
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
+    $output .= osc_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
 
     $output .= '<script type="text/javascript">
                 function cmpl_update_cfg_value() {

@@ -41,7 +41,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -60,8 +60,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -87,15 +87,15 @@
       if (isset($_SESSION['cart_RBS_Worldpay_Hosted_ID'])) {
         $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-        $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
+        $check_query = osc_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
-        if (tep_db_num_rows($check_query) < 1) {
-          tep_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
+        if (osc_db_num_rows($check_query) < 1) {
+          osc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
+          osc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
+          osc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
+          osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
+          osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
+          osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
 
           unset($_SESSION['cart_RBS_Worldpay_Hosted_ID']);
         }
@@ -113,7 +113,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -125,19 +125,19 @@
       if (isset($_SESSION['cart_RBS_Worldpay_Hosted_ID'])) {
         $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-        $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-        $curr = tep_db_fetch_array($curr_check);
+        $curr_check = osc_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+        $curr = osc_db_fetch_array($curr_check);
 
         if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_RBS_Worldpay_Hosted_ID, 0, strlen($cartID))) ) {
-          $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
+          $check_query = osc_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
 
-          if (tep_db_num_rows($check_query) < 1) {
-            tep_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
+          if (osc_db_num_rows($check_query) < 1) {
+            osc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
+            osc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
+            osc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
+            osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
+            osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
+            osc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
           }
 
           $insert_order = true;
@@ -154,7 +154,7 @@
             $class = substr($value, 0, strrpos($value, '.'));
             if ($GLOBALS[$class]->enabled) {
               for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-                if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+                if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text'])) {
                   $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                           'title' => $GLOBALS[$class]->output[$i]['title'],
                                           'text' => $GLOBALS[$class]->output[$i]['text'],
@@ -206,9 +206,9 @@
                                 'currency' => $order->info['currency'],
                                 'currency_value' => $order->info['currency_value']);
 
-        tep_db_perform(TABLE_ORDERS, $sql_data_array);
+        osc_db_perform(TABLE_ORDERS, $sql_data_array);
 
-        $insert_id = tep_db_insert_id();
+        $insert_id = osc_db_insert_id();
 
         for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
           $sql_data_array = array('orders_id' => $insert_id,
@@ -218,12 +218,12 @@
                                   'class' => $order_totals[$i]['code'],
                                   'sort_order' => $order_totals[$i]['sort_order']);
 
-          tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+          osc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
         }
 
         for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
           $sql_data_array = array('orders_id' => $insert_id,
-                                  'products_id' => tep_get_prid($order->products[$i]['id']),
+                                  'products_id' => osc_get_prid($order->products[$i]['id']),
                                   'products_model' => $order->products[$i]['model'],
                                   'products_name' => $order->products[$i]['name'],
                                   'products_price' => $order->products[$i]['price'],
@@ -231,9 +231,9 @@
                                   'products_tax' => $order->products[$i]['tax'],
                                   'products_quantity' => $order->products[$i]['qty']);
 
-          tep_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
+          osc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
-          $order_products_id = tep_db_insert_id();
+          $order_products_id = osc_db_insert_id();
 
           $attributes_exist = '0';
           if (isset($order->products[$i]['attributes'])) {
@@ -251,11 +251,11 @@
                                      and pa.options_values_id = poval.products_options_values_id
                                      and popt.language_id = '" . $_SESSION['languages_id'] . "'
                                      and poval.language_id = '" . $_SESSION['languages_id'] . "'";
-                $attributes = tep_db_query($attributes_query);
+                $attributes = osc_db_query($attributes_query);
               } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
+                $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
               }
-              $attributes_values = tep_db_fetch_array($attributes);
+              $attributes_values = osc_db_fetch_array($attributes);
 
               $sql_data_array = array('orders_id' => $insert_id,
                                       'orders_products_id' => $order_products_id,
@@ -264,23 +264,23 @@
                                       'options_values_price' => $attributes_values['options_values_price'],
                                       'price_prefix' => $attributes_values['price_prefix']);
 
-              tep_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
+              osc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-              if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename'])) {
+              if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && osc_not_null($attributes_values['products_attributes_filename'])) {
                 $sql_data_array = array('orders_id' => $insert_id,
                                         'orders_products_id' => $order_products_id,
                                         'orders_products_filename' => $attributes_values['products_attributes_filename'],
                                         'download_maxdays' => $attributes_values['products_attributes_maxdays'],
                                         'download_count' => $attributes_values['products_attributes_maxcount']);
 
-                tep_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
+                osc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
               }
             }
           }
         }
 
         $cart_RBS_Worldpay_Hosted_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_RBS_Worldpay_Hosted_ID');
+        osc_session_register('cart_RBS_Worldpay_Hosted_ID');
       }
 
       return false;
@@ -291,39 +291,39 @@
 
       $order_id = substr($cart_RBS_Worldpay_Hosted_ID, strpos($cart_RBS_Worldpay_Hosted_ID, '-')+1);
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
-      $lang = tep_db_fetch_array($lang_query);
+      $lang_query = osc_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $lang = osc_db_fetch_array($lang_query);
 
-      $process_button_string = tep_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
-                               tep_draw_hidden_field('cartId', $order_id) .
-                               tep_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
-                               tep_draw_hidden_field('currency', $_SESSION['currency']) .
-                               tep_draw_hidden_field('desc', STORE_NAME) .
-                               tep_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               tep_draw_hidden_field('address1', $order->billing['street_address']) .
-                               tep_draw_hidden_field('town', $order->billing['city']) .
-                               tep_draw_hidden_field('region', $order->billing['state']) .
-                               tep_draw_hidden_field('postcode', $order->billing['postcode']) .
-                               tep_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
-                               tep_draw_hidden_field('tel', $order->customer['telephone']) .
-                               tep_draw_hidden_field('email', $order->customer['email_address']) .
-                               tep_draw_hidden_field('fixContact', 'Y') .
-                               tep_draw_hidden_field('hideCurrency', 'true') .
-                               tep_draw_hidden_field('lang', strtoupper($lang['code'])) .
-                               tep_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
-                               tep_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
-                               tep_draw_hidden_field('MC_callback', tep_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
-                               tep_draw_hidden_field('M_sid', session_id()) .
-                               tep_draw_hidden_field('M_cid', $customer_id) .
-                               tep_draw_hidden_field('M_lang', $_SESSION['language']) .
-                               tep_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
+      $process_button_string = osc_draw_hidden_field('instId', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) .
+                               osc_draw_hidden_field('cartId', $order_id) .
+                               osc_draw_hidden_field('amount', $this->format_raw($order->info['total'])) .
+                               osc_draw_hidden_field('currency', $_SESSION['currency']) .
+                               osc_draw_hidden_field('desc', STORE_NAME) .
+                               osc_draw_hidden_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
+                               osc_draw_hidden_field('address1', $order->billing['street_address']) .
+                               osc_draw_hidden_field('town', $order->billing['city']) .
+                               osc_draw_hidden_field('region', $order->billing['state']) .
+                               osc_draw_hidden_field('postcode', $order->billing['postcode']) .
+                               osc_draw_hidden_field('country', $order->billing['country']['iso_code_2']) .
+                               osc_draw_hidden_field('tel', $order->customer['telephone']) .
+                               osc_draw_hidden_field('email', $order->customer['email_address']) .
+                               osc_draw_hidden_field('fixContact', 'Y') .
+                               osc_draw_hidden_field('hideCurrency', 'true') .
+                               osc_draw_hidden_field('lang', strtoupper($lang['code'])) .
+                               osc_draw_hidden_field('signatureFields', 'amount:currency:cartId') .
+                               osc_draw_hidden_field('signature', md5(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD . ':' . $this->format_raw($order->info['total']) . ':' . $_SESSION['currency'] . ':' . $order_id)) .
+                               osc_draw_hidden_field('MC_callback', osc_href_link('ext/modules/payment/rbsworldpay/hosted_callback.php', '', 'SSL', false)) .
+                               osc_draw_hidden_field('M_sid', session_id()) .
+                               osc_draw_hidden_field('M_cid', $customer_id) .
+                               osc_draw_hidden_field('M_lang', $_SESSION['language']) .
+                               osc_draw_hidden_field('M_hash', md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD));
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD == 'Pre-Authorization') {
-        $process_button_string .= tep_draw_hidden_field('authMode', 'E');
+        $process_button_string .= osc_draw_hidden_field('authMode', 'E');
       }
 
       if (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE == 'True') {
-        $process_button_string .= tep_draw_hidden_field('testMode', '100');
+        $process_button_string .= osc_draw_hidden_field('testMode', '100');
       }
 
       return $process_button_string;
@@ -338,23 +338,23 @@
       if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
-      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
+      $check_query = osc_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query)) {
+      if (!osc_db_num_rows($check_query)) {
         $this->sendDebugEmail();
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART));
       }
 
-      $check = tep_db_fetch_array($check_query);
+      $check = osc_db_fetch_array($check_query);
 
       $order_status_id = (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
 
       if ($check['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
-        tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+        osc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
 
         $sql_data_array = array('orders_id' => $order_id,
                                 'orders_status_id' => $order_status_id,
@@ -362,17 +362,17 @@
                                 'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                                 'comments' => $order->info['comments']);
 
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
       } else {
-        $order_status_query = tep_db_query("select orders_status_history_id from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . (int)$order_id . "' and orders_status_id = '" . (int)$order_status_id . "' and comments = '' order by date_added desc limit 1");
+        $order_status_query = osc_db_query("select orders_status_history_id from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . (int)$order_id . "' and orders_status_id = '" . (int)$order_status_id . "' and comments = '' order by date_added desc limit 1");
 
-        if (tep_db_num_rows($order_status_query)) {
-          $order_status = tep_db_fetch_array($order_status_query);
+        if (osc_db_num_rows($order_status_query)) {
+          $order_status = osc_db_fetch_array($order_status_query);
 
           $sql_data_array = array('customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                                   'comments' => $order->info['comments']);
 
-          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array, 'update', "orders_status_history_id = '" . (int)$order_status['orders_status_history_id'] . "'");
+          osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array, 'update', "orders_status_history_id = '" . (int)$order_status['orders_status_history_id'] . "'");
         }
       }
 
@@ -388,7 +388,7 @@
                               'customer_notified' => '0',
                               'comments' => $trans_result);
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
 // initialized for the email confirmation
       $products_ordered = '';
@@ -405,34 +405,34 @@
                                 ON p.products_id=pa.products_id
                                 LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '" . tep_get_prid($order->products[$i]['id']) . "'";
+                                WHERE p.products_id = '" . osc_get_prid($order->products[$i]['id']) . "'";
 // Will work with only one option for downloadable products
 // otherwise, we have to build the query dynamically with a loop
             $products_attributes = $order->products[$i]['attributes'];
             if (is_array($products_attributes)) {
               $stock_query_raw .= " AND pa.options_id = '" . $products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . $products_attributes[0]['value_id'] . "'";
             }
-            $stock_query = tep_db_query($stock_query_raw);
+            $stock_query = osc_db_query($stock_query_raw);
           } else {
-            $stock_query = tep_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            $stock_query = osc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
           }
-          if (tep_db_num_rows($stock_query) > 0) {
-            $stock_values = tep_db_fetch_array($stock_query);
+          if (osc_db_num_rows($stock_query) > 0) {
+            $stock_values = osc_db_fetch_array($stock_query);
 // do not decrement quantities if products_attributes_filename exists
             if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename'])) {
               $stock_left = $stock_values['products_quantity'] - $order->products[$i]['qty'];
             } else {
               $stock_left = $stock_values['products_quantity'];
             }
-            tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            osc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-              tep_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+              osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             }
           }
         }
 
 // Update products_ordered (for bestsellers list)
-        tep_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+        osc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
 
 //------insert customer choosen option to order--------
         $attributes_exist = '0';
@@ -452,18 +452,18 @@
                                    and pa.options_values_id = poval.products_options_values_id
                                    and popt.language_id = '" . $_SESSION['languages_id'] . "'
                                    and poval.language_id = '" . $_SESSION['languages_id'] . "'";
-              $attributes = tep_db_query($attributes_query);
+              $attributes = osc_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
+              $attributes = osc_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . $_SESSION['languages_id'] . "' and poval.language_id = '" . $_SESSION['languages_id'] . "'");
             }
-            $attributes_values = tep_db_fetch_array($attributes);
+            $attributes_values = osc_db_fetch_array($attributes);
 
             $products_ordered_attributes .= "\n\t" . $attributes_values['products_options_name'] . ' ' . $attributes_values['products_options_values_name'];
           }
         }
 //------insert customer choosen option eof ----
         $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-        $total_tax += tep_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
+        $total_tax += osc_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
         $total_cost += $total_products_price;
 
         $products_ordered .= $order->products[$i]['qty'] . ' x ' . $order->products[$i]['name'] . ' (' . $order->products[$i]['model'] . ') = ' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . $products_ordered_attributes . "\n";
@@ -473,10 +473,10 @@
       $email_order = STORE_NAME . "\n" .
                      EMAIL_SEPARATOR . "\n" .
                      EMAIL_TEXT_ORDER_NUMBER . ' ' . $order_id . "\n" .
-                     EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
+                     EMAIL_TEXT_INVOICE_URL . ' ' . osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $order_id, 'SSL', false) . "\n" .
                      EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
       if ($order->info['comments']) {
-        $email_order .= tep_db_output($order->info['comments']) . "\n\n";
+        $email_order .= osc_db_output($order->info['comments']) . "\n\n";
       }
       $email_order .= EMAIL_TEXT_PRODUCTS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
@@ -490,12 +490,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        osc_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      osc_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
@@ -507,11 +507,11 @@
         }
       }
 
-      tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+      osc_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
 // send emails to other people
       if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-        tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
 
 // load the after_process function from the payment modules
@@ -528,7 +528,7 @@
 
       unset($_SESSION['cart_RBS_Worldpay_Hosted_ID']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {
@@ -541,8 +541,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -575,12 +575,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -599,26 +599,26 @@
 
     function getParams() {
       if (!defined('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [WorldPay]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Preparing [WorldPay]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [WorldPay]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Preparing [WorldPay]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }
@@ -627,26 +627,26 @@
       }
 
       if (!defined('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTIONS_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'WorldPay [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'WorldPay [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $tx_status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $tx_status_id . "', '" . $lang['id'] . "', 'WorldPay [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $tx_status_id . "', '" . $lang['id'] . "', 'WorldPay [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $tx_status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $tx_status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $tx_status_id = $check['orders_status_id'];
         }
@@ -657,7 +657,7 @@
       $params = array('MODULE_PAYMENT_RBSWORLDPAY_HOSTED_STATUS' => array('title' => 'Enable WorldPay Hosted Payment Pages',
                                                                           'desc' => 'Do you want to accept WorldPay Hosted Payment Pages payments?',
                                                                           'value' => 'True',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                          'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID' => array('title' => 'Installation ID',
                                                                                    'desc' => 'The WorldPay Account Installation ID to accept payments for'),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD' => array('title' => 'Callback Password',
@@ -667,31 +667,31 @@
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                       'desc' => 'The processing method to use for each transaction.',
                                                                                       'value' => 'Capture',
-                                                                                      'set_func' => 'tep_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), '),
+                                                                                      'set_func' => 'osc_cfg_select_option(array(\'Pre-Authorization\', \'Capture\'), '),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID' => array('title' => 'Set Preparing Order Status',
                                                                                            'desc' => 'Set the status of prepared orders made with this payment module to this value',
                                                                                            'value' => $status_id,
-                                                                                           'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                           'use_func' => 'tep_get_order_status_name'),
+                                                                                           'set_func' => 'osc_cfg_pull_down_order_statuses(',
+                                                                                           'use_func' => 'osc_get_order_status_name'),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                                    'desc' => 'Set the status of orders made with this payment module to this value',
                                                                                    'value' => '0',
-                                                                                   'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                   'use_func' => 'tep_get_order_status_name'),
+                                                                                   'set_func' => 'osc_cfg_pull_down_order_statuses(',
+                                                                                   'use_func' => 'osc_get_order_status_name'),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'Transactions Order Status Level',
                                                                                                 'desc' => 'Include WorldPay transaction information in this order status level.',
                                                                                                 'value' => $tx_status_id,
-                                                                                                'use_func' => 'tep_get_order_status_name',
-                                                                                                'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                                'use_func' => 'osc_get_order_status_name',
+                                                                                                'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ZONE' => array('title' => 'Payment Zone',
                                                                         'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                                         'value' => '0',
-                                                                        'use_func' => 'tep_get_zone_class_title',
-                                                                        'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                                                                        'use_func' => 'osc_get_zone_class_title',
+                                                                        'set_func' => 'osc_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TESTMODE' => array('title' => 'Test Mode',
                                                                             'desc' => 'Should transactions be processed in test mode?',
                                                                             'value' => 'False',
-                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                            'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
                                                                                'desc' => 'All parameters of an invalid transaction will be sent to this email address if one is entered.'),
                       'MODULE_PAYMENT_RBSWORLDPAY_HOSTED_SORT_ORDER' => array('title' => 'Sort order of display.',
@@ -713,11 +713,11 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -733,7 +733,7 @@
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL, 'WorldPay Hosted Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_RBSWORLDPAY_HOSTED_DEBUG_EMAIL, 'WorldPay Hosted Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

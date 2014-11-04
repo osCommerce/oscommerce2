@@ -28,7 +28,7 @@
     $error = true;
   } elseif ( !isset($_POST['installation']) || ($_POST['installation'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
     $error = true;
-  } elseif ( tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && (!isset($_POST['callbackPW']) || ($_POST['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) ) {
+  } elseif ( osc_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && (!isset($_POST['callbackPW']) || ($_POST['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) ) {
     $error = true;
   } elseif ( !isset($_POST['transStatus']) || ($_POST['transStatus'] != 'Y') ) {
     $error = true;
@@ -37,9 +37,9 @@
   }
 
   if ( $error == false ) {
-    $order_query = tep_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$_POST['cartId'] . "' and customers_id = '" . (int)$_POST['M_cid'] . "'");
+    $order_query = osc_db_query("select orders_id, orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$_POST['cartId'] . "' and customers_id = '" . (int)$_POST['M_cid'] . "'");
 
-    if (!tep_db_num_rows($order_query)) {
+    if (!osc_db_num_rows($order_query)) {
       $error = true;
     }
   }
@@ -50,12 +50,12 @@
     exit;
   }
 
-  $order = tep_db_fetch_array($order_query);
+  $order = osc_db_fetch_array($order_query);
 
   if ($order['orders_status'] == MODULE_PAYMENT_RBSWORLDPAY_HOSTED_PREPARE_ORDER_STATUS_ID) {
     $order_status_id = (MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_RBSWORLDPAY_HOSTED_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID);
 
-    tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$order['orders_id'] . "'");
+    osc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . $order_status_id . "', last_modified = now() where orders_id = '" . (int)$order['orders_id'] . "'");
 
     $sql_data_array = array('orders_id' => $order['orders_id'],
                             'orders_status_id' => $order_status_id,
@@ -63,7 +63,7 @@
                             'customer_notified' => '0',
                             'comments' => '');
 
-    tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+    osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
   }
 
   $trans_result = 'WorldPay: Transaction Verified (Callback)' . "\n" .
@@ -79,21 +79,21 @@
                           'customer_notified' => '0',
                           'comments' => $trans_result);
 
-  tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+  osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 ?>
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
-<title><?php echo tep_output_string_protected(TITLE); ?></title>
-<meta http-equiv="refresh" content="3; URL=<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['M_hash'], 'SSL', false); ?>">
+<title><?php echo osc_output_string_protected(TITLE); ?></title>
+<meta http-equiv="refresh" content="3; URL=<?php echo osc_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['M_hash'], 'SSL', false); ?>">
 </head>
 <body>
 <h1><?php echo STORE_NAME; ?></h1>
 
 <p><?php echo MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_SUCCESSFUL_TRANSACTION; ?></p>
 
-<form action="<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['M_hash'], 'SSL', false); ?>" method="post" target="_top">
+<form action="<?php echo osc_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['M_hash'], 'SSL', false); ?>" method="post" target="_top">
   <p><input type="submit" value="<?php echo sprintf(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_TEXT_CONTINUE_BUTTON, addslashes(STORE_NAME)); ?>" /></p>
 </form>
 
@@ -105,5 +105,5 @@
 </html>
 
 <?php
-  tep_session_destroy();
+  osc_session_destroy();
 ?>

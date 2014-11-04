@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT) && !tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT) && !osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -61,7 +61,7 @@
         unset($_SESSION['ppec_right_turn']);
 
         if ( isset($_SESSION['payment']) && ($payment == $this->code) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       }
 
@@ -76,8 +76,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -103,7 +103,7 @@
 
         $params = array('locale=' . MODULE_PAYMENT_PAYPAL_EXPRESS_LANGUAGE_LOCALE);
 
-        if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
+        if (osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
           $response_array = $this->getPalDetails();
 
           if (isset($response_array['PAL'])) {
@@ -119,13 +119,13 @@
         $image_button = MODULE_PAYMENT_PAYPAL_EXPRESS_BUTTON;
       }
 
-      $button_title = tep_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON);
+      $button_title = osc_output_string_protected(MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_BUTTON);
 
       if ( MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Sandbox' ) {
         $button_title .= ' (' . $this->code . '; Sandbox)';
       }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+      $string = '<a href="' . osc_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
 
       return $string;
     }
@@ -143,15 +143,15 @@
       global $ppe_token, $ppe_secret, $messageStack, $order;
 
       if (!isset($_SESSION['ppe_token'])) {
-        tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
+        osc_redirect(osc_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
       if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       } elseif ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
       }
 
       if ( isset($_SESSION['ppe_order_total_check']) ) {
@@ -172,7 +172,7 @@
 
       if (empty($comments)) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => osc_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
       }
 
       return $confirmation;
@@ -186,22 +186,22 @@
       global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $comments, $response_array;
 
       if (!isset($_SESSION['ppe_token'])) {
-        tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
+        osc_redirect(osc_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
       $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !isset($_SESSION['ppe_order_total_check']) ) {
-          tep_session_register('ppe_order_total_check');
+          osc_session_register('ppe_order_total_check');
           $ppe_order_total_check = true;
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       if ( isset($_SESSION['ppe_order_total_check']) ) {
@@ -209,8 +209,8 @@
       }
 
       if (empty($comments)) {
-        if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
-          $comments = tep_db_prepare_input($_POST['ppecomments']);
+        if (isset($_POST['ppecomments']) && osc_not_null($_POST['ppecomments'])) {
+          $comments = osc_db_prepare_input($_POST['ppecomments']);
 
           $order->info['comments'] = $comments;
         }
@@ -225,7 +225,7 @@
         $params['PAYMENTREQUEST_0_SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['PAYMENTREQUEST_0_SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['PAYMENTREQUEST_0_SHIPTOCITY'] = $order->delivery['city'];
-        $params['PAYMENTREQUEST_0_SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $params['PAYMENTREQUEST_0_SHIPTOSTATE'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $params['PAYMENTREQUEST_0_SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
         $params['PAYMENTREQUEST_0_SHIPTOZIP'] = $order->delivery['postcode'];
       }
@@ -242,23 +242,23 @@
 
           $paypal_url .= '&token=' . $ppe_token . '&useraction=commit';
 
-          tep_redirect($paypal_url);
+          osc_redirect($paypal_url);
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
     }
 
     function after_process() {
       global $response_array, $insert_id, $ppe_payerstatus, $ppe_addressstatus;
 
-      $pp_result = 'Transaction ID: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
-                   'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
-                   'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
-                   'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
-                   'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']) . "\n" .
-                   'Reversal Code: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_REASONCODE']);
+      $pp_result = 'Transaction ID: ' . osc_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
+                   'Payer Status: ' . osc_output_string_protected($ppe_payerstatus) . "\n" .
+                   'Address Status: ' . osc_output_string_protected($ppe_addressstatus) . "\n\n" .
+                   'Payment Status: ' . osc_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
+                   'Payment Type: ' . osc_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
+                   'Pending Reason: ' . osc_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']) . "\n" .
+                   'Reversal Code: ' . osc_output_string_protected($response_array['PAYMENTINFO_0_REASONCODE']);
 
       $sql_data_array = array('orders_id' => $insert_id,
                               'orders_status_id' => MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID,
@@ -266,7 +266,7 @@
                               'customer_notified' => '0',
                               'comments' => $pp_result);
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       unset($_SESSION['ppe_token']);
       unset($_SESSION['ppe_payerid']);
@@ -281,8 +281,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -315,12 +315,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -339,26 +339,26 @@
 
     function getParams() {
       if (!defined('MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }
@@ -369,7 +369,7 @@
       $params = array('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS' => array('title' => 'Enable PayPal Express Checkout',
                                                                       'desc' => 'Do you want to accept PayPal Express Checkout payments?',
                                                                       'value' => 'True',
-                                                                      'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                      'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT' => array('title' => 'Seller Account',
                                                                               'desc' => 'The email address of the seller account if no API credentials has been setup.',
                                                                               'value' => STORE_OWNER_EMAIL_ADDRESS),
@@ -382,44 +382,44 @@
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL' => array('title' => 'PayPal Account Optional',
                                                                                 'desc' => 'This must also be enabled in your PayPal account, in Profile > Website Payment Preferences.',
                                                                                 'value' => 'False',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                                'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_INSTANT_UPDATE' => array('title' => 'PayPal Instant Update',
                                                                               'desc' => 'Allow PayPal to retrieve shipping rates and taxes for the order.',
                                                                               'value' => 'True',
-                                                                              'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                              'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_CHECKOUT_IMAGE' => array('title' => 'PayPal Checkout Image',
                                                                               'desc' => 'Use static or dynamic Express Checkout image buttons. Dynamic images are used with PayPal campaigns.',
                                                                               'value' => 'Static',
-                                                                              'set_func' => 'tep_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
+                                                                              'set_func' => 'osc_cfg_select_option(array(\'Static\', \'Dynamic\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_PAGE_STYLE' => array('title' => 'Page Style',
                                                                           'desc' => 'The page style to use for the checkout flow (defined at your PayPal Profile page)'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                   'desc' => 'The processing method to use for each transaction.',
                                                                                   'value' => 'Sale',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                                                                                  'set_func' => 'osc_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                                'desc' => 'Set the status of orders made with this payment module to this value',
                                                                                'value' => '0',
-                                                                               'use_func' => 'tep_get_order_status_name',
-                                                                               'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                               'use_func' => 'osc_get_order_status_name',
+                                                                               'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
                                                                                             'desc' => 'Include PayPal transaction information in this order status level.',
                                                                                             'value' => $status_id,
-                                                                                            'use_func' => 'tep_get_order_status_name',
-                                                                                            'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                            'use_func' => 'osc_get_order_status_name',
+                                                                                            'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_ZONE' => array('title' => 'Payment Zone',
                                                                     'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                                     'value' => '0',
-                                                                    'use_func' => 'tep_get_zone_class_title',
-                                                                    'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                                                                    'use_func' => 'osc_get_zone_class_title',
+                                                                    'set_func' => 'osc_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                                   'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
                                                                                   'value' => 'Live',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                                                                                  'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                           'desc' => 'Verify gateway server SSL certificate on connection?',
                                                                           'value' => 'True',
-                                                                          'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                          'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY' => array('title' => 'Proxy Server',
                                                                      'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
@@ -464,7 +464,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_EXPRESS_PROXY);
       }
@@ -488,7 +488,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function getPalDetails() {
@@ -532,13 +532,13 @@
 
       $params = array('VERSION' => $this->api_version,
                       'METHOD' => 'SetExpressCheckout',
-                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
-                      'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
-                      'CANCELURL' => tep_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=cancel', 'SSL', true, false),
+                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
+                      'RETURNURL' => osc_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=retrieve', 'SSL', true, false),
+                      'CANCELURL' => osc_href_link('ext/modules/payment/paypal/express.php', 'osC_Action=cancel', 'SSL', true, false),
                       'BRANDNAME' => STORE_NAME,
                       'SOLUTIONTYPE' => (MODULE_PAYMENT_PAYPAL_EXPRESS_ACCOUNT_OPTIONAL == 'True') ? 'Sole' : 'Mark');
 
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
         $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
         $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
         $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
@@ -580,7 +580,7 @@
                       'METHOD' => 'GetExpressCheckoutDetails',
                       'TOKEN' => $token);
 
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
         $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
         $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
         $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
@@ -616,10 +616,10 @@
 
       $params = array('VERSION' => $this->api_version,
                       'METHOD' => 'DoExpressCheckoutPayment',
-                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
+                      'PAYMENTREQUEST_0_PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_METHOD == 'Sale') || (!osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) ? 'Sale' : 'Authorization'),
                       'BUTTONSOURCE' => 'OSCOM23_EC');
 
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME)) {
         $params['USER'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_USERNAME;
         $params['PWD'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_PASSWORD;
         $params['SIGNATURE'] = MODULE_PAYMENT_PAYPAL_EXPRESS_API_SIGNATURE;
@@ -652,9 +652,9 @@
 
     function getProductType($id, $attributes) {
       foreach ( $attributes as $a ) {
-        $virtual_check_query = tep_db_query("select pad.products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad where pa.products_id = '" . (int)$id . "' and pa.options_values_id = '" . (int)$a['value_id'] . "' and pa.products_attributes_id = pad.products_attributes_id limit 1");
+        $virtual_check_query = osc_db_query("select pad.products_attributes_id from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad where pa.products_id = '" . (int)$id . "' and pa.options_values_id = '" . (int)$a['value_id'] . "' and pa.products_attributes_id = pad.products_attributes_id limit 1");
 
-        if ( tep_db_num_rows($virtual_check_query) == 1 ) {
+        if ( osc_db_num_rows($virtual_check_query) == 1 ) {
           return 'Digital';
         }
       }
@@ -663,7 +663,7 @@
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -679,7 +679,7 @@
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Checkout Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_PAYPAL_EXPRESS_DEBUG_EMAIL, 'PayPal Express Checkout Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }
@@ -692,7 +692,7 @@
       $dialog_error = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_PAYPAL_EXPRESS_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>

@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -67,8 +67,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -110,15 +110,15 @@
       }
 
       $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER_FIRSTNAME,
-                                                    'field' => tep_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
+                                                    'field' => osc_draw_input_field('cc_owner_firstname', $order->billing['firstname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_OWNER_LASTNAME,
-                                                    'field' => tep_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
+                                                    'field' => osc_draw_input_field('cc_owner_lastname', $order->billing['lastname'])),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_NUMBER,
-                                                    'field' => tep_draw_input_field('cc_number_nh-dns')),
+                                                    'field' => osc_draw_input_field('cc_number_nh-dns')),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_EXPIRES,
-                                                    'field' => tep_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $expires_year)),
+                                                    'field' => osc_draw_pull_down_menu('cc_expires_month', $expires_month) . '&nbsp;' . osc_draw_pull_down_menu('cc_expires_year', $expires_year)),
                                               array('title' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_CREDIT_CARD_CCV,
-                                                    'field' => tep_draw_input_field('cc_ccv_nh-dns', '', 'size="5" maxlength="4"'))));
+                                                    'field' => osc_draw_input_field('cc_ccv_nh-dns', '', 'size="5" maxlength="4"'))));
 
       return $confirmation;
     }
@@ -152,7 +152,7 @@
                       'x_phone' => substr($order->customer['telephone'], 0, 25),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_cust_id' => substr($customer_id, 0, 20),
-                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_customer_ip' => osc_get_ip_address(),
                       'x_relay_response' => 'FALSE',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
@@ -268,7 +268,7 @@
       $error = false;
 
       if ( ($response['x_response_code'] == '1') || ($response['x_response_code'] == '4') ) {
-        if ( (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) && (strtoupper($response['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))))) || ($response['x_amount'] != $this->format_raw($order->info['total'])) ) {
+        if ( (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) && (strtoupper($response['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))))) || ($response['x_amount'] != $this->format_raw($order->info['total'])) ) {
           if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID > 0 ) {
             $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
           }
@@ -318,7 +318,7 @@
       if ($error !== false) {
         $this->sendDebugEmail($response);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
     }
 
@@ -327,7 +327,7 @@
 
       $status = array();
 
-      if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) ) {
+      if ( osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) ) {
         if ( strtoupper($response['x_MD5_Hash']) == strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))) ) {
           $status[] = 'MD5 Hash: Match';
         } else {
@@ -339,8 +339,8 @@
         $status[] = '*** Order Total Does Not Match Transaction Total ***';
       }
 
-      $status[] = 'Response: ' . tep_db_prepare_input($response['x_response_reason_text']) . ' (' . tep_db_prepare_input($response['x_response_reason_code']) . ')';
-      $status[] = 'Transaction ID: ' . tep_db_prepare_input($response['x_trans_id']);
+      $status[] = 'Response: ' . osc_db_prepare_input($response['x_response_reason_text']) . ' (' . osc_db_prepare_input($response['x_response_reason_code']) . ')';
+      $status[] = 'Transaction ID: ' . osc_db_prepare_input($response['x_trans_id']);
 
       $avs_response = '?';
 
@@ -352,7 +352,7 @@
         }
       }
 
-      $status[] = 'AVS: ' . tep_db_prepare_input($avs_response);
+      $status[] = 'AVS: ' . osc_db_prepare_input($avs_response);
 
       $cvv2_response = '?';
 
@@ -364,7 +364,7 @@
         }
       }
 
-      $status[] = 'Card Code: ' . tep_db_prepare_input($cvv2_response);
+      $status[] = 'Card Code: ' . osc_db_prepare_input($cvv2_response);
 
       $cavv_response = '?';
 
@@ -376,7 +376,7 @@
         }
       }
 
-      $status[] = 'Card Holder: ' . tep_db_prepare_input($cavv_response);
+      $status[] = 'Card Holder: ' . osc_db_prepare_input($cavv_response);
 
       $sql_data_array = array('orders_id' => $insert_id,
                               'orders_status_id' => MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_ORDER_STATUS_ID,
@@ -384,7 +384,7 @@
                               'customer_notified' => '0',
                               'comments' => implode("\n", $status));
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
 
     function get_error() {
@@ -428,8 +428,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -462,12 +462,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -486,26 +486,26 @@
 
     function getParams() {
       if (!defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Authorize.net [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Authorize.net [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Authorize.net [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Authorize.net [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }
@@ -516,7 +516,7 @@
       $params = array('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_STATUS' => array('title' => 'Enable Authorize.net Advanced Integration Method',
                                                                            'desc' => 'Do you want to accept Authorize.net Advanced Integration Method payments?',
                                                                            'value' => 'True',
-                                                                           'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                           'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID' => array('title' => 'API Login ID',
                                                                              'desc' => 'The API Login ID used for the Authorize.net service'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY' => array('title' => 'API Transaction Key',
@@ -526,39 +526,39 @@
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                        'desc' => 'The processing method to use for each transaction.',
                                                                                        'value' => 'Authorization',
-                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Capture\'), '),
+                                                                                       'set_func' => 'osc_cfg_select_option(array(\'Authorization\', \'Capture\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                                     'desc' => 'Set the status of orders made with this payment module to this value',
                                                                                     'value' => '0',
-                                                                                    'use_func' => 'tep_get_order_status_name',
-                                                                                    'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                    'use_func' => 'osc_get_order_status_name',
+                                                                                    'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID' => array('title' => 'Review Order Status',
                                                                                            'desc' => 'Set the status of orders flagged as being under review to this value',
                                                                                            'value' => '0',
-                                                                                           'use_func' => 'tep_get_order_status_name',
-                                                                                           'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                           'use_func' => 'osc_get_order_status_name',
+                                                                                           'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
                                                                                                 'desc' => 'Include transaction information in this order status level',
                                                                                                 'value' => $status_id,
-                                                                                                'use_func' => 'tep_get_order_status_name',
-                                                                                                'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                                'use_func' => 'osc_get_order_status_name',
+                                                                                                'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ZONE' => array('title' => 'Payment Zone',
                                                                          'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                                          'value' => '0',
-                                                                         'set_func' => 'tep_cfg_pull_down_zone_classes(',
-                                                                         'use_func' => 'tep_get_zone_class_title'),
+                                                                         'set_func' => 'osc_cfg_pull_down_zone_classes(',
+                                                                         'use_func' => 'osc_get_zone_class_title'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                                        'desc' => 'Perform transactions on the live or test server. The test server should only be used by developers with Authorize.net test accounts.',
                                                                                        'value' => 'Live',
-                                                                                       'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                                                                                       'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Test\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_MODE' => array('title' => 'Transaction Mode',
                                                                                      'desc' => 'Transaction mode used for processing orders',
                                                                                      'value' => 'Live',
-                                                                                     'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Test\'), '),
+                                                                                     'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Test\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                                'desc' => 'Verify transaction server SSL certificate on connection?',
                                                                                'value' => 'True',
-                                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                               'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY' => array('title' => 'Proxy Server',
                                                                           'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
@@ -629,7 +629,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY);
       }
@@ -649,7 +649,7 @@
       $dialog_error = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>
@@ -725,7 +725,7 @@ EOD;
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
                       'x_version' => $this->api_version,
-                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_customer_ip' => osc_get_ip_address(),
                       'x_relay_response' => 'FALSE',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
@@ -770,11 +770,11 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -806,7 +806,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL, 'Authorize.net AIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL, 'Authorize.net AIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

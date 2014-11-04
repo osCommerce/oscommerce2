@@ -21,38 +21,38 @@
 
     if (ACCOUNT_GENDER == 'true') {
       if (isset($_POST['gender'])) {
-        $gender = tep_db_prepare_input($_POST['gender']);
+        $gender = osc_db_prepare_input($_POST['gender']);
       } else {
         $gender = false;
       }
     }
-    $firstname = tep_db_prepare_input($_POST['firstname']);
-    $lastname = tep_db_prepare_input($_POST['lastname']);
-    if (ACCOUNT_DOB == 'true') $dob = tep_db_prepare_input($_POST['dob']);
-    $email_address = tep_db_prepare_input($_POST['email_address']);
-    if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
-    $street_address = tep_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
-    $postcode = tep_db_prepare_input($_POST['postcode']);
-    $city = tep_db_prepare_input($_POST['city']);
+    $firstname = osc_db_prepare_input($_POST['firstname']);
+    $lastname = osc_db_prepare_input($_POST['lastname']);
+    if (ACCOUNT_DOB == 'true') $dob = osc_db_prepare_input($_POST['dob']);
+    $email_address = osc_db_prepare_input($_POST['email_address']);
+    if (ACCOUNT_COMPANY == 'true') $company = osc_db_prepare_input($_POST['company']);
+    $street_address = osc_db_prepare_input($_POST['street_address']);
+    if (ACCOUNT_SUBURB == 'true') $suburb = osc_db_prepare_input($_POST['suburb']);
+    $postcode = osc_db_prepare_input($_POST['postcode']);
+    $city = osc_db_prepare_input($_POST['city']);
     if (ACCOUNT_STATE == 'true') {
-      $state = tep_db_prepare_input($_POST['state']);
+      $state = osc_db_prepare_input($_POST['state']);
       if (isset($_POST['zone_id'])) {
-        $zone_id = tep_db_prepare_input($_POST['zone_id']);
+        $zone_id = osc_db_prepare_input($_POST['zone_id']);
       } else {
         $zone_id = false;
       }
     }
-    $country = tep_db_prepare_input($_POST['country']);
-    $telephone = tep_db_prepare_input($_POST['telephone']);
-    $fax = tep_db_prepare_input($_POST['fax']);
+    $country = osc_db_prepare_input($_POST['country']);
+    $telephone = osc_db_prepare_input($_POST['telephone']);
+    $fax = osc_db_prepare_input($_POST['fax']);
     if (isset($_POST['newsletter'])) {
-      $newsletter = tep_db_prepare_input($_POST['newsletter']);
+      $newsletter = osc_db_prepare_input($_POST['newsletter']);
     } else {
       $newsletter = false;
     }
-    $password = tep_db_prepare_input($_POST['password']);
-    $confirmation = tep_db_prepare_input($_POST['confirmation']);
+    $password = osc_db_prepare_input($_POST['password']);
+    $confirmation = osc_db_prepare_input($_POST['confirmation']);
 
     $error = false;
 
@@ -77,7 +77,7 @@
     }
 
     if (ACCOUNT_DOB == 'true') {
-      if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || (!empty($dob) && (!is_numeric(tep_date_raw($dob)) || !@checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4))))) {
+      if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || (!empty($dob) && (!is_numeric(osc_date_raw($dob)) || !@checkdate(substr(osc_date_raw($dob), 4, 2), substr(osc_date_raw($dob), 6, 2), substr(osc_date_raw($dob), 0, 4))))) {
         $error = true;
 
         $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
@@ -88,13 +88,13 @@
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
-    } elseif (tep_validate_email($email_address) == false) {
+    } elseif (osc_validate_email($email_address) == false) {
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     } else {
-      $check_email_query = tep_db_query("select count(*) as total from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
-      $check_email = tep_db_fetch_array($check_email_query);
+      $check_email_query = osc_db_query("select count(*) as total from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "'");
+      $check_email = osc_db_fetch_array($check_email_query);
       if ($check_email['total'] > 0) {
         $error = true;
 
@@ -128,13 +128,13 @@
 
     if (ACCOUNT_STATE == 'true') {
       $zone_id = 0;
-      $check_query = tep_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
-      $check = tep_db_fetch_array($check_query);
+      $check_query = osc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
+      $check = osc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
       if ($entry_state_has_zones == true) {
-        $zone_query = tep_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
-        if (tep_db_num_rows($zone_query) == 1) {
-          $zone = tep_db_fetch_array($zone_query);
+        $zone_query = osc_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . osc_db_input($state) . "' or zone_code = '" . osc_db_input($state) . "')");
+        if (osc_db_num_rows($zone_query) == 1) {
+          $zone = osc_db_fetch_array($zone_query);
           $zone_id = $zone['zone_id'];
         } else {
           $error = true;
@@ -174,14 +174,14 @@
                               'customers_telephone' => $telephone,
                               'customers_fax' => $fax,
                               'customers_newsletter' => $newsletter,
-                              'customers_password' => tep_encrypt_password($password));
+                              'customers_password' => osc_encrypt_password($password));
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
+      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = osc_date_raw($dob);
 
-      tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+      osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-      $customer_id = tep_db_insert_id();
+      $customer_id = osc_db_insert_id();
 
       $sql_data_array = array('customers_id' => $customer_id,
                               'entry_firstname' => $firstname,
@@ -204,30 +204,30 @@
         }
       }
 
-      tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+      osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-      $address_id = tep_db_insert_id();
+      $address_id = osc_db_insert_id();
 
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
 
-      tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+      osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
 
       if (SESSION_RECREATE == 'True') {
-        tep_session_recreate();
+        osc_session_recreate();
       }
 
       $customer_first_name = $firstname;
       $customer_default_address_id = $address_id;
       $customer_country_id = $country;
       $customer_zone_id = $zone_id;
-      tep_session_register('customer_id');
-      tep_session_register('customer_first_name');
-      tep_session_register('customer_default_address_id');
-      tep_session_register('customer_country_id');
-      tep_session_register('customer_zone_id');
+      osc_session_register('customer_id');
+      osc_session_register('customer_first_name');
+      osc_session_register('customer_default_address_id');
+      osc_session_register('customer_country_id');
+      osc_session_register('customer_zone_id');
 
 // reset session token
-      $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+      $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
 
 // restore cart contents
       $_SESSION['cart']->restore_contents();
@@ -246,13 +246,13 @@
       }
 
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-      tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+      osc_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-      tep_redirect(tep_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_CREATE_ACCOUNT_SUCCESS, '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -267,9 +267,9 @@
   }
 ?>
 
-<div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, tep_href_link(FILENAME_LOGIN, tep_get_all_get_params(), 'SSL')); ?></div>
+<div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, osc_href_link(FILENAME_LOGIN, osc_get_all_get_params(), 'SSL')); ?></div>
 
-<?php echo tep_draw_form('create_account', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo osc_draw_form('create_account', osc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . osc_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
@@ -288,13 +288,13 @@
       <label class="control-label col-xs-3"><?php echo ENTRY_GENDER; ?></label>
       <div class="col-xs-9">
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'm', NULL, 'required aria-required="true"') . ' ' . MALE; ?>
+          <?php echo osc_draw_radio_field('gender', 'm', NULL, 'required aria-required="true"') . ' ' . MALE; ?>
         </label>
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'f') . ' ' . FEMALE; ?>
+          <?php echo osc_draw_radio_field('gender', 'f') . ' ' . FEMALE; ?>
         </label>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
+        <?php if (osc_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
       </div>
     </div>
 
@@ -305,17 +305,17 @@
     <div class="form-group has-feedback">
       <label for="inputFirstName" class="control-label col-xs-3"><?php echo ENTRY_FIRST_NAME; ?></label>
       <div class="col-xs-9">
-        <?php echo tep_draw_input_field('firstname', NULL, 'required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME . '"'); ?>
+        <?php echo osc_draw_input_field('firstname', NULL, 'required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_FIRST_NAME_TEXT)) echo '<span class="help-block">' . ENTRY_FIRST_NAME_TEXT . '</span>'; ?>
+        <?php if (osc_not_null(ENTRY_FIRST_NAME_TEXT)) echo '<span class="help-block">' . ENTRY_FIRST_NAME_TEXT . '</span>'; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputLastName" class="control-label col-xs-3"><?php echo ENTRY_LAST_NAME; ?></label>
       <div class="col-xs-9">
-        <?php echo tep_draw_input_field('lastname', NULL, 'required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME . '"'); ?>
+        <?php echo osc_draw_input_field('lastname', NULL, 'required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_LAST_NAME_TEXT)) echo '<span class="help-block">' . ENTRY_LAST_NAME_TEXT . '</span>'; ?>
+        <?php if (osc_not_null(ENTRY_LAST_NAME_TEXT)) echo '<span class="help-block">' . ENTRY_LAST_NAME_TEXT . '</span>'; ?>
       </div>
     </div>
 
@@ -327,9 +327,9 @@
       <label for="dob" class="control-label col-xs-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('dob', '', 'required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH . '"');
+        echo osc_draw_input_field('dob', '', 'required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_DATE_OF_BIRTH_TEXT)) echo '<span class="help-block">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>';
+        if (osc_not_null(ENTRY_DATE_OF_BIRTH_TEXT)) echo '<span class="help-block">' . ENTRY_DATE_OF_BIRTH_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -341,9 +341,9 @@
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-xs-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-9">
-        <?php echo tep_draw_input_field('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS . '"', 'email'); ?>
+        <?php echo osc_draw_input_field('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS . '"', 'email'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_EMAIL_ADDRESS_TEXT)) echo '<span class="help-block">' . ENTRY_EMAIL_ADDRESS_TEXT . '</span>'; ?>
+        <?php if (osc_not_null(ENTRY_EMAIL_ADDRESS_TEXT)) echo '<span class="help-block">' . ENTRY_EMAIL_ADDRESS_TEXT . '</span>'; ?>
       </div>
     </div>
   </div>
@@ -361,8 +361,8 @@
       <label for="inputCompany" class="control-label col-xs-3"><?php echo ENTRY_COMPANY; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY . '"');
-        if (tep_not_null(ENTRY_COMPANY_TEXT)) echo '<span class="help-block">' . ENTRY_COMPANY_TEXT . '</span>';
+        echo osc_draw_input_field('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY . '"');
+        if (osc_not_null(ENTRY_COMPANY_TEXT)) echo '<span class="help-block">' . ENTRY_COMPANY_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -381,9 +381,9 @@
       <label for="inputStreet" class="control-label col-xs-3"><?php echo ENTRY_STREET_ADDRESS; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS . '"');
+        echo osc_draw_input_field('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_STREET_ADDRESS_TEXT)) echo '<span class="help-block">' . ENTRY_STREET_ADDRESS_TEXT . '</span>';
+        if (osc_not_null(ENTRY_STREET_ADDRESS_TEXT)) echo '<span class="help-block">' . ENTRY_STREET_ADDRESS_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -396,8 +396,8 @@
       <label for="inputSuburb" class="control-label col-xs-3"><?php echo ENTRY_SUBURB; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB . '"');
-        if (tep_not_null(ENTRY_SUBURB_TEXT)) echo '<span class="help-block">' . ENTRY_SUBURB_TEXT . '</span>';
+        echo osc_draw_input_field('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB . '"');
+        if (osc_not_null(ENTRY_SUBURB_TEXT)) echo '<span class="help-block">' . ENTRY_SUBURB_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -410,9 +410,9 @@
       <label for="inputCity" class="control-label col-xs-3"><?php echo ENTRY_CITY; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('city', NULL, 'required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY. '"');
+        echo osc_draw_input_field('city', NULL, 'required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY. '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_CITY_TEXT)) echo '<span class="help-block">' . ENTRY_CITY_TEXT . '</span>';
+        if (osc_not_null(ENTRY_CITY_TEXT)) echo '<span class="help-block">' . ENTRY_CITY_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -420,9 +420,9 @@
       <label for="inputZip" class="control-label col-xs-3"><?php echo ENTRY_POST_CODE; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('postcode', NULL, 'required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE . '"');
+        echo osc_draw_input_field('postcode', NULL, 'required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_POST_CODE_TEXT)) echo '<span class="help-block">' . ENTRY_POST_CODE_TEXT . '</span>';
+        if (osc_not_null(ENTRY_POST_CODE_TEXT)) echo '<span class="help-block">' . ENTRY_POST_CODE_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -438,21 +438,21 @@
         if ($process == true) {
           if ($entry_state_has_zones == true) {
             $zones_array = array();
-            $zones_query = tep_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' order by zone_name");
-            while ($zones_values = tep_db_fetch_array($zones_query)) {
+            $zones_query = osc_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' order by zone_name");
+            while ($zones_values = osc_db_fetch_array($zones_query)) {
               $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
             }
-            echo tep_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');
+            echo osc_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');
             echo FORM_REQUIRED_INPUT;
           } else {
-            echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE . '"');
+            echo osc_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE . '"');
             echo FORM_REQUIRED_INPUT;
           }
         } else {
-          echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE    . '"');
+          echo osc_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE    . '"');
           echo FORM_REQUIRED_INPUT;
         }
-        if (tep_not_null(ENTRY_STATE_TEXT)) echo '<span class="help-block">' . ENTRY_STATE_TEXT . '</span>';
+        if (osc_not_null(ENTRY_STATE_TEXT)) echo '<span class="help-block">' . ENTRY_STATE_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -465,9 +465,9 @@
       <label for="inputCountry" class="control-label col-xs-3"><?php echo ENTRY_COUNTRY; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_get_country_list('country', NULL, 'required aria-required="true" id="inputCountry"');
+        echo osc_get_country_list('country', NULL, 'required aria-required="true" id="inputCountry"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
+        if (osc_not_null(ENTRY_COUNTRY_TEXT)) echo '<span class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -482,9 +482,9 @@
       <label for="inputTelephone" class="control-label col-xs-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('telephone', NULL, 'required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER . '"');
+        echo osc_draw_input_field('telephone', NULL, 'required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) echo '<span class="help-block">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>';
+        if (osc_not_null(ENTRY_TELEPHONE_NUMBER_TEXT)) echo '<span class="help-block">' . ENTRY_TELEPHONE_NUMBER_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -492,8 +492,8 @@
       <label for="inputFax" class="control-label col-xs-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_input_field('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER . '"');
-        if (tep_not_null(ENTRY_FAX_NUMBER_TEXT)) echo '<span class="help-block">' . ENTRY_FAX_NUMBER_TEXT . '</span>';
+        echo osc_draw_input_field('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER . '"');
+        if (osc_not_null(ENTRY_FAX_NUMBER_TEXT)) echo '<span class="help-block">' . ENTRY_FAX_NUMBER_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -502,8 +502,8 @@
       <div class="col-xs-9">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('newsletter', '1') . '&nbsp;'; ?>
-            <?php if (tep_not_null(ENTRY_NEWSLETTER_TEXT)) echo ENTRY_NEWSLETTER_TEXT; ?>
+            <?php echo osc_draw_checkbox_field('newsletter', '1') . '&nbsp;'; ?>
+            <?php if (osc_not_null(ENTRY_NEWSLETTER_TEXT)) echo ENTRY_NEWSLETTER_TEXT; ?>
           </label>
         </div>
       </div>
@@ -519,9 +519,9 @@
       <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD . '"');
+        echo osc_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -529,16 +529,16 @@
       <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
+        echo osc_draw_password_field('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
         ?>
       </div>
     </div>
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-user', null, 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-user', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
 

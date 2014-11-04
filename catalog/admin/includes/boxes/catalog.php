@@ -16,32 +16,32 @@
       array(
         'code' => FILENAME_CATEGORIES,
         'title' => BOX_CATALOG_CATEGORIES_PRODUCTS,
-        'link' => tep_href_link(FILENAME_CATEGORIES)
+        'link' => osc_href_link(FILENAME_CATEGORIES)
       ),
       array(
         'code' => FILENAME_PRODUCTS_ATTRIBUTES,
         'title' => BOX_CATALOG_CATEGORIES_PRODUCTS_ATTRIBUTES,
-        'link' => tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES)
+        'link' => osc_href_link(FILENAME_PRODUCTS_ATTRIBUTES)
       ),
       array(
         'code' => FILENAME_MANUFACTURERS,
         'title' => BOX_CATALOG_MANUFACTURERS,
-        'link' => tep_href_link(FILENAME_MANUFACTURERS)
+        'link' => osc_href_link(FILENAME_MANUFACTURERS)
       ),
       array(
         'code' => FILENAME_REVIEWS,
         'title' => BOX_CATALOG_REVIEWS,
-        'link' => tep_href_link(FILENAME_REVIEWS)
+        'link' => osc_href_link(FILENAME_REVIEWS)
       ),
       array(
         'code' => FILENAME_SPECIALS,
         'title' => BOX_CATALOG_SPECIALS,
-        'link' => tep_href_link(FILENAME_SPECIALS)
+        'link' => osc_href_link(FILENAME_SPECIALS)
       ),
       array(
         'code' => FILENAME_PRODUCTS_EXPECTED,
         'title' => BOX_CATALOG_PRODUCTS_EXPECTED,
-        'link' => tep_href_link(FILENAME_PRODUCTS_EXPECTED)
+        'link' => osc_href_link(FILENAME_PRODUCTS_EXPECTED)
       )
     )
   );

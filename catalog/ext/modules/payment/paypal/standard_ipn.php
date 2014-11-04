@@ -22,7 +22,7 @@
 
   $result = false;
 
-  if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
+  if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
     $paypal_standard = new paypal_standard();
 
     $parameters = 'cmd=_notify-validate';
@@ -40,7 +40,7 @@
     $paypal_standard->sendDebugEmail($result, true);
   }
 
-  tep_session_destroy();
+  osc_session_destroy();
 
   require('includes/application_bottom.php');
 ?>

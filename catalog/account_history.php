@@ -14,13 +14,13 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_HISTORY);
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -32,18 +32,18 @@
 <div class="contentContainer">
 
 <?php
-  $orders_total = tep_count_customer_orders();
+  $orders_total = osc_count_customer_orders();
 
   if ($orders_total > 0) {
     $history_query_raw = "select o.orders_id, o.date_purchased, o.delivery_name, o.billing_name, ot.text as order_total, s.orders_status_name from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS_STATUS . " s where o.customers_id = '" . (int)$customer_id . "' and o.orders_id = ot.orders_id and ot.class = 'ot_total' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.public_flag = '1' order by orders_id DESC";
     $history_split = new splitPageResults($history_query_raw, MAX_DISPLAY_ORDER_HISTORY);
-    $history_query = tep_db_query($history_split->sql_query);
+    $history_query = osc_db_query($history_split->sql_query);
 
-    while ($history = tep_db_fetch_array($history_query)) {
-      $products_query = tep_db_query("select count(*) as count from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$history['orders_id'] . "'");
-      $products = tep_db_fetch_array($products_query);
+    while ($history = osc_db_fetch_array($history_query)) {
+      $products_query = osc_db_query("select count(*) as count from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$history['orders_id'] . "'");
+      $products = osc_db_fetch_array($products_query);
 
-      if (tep_not_null($history['delivery_name'])) {
+      if (osc_not_null($history['delivery_name'])) {
         $order_type = TEXT_ORDER_SHIPPED_TO;
         $order_name = $history['delivery_name'];
       } else {
@@ -57,12 +57,12 @@
       <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . $history['orders_id'] . ' <span class="contentText">(' . $history['orders_status_name'] . ')</span>'; ?></strong></div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . tep_date_long($history['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . tep_output_string_protected($order_name); ?></div>
+          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . osc_date_long($history['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . osc_output_string_protected($order_name); ?></div>
           <br class="visible-xs" />
           <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_PRODUCTS . '</strong> ' . $products['count'] . '<br /><strong>' . TEXT_ORDER_COST . '</strong> ' . strip_tags($history['order_total']); ?></div>
         </div>
       </div>
-      <div class="panel-footer text-right"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'glyphicon glyphicon-file', tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $history['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs'); ?></div>
+      <div class="panel-footer text-right"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'glyphicon glyphicon-file', osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $history['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs'); ?></div>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
 ?>
 
   <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></p>
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></p>
 
     <p><?php echo $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></p>
   </div>
@@ -89,7 +89,7 @@
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
   </div>
 </div>
 

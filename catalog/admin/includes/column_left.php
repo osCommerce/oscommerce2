@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (tep_session_is_registered('admin')) {
+  if (osc_session_is_registered('admin')) {
     $cl_box_groups = array();
 
     if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {
@@ -37,18 +37,18 @@
       }
     }
 
-    function tep_sort_admin_boxes($a, $b) {
+    function osc_sort_admin_boxes($a, $b) {
       return strcasecmp($a['heading'], $b['heading']);
     }
 
-    usort($cl_box_groups, 'tep_sort_admin_boxes');
+    usort($cl_box_groups, 'osc_sort_admin_boxes');
 
-    function tep_sort_admin_boxes_links($a, $b) {
+    function osc_sort_admin_boxes_links($a, $b) {
       return strcasecmp($a['title'], $b['title']);
     }
 
     foreach ( $cl_box_groups as &$group ) {
-      usort($group['apps'], 'tep_sort_admin_boxes_links');
+      usort($group['apps'], 'osc_sort_admin_boxes_links');
     }
 ?>
 

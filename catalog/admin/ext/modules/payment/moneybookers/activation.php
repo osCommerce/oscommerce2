@@ -31,10 +31,10 @@
                       'Merchant Name: ' . STORE_OWNER . "\n" .
                       'Moneybookers E-Mail Address: ' . $_POST['mb_email'] . "\n" .
                       'Moneybookers Customer ID: ' . $result[1] . "\n" .
-                      'Store URL: ' . tep_catalog_href_link() . "\n" .
+                      'Store URL: ' . osc_catalog_href_link() . "\n" .
                       'Language: ' . $language . "\n";
 
-        tep_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
+        osc_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
       }
 
       break;
@@ -65,7 +65,7 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo MB_ACTIVATION_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -78,7 +78,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_ACTIVATE_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_ACTIVATE_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=install&active=true&email=' . $_POST['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
+          <form name="activation" action="<?php echo osc_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=install&active=true&email=' . $_POST['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
@@ -96,8 +96,8 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_ACCOUNT_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_ACCOUNT_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=verifyEmail'); ?>" method="post">
-            <p><?php echo MB_ACTIVATION_EMAIL_ADDRESS . ' ' . tep_draw_input_field('mb_email', STORE_OWNER_EMAIL_ADDRESS); ?></p>
+          <form name="activation" action="<?php echo osc_href_link('ext/modules/payment/moneybookers/activation.php', 'action=verifyEmail'); ?>" method="post">
+            <p><?php echo MB_ACTIVATION_EMAIL_ADDRESS . ' ' . osc_draw_input_field('mb_email', STORE_OWNER_EMAIL_ADDRESS); ?></p>
             <p><input type="submit" value="<?php echo MB_ACTIVATION_VERIFY_ACCOUNT_BUTTON; ?>"></p>
           </form>
 <?php
@@ -107,7 +107,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_SECRET_WORD_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_SECRET_WORD_SUCCESS_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
+          <form name="activation" action="<?php echo osc_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
@@ -123,7 +123,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_SECRET_WORD_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_SECRET_WORD_FAIL_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
+          <form name="activation" action="<?php echo osc_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
@@ -132,7 +132,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_CORE_REQUIRED_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_CORE_REQUIRED_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link('ext/modules/payment/moneybookers/activation.php'); ?>" method="post">
+          <form name="activation" action="<?php echo osc_href_link('ext/modules/payment/moneybookers/activation.php'); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php

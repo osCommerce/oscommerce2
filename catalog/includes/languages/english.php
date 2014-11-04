@@ -29,7 +29,7 @@ define('JQUERY_DATEPICKER_FORMAT', 'mm/dd/yy'); // see http://docs.jquery.com/UI
 // Return date in raw format
 // $date should be in format mm/dd/yyyy
 // raw date is in format YYYYMMDD, or DDMMYYYY
-function tep_date_raw($date, $reverse = false) {
+function osc_date_raw($date, $reverse = false) {
   if ($reverse) {
     return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
   } else {
@@ -163,7 +163,7 @@ define('PASSWORD_HIDDEN', '--HIDDEN--');
 
 define('FORM_REQUIRED_INFORMATION', '<span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information');
 
-// constants for use in tep_prev_next_display function
+// constants for use in osc_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Result Pages:');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> products)');
 define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> orders)');
@@ -239,7 +239,7 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
 
 define('TEXT_REQUIRED', '<span class="errorText">Required</span>');
 
-define('ERROR_TEP_MAIL', '<font face="Verdana, Arial" size="2" color="#ff0000"><strong><small>TEP ERROR:</small> Cannot send the email through the specified SMTP server. Please check your php.ini setting and correct the SMTP server if necessary.</strong></font>');
+define('ERROR_OSC_MAIL', '<font face="Verdana, Arial" size="2" color="#ff0000"><strong><small>TEP ERROR:</small> Cannot send the email through the specified SMTP server. Please check your php.ini setting and correct the SMTP server if necessary.</strong></font>');
 
 define('TEXT_CCVAL_ERROR_INVALID_DATE', 'The expiry date entered for the credit card is invalid. Please check the date and try again.');
 define('TEXT_CCVAL_ERROR_INVALID_NUMBER', 'The credit card number entered is invalid. Please check the number and try again.');

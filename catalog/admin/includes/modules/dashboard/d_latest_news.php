@@ -58,7 +58,7 @@
       }
 
       $output .= '  <tr class="dataTableRow">' .
-                 '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_oscommerce.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_newsletter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_google_plus.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_facebook.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_twitter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_rss.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>' .
+                 '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_oscommerce.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_newsletter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_google_plus.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_facebook.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_twitter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_rss.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>' .
                  '  </tr>' .
                  '</table>';
 
@@ -74,12 +74,12 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Latest News Module', 'MODULE_ADMIN_DASHBOARD_LATEST_NEWS_STATUS', 'True', 'Do you want to show the latest osCommerce News on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_LATEST_NEWS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Latest News Module', 'MODULE_ADMIN_DASHBOARD_LATEST_NEWS_STATUS', 'True', 'Do you want to show the latest osCommerce News on the dashboard?', '6', '1', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_LATEST_NEWS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {

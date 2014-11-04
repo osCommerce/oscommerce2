@@ -15,10 +15,10 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
+  if ( defined('MODULE_PAYMENT_INSTALLED') && osc_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
     if ( !class_exists('sage_pay_direct') ) {
       include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
       include(DIR_WS_MODULES . 'payment/sage_pay_direct.php');
@@ -27,10 +27,10 @@
     $sage_pay_direct = new sage_pay_direct();
 
     if ( !$sage_pay_direct->enabled ) {
-      tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   } else {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_sage_pay_cards.php');
@@ -38,15 +38,15 @@
   $sage_pay_cards = new cm_account_sage_pay_cards();
 
   if ( !$sage_pay_cards->isEnabled() ) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   if ( isset($_GET['action']) ) {
     if ( ($_GET['action'] == 'delete') && isset($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
-      $token_query = tep_db_query("select id, sagepay_token from customers_sagepay_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
+      $token_query = osc_db_query("select id, sagepay_token from customers_sagepay_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if ( tep_db_num_rows($token_query) ) {
-        $token = tep_db_fetch_array($token_query);
+      if ( osc_db_num_rows($token_query) ) {
+        $token = osc_db_fetch_array($token_query);
 
         $sage_pay_direct->deleteCard($token['sagepay_token'], $token['id']);
 
@@ -54,11 +54,11 @@
       }
     }
 
-    tep_redirect(tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+    osc_redirect(osc_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, osc_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -79,15 +79,15 @@
   <div class="contentText">
 
 <?php
-  $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+  $tokens_query = osc_db_query("select id, card_type, number_filtered, expiry_date from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
 
-  if ( tep_db_num_rows($tokens_query) > 0 ) {
-    while ( $tokens = tep_db_fetch_array($tokens_query) ) {
+  if ( osc_db_num_rows($tokens_query) > 0 ) {
+    while ( $tokens = osc_db_fetch_array($tokens_query) ) {
 ?>
 
     <div>
-      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . (int)$tokens['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
-      <p><strong><?php echo tep_output_string_protected($tokens['card_type']); ?></strong>&nbsp;&nbsp;****<?php echo tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)); ?></p>
+      <span style="float: right;"><?php echo osc_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', osc_href_link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . (int)$tokens['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
+      <p><strong><?php echo osc_output_string_protected($tokens['card_type']); ?></strong>&nbsp;&nbsp;****<?php echo osc_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . osc_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)); ?></p>
     </div>
 
 <?php
@@ -106,7 +106,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
   </div>
 </div>
 

@@ -16,15 +16,15 @@
 
   define('OSC_CATALOG_SESSION_ID', 'osCsid');
 
-  function tep_create_random_value($length, $type = 'mixed') {
+  function osc_create_random_value($length, $type = 'mixed') {
     if ( ($type != 'mixed') && ($type != 'chars') && ($type != 'digits')) return false;
 
     $rand_value = '';
     while (strlen($rand_value) < $length) {
       if ($type == 'digits') {
-        $char = tep_rand(0,9);
+        $char = osc_rand(0,9);
       } else {
-        $char = chr(tep_rand(0,255));
+        $char = chr(osc_rand(0,255));
       }
       if ($type == 'mixed') {
         if (preg_match('/^[a-z0-9]$/i', $char)) $rand_value .= $char;
@@ -40,15 +40,15 @@
 
   // Module already installed
   if (defined('MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS') && (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS == 'True')) {
-    die('Modul bereits installiert<br /><a href="' . tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zur�ck zum ShopAdmin</a>');
+    die('Modul bereits installiert<br /><a href="' . osc_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL') . '">zur�ck zum ShopAdmin</a>');
   }
 
   $parameter = array();
   $parameter['install'] = 'sofortueberweisung_direct';
   $parameter['action'] = 'install';
-  $parameter['input_passwort'] = tep_create_random_value(12);
-  $parameter['bna_passwort'] = tep_create_random_value(12);
-  $parameter['cnt_passwort'] = tep_create_random_value(12);
+  $parameter['input_passwort'] = osc_create_random_value(12);
+  $parameter['bna_passwort'] = osc_create_random_value(12);
+  $parameter['cnt_passwort'] = osc_create_random_value(12);
 
   $get_parameter = '';
   $x = 0;
@@ -59,10 +59,10 @@
     $x++;
   }
 
-  $backlink = tep_href_link('ext/modules/payment/sofortueberweisung/install.php', $get_parameter);
-  $html_abortlink = tep_catalog_href_link('checkout_payment.php', 'payment_error=sofortueberweisung_direct&' . OSC_CATALOG_SESSION_ID . '=-KUNDEN_VAR_2-','SSL', false, false);
-  $header_redir_url = tep_catalog_href_link('checkout_process.php', OSC_CATALOG_SESSION_ID . '=-KUNDEN_VAR_2-&sovar3=-KUNDEN_VAR_3-&sovar4=-KUNDEN_VAR_3_MD5_PASS-&betrag_integer=-BETRAG_INTEGER-','SSL', false, false);
-  $alert_http_url = tep_catalog_href_link('ext/modules/payment/sofortueberweisung/callback.php','' ,'SSL', false, false);
+  $backlink = osc_href_link('ext/modules/payment/sofortueberweisung/install.php', $get_parameter);
+  $html_abortlink = osc_catalog_href_link('checkout_payment.php', 'payment_error=sofortueberweisung_direct&' . OSC_CATALOG_SESSION_ID . '=-KUNDEN_VAR_2-','SSL', false, false);
+  $header_redir_url = osc_catalog_href_link('checkout_process.php', OSC_CATALOG_SESSION_ID . '=-KUNDEN_VAR_2-&sovar3=-KUNDEN_VAR_3-&sovar4=-KUNDEN_VAR_3_MD5_PASS-&betrag_integer=-BETRAG_INTEGER-','SSL', false, false);
+  $alert_http_url = osc_catalog_href_link('ext/modules/payment/sofortueberweisung/callback.php','' ,'SSL', false, false);
 
   if (isset($_GET['action']) && ($_GET['action'] == 'install')) {
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
@@ -74,7 +74,7 @@
       $module->install();
     }
 
-    tep_redirect(tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL'));
   }
 ?>
 <html>
@@ -255,7 +255,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
 	          <tr><td>Ustid</td><td><input id="sammel_input_ustid" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[ustid]', '', '', '', '')"></td></tr>
 	          <tr><td>Steuernr</td><td><input id="sammel_input_steuernummer" size="40" type="text" onkeyup="javascript:giveValue(this.value,'user[steuernr]', '', '', '', '')"></td></tr>
             <tr><td colspan="2"><hr /></td></tr>
-	          <tr><td>Homepage*</td><td><input id="sammel_input_homepage" size="40" type="text" value="<?php echo tep_catalog_href_link() ;?>" onkeyup="javascript:giveValue(this.value,'project[homepage]','user[homepage]', '', '', '')"></td></tr>
+	          <tr><td>Homepage*</td><td><input id="sammel_input_homepage" size="40" type="text" value="<?php echo osc_catalog_href_link() ;?>" onkeyup="javascript:giveValue(this.value,'project[homepage]','user[homepage]', '', '', '')"></td></tr>
 	          <tr><td>Email*</td><td><input id="sammel_input_email" size="40" type="text" value="<?php echo STORE_OWNER_EMAIL_ADDRESS; ?>" onkeyup="javascript:giveValue(this.value,'user[r_email]','user[anspr_email]','project[email]','user[email]','alert[alert_email_adresse]')"></td></tr>
 			      <tr><td>Email-Benachrichtigungen bei Zahlungseing�ngen aktivieren:</td>
 			        <td><input type="radio" name="sammel_input_email_flag" value="1" CHECKED onfocus="javascript:giveValue(this.value,'alert[alert_email_status]', '', '', '', '')"> Ja  <input type="radio" name="sammel_input_email_flag" value="0" onfocus="javascript:giveValue(this.value,'alert[alert_email_status]', '', '', '', '')"> Nein</td>
@@ -328,7 +328,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
   <tr><td>Telefon</td><td><input type="text" name="user[telefon]" value=""></td><td>&nbsp;</td></tr>
   <tr><td>Telefax</td><td><input type="text" name="user[telefax]" value=""></td><td>&nbsp;</td></tr>
   <tr><td>Email</td><td><input type="text" name="user[email]" value="<?php echo STORE_OWNER_EMAIL_ADDRESS; ?>"></td><td>*</td></tr>
-  <tr><td>Homepage</td><td><input type="text" name="user[homepage]" value="<?php echo tep_catalog_href_link() ;?>"></td><td>&nbsp;</td></tr>
+  <tr><td>Homepage</td><td><input type="text" name="user[homepage]" value="<?php echo osc_catalog_href_link() ;?>"></td><td>&nbsp;</td></tr>
   <tr><td>Ustid</td><td><input type="text" name="user[ustid]" value=""></td><td>*</td></tr>
   <tr><td>Steuernr</td><td><input type="text" name="user[steuernr]" value=""></td><td>*</td></tr>
   </table>
@@ -354,7 +354,7 @@ select {Font-family:tahoma,arial,verdana; font-size:11px; color:#666666; backgro
   <tr><td>Telefon</td><td><input type="text" name="project[telefon]" value=""></td><td>*</td></tr>
   <tr><td>Telefax</td><td><input type="text" name="project[telefax]" value=""></td><td>*</td></tr>
   <tr><td>Email</td><td><input type="text" name="project[email]" value="<?php echo STORE_OWNER_EMAIL_ADDRESS; ?>"></td><td>*</td></tr>
-  <tr><td>Homepage</td><td><input type="text" name="project[homepage]" value="<?php echo tep_catalog_href_link() ;?>"></td><td>*</td></tr>
+  <tr><td>Homepage</td><td><input type="text" name="project[homepage]" value="<?php echo osc_catalog_href_link() ;?>"></td><td>*</td></tr>
 </table>
 
 <table border="1" id="table7" style="display:none">

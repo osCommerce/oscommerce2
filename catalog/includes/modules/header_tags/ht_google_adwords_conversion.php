@@ -36,13 +36,13 @@
       }
 
       if ( ($PHP_SELF == FILENAME_CHECKOUT_SUCCESS) && isset($_SESSION['customer_id']) ) {
-        $order_query = tep_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
+        $order_query = osc_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
-        if (tep_db_num_rows($order_query) == 1) {
-          $order = tep_db_fetch_array($order_query);
+        if (osc_db_num_rows($order_query) == 1) {
+          $order = osc_db_fetch_array($order_query);
 
-          $order_subtotal_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class='ot_subtotal'");
-          $order_subtotal = tep_db_fetch_array($order_subtotal_query);
+          $order_subtotal_query = osc_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class='ot_subtotal'");
+          $order_subtotal = osc_db_fetch_array($order_subtotal_query);
 
           if (!isset($lng) || (isset($lng) && !is_object($lng))) {
             include(DIR_WS_CLASSES . 'language.php');
@@ -59,10 +59,10 @@
           }
 
           $conversion_id = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID;
-          $conversion_language = tep_output_string_protected($language_code);
+          $conversion_language = osc_output_string_protected($language_code);
           $conversion_format = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT;
-          $conversion_color = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
-          $conversion_label = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
+          $conversion_color = osc_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
+          $conversion_label = osc_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
           $conversion_value = $this->format_raw($order_subtotal['value'], $order['currency'], $order['currency_value']);
 
           $output = <<<EOD
@@ -100,7 +100,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function isEnabled() {
@@ -112,17 +112,17 @@ EOD;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Google AdWords Conversion Module', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_STATUS', 'True', 'Do you want to allow the Google AdWords Conversion Module on your checkout success page?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Conversion ID', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID', '', 'The Google AdWords Conversion ID', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Tracking Notification Layout', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT', '1', 'A small message will appear on your site telling customers that their visits on your site are being tracked. We recommend you use it.', '6', '0', 'tep_cfg_google_adwords_conversion_set_format(', 'tep_cfg_google_adwords_conversion_get_format', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Page Background Color', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR', 'ffffff', 'Enter a HTML color to match the color of your website background page.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Conversion Label', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL', '', 'The alphanumeric code generated by Google for your AdWords Conversion', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Javascript Placement', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_JS_PLACEMENT', 'Footer', 'Should the Google AdWords Conversion javascript be loaded in the header or footer?', '6', '1', 'tep_cfg_select_option(array(\'Header\', \'Footer\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Google AdWords Conversion Module', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_STATUS', 'True', 'Do you want to allow the Google AdWords Conversion Module on your checkout success page?', '6', '1', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Conversion ID', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID', '', 'The Google AdWords Conversion ID', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Tracking Notification Layout', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT', '1', 'A small message will appear on your site telling customers that their visits on your site are being tracked. We recommend you use it.', '6', '0', 'osc_cfg_google_adwords_conversion_set_format(', 'osc_cfg_google_adwords_conversion_get_format', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Page Background Color', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR', 'ffffff', 'Enter a HTML color to match the color of your website background page.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Conversion Label', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL', '', 'The alphanumeric code generated by Google for your AdWords Conversion', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Javascript Placement', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_JS_PLACEMENT', 'Footer', 'Should the Google AdWords Conversion javascript be loaded in the header or footer?', '6', '1', 'osc_cfg_select_option(array(\'Header\', \'Footer\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -130,7 +130,7 @@ EOD;
     }
   }
 
-  function tep_cfg_google_adwords_conversion_set_format($key_value, $field_key) {
+  function osc_cfg_google_adwords_conversion_set_format($key_value, $field_key) {
     $format = array('1' => 'Single Line', '2' => 'Two Lines', '3' => 'No Indicator');
 
     $string = '';
@@ -146,7 +146,7 @@ EOD;
     return $string;
   }
 
-  function tep_cfg_google_adwords_conversion_get_format($value) {
+  function osc_cfg_google_adwords_conversion_get_format($value) {
     $format = array('1' => 'Single Line', '2' => 'Two Lines', '3' => 'No Indicator');
 
     return $format[$value];

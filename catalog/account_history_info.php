@@ -14,24 +14,24 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
   if (!isset($_GET['order_id']) || (isset($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
   }
 
-  $customer_info_query = tep_db_query("select o.customers_id from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_STATUS . " s where o.orders_id = '". (int)$_GET['order_id'] . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.public_flag = '1'");
-  $customer_info = tep_db_fetch_array($customer_info_query);
+  $customer_info_query = osc_db_query("select o.customers_id from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_STATUS . " s where o.orders_id = '". (int)$_GET['order_id'] . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.public_flag = '1'");
+  $customer_info = osc_db_fetch_array($customer_info_query);
   if ($customer_info['customers_id'] != $customer_id) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+    osc_redirect(osc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_HISTORY_INFO);
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
-  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $_GET['order_id'], 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, osc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, osc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
+  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), osc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $_GET['order_id'], 'SSL'));
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order($_GET['order_id']);
@@ -83,10 +83,10 @@
     echo '</td>' . "\n";
 
     if (sizeof($order->info['tax_groups']) > 1) {
-      echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+      echo '            <td valign="top" align="right">' . osc_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
     }
 
-    echo '            <td align="right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
+    echo '            <td align="right" valign="top">' . $currencies->format(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
          '          </tr>' . "\n";
   }
 ?>
@@ -104,7 +104,7 @@
         </table>
       </div>
       <div class="panel-footer">
-        <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . tep_date_long($order->info['date_purchased']); ?>
+        <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . osc_date_long($order->info['date_purchased']); ?>
       </div>
     </div>
 
@@ -120,7 +120,7 @@
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>'; ?></div>
           <div class="panel-body">
-            <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
+            <?php echo osc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
         </div>
       </div>
@@ -131,7 +131,7 @@
       <div class="panel panel-warning">
         <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>'; ?></div>
         <div class="panel-body">
-          <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
+          <?php echo osc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -168,16 +168,16 @@
   <div class="contentText">
     <ul class="timeline">
       <?php
-      $statuses_query = tep_db_query("select os.orders_status_name, osh.date_added, osh.comments from " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh where osh.orders_id = '" . (int)$_GET['order_id'] . "' and osh.orders_status_id = os.orders_status_id and os.language_id = '" . (int)$_SESSION['languages_id'] . "' and os.public_flag = '1' order by osh.date_added");
-      while ($statuses = tep_db_fetch_array($statuses_query)) {
+      $statuses_query = osc_db_query("select os.orders_status_name, osh.date_added, osh.comments from " . TABLE_ORDERS_STATUS . " os, " . TABLE_ORDERS_STATUS_HISTORY . " osh where osh.orders_id = '" . (int)$_GET['order_id'] . "' and osh.orders_status_id = os.orders_status_id and os.language_id = '" . (int)$_SESSION['languages_id'] . "' and os.public_flag = '1' order by osh.date_added");
+      while ($statuses = osc_db_fetch_array($statuses_query)) {
         echo '<li>';
         echo '  <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>';
         echo '  <div class="timeline-panel">';
         echo '    <div class="timeline-heading">';
-        echo '      <p class="pull-right"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> ' . tep_date_short($statuses['date_added']) . '</small></p><h4 class="timeline-title">' . $statuses['orders_status_name'] . '</h4>';
+        echo '      <p class="pull-right"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> ' . osc_date_short($statuses['date_added']) . '</small></p><h4 class="timeline-title">' . $statuses['orders_status_name'] . '</h4>';
         echo '    </div>';
         echo '    <div class="timeline-body">';
-        echo '      <p><blockquote>' . (empty($statuses['comments']) ? TEXT_NO_COMMENTS : nl2br(tep_output_string_protected($statuses['comments']))) . '</blockquote></p>';
+        echo '      <p><blockquote>' . (empty($statuses['comments']) ? TEXT_NO_COMMENTS : nl2br(osc_output_string_protected($statuses['comments']))) . '</blockquote></p>';
         echo '    </div>';
         echo '  </div>';
         echo '</li>';
@@ -191,7 +191,7 @@
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT_HISTORY, tep_get_all_get_params(array('order_id')), 'SSL')); ?>
+    <?php echo osc_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', osc_href_link(FILENAME_ACCOUNT_HISTORY, osc_get_all_get_params(array('order_id')), 'SSL')); ?>
   </div>
 </div>
 

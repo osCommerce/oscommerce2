@@ -17,12 +17,12 @@
     function shipping($module = '') {
       global $PHP_SELF;
 
-      if (defined('MODULE_SHIPPING_INSTALLED') && tep_not_null(MODULE_SHIPPING_INSTALLED)) {
+      if (defined('MODULE_SHIPPING_INSTALLED') && osc_not_null(MODULE_SHIPPING_INSTALLED)) {
         $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
 
         $include_modules = array();
 
-        if ( (tep_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+        if ( (osc_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
           $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
         } else {
           foreach ($this->modules as $value) {
@@ -65,7 +65,7 @@
 
         foreach($this->modules as $value) {
           $class = substr($value, 0, strrpos($value, '.'));
-          if (tep_not_null($module)) {
+          if (osc_not_null($module)) {
             if ( ($module == $class) && ($GLOBALS[$class]->enabled) ) {
               $include_quotes[] = $class;
             }
@@ -93,7 +93,7 @@
           if ($GLOBALS[$class]->enabled) {
             $quotes = $GLOBALS[$class]->quotes;
             for ($i=0, $n=sizeof($quotes['methods']); $i<$n; $i++) {
-              if (isset($quotes['methods'][$i]['cost']) && tep_not_null($quotes['methods'][$i]['cost'])) {
+              if (isset($quotes['methods'][$i]['cost']) && osc_not_null($quotes['methods'][$i]['cost'])) {
                 $rates[] = array('id' => $quotes['id'] . '_' . $quotes['methods'][$i]['id'],
                                  'title' => $quotes['module'] . ' (' . $quotes['methods'][$i]['title'] . ')',
                                  'cost' => $quotes['methods'][$i]['cost']);

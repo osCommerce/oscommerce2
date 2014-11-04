@@ -25,21 +25,21 @@
 
       $this->errors = array();
 
-      if (tep_session_is_registered('messageToStack')) {
+      if (osc_session_is_registered('messageToStack')) {
         for ($i = 0, $n = sizeof($messageToStack); $i < $n; $i++) {
           $this->add($messageToStack[$i]['text'], $messageToStack[$i]['type']);
         }
-        tep_session_unregister('messageToStack');
+        osc_session_unregister('messageToStack');
       }
     }
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => tep_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => osc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
       } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => tep_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => osc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
       } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => tep_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => osc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
       } else {
         $this->errors[] = array('params' => 'class="messageStackError"', 'text' => $message);
       }
@@ -50,8 +50,8 @@
     function add_session($message, $type = 'error') {
       global $messageToStack;
 
-      if (!tep_session_is_registered('messageToStack')) {
-        tep_session_register('messageToStack');
+      if (!osc_session_is_registered('messageToStack')) {
+        osc_session_register('messageToStack');
         $messageToStack = array();
       }
 

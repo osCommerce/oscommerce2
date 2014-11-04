@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  $current_version = tep_get_version();
+  $current_version = osc_get_version();
   $major_version = (int)substr($current_version, 0, 1);
 
   $releases = null;
@@ -87,7 +87,7 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><?php echo osc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -95,7 +95,7 @@
         <td class="smallText"><?php echo TITLE_INSTALLED_VERSION . ' <strong>osCommerce Online Merchant v' . $current_version . '</strong>'; ?></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td><div class="<?php echo $check_message['class']; ?>">
@@ -103,7 +103,7 @@
         </div></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
 <?php
   if (!empty($new_versions)) {
@@ -123,8 +123,8 @@
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo '<a href="' . $version[2] . '" target="_blank">osCommerce Online Merchant v' . $version[0] . '</a>'; ?></td>
-                <td class="dataTableContent"><?php echo tep_date_long(substr($version[1], 0, 4) . '-' . substr($version[1], 4, 2) . '-' . substr($version[1], 6, 2)); ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . $version[2] . '" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo osc_date_long(substr($version[1], 0, 4) . '-' . substr($version[1], 4, 2) . '-' . substr($version[1], 6, 2)); ?></td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . $version[2] . '" target="_blank">' . osc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; ?>&nbsp;</td>
               </tr>
 <?php
     }

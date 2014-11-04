@@ -7,6 +7,6 @@
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
     </div>
 
-    <p align="right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), null, null, 'btn-info btn-block'); ?></p>
+    <p align="right"><?php echo osc_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', osc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), null, null, 'btn-info btn-block'); ?></p>
   </div>
 </div>

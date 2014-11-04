@@ -38,8 +38,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PSIGATE_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PSIGATE_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PSIGATE_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -89,9 +89,9 @@
                            'fields' => array(array('title' => MODULE_PAYMENT_PSIGATE_TEXT_CREDIT_CARD_OWNER,
                                                    'field' => $order->billing['firstname'] . ' ' . $order->billing['lastname']),
                                              array('title' => MODULE_PAYMENT_PSIGATE_TEXT_CREDIT_CARD_NUMBER,
-                                                   'field' => tep_draw_input_field('psigate_cc_number')),
+                                                   'field' => osc_draw_input_field('psigate_cc_number')),
                                              array('title' => MODULE_PAYMENT_PSIGATE_TEXT_CREDIT_CARD_EXPIRES,
-                                                   'field' => tep_draw_pull_down_menu('psigate_cc_expires_month', $expires_month) . '&nbsp;' . tep_draw_pull_down_menu('psigate_cc_expires_year', $expires_year))));
+                                                   'field' => osc_draw_pull_down_menu('psigate_cc_expires_month', $expires_month) . '&nbsp;' . osc_draw_pull_down_menu('psigate_cc_expires_year', $expires_year))));
       } else {
         $selection = array('id' => $this->code,
                            'module' => $this->title);
@@ -125,7 +125,7 @@
         if ( ($result == false) || ($result < 1) ) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode($error) . '&psigate_cc_owner=' . urlencode($_POST['psigate_cc_owner']) . '&psigate_cc_expires_month=' . $_POST['psigate_cc_expires_month'] . '&psigate_cc_expires_year=' . $_POST['psigate_cc_expires_year'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
+          osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
         }
 
         $this->cc_card_type = $cc_validation->cc_type;
@@ -187,41 +187,41 @@
           break;
       }
 
-      $process_button_string = tep_draw_hidden_field('MerchantID', MODULE_PAYMENT_PSIGATE_MERCHANT_ID) .
-                               tep_draw_hidden_field('FullTotal', number_format($order->info['total'] * $currencies->get_value(MODULE_PAYMENT_PSIGATE_CURRENCY), $currencies->currencies[MODULE_PAYMENT_PSIGATE_CURRENCY]['decimal_places'])) .
-                               tep_draw_hidden_field('ThanksURL', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
-                               tep_draw_hidden_field('NoThanksURL', tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'NONSSL', true)) .
-                               tep_draw_hidden_field('Bname', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
-                               tep_draw_hidden_field('Baddr1', $order->billing['street_address']) .
-                               tep_draw_hidden_field('Bcity', $order->billing['city']);
+      $process_button_string = osc_draw_hidden_field('MerchantID', MODULE_PAYMENT_PSIGATE_MERCHANT_ID) .
+                               osc_draw_hidden_field('FullTotal', number_format($order->info['total'] * $currencies->get_value(MODULE_PAYMENT_PSIGATE_CURRENCY), $currencies->currencies[MODULE_PAYMENT_PSIGATE_CURRENCY]['decimal_places'])) .
+                               osc_draw_hidden_field('ThanksURL', osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
+                               osc_draw_hidden_field('NoThanksURL', osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'NONSSL', true)) .
+                               osc_draw_hidden_field('Bname', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
+                               osc_draw_hidden_field('Baddr1', $order->billing['street_address']) .
+                               osc_draw_hidden_field('Bcity', $order->billing['city']);
 
       if ($order->billing['country']['iso_code_2'] == 'US') {
-        $billing_state_query = tep_db_query("select zone_code from " . TABLE_ZONES . " where zone_id = '" . (int)$order->billing['zone_id'] . "'");
-        $billing_state = tep_db_fetch_array($billing_state_query);
+        $billing_state_query = osc_db_query("select zone_code from " . TABLE_ZONES . " where zone_id = '" . (int)$order->billing['zone_id'] . "'");
+        $billing_state = osc_db_fetch_array($billing_state_query);
 
-        $process_button_string .= tep_draw_hidden_field('Bstate', $billing_state['zone_code']);
+        $process_button_string .= osc_draw_hidden_field('Bstate', $billing_state['zone_code']);
       } else {
-        $process_button_string .= tep_draw_hidden_field('Bstate', $order->billing['state']);
+        $process_button_string .= osc_draw_hidden_field('Bstate', $order->billing['state']);
       }
 
-      $process_button_string .= tep_draw_hidden_field('Bzip', $order->billing['postcode']) .
-                                tep_draw_hidden_field('Bcountry', $order->billing['country']['iso_code_2']) .
-                                tep_draw_hidden_field('Phone', $order->customer['telephone']) .
-                                tep_draw_hidden_field('Email', $order->customer['email_address']) .
-                                tep_draw_hidden_field('Sname', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
-                                tep_draw_hidden_field('Saddr1', $order->delivery['street_address']) .
-                                tep_draw_hidden_field('Scity', $order->delivery['city']) .
-                                tep_draw_hidden_field('Sstate', $order->delivery['state']) .
-                                tep_draw_hidden_field('Szip', $order->delivery['postcode']) .
-                                tep_draw_hidden_field('Scountry', $order->delivery['country']['iso_code_2']) .
-                                tep_draw_hidden_field('ChargeType', $transaction_type) .
-                                tep_draw_hidden_field('Result', $transaction_mode) .
-                                tep_draw_hidden_field('IP', $_SERVER['REMOTE_ADDR']);
+      $process_button_string .= osc_draw_hidden_field('Bzip', $order->billing['postcode']) .
+                                osc_draw_hidden_field('Bcountry', $order->billing['country']['iso_code_2']) .
+                                osc_draw_hidden_field('Phone', $order->customer['telephone']) .
+                                osc_draw_hidden_field('Email', $order->customer['email_address']) .
+                                osc_draw_hidden_field('Sname', $order->delivery['firstname'] . ' ' . $order->delivery['lastname']) .
+                                osc_draw_hidden_field('Saddr1', $order->delivery['street_address']) .
+                                osc_draw_hidden_field('Scity', $order->delivery['city']) .
+                                osc_draw_hidden_field('Sstate', $order->delivery['state']) .
+                                osc_draw_hidden_field('Szip', $order->delivery['postcode']) .
+                                osc_draw_hidden_field('Scountry', $order->delivery['country']['iso_code_2']) .
+                                osc_draw_hidden_field('ChargeType', $transaction_type) .
+                                osc_draw_hidden_field('Result', $transaction_mode) .
+                                osc_draw_hidden_field('IP', $_SERVER['REMOTE_ADDR']);
 
       if (MODULE_PAYMENT_PSIGATE_INPUT_MODE == 'Local') {
-        $process_button_string .= tep_draw_hidden_field('CardNumber', $this->cc_card_number) .
-                                  tep_draw_hidden_field('ExpMonth', $this->cc_expiry_month) .
-                                  tep_draw_hidden_field('ExpYear', substr($this->cc_expiry_year, -2));
+        $process_button_string .= osc_draw_hidden_field('CardNumber', $this->cc_card_number) .
+                                  osc_draw_hidden_field('ExpMonth', $this->cc_expiry_month) .
+                                  osc_draw_hidden_field('ExpYear', substr($this->cc_expiry_year, -2));
       }
 
       return $process_button_string;
@@ -236,11 +236,11 @@
     }
 
     function get_error() {
-      if (isset($_GET['ErrMsg']) && tep_not_null($_GET['ErrMsg'])) {
+      if (isset($_GET['ErrMsg']) && osc_not_null($_GET['ErrMsg'])) {
         $error = stripslashes(urldecode($_GET['ErrMsg']));
-      } elseif (isset($_GET['Err']) && tep_not_null($_GET['Err'])) {
+      } elseif (isset($_GET['Err']) && osc_not_null($_GET['Err'])) {
         $error = stripslashes(urldecode($_GET['Err']));
-      } elseif (isset($_GET['error']) && tep_not_null($_GET['error'])) {
+      } elseif (isset($_GET['error']) && osc_not_null($_GET['error'])) {
         $error = stripslashes(urldecode($_GET['error']));
       } else {
         $error = MODULE_PAYMENT_PSIGATE_TEXT_ERROR_MESSAGE;
@@ -252,26 +252,26 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PSIGATE_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PSIGATE_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PSiGate Module', 'MODULE_PAYMENT_PSIGATE_STATUS', 'True', 'Do you want to accept PSiGate payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Merchant ID', 'MODULE_PAYMENT_PSIGATE_MERCHANT_ID', 'teststorewithcard', 'Merchant ID used for the PSiGate service', '6', '2', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_PSIGATE_TRANSACTION_MODE', 'Always Good', 'Transaction mode to use for the PSiGate service', '6', '3', 'tep_cfg_select_option(array(\'Production\', \'Always Good\', \'Always Duplicate\', \'Always Decline\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PSIGATE_TRANSACTION_TYPE', 'PreAuth', 'Transaction type to use for the PSiGate service', '6', '4', 'tep_cfg_select_option(array(\'Sale\', \'PreAuth\', \'PostAuth\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Credit Card Collection', 'MODULE_PAYMENT_PSIGATE_INPUT_MODE', 'Local', 'Should the credit card details be collected locally or remotely at PSiGate?', '6', '5', 'tep_cfg_select_option(array(\'Local\', \'Remote\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PSIGATE_CURRENCY', 'USD', 'The currency to use for credit card transactions', '6', '6', 'tep_cfg_select_option(array(\'CAD\', \'USD\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PSIGATE_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PSIGATE_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PSIGATE_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable PSiGate Module', 'MODULE_PAYMENT_PSIGATE_STATUS', 'True', 'Do you want to accept PSiGate payments?', '6', '1', 'osc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Merchant ID', 'MODULE_PAYMENT_PSIGATE_MERCHANT_ID', 'teststorewithcard', 'Merchant ID used for the PSiGate service', '6', '2', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_PSIGATE_TRANSACTION_MODE', 'Always Good', 'Transaction mode to use for the PSiGate service', '6', '3', 'osc_cfg_select_option(array(\'Production\', \'Always Good\', \'Always Duplicate\', \'Always Decline\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Type', 'MODULE_PAYMENT_PSIGATE_TRANSACTION_TYPE', 'PreAuth', 'Transaction type to use for the PSiGate service', '6', '4', 'osc_cfg_select_option(array(\'Sale\', \'PreAuth\', \'PostAuth\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Credit Card Collection', 'MODULE_PAYMENT_PSIGATE_INPUT_MODE', 'Local', 'Should the credit card details be collected locally or remotely at PSiGate?', '6', '5', 'osc_cfg_select_option(array(\'Local\', \'Remote\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Currency', 'MODULE_PAYMENT_PSIGATE_CURRENCY', 'USD', 'The currency to use for credit card transactions', '6', '6', 'osc_cfg_select_option(array(\'CAD\', \'USD\'), ', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_PSIGATE_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_PSIGATE_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'osc_get_zone_class_title', 'osc_cfg_pull_down_zone_classes(', now())");
+      osc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_PSIGATE_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'osc_cfg_pull_down_order_statuses(', 'osc_get_order_status_name', now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {

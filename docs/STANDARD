@@ -139,13 +139,13 @@ For example:
 Custom Functions
 ----------------
 
-All custom functions should start with tep_ so that the developer knows
+All custom functions should start with osc_ so that the developer knows
 a native PHP function is not being called.*
 
 An example custom function style:
 
 <?php
-  function tep_my_function($parameter, $optional = '') {
+  function osc_my_function($parameter, $optional = '') {
     global $another_variable;
 
     ....
@@ -153,9 +153,6 @@ An example custom function style:
     return true;
   }
 ?>
-
-* When 2.2 is finalized the custom functions should be renamed to osc_*
-as "tep" refers to the previous name of the project.
 
 Class Names
 -----------
@@ -219,26 +216,26 @@ structured as:
 
 <?php
 // multi-result set
-  $action_query = tep_db_query("select column1, ...");
-  while ($action = tep_db_fetch_array($action_query)) {
+  $action_query = osc_db_query("select column1, ...");
+  while ($action = osc_db_fetch_array($action_query)) {
     echo $action['column1'];
   }
 
 // single result set
-  $action_query = tep_db_query("select column1, ...");
-  $action = tep_db_fetch_array($action_query);
+  $action_query = osc_db_query("select column1, ...");
+  $action = osc_db_fetch_array($action_query);
 
   echo $action['column1'];
 
 // return number of rows
-  $action_query = tep_db_query("select count(*) as total from ...");
-  $action = tep_db_fetch_array($action_query);
+  $action_query = osc_db_query("select count(*) as total from ...");
+  $action = osc_db_fetch_array($action_query);
 
   echo $action['total'];
 
 // query with parameters
-  $action_query = tep_db_query("select column1 from table where field = '" . tep_db_input($some_id) . "'");
-  while ($action = tep_db_fetch_array($action_query)) {
+  $action_query = osc_db_query("select column1 from table where field = '" . osc_db_input($some_id) . "'");
+  while ($action = osc_db_fetch_array($action_query)) {
     ....
   }
 ?>
@@ -253,9 +250,9 @@ attacks residing in the user input. The data is first prepared and then protecte
 when inserting it into the table. The following structure is used:
 
 <?php
-  $value1 = tep_db_prepare_input($_POST['value1']);
+  $value1 = osc_db_prepare_input($_POST['value1']);
 
-  tep_db_query("update table set column = '" . tep_db_input($value1) . "' where id = '" . (int)$id . "'");
+  osc_db_query("update table set column = '" . osc_db_input($value1) . "' where id = '" . (int)$id . "'");
 ?>
 
 Variable type casting should be performed directly for integer based values, such
@@ -265,29 +262,29 @@ Multiple values can be parsed, protected and inserted into the table in an easie
 fashion:
 
 <?php
-  $value1 = tep_db_prepare_input($_POST['value1']);
-  $value2 = tep_db_prepare_input($_POST['value2']);
-  $value3 = tep_db_prepare_input($_POST['value3']);
+  $value1 = osc_db_prepare_input($_POST['value1']);
+  $value2 = osc_db_prepare_input($_POST['value2']);
+  $value3 = osc_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
                           'column3' => $value3);
 
-  tep_db_perform('table', $sql_data_array);
+  osc_db_perform('table', $sql_data_array);
 ?>
 
 A similar structure can be used for updating values in a table:
 
 <?php
-  $value1 = tep_db_prepare_input($_POST['value1']);
-  $value2 = tep_db_prepare_input($_POST['value2']);
-  $value3 = tep_db_prepare_input($_POST['value3']);
+  $value1 = osc_db_prepare_input($_POST['value1']);
+  $value2 = osc_db_prepare_input($_POST['value2']);
+  $value3 = osc_db_prepare_input($_POST['value3']);
 
   $sql_data_array = array('column1' => $value1,
                           'column2' => $value2,
                           'column3' => $value3);
 
-  tep_db_perform('table', $sql_data_array, 'update', "id = '" . (int)$id . "'");
+  osc_db_perform('table', $sql_data_array, 'update', "id = '" . (int)$id . "'");
 ?>
 
 Table names should not directly be entered in the query, but the constant
@@ -302,7 +299,7 @@ All custom functions should return strings; not directly via echo().
 For example:
 
 <?php
-  function tep_my_function($string) {
+  function osc_my_function($string) {
     return $string;
   }
 ?>
@@ -310,7 +307,7 @@ For example:
 and not:
 
 <?php
-  function tep_my_function($string) {
+  function osc_my_function($string) {
     echo $string;
   }
 ?>
@@ -375,7 +372,7 @@ statement. For the following valid example:
     ...
   }
 
-  if ( (isset($variable)) && (tep_not_null($string)) ) {
+  if ( (isset($variable)) && (osc_not_null($string)) ) {
     ...
   }
 ?>
@@ -462,11 +459,11 @@ Correct:
   echo '<td>Hello</td>';
 ?>
 
-Exceptions to this standard include the tep_draw_form()
+Exceptions to this standard include the osc_draw_form()
 function:
 
 <?php
-  echo tep_draw_form();
+  echo osc_draw_form();
 ?>
 [form input fields are placed here]
 </form>

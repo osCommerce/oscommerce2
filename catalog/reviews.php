@@ -14,7 +14,7 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_REVIEWS);
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_REVIEWS));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_REVIEWS));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -34,7 +34,7 @@
 ?>
 
   <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info'))); ?></p>
 
     <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
   </div>
@@ -46,19 +46,19 @@
     ?>
 <div class="row">
 <?php
-    $reviews_query = tep_db_query($reviews_split->sql_query);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
+    $reviews_query = osc_db_query($reviews_split->sql_query);
+    while ($reviews = osc_db_fetch_array($reviews_query)) {
 ?>
 
   <div class="col-sm-6 review">
-    <h4><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']) . '">' . $reviews['products_name'] . '</a>'; ?></h4>
+    <h4><?php echo '<a href="' . osc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']) . '">' . $reviews['products_name'] . '</a>'; ?></h4>
     <blockquote>
-      <p><span class="pull-left"><?php echo tep_image(DIR_WS_IMAGES . tep_output_string_protected($reviews['products_image']), tep_output_string_protected($reviews['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo tep_output_string_protected($reviews['reviews_text']) . ' ... '; ?></p>
+      <p><span class="pull-left"><?php echo osc_image(DIR_WS_IMAGES . osc_output_string_protected($reviews['products_image']), osc_output_string_protected($reviews['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo osc_output_string_protected($reviews['reviews_text']) . ' ... '; ?></p>
       <div class="clearfix"></div>
       <footer>
         <?php
-        $review_name = tep_output_string_protected($reviews['customers_name']);
-        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($reviews['reviews_rating']), $review_name, $review_name) . '<a href="' . tep_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id=' . (int)$reviews['products_id']) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
+        $review_name = osc_output_string_protected($reviews['customers_name']);
+        echo sprintf(REVIEWS_TEXT_RATED, osc_draw_stars($reviews['reviews_rating']), $review_name, $review_name) . '<a href="' . osc_href_link(FILENAME_PRODUCT_REVIEWS, 'products_id=' . (int)$reviews['products_id']) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
       </footer>
     </blockquote>
   </div>
@@ -86,7 +86,7 @@
   <br />
 
   <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
+    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info'))); ?></p>
 
     <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
   </div>

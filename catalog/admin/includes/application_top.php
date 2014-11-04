@@ -63,11 +63,11 @@
   require(DIR_WS_FUNCTIONS . 'database.php');
 
 // make a connection to the database... now
-  tep_db_connect() or die('Unable to connect to database server!');
+  osc_db_connect() or die('Unable to connect to database server!');
 
 // set application wide parameters
-  $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
+  $configuration_query = osc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
+  while ($configuration = osc_db_fetch_array($configuration_query)) {
     define($configuration['cfgKey'], $configuration['cfgValue']);
   }
 
@@ -85,8 +85,8 @@
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
 // set the session name and save path
-  tep_session_name('osCAdminID');
-  tep_session_save_path(SESSION_WRITE_DIRECTORY);
+  osc_session_name('osCAdminID');
+  osc_session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
    if (function_exists('session_set_cookie_params')) {
@@ -100,23 +100,23 @@
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // lets start our session
-  tep_session_start();
+  osc_session_start();
 
 // TODO remove when no more global sessions exist
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
 
 
 // set the language
-  if (!tep_session_is_registered('language') || isset($_GET['language'])) {
-    if (!tep_session_is_registered('language')) {
-      tep_session_register('language');
-      tep_session_register('languages_id');
+  if (!osc_session_is_registered('language') || isset($_GET['language'])) {
+    if (!osc_session_is_registered('language')) {
+      osc_session_register('language');
+      osc_session_register('languages_id');
     }
 
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
+    if (isset($_GET['language']) && osc_not_null($_GET['language'])) {
       $lng->set_language($_GET['language']);
     } else {
       $lng->get_browser_language();
@@ -127,28 +127,28 @@
   }
 
 // redirect to login page if administrator is not yet logged in
-  if (!tep_session_is_registered('admin')) {
+  if (!osc_session_is_registered('admin')) {
     $redirect = false;
 
     $current_page = $PHP_SELF;
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
-    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
+    if ( ($current_page == FILENAME_LOGIN) && !osc_session_is_registered('redirect_origin') ) {
       $current_page = FILENAME_DEFAULT;
       $_GET = array();
     }
 
     if ($current_page != FILENAME_LOGIN) {
-      if (!tep_session_is_registered('redirect_origin')) {
-        tep_session_register('redirect_origin');
+      if (!osc_session_is_registered('redirect_origin')) {
+        osc_session_register('redirect_origin');
 
         $redirect_origin = array('page' => $current_page,
                                  'get' => $_GET);
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
-      if (!tep_session_is_registered('auth_ignore')) {
+      if (!osc_session_is_registered('auth_ignore')) {
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
           $redirect_origin['auth_user'] = $_SERVER['PHP_AUTH_USER'];
           $redirect_origin['auth_pw'] = $_SERVER['PHP_AUTH_PW'];
@@ -163,7 +163,7 @@
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      osc_redirect(osc_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
@@ -216,8 +216,8 @@
     $cPath = '';
   }
 
-  if (tep_not_null($cPath)) {
-    $cPath_array = tep_parse_category_path($cPath);
+  if (osc_not_null($cPath)) {
+    $cPath_array = osc_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {

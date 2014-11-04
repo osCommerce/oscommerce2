@@ -27,7 +27,7 @@
       $this->enabled = defined('MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS') && (MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS == 'True') ? true : false;
       $this->order_status = defined('MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID') && ((int)MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID > 0) ? (int)MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID : 0;
 
-      if ( !defined('MODULE_PAYMENT_INSTALLED') || !tep_not_null(MODULE_PAYMENT_INSTALLED) || !in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) || !defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') || (MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS != 'True') ) {
+      if ( !defined('MODULE_PAYMENT_INSTALLED') || !osc_not_null(MODULE_PAYMENT_INSTALLED) || !in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) || !defined('MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS') || (MODULE_PAYMENT_PAYPAL_EXPRESS_STATUS != 'True') ) {
         $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_EXPRESS_MODULE . '</div>' . $this->description;
 
         $this->enabled = false;
@@ -49,7 +49,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME) || !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD) || !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -79,8 +79,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_PAYPAL_PRO_DP_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_PRO_DP_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_PAYPAL_PRO_DP_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -142,39 +142,39 @@
       $content = '<table id="paypal_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                  '<tr>' .
                  '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_TYPE . '</td>' .
-                 '  <td>' . tep_draw_pull_down_menu('cc_type', $types_array, '', 'id="paypal_card_type"') . '</td>' .
+                 '  <td>' . osc_draw_pull_down_menu('cc_type', $types_array, '', 'id="paypal_card_type"') . '</td>' .
                  '</tr>' .
                  '<tr>' .
                  '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_OWNER . '</td>' .
-                 '  <td>' . tep_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
+                 '  <td>' . osc_draw_input_field('cc_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
                  '</tr>' .
                  '<tr>' .
                  '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_NUMBER . '</td>' .
-                 '  <td>' . tep_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
+                 '  <td>' . osc_draw_input_field('cc_number_nh-dns', '', 'id="paypal_card_num"') . '</td>' .
                  '</tr>';
 
       if ( (MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_MAESTRO == 'True') || (MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_AMEX == 'True') ) {
         $content .= '<tr>' .
                     '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM . '</td>' .
-                    '  <td>' . tep_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . tep_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
+                    '  <td>' . osc_draw_pull_down_menu('cc_starts_month', $months_array, '', 'id="paypal_card_date_start"') . '&nbsp;' . osc_draw_pull_down_menu('cc_starts_year', $year_valid_from_array) . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_VALID_FROM_INFO . '</td>' .
                     '</tr>';
       }
 
       $content .= '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_EXPIRES . '</td>' .
-                  '  <td>' . tep_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . tep_draw_pull_down_menu('cc_expires_year', $year_expires_array) . '</td>' .
+                  '  <td>' . osc_draw_pull_down_menu('cc_expires_month', $months_array) . '&nbsp;' . osc_draw_pull_down_menu('cc_expires_year', $year_expires_array) . '</td>' .
                   '</tr>';
 
       if ( MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_MAESTRO == 'True' ) {
         $content .= '<tr>' .
                     '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER . '</td>' .
-                    '  <td>' . tep_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO . '</td>' .
+                    '  <td>' . osc_draw_input_field('cc_issue_nh-dns', '', 'id="paypal_card_issue" size="3" maxlength="2"') . '&nbsp;' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_ISSUE_NUMBER_INFO . '</td>' .
                     '</tr>';
       }
 
       $content .= '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_PAYPAL_PRO_DP_CARD_CVC . '</td>' .
-                  '  <td>' . tep_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . '</td>' .
+                  '  <td>' . osc_draw_input_field('cc_cvc_nh-dns', '', 'size="5" maxlength="4"') . '</td>' .
                   '</tr>' .
                   '</table>';
 
@@ -205,7 +205,7 @@
                         'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE,
                         'METHOD' => 'DoDirectPayment',
                         'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
-                        'IPADDRESS' => tep_get_ip_address(),
+                        'IPADDRESS' => osc_get_ip_address(),
                         'AMT' => $this->format_raw($order->info['total']),
                         'CREDITCARDTYPE' => $_POST['cc_type'],
                         'ACCT' => $_POST['cc_number_nh-dns'],
@@ -215,7 +215,7 @@
                         'LASTNAME' => substr($_POST['cc_owner'], strpos($_POST['cc_owner'], ' ')+1),
                         'STREET' => $order->billing['street_address'],
                         'CITY' => $order->billing['city'],
-                        'STATE' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
+                        'STATE' => osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
                         'COUNTRYCODE' => $order->billing['country']['iso_code_2'],
                         'ZIP' => $order->billing['postcode'],
                         'EMAIL' => $order->customer['email_address'],
@@ -232,7 +232,7 @@
           $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
           $params['SHIPTOSTREET'] = $order->delivery['street_address'];
           $params['SHIPTOCITY'] = $order->delivery['city'];
-          $params['SHIPTOSTATE'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+          $params['SHIPTOSTATE'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['SHIPTOCOUNTRYCODE'] = $order->delivery['country']['iso_code_2'];
           $params['SHIPTOZIP'] = $order->delivery['postcode'];
         }
@@ -286,19 +286,19 @@
         if (($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning')) {
           $this->sendDebugEmail($response_array);
 
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+          osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
+        osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'error_message=' . MODULE_PAYMENT_PAYPAL_PRO_DP_ERROR_ALL_FIELDS_REQUIRED, 'SSL'));
       }
     }
 
     function after_process() {
       global $response_array, $insert_id;
 
-      $result = 'Transaction ID: ' . tep_output_string_protected($response_array['TRANSACTIONID']) . "\n" .
-                'AVS Code: ' . tep_output_string_protected($response_array['AVSCODE']) . "\n" .
-                'CVV2 Match: ' . tep_output_string_protected($response_array['CVV2MATCH']);
+      $result = 'Transaction ID: ' . osc_output_string_protected($response_array['TRANSACTIONID']) . "\n" .
+                'AVS Code: ' . osc_output_string_protected($response_array['AVSCODE']) . "\n" .
+                'CVV2 Match: ' . osc_output_string_protected($response_array['CVV2MATCH']);
 
       $sql_data_array = array('orders_id' => $insert_id,
                               'orders_status_id' => MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTIONS_ORDER_STATUS_ID,
@@ -306,7 +306,7 @@
                               'customer_notified' => '0',
                               'comments' => $result);
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
     }
 
     function get_error() {
@@ -315,8 +315,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -349,12 +349,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -373,26 +373,26 @@
 
     function getParams() {
       if (!defined('MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTIONS_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'PayPal [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'PayPal [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }
@@ -403,7 +403,7 @@
       $params = array('MODULE_PAYMENT_PAYPAL_PRO_DP_STATUS' => array('title' => 'Enable PayPal Payments Pro (Direct Payment)',
                                                                      'desc' => 'Do you want to accept PayPal Payments Pro (Direct Payment) payments?',
                                                                      'value' => 'True',
-                                                                     'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                     'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_API_USERNAME' => array('title' => 'API Username',
                                                                            'desc' => 'The username to use for the PayPal API service.'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_API_PASSWORD' => array('title' => 'API Password',
@@ -413,30 +413,30 @@
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                  'desc' => 'The processing method to use for each transaction.',
                                                                                  'value' => 'Sale',
-                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
+                                                                                 'set_func' => 'osc_cfg_select_option(array(\'Authorization\', \'Sale\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                               'desc' => 'Set the status of orders made with this payment module to this value.',
                                                                               'value' => '0',
-                                                                              'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                              'use_func' => 'tep_get_order_status_name'),
+                                                                              'set_func' => 'osc_cfg_pull_down_order_statuses(',
+                                                                              'use_func' => 'osc_get_order_status_name'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTIONS_ORDER_STATUS_ID' => array('title' => 'PayPal Transactions Order Status Level',
                                                                                            'desc' => 'Include PayPal transaction information in this order status level.',
                                                                                            'value' => $status_id,
-                                                                                           'use_func' => 'tep_get_order_status_name',
-                                                                                           'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                                           'use_func' => 'osc_get_order_status_name',
+                                                                                           'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_ZONE' => array('title' => 'Payment Zone',
                                                                    'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                                    'value' => '0',
-                                                                   'set_func' => 'tep_cfg_pull_down_zone_classes(',
-                                                                   'use_func' => 'tep_get_zone_class_title'),
+                                                                   'set_func' => 'osc_cfg_pull_down_zone_classes(',
+                                                                   'use_func' => 'osc_get_zone_class_title'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                                  'desc' => 'Use the live or testing (sandbox) gateway server to process transactions?',
                                                                                  'value' => 'Live',
-                                                                                 'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                                                                                 'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
                                                                          'desc' => 'Verify gateway server SSL certificate on connection?',
                                                                          'value' => 'True',
-                                                                         'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                         'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY' => array('title' => 'Proxy Server',
                                                                     'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL' => array('title' => 'Debug E-Mail Address',
@@ -447,23 +447,23 @@
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_VISA' => array('title' => 'Accept Visa',
                                                                             'desc' => 'Accept Visa card payments?',
                                                                             'value' => 'True',
-                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                            'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_MASTERCARD' => array('title' => 'Accept MasterCard',
                                                                                   'desc' => 'Accept MasterCard card payments?',
                                                                                   'value' => 'True',
-                                                                                  'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                                  'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_DISCOVER' => array('title' => 'Accept Discover',
                                                                                 'desc' => 'Accept Discover card payments?',
                                                                                 'value' => 'True',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                                'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_AMEX' => array('title' => 'Accept American Express',
                                                                             'desc' => 'Accept American Express card payments?',
                                                                             'value' => 'True',
-                                                                            'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                            'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_PAYPAL_PRO_DP_CARDTYPE_MAESTRO' => array('title' => 'Accept Maestro',
                                                                                'desc' => 'Accept Maestro card payments?',
                                                                                'value' => 'True',
-                                                                               'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '));
+                                                                               'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '));
 
       return $params;
     }
@@ -501,7 +501,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_PRO_DP_PROXY);
       }
@@ -525,7 +525,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function isCardAccepted($card) {
@@ -540,7 +540,7 @@
       $dialog_error = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_ERROR;
       $dialog_connection_time = MODULE_PAYMENT_PAYPAL_PRO_DP_DIALOG_CONNECTION_TIME;
 
-      $test_url = tep_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
+      $test_url = osc_href_link(FILENAME_MODULES, 'set=payment&module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
 <script>
@@ -619,7 +619,7 @@ EOD;
                       'SIGNATURE' => MODULE_PAYMENT_PAYPAL_PRO_DP_API_SIGNATURE,
                       'METHOD' => 'DoDirectPayment',
                       'PAYMENTACTION' => ((MODULE_PAYMENT_PAYPAL_PRO_DP_TRANSACTION_METHOD == 'Sale') ? 'Sale' : 'Authorization'),
-                      'IPADDRESS' => tep_get_ip_address());
+                      'IPADDRESS' => osc_get_ip_address());
 
       $post_string = '';
 
@@ -717,7 +717,7 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -761,7 +761,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL, 'PayPal Payments Pro (Direct Payment) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_PAYPAL_PRO_DP_DEBUG_EMAIL, 'PayPal Payments Pro (Direct Payment) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

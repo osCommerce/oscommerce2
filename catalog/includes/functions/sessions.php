@@ -20,8 +20,8 @@
     }
 
     function _sess_read($key) {
-      $value_query = tep_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
-      $value = tep_db_fetch_array($value_query);
+      $value_query = osc_db_query("select value from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "'");
+      $value = osc_db_fetch_array($value_query);
 
       if (isset($value['value'])) {
         return $value['value'];
@@ -31,27 +31,27 @@
     }
 
     function _sess_write($key, $value) {
-      $check_query = tep_db_query("select 1 from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
+      $check_query = osc_db_query("select 1 from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "'");
 
-      if ( tep_db_num_rows($check_query) > 0 ) {
-        return tep_db_query("update " . TABLE_SESSIONS . " set expiry = '" . tep_db_input(time()) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
+      if ( osc_db_num_rows($check_query) > 0 ) {
+        return osc_db_query("update " . TABLE_SESSIONS . " set expiry = '" . osc_db_input(time()) . "', value = '" . osc_db_input($value) . "' where sesskey = '" . osc_db_input($key) . "'");
       } else {
-        return tep_db_query("insert into " . TABLE_SESSIONS . " values ('" . tep_db_input($key) . "', '" . tep_db_input(time()) . "', '" . tep_db_input($value) . "')");
+        return osc_db_query("insert into " . TABLE_SESSIONS . " values ('" . osc_db_input($key) . "', '" . osc_db_input(time()) . "', '" . osc_db_input($value) . "')");
       }
     }
 
     function _sess_destroy($key) {
-      return tep_db_query("delete from " . TABLE_SESSIONS . " where sesskey = '" . tep_db_input($key) . "'");
+      return osc_db_query("delete from " . TABLE_SESSIONS . " where sesskey = '" . osc_db_input($key) . "'");
     }
 
     function _sess_gc($maxlifetime) {
-      return tep_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . (time() - $maxlifetime) . "'");
+      return osc_db_query("delete from " . TABLE_SESSIONS . " where expiry < '" . (time() - $maxlifetime) . "'");
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
   }
 
-  function tep_session_start() {
+  function osc_session_start() {
     $sane_session_id = true;
 
     if ( isset($_GET[session_name()]) ) {
@@ -82,7 +82,7 @@
     }
 
     if ($sane_session_id == false) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      osc_redirect(osc_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
     register_shutdown_function('session_write_close');
@@ -90,7 +90,7 @@
     return session_start();
   }
 
-  function tep_session_register($variable) {
+  function osc_session_register($variable) {
     global $session_started;
 
     if ($session_started == true) {
@@ -102,7 +102,7 @@
     return false;
   }
 
-  function tep_session_destroy() {
+  function osc_session_destroy() {
     if ( isset($_COOKIE[session_name()]) ) {
       $session_data = session_get_cookie_params();
 
@@ -113,7 +113,7 @@
     return session_destroy();
   }
 
-  function tep_session_recreate() {
+  function osc_session_recreate() {
     global $SID;
 
       $old_id = session_id();
@@ -124,6 +124,6 @@
         $SID = session_name() . '=' . session_id();
       }
 
-      tep_whos_online_update_session_id($old_id, session_id());
+      osc_whos_online_update_session_id($old_id, session_id());
   }
 ?>

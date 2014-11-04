@@ -23,10 +23,10 @@
     }
 
     function pass() {
-      $check_query = tep_db_query('show table status');
+      $check_query = osc_db_query('show table status');
 
-      if ( tep_db_num_rows($check_query) > 0 ) {
-        while ( $check = tep_db_fetch_array($check_query) ) {
+      if ( osc_db_num_rows($check_query) > 0 ) {
+        while ( $check = osc_db_fetch_array($check_query) ) {
           if ( isset($check['Collation']) && ($check['Collation'] != 'utf8_unicode_ci') ) {
             return false;
           }
@@ -37,7 +37,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
+      return '<a href="' . osc_href_link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
     }
   }
 ?>

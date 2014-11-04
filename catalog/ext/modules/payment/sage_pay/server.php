@@ -24,11 +24,11 @@
   $result = null;
 
   if ( isset($_GET['skcode']) && isset($_POST['VPSSignature']) && isset($_POST['VPSTxId']) && isset($_POST['VendorTxCode']) && isset($_POST['Status']) ) {
-    $skcode = tep_db_prepare_input($_GET['skcode']);
+    $skcode = osc_db_prepare_input($_GET['skcode']);
 
-    $sp_query = tep_db_query('select securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
-    if ( tep_db_num_rows($sp_query) ) {
-      $sp = tep_db_fetch_array($sp_query);
+    $sp_query = osc_db_query('select securitykey from sagepay_server_securitykeys where code = "' . osc_db_input($skcode) . '" limit 1');
+    if ( osc_db_num_rows($sp_query) ) {
+      $sp = osc_db_fetch_array($sp_query);
 
       $transaction_details = array('ID' => $_POST['VPSTxId']);
 
@@ -128,31 +128,31 @@
             $transaction_details_string .= $k . ': ' . $v . "\n";
           }
 
-          $transaction_details_string = tep_db_prepare_input($transaction_details_string);
+          $transaction_details_string = osc_db_prepare_input($transaction_details_string);
 
-          tep_db_query('update sagepay_server_securitykeys set verified = 1, transaction_details = "' . tep_db_input($transaction_details_string) . '" where code = "' . tep_db_input($skcode) . '"');
+          osc_db_query('update sagepay_server_securitykeys set verified = 1, transaction_details = "' . osc_db_input($transaction_details_string) . '" where code = "' . osc_db_input($skcode) . '"');
 
           $result = 'Status=OK' . chr(13) . chr(10) .
-                    'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
+                    'RedirectURL=' . $sage_pay_server->formatURL(osc_href_link(FILENAME_CHECKOUT_PROCESS, 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
         } else {
           $error = isset($_POST['StatusDetail']) ? $sage_pay_server->getErrorMessageNumber($_POST['StatusDetail']) : null;
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $sage_pay_server->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           } else {
-            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = osc_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           }
 
           $result = 'Status=OK' . chr(13) . chr(10) .
                     'RedirectURL=' . $sage_pay_server->formatURL($error_url);
 
-          tep_db_query('delete from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '"');
+          osc_db_query('delete from sagepay_server_securitykeys where code = "' . osc_db_input($skcode) . '"');
 
           $sage_pay_server->sendDebugEmail();
         }
       } else {
         $result = 'Status=INVALID' . chr(13) . chr(10) .
-                  'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
+                  'RedirectURL=' . $sage_pay_server->formatURL(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
 
         $sage_pay_server->sendDebugEmail();
       }
@@ -161,12 +161,12 @@
 
   if ( !isset($result) ) {
     $result = 'Status=ERROR' . chr(13) . chr(10) .
-              'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
+              'RedirectURL=' . $sage_pay_server->formatURL(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
   }
 
   echo $result;
 
-  tep_session_destroy();
+  osc_session_destroy();
 
   exit;
 

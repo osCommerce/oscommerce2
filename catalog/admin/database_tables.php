@@ -12,11 +12,11 @@
 
   require('includes/application_top.php');
 
-  function tep_dt_get_tables() {
+  function osc_dt_get_tables() {
     $result = array();
 
-    $tables_query = tep_db_query('show table status');
-    while ( $tables = tep_db_fetch_array($tables_query) ) {
+    $tables_query = osc_db_query('show table status');
+    while ( $tables = osc_db_fetch_array($tables_query) ) {
       $result[] = $tables['Name'];
     }
 
@@ -25,8 +25,8 @@
 
   $mysql_charsets = array(array('id' => 'auto', 'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT));
 
-  $charsets_query = tep_db_query("show character set");
-  while ( $charsets = tep_db_fetch_array($charsets_query) ) {
+  $charsets_query = osc_db_query("show character set");
+  while ( $charsets = osc_db_fetch_array($charsets_query) ) {
     $mysql_charsets[] = array('id' => $charsets['Charset'], 'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $charsets['Charset']));
   }
 
@@ -45,7 +45,7 @@
   if ( isset($_POST['action']) ) {
     if ( in_array($_POST['action'], array('check', 'analyze', 'optimize', 'repair', 'utf8')) ) {
       if ( isset($_POST['id']) && is_array($_POST['id']) && !empty($_POST['id']) ) {
-        $tables = tep_dt_get_tables();
+        $tables = osc_dt_get_tables();
 
         foreach ( $_POST['id'] as $key => $value ) {
           if ( !in_array($value, $tables) ) {
@@ -65,24 +65,24 @@
     case 'analyze':
     case 'optimize':
     case 'repair':
-      tep_set_time_limit(0);
+      osc_set_time_limit(0);
 
       $table_headers = array(TABLE_HEADING_TABLE,
                              TABLE_HEADING_MSG_TYPE,
                              TABLE_HEADING_MSG,
-                             tep_draw_checkbox_field('masterblaster'));
+                             osc_draw_checkbox_field('masterblaster'));
 
       $table_data = array();
 
       foreach ( $_POST['id'] as $table ) {
         $current_table = null;
 
-        $sql_query = tep_db_query($action . " table " . $table);
-        while ( $sql = tep_db_fetch_array($sql_query) ) {
-          $table_data[] = array(($table != $current_table) ? tep_output_string_protected($table) : '',
-                                tep_output_string_protected($sql['Msg_type']),
-                                tep_output_string_protected($sql['Msg_text']),
-                                ($table != $current_table) ? tep_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
+        $sql_query = osc_db_query($action . " table " . $table);
+        while ( $sql = osc_db_fetch_array($sql_query) ) {
+          $table_data[] = array(($table != $current_table) ? osc_output_string_protected($table) : '',
+                                osc_output_string_protected($sql['Msg_type']),
+                                osc_output_string_protected($sql['Msg_text']),
+                                ($table != $current_table) ? osc_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
 
           $current_table = $table;
         }
@@ -107,17 +107,17 @@
       }
 
       if ( $charset_pass === false ) {
-        tep_redirect(tep_href_link('database_tables.php'));
+        osc_redirect(osc_href_link('database_tables.php'));
       }
 
-      tep_set_time_limit(0);
+      osc_set_time_limit(0);
 
       if ( isset($_POST['dryrun']) ) {
         $table_headers = array(TABLE_HEADING_QUERIES);
       } else {
         $table_headers = array(TABLE_HEADING_TABLE,
                                TABLE_HEADING_MSG,
-                               tep_draw_checkbox_field('masterblaster'));
+                               osc_draw_checkbox_field('masterblaster'));
       }
 
       $table_data = array();
@@ -127,8 +127,8 @@
 
         $queries = array();
 
-        $cols_query = tep_db_query("show full columns from " . $table);
-        while ( $cols = tep_db_fetch_array($cols_query) ) {
+        $cols_query = osc_db_query("show full columns from " . $table);
+        while ( $cols = osc_db_fetch_array($cols_query) ) {
           if ( !empty($cols['Collation']) ) {
             if ( $_POST['from_charset'] == 'auto' ) {
               $old_charset = substr($cols['Collation'], 0, strpos($cols['Collation'], '_'));
@@ -149,7 +149,7 @@
             $table_data[] = array($q);
           }
         } else {
-// mysqli_query() is directly called as tep_db_query() dies when an error occurs
+// mysqli_query() is directly called as osc_db_query() dies when an error occurs
           if ( mysqli_query($db_link, $query) ) {
             foreach ( $queries as $q ) {
               if ( !mysqli_query($db_link, $q) ) {
@@ -163,9 +163,9 @@
         }
 
         if ( !isset($_POST['dryrun']) ) {
-          $table_data[] = array(tep_output_string_protected($table),
-                                tep_output_string_protected($result),
-                                tep_draw_checkbox_field('id[]', $table, true));
+          $table_data[] = array(osc_output_string_protected($table),
+                                osc_output_string_protected($result),
+                                osc_draw_checkbox_field('id[]', $table, true));
         }
       }
 
@@ -177,18 +177,18 @@
                              TABLE_HEADING_SIZE,
                              TABLE_HEADING_ENGINE,
                              TABLE_HEADING_COLLATION,
-                             tep_draw_checkbox_field('masterblaster'));
+                             osc_draw_checkbox_field('masterblaster'));
 
       $table_data = array();
 
-      $sql_query = tep_db_query('show table status');
-      while ( $sql = tep_db_fetch_array($sql_query) ) {
-        $table_data[] = array(tep_output_string_protected($sql['Name']),
-                              tep_output_string_protected($sql['Rows']),
+      $sql_query = osc_db_query('show table status');
+      while ( $sql = osc_db_fetch_array($sql_query) ) {
+        $table_data[] = array(osc_output_string_protected($sql['Name']),
+                              osc_output_string_protected($sql['Rows']),
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
-                              tep_output_string_protected($sql['Engine']),
-                              tep_output_string_protected($sql['Collation']),
-                              tep_draw_checkbox_field('id[]', $sql['Name']));
+                              osc_output_string_protected($sql['Engine']),
+                              osc_output_string_protected($sql['Collation']),
+                              osc_draw_checkbox_field('id[]', $sql['Name']));
       }
   }
 
@@ -197,14 +197,14 @@
 
 <?php
   if ( isset($action) ) {
-    echo '<div style="float: right;">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link('database_tables.php')) . '</div>';
+    echo '<div style="float: right;">' . osc_draw_button(IMAGE_BACK, 'triangle-1-w', osc_href_link('database_tables.php')) . '</div>';
   }
 ?>
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  echo tep_draw_form('sql', 'database_tables.php');
+  echo osc_draw_form('sql', 'database_tables.php');
 ?>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -236,7 +236,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, tep_draw_checkbox_field('dryrun')) . '</span>' . tep_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . tep_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, osc_draw_checkbox_field('dryrun')) . '</span>' . osc_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . osc_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . osc_draw_button(BUTTON_ACTION_GO); ?>
 </div>
 
 <?php

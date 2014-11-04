@@ -14,7 +14,7 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCTS_NEW);
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRODUCTS_NEW));
+  $breadcrumb->add(NAVBAR_TITLE, osc_href_link(FILENAME_PRODUCTS_NEW));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -36,7 +36,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
+      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
 
       <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
     </div>
@@ -55,28 +55,28 @@
     <div class="row">
 
 <?php
-    $products_new_query = tep_db_query($products_new_split->sql_query);
-    while ($products_new = tep_db_fetch_array($products_new_query)) {
-      if ($new_price = tep_get_products_special_price($products_new['products_id'])) {
-        $products_price = '<del>' . $currencies->display_price($products_new['products_price'], tep_get_tax_rate($products_new['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($products_new['products_tax_class_id'])) . '</span>';
+    $products_new_query = osc_db_query($products_new_split->sql_query);
+    while ($products_new = osc_db_fetch_array($products_new_query)) {
+      if ($new_price = osc_get_products_special_price($products_new['products_id'])) {
+        $products_price = '<del>' . $currencies->display_price($products_new['products_price'], osc_get_tax_rate($products_new['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, osc_get_tax_rate($products_new['products_tax_class_id'])) . '</span>';
       } else {
-        $products_price = $currencies->display_price($products_new['products_price'], tep_get_tax_rate($products_new['products_tax_class_id']));
+        $products_price = $currencies->display_price($products_new['products_price'], osc_get_tax_rate($products_new['products_tax_class_id']));
       }
 ?>
       <div class="col-sm-6">
         <div class="well well-sm">
            <div class="row">
-              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $products_new['products_image'], $products_new['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
+              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '">' . osc_image(DIR_WS_IMAGES . $products_new['products_image'], $products_new['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
               <div class="col-xs-9 col-md-9 info-box">
-                <h4><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '">' . $products_new['products_name'] . '</a>'; ?></h4>
-                <p><?php echo TEXT_DATE_ADDED . ' ' . tep_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER . ' ' . $products_new['manufacturers_name']; ?></p>
+                <h4><?php echo '<a href="' . osc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products_new['products_id']) . '">' . $products_new['products_name'] . '</a>'; ?></h4>
+                <p><?php echo TEXT_DATE_ADDED . ' ' . osc_date_long($products_new['products_date_added']) . '<br />' . TEXT_MANUFACTURER . ' ' . $products_new['manufacturers_name']; ?></p>
                 <hr />
                 <div class="row">
                   <div class="col-sm-6">
                     <?php echo TEXT_PRICE . ' ' . $products_price; ?>
                   </div>
                   <div class="col-sm-6 text-right">
-                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $products_new['products_id']), null, null, 'btn-success'); ?>
+                    <?php echo osc_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', osc_href_link(FILENAME_PRODUCTS_NEW, osc_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $products_new['products_id']), null, null, 'btn-success'); ?>
                   </div>
                 </div>
              </div>
@@ -106,7 +106,7 @@
     <br />
 
     <div>
-      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
+      <span style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, osc_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></span>
 
       <span><?php echo $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW); ?></span>
     </div>

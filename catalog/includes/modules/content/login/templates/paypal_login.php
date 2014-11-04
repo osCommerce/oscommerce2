@@ -29,7 +29,7 @@ paypal.use( ["login"], function(login) {
     echo '    "theme": "neutral",';
   }
 
-  if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE') && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE) ) {
+  if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE') && osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE) ) {
     echo '    "locale": "' . MODULE_CONTENT_PAYPAL_LOGIN_LANGUAGE_LOCALE . '",';
   }
 ?>
@@ -37,7 +37,7 @@ paypal.use( ["login"], function(login) {
     "appid": "<?php echo MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID; ?>",
     "scopes": "<?php echo implode(' ', $use_scopes); ?>",
     "containerid": "PayPalLoginButton",
-    "returnurl": "<?php echo str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL', false)); ?>"
+    "returnurl": "<?php echo str_replace('&amp;', '&', osc_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL', false)); ?>"
   });
 });
 </script>

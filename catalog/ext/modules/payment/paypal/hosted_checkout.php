@@ -29,7 +29,7 @@
     if (($pphs_result['ACK'] != 'Success') && ($pphs_result['ACK'] != 'SuccessWithWarning')) {
       $error = true;
 
-      tep_session_register('pphs_error_msg');
+      osc_session_register('pphs_error_msg');
       $pphs_error_msg = $pphs_result['L_LONGMESSAGE0'];
     }
   }
@@ -41,24 +41,24 @@
       $form_url = 'https://securepayments.sandbox.paypal.com/webapps/HostedSoleSolutionApp/webflow/sparta/hostedSoleSolutionProcess';
     }
   } else {
-    $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
+    $form_url = osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
   }
 ?>
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
-<title><?php echo tep_output_string_protected(TITLE); ?></title>
+<title><?php echo osc_output_string_protected(TITLE); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 </head>
 <body>
 
 <div style="text-align: center;">
-  <?php echo tep_image('ext/modules/payment/paypal/images/hss_load.gif');?>
+  <?php echo osc_image('ext/modules/payment/paypal/images/hss_load.gif');?>
 </div>
 
 <form name="pphs" action="<?php echo $form_url; ?>" method="post" <?php echo ($error == true ? 'target="_top"' : ''); ?>>
-  <input type="hidden" name="hosted_button_id" value="<?php echo (isset($pphs_result['HOSTEDBUTTONID']) ? tep_output_string_protected($pphs_result['HOSTEDBUTTONID']) : ''); ?>" />
+  <input type="hidden" name="hosted_button_id" value="<?php echo (isset($pphs_result['HOSTEDBUTTONID']) ? osc_output_string_protected($pphs_result['HOSTEDBUTTONID']) : ''); ?>" />
 </form>
 
 <script>
