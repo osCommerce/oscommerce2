@@ -23,7 +23,7 @@
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_catalog_href_link('ext/'));
+      $request = $this->getHttpRequest(osc_catalog_href_link('ext/'));
 
       return $request['http_code'] != 200;
     }

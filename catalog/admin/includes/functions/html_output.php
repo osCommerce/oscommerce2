@@ -63,7 +63,7 @@
     return $link;
   }
 
-  function tep_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  function osc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
@@ -125,7 +125,7 @@
 
 ////
 // Draw a 1 pixel black line
-  function tep_black_line() {
+  function osc_black_line() {
     return osc_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
   }
 
@@ -146,7 +146,7 @@
 ////
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
-  function tep_js_zone_list($country, $form, $field) {
+  function osc_js_zone_list($country, $form, $field) {
     $countries_query = osc_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
     $num_country = 1;
     $output_string = '';
@@ -229,7 +229,7 @@
 
 ////
 // Output a form filefield
-  function tep_draw_file_field($name, $required = false) {
+  function osc_draw_file_field($name, $required = false) {
     $field = osc_draw_input_field($name, '', '', $required, 'file');
 
     return $field;

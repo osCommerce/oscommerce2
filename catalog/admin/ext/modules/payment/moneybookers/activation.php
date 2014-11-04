@@ -31,7 +31,7 @@
                       'Merchant Name: ' . STORE_OWNER . "\n" .
                       'Moneybookers E-Mail Address: ' . $_POST['mb_email'] . "\n" .
                       'Moneybookers Customer ID: ' . $result[1] . "\n" .
-                      'Store URL: ' . tep_catalog_href_link() . "\n" .
+                      'Store URL: ' . osc_catalog_href_link() . "\n" .
                       'Language: ' . $language . "\n";
 
         osc_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);

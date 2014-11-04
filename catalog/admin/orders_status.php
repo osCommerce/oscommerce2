@@ -174,7 +174,7 @@
       $orders_status_inputs_string = '';
       $languages = osc_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $orders_status_inputs_string .= '<br />' . osc_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']');
+        $orders_status_inputs_string .= '<br />' . osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']');
       }
 
       $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
@@ -192,7 +192,7 @@
       $orders_status_inputs_string = '';
       $languages = osc_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $orders_status_inputs_string .= '<br />' . osc_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']', osc_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
+        $orders_status_inputs_string .= '<br />' . osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('orders_status_name[' . $languages[$i]['id'] . ']', osc_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
       }
 
       $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
@@ -218,7 +218,7 @@
         $orders_status_inputs_string = '';
         $languages = osc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $orders_status_inputs_string .= '<br />' . osc_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']);
+          $orders_status_inputs_string .= '<br />' . osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']);
         }
 
         $contents[] = array('text' => $orders_status_inputs_string);

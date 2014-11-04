@@ -104,7 +104,7 @@ function update_zone(theForm) {
 
   SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
 
-<?php echo tep_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
+<?php echo osc_js_zone_list('SelectedCountry', 'theForm', 'zone_id'); ?>
 
 }
 //--></script>

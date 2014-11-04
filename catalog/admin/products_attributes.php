@@ -170,7 +170,7 @@
               <tr>
                 <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
 <?php
     $products = osc_db_query("select p.products_id, pd.products_name, pov.products_options_values_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov, " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.products_id = p.products_id and pov.language_id = '" . (int)$languages_id . "' and pd.language_id = '" . (int)$languages_id . "' and pa.products_id = p.products_id and pa.options_id='" . (int)$_GET['option_id'] . "' and pov.products_options_values_id = pa.options_values_id order by pd.products_name");
@@ -182,7 +182,7 @@
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
 <?php
       $rows = 0;
@@ -198,7 +198,7 @@
       }
 ?>
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
                   <tr>
                     <td colspan="3" class="main"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
@@ -237,7 +237,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="3"><?php echo tep_black_line(); ?></td>
+                <td colspan="3"><?php echo osc_black_line(); ?></td>
               </tr>
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -245,7 +245,7 @@
                 <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="3"><?php echo tep_black_line(); ?></td>
+                <td colspan="3"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     $next_id = 1;
@@ -286,7 +286,7 @@
     }
 ?>
               <tr>
-                <td colspan="3"><?php echo tep_black_line(); ?></td>
+                <td colspan="3"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     if ($action != 'update_option') {
@@ -307,7 +307,7 @@
 ?>
               </tr>
               <tr>
-                <td colspan="3"><?php echo tep_black_line(); ?></td>
+                <td colspan="3"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     }
@@ -328,7 +328,7 @@
               <tr>
                 <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
 <?php
     $products = osc_db_query("select p.products_id, pd.products_name, po.products_options_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS . " po, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.products_id = p.products_id and pd.language_id = '" . (int)$languages_id . "' and po.language_id = '" . (int)$languages_id . "' and pa.products_id = p.products_id and pa.options_values_id='" . (int)$_GET['value_id'] . "' and po.products_options_id = pa.options_id order by pd.products_name");
@@ -340,7 +340,7 @@
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
 <?php
       while ($products_values = osc_db_fetch_array($products)) {
@@ -355,7 +355,7 @@
       }
 ?>
                   <tr>
-                    <td colspan="3"><?php echo tep_black_line(); ?></td>
+                    <td colspan="3"><?php echo osc_black_line(); ?></td>
                   </tr>
                   <tr>
                     <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
@@ -394,7 +394,7 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_black_line(); ?></td>
+                <td colspan="4"><?php echo osc_black_line(); ?></td>
               </tr>
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -403,7 +403,7 @@
                 <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_black_line(); ?></td>
+                <td colspan="4"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     $next_id = 1;
@@ -457,7 +457,7 @@
 ?>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_black_line(); ?></td>
+                <td colspan="4"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     if ($action != 'update_option_value') {
@@ -487,7 +487,7 @@
 ?>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_black_line(); ?></td>
+                <td colspan="4"><?php echo osc_black_line(); ?></td>
               </tr>
 <?php
     }
@@ -531,7 +531,7 @@
         </table>
         <form name="attributes" action="<?php echo osc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=' . $form_action . '&' . $page_info); ?>" method="post"><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td colspan="7"><?php echo tep_black_line(); ?></td>
+            <td colspan="7"><?php echo osc_black_line(); ?></td>
           </tr>
           <tr class="dataTableHeadingRow">
             <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
@@ -543,7 +543,7 @@
             <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
           </tr>
           <tr>
-            <td colspan="7"><?php echo tep_black_line(); ?></td>
+            <td colspan="7"><?php echo osc_black_line(); ?></td>
           </tr>
 <?php
   $next_id = 1;
@@ -663,7 +663,7 @@
   if ($action != 'update_attribute') {
 ?>
           <tr>
-            <td colspan="7"><?php echo tep_black_line(); ?></td>
+            <td colspan="7"><?php echo osc_black_line(); ?></td>
           </tr>
           <tr class="<?php echo (floor($rows/2) == ($rows/2) ? 'attributes-even' : 'attributes-odd'); ?>">
             <td class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
@@ -724,7 +724,7 @@
   }
 ?>
           <tr>
-            <td colspan="7"><?php echo tep_black_line(); ?></td>
+            <td colspan="7"><?php echo osc_black_line(); ?></td>
           </tr>
         </table></form></td>
       </tr>

@@ -68,7 +68,7 @@
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
-              <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
+              <td class="main"><?php echo osc_draw_file_field('store_logo'); ?></td>
               <td class="smallText"><?php echo osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
             </tr>
           </table>

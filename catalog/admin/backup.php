@@ -442,7 +442,7 @@
 
       $contents = array('form' => osc_draw_form('restore', FILENAME_BACKUP, 'action=restorelocalnow', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
-      $contents[] = array('text' => '<br />' . tep_draw_file_field('sql_file'));
+      $contents[] = array('text' => '<br />' . osc_draw_file_field('sql_file'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
       $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_BACKUP)));
       break;

@@ -608,9 +608,9 @@ EOD;
 
       $info = '<p><img src="images/icon_info.gif" border="0">&nbsp;<a href="javascript:openShowUrlsDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE . '</a></p>' .
               '<div id="showUrlsDialog" style="display: none;">' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
+              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', osc_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
               '</div>' .
               $js;
 
