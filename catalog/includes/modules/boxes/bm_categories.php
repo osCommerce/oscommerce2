@@ -155,7 +155,7 @@
       global $SID, $oscTemplate;
 
       if ((USE_CACHE == 'true') && empty($SID)) {
-        $output = tep_cache_categories_box();
+        $output = osc_cache_categories_box();
       } else {
         $output = $this->getData();
       }

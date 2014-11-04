@@ -80,7 +80,7 @@
       global $SID, $oscTemplate;
 
       if ((USE_CACHE == 'true') && empty($SID)) {
-        $output = tep_cache_manufacturers_box();
+        $output = osc_cache_manufacturers_box();
       } else {
         $output = $this->getData();
       }
