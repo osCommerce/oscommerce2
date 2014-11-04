@@ -21,38 +21,38 @@
 
     if (ACCOUNT_GENDER == 'true') {
       if (isset($_POST['gender'])) {
-        $gender = tep_db_prepare_input($_POST['gender']);
+        $gender = osc_db_prepare_input($_POST['gender']);
       } else {
         $gender = false;
       }
     }
-    $firstname = tep_db_prepare_input($_POST['firstname']);
-    $lastname = tep_db_prepare_input($_POST['lastname']);
-    if (ACCOUNT_DOB == 'true') $dob = tep_db_prepare_input($_POST['dob']);
-    $email_address = tep_db_prepare_input($_POST['email_address']);
-    if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
-    $street_address = tep_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
-    $postcode = tep_db_prepare_input($_POST['postcode']);
-    $city = tep_db_prepare_input($_POST['city']);
+    $firstname = osc_db_prepare_input($_POST['firstname']);
+    $lastname = osc_db_prepare_input($_POST['lastname']);
+    if (ACCOUNT_DOB == 'true') $dob = osc_db_prepare_input($_POST['dob']);
+    $email_address = osc_db_prepare_input($_POST['email_address']);
+    if (ACCOUNT_COMPANY == 'true') $company = osc_db_prepare_input($_POST['company']);
+    $street_address = osc_db_prepare_input($_POST['street_address']);
+    if (ACCOUNT_SUBURB == 'true') $suburb = osc_db_prepare_input($_POST['suburb']);
+    $postcode = osc_db_prepare_input($_POST['postcode']);
+    $city = osc_db_prepare_input($_POST['city']);
     if (ACCOUNT_STATE == 'true') {
-      $state = tep_db_prepare_input($_POST['state']);
+      $state = osc_db_prepare_input($_POST['state']);
       if (isset($_POST['zone_id'])) {
-        $zone_id = tep_db_prepare_input($_POST['zone_id']);
+        $zone_id = osc_db_prepare_input($_POST['zone_id']);
       } else {
         $zone_id = false;
       }
     }
-    $country = tep_db_prepare_input($_POST['country']);
-    $telephone = tep_db_prepare_input($_POST['telephone']);
-    $fax = tep_db_prepare_input($_POST['fax']);
+    $country = osc_db_prepare_input($_POST['country']);
+    $telephone = osc_db_prepare_input($_POST['telephone']);
+    $fax = osc_db_prepare_input($_POST['fax']);
     if (isset($_POST['newsletter'])) {
-      $newsletter = tep_db_prepare_input($_POST['newsletter']);
+      $newsletter = osc_db_prepare_input($_POST['newsletter']);
     } else {
       $newsletter = false;
     }
-    $password = tep_db_prepare_input($_POST['password']);
-    $confirmation = tep_db_prepare_input($_POST['confirmation']);
+    $password = osc_db_prepare_input($_POST['password']);
+    $confirmation = osc_db_prepare_input($_POST['confirmation']);
 
     $error = false;
 
@@ -93,8 +93,8 @@
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     } else {
-      $check_email_query = tep_db_query("select count(*) as total from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "'");
-      $check_email = tep_db_fetch_array($check_email_query);
+      $check_email_query = osc_db_query("select count(*) as total from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "'");
+      $check_email = osc_db_fetch_array($check_email_query);
       if ($check_email['total'] > 0) {
         $error = true;
 
@@ -128,13 +128,13 @@
 
     if (ACCOUNT_STATE == 'true') {
       $zone_id = 0;
-      $check_query = tep_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
-      $check = tep_db_fetch_array($check_query);
+      $check_query = osc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
+      $check = osc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
       if ($entry_state_has_zones == true) {
-        $zone_query = tep_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
-        if (tep_db_num_rows($zone_query) == 1) {
-          $zone = tep_db_fetch_array($zone_query);
+        $zone_query = osc_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . osc_db_input($state) . "' or zone_code = '" . osc_db_input($state) . "')");
+        if (osc_db_num_rows($zone_query) == 1) {
+          $zone = osc_db_fetch_array($zone_query);
           $zone_id = $zone['zone_id'];
         } else {
           $error = true;
@@ -179,9 +179,9 @@
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
 
-      tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+      osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-      $customer_id = tep_db_insert_id();
+      $customer_id = osc_db_insert_id();
 
       $sql_data_array = array('customers_id' => $customer_id,
                               'entry_firstname' => $firstname,
@@ -204,13 +204,13 @@
         }
       }
 
-      tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+      osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-      $address_id = tep_db_insert_id();
+      $address_id = osc_db_insert_id();
 
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
 
-      tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+      osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
 
       if (SESSION_RECREATE == 'True') {
         tep_session_recreate();
@@ -438,8 +438,8 @@
         if ($process == true) {
           if ($entry_state_has_zones == true) {
             $zones_array = array();
-            $zones_query = tep_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' order by zone_name");
-            while ($zones_values = tep_db_fetch_array($zones_query)) {
+            $zones_query = osc_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' order by zone_name");
+            while ($zones_values = osc_db_fetch_array($zones_query)) {
               $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
             }
             echo tep_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');

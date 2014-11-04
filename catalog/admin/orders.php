@@ -17,8 +17,8 @@
 
   $orders_statuses = array();
   $orders_status_array = array();
-  $orders_status_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
-  while ($orders_status = tep_db_fetch_array($orders_status_query)) {
+  $orders_status_query = osc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
+  while ($orders_status = osc_db_fetch_array($orders_status_query)) {
     $orders_statuses[] = array('id' => $orders_status['orders_status_id'],
                                'text' => $orders_status['orders_status_name']);
     $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
@@ -29,16 +29,16 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'update_order':
-        $oID = tep_db_prepare_input($_GET['oID']);
-        $status = tep_db_prepare_input($_POST['status']);
-        $comments = tep_db_prepare_input($_POST['comments']);
+        $oID = osc_db_prepare_input($_GET['oID']);
+        $status = osc_db_prepare_input($_POST['status']);
+        $comments = osc_db_prepare_input($_POST['comments']);
 
         $order_updated = false;
-        $check_status_query = tep_db_query("select customers_name, customers_email_address, orders_status, date_purchased from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
-        $check_status = tep_db_fetch_array($check_status_query);
+        $check_status_query = osc_db_query("select customers_name, customers_email_address, orders_status, date_purchased from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
+        $check_status = osc_db_fetch_array($check_status_query);
 
         if ( ($check_status['orders_status'] != $status) || tep_not_null($comments)) {
-          tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . tep_db_input($status) . "', last_modified = now() where orders_id = '" . (int)$oID . "'");
+          osc_db_query("update " . TABLE_ORDERS . " set orders_status = '" . osc_db_input($status) . "', last_modified = now() where orders_id = '" . (int)$oID . "'");
 
           $customer_notified = '0';
           if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
@@ -54,7 +54,7 @@
             $customer_notified = '1';
           }
 
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments) values ('" . (int)$oID . "', '" . tep_db_input($status) . "', now(), '" . tep_db_input($customer_notified) . "', '" . tep_db_input($comments)  . "')");
+          osc_db_query("insert into " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments) values ('" . (int)$oID . "', '" . osc_db_input($status) . "', now(), '" . osc_db_input($customer_notified) . "', '" . osc_db_input($comments)  . "')");
 
           $order_updated = true;
         }
@@ -68,7 +68,7 @@
         tep_redirect(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'deleteconfirm':
-        $oID = tep_db_prepare_input($_GET['oID']);
+        $oID = osc_db_prepare_input($_GET['oID']);
 
         tep_remove_order($oID, $_POST['restock']);
 
@@ -78,11 +78,11 @@
   }
 
   if (($action == 'edit') && isset($_GET['oID'])) {
-    $oID = tep_db_prepare_input($_GET['oID']);
+    $oID = osc_db_prepare_input($_GET['oID']);
 
-    $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
+    $orders_query = osc_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
     $order_exists = true;
-    if (!tep_db_num_rows($orders_query)) {
+    if (!osc_db_num_rows($orders_query)) {
       $order_exists = false;
       $messageStack->add(sprintf(ERROR_ORDER_DOES_NOT_EXIST, $oID), 'error');
     }
@@ -245,9 +245,9 @@
             <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_COMMENTS; ?></strong></td>
           </tr>
 <?php
-    $orders_history_query = tep_db_query("select orders_status_id, date_added, customer_notified, comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . tep_db_input($oID) . "' order by date_added");
-    if (tep_db_num_rows($orders_history_query)) {
-      while ($orders_history = tep_db_fetch_array($orders_history_query)) {
+    $orders_history_query = osc_db_query("select orders_status_id, date_added, customer_notified, comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . osc_db_input($oID) . "' order by date_added");
+    if (osc_db_num_rows($orders_history_query)) {
+      while ($orders_history = osc_db_fetch_array($orders_history_query)) {
         echo '          <tr>' . "\n" .
              '            <td class="smallText" align="center">' . tep_datetime_short($orders_history['date_added']) . '</td>' . "\n" .
              '            <td class="smallText" align="center">';
@@ -257,7 +257,7 @@
           echo tep_image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS) . "</td>\n";
         }
         echo '            <td class="smallText">' . $orders_status_array[$orders_history['orders_status_id']] . '</td>' . "\n" .
-             '            <td class="smallText">' . nl2br(tep_db_output($orders_history['comments'])) . '&nbsp;</td>' . "\n" .
+             '            <td class="smallText">' . nl2br(osc_db_output($orders_history['comments'])) . '&nbsp;</td>' . "\n" .
              '          </tr>' . "\n";
       }
     } else {
@@ -328,17 +328,17 @@
               </tr>
 <?php
     if (isset($_GET['cID'])) {
-      $cID = tep_db_prepare_input($_GET['cID']);
+      $cID = osc_db_prepare_input($_GET['cID']);
       $orders_query_raw = "select o.orders_id, o.customers_name, o.customers_id, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.customers_id = '" . (int)$cID . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by orders_id DESC";
     } elseif (isset($_GET['status']) && is_numeric($_GET['status']) && ($_GET['status'] > 0)) {
-      $status = tep_db_prepare_input($_GET['status']);
+      $status = osc_db_prepare_input($_GET['status']);
       $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and s.orders_status_id = '" . (int)$status . "' and ot.class = 'ot_total' order by o.orders_id DESC";
     } else {
       $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by o.orders_id DESC";
     }
     $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_query_raw, $orders_query_numrows);
-    $orders_query = tep_db_query($orders_query_raw);
-    while ($orders = tep_db_fetch_array($orders_query)) {
+    $orders_query = osc_db_query($orders_query_raw);
+    while ($orders = osc_db_fetch_array($orders_query)) {
     if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders['orders_id']))) && !isset($oInfo)) {
         $oInfo = new objectInfo($orders);
       }

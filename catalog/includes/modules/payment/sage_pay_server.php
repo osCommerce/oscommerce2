@@ -67,8 +67,8 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
+        $check_query = osc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_SERVER_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        while ($check = osc_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
             break;
@@ -114,15 +114,15 @@
 
       if (isset($_GET['check']) && ($_GET['check'] == 'PROCESS')) {
         if ( isset($_GET['skcode']) && isset($_SESSION['sagepay_server_skey_code']) && ($_GET['skcode'] == $sagepay_server_skey_code) ) {
-          $skcode = tep_db_prepare_input($_GET['skcode']);
+          $skcode = osc_db_prepare_input($_GET['skcode']);
 
-          $sp_query = tep_db_query('select verified, transaction_details from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
+          $sp_query = osc_db_query('select verified, transaction_details from sagepay_server_securitykeys where code = "' . osc_db_input($skcode) . '" limit 1');
 
-          if ( tep_db_num_rows($sp_query) ) {
-            $sp = tep_db_fetch_array($sp_query);
+          if ( osc_db_num_rows($sp_query) ) {
+            $sp = osc_db_fetch_array($sp_query);
 
             unset($_SESSION['sagepay_server_skey_code']);
-            tep_db_query('delete from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '"');
+            osc_db_query('delete from sagepay_server_securitykeys where code = "' . osc_db_input($skcode) . '"');
 
             if ( $sp['verified'] == '1' ) {
               $sagepay_server_transaction_details = $sp['transaction_details'];
@@ -233,16 +233,16 @@
         }
 
         if ($return['Status'] == 'OK') {
-          $sp_query = tep_db_query('select id, securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($sagepay_server_skey_code) . '" limit 1');
+          $sp_query = osc_db_query('select id, securitykey from sagepay_server_securitykeys where code = "' . osc_db_input($sagepay_server_skey_code) . '" limit 1');
 
-          if ( tep_db_num_rows($sp_query) ) {
-            $sp = tep_db_fetch_array($sp_query);
+          if ( osc_db_num_rows($sp_query) ) {
+            $sp = osc_db_fetch_array($sp_query);
 
             if ( $sp['securitykey'] != $return['SecurityKey'] ) {
-              tep_db_query('update sagepay_server_securitykeys set securitykey = "' . tep_db_input($return['SecurityKey']) . '", date_added = now() where id = "' . (int)$sp['id'] . '"');
+              osc_db_query('update sagepay_server_securitykeys set securitykey = "' . osc_db_input($return['SecurityKey']) . '", date_added = now() where id = "' . (int)$sp['id'] . '"');
             }
           } else {
-            tep_db_query('insert into sagepay_server_securitykeys (code, securitykey, date_added) values ("' . tep_db_input($sagepay_server_skey_code) . '", "' . tep_db_input($return['SecurityKey']) . '", now())');
+            osc_db_query('insert into sagepay_server_securitykeys (code, securitykey, date_added) values ("' . osc_db_input($sagepay_server_skey_code) . '", "' . osc_db_input($return['SecurityKey']) . '", now())');
           }
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
@@ -275,7 +275,7 @@
                               'customer_notified' => '0',
                               'comments' => trim($sagepay_server_transaction_details));
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
       if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Low' ) {
         $_SESSION['cart']->reset(true);
@@ -319,8 +319,8 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
+        $check_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_SERVER_STATUS'");
+        $this->_check = osc_db_num_rows($check_query);
       }
       return $this->_check;
     }
@@ -353,12 +353,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -376,7 +376,7 @@
     }
 
     function getParams() {
-      if ( tep_db_num_rows(tep_db_query("show tables like 'sagepay_server_securitykeys'")) != 1 ) {
+      if ( osc_db_num_rows(osc_db_query("show tables like 'sagepay_server_securitykeys'")) != 1 ) {
         $sql = <<<EOD
 CREATE TABLE sagepay_server_securitykeys (
   id int NOT NULL auto_increment,
@@ -391,30 +391,30 @@ CREATE TABLE sagepay_server_securitykeys (
 );
 EOD;
 
-        tep_db_query($sql);
+        osc_db_query($sql);
       }
 
       if (!defined('MODULE_PAYMENT_SAGE_PAY_SERVER_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sage Pay [Transactions]' limit 1");
+        $check_query = osc_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sage Pay [Transactions]' limit 1");
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
-          $status = tep_db_fetch_array($status_query);
+        if (osc_db_num_rows($check_query) < 1) {
+          $status_query = osc_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+          $status = osc_db_fetch_array($status_query);
 
           $status_id = $status['status_id']+1;
 
           $languages = tep_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
+            osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
           }
 
-          $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          $flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+          if (osc_db_num_rows($flags_query) == 1) {
+            osc_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
+          $check = osc_db_fetch_array($check_query);
 
           $status_id = $check['orders_status_id'];
         }

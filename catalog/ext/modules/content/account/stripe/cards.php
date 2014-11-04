@@ -43,10 +43,10 @@
 
   if ( isset($_GET['action']) ) {
     if ( ($_GET['action'] == 'delete') && isset($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
-      $token_query = tep_db_query("select id, stripe_token from customers_stripe_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
+      $token_query = osc_db_query("select id, stripe_token from customers_stripe_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if ( tep_db_num_rows($token_query) ) {
-        $token = tep_db_fetch_array($token_query);
+      if ( osc_db_num_rows($token_query) ) {
+        $token = osc_db_fetch_array($token_query);
 
         list($customer, $card) = explode(':|:', $token['stripe_token'], 2);
 
@@ -81,10 +81,10 @@
   <div class="contentText">
 
 <?php
-  $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+  $tokens_query = osc_db_query("select id, card_type, number_filtered, expiry_date from customers_stripe_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
 
-  if ( tep_db_num_rows($tokens_query) > 0 ) {
-    while ( $tokens = tep_db_fetch_array($tokens_query) ) {
+  if ( osc_db_num_rows($tokens_query) > 0 ) {
+    while ( $tokens = osc_db_fetch_array($tokens_query) ) {
 ?>
 
     <div>

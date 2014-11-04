@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  tep_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
+  osc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -38,8 +38,8 @@
 <?php
   $products_query_raw = "select pd.products_id, pd.products_name, p.products_date_available from " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS . " p where p.products_id = pd.products_id and p.products_date_available != '' and pd.language_id = '" . (int)$languages_id . "' order by p.products_date_available DESC";
   $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
-  $products_query = tep_db_query($products_query_raw);
-  while ($products = tep_db_fetch_array($products_query)) {
+  $products_query = osc_db_query($products_query_raw);
+  while ($products = osc_db_fetch_array($products_query)) {
     if ((!isset($_GET['pID']) || (isset($_GET['pID']) && ($_GET['pID'] == $products['products_id']))) && !isset($pInfo)) {
       $pInfo = new objectInfo($products);
     }

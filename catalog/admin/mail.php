@@ -17,24 +17,24 @@
   if ( ($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back_x']) ) {
     switch ($_POST['customers_email_address']) {
       case '***':
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS);
+        $mail_query = osc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS);
         $mail_sent_to = TEXT_ALL_CUSTOMERS;
         break;
       case '**D':
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
+        $mail_query = osc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
         $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
         break;
       default:
-        $customers_email_address = tep_db_prepare_input($_POST['customers_email_address']);
+        $customers_email_address = osc_db_prepare_input($_POST['customers_email_address']);
 
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($customers_email_address) . "'");
+        $mail_query = osc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($customers_email_address) . "'");
         $mail_sent_to = $_POST['customers_email_address'];
         break;
     }
 
-    $from = tep_db_prepare_input($_POST['from']);
-    $subject = tep_db_prepare_input($_POST['subject']);
-    $message = tep_db_prepare_input($_POST['message']);
+    $from = osc_db_prepare_input($_POST['from']);
+    $subject = osc_db_prepare_input($_POST['subject']);
+    $message = osc_db_prepare_input($_POST['message']);
 
     //Let's build a message object using the email class
     $mimemessage = new email(array('X-Mailer: osCommerce'));
@@ -48,7 +48,7 @@
     }
 
     $mimemessage->build_message();
-    while ($mail = tep_db_fetch_array($mail_query)) {
+    while ($mail = osc_db_fetch_array($mail_query)) {
       $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', $from, $subject);
     }
 
@@ -149,8 +149,8 @@
     $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
     $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
     $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
-    $mail_query = tep_db_query("select customers_email_address, customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " order by customers_lastname");
-    while($customers_values = tep_db_fetch_array($mail_query)) {
+    $mail_query = osc_db_query("select customers_email_address, customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " order by customers_lastname");
+    while($customers_values = osc_db_fetch_array($mail_query)) {
       $customers[] = array('id' => $customers_values['customers_email_address'],
                            'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')');
     }

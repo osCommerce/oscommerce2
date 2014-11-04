@@ -21,15 +21,15 @@
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['cID'])) $currency_id = tep_db_prepare_input($_GET['cID']);
-        $title = tep_db_prepare_input($_POST['title']);
-        $code = tep_db_prepare_input($_POST['code']);
-        $symbol_left = tep_db_prepare_input($_POST['symbol_left']);
-        $symbol_right = tep_db_prepare_input($_POST['symbol_right']);
-        $decimal_point = tep_db_prepare_input($_POST['decimal_point']);
-        $thousands_point = tep_db_prepare_input($_POST['thousands_point']);
-        $decimal_places = tep_db_prepare_input($_POST['decimal_places']);
-        $value = tep_db_prepare_input($_POST['value']);
+        if (isset($_GET['cID'])) $currency_id = osc_db_prepare_input($_GET['cID']);
+        $title = osc_db_prepare_input($_POST['title']);
+        $code = osc_db_prepare_input($_POST['code']);
+        $symbol_left = osc_db_prepare_input($_POST['symbol_left']);
+        $symbol_right = osc_db_prepare_input($_POST['symbol_right']);
+        $decimal_point = osc_db_prepare_input($_POST['decimal_point']);
+        $thousands_point = osc_db_prepare_input($_POST['thousands_point']);
+        $decimal_places = osc_db_prepare_input($_POST['decimal_places']);
+        $value = osc_db_prepare_input($_POST['value']);
 
         $sql_data_array = array('title' => $title,
                                 'code' => $code,
@@ -41,37 +41,37 @@
                                 'value' => $value);
 
         if ($action == 'insert') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array);
-          $currency_id = tep_db_insert_id();
+          osc_db_perform(TABLE_CURRENCIES, $sql_data_array);
+          $currency_id = osc_db_insert_id();
         } elseif ($action == 'save') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+          osc_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . osc_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
         }
 
         tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
         break;
       case 'deleteconfirm':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = osc_db_prepare_input($_GET['cID']);
 
-        $currency_query = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $currency_query = osc_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
+        $currency = osc_db_fetch_array($currency_query);
 
         if ($currency['currencies_id'] == $currencies_id) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
         }
 
-        tep_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
+        osc_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
         break;
       case 'update':
         $server_used = CURRENCY_SERVER_PRIMARY;
 
-        $currency_query = tep_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
-        while ($currency = tep_db_fetch_array($currency_query)) {
+        $currency_query = osc_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
+        while ($currency = osc_db_fetch_array($currency_query)) {
           $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
           $rate = $quote_function($currency['code']);
 
@@ -85,7 +85,7 @@
           }
 
           if (tep_not_null($rate)) {
-            tep_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
+            osc_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
 
             $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency['title'], $currency['code'], $server_used), 'success');
           } else {
@@ -96,10 +96,10 @@
         tep_redirect(tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'delete':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = osc_db_prepare_input($_GET['cID']);
 
-        $currency_query = tep_db_query("select code from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $currency_query = osc_db_query("select code from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
+        $currency = osc_db_fetch_array($currency_query);
 
         $remove_currency = true;
         if ($currency['code'] == DEFAULT_CURRENCY) {
@@ -192,8 +192,8 @@ function updateForm() {
 <?php
   $currency_query_raw = "select currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from " . TABLE_CURRENCIES . " order by title";
   $currency_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $currency_query_raw, $currency_query_numrows);
-  $currency_query = tep_db_query($currency_query_raw);
-  while ($currency = tep_db_fetch_array($currency_query)) {
+  $currency_query = osc_db_query($currency_query_raw);
+  while ($currency = osc_db_fetch_array($currency_query)) {
     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $currency['currencies_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
       $cInfo = new objectInfo($currency);
     }

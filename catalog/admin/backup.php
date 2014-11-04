@@ -17,7 +17,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'forget':
-        tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
+        osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
 
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
@@ -40,16 +40,16 @@
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
 
-        $tables_query = tep_db_query('show tables');
-        while ($tables = tep_db_fetch_array($tables_query)) {
+        $tables_query = osc_db_query('show tables');
+        while ($tables = osc_db_fetch_array($tables_query)) {
           list(,$table) = each($tables);
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
 
           $table_list = array();
-          $fields_query = tep_db_query("show fields from " . $table);
-          while ($fields = tep_db_fetch_array($fields_query)) {
+          $fields_query = osc_db_query("show fields from " . $table);
+          while ($fields = osc_db_fetch_array($fields_query)) {
             $table_list[] = $fields['Field'];
 
             $schema .= '  ' . $fields['Field'] . ' ' . $fields['Type'];
@@ -67,8 +67,8 @@
 
 // add the keys
           $index = array();
-          $keys_query = tep_db_query("show keys from " . $table);
-          while ($keys = tep_db_fetch_array($keys_query)) {
+          $keys_query = osc_db_query("show keys from " . $table);
+          while ($keys = osc_db_fetch_array($keys_query)) {
             $kname = $keys['Key_name'];
 
             if (!isset($index[$kname])) {
@@ -101,8 +101,8 @@
 
 // dump the data
           if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) ) {
-            $rows_query = tep_db_query("select " . implode(',', $table_list) . " from " . $table);
-            while ($rows = tep_db_fetch_array($rows_query)) {
+            $rows_query = osc_db_query("select " . implode(',', $table_list) . " from " . $table);
+            while ($rows = osc_db_fetch_array($rows_query)) {
               $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
 
               foreach ( $table_list as $i ) {
@@ -257,19 +257,19 @@
             }
           }
 
-          tep_db_query('drop table if exists ' . implode(', ', $drop_table_names));
+          osc_db_query('drop table if exists ' . implode(', ', $drop_table_names));
 
           for ($i=0, $n=sizeof($sql_array); $i<$n; $i++) {
-            tep_db_query($sql_array[$i]);
+            osc_db_query($sql_array[$i]);
           }
 
           session_write_close();
 
-          tep_db_query("delete from " . TABLE_WHOS_ONLINE);
-          tep_db_query("delete from " . TABLE_SESSIONS);
+          osc_db_query("delete from " . TABLE_WHOS_ONLINE);
+          osc_db_query("delete from " . TABLE_SESSIONS);
 
-          tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
-          tep_db_query("insert into " . TABLE_CONFIGURATION . " values (null, 'Last Database Restore', 'DB_LAST_RESTORE', '" . $read_from . "', 'Last database restore file', '6', '0', null, now(), '', '')");
+          osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
+          osc_db_query("insert into " . TABLE_CONFIGURATION . " values (null, 'Last Database Restore', 'DB_LAST_RESTORE', '" . $read_from . "', 'Last database restore file', '6', '0', null, now(), '', '')");
 
           if (isset($remove_raw) && ($remove_raw == true)) {
             unlink($restore_from);

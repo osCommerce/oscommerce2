@@ -23,8 +23,8 @@
   }
 
   if ($error == false) {
-    $email_address = tep_db_prepare_input($_GET['account']);
-    $password_key = tep_db_prepare_input($_GET['key']);
+    $email_address = osc_db_prepare_input($_GET['account']);
+    $password_key = osc_db_prepare_input($_GET['key']);
 
     if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
       $error = true;
@@ -35,9 +35,9 @@
 
       $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
     } else {
-      $check_customer_query = tep_db_query("select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_email_address = '" . tep_db_input($email_address) . "' and c.customers_id = ci.customers_info_id");
-      if (tep_db_num_rows($check_customer_query)) {
-        $check_customer = tep_db_fetch_array($check_customer_query);
+      $check_customer_query = osc_db_query("select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_email_address = '" . osc_db_input($email_address) . "' and c.customers_id = ci.customers_info_id");
+      if (osc_db_num_rows($check_customer_query)) {
+        $check_customer = osc_db_fetch_array($check_customer_query);
 
         if ( empty($check_customer['password_reset_key']) || ($check_customer['password_reset_key'] != $password_key) || (strtotime($check_customer['password_reset_date'] . ' +1 day') <= time()) ) {
           $error = true;
@@ -57,8 +57,8 @@
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_new = tep_db_prepare_input($_POST['password']);
-    $password_confirmation = tep_db_prepare_input($_POST['confirmation']);
+    $password_new = osc_db_prepare_input($_POST['password']);
+    $password_confirmation = osc_db_prepare_input($_POST['confirmation']);
 
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
@@ -71,9 +71,9 @@
     }
 
     if ($error == false) {
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
 
-      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now(), password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now(), password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 

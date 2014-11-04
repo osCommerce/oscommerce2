@@ -133,16 +133,16 @@
 
               $force_login = true;
 
-              $email_address = tep_db_prepare_input($response['email']);
+              $email_address = osc_db_prepare_input($response['email']);
 
-              $check_query = tep_db_query("select customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($email_address) . "' limit 1");
-              if (tep_db_num_rows($check_query)) {
-                $check = tep_db_fetch_array($check_query);
+              $check_query = osc_db_query("select customers_id from " . TABLE_CUSTOMERS . " where customers_email_address = '" . osc_db_input($email_address) . "' limit 1");
+              if (osc_db_num_rows($check_query)) {
+                $check = osc_db_fetch_array($check_query);
 
                 $customer_id = (int)$check['customers_id'];
               } else {
-                $customers_firstname = tep_db_prepare_input($response['given_name']);
-                $customers_lastname = tep_db_prepare_input($response['family_name']);
+                $customers_firstname = osc_db_prepare_input($response['given_name']);
+                $customers_lastname = osc_db_prepare_input($response['family_name']);
 
                 $sql_data_array = array('customers_firstname' => $customers_firstname,
                                         'customers_lastname' => $customers_lastname,
@@ -153,51 +153,51 @@
                                         'customers_password' => '');
 
                 if ($this->hasAttribute('phone') && isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
-                  $customers_telephone = tep_db_prepare_input($response['phone_number']);
+                  $customers_telephone = osc_db_prepare_input($response['phone_number']);
 
                   $sql_data_array['customers_telephone'] = $customers_telephone;
                 }
 
-                tep_db_perform(TABLE_CUSTOMERS, $sql_data_array);
+                osc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
-                $customer_id = (int)tep_db_insert_id();
+                $customer_id = (int)osc_db_insert_id();
 
-                tep_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+                osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
               }
             }
 
 // check if paypal shipping address exists in the address book
-            $ship_firstname = tep_db_prepare_input($response['given_name']);
-            $ship_lastname = tep_db_prepare_input($response['family_name']);
-            $ship_address = tep_db_prepare_input($response['address']['street_address']);
-            $ship_city = tep_db_prepare_input($response['address']['locality']);
-            $ship_zone = tep_db_prepare_input($response['address']['region']);
+            $ship_firstname = osc_db_prepare_input($response['given_name']);
+            $ship_lastname = osc_db_prepare_input($response['family_name']);
+            $ship_address = osc_db_prepare_input($response['address']['street_address']);
+            $ship_city = osc_db_prepare_input($response['address']['locality']);
+            $ship_zone = osc_db_prepare_input($response['address']['region']);
             $ship_zone_id = 0;
-            $ship_postcode = tep_db_prepare_input($response['address']['postal_code']);
-            $ship_country = tep_db_prepare_input($response['address']['country']);
+            $ship_postcode = osc_db_prepare_input($response['address']['postal_code']);
+            $ship_country = osc_db_prepare_input($response['address']['country']);
             $ship_country_id = 0;
             $ship_address_format_id = 1;
 
-            $country_query = tep_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . tep_db_input($ship_country) . "' limit 1");
-            if (tep_db_num_rows($country_query)) {
-              $country = tep_db_fetch_array($country_query);
+            $country_query = osc_db_query("select countries_id, address_format_id from " . TABLE_COUNTRIES . " where countries_iso_code_2 = '" . osc_db_input($ship_country) . "' limit 1");
+            if (osc_db_num_rows($country_query)) {
+              $country = osc_db_fetch_array($country_query);
 
               $ship_country_id = $country['countries_id'];
               $ship_address_format_id = $country['address_format_id'];
             }
 
             if ($ship_country_id > 0) {
-              $zone_query = tep_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . tep_db_input($ship_zone) . "' or zone_code = '" . tep_db_input($ship_zone) . "') limit 1");
-              if (tep_db_num_rows($zone_query)) {
-                $zone = tep_db_fetch_array($zone_query);
+              $zone_query = osc_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$ship_country_id . "' and (zone_name = '" . osc_db_input($ship_zone) . "' or zone_code = '" . osc_db_input($ship_zone) . "') limit 1");
+              if (osc_db_num_rows($zone_query)) {
+                $zone = osc_db_fetch_array($zone_query);
 
                 $ship_zone_id = $zone['zone_id'];
               }
             }
 
-            $check_query = tep_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
-            if (tep_db_num_rows($check_query)) {
-              $check = tep_db_fetch_array($check_query);
+            $check_query = osc_db_query("select address_book_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . osc_db_input($ship_firstname) . "' and entry_lastname = '" . osc_db_input($ship_lastname) . "' and entry_street_address = '" . osc_db_input($ship_address) . "' and entry_postcode = '" . osc_db_input($ship_postcode) . "' and entry_city = '" . osc_db_input($ship_city) . "' and (entry_state = '" . osc_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+            if (osc_db_num_rows($check_query)) {
+              $check = osc_db_fetch_array($check_query);
 
               $sendto = $check['address_book_id'];
             } else {
@@ -219,14 +219,14 @@
                 }
               }
 
-              tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+              osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-              $address_id = tep_db_insert_id();
+              $address_id = osc_db_insert_id();
 
               $sendto = $address_id;
 
               if ($customer_default_address_id < 1) {
-                tep_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
+                osc_db_query("update " . TABLE_CUSTOMERS . " set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
                 $customer_default_address_id = $address_id;
               }
             }
@@ -328,12 +328,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
+        osc_db_perform(TABLE_CONFIGURATION, $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {

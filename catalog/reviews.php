@@ -46,8 +46,8 @@
     ?>
 <div class="row">
 <?php
-    $reviews_query = tep_db_query($reviews_split->sql_query);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
+    $reviews_query = osc_db_query($reviews_split->sql_query);
+    while ($reviews = osc_db_fetch_array($reviews_query)) {
 ?>
 
   <div class="col-sm-6 review">

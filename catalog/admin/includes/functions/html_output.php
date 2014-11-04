@@ -147,20 +147,20 @@
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
   function tep_js_zone_list($country, $form, $field) {
-    $countries_query = tep_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
+    $countries_query = osc_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
     $num_country = 1;
     $output_string = '';
-    while ($countries = tep_db_fetch_array($countries_query)) {
+    while ($countries = osc_db_fetch_array($countries_query)) {
       if ($num_country == 1) {
         $output_string .= '  if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
       } else {
         $output_string .= '  } else if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
       }
 
-      $states_query = tep_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
+      $states_query = osc_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
 
       $num_state = 1;
-      while ($states = tep_db_fetch_array($states_query)) {
+      while ($states = osc_db_fetch_array($states_query)) {
         if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states['zone_name'] . '", "' . $states['zone_id'] . '");' . "\n";
         $num_state++;

@@ -21,8 +21,8 @@
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
-  $check_customer_query = tep_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
-  $check_customer = tep_db_fetch_array($check_customer_query);
+  $check_customer_query = osc_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
+  $check_customer = osc_db_fetch_array($check_customer_query);
 
   if ( !empty($check_customer['customers_password']) ) {
     tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -32,8 +32,8 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_set_password.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_new = tep_db_prepare_input($_POST['password_new']);
-    $password_confirmation = tep_db_prepare_input($_POST['password_confirmation']);
+    $password_new = osc_db_prepare_input($_POST['password_new']);
+    $password_confirmation = osc_db_prepare_input($_POST['password_confirmation']);
 
     $error = false;
 
@@ -48,9 +48,9 @@
     }
 
     if ($error == false) {
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
 
-      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 

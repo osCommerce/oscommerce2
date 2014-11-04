@@ -48,7 +48,7 @@
     }
 
     if (isset($_GET['keywords'])) {
-      $keywords = tep_db_prepare_input($_GET['keywords']);
+      $keywords = osc_db_prepare_input($_GET['keywords']);
     }
 
     $date_check_error = false;
@@ -229,9 +229,9 @@
           $where_str .= " " . $search_keywords[$i] . " ";
           break;
         default:
-          $keyword = tep_db_prepare_input($search_keywords[$i]);
-          $where_str .= "(pd.products_name like '%" . tep_db_input($keyword) . "%' or p.products_model like '%" . tep_db_input($keyword) . "%' or m.manufacturers_name like '%" . tep_db_input($keyword) . "%'";
-          if (isset($_GET['search_in_description']) && ($_GET['search_in_description'] == '1')) $where_str .= " or pd.products_description like '%" . tep_db_input($keyword) . "%'";
+          $keyword = osc_db_prepare_input($search_keywords[$i]);
+          $where_str .= "(pd.products_name like '%" . osc_db_input($keyword) . "%' or p.products_model like '%" . osc_db_input($keyword) . "%' or m.manufacturers_name like '%" . osc_db_input($keyword) . "%'";
+          if (isset($_GET['search_in_description']) && ($_GET['search_in_description'] == '1')) $where_str .= " or pd.products_description like '%" . osc_db_input($keyword) . "%'";
           $where_str .= ')';
           break;
       }

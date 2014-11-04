@@ -33,22 +33,22 @@
     if (tep_not_null($_POST['firstname']) && tep_not_null($_POST['lastname']) && tep_not_null($_POST['street_address'])) {
       $process = true;
 
-      if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
-      if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
-      $firstname = tep_db_prepare_input($_POST['firstname']);
-      $lastname = tep_db_prepare_input($_POST['lastname']);
-      $street_address = tep_db_prepare_input($_POST['street_address']);
-      if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
-      $postcode = tep_db_prepare_input($_POST['postcode']);
-      $city = tep_db_prepare_input($_POST['city']);
-      $country = tep_db_prepare_input($_POST['country']);
+      if (ACCOUNT_GENDER == 'true') $gender = osc_db_prepare_input($_POST['gender']);
+      if (ACCOUNT_COMPANY == 'true') $company = osc_db_prepare_input($_POST['company']);
+      $firstname = osc_db_prepare_input($_POST['firstname']);
+      $lastname = osc_db_prepare_input($_POST['lastname']);
+      $street_address = osc_db_prepare_input($_POST['street_address']);
+      if (ACCOUNT_SUBURB == 'true') $suburb = osc_db_prepare_input($_POST['suburb']);
+      $postcode = osc_db_prepare_input($_POST['postcode']);
+      $city = osc_db_prepare_input($_POST['city']);
+      $country = osc_db_prepare_input($_POST['country']);
       if (ACCOUNT_STATE == 'true') {
         if (isset($_POST['zone_id'])) {
-          $zone_id = tep_db_prepare_input($_POST['zone_id']);
+          $zone_id = osc_db_prepare_input($_POST['zone_id']);
         } else {
           $zone_id = false;
         }
-        $state = tep_db_prepare_input($_POST['state']);
+        $state = osc_db_prepare_input($_POST['state']);
       }
 
       if (ACCOUNT_GENDER == 'true') {
@@ -91,13 +91,13 @@
 
       if (ACCOUNT_STATE == 'true') {
         $zone_id = 0;
-        $check_query = tep_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
-        $check = tep_db_fetch_array($check_query);
+        $check_query = osc_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
+        $check = osc_db_fetch_array($check_query);
         $entry_state_has_zones = ($check['total'] > 0);
         if ($entry_state_has_zones == true) {
-          $zone_query = tep_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
-          if (tep_db_num_rows($zone_query) == 1) {
-            $zone = tep_db_fetch_array($zone_query);
+          $zone_query = osc_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . osc_db_input($state) . "' or zone_code = '" . osc_db_input($state) . "')");
+          if (osc_db_num_rows($zone_query) == 1) {
+            $zone = osc_db_fetch_array($zone_query);
             $zone_id = $zone['zone_id'];
           } else {
             $error = true;
@@ -143,9 +143,9 @@
 
         if (!isset($_SESSION['billto'])) tep_session_register('billto');
 
-        tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+        osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
-        $billto = tep_db_insert_id();
+        $billto = osc_db_insert_id();
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
@@ -166,8 +166,8 @@
 
       $billto = $_POST['address'];
 
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $check_address_query = osc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
+      $check_address = osc_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
         if ($reset_payment == true) unset($_SESSION['payment']);
@@ -263,8 +263,8 @@
 <?php
       $radio_buttons = 0;
 
-      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "'");
-      while ($addresses = tep_db_fetch_array($addresses_query)) {
+      $addresses_query = osc_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "'");
+      while ($addresses = osc_db_fetch_array($addresses_query)) {
         $format_id = tep_get_address_format_id($addresses['country_id']);
 
        if ($addresses['address_book_id'] == $billto) {

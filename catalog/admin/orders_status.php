@@ -18,21 +18,21 @@
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['oID'])) $orders_status_id = tep_db_prepare_input($_GET['oID']);
+        if (isset($_GET['oID'])) $orders_status_id = osc_db_prepare_input($_GET['oID']);
 
         $languages = tep_get_languages();
         for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
           $orders_status_name_array = $_POST['orders_status_name'];
           $language_id = $languages[$i]['id'];
 
-          $sql_data_array = array('orders_status_name' => tep_db_prepare_input($orders_status_name_array[$language_id]),
+          $sql_data_array = array('orders_status_name' => osc_db_prepare_input($orders_status_name_array[$language_id]),
                                   'public_flag' => ((isset($_POST['public_flag']) && ($_POST['public_flag'] == '1')) ? '1' : '0'),
                                   'downloads_flag' => ((isset($_POST['downloads_flag']) && ($_POST['downloads_flag'] == '1')) ? '1' : '0'));
 
           if ($action == 'insert') {
             if (empty($orders_status_id)) {
-              $next_id_query = tep_db_query("select max(orders_status_id) as orders_status_id from " . TABLE_ORDERS_STATUS . "");
-              $next_id = tep_db_fetch_array($next_id_query);
+              $next_id_query = osc_db_query("select max(orders_status_id) as orders_status_id from " . TABLE_ORDERS_STATUS . "");
+              $next_id = osc_db_fetch_array($next_id_query);
               $orders_status_id = $next_id['orders_status_id'] + 1;
             }
 
@@ -41,37 +41,37 @@
 
             $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-            tep_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
+            osc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
           } elseif ($action == 'save') {
-            tep_db_perform(TABLE_ORDERS_STATUS, $sql_data_array, 'update', "orders_status_id = '" . (int)$orders_status_id . "' and language_id = '" . (int)$language_id . "'");
+            osc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array, 'update', "orders_status_id = '" . (int)$orders_status_id . "' and language_id = '" . (int)$language_id . "'");
           }
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($orders_status_id) . "' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . osc_db_input($orders_status_id) . "' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         }
 
         tep_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status_id));
         break;
       case 'deleteconfirm':
-        $oID = tep_db_prepare_input($_GET['oID']);
+        $oID = osc_db_prepare_input($_GET['oID']);
 
-        $orders_status_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
-        $orders_status = tep_db_fetch_array($orders_status_query);
+        $orders_status_query = osc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+        $orders_status = osc_db_fetch_array($orders_status_query);
 
         if ($orders_status['configuration_value'] == $oID) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+          osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         }
 
-        tep_db_query("delete from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . tep_db_input($oID) . "'");
+        osc_db_query("delete from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . osc_db_input($oID) . "'");
 
         tep_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']));
         break;
       case 'delete':
-        $oID = tep_db_prepare_input($_GET['oID']);
+        $oID = osc_db_prepare_input($_GET['oID']);
 
-        $status_query = tep_db_query("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . (int)$oID . "'");
-        $status = tep_db_fetch_array($status_query);
+        $status_query = osc_db_query("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . (int)$oID . "'");
+        $status = osc_db_fetch_array($status_query);
 
         $remove_status = true;
         if ($oID == DEFAULT_ORDERS_STATUS_ID) {
@@ -81,8 +81,8 @@
           $remove_status = false;
           $messageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
         } else {
-          $history_query = tep_db_query("select count(*) as count from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_status_id = '" . (int)$oID . "'");
-          $history = tep_db_fetch_array($history_query);
+          $history_query = osc_db_query("select count(*) as count from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_status_id = '" . (int)$oID . "'");
+          $history = osc_db_fetch_array($history_query);
           if ($history['count'] > 0) {
             $remove_status = false;
             $messageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
@@ -117,8 +117,8 @@
 <?php
   $orders_status_query_raw = "select * from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_id";
   $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
-  $orders_status_query = tep_db_query($orders_status_query_raw);
-  while ($orders_status = tep_db_fetch_array($orders_status_query)) {
+  $orders_status_query = osc_db_query($orders_status_query_raw);
+  while ($orders_status = osc_db_fetch_array($orders_status_query)) {
     if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders_status['orders_status_id']))) && !isset($oInfo) && (substr($action, 0, 3) != 'new')) {
       $oInfo = new objectInfo($orders_status);
     }

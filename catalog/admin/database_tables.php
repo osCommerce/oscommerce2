@@ -15,8 +15,8 @@
   function tep_dt_get_tables() {
     $result = array();
 
-    $tables_query = tep_db_query('show table status');
-    while ( $tables = tep_db_fetch_array($tables_query) ) {
+    $tables_query = osc_db_query('show table status');
+    while ( $tables = osc_db_fetch_array($tables_query) ) {
       $result[] = $tables['Name'];
     }
 
@@ -25,8 +25,8 @@
 
   $mysql_charsets = array(array('id' => 'auto', 'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT));
 
-  $charsets_query = tep_db_query("show character set");
-  while ( $charsets = tep_db_fetch_array($charsets_query) ) {
+  $charsets_query = osc_db_query("show character set");
+  while ( $charsets = osc_db_fetch_array($charsets_query) ) {
     $mysql_charsets[] = array('id' => $charsets['Charset'], 'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $charsets['Charset']));
   }
 
@@ -77,8 +77,8 @@
       foreach ( $_POST['id'] as $table ) {
         $current_table = null;
 
-        $sql_query = tep_db_query($action . " table " . $table);
-        while ( $sql = tep_db_fetch_array($sql_query) ) {
+        $sql_query = osc_db_query($action . " table " . $table);
+        while ( $sql = osc_db_fetch_array($sql_query) ) {
           $table_data[] = array(($table != $current_table) ? tep_output_string_protected($table) : '',
                                 tep_output_string_protected($sql['Msg_type']),
                                 tep_output_string_protected($sql['Msg_text']),
@@ -127,8 +127,8 @@
 
         $queries = array();
 
-        $cols_query = tep_db_query("show full columns from " . $table);
-        while ( $cols = tep_db_fetch_array($cols_query) ) {
+        $cols_query = osc_db_query("show full columns from " . $table);
+        while ( $cols = osc_db_fetch_array($cols_query) ) {
           if ( !empty($cols['Collation']) ) {
             if ( $_POST['from_charset'] == 'auto' ) {
               $old_charset = substr($cols['Collation'], 0, strpos($cols['Collation'], '_'));
@@ -181,8 +181,8 @@
 
       $table_data = array();
 
-      $sql_query = tep_db_query('show table status');
-      while ( $sql = tep_db_fetch_array($sql_query) ) {
+      $sql_query = osc_db_query('show table status');
+      while ( $sql = osc_db_fetch_array($sql_query) ) {
         $table_data[] = array(tep_output_string_protected($sql['Name']),
                               tep_output_string_protected($sql['Rows']),
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',

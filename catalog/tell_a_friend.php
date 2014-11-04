@@ -19,11 +19,11 @@
 
   $valid_product = false;
   if (isset($_GET['products_id'])) {
-    $product_info_query = tep_db_query("select pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-    if (tep_db_num_rows($product_info_query)) {
+    $product_info_query = osc_db_query("select pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    if (osc_db_num_rows($product_info_query)) {
       $valid_product = true;
 
-      $product_info = tep_db_fetch_array($product_info_query);
+      $product_info = osc_db_fetch_array($product_info_query);
     }
   }
 
@@ -36,11 +36,11 @@
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
-    $to_email_address = tep_db_prepare_input($_POST['to_email_address']);
-    $to_name = tep_db_prepare_input($_POST['to_name']);
-    $from_email_address = tep_db_prepare_input($_POST['from_email_address']);
-    $from_name = tep_db_prepare_input($_POST['from_name']);
-    $message = tep_db_prepare_input($_POST['message']);
+    $to_email_address = osc_db_prepare_input($_POST['to_email_address']);
+    $to_name = osc_db_prepare_input($_POST['to_name']);
+    $from_email_address = osc_db_prepare_input($_POST['from_email_address']);
+    $from_name = osc_db_prepare_input($_POST['from_name']);
+    $message = osc_db_prepare_input($_POST['message']);
 
     if (empty($from_name)) {
       $error = true;
@@ -95,8 +95,8 @@
       tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . (int)$_GET['products_id']));
     }
   } elseif (isset($_SESSION['customer_id'])) {
-    $account_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
-    $account = tep_db_fetch_array($account_query);
+    $account_query = osc_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
+    $account = osc_db_fetch_array($account_query);
 
     $from_name = $account['customers_firstname'] . ' ' . $account['customers_lastname'];
     $from_email_address = $account['customers_email_address'];

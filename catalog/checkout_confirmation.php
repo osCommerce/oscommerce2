@@ -40,7 +40,7 @@
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $comments = osc_db_prepare_input($_POST['comments']);
   }
 
 // load the selected payment module

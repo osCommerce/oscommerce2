@@ -26,21 +26,21 @@
         tep_redirect(tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID']));
         break;
       case 'update':
-        $reviews_id = tep_db_prepare_input($_GET['rID']);
-        $reviews_rating = tep_db_prepare_input($_POST['reviews_rating']);
-        $reviews_text = tep_db_prepare_input($_POST['reviews_text']);
-        $reviews_status = tep_db_prepare_input($_POST['reviews_status']);
+        $reviews_id = osc_db_prepare_input($_GET['rID']);
+        $reviews_rating = osc_db_prepare_input($_POST['reviews_rating']);
+        $reviews_text = osc_db_prepare_input($_POST['reviews_text']);
+        $reviews_status = osc_db_prepare_input($_POST['reviews_status']);
 
-        tep_db_query("update " . TABLE_REVIEWS . " set reviews_rating = '" . tep_db_input($reviews_rating) . "', reviews_status = '" . tep_db_input($reviews_status) . "', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
-        tep_db_query("update " . TABLE_REVIEWS_DESCRIPTION . " set reviews_text = '" . tep_db_input($reviews_text) . "' where reviews_id = '" . (int)$reviews_id . "'");
+        osc_db_query("update " . TABLE_REVIEWS . " set reviews_rating = '" . osc_db_input($reviews_rating) . "', reviews_status = '" . osc_db_input($reviews_status) . "', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
+        osc_db_query("update " . TABLE_REVIEWS_DESCRIPTION . " set reviews_text = '" . osc_db_input($reviews_text) . "' where reviews_id = '" . (int)$reviews_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews_id));
         break;
       case 'deleteconfirm':
-        $reviews_id = tep_db_prepare_input($_GET['rID']);
+        $reviews_id = osc_db_prepare_input($_GET['rID']);
 
-        tep_db_query("delete from " . TABLE_REVIEWS . " where reviews_id = '" . (int)$reviews_id . "'");
-        tep_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$reviews_id . "'");
+        osc_db_query("delete from " . TABLE_REVIEWS . " where reviews_id = '" . (int)$reviews_id . "'");
+        osc_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$reviews_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page']));
         break;
@@ -61,16 +61,16 @@
       </tr>
 <?php
   if ($action == 'edit') {
-    $rID = tep_db_prepare_input($_GET['rID']);
+    $rID = osc_db_prepare_input($_GET['rID']);
 
-    $reviews_query = tep_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
-    $reviews = tep_db_fetch_array($reviews_query);
+    $reviews_query = osc_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
+    $reviews = osc_db_fetch_array($reviews_query);
 
-    $products_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-    $products = tep_db_fetch_array($products_query);
+    $products_query = osc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
+    $products = osc_db_fetch_array($products_query);
 
-    $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-    $products_name = tep_db_fetch_array($products_name_query);
+    $products_name_query = osc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
+    $products_name = osc_db_fetch_array($products_name_query);
 
     $rInfo_array = array_merge($reviews, $products, $products_name);
     $rInfo = new objectInfo($rInfo_array);
@@ -123,16 +123,16 @@
     if (tep_not_null($_POST)) {
       $rInfo = new objectInfo($_POST);
     } else {
-      $rID = tep_db_prepare_input($_GET['rID']);
+      $rID = osc_db_prepare_input($_GET['rID']);
 
-      $reviews_query = tep_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
-      $reviews = tep_db_fetch_array($reviews_query);
+      $reviews_query = osc_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
+      $reviews = osc_db_fetch_array($reviews_query);
 
-      $products_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-      $products = tep_db_fetch_array($products_query);
+      $products_query = osc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
+      $products = osc_db_fetch_array($products_query);
 
-      $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-      $products_name = tep_db_fetch_array($products_name_query);
+      $products_name_query = osc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
+      $products_name = osc_db_fetch_array($products_name_query);
 
       $rInfo_array = array_merge($reviews, $products, $products_name);
       $rInfo = new objectInfo($rInfo_array);
@@ -149,7 +149,7 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(tep_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
+            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(osc_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -203,20 +203,20 @@
 <?php
     $reviews_query_raw = "select reviews_id, products_id, date_added, last_modified, reviews_rating, reviews_status from " . TABLE_REVIEWS . " order by date_added DESC";
     $reviews_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
-    $reviews_query = tep_db_query($reviews_query_raw);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
+    $reviews_query = osc_db_query($reviews_query_raw);
+    while ($reviews = osc_db_fetch_array($reviews_query)) {
       if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $reviews['reviews_id']))) && !isset($rInfo)) {
-        $reviews_text_query = tep_db_query("select r.reviews_read, r.customers_name, length(rd.reviews_text) as reviews_text_size from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$reviews['reviews_id'] . "' and r.reviews_id = rd.reviews_id");
-        $reviews_text = tep_db_fetch_array($reviews_text_query);
+        $reviews_text_query = osc_db_query("select r.reviews_read, r.customers_name, length(rd.reviews_text) as reviews_text_size from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$reviews['reviews_id'] . "' and r.reviews_id = rd.reviews_id");
+        $reviews_text = osc_db_fetch_array($reviews_text_query);
 
-        $products_image_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-        $products_image = tep_db_fetch_array($products_image_query);
+        $products_image_query = osc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
+        $products_image = osc_db_fetch_array($products_image_query);
 
-        $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-        $products_name = tep_db_fetch_array($products_name_query);
+        $products_name_query = osc_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
+        $products_name = osc_db_fetch_array($products_name_query);
 
-        $reviews_average_query = tep_db_query("select (avg(reviews_rating) / 5 * 100) as average_rating from " . TABLE_REVIEWS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-        $reviews_average = tep_db_fetch_array($reviews_average_query);
+        $reviews_average_query = osc_db_query("select (avg(reviews_rating) / 5 * 100) as average_rating from " . TABLE_REVIEWS . " where products_id = '" . (int)$reviews['products_id'] . "'");
+        $reviews_average = osc_db_fetch_array($reviews_average_query);
 
         $review_info = array_merge($reviews_text, $reviews_average, $products_name);
         $rInfo_array = array_merge($reviews, $review_info, $products_image);

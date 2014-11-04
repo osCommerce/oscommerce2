@@ -73,7 +73,7 @@
 
     function record($success = true) {
       if (tep_not_null($this->_module)) {
-        tep_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
+        osc_db_query("insert into " . TABLE_ACTION_RECORDER . " (module, user_id, user_name, identifier, success, date_added) values ('" . osc_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . osc_db_input($this->_user_name) . "', '" . osc_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
       }
     }
 

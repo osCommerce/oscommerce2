@@ -48,8 +48,8 @@
 
     <div class="row">
 <?php
-    $specials_query = tep_db_query($specials_split->sql_query);
-    while ($specials = tep_db_fetch_array($specials_query)) {
+    $specials_query = osc_db_query($specials_split->sql_query);
+    while ($specials = osc_db_fetch_array($specials_query)) {
 ?>
 
       <div class="col-sm-6">

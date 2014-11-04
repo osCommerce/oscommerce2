@@ -55,8 +55,8 @@
     <div class="row">
 
 <?php
-    $products_new_query = tep_db_query($products_new_split->sql_query);
-    while ($products_new = tep_db_fetch_array($products_new_query)) {
+    $products_new_query = osc_db_query($products_new_split->sql_query);
+    while ($products_new = osc_db_fetch_array($products_new_query)) {
       if ($new_price = tep_get_products_special_price($products_new['products_id'])) {
         $products_price = '<del>' . $currencies->display_price($products_new['products_price'], tep_get_tax_rate($products_new['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($products_new['products_tax_class_id'])) . '</span>';
       } else {

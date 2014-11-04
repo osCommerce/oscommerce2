@@ -44,8 +44,8 @@
   $modules_array = array();
   $modules_list_array = array(array('id' => '', 'text' => TEXT_ALL_MODULES));
 
-  $modules_query = tep_db_query("select distinct module from " . TABLE_ACTION_RECORDER . " order by module");
-  while ($modules = tep_db_fetch_array($modules_query)) {
+  $modules_query = osc_db_query("select distinct module from " . TABLE_ACTION_RECORDER . " order by module");
+  while ($modules = osc_db_fetch_array($modules_query)) {
     $modules_array[] = $modules['module'];
 
     $modules_list_array[] = array('id' => $modules['module'],
@@ -63,8 +63,8 @@
           if (is_object(${$_GET['module']})) {
             $expired_entries += ${$_GET['module']}->expireEntries();
           } else {
-            $delete_query = tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($_GET['module']) . "'");
-            $expired_entries += tep_db_affected_rows();
+            $delete_query = osc_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . osc_db_input($_GET['module']) . "'");
+            $expired_entries += osc_db_affected_rows();
           }
         } else {
           foreach ($modules_array as $module) {
@@ -129,17 +129,17 @@
   $filter = array();
 
   if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
-    $filter[] = " module = '" . tep_db_input($_GET['module']) . "' ";
+    $filter[] = " module = '" . osc_db_input($_GET['module']) . "' ";
   }
 
   if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $filter[] = " identifier like '%" . tep_db_input($_GET['search']) . "%' ";
+    $filter[] = " identifier like '%" . osc_db_input($_GET['search']) . "%' ";
   }
 
   $actions_query_raw = "select * from " . TABLE_ACTION_RECORDER . (!empty($filter) ? " where " . implode(" and ", $filter) : "") . " order by date_added desc";
   $actions_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
-  $actions_query = tep_db_query($actions_query_raw);
-  while ($actions = tep_db_fetch_array($actions_query)) {
+  $actions_query = osc_db_query($actions_query_raw);
+  while ($actions = osc_db_fetch_array($actions_query)) {
     $module = $actions['module'];
 
     $module_title = $actions['module'];
@@ -148,8 +148,8 @@
     }
 
     if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ($_GET['aID'] == $actions['id']))) && !isset($aInfo)) {
-      $actions_extra_query = tep_db_query("select identifier from " . TABLE_ACTION_RECORDER . " where id = '" . (int)$actions['id'] . "'");
-      $actions_extra = tep_db_fetch_array($actions_extra_query);
+      $actions_extra_query = osc_db_query("select identifier from " . TABLE_ACTION_RECORDER . " where id = '" . (int)$actions['id'] . "'");
+      $actions_extra = osc_db_fetch_array($actions_extra_query);
 
       $aInfo_array = array_merge($actions, $actions_extra, array('module' => $module_title));
       $aInfo = new objectInfo($aInfo_array);

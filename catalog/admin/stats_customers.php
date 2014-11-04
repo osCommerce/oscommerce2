@@ -41,12 +41,12 @@
   $customers_query_raw = "select c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price) as ordersum from " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_firstname, c.customers_lastname order by ordersum DESC";
   $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_query_raw, $customers_query_numrows);
 // fix counted customers
-  $customers_query_numrows = tep_db_query("select customers_id from " . TABLE_ORDERS . " group by customers_id");
-  $customers_query_numrows = tep_db_num_rows($customers_query_numrows);
+  $customers_query_numrows = osc_db_query("select customers_id from " . TABLE_ORDERS . " group by customers_id");
+  $customers_query_numrows = osc_db_num_rows($customers_query_numrows);
 
   $rows = 0;
-  $customers_query = tep_db_query($customers_query_raw);
-  while ($customers = tep_db_fetch_array($customers_query)) {
+  $customers_query = osc_db_query($customers_query_raw);
+  while ($customers = osc_db_fetch_array($customers_query)) {
     $rows++;
 
     if (strlen($rows) < 2) {

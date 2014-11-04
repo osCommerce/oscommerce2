@@ -17,28 +17,28 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
-        $zone_country_id = tep_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = tep_db_prepare_input($_POST['zone_code']);
-        $zone_name = tep_db_prepare_input($_POST['zone_name']);
+        $zone_country_id = osc_db_prepare_input($_POST['zone_country_id']);
+        $zone_code = osc_db_prepare_input($_POST['zone_code']);
+        $zone_name = osc_db_prepare_input($_POST['zone_name']);
 
-        tep_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . (int)$zone_country_id . "', '" . tep_db_input($zone_code) . "', '" . tep_db_input($zone_name) . "')");
+        osc_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . (int)$zone_country_id . "', '" . osc_db_input($zone_code) . "', '" . osc_db_input($zone_name) . "')");
 
         tep_redirect(tep_href_link(FILENAME_ZONES));
         break;
       case 'save':
-        $zone_id = tep_db_prepare_input($_GET['cID']);
-        $zone_country_id = tep_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = tep_db_prepare_input($_POST['zone_code']);
-        $zone_name = tep_db_prepare_input($_POST['zone_name']);
+        $zone_id = osc_db_prepare_input($_GET['cID']);
+        $zone_country_id = osc_db_prepare_input($_POST['zone_country_id']);
+        $zone_code = osc_db_prepare_input($_POST['zone_code']);
+        $zone_name = osc_db_prepare_input($_POST['zone_name']);
 
-        tep_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . (int)$zone_country_id . "', zone_code = '" . tep_db_input($zone_code) . "', zone_name = '" . tep_db_input($zone_name) . "' where zone_id = '" . (int)$zone_id . "'");
+        osc_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . (int)$zone_country_id . "', zone_code = '" . osc_db_input($zone_code) . "', zone_name = '" . osc_db_input($zone_name) . "' where zone_id = '" . (int)$zone_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
         break;
       case 'deleteconfirm':
-        $zone_id = tep_db_prepare_input($_GET['cID']);
+        $zone_id = osc_db_prepare_input($_GET['cID']);
 
-        tep_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
+        osc_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
         break;
@@ -70,8 +70,8 @@
 <?php
   $zones_query_raw = "select z.zone_id, c.countries_id, c.countries_name, z.zone_name, z.zone_code, z.zone_country_id from " . TABLE_ZONES . " z, " . TABLE_COUNTRIES . " c where z.zone_country_id = c.countries_id order by c.countries_name, z.zone_name";
   $zones_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
-  $zones_query = tep_db_query($zones_query_raw);
-  while ($zones = tep_db_fetch_array($zones_query)) {
+  $zones_query = osc_db_query($zones_query_raw);
+  while ($zones = osc_db_fetch_array($zones_query)) {
     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zones['zone_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
       $cInfo = new objectInfo($zones);
     }

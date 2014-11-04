@@ -44,13 +44,13 @@
       if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
       if (strpos($this->sql_query, 'distinct') || strpos($this->sql_query, 'group by')) {
-        $count_string = 'distinct ' . tep_db_input($count_key);
+        $count_string = 'distinct ' . osc_db_input($count_key);
       } else {
-        $count_string = tep_db_input($count_key);
+        $count_string = osc_db_input($count_key);
       }
 
-      $count_query = tep_db_query("select count(" . $count_string . ") as total " . substr($this->sql_query, $pos_from, ($pos_to - $pos_from)));
-      $count = tep_db_fetch_array($count_query);
+      $count_query = osc_db_query("select count(" . $count_string . ") as total " . substr($this->sql_query, $pos_from, ($pos_to - $pos_from)));
+      $count = osc_db_fetch_array($count_query);
 
       $this->number_of_rows = $count['total'];
 

@@ -21,9 +21,9 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT_PASSWORD);
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_current = tep_db_prepare_input($_POST['password_current']);
-    $password_new = tep_db_prepare_input($_POST['password_new']);
-    $password_confirmation = tep_db_prepare_input($_POST['password_confirmation']);
+    $password_current = osc_db_prepare_input($_POST['password_current']);
+    $password_new = osc_db_prepare_input($_POST['password_new']);
+    $password_confirmation = osc_db_prepare_input($_POST['password_confirmation']);
 
     $error = false;
 
@@ -38,13 +38,13 @@
     }
 
     if ($error == false) {
-      $check_customer_query = tep_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
-      $check_customer = tep_db_fetch_array($check_customer_query);
+      $check_customer_query = osc_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
+      $check_customer = osc_db_fetch_array($check_customer_query);
 
       if (tep_validate_password($password_current, $check_customer['customers_password'])) {
-        tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
+        osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
 
-        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
+        osc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
 
         $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 

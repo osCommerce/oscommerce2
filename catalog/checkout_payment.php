@@ -53,8 +53,8 @@
   } else {
 // verify the selected billing address
     if ( (is_array($billto) && empty($billto)) || is_numeric($billto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $check_address_query = osc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
+      $check_address = osc_db_fetch_array($check_address_query);
 
       if ($check_address['total'] != '1') {
         $billto = $customer_default_address_id;
@@ -68,7 +68,7 @@
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $comments = osc_db_prepare_input($_POST['comments']);
   }
 
   $total_weight = $_SESSION['cart']->show_weight();

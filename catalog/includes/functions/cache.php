@@ -83,10 +83,10 @@
     if (($refresh == true)|| !osc_read_cache($var, $filename)) {
 // Didn' get cache so go to the database.
 //      $conn = mysql_connect("localhost", "apachecon", "apachecon");
-      $res = tep_db_query($sql);
+      $res = osc_db_query($sql);
 //      if ($err = mysql_error()) trigger_error($err, E_USER_ERROR);
 // loop through the results and add them to an array
-      while ($rec = tep_db_fetch_array($res)) {
+      while ($rec = osc_db_fetch_array($res)) {
         $var[] = $rec;
       }
 // write the data to the file

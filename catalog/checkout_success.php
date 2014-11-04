@@ -17,14 +17,14 @@
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
+  $orders_query = osc_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
 
 // redirect to shopping cart page if no orders exist
-  if ( !tep_db_num_rows($orders_query) ) {
+  if ( !osc_db_num_rows($orders_query) ) {
     tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
-  $orders = tep_db_fetch_array($orders_query);
+  $orders = osc_db_fetch_array($orders_query);
 
   $order_id = $orders['orders_id'];
 

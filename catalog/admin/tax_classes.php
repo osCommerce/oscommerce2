@@ -17,26 +17,26 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
-        $tax_class_title = tep_db_prepare_input($_POST['tax_class_title']);
-        $tax_class_description = tep_db_prepare_input($_POST['tax_class_description']);
+        $tax_class_title = osc_db_prepare_input($_POST['tax_class_title']);
+        $tax_class_description = osc_db_prepare_input($_POST['tax_class_description']);
 
-        tep_db_query("insert into " . TABLE_TAX_CLASS . " (tax_class_title, tax_class_description, date_added) values ('" . tep_db_input($tax_class_title) . "', '" . tep_db_input($tax_class_description) . "', now())");
+        osc_db_query("insert into " . TABLE_TAX_CLASS . " (tax_class_title, tax_class_description, date_added) values ('" . osc_db_input($tax_class_title) . "', '" . osc_db_input($tax_class_description) . "', now())");
 
         tep_redirect(tep_href_link(FILENAME_TAX_CLASSES));
         break;
       case 'save':
-        $tax_class_id = tep_db_prepare_input($_GET['tID']);
-        $tax_class_title = tep_db_prepare_input($_POST['tax_class_title']);
-        $tax_class_description = tep_db_prepare_input($_POST['tax_class_description']);
+        $tax_class_id = osc_db_prepare_input($_GET['tID']);
+        $tax_class_title = osc_db_prepare_input($_POST['tax_class_title']);
+        $tax_class_description = osc_db_prepare_input($_POST['tax_class_description']);
 
-        tep_db_query("update " . TABLE_TAX_CLASS . " set tax_class_id = '" . (int)$tax_class_id . "', tax_class_title = '" . tep_db_input($tax_class_title) . "', tax_class_description = '" . tep_db_input($tax_class_description) . "', last_modified = now() where tax_class_id = '" . (int)$tax_class_id . "'");
+        osc_db_query("update " . TABLE_TAX_CLASS . " set tax_class_id = '" . (int)$tax_class_id . "', tax_class_title = '" . osc_db_input($tax_class_title) . "', tax_class_description = '" . osc_db_input($tax_class_description) . "', last_modified = now() where tax_class_id = '" . (int)$tax_class_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id));
         break;
       case 'deleteconfirm':
-        $tax_class_id = tep_db_prepare_input($_GET['tID']);
+        $tax_class_id = osc_db_prepare_input($_GET['tID']);
 
-        tep_db_query("delete from " . TABLE_TAX_CLASS . " where tax_class_id = '" . (int)$tax_class_id . "'");
+        osc_db_query("delete from " . TABLE_TAX_CLASS . " where tax_class_id = '" . (int)$tax_class_id . "'");
 
         tep_redirect(tep_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']));
         break;
@@ -66,8 +66,8 @@
 <?php
   $classes_query_raw = "select tax_class_id, tax_class_title, tax_class_description, last_modified, date_added from " . TABLE_TAX_CLASS . " order by tax_class_title";
   $classes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $classes_query_raw, $classes_query_numrows);
-  $classes_query = tep_db_query($classes_query_raw);
-  while ($classes = tep_db_fetch_array($classes_query)) {
+  $classes_query = osc_db_query($classes_query_raw);
+  while ($classes = osc_db_fetch_array($classes_query)) {
     if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $classes['tax_class_id']))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
       $tcInfo = new objectInfo($classes);
     }

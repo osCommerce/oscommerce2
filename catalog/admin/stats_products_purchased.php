@@ -39,8 +39,8 @@
   $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
 
   $rows = 0;
-  $products_query = tep_db_query($products_query_raw);
-  while ($products = tep_db_fetch_array($products_query)) {
+  $products_query = osc_db_query($products_query_raw);
+  while ($products = osc_db_fetch_array($products_query)) {
     $rows++;
 
     if (strlen($rows) < 2) {

@@ -31,8 +31,8 @@
   } else {
 // verify the selected shipping address
     if ( (is_array($sendto) && empty($sendto)) || is_numeric($sendto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $check_address_query = osc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
+      $check_address = osc_db_fetch_array($check_address_query);
 
       if ($check_address['total'] != '1') {
         $sendto = $customer_default_address_id;
@@ -103,7 +103,7 @@
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
     if (!isset($_SESSION['comments'])) tep_session_register('comments');
     if (tep_not_null($_POST['comments'])) {
-      $comments = tep_db_prepare_input($_POST['comments']);
+      $comments = osc_db_prepare_input($_POST['comments']);
     }
 
     if (!isset($_SESSION['shipping'])) tep_session_register('shipping');

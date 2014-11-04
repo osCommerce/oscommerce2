@@ -21,11 +21,11 @@
 
   if (isset($_POST['transaction_id']) && is_numeric($_POST['transaction_id']) && ($_POST['transaction_id'] > 0)) {
     if ($_POST['md5sig'] == strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID . $_POST['transaction_id'] . strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD)) . $_POST['mb_amount'] . $_POST['mb_currency'] . $_POST['status']))) {
-      $order_query = tep_db_query("select orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . $_POST['transaction_id'] . "' and customers_id = '" . (int)$_POST['osc_custid'] . "'");
-      if (tep_db_num_rows($order_query) > 0) {
+      $order_query = osc_db_query("select orders_status, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . $_POST['transaction_id'] . "' and customers_id = '" . (int)$_POST['osc_custid'] . "'");
+      if (osc_db_num_rows($order_query) > 0) {
         $pass = true;
 
-        $order = tep_db_fetch_array($order_query);
+        $order = osc_db_fetch_array($order_query);
 
         $status = $_POST['status'];
         switch ($_POST['status']) {
@@ -54,7 +54,7 @@
                                 'customer_notified' => '0',
                                 'comments' => 'Moneybookers Verified [' . $comment_status . ']');
 
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
       }
     }
   }
