@@ -259,7 +259,7 @@
         </table></td>
       </tr>
 <?php
-  tep_set_time_limit(0);
+  osc_set_time_limit(0);
   flush();
   $module->send($nInfo->newsletters_id);
 ?>

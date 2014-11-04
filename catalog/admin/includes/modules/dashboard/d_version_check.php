@@ -33,7 +33,7 @@
       $new_version = false;
 
       if (file_exists($cache_file)) {
-        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', filemtime($cache_file)));
+        $date_last_checked = osc_datetime_short(date('Y-m-d H:i:s', filemtime($cache_file)));
 
         $releases = unserialize(implode('', file($cache_file)));
 

@@ -115,7 +115,7 @@
     }
   }
 
-  $languages = tep_get_languages();
+  $languages = osc_get_languages();
   $languages_array = array();
   $languages_selected = DEFAULT_LANGUAGE;
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {

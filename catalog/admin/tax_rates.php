@@ -124,7 +124,7 @@
 
       $contents = array('form' => osc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . osc_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . osc_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . osc_draw_input_field('tax_rate'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . osc_draw_input_field('tax_description'));
@@ -136,7 +136,7 @@
 
       $contents = array('form' => osc_draw_form('rates', FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id  . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"', $trInfo->tax_class_id));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . osc_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"', $trInfo->tax_class_id));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . osc_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"', $trInfo->geo_zone_id));
       $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . osc_draw_input_field('tax_rate', $trInfo->tax_rate));
       $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . osc_draw_input_field('tax_description', $trInfo->tax_description));

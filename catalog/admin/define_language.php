@@ -45,7 +45,7 @@
   if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $language;
 
   $languages_array = array();
-  $languages = tep_get_languages();
+  $languages = osc_get_languages();
   $lng_exists = false;
   for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
     if ($languages[$i]['directory'] == $_GET['lngdir']) $lng_exists = true;

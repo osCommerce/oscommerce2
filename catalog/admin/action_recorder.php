@@ -164,7 +164,7 @@
                 <td class="dataTableContent" align="center"><?php echo osc_image(DIR_WS_IMAGES . 'icons/' . (($actions['success'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent"><?php echo $module_title; ?></td>
                 <td class="dataTableContent"><?php echo osc_output_string_protected($actions['user_name']) . ' [' . (int)$actions['user_id'] . ']'; ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_datetime_short($actions['date_added']); ?></td>
+                <td class="dataTableContent" align="right"><?php echo osc_datetime_short($actions['date_added']); ?></td>
                 <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) { echo osc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . osc_href_link(FILENAME_ACTION_RECORDER, osc_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '">' . osc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -189,7 +189,7 @@
         $heading[] = array('text' => '<strong>' . $aInfo->module . '</strong>');
 
         $contents[] = array('text' => TEXT_INFO_IDENTIFIER . '<br /><br />' . (!empty($aInfo->identifier) ? '<a href="' . osc_href_link(FILENAME_ACTION_RECORDER, 'search=' . $aInfo->identifier) . '"><u>' . osc_output_string_protected($aInfo->identifier) . '</u></a>': '(empty)'));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_datetime_short($aInfo->date_added));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . osc_datetime_short($aInfo->date_added));
       }
       break;
   }

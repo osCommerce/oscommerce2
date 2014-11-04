@@ -16,14 +16,14 @@
 
   switch ($action) {
     case 'export':
-      $info = tep_get_system_information();
+      $info = osc_get_system_information();
     break;
 
     case 'submit':
       $target_host = 'usage.oscommerce.com';
       $target_path = '/submit.php';
 
-      $encoded = base64_encode(serialize(tep_get_system_information()));
+      $encoded = base64_encode(serialize(osc_get_system_information()));
 
       $response = false;
 
@@ -70,17 +70,17 @@
     break;
 
     case 'save':
-      $info = tep_get_system_information();
+      $info = osc_get_system_information();
       $info_file = 'server_info-' . date('YmdHis') . '.txt';
       header('Content-type: text/plain');
       header('Content-disposition: attachment; filename=' . $info_file);
-      echo tep_format_system_info_array($info);
+      echo osc_format_system_info_array($info);
       exit;
 
     break;
 
     default:
-      $info = tep_get_system_information();
+      $info = osc_get_system_information();
       break;
   }
 
@@ -108,7 +108,7 @@
             <td colspan="2"><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo osc_draw_textarea_field('server configuration', 'soft', '100', '15', tep_format_system_info_array($info)); ?></td>
+            <td colspan="2"><?php echo osc_draw_textarea_field('server configuration', 'soft', '100', '15', osc_format_system_info_array($info)); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo osc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

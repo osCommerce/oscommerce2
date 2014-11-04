@@ -65,7 +65,7 @@
     case 'analyze':
     case 'optimize':
     case 'repair':
-      tep_set_time_limit(0);
+      osc_set_time_limit(0);
 
       $table_headers = array(TABLE_HEADING_TABLE,
                              TABLE_HEADING_MSG_TYPE,
@@ -110,7 +110,7 @@
         osc_redirect(osc_href_link('database_tables.php'));
       }
 
-      tep_set_time_limit(0);
+      osc_set_time_limit(0);
 
       if ( isset($_POST['dryrun']) ) {
         $table_headers = array(TABLE_HEADING_QUERIES);

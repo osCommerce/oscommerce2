@@ -566,7 +566,7 @@
 
         $preparing_status_id = $status['status_id']+1;
 
-        $languages = tep_get_languages();
+        $languages = osc_get_languages();
 
         foreach ($languages as $lang) {
           osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $preparing_status_id . "', '" . $lang['id'] . "', 'Preparing [Moneybookers]')");
@@ -591,7 +591,7 @@
 
         $transactions_status_id = $status['status_id']+1;
 
-        $languages = tep_get_languages();
+        $languages = osc_get_languages();
 
         foreach ($languages as $lang) {
           osc_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $transactions_status_id . "', '" . $lang['id'] . "', 'Transaction [Moneybookers]')");

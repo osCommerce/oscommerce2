@@ -52,7 +52,7 @@
               </tr>
 <?php
   if ($messageStack->size < 1) {
-    $languages = tep_get_languages();
+    $languages = osc_get_languages();
 
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
       if ($languages[$i]['code'] == DEFAULT_LANGUAGE) {

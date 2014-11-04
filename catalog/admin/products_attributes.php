@@ -11,7 +11,7 @@
 */
 
   require('includes/application_top.php');
-  $languages = tep_get_languages();
+  $languages = osc_get_languages();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 

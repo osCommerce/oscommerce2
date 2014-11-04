@@ -47,7 +47,7 @@
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
-  function tep_parse_input_field_data($data, $parse) {
+  function osc_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);
   }
 
@@ -56,9 +56,9 @@
       return htmlspecialchars($string);
     } else {
       if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
+        return osc_parse_input_field_data($string, array('"' => '&quot;'));
       } else {
-        return tep_parse_input_field_data($string, $translate);
+        return osc_parse_input_field_data($string, $translate);
       }
     }
   }
@@ -73,7 +73,7 @@
     return preg_replace($patterns, $replace, trim($string));
   }
 
-  function tep_customers_name($customers_id) {
+  function osc_customers_name($customers_id) {
     $customers = osc_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customers_id . "'");
     $customers_values = osc_db_fetch_array($customers);
 
@@ -165,7 +165,7 @@
 
   }
 
-  function tep_datetime_short($raw_datetime) {
+  function osc_datetime_short($raw_datetime) {
     if ( ($raw_datetime == '0000-00-00 00:00:00') || ($raw_datetime == '') ) return false;
 
     $year = (int)substr($raw_datetime, 0, 4);
@@ -178,7 +178,7 @@
     return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
   }
 
-  function tep_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
+  function osc_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
     global $languages_id;
 
     if (!is_array($category_tree_array)) $category_tree_array = array();
@@ -193,13 +193,13 @@
     $categories_query = osc_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and c.parent_id = '" . (int)$parent_id . "' order by c.sort_order, cd.categories_name");
     while ($categories = osc_db_fetch_array($categories_query)) {
       if ($exclude != $categories['categories_id']) $category_tree_array[] = array('id' => $categories['categories_id'], 'text' => $spacing . $categories['categories_name']);
-      $category_tree_array = tep_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
+      $category_tree_array = osc_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
     }
 
     return $category_tree_array;
   }
 
-  function tep_draw_products_pull_down($name, $parameters = '', $exclude = '') {
+  function osc_draw_products_pull_down($name, $parameters = '', $exclude = '') {
     global $currencies, $languages_id;
 
     if ($exclude == '') {
@@ -226,7 +226,7 @@
     return $select_string;
   }
 
-  function tep_format_system_info_array($array) {
+  function osc_format_system_info_array($array) {
 
     $output = '';
     foreach ($array as $section => $child) {
@@ -265,7 +265,7 @@
     return $values_values['products_options_values_name'];
   }
 
-  function tep_info_image($image, $alt, $width = '', $height = '') {
+  function osc_info_image($image, $alt, $width = '', $height = '') {
     if (osc_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
       $image = osc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
     } else {
@@ -338,7 +338,7 @@
     return stristr($HTTP_USER_AGENT, $component);
   }
 
-  function tep_tax_classes_pull_down($parameters, $selected = '') {
+  function osc_tax_classes_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
     $classes_query = osc_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
     while ($classes = osc_db_fetch_array($classes_query)) {
@@ -364,7 +364,7 @@
     return $select_string;
   }
 
-  function tep_get_geo_zone_name($geo_zone_id) {
+  function osc_get_geo_zone_name($geo_zone_id) {
     $zones_query = osc_db_query("select geo_zone_name from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . (int)$geo_zone_id . "'");
 
     if (!osc_db_num_rows($zones_query)) {
@@ -491,7 +491,7 @@
     return $pieces[0];
   }
 
-  function tep_get_languages() {
+  function osc_get_languages() {
     $languages_query = osc_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
     while ($languages = osc_db_fetch_array($languages_query)) {
       $languages_array[] = array('id' => $languages['languages_id'],
@@ -717,7 +717,7 @@
     return osc_draw_textarea_field('configuration_value', false, 35, 5, $text);
   }
 
-  function tep_cfg_get_zone_name($zone_id) {
+  function osc_cfg_get_zone_name($zone_id) {
     $zone_query = osc_db_query("select zone_name from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
 
     if (!osc_db_num_rows($zone_query)) {
@@ -742,7 +742,7 @@
 
 ////
 // Sets the status of a product
-  function tep_set_product_status($products_id, $status) {
+  function osc_set_product_status($products_id, $status) {
     if ($status == '1') {
       return osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '1', products_last_modified = now() where products_id = '" . (int)$products_id . "'");
     } elseif ($status == '0') {
@@ -779,7 +779,7 @@
 ////
 // Sets timeout for the current script.
 // Cant be used in safe mode.
-  function tep_set_time_limit($limit) {
+  function osc_set_time_limit($limit) {
     if (!get_cfg_var('safe_mode')) {
       set_time_limit($limit);
     }
@@ -787,7 +787,7 @@
 
 ////
 // Alias function for Store configuration values in the Administration Tool
-  function tep_cfg_select_option($select_array, $key_value, $key = '') {
+  function osc_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '';
 
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
@@ -818,7 +818,7 @@
 
 ////
 // Retreive server information
-  function tep_get_system_information() {
+  function osc_get_system_information() {
 
     $db_query = osc_db_query("select now() as datetime");
     $db = osc_db_fetch_array($db_query);
@@ -866,7 +866,7 @@
     return $data;
   }
 
-  function tep_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
+  function osc_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
     global $languages_id;
 
     if (!is_array($categories_array)) $categories_array = array();
@@ -880,7 +880,7 @@
           $category_query = osc_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$categories['categories_id'] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
           $category = osc_db_fetch_array($category_query);
           $categories_array[$index][] = array('id' => $categories['categories_id'], 'text' => $category['categories_name']);
-          if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+          if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = osc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
           $categories_array[$index] = array_reverse($categories_array[$index]);
         }
         $index++;
@@ -889,15 +889,15 @@
       $category_query = osc_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
       $category = osc_db_fetch_array($category_query);
       $categories_array[$index][] = array('id' => $id, 'text' => $category['categories_name']);
-      if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+      if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = osc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
     }
 
     return $categories_array;
   }
 
-  function tep_output_generated_category_path($id, $from = 'category') {
+  function osc_output_generated_category_path($id, $from = 'category') {
     $calculated_category_path_string = '';
-    $calculated_category_path = tep_generate_category_path($id, $from);
+    $calculated_category_path = osc_generate_category_path($id, $from);
     for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'] . '&nbsp;&gt;&nbsp;';
@@ -911,9 +911,9 @@
     return $calculated_category_path_string;
   }
 
-  function tep_get_generated_category_path_ids($id, $from = 'category') {
+  function osc_get_generated_category_path_ids($id, $from = 'category') {
     $calculated_category_path_string = '';
-    $calculated_category_path = tep_generate_category_path($id, $from);
+    $calculated_category_path = osc_generate_category_path($id, $from);
     for ($i=0, $n=sizeof($calculated_category_path); $i<$n; $i++) {
       for ($j=0, $k=sizeof($calculated_category_path[$i]); $j<$k; $j++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['id'] . '_';
@@ -1023,7 +1023,7 @@
           if ($dir = @opendir(DIR_FS_CACHE)) {
             while ($cache_file = readdir($dir)) {
               $cached_file = $cache_blocks[$i]['file'];
-              $languages = tep_get_languages();
+              $languages = osc_get_languages();
               for ($j=0, $k=sizeof($languages); $j<$k; $j++) {
                 $cached_file_unlink = preg_replace('/-language/', '-' . $languages[$j]['directory'], $cached_file);
                 if (preg_match('/^' . $cached_file_unlink . '/', $cache_file)) {
@@ -1035,7 +1035,7 @@
           }
         } else {
           $cached_file = $cache_blocks[$i]['file'];
-          $languages = tep_get_languages();
+          $languages = osc_get_languages();
           for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
             $cached_file = preg_replace('/-language/', '-' . $languages[$i]['directory'], $cached_file);
             @unlink(DIR_FS_CACHE . $cached_file);

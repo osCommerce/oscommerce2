@@ -596,7 +596,7 @@ class inpay
             $status_query = osc_db_query("select max(orders_status_id) as status_id from ".TABLE_ORDERS_STATUS);
             $status = osc_db_fetch_array($status_query);
             $status_id = $status['status_id']+1;
-            $languages = tep_get_languages();
+            $languages = osc_get_languages();
 			$flags_query = osc_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
             if (osc_db_num_rows($flags_query) == 1) {
               foreach ($languages as $lang)

@@ -24,7 +24,7 @@
         osc_redirect(osc_href_link(FILENAME_BACKUP));
         break;
       case 'backupnow':
-        tep_set_time_limit(0);
+        osc_set_time_limit(0);
         $backup_file = 'db_' . DB_DATABASE . '-' . date('YmdHis') . '.sql';
         $fp = fopen(DIR_FS_BACKUP . $backup_file, 'w');
 
@@ -161,7 +161,7 @@
         break;
       case 'restorenow':
       case 'restorelocalnow':
-        tep_set_time_limit(0);
+        osc_set_time_limit(0);
 
         if ($action == 'restorenow') {
           $read_from = $_GET['file'];
