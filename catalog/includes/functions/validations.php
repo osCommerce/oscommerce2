@@ -42,7 +42,7 @@
   //    first@last@host.com
   //
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  function tep_validate_email($email) {
+  function osc_validate_email($email) {
     $email = trim($email);
 
     if ( strlen($email) > 255 ) {

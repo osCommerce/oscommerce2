@@ -72,7 +72,7 @@
           $entry_email_address_error = false;
         }
 
-        if (!tep_validate_email($customers_email_address)) {
+        if (!osc_validate_email($customers_email_address)) {
           $error = true;
           $entry_email_address_check_error = true;
         } else {

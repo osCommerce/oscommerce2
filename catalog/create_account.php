@@ -88,7 +88,7 @@
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
-    } elseif (tep_validate_email($email_address) == false) {
+    } elseif (osc_validate_email($email_address) == false) {
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);

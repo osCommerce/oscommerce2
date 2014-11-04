@@ -48,7 +48,7 @@
       $messageStack->add('friend', ERROR_FROM_NAME);
     }
 
-    if (!tep_validate_email($from_email_address)) {
+    if (!osc_validate_email($from_email_address)) {
       $error = true;
 
       $messageStack->add('friend', ERROR_FROM_ADDRESS);
@@ -60,7 +60,7 @@
       $messageStack->add('friend', ERROR_TO_NAME);
     }
 
-    if (!tep_validate_email($to_email_address)) {
+    if (!osc_validate_email($to_email_address)) {
       $error = true;
 
       $messageStack->add('friend', ERROR_TO_ADDRESS);

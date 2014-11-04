@@ -21,7 +21,7 @@
     $email_address = osc_db_prepare_input($_POST['email']);
     $enquiry = osc_db_prepare_input($_POST['enquiry']);
 
-    if (!tep_validate_email($email_address)) {
+    if (!osc_validate_email($email_address)) {
       $error = true;
 
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
