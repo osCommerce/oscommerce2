@@ -16,7 +16,7 @@
 
   if (osc_not_null($action)) {
     if ($action == 'reset') {
-      tep_reset_cache_block($_GET['block']);
+      osc_reset_cache_block($_GET['block']);
     }
 
     osc_redirect(osc_href_link(FILENAME_CACHE));
@@ -24,7 +24,7 @@
 
 // check if the cache directory exists
   if (is_dir(DIR_FS_CACHE)) {
-    if (!tep_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+    if (!osc_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
     $messageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }

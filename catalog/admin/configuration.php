@@ -64,9 +64,9 @@
           include(DIR_WS_CLASSES . $class_method[0] . '.php');
           ${$class_method[0]} = new $class_method[0]();
         }
-        $cfgValue = tep_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
+        $cfgValue = osc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
       } else {
-        $cfgValue = tep_call_function($use_function, $configuration['configuration_value']);
+        $cfgValue = osc_call_function($use_function, $configuration['configuration_value']);
       }
     } else {
       $cfgValue = $configuration['configuration_value'];

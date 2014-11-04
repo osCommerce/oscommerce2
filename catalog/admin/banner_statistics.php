@@ -14,13 +14,13 @@
 
   $type = (isset($_GET['type']) ? $_GET['type'] : '');
 
-  $banner_extension = tep_banner_image_extension();
+  $banner_extension = osc_banner_image_extension();
 
 // check if the graphs directory exists
   $dir_ok = false;
   if (function_exists('imagecreate') && osc_not_null($banner_extension)) {
     if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-      if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
+      if (osc_is_writable(DIR_WS_IMAGES . 'graphs')) {
         $dir_ok = true;
       } else {
         $messageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');

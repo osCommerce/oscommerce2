@@ -122,7 +122,7 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . osc_draw_input_field('countries_name'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . osc_draw_input_field('countries_iso_code_2'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . osc_draw_input_field('countries_iso_code_3'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . osc_draw_pull_down_menu('address_format_id', tep_get_address_formats()));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . osc_draw_pull_down_menu('address_format_id', osc_get_address_formats()));
       $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
@@ -133,7 +133,7 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . osc_draw_input_field('countries_name', $cInfo->countries_name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . osc_draw_input_field('countries_iso_code_2', $cInfo->countries_iso_code_2));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . osc_draw_input_field('countries_iso_code_3', $cInfo->countries_iso_code_3));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . osc_draw_pull_down_menu('address_format_id', tep_get_address_formats(), $cInfo->address_format_id));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . osc_draw_pull_down_menu('address_format_id', osc_get_address_formats(), $cInfo->address_format_id));
       $contents[] = array('align' => 'center', 'text' => '<br />' . osc_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . osc_draw_button(IMAGE_CANCEL, 'close', osc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id)));
       break;
     case 'delete':

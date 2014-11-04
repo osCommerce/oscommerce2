@@ -302,7 +302,7 @@
       case 'deleteconfirm':
         if (strstr($_GET['file'], '..')) osc_redirect(osc_href_link(FILENAME_BACKUP));
 
-        tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
+        osc_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
@@ -316,7 +316,7 @@
 // check if the backup directory exists
   $dir_ok = false;
   if (is_dir(DIR_FS_BACKUP)) {
-    if (tep_is_writable(DIR_FS_BACKUP)) {
+    if (osc_is_writable(DIR_FS_BACKUP)) {
       $dir_ok = true;
     } else {
       $messageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');

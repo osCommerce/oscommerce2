@@ -23,7 +23,7 @@
                               'Require valid-user',
                               '##### OSCOMMERCE ADMIN PROTECTION - END #####');
 
-  if (!$is_iis && file_exists(DIR_FS_ADMIN . '.htpasswd_oscommerce') && tep_is_writable(DIR_FS_ADMIN . '.htpasswd_oscommerce') && file_exists(DIR_FS_ADMIN . '.htaccess') && tep_is_writable(DIR_FS_ADMIN . '.htaccess')) {
+  if (!$is_iis && file_exists(DIR_FS_ADMIN . '.htpasswd_oscommerce') && osc_is_writable(DIR_FS_ADMIN . '.htpasswd_oscommerce') && file_exists(DIR_FS_ADMIN . '.htaccess') && osc_is_writable(DIR_FS_ADMIN . '.htaccess')) {
     $htaccess_array = array();
     $htpasswd_array = array();
 

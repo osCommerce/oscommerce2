@@ -70,7 +70,7 @@
       case 'deleteconfirm':
         $oID = osc_db_prepare_input($_GET['oID']);
 
-        tep_remove_order($oID, $_POST['restock']);
+        osc_remove_order($oID, $_POST['restock']);
 
         osc_redirect(osc_href_link(FILENAME_ORDERS, osc_get_all_get_params(array('oID', 'action'))));
         break;

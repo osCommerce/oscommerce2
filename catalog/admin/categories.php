@@ -563,7 +563,7 @@ updateGross();
             <td><table border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td class="main" valign="top"><?php echo osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']); ?>&nbsp;</td>
-                <td class="main"><?php echo osc_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '70', '15', (empty($pInfo->products_id) ? '' : tep_get_products_description($pInfo->products_id, $languages[$i]['id']))); ?></td>
+                <td class="main"><?php echo osc_draw_textarea_field('products_description[' . $languages[$i]['id'] . ']', 'soft', '70', '15', (empty($pInfo->products_id) ? '' : osc_get_products_description($pInfo->products_id, $languages[$i]['id']))); ?></td>
               </tr>
             </table></td>
           </tr>
@@ -663,7 +663,7 @@ function showPiDelConfirm(piId) {
 ?>
           <tr>
             <td class="main"><?php if ($i == 0) echo TEXT_PRODUCTS_URL . '<br /><small>' . TEXT_PRODUCTS_URL_WITHOUT_HTTP . '</small>'; ?></td>
-            <td class="main"><?php echo osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (isset($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : tep_get_products_url($pInfo->products_id, $languages[$i]['id']))); ?></td>
+            <td class="main"><?php echo osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (isset($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : osc_get_products_url($pInfo->products_id, $languages[$i]['id']))); ?></td>
           </tr>
 <?php
     }
@@ -703,8 +703,8 @@ $('#products_date_available').datepicker({
     $languages = osc_get_languages();
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
       $pInfo->products_name = osc_get_products_name($pInfo->products_id, $languages[$i]['id']);
-      $pInfo->products_description = tep_get_products_description($pInfo->products_id, $languages[$i]['id']);
-      $pInfo->products_url = tep_get_products_url($pInfo->products_id, $languages[$i]['id']);
+      $pInfo->products_description = osc_get_products_description($pInfo->products_id, $languages[$i]['id']);
+      $pInfo->products_url = osc_get_products_url($pInfo->products_id, $languages[$i]['id']);
 ?>
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
@@ -834,7 +834,7 @@ $('#products_date_available').datepicker({
       if (isset($_GET['search'])) $cPath= $categories['parent_id'];
 
       if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $categories['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-        $category_childs = array('childs_count' => tep_childs_in_category_count($categories['categories_id']));
+        $category_childs = array('childs_count' => osc_childs_in_category_count($categories['categories_id']));
         $category_products = array('products_count' => osc_products_in_category_count($categories['categories_id']));
 
         $cInfo_array = array_merge($categories, $category_childs, $category_products);
@@ -947,7 +947,7 @@ $('#products_date_available').datepicker({
         $category_inputs_string = '';
         $languages = osc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $category_inputs_string .= '<br />' . osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
+          $category_inputs_string .= '<br />' . osc_image(osc_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', osc_get_category_name($cInfo->categories_id, $languages[$i]['id']));
         }
 
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_NAME . $category_inputs_string);

@@ -65,7 +65,7 @@
         }
 
         if (USE_CACHE == 'true') {
-          tep_reset_cache_block('manufacturers');
+          osc_reset_cache_block('manufacturers');
         }
 
         osc_redirect(osc_href_link(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
@@ -88,14 +88,14 @@
         if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
           $products_query = osc_db_query("select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . (int)$manufacturers_id . "'");
           while ($products = osc_db_fetch_array($products_query)) {
-            tep_remove_product($products['products_id']);
+            osc_remove_product($products['products_id']);
           }
         } else {
           osc_db_query("update " . TABLE_PRODUCTS . " set manufacturers_id = '' where manufacturers_id = '" . (int)$manufacturers_id . "'");
         }
 
         if (USE_CACHE == 'true') {
-          tep_reset_cache_block('manufacturers');
+          osc_reset_cache_block('manufacturers');
         }
 
         osc_redirect(osc_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));
@@ -199,7 +199,7 @@
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $manufacturer_inputs_string .= '<br />' . osc_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', tep_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']));
+        $manufacturer_inputs_string .= '<br />' . osc_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . osc_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', osc_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']));
       }
 
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_URL . $manufacturer_inputs_string);

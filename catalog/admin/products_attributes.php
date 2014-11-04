@@ -410,7 +410,7 @@
     $rows = 0;
     $values = osc_db_query($values);
     while ($values_values = osc_db_fetch_array($values)) {
-      $options_name = tep_options_name($values_values['products_options_id']);
+      $options_name = osc_options_name($values_values['products_options_id']);
       $values_name = $values_values['products_options_values_name'];
       $rows++;
 ?>
@@ -550,8 +550,8 @@
   $attributes = osc_db_query($attributes);
   while ($attributes_values = osc_db_fetch_array($attributes)) {
     $products_name_only = osc_get_products_name($attributes_values['products_id']);
-    $options_name = tep_options_name($attributes_values['options_id']);
-    $values_name = tep_values_name($attributes_values['options_values_id']);
+    $options_name = osc_options_name($attributes_values['options_id']);
+    $values_name = osc_values_name($attributes_values['options_values_id']);
     $rows++;
 ?>
           <tr class="<?php echo (floor($rows/2) == ($rows/2) ? 'attributes-even' : 'attributes-odd'); ?>">

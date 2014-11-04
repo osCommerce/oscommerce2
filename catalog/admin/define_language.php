@@ -24,7 +24,7 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => tep_is_writable($path . $filename),
+                        'writable' => osc_is_writable($path . $filename),
                         'size' => filesize($path . $filename),
                         'last_modified' => strftime(DATE_TIME_FORMAT, filemtime($path . $filename)));
 
@@ -72,7 +72,7 @@
         if (isset($_GET['lngdir']) && isset($_GET['filename'])) {
           $file = DIR_FS_CATALOG_LANGUAGES . $_GET['filename'];
 
-          if (file_exists($file) && tep_is_writable($file)) {
+          if (file_exists($file) && osc_is_writable($file)) {
             $new_file = fopen($file, 'w');
             $file_contents = stripslashes($_POST['file_contents']);
             fwrite($new_file, $file_contents, strlen($file_contents));
@@ -109,7 +109,7 @@
       $contents = implode('', $file_array);
 
       $file_writeable = true;
-      if (!tep_is_writable($file)) {
+      if (!osc_is_writable($file)) {
         $file_writeable = false;
         $messageStack->reset();
         $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
@@ -166,7 +166,7 @@
               </tr>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><a href="<?php echo osc_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
-                <td class="dataTableContent" align="center"><?php echo osc_image(DIR_WS_IMAGES . 'icons/' . ((tep_is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo osc_image(DIR_WS_IMAGES . 'icons/' . ((osc_is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG_LANGUAGES . $filename)); ?></td>
               </tr>
 <?php

@@ -139,7 +139,7 @@
     function check_destination() {
       global $messageStack;
 
-      if (!tep_is_writable($this->destination)) {
+      if (!osc_is_writable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
             $messageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');

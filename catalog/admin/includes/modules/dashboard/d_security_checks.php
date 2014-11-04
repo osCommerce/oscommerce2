@@ -53,7 +53,7 @@
         include(DIR_FS_ADMIN . 'includes/modules/security_check/' . $secmodule);
 
         $secclass = 'securityCheck_' . substr($secmodule, 0, strrpos($secmodule, '.'));
-        if (tep_class_exists($secclass)) {
+        if (osc_class_exists($secclass)) {
           $secCheck = new $secclass;
 
           if ( !$secCheck->pass() ) {

@@ -19,7 +19,7 @@
       case 'setflag':
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           if (isset($_GET['rID'])) {
-            tep_set_review_status($_GET['rID'], $_GET['flag']);
+            osc_set_review_status($_GET['rID'], $_GET['flag']);
           }
         }
 

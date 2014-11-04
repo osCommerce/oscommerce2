@@ -141,7 +141,7 @@
     include($module_directory . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
+    if (osc_class_exists($class)) {
       $module = new $class;
       if ($module->check() > 0) {
         if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
@@ -268,9 +268,9 @@
                 include(DIR_WS_CLASSES . $class_method[0] . '.php');
                 ${$class_method[0]} = new $class_method[0]();
               }
-              $keys .= tep_call_function($class_method[1], $value['value'], ${$class_method[0]});
+              $keys .= osc_call_function($class_method[1], $value['value'], ${$class_method[0]});
             } else {
-              $keys .= tep_call_function($use_function, $value['value']);
+              $keys .= osc_call_function($use_function, $value['value']);
             }
           } else {
             $keys .= $value['value'];

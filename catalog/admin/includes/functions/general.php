@@ -247,7 +247,7 @@
 
 
 
-  function tep_options_name($options_id) {
+  function osc_options_name($options_id) {
     global $languages_id;
 
     $options = osc_db_query("select products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id = '" . (int)$options_id . "' and language_id = '" . (int)$languages_id . "'");
@@ -256,7 +256,7 @@
     return $options_values['products_options_name'];
   }
 
-  function tep_values_name($values_id) {
+  function osc_values_name($values_id) {
     global $languages_id;
 
     $values = osc_db_query("select products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id = '" . (int)$values_id . "' and language_id = '" . (int)$languages_id . "'");
@@ -351,7 +351,7 @@
     return $select_string;
   }
 
-  function tep_geo_zones_pull_down($parameters, $selected = '') {
+  function osc_geo_zones_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
     $zones_query = osc_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
     while ($zones = osc_db_fetch_array($zones_query)) {
@@ -504,14 +504,14 @@
     return $languages_array;
   }
 
-  function tep_get_category_name($category_id, $language_id) {
+  function osc_get_category_name($category_id, $language_id) {
     $category_query = osc_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
     $category = osc_db_fetch_array($category_query);
 
     return $category['categories_name'];
   }
 
-  function tep_get_orders_status_name($orders_status_id, $language_id = '') {
+  function osc_get_orders_status_name($orders_status_id, $language_id = '') {
     global $languages_id;
 
     if (!$language_id) $language_id = $languages_id;
@@ -521,7 +521,7 @@
     return $orders_status['orders_status_name'];
   }
 
-  function tep_get_orders_status() {
+  function osc_get_orders_status() {
     global $languages_id;
 
     $orders_status_array = array();
@@ -544,14 +544,14 @@
     return $product['products_name'];
   }
 
-  function tep_get_products_description($product_id, $language_id) {
+  function osc_get_products_description($product_id, $language_id) {
     $product_query = osc_db_query("select products_description from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
     $product = osc_db_fetch_array($product_query);
 
     return $product['products_description'];
   }
 
-  function tep_get_products_url($product_id, $language_id) {
+  function osc_get_products_url($product_id, $language_id) {
     $product_query = osc_db_query("select products_url from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
     $product = osc_db_fetch_array($product_query);
 
@@ -561,7 +561,7 @@
 ////
 // Return the manufacturers URL in the needed language
 // TABLES: manufacturers_info
-  function tep_get_manufacturer_url($manufacturer_id, $language_id) {
+  function osc_get_manufacturer_url($manufacturer_id, $language_id) {
     $manufacturer_query = osc_db_query("select manufacturers_url from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturer_id . "' and languages_id = '" . (int)$language_id . "'");
     $manufacturer = osc_db_fetch_array($manufacturer_query);
 
@@ -571,7 +571,7 @@
 ////
 // Wrapper for class_exists() function
 // This function is not available in all PHP versions so we test it before using it.
-  function tep_class_exists($class_name) {
+  function osc_class_exists($class_name) {
     if (function_exists('class_exists')) {
       return class_exists($class_name);
     } else {
@@ -582,7 +582,7 @@
 ////
 // Count how many products exist in a category
 // TABLES: products, products_to_categories, categories
-  function tep_products_in_category_count($categories_id, $include_deactivated = false) {
+  function osc_products_in_category_count($categories_id, $include_deactivated = false) {
     $products_count = 0;
 
     if ($include_deactivated) {
@@ -598,7 +598,7 @@
     $childs_query = osc_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$categories_id . "'");
     if (osc_db_num_rows($childs_query)) {
       while ($childs = osc_db_fetch_array($childs_query)) {
-        $products_count += tep_products_in_category_count($childs['categories_id'], $include_deactivated);
+        $products_count += osc_products_in_category_count($childs['categories_id'], $include_deactivated);
       }
     }
 
@@ -608,13 +608,13 @@
 ////
 // Count how many subcategories exist in a category
 // TABLES: categories
-  function tep_childs_in_category_count($categories_id) {
+  function osc_childs_in_category_count($categories_id) {
     $categories_count = 0;
 
     $categories_query = osc_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$categories_id . "'");
     while ($categories = osc_db_fetch_array($categories_query)) {
       $categories_count++;
-      $categories_count += tep_childs_in_category_count($categories['categories_id']);
+      $categories_count += osc_childs_in_category_count($categories['categories_id']);
     }
 
     return $categories_count;
@@ -640,7 +640,7 @@
 
 ////
 // return an array with country zones
-  function tep_get_country_zones($country_id) {
+  function osc_get_country_zones($country_id) {
     $zones_array = array();
     $zones_query = osc_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' order by zone_name");
     while ($zones = osc_db_fetch_array($zones_query)) {
@@ -651,14 +651,14 @@
     return $zones_array;
   }
 
-  function tep_prepare_country_zones_pull_down($country_id = '') {
+  function osc_prepare_country_zones_pull_down($country_id = '') {
 // preset the width of the drop-down for Netscape
     $pre = '';
     if ( (!osc_browser_detect('MSIE')) && (osc_browser_detect('Mozilla/4')) ) {
       for ($i=0; $i<45; $i++) $pre .= '&nbsp;';
     }
 
-    $zones = tep_get_country_zones($country_id);
+    $zones = osc_get_country_zones($country_id);
 
     if (sizeof($zones) > 0) {
       $zones_select = array(array('id' => '', 'text' => PLEASE_SELECT));
@@ -678,7 +678,7 @@
 
 ////
 // Get list of address_format_id's
-  function tep_get_address_formats() {
+  function osc_get_address_formats() {
     $address_format_query = osc_db_query("select address_format_id from " . TABLE_ADDRESS_FORMAT . " order by address_format_id");
     $address_format_array = array();
     while ($address_format_values = osc_db_fetch_array($address_format_query)) {
@@ -690,15 +690,15 @@
 
 ////
 // Alias function for Store configuration values in the Administration Tool
-  function tep_cfg_pull_down_country_list($country_id) {
+  function osc_cfg_pull_down_country_list($country_id) {
     return osc_draw_pull_down_menu('configuration_value', osc_get_countries(), $country_id);
   }
 
-  function tep_cfg_pull_down_zone_list($zone_id) {
-    return osc_draw_pull_down_menu('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
+  function osc_cfg_pull_down_zone_list($zone_id) {
+    return osc_draw_pull_down_menu('configuration_value', osc_get_country_zones(STORE_COUNTRY), $zone_id);
   }
 
-  function tep_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
+  function osc_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
 
     $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
@@ -713,7 +713,7 @@
 
 ////
 // Function to read in text area in admin
- function tep_cfg_textarea($text) {
+ function osc_cfg_textarea($text) {
     return osc_draw_textarea_field('configuration_value', false, 35, 5, $text);
   }
 
@@ -754,7 +754,7 @@
 
 ////
 // Sets the status of a review
-  function tep_set_review_status($reviews_id, $status) {
+  function osc_set_review_status($reviews_id, $status) {
     if ($status == '1') {
       return osc_db_query("update " . TABLE_REVIEWS . " set reviews_status = '1', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
     } elseif ($status == '0') {
@@ -805,7 +805,7 @@
 
 ////
 // Alias function for module configuration keys
-  function tep_mod_select_option($select_array, $key_name, $key_value) {
+  function osc_mod_select_option($select_array, $key_name, $key_value) {
     foreach ( $select_array as $key => $value ) {
       if (is_int($key)) $key = $value;
       $string .= '<br /><input type="radio" name="configuration[' . $key_name . ']" value="' . $key . '"';
@@ -927,7 +927,7 @@
     return $calculated_category_path_string;
   }
 
-  function tep_remove_category($category_id) {
+  function osc_remove_category($category_id) {
     $category_image_query = osc_db_query("select categories_image from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$category_id . "'");
     $category_image = osc_db_fetch_array($category_image_query);
 
@@ -945,12 +945,12 @@
     osc_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$category_id . "'");
 
     if (USE_CACHE == 'true') {
-      tep_reset_cache_block('categories');
-      tep_reset_cache_block('also_purchased');
+      osc_reset_cache_block('categories');
+      osc_reset_cache_block('also_purchased');
     }
   }
 
-  function tep_remove_product($product_id) {
+  function osc_remove_product($product_id) {
     $product_image_query = osc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
     $product_image = osc_db_fetch_array($product_image_query);
 
@@ -994,12 +994,12 @@
     osc_db_query("delete from " . TABLE_REVIEWS . " where products_id = '" . (int)$product_id . "'");
 
     if (USE_CACHE == 'true') {
-      tep_reset_cache_block('categories');
-      tep_reset_cache_block('also_purchased');
+      osc_reset_cache_block('categories');
+      osc_reset_cache_block('also_purchased');
     }
   }
 
-  function tep_remove_order($order_id, $restock = false) {
+  function osc_remove_order($order_id, $restock = false) {
     if ($restock == 'on') {
       $order_query = osc_db_query("select products_id, products_quantity from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$order_id . "'");
       while ($order = osc_db_fetch_array($order_query)) {
@@ -1014,7 +1014,7 @@
     osc_db_query("delete from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "'");
   }
 
-  function tep_reset_cache_block($cache_block) {
+  function osc_reset_cache_block($cache_block) {
     global $cache_blocks;
 
     for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
@@ -1046,7 +1046,7 @@
     }
   }
 
-  function tep_get_file_permissions($mode) {
+  function osc_get_file_permissions($mode) {
 // determine type
     if ( ($mode & 0xC000) == 0xC000) { // unix domain socket
       $type = 's';
@@ -1088,7 +1088,7 @@
            $world['read'] . $world['write'] . $world['execute'];
   }
 
-  function tep_remove($source) {
+  function osc_remove($source) {
     global $messageStack, $tep_remove_error;
 
     if (isset($tep_remove_error)) $tep_remove_error = false;
@@ -1097,8 +1097,8 @@
       $dir = dir($source);
       while ($file = $dir->read()) {
         if ( ($file != '.') && ($file != '..') ) {
-          if (tep_is_writable($source . '/' . $file)) {
-            tep_remove($source . '/' . $file);
+          if (osc_is_writable($source . '/' . $file)) {
+            osc_remove($source . '/' . $file);
           } else {
             $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
             $tep_remove_error = true;
@@ -1107,14 +1107,14 @@
       }
       $dir->close();
 
-      if (tep_is_writable($source)) {
+      if (osc_is_writable($source)) {
         rmdir($source);
       } else {
         $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
         $tep_remove_error = true;
       }
     } else {
-      if (tep_is_writable($source)) {
+      if (osc_is_writable($source)) {
         unlink($source);
       } else {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
@@ -1176,7 +1176,7 @@
     $message->send($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject);
   }
 
-  function tep_get_tax_class_title($tax_class_id) {
+  function osc_get_tax_class_title($tax_class_id) {
     if ($tax_class_id == '0') {
       return TEXT_NONE;
     } else {
@@ -1187,7 +1187,7 @@
     }
   }
 
-  function tep_banner_image_extension() {
+  function osc_banner_image_extension() {
     if (function_exists('imagetypes')) {
       if (imagetypes() & IMG_PNG) {
         return 'png';
@@ -1259,11 +1259,11 @@
 ////
 // Returns the tax rate for a tax class
 // TABLES: tax_rates
-  function tep_get_tax_rate_value($class_id) {
+  function osc_get_tax_rate_value($class_id) {
     return osc_get_tax_rate($class_id, -1, -1);
   }
 
-  function tep_call_function($function, $parameter, $object = '') {
+  function osc_call_function($function, $parameter, $object = '') {
     if ($object == '') {
       return call_user_func($function, $parameter);
     } else {
@@ -1271,7 +1271,7 @@
     }
   }
 
-  function tep_get_zone_class_title($zone_class_id) {
+  function osc_get_zone_class_title($zone_class_id) {
     if ($zone_class_id == '0') {
       return TEXT_NONE;
     } else {
@@ -1282,7 +1282,7 @@
     }
   }
 
-  function tep_cfg_pull_down_zone_classes($zone_class_id, $key = '') {
+  function osc_cfg_pull_down_zone_classes($zone_class_id, $key = '') {
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
 
     $zone_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
@@ -1295,7 +1295,7 @@
     return osc_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
   }
 
-  function tep_cfg_pull_down_order_statuses($order_status_id, $key = '') {
+  function osc_cfg_pull_down_order_statuses($order_status_id, $key = '') {
     global $languages_id;
 
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
@@ -1310,7 +1310,7 @@
     return osc_draw_pull_down_menu($name, $statuses_array, $order_status_id);
   }
 
-  function tep_get_order_status_name($order_status_id, $language_id = '') {
+  function osc_get_order_status_name($order_status_id, $language_id = '') {
     global $languages_id;
 
     if ($order_status_id < 1) return TEXT_DEFAULT;
@@ -1344,7 +1344,7 @@
       return str_replace($from, $to, $string);
   }
 
-  function tep_string_to_int($string) {
+  function osc_string_to_int($string) {
     return (int)$string;
   }
 
@@ -1427,7 +1427,7 @@
 
 ////
 // Wrapper function for is_writable() for Windows compatibility
-  function tep_is_writable($file) {
+  function osc_is_writable($file) {
     if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
       if (file_exists($file)) {
         $file = realpath($file);
@@ -1446,7 +1446,7 @@
         }
       } else{
         $dir = dirname($file);
-        if (file_exists($dir) && is_dir($dir) && tep_is_writable($dir)) {
+        if (file_exists($dir) && is_dir($dir) && osc_is_writable($dir)) {
           return true;
         }
       }

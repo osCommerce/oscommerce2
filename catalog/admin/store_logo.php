@@ -41,7 +41,7 @@
     }
   }
 
-  if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) {
+  if (!osc_is_writable(DIR_FS_CATALOG_IMAGES)) {
     $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, osc_href_link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
   }
 
