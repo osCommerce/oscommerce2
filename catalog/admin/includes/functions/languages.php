@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  function tep_get_languages_directory($code) {
+  function osc_get_languages_directory($code) {
     global $languages_id;
 
     $language_query = osc_db_query("select languages_id, directory from " . TABLE_LANGUAGES . " where code = '" . osc_db_input($code) . "'");
