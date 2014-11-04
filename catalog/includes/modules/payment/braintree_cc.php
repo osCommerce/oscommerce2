@@ -84,7 +84,7 @@
           include('braintree_cc/Braintree.php');
         }
 
-        spl_autoload_register('tep_braintree_autoloader');
+        spl_autoload_register('osc_braintree_autoloader');
 
         $this->api_version .= ' [' . Braintree_Version::get() . ']';
       } else {
@@ -594,7 +594,7 @@ EOD;
       $params = array('MODULE_PAYMENT_BRAINTREE_CC_STATUS' => array('title' => 'Enable Braintree Module',
                                                                     'desc' => 'Do you want to accept Braintree payments?',
                                                                     'value' => 'True',
-                                                                    'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                    'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID' => array('title' => 'Merchant ID',
                                                                          'desc' => 'The Braintree account Merchant ID to use.'),
                       'MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY' => array('title' => 'Public Key',
@@ -603,43 +603,43 @@ EOD;
                                                                          'desc' => 'The Braintree account private key to use.'),
                       'MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY' => array('title' => 'Client Side Encryption Key',
                                                                         'desc' => 'The client side encryption key to use.',
-                                                                        'set_func' => 'tep_cfg_braintree_cc_set_client_key(',
-                                                                        'use_func' => 'tep_cfg_braintree_cc_show_client_key'),
+                                                                        'set_func' => 'osc_cfg_braintree_cc_set_client_key(',
+                                                                        'use_func' => 'osc_cfg_braintree_cc_show_client_key'),
                       'MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS' => array('title' => 'Merchant Accounts',
                                                                                'desc' => 'Merchant accounts and defined currencies.',
-                                                                               'set_func' => 'tep_cfg_braintree_cc_set_merchant_accounts(',
-                                                                               'use_func' => 'tep_cfg_braintree_cc_show_merchant_accounts'),
+                                                                               'set_func' => 'osc_cfg_braintree_cc_set_merchant_accounts(',
+                                                                               'use_func' => 'osc_cfg_braintree_cc_show_merchant_accounts'),
                       'MODULE_PAYMENT_BRAINTREE_CC_TOKENS' => array('title' => 'Create Tokens',
                                                                        'desc' => 'Create and store tokens for card payments customers can use on their next purchase?',
                                                                        'value' => 'False',
-                                                                       'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                       'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV' => array('title' => 'Verify With CVV',
                                                                                 'desc' => 'Verify the credit card with the billing address with the Card Verification Value (CVV)?',
                                                                                 'value' => 'True',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
+                                                                                'set_func' => 'osc_cfg_select_option(array(\'True\', \'False\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_METHOD' => array('title' => 'Transaction Method',
                                                                                 'desc' => 'The processing method to use for each transaction.',
                                                                                 'value' => 'Authorize',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'Authorize\', \'Payment\'), '),
+                                                                                'set_func' => 'osc_cfg_select_option(array(\'Authorize\', \'Payment\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_ORDER_STATUS_ID' => array('title' => 'Set Order Status',
                                                                              'desc' => 'Set the status of orders made with this payment module to this value',
                                                                              'value' => '0',
-                                                                             'use_func' => 'tep_get_order_status_name',
-                                                                             'set_func' => 'tep_cfg_pull_down_order_statuses('),
+                                                                             'use_func' => 'osc_get_order_status_name',
+                                                                             'set_func' => 'osc_cfg_pull_down_order_statuses('),
                       'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_ORDER_STATUS_ID' => array('title' => 'Transaction Order Status',
                                                                                          'desc' => 'Include transaction information in this order status level',
                                                                                          'value' => $status_id,
-                                                                                         'set_func' => 'tep_cfg_pull_down_order_statuses(',
-                                                                                         'use_func' => 'tep_get_order_status_name'),
+                                                                                         'set_func' => 'osc_cfg_pull_down_order_statuses(',
+                                                                                         'use_func' => 'osc_get_order_status_name'),
                       'MODULE_PAYMENT_BRAINTREE_CC_TRANSACTION_SERVER' => array('title' => 'Transaction Server',
                                                                                 'desc' => 'Perform transactions on the production server or on the testing server.',
                                                                                 'value' => 'Live',
-                                                                                'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
+                                                                                'set_func' => 'osc_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
                       'MODULE_PAYMENT_BRAINTREE_CC_ZONE' => array('title' => 'Payment Zone',
                                                                   'desc' => 'If a zone is selected, only enable this payment method for that zone.',
                                                                   'value' => '0',
-                                                                  'use_func' => 'tep_get_zone_class_title',
-                                                                  'set_func' => 'tep_cfg_pull_down_zone_classes('),
+                                                                  'use_func' => 'osc_get_zone_class_title',
+                                                                  'set_func' => 'osc_cfg_pull_down_zone_classes('),
                       'MODULE_PAYMENT_BRAINTREE_CC_SORT_ORDER' => array('title' => 'Sort order of display.',
                                                                         'desc' => 'Sort order of display. Lowest is displayed first.',
                                                                         'value' => '0'));
@@ -787,11 +787,11 @@ EOD;
     }
   }
 
-  function tep_cfg_braintree_cc_set_client_key($value, $name) {
+  function osc_cfg_braintree_cc_set_client_key($value, $name) {
     return osc_draw_textarea_field('configuration[' . $name . ']', '', '50', '12', $value);
   }
 
-  function tep_cfg_braintree_cc_show_client_key($key) {
+  function osc_cfg_braintree_cc_show_client_key($key) {
     $string = '';
 
     if ( strlen($key) > 0 ) {
@@ -801,7 +801,7 @@ EOD;
     return $string;
   }
 
-  function tep_cfg_braintree_cc_set_merchant_accounts($value, $key) {
+  function osc_cfg_braintree_cc_set_merchant_accounts($value, $key) {
     if ( !class_exists('currencies') ) {
       include(DIR_WS_CLASSES . 'currencies.php');
     }
@@ -866,7 +866,7 @@ EOD;
     return $result;
   }
 
-  function tep_cfg_braintree_cc_show_merchant_accounts($value) {
+  function osc_cfg_braintree_cc_show_merchant_accounts($value) {
     if ( !class_exists('currencies') ) {
       include(DIR_WS_CLASSES . 'currencies.php');
     }
@@ -907,7 +907,7 @@ EOD;
     return $result;
   }
 
-  function tep_braintree_autoloader($class) {
+  function osc_braintree_autoloader($class) {
     if ( substr($class, 0, 10) == 'Braintree_' ) {
       $file = dirname(__FILE__) . '/braintree_cc/' . str_replace('_', '/', $class) . '.php';
 

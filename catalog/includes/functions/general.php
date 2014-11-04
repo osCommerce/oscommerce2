@@ -212,7 +212,7 @@
   }
 
 ////
-// Alias function to tep_get_countries, which also returns the countries iso codes
+// Alias function to osc_get_countries, which also returns the countries iso codes
   function osc_get_countries_with_iso_codes($countries_id) {
     return osc_get_countries($countries_id, true);
   }
@@ -263,7 +263,7 @@
   }
 
 ////
-// Alias function to tep_get_countries()
+// Alias function to osc_get_countries()
   function osc_get_country_name($country_id) {
     $country_array = osc_get_countries($country_id);
 

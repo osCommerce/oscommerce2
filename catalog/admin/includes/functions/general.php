@@ -448,7 +448,7 @@
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   //
-  // Function    : tep_get_zone_code
+  // Function    : osc_get_zone_code
   //
   // Arguments   : country           country code string
   //               zone              state/province zone_id
@@ -1089,9 +1089,9 @@
   }
 
   function osc_remove($source) {
-    global $messageStack, $tep_remove_error;
+    global $messageStack, $osc_remove_error;
 
-    if (isset($tep_remove_error)) $tep_remove_error = false;
+    if (isset($osc_remove_error)) $osc_remove_error = false;
 
     if (is_dir($source)) {
       $dir = dir($source);
@@ -1101,7 +1101,7 @@
             osc_remove($source . '/' . $file);
           } else {
             $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
-            $tep_remove_error = true;
+            $osc_remove_error = true;
           }
         }
       }
@@ -1111,14 +1111,14 @@
         rmdir($source);
       } else {
         $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
+        $osc_remove_error = true;
       }
     } else {
       if (osc_is_writable($source)) {
         unlink($source);
       } else {
         $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
+        $osc_remove_error = true;
       }
     }
   }
@@ -1352,7 +1352,7 @@
 // Parse and secure the cPath parameter values
   function osc_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map('osc_string_to_int', explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();

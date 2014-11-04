@@ -63,7 +63,7 @@
       if ($banners['count'] > 0) {
         $banner = osc_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
       } else {
-        return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> No banners with group \'' . $identifier . '\' found!</strong>';
+        return '<strong>TEP ERROR! (osc_display_banner(' . $action . ', ' . $identifier . ') -> No banners with group \'' . $identifier . '\' found!</strong>';
       }
     } elseif ($action == 'static') {
       if (is_array($identifier)) {
@@ -73,11 +73,11 @@
         if (osc_db_num_rows($banner_query)) {
           $banner = osc_db_fetch_array($banner_query);
         } else {
-          return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> Banner with ID \'' . $identifier . '\' not found, or status inactive</strong>';
+          return '<strong>TEP ERROR! (osc_display_banner(' . $action . ', ' . $identifier . ') -> Banner with ID \'' . $identifier . '\' not found, or status inactive</strong>';
         }
       }
     } else {
-      return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> Unknown $action parameter value - it must be either \'dynamic\' or \'static\'</strong>';
+      return '<strong>TEP ERROR! (osc_display_banner(' . $action . ', ' . $identifier . ') -> Unknown $action parameter value - it must be either \'dynamic\' or \'static\'</strong>';
     }
 
     if (osc_not_null($banner['banners_html_text'])) {

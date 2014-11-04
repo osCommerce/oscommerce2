@@ -304,7 +304,7 @@
 
         osc_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
-        if (!$tep_remove_error) {
+        if (!$osc_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
 
           osc_redirect(osc_href_link(FILENAME_BACKUP));

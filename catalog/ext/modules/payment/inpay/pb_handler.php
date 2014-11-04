@@ -368,7 +368,7 @@ if ($result == 'VERIFIED')
         if (osc_db_num_rows($check_query) > 0)
         {
             $comment_status = $result;
-            //tep_db_query("update ".TABLE_ORDERS." set orders_status = '".((MODULE_PAYMENT_INPAY_ORDER_STATUS_ID > 0)?MODULE_PAYMENT_INPAY_ORDER_STATUS_ID:DEFAULT_ORDERS_STATUS_ID)."', last_modified = now() where orders_id = '".$_POST['order_id']."'");
+            //osc_db_query("update ".TABLE_ORDERS." set orders_status = '".((MODULE_PAYMENT_INPAY_ORDER_STATUS_ID > 0)?MODULE_PAYMENT_INPAY_ORDER_STATUS_ID:DEFAULT_ORDERS_STATUS_ID)."', last_modified = now() where orders_id = '".$_POST['order_id']."'");
             $sql_data_array = array ('orders_id'=>$_POST['order_id'],
             'orders_status_id'=>$order_status_id,
             'date_added'=>'now()',

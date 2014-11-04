@@ -240,11 +240,11 @@
   }
 
   if (osc_not_null($dfrom)) {
-    $where_str .= " and p.products_date_added >= '" . tep_date_raw($dfrom) . "'";
+    $where_str .= " and p.products_date_added >= '" . osc_date_raw($dfrom) . "'";
   }
 
   if (osc_not_null($dto)) {
-    $where_str .= " and p.products_date_added <= '" . tep_date_raw($dto) . "'";
+    $where_str .= " and p.products_date_added <= '" . osc_date_raw($dto) . "'";
   }
 
   if (osc_not_null($pfrom)) {

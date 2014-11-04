@@ -358,7 +358,7 @@ EOD;
           $sendto = false;
         }
 
-/* useraction=commit       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')); */
+/* useraction=commit       osc_redirect(osc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')); */
         osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
         osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));

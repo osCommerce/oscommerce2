@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  function tep_dt_get_tables() {
+  function osc_dt_get_tables() {
     $result = array();
 
     $tables_query = osc_db_query('show table status');
@@ -45,7 +45,7 @@
   if ( isset($_POST['action']) ) {
     if ( in_array($_POST['action'], array('check', 'analyze', 'optimize', 'repair', 'utf8')) ) {
       if ( isset($_POST['id']) && is_array($_POST['id']) && !empty($_POST['id']) ) {
-        $tables = tep_dt_get_tables();
+        $tables = osc_dt_get_tables();
 
         foreach ( $_POST['id'] as $key => $value ) {
           if ( !in_array($value, $tables) ) {
@@ -149,7 +149,7 @@
             $table_data[] = array($q);
           }
         } else {
-// mysqli_query() is directly called as tep_db_query() dies when an error occurs
+// mysqli_query() is directly called as osc_db_query() dies when an error occurs
           if ( mysqli_query($db_link, $query) ) {
             foreach ( $queries as $q ) {
               if ( !mysqli_query($db_link, $q) ) {

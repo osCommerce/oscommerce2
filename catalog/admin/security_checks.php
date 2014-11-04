@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  function tep_sort_secmodules($a, $b) {
+  function osc_sort_secmodules($a, $b) {
     return strcasecmp($a['title'], $b['title']);
   }
 
@@ -56,7 +56,7 @@
     $extdir->close();
   }
 
-  usort($modules, 'tep_sort_secmodules');
+  usort($modules, 'osc_sort_secmodules');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

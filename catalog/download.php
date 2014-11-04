@@ -40,7 +40,7 @@
 // Returns a random name, 16 to 20 characters long
 // There are more than 10^28 combinations
 // The directory is "hidden", i.e. starts with '.'
-function tep_random_name()
+function osc_random_name()
 {
   $letters = 'abcdefghijklmnopqrstuvwxyz';
   $dirname = '.';
@@ -54,7 +54,7 @@ function tep_random_name()
 
 // Unlinks all subdirectories and files in $dir
 // Works only on one subdir level, will not recurse
-function tep_unlink_temp_dir($dir)
+function osc_unlink_temp_dir($dir)
 {
   $h1 = opendir($dir);
   while ($subdir = readdir($h1)) {
@@ -85,8 +85,8 @@ function tep_unlink_temp_dir($dir)
 
   if (DOWNLOAD_BY_REDIRECT == 'true') {
 // This will work only on Unix/Linux hosts
-    tep_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
-    $tempdir = tep_random_name();
+    osc_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
+    $tempdir = osc_random_name();
     umask(0000);
     mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
     symlink(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'], DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $downloads['orders_products_filename']);

@@ -57,7 +57,7 @@
         }
 
         if (ACCOUNT_DOB == 'true') {
-          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && ((is_numeric(tep_date_raw($customers_dob)) && @checkdate(substr(tep_date_raw($customers_dob), 4, 2), substr(tep_date_raw($customers_dob), 6, 2), substr(tep_date_raw($customers_dob), 0, 4))) || empty($customers_dob))) {
+          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && ((is_numeric(osc_date_raw($customers_dob)) && @checkdate(substr(osc_date_raw($customers_dob), 4, 2), substr(osc_date_raw($customers_dob), 6, 2), substr(osc_date_raw($customers_dob), 0, 4))) || empty($customers_dob))) {
             $entry_date_of_birth_error = false;
           } else {
             $error = true;
@@ -159,7 +159,7 @@
                                 'customers_newsletter' => $customers_newsletter);
 
         if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($customers_dob);
+        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = osc_date_raw($customers_dob);
 
         osc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
 

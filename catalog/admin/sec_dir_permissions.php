@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  function tep_opendir($path) {
+  function osc_opendir($path) {
     $path = rtrim($path, '/') . '/';
 
     $exclude_array = array('.', '..', '.DS_Store', 'Thumbs.db');
@@ -29,7 +29,7 @@
           $result[] = $file;
 
           if ($file['is_dir'] == true) {
-            $result = array_merge($result, tep_opendir($path . $filename));
+            $result = array_merge($result, osc_opendir($path . $filename));
           }
         }
       }
@@ -79,7 +79,7 @@
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RECOMMENDED; ?></td>
               </tr>
 <?php
-  foreach (tep_opendir(DIR_FS_CATALOG) as $file) {
+  foreach (osc_opendir(DIR_FS_CATALOG) as $file) {
     if ($file['is_dir']) {
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">

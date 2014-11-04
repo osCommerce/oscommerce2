@@ -11,7 +11,7 @@
 
   ////////////////////////////////////////////////////////////////////////////////////////////////
   //
-  // Function    : tep_validate_email
+  // Function    : osc_validate_email
   //
   // Arguments   : email   email address to be checked
   //

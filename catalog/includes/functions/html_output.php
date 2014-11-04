@@ -206,7 +206,7 @@
   }
 
 ////
-// Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
+// Output a selection field - alias function for osc_draw_checkbox_field() and osc_draw_radio_field()
   function osc_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
     $selection = '<input type="' . osc_output_string($type) . '" name="' . osc_output_string($name) . '"';
 

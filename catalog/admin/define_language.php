@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  function tep_opendir($path) {
+  function osc_opendir($path) {
     $path = rtrim($path, '/') . '/';
 
     $exclude_array = array('.', '..', '.DS_Store', 'Thumbs.db');
@@ -31,7 +31,7 @@
           $result[] = $file;
 
           if ($file['is_dir'] == true) {
-            $result = array_merge($result, tep_opendir($path . $filename));
+            $result = array_merge($result, osc_opendir($path . $filename));
           }
         }
       }
@@ -170,7 +170,7 @@
                 <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG_LANGUAGES . $filename)); ?></td>
               </tr>
 <?php
-    foreach (tep_opendir(DIR_FS_CATALOG_LANGUAGES . $_GET['lngdir']) as $file) {
+    foreach (osc_opendir(DIR_FS_CATALOG_LANGUAGES . $_GET['lngdir']) as $file) {
       if (substr($file['name'], strrpos($file['name'], '.')) == $file_extension) {
         $filename = substr($file['name'], strlen(DIR_FS_CATALOG_LANGUAGES));
 
