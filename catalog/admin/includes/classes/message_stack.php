@@ -25,11 +25,11 @@
 
       $this->errors = array();
 
-      if (tep_session_is_registered('messageToStack')) {
+      if (osc_session_is_registered('messageToStack')) {
         for ($i = 0, $n = sizeof($messageToStack); $i < $n; $i++) {
           $this->add($messageToStack[$i]['text'], $messageToStack[$i]['type']);
         }
-        tep_session_unregister('messageToStack');
+        osc_session_unregister('messageToStack');
       }
     }
 
@@ -50,7 +50,7 @@
     function add_session($message, $type = 'error') {
       global $messageToStack;
 
-      if (!tep_session_is_registered('messageToStack')) {
+      if (!osc_session_is_registered('messageToStack')) {
         osc_session_register('messageToStack');
         $messageToStack = array();
       }

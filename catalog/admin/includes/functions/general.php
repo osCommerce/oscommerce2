@@ -124,7 +124,7 @@
     $get_url = '';
 
     foreach ( $_GET as $key => $value ) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+      if (($key != osc_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
     return $get_url;
@@ -1235,7 +1235,7 @@
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!tep_session_is_registered('customer_id')) {
+      if (!osc_session_is_registered('customer_id')) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {

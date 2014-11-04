@@ -49,7 +49,7 @@
         $_sid = $SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
         if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
-          $_sid = tep_session_name() . '=' . tep_session_id();
+          $_sid = osc_session_name() . '=' . osc_session_id();
         }
       }
     }
@@ -319,7 +319,7 @@
     $string = '';
 
     if (defined('SID') && osc_not_null(SID)) {
-      $string = osc_draw_hidden_field(tep_session_name(), tep_session_id());
+      $string = osc_draw_hidden_field(osc_session_name(), osc_session_id());
     }
 
     return $string;

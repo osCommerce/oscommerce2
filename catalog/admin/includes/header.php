@@ -21,6 +21,6 @@
   </tr>
   <tr class="headerBar">
     <td class="headerBarContent">&nbsp;&nbsp;<?php echo '<a href="' . osc_href_link(FILENAME_DEFAULT) . '" class="headerLink">' . HEADER_TITLE_ADMINISTRATION . '</a> &nbsp;|&nbsp; <a href="' . osc_catalog_href_link() . '" class="headerLink">' . HEADER_TITLE_ONLINE_CATALOG . '</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.com" class="headerLink">' . HEADER_TITLE_SUPPORT_SITE . '</a>'; ?></td>
-    <td class="headerBarContent" align="right"><?php echo (tep_session_is_registered('admin') ? 'Logged in as: ' . $admin['username']  . ' (<a href="' . osc_href_link(FILENAME_LOGIN, 'action=logoff') . '" class="headerLink">Logoff</a>)' : ''); ?>&nbsp;&nbsp;</td>
+    <td class="headerBarContent" align="right"><?php echo (osc_session_is_registered('admin') ? 'Logged in as: ' . $admin['username']  . ' (<a href="' . osc_href_link(FILENAME_LOGIN, 'action=logoff') . '" class="headerLink">Logoff</a>)' : ''); ?>&nbsp;&nbsp;</td>
   </tr>
 </table>

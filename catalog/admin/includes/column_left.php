@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (tep_session_is_registered('admin')) {
+  if (osc_session_is_registered('admin')) {
     $cl_box_groups = array();
 
     if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {

@@ -18,14 +18,14 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 // prepare to logout an active administrator if the login page is accessed again
-  if (tep_session_is_registered('admin')) {
+  if (osc_session_is_registered('admin')) {
     $action = 'logoff';
   }
 
   if (osc_not_null($action)) {
     switch ($action) {
       case 'process':
-        if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user']) && !isset($_POST['username'])) {
+        if (osc_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user']) && !isset($_POST['username'])) {
           $username = osc_db_prepare_input($redirect_origin['auth_user']);
           $password = osc_db_prepare_input($redirect_origin['auth_pw']);
         } else {
@@ -55,7 +55,7 @@
               $actionRecorder->_user_id = $admin['id'];
               $actionRecorder->record();
 
-              if (tep_session_is_registered('redirect_origin')) {
+              if (osc_session_is_registered('redirect_origin')) {
                 $page = $redirect_origin['page'];
                 $get_string = '';
 
@@ -63,7 +63,7 @@
                   $get_string = http_build_query($redirect_origin['get']);
                 }
 
-                tep_session_unregister('redirect_origin');
+                osc_session_unregister('redirect_origin');
 
                 osc_redirect(osc_href_link($page, $get_string));
               } else {
@@ -86,7 +86,7 @@
         break;
 
       case 'logoff':
-        tep_session_unregister('admin');
+        osc_session_unregister('admin');
 
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
           osc_session_register('auth_ignore');

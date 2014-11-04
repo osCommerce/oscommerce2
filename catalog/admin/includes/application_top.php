@@ -85,8 +85,8 @@
   require(DIR_WS_FUNCTIONS . 'sessions.php');
 
 // set the session name and save path
-  tep_session_name('osCAdminID');
-  tep_session_save_path(SESSION_WRITE_DIRECTORY);
+  osc_session_name('osCAdminID');
+  osc_session_save_path(SESSION_WRITE_DIRECTORY);
 
 // set the session cookie parameters
    if (function_exists('session_set_cookie_params')) {
@@ -107,8 +107,8 @@
 
 
 // set the language
-  if (!tep_session_is_registered('language') || isset($_GET['language'])) {
-    if (!tep_session_is_registered('language')) {
+  if (!osc_session_is_registered('language') || isset($_GET['language'])) {
+    if (!osc_session_is_registered('language')) {
       osc_session_register('language');
       osc_session_register('languages_id');
     }
@@ -127,20 +127,20 @@
   }
 
 // redirect to login page if administrator is not yet logged in
-  if (!tep_session_is_registered('admin')) {
+  if (!osc_session_is_registered('admin')) {
     $redirect = false;
 
     $current_page = $PHP_SELF;
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
-    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
+    if ( ($current_page == FILENAME_LOGIN) && !osc_session_is_registered('redirect_origin') ) {
       $current_page = FILENAME_DEFAULT;
       $_GET = array();
     }
 
     if ($current_page != FILENAME_LOGIN) {
-      if (!tep_session_is_registered('redirect_origin')) {
+      if (!osc_session_is_registered('redirect_origin')) {
         osc_session_register('redirect_origin');
 
         $redirect_origin = array('page' => $current_page,
@@ -148,7 +148,7 @@
       }
 
 // try to automatically login with the HTTP Authentication values if it exists
-      if (!tep_session_is_registered('auth_ignore')) {
+      if (!osc_session_is_registered('auth_ignore')) {
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
           $redirect_origin['auth_user'] = $_SERVER['PHP_AUTH_USER'];
           $redirect_origin['auth_pw'] = $_SERVER['PHP_AUTH_PW'];

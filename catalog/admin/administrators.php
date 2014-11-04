@@ -182,7 +182,7 @@
         $check = osc_db_fetch_array($check_query);
 
         if ($admin['id'] == $check['id']) {
-          tep_session_unregister('admin');
+          osc_session_unregister('admin');
         }
 
         osc_db_query("delete from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
