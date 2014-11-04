@@ -103,7 +103,7 @@
     return mysqli_fetch_array($db_query, MYSQLI_ASSOC);
   }
 
-  function tep_db_result($result, $row, $field = '') {
+  function osc_db_result($result, $row, $field = '') {
     if ( $field === '' ) {
       $field = 0;
     }
