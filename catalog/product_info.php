@@ -231,7 +231,7 @@ $(function() {
 
 <?php
     if ((USE_CACHE == 'true') && empty($SID)) {
-      echo tep_cache_also_purchased(3600);
+      echo osc_cache_also_purchased(3600);
     } else {
       include(DIR_WS_MODULES . FILENAME_ALSO_PURCHASED_PRODUCTS);
     }
