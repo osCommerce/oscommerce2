@@ -122,7 +122,7 @@
 
           if ( isset($response['email']) ) {
             $paypal_login_access_token = $response_token['access_token'];
-            tep_session_register('paypal_login_access_token');
+            osc_session_register('paypal_login_access_token');
 
             $force_login = false;
 
@@ -238,17 +238,17 @@
             }
 
             if ( !isset($_SESSION['paypal_login_customer_id']) ) {
-              tep_session_register('paypal_login_customer_id');
+              osc_session_register('paypal_login_customer_id');
             }
 
             $billto = $sendto;
 
             if ( !isset($_SESSION['sendto']) ) {
-              tep_session_register('sendto');
+              osc_session_register('sendto');
             }
 
             if ( !isset($_SESSION['billto']) ) {
-              tep_session_register('billto');
+              osc_session_register('billto');
             }
 
             $return_url = osc_href_link(FILENAME_LOGIN, 'action=paypal_login_process', 'SSL');
@@ -285,7 +285,7 @@
 
             if ( $ppe->enabled ) {
               $payment = 'paypal_express';
-              tep_session_register('payment');
+              osc_session_register('payment');
             }
           }
         }

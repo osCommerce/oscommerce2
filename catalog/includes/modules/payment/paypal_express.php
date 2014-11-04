@@ -195,7 +195,7 @@
         if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
           osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !isset($_SESSION['ppe_order_total_check']) ) {
-          tep_session_register('ppe_order_total_check');
+          osc_session_register('ppe_order_total_check');
           $ppe_order_total_check = true;
 
           osc_redirect(osc_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));

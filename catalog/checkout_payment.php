@@ -48,7 +48,7 @@
 
 // if no billing destination address was selected, use the customers own address as default
   if (!isset($_SESSION['billto'])) {
-    tep_session_register('billto');
+    osc_session_register('billto');
     $billto = $customer_default_address_id;
   } else {
 // verify the selected billing address
@@ -66,7 +66,7 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
-  if (!isset($_SESSION['comments'])) tep_session_register('comments');
+  if (!isset($_SESSION['comments'])) osc_session_register('comments');
   if (isset($_POST['comments']) && osc_not_null($_POST['comments'])) {
     $comments = osc_db_prepare_input($_POST['comments']);
   }

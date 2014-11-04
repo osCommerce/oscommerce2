@@ -126,7 +126,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -295,7 +295,7 @@
           }
 
           $cart_PayPal_Pro_HS_ID = $cartID . '-' . $insert_id;
-          tep_session_register('cart_PayPal_Pro_HS_ID');
+          osc_session_register('cart_PayPal_Pro_HS_ID');
         }
 
         $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
@@ -363,14 +363,14 @@
         }
 
         if ( !isset($_SESSION['pphs_result']) ) {
-          tep_session_register('pphs_result');
+          osc_session_register('pphs_result');
         }
       }
 
       $pphs_key = osc_create_random_value(16);
 
       if ( !isset($_SESSION['pphs_key']) ) {
-        tep_session_register('pphs_key');
+        osc_session_register('pphs_key');
       }
 
       $iframe_url = osc_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');

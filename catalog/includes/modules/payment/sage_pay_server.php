@@ -133,7 +133,7 @@
         }
       } else {
         if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
-          tep_session_register('sagepay_server_skey_code');
+          osc_session_register('sagepay_server_skey_code');
           $sagepay_server_skey_code = osc_create_random_value(16);
         }
 
@@ -249,7 +249,7 @@
             osc_redirect($return['NextURL']);
           } else {
             if ( !isset($_SESSION['sage_pay_server_nexturl']) ) {
-              tep_session_register('sage_pay_server_nexturl');
+              osc_session_register('sage_pay_server_nexturl');
             }
 
             $sage_pay_server_nexturl = $return['NextURL'];

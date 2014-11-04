@@ -51,7 +51,7 @@
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
   }
 
-  function tep_session_start() {
+  function osc_session_start() {
     $sane_session_id = true;
 
     if ( isset($_GET[session_name()]) ) {
@@ -90,7 +90,7 @@
     return session_start();
   }
 
-  function tep_session_register($variable) {
+  function osc_session_register($variable) {
     global $session_started;
 
     if ($session_started == true) {
@@ -102,7 +102,7 @@
     return false;
   }
 
-  function tep_session_destroy() {
+  function osc_session_destroy() {
     if ( isset($_COOKIE[session_name()]) ) {
       $session_data = session_get_cookie_params();
 
@@ -113,7 +113,7 @@
     return session_destroy();
   }
 
-  function tep_session_recreate() {
+  function osc_session_recreate() {
     global $SID;
 
       $old_id = session_id();

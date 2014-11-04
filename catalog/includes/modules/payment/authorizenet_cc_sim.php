@@ -214,7 +214,7 @@
         $this->sendDebugEmail();
 
         $authorizenet_cc_sim_error = $_POST['x_response_reason_text'];
-        tep_session_register('authorizenet_cc_sim_error');
+        osc_session_register('authorizenet_cc_sim_error');
 
         osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }

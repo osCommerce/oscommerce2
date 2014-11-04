@@ -141,7 +141,7 @@
           }
         }
 
-        if (!isset($_SESSION['billto'])) tep_session_register('billto');
+        if (!isset($_SESSION['billto'])) osc_session_register('billto');
 
         osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
@@ -161,7 +161,7 @@
           }
         }
       } else {
-        tep_session_register('billto');
+        osc_session_register('billto');
       }
 
       $billto = $_POST['address'];
@@ -177,7 +177,7 @@
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      if (!isset($_SESSION['billto'])) tep_session_register('billto');
+      if (!isset($_SESSION['billto'])) osc_session_register('billto');
       $billto = $customer_default_address_id;
 
       osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));

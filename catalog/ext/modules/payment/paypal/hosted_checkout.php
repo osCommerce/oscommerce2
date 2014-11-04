@@ -29,7 +29,7 @@
     if (($pphs_result['ACK'] != 'Success') && ($pphs_result['ACK'] != 'SuccessWithWarning')) {
       $error = true;
 
-      tep_session_register('pphs_error_msg');
+      osc_session_register('pphs_error_msg');
       $pphs_error_msg = $pphs_result['L_LONGMESSAGE0'];
     }
   }

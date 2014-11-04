@@ -105,7 +105,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -272,7 +272,7 @@
         }
 
         $GLOBALS[$this->_mbcartID] = $cartID . '-' . $insert_id;
-        tep_session_register($this->_mbcartID);
+        osc_session_register($this->_mbcartID);
       }
     }
 

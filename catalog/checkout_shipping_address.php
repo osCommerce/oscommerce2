@@ -32,9 +32,9 @@
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) osc_session_register('shipping');
     $shipping = false;
-    if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
+    if (!isset($_SESSION['sendto'])) osc_session_register('sendto');
     $sendto = false;
     osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
@@ -154,7 +154,7 @@
           }
         }
 
-        if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
+        if (!isset($_SESSION['sendto'])) osc_session_register('sendto');
 
         osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
@@ -174,7 +174,7 @@
           }
         }
       } else {
-        tep_session_register('sendto');
+        osc_session_register('sendto');
       }
 
       $sendto = $_POST['address'];
@@ -189,7 +189,7 @@
         unset($_SESSION['sendto']);
       }
     } else {
-      if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
+      if (!isset($_SESSION['sendto'])) osc_session_register('sendto');
       $sendto = $customer_default_address_id;
 
       osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

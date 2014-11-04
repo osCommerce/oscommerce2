@@ -58,7 +58,7 @@
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
-  if (!isset($_SESSION['cartID'])) tep_session_register('cartID');
+  if (!isset($_SESSION['cartID'])) osc_session_register('cartID');
   $cartID = $_SESSION['cart']->cartID;
 
   switch ($_GET['osC_Action']) {
@@ -264,7 +264,7 @@
         echo $post_string;
       }
 
-      tep_session_destroy();
+      osc_session_destroy();
 
       exit;
 
@@ -282,19 +282,19 @@
           osc_redirect(osc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
         }
 
-        if (!isset($_SESSION['payment'])) tep_session_register('payment');
+        if (!isset($_SESSION['payment'])) osc_session_register('payment');
         $payment = $paypal_express->code;
 
-        if (!isset($_SESSION['ppe_token'])) tep_session_register('ppe_token');
+        if (!isset($_SESSION['ppe_token'])) osc_session_register('ppe_token');
         $ppe_token = $response_array['TOKEN'];
 
-        if (!isset($_SESSION['ppe_payerid'])) tep_session_register('ppe_payerid');
+        if (!isset($_SESSION['ppe_payerid'])) osc_session_register('ppe_payerid');
         $ppe_payerid = $response_array['PAYERID'];
 
-        if (!isset($_SESSION['ppe_payerstatus'])) tep_session_register('ppe_payerstatus');
+        if (!isset($_SESSION['ppe_payerstatus'])) osc_session_register('ppe_payerstatus');
         $ppe_payerstatus = $response_array['PAYERSTATUS'];
 
-        if (!isset($_SESSION['ppe_addressstatus'])) tep_session_register('ppe_addressstatus');
+        if (!isset($_SESSION['ppe_addressstatus'])) osc_session_register('ppe_addressstatus');
         $ppe_addressstatus = $response_array['ADDRESSSTATUS'];
 
         $force_login = false;
@@ -372,12 +372,12 @@ EOD;
           }
 
           if (SESSION_RECREATE == 'True') {
-            tep_session_recreate();
+            osc_session_recreate();
           }
 
           $customer_first_name = $customers_firstname;
-          tep_session_register('customer_id');
-          tep_session_register('customer_first_name');
+          osc_session_register('customer_id');
+          osc_session_register('customer_first_name');
 
 // reset session token
           $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());
@@ -451,19 +451,19 @@ EOD;
         $billto = $sendto;
 
         if ( !isset($_SESSION['sendto']) ) {
-          tep_session_register('sendto');
+          osc_session_register('sendto');
         }
 
         if ( !isset($_SESSION['billto']) ) {
-          tep_session_register('billto');
+          osc_session_register('billto');
         }
 
         if ($force_login == true) {
           $customer_country_id = $ship_country_id;
           $customer_zone_id = $ship_zone_id;
-          tep_session_register('customer_default_address_id');
-          tep_session_register('customer_country_id');
-          tep_session_register('customer_zone_id');
+          osc_session_register('customer_default_address_id');
+          osc_session_register('customer_country_id');
+          osc_session_register('customer_zone_id');
         }
 
         include(DIR_WS_CLASSES . 'order.php');
@@ -507,7 +507,7 @@ EOD;
             }
           }
 
-          if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
+          if (!isset($_SESSION['shipping'])) osc_session_register('shipping');
           $shipping = false;
 
           if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
@@ -550,7 +550,7 @@ EOD;
 
               $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_EXPRESS_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS, 'error');
 
-              tep_session_register('ppec_right_turn');
+              osc_session_register('ppec_right_turn');
               $ppec_right_turn = true;
 
               osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
@@ -582,7 +582,7 @@ EOD;
             }
           }
         } else {
-          if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
+          if (!isset($_SESSION['shipping'])) osc_session_register('shipping');
           $shipping = false;
 
           $sendto = false;
@@ -773,7 +773,7 @@ EOD;
         }
 
         if ( !isset($_SESSION['shipping']) ) {
-          tep_session_register('shipping');
+          osc_session_register('shipping');
         }
       }
 
@@ -849,7 +849,7 @@ EOD;
       $ppe_secret = osc_create_random_value(16, 'digits');
 
       if ( !isset($_SESSION['ppe_secret']) ) {
-        tep_session_register('ppe_secret');
+        osc_session_register('ppe_secret');
       }
 
       $params['PAYMENTREQUEST_0_CUSTOM'] = $ppe_secret;

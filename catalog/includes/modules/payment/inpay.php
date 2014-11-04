@@ -113,7 +113,7 @@ class inpay
 
         if (!isset($_SESSION['cartID']))
         {
-            tep_session_register('cartID');
+            osc_session_register('cartID');
         }
     }
 
@@ -300,7 +300,7 @@ class inpay
                 }
 
                 $cart_inpay_Standard_ID = $cartID.'-'.$insert_id;
-                tep_session_register('cart_inpay_Standard_ID');
+                osc_session_register('cart_inpay_Standard_ID');
             }
         }
 

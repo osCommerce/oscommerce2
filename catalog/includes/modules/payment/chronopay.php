@@ -94,7 +94,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -262,7 +262,7 @@
           }
 
           $cart_ChronoPay_ID = $cartID . '-' . $insert_id;
-          tep_session_register('cart_ChronoPay_ID');
+          osc_session_register('cart_ChronoPay_ID');
         }
       }
 

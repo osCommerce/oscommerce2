@@ -100,7 +100,7 @@
   @ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // lets start our session
-  tep_session_start();
+  osc_session_start();
 
 // TODO remove when no more global sessions exist
     extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
@@ -109,8 +109,8 @@
 // set the language
   if (!tep_session_is_registered('language') || isset($_GET['language'])) {
     if (!tep_session_is_registered('language')) {
-      tep_session_register('language');
-      tep_session_register('languages_id');
+      osc_session_register('language');
+      osc_session_register('languages_id');
     }
 
     include(DIR_WS_CLASSES . 'language.php');
@@ -141,7 +141,7 @@
 
     if ($current_page != FILENAME_LOGIN) {
       if (!tep_session_is_registered('redirect_origin')) {
-        tep_session_register('redirect_origin');
+        osc_session_register('redirect_origin');
 
         $redirect_origin = array('page' => $current_page,
                                  'get' => $_GET);

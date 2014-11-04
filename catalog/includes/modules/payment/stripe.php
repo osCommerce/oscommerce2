@@ -96,7 +96,7 @@
 
         if ( osc_db_num_rows($tokens_query) ) {
           $payment = $this->code;
-          tep_session_register('payment');
+          osc_session_register('payment');
         }
       }
 
@@ -283,7 +283,7 @@
       }
 
       if ( isset($stripe_result['error']['message']) ) {
-        tep_session_register('stripe_error');
+        osc_session_register('stripe_error');
 
         $stripe_error = $stripe_result['error']['message'];
       }

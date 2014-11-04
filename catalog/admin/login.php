@@ -47,7 +47,7 @@
                 osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . osc_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
               }
 
-              tep_session_register('admin');
+              osc_session_register('admin');
 
               $admin = array('id' => $check['id'],
                              'username' => $check['user_name']);
@@ -89,7 +89,7 @@
         tep_session_unregister('admin');
 
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
-          tep_session_register('auth_ignore');
+          osc_session_register('auth_ignore');
           $auth_ignore = true;
         }
 

@@ -105,5 +105,5 @@
 </html>
 
 <?php
-  tep_session_destroy();
+  osc_session_destroy();
 ?>

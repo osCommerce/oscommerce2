@@ -390,7 +390,7 @@
         $braintree_error = $braintree_result->message;
 
         if ( !empty($braintree_error) ) {
-          tep_session_register('braintree_error');
+          osc_session_register('braintree_error');
         }
       } else {
         $braintree_error = '';
@@ -406,7 +406,7 @@
         }
 
         if ( !empty($braintree_error) ) {
-          tep_session_register('braintree_error');
+          osc_session_register('braintree_error');
         }
       }
 

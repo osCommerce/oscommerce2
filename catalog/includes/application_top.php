@@ -124,7 +124,7 @@
     osc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30);
 
     if ( isset($_COOKIE['cookie_test']) ) {
-      tep_session_start();
+      osc_session_start();
       $session_started = true;
     }
   } elseif ( SESSION_BLOCK_SPIDERS == 'True' ) {
@@ -149,11 +149,11 @@
     }
 
     if ( $spider_flag === false ) {
-      tep_session_start();
+      osc_session_start();
       $session_started = true;
     }
   } else {
-    tep_session_start();
+    osc_session_start();
     $session_started = true;
   }
 
@@ -172,7 +172,7 @@
     }
 
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
-      tep_session_destroy();
+      osc_session_destroy();
 
       osc_redirect(osc_href_link(FILENAME_SSL_CHECK));
     }
@@ -185,7 +185,7 @@
     }
 
     if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
-      tep_session_destroy();
+      osc_session_destroy();
       osc_redirect(osc_href_link(FILENAME_LOGIN));
     }
   }
@@ -197,7 +197,7 @@
     }
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != osc_get_ip_address() ) {
-      tep_session_destroy();
+      osc_session_destroy();
       osc_redirect(osc_href_link(FILENAME_LOGIN));
     }
   }

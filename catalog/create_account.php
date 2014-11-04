@@ -213,18 +213,18 @@
       osc_db_query("insert into " . TABLE_CUSTOMERS_INFO . " (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
 
       if (SESSION_RECREATE == 'True') {
-        tep_session_recreate();
+        osc_session_recreate();
       }
 
       $customer_first_name = $firstname;
       $customer_default_address_id = $address_id;
       $customer_country_id = $country;
       $customer_zone_id = $zone_id;
-      tep_session_register('customer_id');
-      tep_session_register('customer_first_name');
-      tep_session_register('customer_default_address_id');
-      tep_session_register('customer_country_id');
-      tep_session_register('customer_zone_id');
+      osc_session_register('customer_id');
+      osc_session_register('customer_first_name');
+      osc_session_register('customer_default_address_id');
+      osc_session_register('customer_country_id');
+      osc_session_register('customer_zone_id');
 
 // reset session token
       $_SESSION['sessiontoken'] = md5(osc_rand() . osc_rand() . osc_rand() . osc_rand());

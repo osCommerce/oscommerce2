@@ -100,7 +100,7 @@
 
         if ( osc_db_num_rows($tokens_query) ) {
           $payment = $this->code;
-          tep_session_register('payment');
+          osc_session_register('payment');
         }
       }
 
@@ -501,26 +501,26 @@
       if ( isset($params['CreateToken']) && ($params['CreateToken'] == '1') ) {
         global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
 
-        tep_session_register('sagepay_token_cc_type');
+        osc_session_register('sagepay_token_cc_type');
         $sagepay_token_cc_type = $params['CardType'];
 
-        tep_session_register('sagepay_token_cc_number');
+        osc_session_register('sagepay_token_cc_number');
         $sagepay_token_cc_number = str_repeat('X', strlen($params['CardNumber']) - 4) . substr($params['CardNumber'], -4);
 
-        tep_session_register('sagepay_token_cc_expiry_date');
+        osc_session_register('sagepay_token_cc_expiry_date');
         $sagepay_token_cc_expiry_date = $params['ExpiryDate'];
       }
 
       if ($sage_pay_response['Status'] == '3DAUTH') {
         global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md;
 
-        tep_session_register('sage_pay_direct_acsurl');
+        osc_session_register('sage_pay_direct_acsurl');
         $sage_pay_direct_acsurl = $sage_pay_response['ACSURL'];
 
-        tep_session_register('sage_pay_direct_pareq');
+        osc_session_register('sage_pay_direct_pareq');
         $sage_pay_direct_pareq = $sage_pay_response['PAReq'];
 
-        tep_session_register('sage_pay_direct_md');
+        osc_session_register('sage_pay_direct_md');
         $sage_pay_direct_md = $sage_pay_response['MD'];
 
         osc_redirect(osc_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));

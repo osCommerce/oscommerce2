@@ -97,7 +97,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -264,7 +264,7 @@
         }
 
         $cart_Sofortueberweisung_Direct_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_Sofortueberweisung_Direct_ID');
+        osc_session_register('cart_Sofortueberweisung_Direct_ID');
       }
 
       return array('title' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_DESCRIPTION_CHECKOUT_CONFIRMATION);

@@ -125,7 +125,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
 
       $order->info['payment_method_raw'] = $order->info['payment_method'];
@@ -300,7 +300,7 @@
           }
 
           $cart_PayPal_Standard_ID = $cartID . '-' . $insert_id;
-          tep_session_register('cart_PayPal_Standard_ID');
+          osc_session_register('cart_PayPal_Standard_ID');
         }
       }
 

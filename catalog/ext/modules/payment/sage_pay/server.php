@@ -166,7 +166,7 @@
 
   echo $result;
 
-  tep_session_destroy();
+  osc_session_destroy();
 
   exit;
 

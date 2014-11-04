@@ -51,7 +51,7 @@
       global $messageToStack;
 
       if (!tep_session_is_registered('messageToStack')) {
-        tep_session_register('messageToStack');
+        osc_session_register('messageToStack');
         $messageToStack = array();
       }
 

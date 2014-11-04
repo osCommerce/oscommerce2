@@ -91,7 +91,7 @@
           }
         }
         $new_products_id_in_cart = $products_id;
-        tep_session_register('new_products_id_in_cart');
+        osc_session_register('new_products_id_in_cart');
       }
       $this->cleanup();
     }

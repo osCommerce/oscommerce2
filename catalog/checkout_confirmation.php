@@ -35,10 +35,10 @@
     osc_redirect(osc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
-  if (!isset($_SESSION['payment'])) tep_session_register('payment');
+  if (!isset($_SESSION['payment'])) osc_session_register('payment');
   if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
-  if (!isset($_SESSION['comments'])) tep_session_register('comments');
+  if (!isset($_SESSION['comments'])) osc_session_register('comments');
   if (isset($_POST['comments']) && osc_not_null($_POST['comments'])) {
     $comments = osc_db_prepare_input($_POST['comments']);
   }

@@ -112,7 +112,7 @@
         if (($check_product !== false) && ($check_product['products_status'] == '1')) {
           if ($notify == true) {
             $new_products_id_in_cart = $products_id;
-            tep_session_register('new_products_id_in_cart');
+            osc_session_register('new_products_id_in_cart');
           }
 
           if ($this->in_cart($products_id_string)) {

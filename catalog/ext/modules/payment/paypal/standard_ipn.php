@@ -40,7 +40,7 @@
     $paypal_standard->sendDebugEmail($result, true);
   }
 
-  tep_session_destroy();
+  osc_session_destroy();
 
   require('includes/application_bottom.php');
 ?>

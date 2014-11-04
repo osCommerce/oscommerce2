@@ -113,7 +113,7 @@
       }
 
       if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        osc_session_register('cartID');
       }
     }
 
@@ -280,7 +280,7 @@
         }
 
         $cart_RBS_Worldpay_Hosted_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_RBS_Worldpay_Hosted_ID');
+        osc_session_register('cart_RBS_Worldpay_Hosted_ID');
       }
 
       return false;

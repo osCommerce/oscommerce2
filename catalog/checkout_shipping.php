@@ -26,7 +26,7 @@
 
 // if no shipping destination address was selected, use the customers own address as default
   if (!isset($_SESSION['sendto'])) {
-    tep_session_register('sendto');
+    osc_session_register('sendto');
     $sendto = $customer_default_address_id;
   } else {
 // verify the selected shipping address
@@ -47,7 +47,7 @@
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
   if (!isset($_SESSION['cartID'])) {
-    tep_session_register('cartID');
+    osc_session_register('cartID');
   } elseif (($cartID != $_SESSION['cart']->cartID) && isset($_SESSION['shipping'])) {
     unset($_SESSION['shipping']);
   }
@@ -57,7 +57,7 @@
 // if the order contains only virtual products, forward the customer to the billing page as
 // a shipping address is not needed
   if ($order->content_type == 'virtual') {
-    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) osc_session_register('shipping');
     $shipping = false;
     $sendto = false;
     osc_redirect(osc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
@@ -101,12 +101,12 @@
 
 // process the selected shipping method
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
-    if (!isset($_SESSION['comments'])) tep_session_register('comments');
+    if (!isset($_SESSION['comments'])) osc_session_register('comments');
     if (osc_not_null($_POST['comments'])) {
       $comments = osc_db_prepare_input($_POST['comments']);
     }
 
-    if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
+    if (!isset($_SESSION['shipping'])) osc_session_register('shipping');
 
     if ( (osc_count_shipping_modules() > 0) || ($free_shipping == true) ) {
       if ( (isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_')) ) {
