@@ -14,14 +14,14 @@
 
 // the following cPath references come from application_top.php
   $category_depth = 'top';
-  if (isset($cPath) && tep_not_null($cPath)) {
-    $categories_products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
-    $categories_products = tep_db_fetch_array($categories_products_query);
+  if (isset($cPath) && osc_not_null($cPath)) {
+    $categories_products_query = osc_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
+    $categories_products = osc_db_fetch_array($categories_products_query);
     if ($categories_products['total'] > 0) {
       $category_depth = 'products'; // display products
     } else {
-      $category_parent_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$current_category_id . "'");
-      $category_parent = tep_db_fetch_array($category_parent_query);
+      $category_parent_query = osc_db_query("select count(*) as total from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$current_category_id . "'");
+      $category_parent = osc_db_fetch_array($category_parent_query);
       if ($category_parent['total'] > 0) {
         $category_depth = 'nested'; // navigate through the categories
       } else {
@@ -35,8 +35,8 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 
   if ($category_depth == 'nested') {
-    $category_query = tep_db_query("select cd.categories_name, c.categories_image from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and cd.categories_id = '" . (int)$current_category_id . "' and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-    $category = tep_db_fetch_array($category_query);
+    $category_query = osc_db_query("select cd.categories_name, c.categories_image from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and cd.categories_id = '" . (int)$current_category_id . "' and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+    $category = osc_db_fetch_array($category_query);
 ?>
 
 <div class="page-header">
@@ -51,28 +51,28 @@
 // check to see if there are deeper categories within the current category
       $category_links = array_reverse($cPath_array);
       for($i=0, $n=sizeof($category_links); $i<$n; $i++) {
-        $categories_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-        $categories = tep_db_fetch_array($categories_query);
+        $categories_query = osc_db_query("select count(*) as total from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+        $categories = osc_db_fetch_array($categories_query);
         if ($categories['total'] < 1) {
           // do nothing, go through the loop
         } else {
-          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+          $categories_query = osc_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
           break; // we've found the deepest category the customer is in
         }
       }
     } else {
-      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+      $categories_query = osc_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
     }
 
-    $number_of_categories = tep_db_num_rows($categories_query);
+    $number_of_categories = osc_db_num_rows($categories_query);
 
-    while ($categories = tep_db_fetch_array($categories_query)) {
-      $cPath_new = tep_get_path($categories['categories_id']);
+    while ($categories = osc_db_fetch_array($categories_query)) {
+      $cPath_new = osc_get_path($categories['categories_id']);
       echo '<div class="col-xs-6 col-sm-4">';
       echo '  <div class="text-center">';
-      echo '    <a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
+      echo '    <a href="' . osc_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . osc_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
       echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . $categories['categories_name'] . '</a></h5>';
+      echo '      <h5><a href="' . osc_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . $categories['categories_name'] . '</a></h5>';
       echo '    </div>';
       echo '  </div>';
       echo '</div>';
@@ -136,7 +136,7 @@
 
 // show the products of a specified manufacturer
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-      if (isset($_GET['filter_id']) && tep_not_null($_GET['filter_id'])) {
+      if (isset($_GET['filter_id']) && osc_not_null($_GET['filter_id'])) {
 // We are asked to show only a specific category
         $listing_sql = "select " . $select_column_list . " p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_status = '1' and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "' and p.products_id = p2c.products_id and pd.products_id = p2c.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p2c.categories_id = '" . (int)$_GET['filter_id'] . "'";
       } else {
@@ -145,7 +145,7 @@
       }
     } else {
 // show the products in a given categorie
-      if (isset($_GET['filter_id']) && tep_not_null($_GET['filter_id'])) {
+      if (isset($_GET['filter_id']) && osc_not_null($_GET['filter_id'])) {
 // We are asked to show only specific catgeory
         $listing_sql = "select " . $select_column_list . " p.products_id, p.manufacturers_id, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price from " . TABLE_PRODUCTS . " p left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_MANUFACTURERS . " m, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_status = '1' and p.manufacturers_id = m.manufacturers_id and m.manufacturers_id = '" . (int)$_GET['filter_id'] . "' and p.products_id = p2c.products_id and pd.products_id = p2c.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p2c.categories_id = '" . (int)$current_category_id . "'";
       } else {
@@ -193,12 +193,12 @@
 
     $catname = HEADING_TITLE;
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-      $image = tep_db_query("select manufacturers_image, manufacturers_name as catname from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
-      $image = tep_db_fetch_array($image);
+      $image = osc_db_query("select manufacturers_image, manufacturers_name as catname from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
+      $image = osc_db_fetch_array($image);
       $catname = $image['catname'];
     } elseif ($current_category_id) {
-      $image = tep_db_query("select c.categories_image, cd.categories_name as catname from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-      $image = tep_db_fetch_array($image);
+      $image = osc_db_query("select c.categories_image, cd.categories_name as catname from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $image = osc_db_fetch_array($image);
       $catname = $image['catname'];
     }
 ?>
@@ -217,22 +217,22 @@
       } else {
         $filterlist_sql= "select distinct m.manufacturers_id as id, m.manufacturers_name as name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c, " . TABLE_MANUFACTURERS . " m where p.products_status = '1' and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$current_category_id . "' order by m.manufacturers_name";
       }
-      $filterlist_query = tep_db_query($filterlist_sql);
-      if (tep_db_num_rows($filterlist_query) > 1) {
-        echo '<div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+      $filterlist_query = osc_db_query($filterlist_sql);
+      if (osc_db_num_rows($filterlist_query) > 1) {
+        echo '<div>' . osc_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-          echo tep_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
+          echo osc_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
         } else {
-          echo tep_draw_hidden_field('cPath', $cPath);
+          echo osc_draw_hidden_field('cPath', $cPath);
           $options = array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
         }
-        echo tep_draw_hidden_field('sort', $_GET['sort']);
-        while ($filterlist = tep_db_fetch_array($filterlist_query)) {
+        echo osc_draw_hidden_field('sort', $_GET['sort']);
+        while ($filterlist = osc_db_fetch_array($filterlist_query)) {
           $options[] = array('id' => $filterlist['id'], 'text' => $filterlist['name']);
         }
-        echo tep_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</p></form></div>' . "\n";
+        echo osc_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo osc_hide_session_id() . '</p></form></div>' . "\n";
       }
     }
 
@@ -252,12 +252,12 @@
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-info">
-      <?php echo tep_customer_greeting(); ?>
+      <?php echo osc_customer_greeting(); ?>
     </div>
   </div>
 
 <?php
-    if (tep_not_null(TEXT_MAIN)) {
+    if (osc_not_null(TEXT_MAIN)) {
 ?>
 
   <div class="contentText">
