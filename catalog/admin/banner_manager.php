@@ -399,7 +399,7 @@ $('#expires_date').datepicker({
           $contents[] = array('align' => 'center', 'text' => '<br />' . osc_image(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banner_id . '.' . $banner_extension));
         } else {
           include(DIR_WS_FUNCTIONS . 'html_graphs.php');
-          $contents[] = array('align' => 'center', 'text' => '<br />' . tep_banner_graph_infoBox($bInfo->banners_id, '3'));
+          $contents[] = array('align' => 'center', 'text' => '<br />' . osc_banner_graph_infoBox($bInfo->banners_id, '3'));
         }
 
         $contents[] = array('text' => osc_image(DIR_WS_IMAGES . 'graph_hbar_blue.gif', 'Blue', '5', '5') . ' ' . TEXT_BANNERS_BANNER_VIEWS . '<br />' . osc_image(DIR_WS_IMAGES . 'graph_hbar_red.gif', 'Red', '5', '5') . ' ' . TEXT_BANNERS_BANNER_CLICKS);

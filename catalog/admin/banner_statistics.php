@@ -126,14 +126,14 @@
 
     switch ($type) {
       case 'yearly':
-        echo tep_banner_graph_yearly($_GET['bID']);
+        echo osc_banner_graph_yearly($_GET['bID']);
         break;
       case 'monthly':
-        echo tep_banner_graph_monthly($_GET['bID']);
+        echo osc_banner_graph_monthly($_GET['bID']);
         break;
       default:
       case 'daily':
-        echo tep_banner_graph_daily($_GET['bID']);
+        echo osc_banner_graph_daily($_GET['bID']);
         break;
     }
   }
