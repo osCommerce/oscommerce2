@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  function tep_check_gzip() {
+  function osc_check_gzip() {
     if (headers_sent() || connection_aborted()) {
       return false;
     }
@@ -23,8 +23,8 @@
   }
 
 /* $level = compression level 0-9, 0=none, 9=max */
-  function tep_gzip_output($level = 5) {
-    if ($encoding = tep_check_gzip()) {
+  function osc_gzip_output($level = 5) {
+    if ($encoding = osc_check_gzip()) {
       $contents = ob_get_contents();
       ob_end_clean();
 
