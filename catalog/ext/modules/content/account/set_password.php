@@ -48,7 +48,7 @@
     }
 
     if ($error == false) {
-      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
+      osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . osc_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
 
       osc_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
 

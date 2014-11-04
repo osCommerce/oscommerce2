@@ -41,10 +41,10 @@
           if (osc_db_num_rows($check_query) == 1) {
             $check = osc_db_fetch_array($check_query);
 
-            if (tep_validate_password($password, $check['user_password'])) {
+            if (osc_validate_password($password, $check['user_password'])) {
 // migrate old hashed password to new phpass password
-              if (tep_password_type($check['user_password']) != 'phpass') {
-                osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
+              if (osc_password_type($check['user_password']) != 'phpass') {
+                osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . osc_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
               }
 
               tep_session_register('admin');
@@ -105,7 +105,7 @@
           $password = osc_db_prepare_input($_POST['password']);
 
           if ( !empty($username) ) {
-            osc_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . osc_db_input($username) . "', '" . osc_db_input(tep_encrypt_password($password)) . "')");
+            osc_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . osc_db_input($username) . "', '" . osc_db_input(osc_encrypt_password($password)) . "')");
           }
         }
 

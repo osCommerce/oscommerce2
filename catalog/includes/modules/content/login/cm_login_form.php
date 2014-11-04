@@ -48,15 +48,15 @@
           $customer = osc_db_fetch_array($customer_query);
 
 // Check that password is good
-          if (!tep_validate_password($password, $customer['customers_password'])) {
+          if (!osc_validate_password($password, $customer['customers_password'])) {
             $error = true;
           } else {
 // set $login_customer_id globally and perform post login code in catalog/login.php
             $login_customer_id = (int)$customer['customers_id'];
 
 // migrate old hashed password to new phpass password
-            if (tep_password_type($customer['customers_password']) != 'phpass') {
-              osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password) . "' where customers_id = '" . (int)$login_customer_id . "'");
+            if (osc_password_type($customer['customers_password']) != 'phpass') {
+              osc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . osc_encrypt_password($password) . "' where customers_id = '" . (int)$login_customer_id . "'");
             }
           }
         }

@@ -57,7 +57,7 @@
         $check_query = osc_db_query("select id from " . TABLE_ADMINISTRATORS . " where user_name = '" . osc_db_input($username) . "' limit 1");
 
         if (osc_db_num_rows($check_query) < 1) {
-          osc_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . osc_db_input($username) . "', '" . osc_db_input(tep_encrypt_password($password)) . "')");
+          osc_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . osc_db_input($username) . "', '" . osc_db_input(osc_encrypt_password($password)) . "')");
 
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
@@ -139,7 +139,7 @@
             }
           }
 
-          osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . osc_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$_GET['aID'] . "'");
+          osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . osc_db_input(osc_encrypt_password($password)) . "' where id = '" . (int)$_GET['aID'] . "'");
         } elseif (!isset($_POST['htaccess']) || ($_POST['htaccess'] != 'true')) {
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {

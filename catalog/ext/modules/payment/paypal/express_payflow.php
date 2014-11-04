@@ -155,7 +155,7 @@ EOD;
             if ( !defined('MODULE_CONTENT_ACCOUNT_SET_PASSWORD_STATUS') || (MODULE_CONTENT_ACCOUNT_SET_PASSWORD_STATUS != 'True') ) {
               $customer_password = osc_create_random_value(max(ENTRY_PASSWORD_MIN_LENGTH, 8));
 
-              osc_db_perform(TABLE_CUSTOMERS, array('customers_password' => tep_encrypt_password($customer_password)), 'update', 'customers_id = "' . (int)$customer_id . '"');
+              osc_db_perform(TABLE_CUSTOMERS, array('customers_password' => osc_encrypt_password($customer_password)), 'update', 'customers_id = "' . (int)$customer_id . '"');
 
 // build the message content
               $name = $customers_firstname . ' ' . $customers_lastname;
