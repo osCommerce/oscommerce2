@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID) || !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -152,7 +152,7 @@
                       'x_phone' => substr($order->customer['telephone'], 0, 25),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_cust_id' => substr($customer_id, 0, 20),
-                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_customer_ip' => osc_get_ip_address(),
                       'x_relay_response' => 'FALSE',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
@@ -268,7 +268,7 @@
       $error = false;
 
       if ( ($response['x_response_code'] == '1') || ($response['x_response_code'] == '4') ) {
-        if ( (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) && (strtoupper($response['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))))) || ($response['x_amount'] != $this->format_raw($order->info['total'])) ) {
+        if ( (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) && (strtoupper($response['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))))) || ($response['x_amount'] != $this->format_raw($order->info['total'])) ) {
           if ( MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID > 0 ) {
             $order->info['order_status'] = MODULE_PAYMENT_AUTHORIZENET_CC_AIM_REVIEW_ORDER_STATUS_ID;
           }
@@ -318,7 +318,7 @@
       if ($error !== false) {
         $this->sendDebugEmail($response);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
     }
 
@@ -327,7 +327,7 @@
 
       $status = array();
 
-      if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) ) {
+      if ( osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH) ) {
         if ( strtoupper($response['x_MD5_Hash']) == strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID . $response['x_trans_id'] . $this->format_raw($order->info['total']))) ) {
           $status[] = 'MD5 Hash: Match';
         } else {
@@ -629,7 +629,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_AUTHORIZENET_CC_AIM_PROXY);
       }
@@ -725,7 +725,7 @@ EOD;
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
                       'x_version' => $this->api_version,
-                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_customer_ip' => osc_get_ip_address(),
                       'x_relay_response' => 'FALSE',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
@@ -770,11 +770,11 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -806,7 +806,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL, 'Authorize.net AIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_AIM_DEBUG_EMAIL, 'Authorize.net AIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

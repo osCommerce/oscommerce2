@@ -28,7 +28,7 @@
       if ($actionRecorder->canPerform()) {
         $actionRecorder->record();
 
-        $reset_key = tep_create_random_value(40);
+        $reset_key = osc_create_random_value(40);
 
         osc_db_query("update " . TABLE_CUSTOMERS_INFO . " set password_reset_key = '" . osc_db_input($reset_key) . "', password_reset_date = now() where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
 
@@ -38,7 +38,7 @@
           $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
         }
 
-        tep_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail($check_customer['customers_firstname'] . ' ' . $check_customer['customers_lastname'], $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
         $password_reset_initiated = true;
       } else {

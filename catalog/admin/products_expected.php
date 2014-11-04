@@ -51,7 +51,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $products['products_name']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_date_short($products['products_date_available']); ?></td>
+                <td class="dataTableContent" align="center"><?php echo osc_date_short($products['products_date_available']); ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id)) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -74,10 +74,10 @@
     $heading[] = array('text' => '<strong>' . $pInfo->products_name . '</strong>');
 
     $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_CATEGORIES, 'pID=' . $pInfo->products_id . '&action=new_product')));
-    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_EXPECTED . ' ' . tep_date_short($pInfo->products_date_available));
+    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_EXPECTED . ' ' . osc_date_short($pInfo->products_date_available));
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

@@ -12,7 +12,7 @@
 
 ////
 // Get the installed version number
-  function tep_get_version() {
+  function osc_get_version() {
     static $v;
 
     if (!isset($v)) {
@@ -24,11 +24,11 @@
 
 ////
 // Redirect to another page or site
-  function tep_redirect($url) {
+  function osc_redirect($url) {
     global $logger;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
+      osc_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
     if ( strpos($url, '&amp;') !== false ) {
@@ -51,7 +51,7 @@
     return strtr(trim($data), $parse);
   }
 
-  function tep_output_string($string, $translate = false, $protected = false) {
+  function osc_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string);
     } else {
@@ -63,11 +63,11 @@
     }
   }
 
-  function tep_output_string_protected($string) {
-    return tep_output_string($string, false, true);
+  function osc_output_string_protected($string) {
+    return osc_output_string($string, false, true);
   }
 
-  function tep_sanitize_string($string) {
+  function osc_sanitize_string($string) {
     $patterns = array ('/ +/','/[<>]/');
     $replace = array (' ', '_');
     return preg_replace($patterns, $replace, trim($string));
@@ -80,7 +80,7 @@
     return $customers_values['customers_firstname'] . ' ' . $customers_values['customers_lastname'];
   }
 
-  function tep_get_path($current_category_id = '') {
+  function osc_get_path($current_category_id = '') {
     global $cPath_array;
 
     if ($current_category_id == '') {
@@ -117,7 +117,7 @@
     return 'cPath=' . $cPath_new;
   }
 
-  function tep_get_all_get_params($exclude_array = '') {
+  function osc_get_all_get_params($exclude_array = '') {
 
     if ($exclude_array == '') $exclude_array = array();
 
@@ -130,7 +130,7 @@
     return $get_url;
   }
 
-  function tep_date_long($raw_date) {
+  function osc_date_long($raw_date) {
     if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
 
     $year = (int)substr($raw_date, 0, 4);
@@ -147,7 +147,7 @@
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
 // NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
-  function tep_date_short($raw_date) {
+  function osc_date_short($raw_date) {
     if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
 
     $year = substr($raw_date, 0, 4);
@@ -266,7 +266,7 @@
   }
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
-    if (tep_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
+    if (osc_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
       $image = tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
@@ -275,7 +275,7 @@
     return $image;
   }
 
-  function tep_break_string($string, $len, $break_char = '-') {
+  function osc_break_string($string, $len, $break_char = '-') {
     $l = 0;
     $output = '';
     for ($i=0, $n=strlen($string); $i<$n; $i++) {
@@ -295,7 +295,7 @@
     return $output;
   }
 
-  function tep_get_country_name($country_id) {
+  function osc_get_country_name($country_id) {
     $country_query = osc_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
 
     if (!osc_db_num_rows($country_query)) {
@@ -306,7 +306,7 @@
     }
   }
 
-  function tep_get_zone_name($country_id, $zone_id, $default_zone) {
+  function osc_get_zone_name($country_id, $zone_id, $default_zone) {
     $zone_query = osc_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' and zone_id = '" . (int)$zone_id . "'");
     if (osc_db_num_rows($zone_query)) {
       $zone = osc_db_fetch_array($zone_query);
@@ -316,7 +316,7 @@
     }
   }
 
-  function tep_not_null($value) {
+  function osc_not_null($value) {
     if (is_array($value)) {
       if (sizeof($value) > 0) {
         return true;
@@ -332,7 +332,7 @@
     }
   }
 
-  function tep_browser_detect($component) {
+  function osc_browser_detect($component) {
     global $HTTP_USER_AGENT;
 
     return stristr($HTTP_USER_AGENT, $component);
@@ -377,37 +377,37 @@
     return $geo_zone_name;
   }
 
-  function tep_address_format($address_format_id, $address, $html, $boln, $eoln) {
+  function osc_address_format($address_format_id, $address, $html, $boln, $eoln) {
     $address_format_query = osc_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = '" . (int)$address_format_id . "'");
     $address_format = osc_db_fetch_array($address_format_query);
 
-    $company = tep_output_string_protected($address['company']);
-    if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
-      $firstname = tep_output_string_protected($address['firstname']);
-      $lastname = tep_output_string_protected($address['lastname']);
-    } elseif (isset($address['name']) && tep_not_null($address['name'])) {
-      $firstname = tep_output_string_protected($address['name']);
+    $company = osc_output_string_protected($address['company']);
+    if (isset($address['firstname']) && osc_not_null($address['firstname'])) {
+      $firstname = osc_output_string_protected($address['firstname']);
+      $lastname = osc_output_string_protected($address['lastname']);
+    } elseif (isset($address['name']) && osc_not_null($address['name'])) {
+      $firstname = osc_output_string_protected($address['name']);
       $lastname = '';
     } else {
       $firstname = '';
       $lastname = '';
     }
-    $street = tep_output_string_protected($address['street_address']);
-    $suburb = tep_output_string_protected($address['suburb']);
-    $city = tep_output_string_protected($address['city']);
-    $state = tep_output_string_protected($address['state']);
-    if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
-      $country = tep_get_country_name($address['country_id']);
+    $street = osc_output_string_protected($address['street_address']);
+    $suburb = osc_output_string_protected($address['suburb']);
+    $city = osc_output_string_protected($address['city']);
+    $state = osc_output_string_protected($address['state']);
+    if (isset($address['country_id']) && osc_not_null($address['country_id'])) {
+      $country = osc_get_country_name($address['country_id']);
 
-      if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
-        $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
+      if (isset($address['zone_id']) && osc_not_null($address['zone_id'])) {
+        $state = osc_get_zone_code($address['country_id'], $address['zone_id'], $state);
       }
-    } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']);
+    } elseif (isset($address['country']) && osc_not_null($address['country'])) {
+      $country = osc_output_string_protected($address['country']);
     } else {
       $country = '';
     }
-    $postcode = tep_output_string_protected($address['postcode']);
+    $postcode = osc_output_string_protected($address['postcode']);
     $zip = $postcode;
 
     if ($html) {
@@ -433,13 +433,13 @@
     $statecomma = '';
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = tep_output_string_protected($address['country']);
+    if ($country == '') $country = osc_output_string_protected($address['country']);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format['format'];
     eval("\$address = \"$fmt\";");
 
-    if ( (ACCOUNT_COMPANY == 'true') && (tep_not_null($company)) ) {
+    if ( (ACCOUNT_COMPANY == 'true') && (osc_not_null($company)) ) {
       $address = $company . $cr . $address;
     }
 
@@ -459,7 +459,7 @@
   // Description : Function to retrieve the state/province code (as in FL for Florida etc)
   //
   ////////////////////////////////////////////////////////////////////////////////////////////////
-  function tep_get_zone_code($country, $zone, $def_state) {
+  function osc_get_zone_code($country, $zone, $def_state) {
 
     $state_prov_query = osc_db_query("select zone_code from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and zone_id = '" . (int)$zone . "'");
 
@@ -474,7 +474,7 @@
     return $state_prov_code;
   }
 
-  function tep_get_uprid($prid, $params) {
+  function osc_get_uprid($prid, $params) {
     $uprid = $prid;
     if ( (is_array($params)) && (!strstr($prid, '{')) ) {
       foreach ( $params as $option => $value ) {
@@ -485,7 +485,7 @@
     return $uprid;
   }
 
-  function tep_get_prid($uprid) {
+  function osc_get_prid($uprid) {
     $pieces = explode('{', $uprid);
 
     return $pieces[0];
@@ -534,7 +534,7 @@
     return $orders_status_array;
   }
 
-  function tep_get_products_name($product_id, $language_id = 0) {
+  function osc_get_products_name($product_id, $language_id = 0) {
     global $languages_id;
 
     if ($language_id == 0) $language_id = $languages_id;
@@ -623,7 +623,7 @@
 ////
 // Returns an array with countries
 // TABLES: countries
-  function tep_get_countries($default = '') {
+  function osc_get_countries($default = '') {
     $countries_array = array();
     if ($default) {
       $countries_array[] = array('id' => '',
@@ -654,7 +654,7 @@
   function tep_prepare_country_zones_pull_down($country_id = '') {
 // preset the width of the drop-down for Netscape
     $pre = '';
-    if ( (!tep_browser_detect('MSIE')) && (tep_browser_detect('Mozilla/4')) ) {
+    if ( (!osc_browser_detect('MSIE')) && (osc_browser_detect('Mozilla/4')) ) {
       for ($i=0; $i<45; $i++) $pre .= '&nbsp;';
     }
 
@@ -666,7 +666,7 @@
     } else {
       $zones = array(array('id' => '', 'text' => TYPE_BELOW));
 // create dummy options for Netscape to preset the height of the drop-down
-      if ( (!tep_browser_detect('MSIE')) && (tep_browser_detect('Mozilla/4')) ) {
+      if ( (!osc_browser_detect('MSIE')) && (osc_browser_detect('Mozilla/4')) ) {
         for ($i=0; $i<9; $i++) {
           $zones[] = array('id' => '', 'text' => $pre);
         }
@@ -691,7 +691,7 @@
 ////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_pull_down_country_list($country_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_countries(), $country_id);
+    return tep_draw_pull_down_menu('configuration_value', osc_get_countries(), $country_id);
   }
 
   function tep_cfg_pull_down_zone_list($zone_id) {
@@ -791,7 +791,7 @@
     $string = '';
 
     for ($i=0, $n=sizeof($select_array); $i<$n; $i++) {
-      $name = ((tep_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
+      $name = ((osc_not_null($key)) ? 'configuration[' . $key . ']' : 'configuration_value');
 
       $string .= '<br /><input type="radio" name="' . $name . '" value="' . $select_array[$i] . '"';
 
@@ -827,7 +827,7 @@
 
     $data = array();
 
-    $data['oscommerce']  = array('version' => tep_get_version());
+    $data['oscommerce']  = array('version' => osc_get_version());
 
     $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,
@@ -880,7 +880,7 @@
           $category_query = osc_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$categories['categories_id'] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
           $category = osc_db_fetch_array($category_query);
           $categories_array[$index][] = array('id' => $categories['categories_id'], 'text' => $category['categories_name']);
-          if ( (tep_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+          if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
           $categories_array[$index] = array_reverse($categories_array[$index]);
         }
         $index++;
@@ -889,7 +889,7 @@
       $category_query = osc_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
       $category = osc_db_fetch_array($category_query);
       $categories_array[$index][] = array('id' => $id, 'text' => $category['categories_name']);
-      if ( (tep_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+      if ( (osc_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
     }
 
     return $categories_array;
@@ -1125,7 +1125,7 @@
 
 ////
 // Output the tax percentage with optional padded decimals
-  function tep_display_tax_value($value, $padding = TAX_DECIMAL_PLACES) {
+  function osc_display_tax_value($value, $padding = TAX_DECIMAL_PLACES) {
     if (strpos($value, '.')) {
       $loop = true;
       while ($loop) {
@@ -1157,7 +1157,7 @@
     return $value;
   }
 
-  function tep_mail($to_name, $to_email_address, $email_subject, $email_text, $from_email_name, $from_email_address) {
+  function osc_mail($to_name, $to_email_address, $email_subject, $email_text, $from_email_name, $from_email_address) {
     if (SEND_EMAILS != 'true') return false;
 
     // Instantiate a new mail object
@@ -1209,29 +1209,29 @@
 
 ////
 // Wrapper function for round() for php3 compatibility
-  function tep_round($value, $precision) {
+  function osc_round($value, $precision) {
     return round($value, $precision);
   }
 
 ////
 // Add tax to a products price
-  function tep_add_tax($price, $tax, $override = false) {
+  function osc_add_tax($price, $tax, $override = false) {
     if ( ( (DISPLAY_PRICE_WITH_TAX == 'true') || ($override == true) ) && ($tax > 0) ) {
-      return $price + tep_calculate_tax($price, $tax);
+      return $price + osc_calculate_tax($price, $tax);
     } else {
       return $price;
     }
   }
 
 // Calculates Tax rounding the result
-  function tep_calculate_tax($price, $tax) {
+  function osc_calculate_tax($price, $tax) {
     return $price * $tax / 100;
   }
 
 ////
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
-  function tep_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
+  function osc_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
@@ -1260,7 +1260,7 @@
 // Returns the tax rate for a tax class
 // TABLES: tax_rates
   function tep_get_tax_rate_value($class_id) {
-    return tep_get_tax_rate($class_id, -1, -1);
+    return osc_get_tax_rate($class_id, -1, -1);
   }
 
   function tep_call_function($function, $parameter, $object = '') {
@@ -1325,7 +1325,7 @@
 
 ////
 // Return a random value
-  function tep_rand($min = null, $max = null) {
+  function osc_rand($min = null, $max = null) {
     static $seeded;
 
     if (isset($min) && isset($max)) {
@@ -1340,7 +1340,7 @@
   }
 
 // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
-  function tep_convert_linefeeds($from, $to, $string) {
+  function osc_convert_linefeeds($from, $to, $string) {
       return str_replace($from, $to, $string);
   }
 
@@ -1350,7 +1350,7 @@
 
 ////
 // Parse and secure the cPath parameter values
-  function tep_parse_category_path($cPath) {
+  function osc_parse_category_path($cPath) {
 // make sure the category IDs are integers
     $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
 
@@ -1366,7 +1366,7 @@
     return $tmp_array;
   }
 
-  function tep_validate_ip_address($ip_address) {
+  function osc_validate_ip_address($ip_address) {
     if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
       return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
     }
@@ -1386,7 +1386,7 @@
     return false;
   }
 
-  function tep_get_ip_address() {
+  function osc_get_ip_address() {
 
     $ip_address = null;
     $ip_addresses = array();
@@ -1395,7 +1395,7 @@
       foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
         $x_ip = trim($x_ip);
 
-        if (tep_validate_ip_address($x_ip)) {
+        if (osc_validate_ip_address($x_ip)) {
           $ip_addresses[] = $x_ip;
         }
       }
@@ -1416,7 +1416,7 @@
     $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
 
     foreach ( $ip_addresses as $ip ) {
-      if (!empty($ip) && tep_validate_ip_address($ip)) {
+      if (!empty($ip) && osc_validate_ip_address($ip)) {
         $ip_address = $ip;
         break;
       }

@@ -14,12 +14,12 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     if ($action == 'reset') {
       tep_reset_cache_block($_GET['block']);
     }
 
-    tep_redirect(tep_href_link(FILENAME_CACHE));
+    osc_redirect(tep_href_link(FILENAME_CACHE));
   }
 
 // check if the cache directory exists

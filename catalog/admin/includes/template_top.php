@@ -23,7 +23,7 @@
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/ui/jquery-ui-1.10.4.min.js', '', 'SSL'); ?>"></script>
 
 <?php
-  if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
+  if (osc_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
 ?>
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/ui/i18n/jquery.ui.datepicker-' . JQUERY_DATEPICKER_I18N_CODE . '.js', '', 'SSL'); ?>"></script>
 <script type="text/javascript">

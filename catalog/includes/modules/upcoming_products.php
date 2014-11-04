@@ -27,7 +27,7 @@
         while ($expected = osc_db_fetch_array($expected_query)) {
           echo '        <tr>' . "\n" .
                '          <td><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $expected['products_id']) . '">' . $expected['products_name'] . '</a></td>' . "\n" .
-               '          <td class="text-right">' . tep_date_short($expected['date_expected']) . '</td>' . "\n" .
+               '          <td class="text-right">' . osc_date_short($expected['date_expected']) . '</td>' . "\n" .
                '        </tr>' . "\n";
         }
         ?>

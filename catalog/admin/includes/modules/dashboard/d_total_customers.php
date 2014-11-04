@@ -49,7 +49,7 @@
         $js_array = substr($js_array, 0, -1);
       }
 
-      $chart_label = tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_CHART_LINK);
+      $chart_label = osc_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_CHART_LINK);
       $chart_label_link = tep_href_link(FILENAME_CUSTOMERS);
 
       $output = <<<EOD

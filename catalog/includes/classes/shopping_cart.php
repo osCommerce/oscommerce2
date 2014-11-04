@@ -79,8 +79,8 @@
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
       global $new_products_id_in_cart, $customer_id;
 
-      $products_id_string = tep_get_uprid($products_id, $attributes);
-      $products_id = tep_get_prid($products_id_string);
+      $products_id_string = osc_get_uprid($products_id, $attributes);
+      $products_id = osc_get_prid($products_id_string);
 
       if (defined('MAX_QTY_IN_CART') && (MAX_QTY_IN_CART > 0) && ((int)$qty > MAX_QTY_IN_CART)) {
         $qty = MAX_QTY_IN_CART;
@@ -101,7 +101,7 @@
             }
           }
         }
-      } elseif (tep_has_product_attributes($products_id)) {
+      } elseif (osc_has_product_attributes($products_id)) {
         $attributes_pass_check = false;
       }
 
@@ -142,8 +142,8 @@
     function update_quantity($products_id, $quantity = '', $attributes = '') {
       global $customer_id;
 
-      $products_id_string = tep_get_uprid($products_id, $attributes);
-      $products_id = tep_get_prid($products_id_string);
+      $products_id_string = osc_get_uprid($products_id, $attributes);
+      $products_id = osc_get_prid($products_id_string);
 
       if (defined('MAX_QTY_IN_CART') && (MAX_QTY_IN_CART > 0) && ((int)$quantity > MAX_QTY_IN_CART)) {
         $quantity = MAX_QTY_IN_CART;
@@ -263,7 +263,7 @@
         $product_query = osc_db_query("select products_id, products_price, products_tax_class_id, products_weight from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
         if ($product = osc_db_fetch_array($product_query)) {
           $prid = $product['products_id'];
-          $products_tax = tep_get_tax_rate($product['products_tax_class_id']);
+          $products_tax = osc_get_tax_rate($product['products_tax_class_id']);
           $products_price = $product['products_price'];
           $products_weight = $product['products_weight'];
 
@@ -355,7 +355,7 @@
     }
 
     function generate_cart_id($length = 5) {
-      return tep_create_random_value($length, 'digits');
+      return osc_create_random_value($length, 'digits');
     }
 
     function get_content_type() {

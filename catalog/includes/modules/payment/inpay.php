@@ -166,7 +166,7 @@ class inpay
                         {
                             for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i++)
                             {
-                                if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text']))
+                                if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text']))
                                 {
                                     $order_totals[] = array ('code'=>$GLOBALS[$class]->code,
                                     'title'=>$GLOBALS[$class]->output[$i]['title'],
@@ -238,7 +238,7 @@ class inpay
                 for ($i = 0, $n = sizeof($order->products); $i < $n; $i++)
                 {
                     $sql_data_array = array ('orders_id'=>$insert_id,
-                    'products_id'=>tep_get_prid($order->products[$i]['id']),
+                    'products_id'=>osc_get_prid($order->products[$i]['id']),
                     'products_model'=>$order->products[$i]['model'],
                     'products_name'=>$order->products[$i]['name'],
                     'products_price'=>$order->products[$i]['price'],
@@ -285,7 +285,7 @@ class inpay
 
                             osc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-                            if ((DOWNLOAD_ENABLED == 'true') && isset ($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename']))
+                            if ((DOWNLOAD_ENABLED == 'true') && isset ($attributes_values['products_attributes_filename']) && osc_not_null($attributes_values['products_attributes_filename']))
                             {
                                 $sql_data_array = array ('orders_id'=>$insert_id,
                                 'orders_products_id'=>$order_products_id,
@@ -335,7 +335,7 @@ class inpay
         {
             $address = '';
             $address = $order->delivery['street_address'].' '.$order->delivery['city'].' '.
-            tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']).
+            osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']).
             ' '.$order->delivery['postcode'].' '.$order->delivery['country']['iso_code_2'];
 
             $parameters['address_override'] = '1';
@@ -346,7 +346,7 @@ class inpay
         {
             $address = '';
             $address = $order->billing['street_address'].' '.$order->billing['city'].' '.
-            tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']).
+            osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']).
             ' '.$order->billing['postcode'].' '.$order->billing['country']['iso_code_2'];
             $parameters['buyer_name'] = utf8_encode($order->billing['firstname']." ".$order->billing['lastname']);
             $parameters['buyer_address'] = utf8_encode($address);
@@ -423,7 +423,7 @@ class inpay
                                 ON p.products_id=pa.products_id
                                 LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '".tep_get_prid($order->products[$i]['id'])."'";
+                                WHERE p.products_id = '".osc_get_prid($order->products[$i]['id'])."'";
                     // Will work with only one option for downloadable products
                     // otherwise, we have to build the query dynamically with a loop
                     $products_attributes = $order->products[$i]['attributes'];
@@ -434,7 +434,7 @@ class inpay
                     $stock_query = osc_db_query($stock_query_raw);
                 } else
                 {
-                    $stock_query = osc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    $stock_query = osc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                 }
                 if (osc_db_num_rows($stock_query) > 0)
                 {
@@ -447,16 +447,16 @@ class inpay
                     {
                         $stock_left = $stock_values['products_quantity'];
                     }
-                    osc_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    osc_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     if (($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false'))
                     {
-                        osc_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                        osc_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     }
                 }
             } // Decrease stock ended
 
             // Update products_ordered (for bestsellers list)
-            osc_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+            osc_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
 
             //------insert customer choosen option to order--------
             $attributes_exist = '0';
@@ -491,7 +491,7 @@ class inpay
             }
             //------insert customer choosen option eof ----
             $total_weight += ($order->products[$i]['qty']*$order->products[$i]['weight']);
-            $total_tax += tep_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
+            $total_tax += osc_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
             $total_cost += $total_products_price;
 
             $products_ordered .= $order->products[$i]['qty'].' x '.$order->products[$i]['name'].' ('.$order->products[$i]['model'].') = '.$currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']).$products_ordered_attributes."\n";
@@ -521,12 +521,12 @@ class inpay
         {
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_label($customer_id, $sendto, 0, '', "\n")."\n";
+            osc_address_label($customer_id, $sendto, 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_label($customer_id, $billto, 0, '', "\n")."\n\n";
+        osc_address_label($customer_id, $billto, 0, '', "\n")."\n\n";
 
         if (is_object($$payment))
         {
@@ -544,11 +544,11 @@ class inpay
         //
         if ($update_status)
         {
-            tep_mail($order->customer['firstname'].' '.$order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            osc_mail($order->customer['firstname'].' '.$order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 			// send emails to other people
             if (SEND_EXTRA_ORDER_EMAILS_TO != '')
             {
-                tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+                osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
             }
         }
         // load the after_process function from the payment modules
@@ -565,7 +565,7 @@ class inpay
 
         unset($_SESSION['cart_inpay_Standard_ID']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process()
@@ -677,7 +677,7 @@ class inpay
             $currency_value = $currencies->currencies[$currency_code]['value'];
         }
 
-        return number_format(tep_round($number*$currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+        return number_format(osc_round($number*$currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
     //
     // calculate inpay MD5 for invoice creation

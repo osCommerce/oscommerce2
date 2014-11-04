@@ -14,7 +14,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -29,7 +29,7 @@
       $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
     }
 
-    tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
   }
 
 // error checking when updating or adding an entry
@@ -169,7 +169,7 @@
           $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
         }
       } else {
-        if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
+        if (osc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
           $sql_data_array['customers_id'] = (int)$customer_id;
           osc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
 
@@ -195,7 +195,7 @@
         }
       }
 
-      tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
   }
 
@@ -205,7 +205,7 @@
     if (!osc_db_num_rows($entry_query)) {
       $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-      tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
 
     $entry = osc_db_fetch_array($entry_query);
@@ -213,7 +213,7 @@
     if ($_GET['delete'] == $customer_default_address_id) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
-      tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     } else {
       $check_query = osc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where address_book_id = '" . (int)$_GET['delete'] . "' and customers_id = '" . (int)$customer_id . "'");
       $check = osc_db_fetch_array($check_query);
@@ -221,7 +221,7 @@
       if ($check['total'] < 1) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-        tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
       }
     }
   } else {
@@ -229,10 +229,10 @@
   }
 
   if (!isset($_GET['delete']) && !isset($_GET['edit'])) {
-    if (tep_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
+    if (osc_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
       $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
 
-      tep_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
     }
   }
 
@@ -279,7 +279,7 @@
         <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $_GET['delete'], true, ' ', '<br />'); ?>
+          <?php echo osc_address_label($customer_id, $_GET['delete'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -312,7 +312,7 @@
         <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, (int)$_GET['edit'], true, ' ', '<br />'); ?>
+          <?php echo osc_address_label($customer_id, (int)$_GET['edit'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -335,7 +335,7 @@
 <?php
     } else {
       if (sizeof($navigation->snapshot) > 0) {
-        $back_link = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
+        $back_link = tep_href_link($navigation->snapshot['page'], osc_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
       } else {
         $back_link = tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
       }

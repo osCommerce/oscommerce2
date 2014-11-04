@@ -18,7 +18,7 @@
     define('MODULE_CONTENT_INSTALLED', '');
   }
 
-  $modules_installed = (tep_not_null(MODULE_CONTENT_INSTALLED) ? explode(';', MODULE_CONTENT_INSTALLED) : array());
+  $modules_installed = (osc_not_null(MODULE_CONTENT_INSTALLED) ? explode(';', MODULE_CONTENT_INSTALLED) : array());
   $modules = array('installed' => array(), 'new' => array());
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
@@ -90,7 +90,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'save':
         $class = basename($_GET['module']);
@@ -108,7 +108,7 @@
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $class));
+        osc_redirect(tep_href_link('modules_content.php', 'module=' . $class));
 
         break;
 
@@ -125,11 +125,11 @@
 
             osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
 
-            tep_redirect(tep_href_link('modules_content.php', 'module=' . $class . '&action=edit'));
+            osc_redirect(tep_href_link('modules_content.php', 'module=' . $class . '&action=edit'));
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'action=list_new&module=' . $class));
+        osc_redirect(tep_href_link('modules_content.php', 'action=list_new&module=' . $class));
 
         break;
 
@@ -150,11 +150,11 @@
 
             osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
 
-            tep_redirect(tep_href_link('modules_content.php'));
+            osc_redirect(tep_href_link('modules_content.php'));
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $class));
+        osc_redirect(tep_href_link('modules_content.php', 'module=' . $class));
 
         break;
     }
@@ -373,7 +373,7 @@
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

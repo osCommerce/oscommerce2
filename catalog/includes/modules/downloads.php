@@ -49,7 +49,7 @@
         echo '        <td>' . $downloads['products_name'] . '</td>' . "\n";
       }
 
-      echo '        <td>' . TABLE_HEADING_DOWNLOAD_DATE . tep_date_long($download_expiry) . '</td>' . "\n" .
+      echo '        <td>' . TABLE_HEADING_DOWNLOAD_DATE . osc_date_long($download_expiry) . '</td>' . "\n" .
            '        <td align="right">' . $downloads['download_count'] . TABLE_HEADING_DOWNLOAD_COUNT . '</td>' . "\n" .
            '      </tr>' . "\n";
     }

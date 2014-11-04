@@ -125,7 +125,7 @@
         if ( ($result == false) || ($result < 1) ) {
           $payment_error_return = 'payment_error=' . $this->code . '&error=' . urlencode($error) . '&psigate_cc_owner=' . urlencode($_POST['psigate_cc_owner']) . '&psigate_cc_expires_month=' . $_POST['psigate_cc_expires_month'] . '&psigate_cc_expires_year=' . $_POST['psigate_cc_expires_year'];
 
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, $payment_error_return, 'SSL', true, false));
         }
 
         $this->cc_card_type = $cc_validation->cc_type;
@@ -236,11 +236,11 @@
     }
 
     function get_error() {
-      if (isset($_GET['ErrMsg']) && tep_not_null($_GET['ErrMsg'])) {
+      if (isset($_GET['ErrMsg']) && osc_not_null($_GET['ErrMsg'])) {
         $error = stripslashes(urldecode($_GET['ErrMsg']));
-      } elseif (isset($_GET['Err']) && tep_not_null($_GET['Err'])) {
+      } elseif (isset($_GET['Err']) && osc_not_null($_GET['Err'])) {
         $error = stripslashes(urldecode($_GET['Err']));
-      } elseif (isset($_GET['error']) && tep_not_null($_GET['error'])) {
+      } elseif (isset($_GET['error']) && osc_not_null($_GET['error'])) {
         $error = stripslashes(urldecode($_GET['error']));
       } else {
         $error = MODULE_PAYMENT_PSIGATE_TEXT_ERROR_MESSAGE;

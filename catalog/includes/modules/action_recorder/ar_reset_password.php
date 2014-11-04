@@ -30,7 +30,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = osc_get_ip_address();
     }
 
     function canPerform($user_id, $user_name) {

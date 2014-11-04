@@ -41,7 +41,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID) || !tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID) || !osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TRANSACTION_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -116,7 +116,7 @@
                       'x_country' => substr($order->billing['country']['title'], 0, 60),
                       'x_phone' => substr(preg_replace('/[^0-9]/', '', $order->customer['telephone']), 0, 25),
                       'x_cust_id' => substr($customer_id, 0, 20),
-                      'x_customer_ip' => tep_get_ip_address(),
+                      'x_customer_ip' => osc_get_ip_address(),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
                       'x_amount' => $this->format_raw($order->info['total']),
@@ -192,7 +192,7 @@
 
       if ( $error === false ) {
         if ( ($_POST['x_response_code'] == '1') || ($_POST['x_response_code'] == '4') ) {
-          if ( tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && (!isset($_POST['x_MD5_Hash']) || (strtoupper($_POST['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) ) {
+          if ( osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH) && (!isset($_POST['x_MD5_Hash']) || (strtoupper($_POST['x_MD5_Hash']) != strtoupper(md5(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_MD5_HASH . MODULE_PAYMENT_AUTHORIZENET_CC_SIM_LOGIN_ID . $_POST['x_trans_id'] . $this->format_raw($order->info['total']))))) ) {
             $error = 'verification';
           } elseif ($_POST['x_amount'] != $this->format_raw($order->info['total'])) {
             $error = 'verification';
@@ -216,7 +216,7 @@
         $authorizenet_cc_sim_error = $_POST['x_response_reason_text'];
         tep_session_register('authorizenet_cc_sim_error');
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
 
       if ( isset($_SESSION['authorizenet_cc_sim_error']) ) {
@@ -509,11 +509,11 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -529,7 +529,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL, 'Authorize.net SIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_AUTHORIZENET_CC_SIM_DEBUG_EMAIL, 'Authorize.net SIM Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

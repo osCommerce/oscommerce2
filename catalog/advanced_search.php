@@ -77,7 +77,7 @@
       <label for="entryCategories" class="control-label col-xs-3"><?php echo ENTRY_CATEGORIES; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_pull_down_menu('categories_id', tep_get_categories(array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES))), NULL, 'id="entryCategories"');
+        echo tep_draw_pull_down_menu('categories_id', osc_get_categories(array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES))), NULL, 'id="entryCategories"');
         ?>
       </div>
     </div>
@@ -97,7 +97,7 @@
       <label for="entryManufacturers" class="control-label col-xs-3"><?php echo ENTRY_MANUFACTURERS; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_pull_down_menu('manufacturers_id', tep_get_manufacturers(array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS))), NULL, 'id="entryManufacturers"');
+        echo tep_draw_pull_down_menu('manufacturers_id', osc_get_manufacturers(array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS))), NULL, 'id="entryManufacturers"');
         ?>
       </div>
     </div>

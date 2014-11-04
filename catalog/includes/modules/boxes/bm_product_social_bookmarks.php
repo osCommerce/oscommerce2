@@ -33,7 +33,7 @@
     function execute() {
       global $oscTemplate;
 
-      if ( isset($_GET['products_id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && tep_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
+      if ( isset($_GET['products_id']) && defined('MODULE_SOCIAL_BOOKMARKS_INSTALLED') && osc_not_null(MODULE_SOCIAL_BOOKMARKS_INSTALLED) ) {
         $sbm_array = explode(';', MODULE_SOCIAL_BOOKMARKS_INSTALLED);
 
         $social_bookmarks = array();

@@ -58,7 +58,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+    window.___gcfg.lang = "' . osc_output_string_protected($language_code) . '";
   }
 
   (function() {

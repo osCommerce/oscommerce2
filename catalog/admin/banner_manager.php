@@ -16,7 +16,7 @@
 
   $banner_extension = tep_banner_image_extension();
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'setflag':
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
@@ -27,7 +27,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
-        tep_redirect(tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
+        osc_redirect(tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
         break;
       case 'insert':
       case 'update':
@@ -66,7 +66,7 @@
         }
 
         if ($banner_error == false) {
-          $db_image_location = (tep_not_null($banners_image_local)) ? $banners_image_local : $banners_image_target . $banners_image->filename;
+          $db_image_location = (osc_not_null($banners_image_local)) ? $banners_image_local : $banners_image_target . $banners_image->filename;
           $sql_data_array = array('banners_title' => $banners_title,
                                   'banners_url' => $banners_url,
                                   'banners_image' => $db_image_location,
@@ -93,21 +93,21 @@
             $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
           }
 
-          if (tep_not_null($expires_date)) {
+          if (osc_not_null($expires_date)) {
             $expires_date = substr($expires_date, 0, 4) . substr($expires_date, 5, 2) . substr($expires_date, 8, 2);
 
             osc_db_query("update " . TABLE_BANNERS . " set expires_date = '" . osc_db_input($expires_date) . "', expires_impressions = null where banners_id = '" . (int)$banners_id . "'");
-          } elseif (tep_not_null($expires_impressions)) {
+          } elseif (osc_not_null($expires_impressions)) {
             osc_db_query("update " . TABLE_BANNERS . " set expires_impressions = '" . osc_db_input($expires_impressions) . "', expires_date = null where banners_id = '" . (int)$banners_id . "'");
           }
 
-          if (tep_not_null($date_scheduled)) {
+          if (osc_not_null($date_scheduled)) {
             $date_scheduled = substr($date_scheduled, 0, 4) . substr($date_scheduled, 5, 2) . substr($date_scheduled, 8, 2);
 
             osc_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . osc_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
           }
 
-          tep_redirect(tep_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
+          osc_redirect(tep_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
         } else {
           $action = 'new';
         }
@@ -133,7 +133,7 @@
         osc_db_query("delete from " . TABLE_BANNERS . " where banners_id = '" . (int)$banners_id . "'");
         osc_db_query("delete from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . (int)$banners_id . "'");
 
-        if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
+        if (function_exists('imagecreate') && osc_not_null($banner_extension)) {
           if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
             if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
               unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension);
@@ -161,14 +161,14 @@
 
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
-        tep_redirect(tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
+        osc_redirect(tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
         break;
     }
   }
 
 // check if the graphs directory exists
   $dir_ok = false;
-  if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
+  if (function_exists('imagecreate') && osc_not_null($banner_extension)) {
     if (is_dir(DIR_WS_IMAGES . 'graphs')) {
       if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
         $dir_ok = true;
@@ -222,7 +222,7 @@ function popupImageWindow(url) {
       $banner = osc_db_fetch_array($banner_query);
 
       $bInfo->objectInfo($banner);
-    } elseif (tep_not_null($_POST)) {
+    } elseif (osc_not_null($_POST)) {
       $bInfo->objectInfo($_POST);
     }
 
@@ -390,7 +390,7 @@ $('#expires_date').datepicker({
         $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=delete')) . tep_draw_button(IMAGE_DETAILS, 'info', tep_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id)));
-        $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . tep_date_short($bInfo->date_added));
+        $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . osc_date_short($bInfo->date_added));
 
         if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {
           $banner_id = $bInfo->banners_id;
@@ -404,20 +404,20 @@ $('#expires_date').datepicker({
 
         $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'graph_hbar_blue.gif', 'Blue', '5', '5') . ' ' . TEXT_BANNERS_BANNER_VIEWS . '<br />' . tep_image(DIR_WS_IMAGES . 'graph_hbar_red.gif', 'Red', '5', '5') . ' ' . TEXT_BANNERS_BANNER_CLICKS);
 
-        if ($bInfo->date_scheduled) $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_SCHEDULED_AT_DATE, tep_date_short($bInfo->date_scheduled)));
+        if ($bInfo->date_scheduled) $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_SCHEDULED_AT_DATE, osc_date_short($bInfo->date_scheduled)));
 
         if ($bInfo->expires_date) {
-          $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_EXPIRES_AT_DATE, tep_date_short($bInfo->expires_date)));
+          $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_EXPIRES_AT_DATE, osc_date_short($bInfo->expires_date)));
         } elseif ($bInfo->expires_impressions) {
           $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_EXPIRES_AT_IMPRESSIONS, $bInfo->expires_impressions));
         }
 
-        if ($bInfo->date_status_change) $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_STATUS_CHANGE, tep_date_short($bInfo->date_status_change)));
+        if ($bInfo->date_status_change) $contents[] = array('text' => '<br />' . sprintf(TEXT_BANNERS_STATUS_CHANGE, osc_date_short($bInfo->date_status_change)));
       }
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

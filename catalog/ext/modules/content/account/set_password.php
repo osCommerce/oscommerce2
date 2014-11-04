@@ -14,18 +14,18 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
   if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   $check_customer_query = osc_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
   $check_customer = osc_db_fetch_array($check_customer_query);
 
   if ( !empty($check_customer['customers_password']) ) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -54,7 +54,7 @@
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 
-      tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   }
 
@@ -86,7 +86,7 @@
         <?php
         echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -96,7 +96,7 @@
         <?php
         echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
         ?>
       </div>
     </div>

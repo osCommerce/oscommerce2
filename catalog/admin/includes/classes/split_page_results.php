@@ -41,7 +41,7 @@
     function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page') {
       global $PHP_SELF;
 
-      if ( tep_not_null($parameters) && (substr($parameters, -1) != '&') ) $parameters .= '&';
+      if ( osc_not_null($parameters) && (substr($parameters, -1) != '&') ) $parameters .= '&';
 
 // calculate number of pages needing links
       $num_pages = ceil($query_numrows / $max_rows_per_page);

@@ -53,7 +53,7 @@
     }
 
     function display_price($products_price, $products_tax, $quantity = 1, $currency_type = DEFAULT_CURRENCY) {
-      return $this->format(tep_round(tep_add_tax($products_price, $products_tax), $this->currencies[$currency_type]['decimal_places']) * $quantity);
+      return $this->format(osc_round(osc_add_tax($products_price, $products_tax), $this->currencies[$currency_type]['decimal_places']) * $quantity);
     }
   }
 ?>

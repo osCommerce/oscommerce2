@@ -116,7 +116,7 @@
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
+    if (isset($_GET['language']) && osc_not_null($_GET['language'])) {
       $lng->set_language($_GET['language']);
     } else {
       $lng->get_browser_language();
@@ -163,7 +163,7 @@
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      osc_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);
@@ -216,8 +216,8 @@
     $cPath = '';
   }
 
-  if (tep_not_null($cPath)) {
-    $cPath_array = tep_parse_category_path($cPath);
+  if (osc_not_null($cPath)) {
+    $cPath_array = osc_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
   } else {

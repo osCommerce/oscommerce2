@@ -89,7 +89,7 @@
 
     function install() {
       if (!defined('MODULE_PAYMENT_MONEYBOOKERS_STATUS')) {
-        tep_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
+        osc_redirect(tep_href_link('ext/modules/payment/moneybookers/activation.php', 'action=coreRequired'));
       }
 
       $zone_id = 0;

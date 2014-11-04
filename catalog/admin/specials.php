@@ -17,12 +17,12 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'setflag':
         tep_set_specials_status($_GET['id'], $_GET['flag']);
 
-        tep_redirect(tep_href_link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id']));
+        osc_redirect(tep_href_link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id']));
         break;
       case 'insert':
         $products_id = osc_db_prepare_input($_POST['products_id']);
@@ -39,13 +39,13 @@
         }
 
         $expires_date = '';
-        if (tep_not_null($expdate)) {
+        if (osc_not_null($expdate)) {
           $expires_date = substr($expdate, 0, 4) . substr($expdate, 5, 2) . substr($expdate, 8, 2);
         }
 
-        osc_db_query("insert into " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status) values ('" . (int)$products_id . "', '" . osc_db_input($specials_price) . "', now(), " . (tep_not_null($expires_date) ? "'" . osc_db_input($expires_date) . "'" : 'null') . ", '1')");
+        osc_db_query("insert into " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status) values ('" . (int)$products_id . "', '" . osc_db_input($specials_price) . "', now(), " . (osc_not_null($expires_date) ? "'" . osc_db_input($expires_date) . "'" : 'null') . ", '1')");
 
-        tep_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
+        osc_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
         break;
       case 'update':
         $specials_id = osc_db_prepare_input($_POST['specials_id']);
@@ -56,20 +56,20 @@
         if (substr($specials_price, -1) == '%') $specials_price = ($products_price - (($specials_price / 100) * $products_price));
 
         $expires_date = '';
-        if (tep_not_null($expdate)) {
+        if (osc_not_null($expdate)) {
           $expires_date = substr($expdate, 0, 4) . substr($expdate, 5, 2) . substr($expdate, 8, 2);
         }
 
-        osc_db_query("update " . TABLE_SPECIALS . " set specials_new_products_price = '" . osc_db_input($specials_price) . "', specials_last_modified = now(), expires_date = " . (tep_not_null($expires_date) ? "'" . osc_db_input($expires_date) . "'" : 'null') . " where specials_id = '" . (int)$specials_id . "'");
+        osc_db_query("update " . TABLE_SPECIALS . " set specials_new_products_price = '" . osc_db_input($specials_price) . "', specials_last_modified = now(), expires_date = " . (osc_not_null($expires_date) ? "'" . osc_db_input($expires_date) . "'" : 'null') . " where specials_id = '" . (int)$specials_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials_id));
+        osc_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials_id));
         break;
       case 'deleteconfirm':
         $specials_id = osc_db_prepare_input($_GET['sID']);
 
         osc_db_query("delete from " . TABLE_SPECIALS . " where specials_id = '" . (int)$specials_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
+        osc_redirect(tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
         break;
     }
   }
@@ -108,7 +108,7 @@
       }
     }
 ?>
-      <tr><form name="new_special" <?php echo 'action="' . tep_href_link(FILENAME_SPECIALS, tep_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action) . '"'; ?> method="post"><?php if ($form_action == 'update') echo tep_draw_hidden_field('specials_id', $_GET['sID']); ?>
+      <tr><form name="new_special" <?php echo 'action="' . tep_href_link(FILENAME_SPECIALS, osc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action) . '"'; ?> method="post"><?php if ($form_action == 'update') echo tep_draw_hidden_field('specials_id', $_GET['sID']); ?>
         <td><br /><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_PRODUCT; ?>&nbsp;</td>
@@ -120,7 +120,7 @@
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo tep_draw_input_field('expdate', (tep_not_null($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) . '-' . substr($sInfo->expires_date, 5, 2) . '-' . substr($sInfo->expires_date, 8, 2) : ''), 'id="expdate"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
+            <td class="main"><?php echo tep_draw_input_field('expdate', (osc_not_null($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) . '-' . substr($sInfo->expires_date, 5, 2) . '-' . substr($sInfo->expires_date, 8, 2) : ''), 'id="expdate"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
         </table>
 
@@ -222,19 +222,19 @@ $('#expdate').datepicker({
         $heading[] = array('text' => '<strong>' . $sInfo->products_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $sInfo->specials_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($sInfo->specials_date_added));
-        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . tep_date_short($sInfo->specials_last_modified));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . osc_date_short($sInfo->specials_date_added));
+        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . osc_date_short($sInfo->specials_last_modified));
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_info_image($sInfo->products_image, $sInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
         $contents[] = array('text' => '<br />' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $currencies->format($sInfo->products_price));
         $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $currencies->format($sInfo->specials_new_products_price));
         $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) . '%');
 
-        $contents[] = array('text' => '<br />' . TEXT_INFO_EXPIRES_DATE . ' <strong>' . tep_date_short($sInfo->expires_date) . '</strong>');
-        $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . tep_date_short($sInfo->date_status_change));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_EXPIRES_DATE . ' <strong>' . osc_date_short($sInfo->expires_date) . '</strong>');
+        $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . osc_date_short($sInfo->date_status_change));
       }
       break;
   }
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

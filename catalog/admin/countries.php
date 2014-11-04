@@ -14,7 +14,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'insert':
         $countries_name = osc_db_prepare_input($_POST['countries_name']);
@@ -24,7 +24,7 @@
 
         osc_db_query("insert into " . TABLE_COUNTRIES . " (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) values ('" . osc_db_input($countries_name) . "', '" . osc_db_input($countries_iso_code_2) . "', '" . osc_db_input($countries_iso_code_3) . "', '" . (int)$address_format_id . "')");
 
-        tep_redirect(tep_href_link(FILENAME_COUNTRIES));
+        osc_redirect(tep_href_link(FILENAME_COUNTRIES));
         break;
       case 'save':
         $countries_id = osc_db_prepare_input($_GET['cID']);
@@ -35,14 +35,14 @@
 
         osc_db_query("update " . TABLE_COUNTRIES . " set countries_name = '" . osc_db_input($countries_name) . "', countries_iso_code_2 = '" . osc_db_input($countries_iso_code_2) . "', countries_iso_code_3 = '" . osc_db_input($countries_iso_code_3) . "', address_format_id = '" . (int)$address_format_id . "' where countries_id = '" . (int)$countries_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));
+        osc_redirect(tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));
         break;
       case 'deleteconfirm':
         $countries_id = osc_db_prepare_input($_GET['cID']);
 
         osc_db_query("delete from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$countries_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));
+        osc_redirect(tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));
         break;
     }
   }
@@ -157,7 +157,7 @@
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

@@ -49,7 +49,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_ID) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD) || !tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_ID) || !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_USERNAME) || !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_PASSWORD) || !osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_API_SIGNATURE) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_PRO_HS_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -169,7 +169,7 @@
               $class = substr($value, 0, strrpos($value, '.'));
               if ($GLOBALS[$class]->enabled) {
                 for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-                  if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+                  if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text'])) {
                     $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                             'title' => $GLOBALS[$class]->output[$i]['title'],
                                             'text' => $GLOBALS[$class]->output[$i]['text'],
@@ -238,7 +238,7 @@
 
           for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
             $sql_data_array = array('orders_id' => $insert_id,
-                                    'products_id' => tep_get_prid($order->products[$i]['id']),
+                                    'products_id' => osc_get_prid($order->products[$i]['id']),
                                     'products_model' => $order->products[$i]['model'],
                                     'products_name' => $order->products[$i]['name'],
                                     'products_price' => $order->products[$i]['price'],
@@ -281,7 +281,7 @@
 
                 osc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-                if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename'])) {
+                if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && osc_not_null($attributes_values['products_attributes_filename'])) {
                   $sql_data_array = array('orders_id' => $insert_id,
                                           'orders_products_id' => $order_products_id,
                                           'orders_products_filename' => $attributes_values['products_attributes_filename'],
@@ -317,7 +317,7 @@
                         'billing_last_name' => $order->billing['lastname'],
                         'billing_address1' => $order->billing['street_address'],
                         'billing_city' => $order->billing['city'],
-                        'billing_state' => tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
+                        'billing_state' => osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']),
                         'billing_zip' => $order->billing['postcode'],
                         'billing_country' => $order->billing['country']['iso_code_2'],
                         'night_phone_b' => $order->customer['telephone'],
@@ -333,12 +333,12 @@
           $params['last_name'] = $order->delivery['lastname'];
           $params['address1'] = $order->delivery['street_address'];
           $params['city'] = $order->delivery['city'];
-          $params['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+          $params['state'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
           $params['zip'] = $order->delivery['postcode'];
           $params['country'] = $order->delivery['country']['iso_code_2'];
         }
 
-        if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) <= 60) ) {
+        if ( osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON) <= 60) ) {
           $params['cbt'] = MODULE_PAYMENT_PAYPAL_PRO_HS_TEXT_PAYPAL_RETURN_BUTTON;
         }
 
@@ -367,7 +367,7 @@
         }
       }
 
-      $pphs_key = tep_create_random_value(16);
+      $pphs_key = osc_create_random_value(16);
 
       if ( !isset($_SESSION['pphs_key']) ) {
         tep_session_register('pphs_key');
@@ -414,19 +414,19 @@ EOD;
       }
 
       if ( !is_array($result) || !isset($result['ACK']) || (($result['ACK'] != 'Success') && ($result['ACK'] != 'SuccessWithWarning')) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
       }
 
       $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
 
       $seller_accounts = array(MODULE_PAYMENT_PAYPAL_PRO_HS_ID);
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID) ) {
+      if ( osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID) ) {
         $seller_accounts[] = MODULE_PAYMENT_PAYPAL_PRO_HS_PRIMARY_ID;
       }
 
       if ( !isset($result['RECEIVERBUSINESS']) || !in_array($result['RECEIVERBUSINESS'], $seller_accounts) || ($result['INVNUM'] != $order_id) || ($result['CUSTOM'] != $customer_id) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
       $pphs_result = $result;
@@ -437,7 +437,7 @@ EOD;
       $tx_customer_id = $pphs_result['CUSTOM'];
 
       if (!osc_db_num_rows($check_query) || ($order_id != $tx_order_id) || ($customer_id != $tx_customer_id)) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = osc_db_fetch_array($check_query);
@@ -479,7 +479,7 @@ EOD;
                                 ON p.products_id=pa.products_id
                                 LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '" . tep_get_prid($order->products[$i]['id']) . "'";
+                                WHERE p.products_id = '" . osc_get_prid($order->products[$i]['id']) . "'";
 // Will work with only one option for downloadable products
 // otherwise, we have to build the query dynamically with a loop
             $products_attributes = $order->products[$i]['attributes'];
@@ -488,7 +488,7 @@ EOD;
             }
             $stock_query = osc_db_query($stock_query_raw);
           } else {
-            $stock_query = osc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            $stock_query = osc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
           }
           if (osc_db_num_rows($stock_query) > 0) {
             $stock_values = osc_db_fetch_array($stock_query);
@@ -498,15 +498,15 @@ EOD;
             } else {
               $stock_left = $stock_values['products_quantity'];
             }
-            osc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            osc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-              osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+              osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             }
           }
         }
 
 // Update products_ordered (for bestsellers list)
-        osc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+        osc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
 
 //------insert customer choosen option to order--------
         $attributes_exist = '0';
@@ -537,7 +537,7 @@ EOD;
         }
 //------insert customer choosen option eof ----
         $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-        $total_tax += tep_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
+        $total_tax += osc_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
         $total_cost += $total_products_price;
 
         $products_ordered .= $order->products[$i]['qty'] . ' x ' . $order->products[$i]['name'] . ' (' . $order->products[$i]['model'] . ') = ' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . $products_ordered_attributes . "\n";
@@ -564,12 +564,12 @@ EOD;
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        osc_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      osc_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
@@ -581,11 +581,11 @@ EOD;
         }
       }
 
-      tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+      osc_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
 // send emails to other people
       if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-        tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
 
 // load the after_process function from the payment modules
@@ -604,7 +604,7 @@ EOD;
       unset($_SESSION['pphs_result']);
       unset($_SESSION['pphs_key']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {
@@ -831,7 +831,7 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_PRO_HS_PROXY);
       }
@@ -883,7 +883,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function getTestLinkInfo() {
@@ -1043,7 +1043,7 @@ EOD;
                                   'orders_status_id' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTIONS_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
-                                  'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
+                                  'comments' => $source . ' [' . osc_output_string_protected($comment_status) . ']');
 
           osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
@@ -1051,7 +1051,7 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -1067,7 +1067,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL, 'PayPal Payments Pro (Hosted Solution) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_PAYPAL_PRO_HS_DEBUG_EMAIL, 'PayPal Payments Pro (Hosted Solution) Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

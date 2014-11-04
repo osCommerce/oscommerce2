@@ -39,8 +39,8 @@
       while ($logins = osc_db_fetch_array($logins_query)) {
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
                    '    <td class="dataTableContent" align="center">' . tep_image(DIR_WS_IMAGES . 'icons/' . (($logins['success'] == '1') ? 'tick.gif' : 'cross.gif')) . '</td>' .
-                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . (int)$logins['id']) . '">' . tep_output_string_protected($logins['user_name']) . '</a></td>' .
-                   '    <td class="dataTableContent" align="right">' . tep_date_short($logins['date_added']) . '</td>' .
+                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . (int)$logins['id']) . '">' . osc_output_string_protected($logins['user_name']) . '</a></td>' .
+                   '    <td class="dataTableContent" align="right">' . osc_date_short($logins['date_added']) . '</td>' .
                    '  </tr>';
       }
 

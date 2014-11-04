@@ -48,7 +48,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_ID) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_ID) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_PAYPAL_STANDARD_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -169,7 +169,7 @@
               $class = substr($value, 0, strrpos($value, '.'));
               if ($GLOBALS[$class]->enabled) {
                 for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-                  if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+                  if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text'])) {
                     $order_totals[] = array('code' => $GLOBALS[$class]->code,
                                             'title' => $GLOBALS[$class]->output[$i]['title'],
                                             'text' => $GLOBALS[$class]->output[$i]['text'],
@@ -243,7 +243,7 @@
 
           for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
             $sql_data_array = array('orders_id' => $insert_id,
-                                    'products_id' => tep_get_prid($order->products[$i]['id']),
+                                    'products_id' => osc_get_prid($order->products[$i]['id']),
                                     'products_model' => $order->products[$i]['model'],
                                     'products_name' => $order->products[$i]['name'],
                                     'products_price' => $order->products[$i]['price'],
@@ -286,7 +286,7 @@
 
                 osc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-                if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename'])) {
+                if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && osc_not_null($attributes_values['products_attributes_filename'])) {
                   $sql_data_array = array('orders_id' => $insert_id,
                                           'orders_products_id' => $order_products_id,
                                           'orders_products_filename' => $attributes_values['products_attributes_filename'],
@@ -335,7 +335,7 @@
                           'bn' => 'OSCOM23_PS',
                           'paymentaction' => ((MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTION_METHOD == 'Sale') ? 'sale' : 'authorization'));
 
-      if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) <= 60)) {
+      if (defined('MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON') && osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) && (strlen(MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON) <= 60)) {
         $parameters['cbt'] = MODULE_PAYMENT_PAYPAL_STANDARD_TEXT_PAYPAL_RETURN_BUTTON;
       }
 
@@ -345,7 +345,7 @@
         $parameters['last_name'] = $order->delivery['lastname'];
         $parameters['address1'] = $order->delivery['street_address'];
         $parameters['city'] = $order->delivery['city'];
-        $parameters['state'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
+        $parameters['state'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], $order->delivery['state']);
         $parameters['zip'] = $order->delivery['postcode'];
         $parameters['country'] = $order->delivery['country']['iso_code_2'];
       } else {
@@ -354,12 +354,12 @@
         $parameters['last_name'] = $order->billing['lastname'];
         $parameters['address1'] = $order->billing['street_address'];
         $parameters['city'] = $order->billing['city'];
-        $parameters['state'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
+        $parameters['state'] = osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], $order->billing['state']);
         $parameters['zip'] = $order->billing['postcode'];
         $parameters['country'] = $order->billing['country']['iso_code_2'];
       }
 
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE)) {
         $parameters['page_style'] = MODULE_PAYMENT_PAYPAL_STANDARD_PAGE_STYLE;
       }
 
@@ -369,7 +369,7 @@
 
       foreach ($order->products as $product) {
         if ( DISPLAY_PRICE_WITH_TAX == 'true' ) {
-          $product_price = $this->format_raw($product['final_price'] + tep_calculate_tax($product['final_price'], $product['tax']));
+          $product_price = $this->format_raw($product['final_price'] + osc_calculate_tax($product['final_price'], $product['tax']));
         } else {
           $product_price = $this->format_raw($product['final_price']);
         }
@@ -392,7 +392,7 @@
 
           if ($GLOBALS[$class]->enabled) {
             for ($i=0, $n=sizeof($GLOBALS[$class]->output); $i<$n; $i++) {
-              if (tep_not_null($GLOBALS[$class]->output[$i]['title']) && tep_not_null($GLOBALS[$class]->output[$i]['text'])) {
+              if (osc_not_null($GLOBALS[$class]->output[$i]['title']) && osc_not_null($GLOBALS[$class]->output[$i]['text'])) {
                 if ( !in_array($GLOBALS[$class]->code, array('ot_subtotal', 'ot_shipping', 'ot_tax', 'ot_total')) ) {
                   $item_params['item_name_' . $line_item_no] = $GLOBALS[$class]->output[$i]['title'];
                   $item_params['amount_' . $line_item_no] = $this->format_raw($GLOBALS[$class]->output[$i]['value']);
@@ -499,7 +499,7 @@
 
       $result = false;
 
-      if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
+      if ( isset($_POST['receiver_email']) && (($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_ID) || (defined('MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID') && osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID) && ($_POST['receiver_email'] == MODULE_PAYMENT_PAYPAL_STANDARD_PRIMARY_ID))) ) {
         $parameters = 'cmd=_notify-validate';
 
         foreach ($_POST as $key => $value) {
@@ -516,7 +516,7 @@
 
         $this->sendDebugEmail($result);
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
       $this->verifyTransaction();
@@ -526,7 +526,7 @@
       $check_query = osc_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
       if (!osc_db_num_rows($check_query) || ($order_id != $_POST['invoice']) || ($customer_id != $_POST['custom'])) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
       $check = osc_db_fetch_array($check_query);
@@ -566,7 +566,7 @@
                                 ON p.products_id=pa.products_id
                                 LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
-                                WHERE p.products_id = '" . tep_get_prid($order->products[$i]['id']) . "'";
+                                WHERE p.products_id = '" . osc_get_prid($order->products[$i]['id']) . "'";
 // Will work with only one option for downloadable products
 // otherwise, we have to build the query dynamically with a loop
             $products_attributes = $order->products[$i]['attributes'];
@@ -575,7 +575,7 @@
             }
             $stock_query = osc_db_query($stock_query_raw);
           } else {
-            $stock_query = osc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            $stock_query = osc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
           }
           if (osc_db_num_rows($stock_query) > 0) {
             $stock_values = osc_db_fetch_array($stock_query);
@@ -585,15 +585,15 @@
             } else {
               $stock_left = $stock_values['products_quantity'];
             }
-            osc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            osc_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-              osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+              osc_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
             }
           }
         }
 
 // Update products_ordered (for bestsellers list)
-        osc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+        osc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . osc_get_prid($order->products[$i]['id']) . "'");
 
 //------insert customer choosen option to order--------
         $attributes_exist = '0';
@@ -624,7 +624,7 @@
         }
 //------insert customer choosen option eof ----
         $total_weight += ($order->products[$i]['qty'] * $order->products[$i]['weight']);
-        $total_tax += tep_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
+        $total_tax += osc_calculate_tax($total_products_price, $products_tax) * $order->products[$i]['qty'];
         $total_cost += $total_products_price;
 
         $products_ordered .= $order->products[$i]['qty'] . ' x ' . $order->products[$i]['name'] . ' (' . $order->products[$i]['model'] . ') = ' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . $products_ordered_attributes . "\n";
@@ -651,12 +651,12 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        osc_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      osc_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
 
       if (is_object($$payment)) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
@@ -668,11 +668,11 @@
         }
       }
 
-      tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+      osc_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
 // send emails to other people
       if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-        tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
 
 // load the after_process function from the payment modules
@@ -689,7 +689,7 @@
 
       unset($_SESSION['cart_PayPal_Standard_ID']);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
     }
 
     function after_process() {
@@ -918,7 +918,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_PAYPAL_STANDARD_PROXY);
       }
@@ -942,11 +942,11 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($response = '', $ipn = false) {
-      if (tep_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -962,7 +962,7 @@
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Standard Debug E-Mail' . ($ipn == true ? ' (IPN)' : ''), trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_PAYPAL_STANDARD_DEBUG_EMAIL, 'PayPal Standard Debug E-Mail' . ($ipn == true ? ' (IPN)' : ''), trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }
@@ -1098,7 +1098,7 @@ EOD;
                                   'orders_status_id' => MODULE_PAYMENT_PAYPAL_STANDARD_TRANSACTIONS_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
-                                  'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
+                                  'comments' => $source . ' [' . osc_output_string_protected($comment_status) . ']');
 
           osc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }

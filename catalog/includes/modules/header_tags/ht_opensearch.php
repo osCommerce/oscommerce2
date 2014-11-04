@@ -31,7 +31,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
+      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . osc_output_string(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {

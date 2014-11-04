@@ -28,7 +28,7 @@
     $error = true;
   } elseif ( !isset($_POST['installation']) || ($_POST['installation'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_INSTALLATION_ID) ) {
     $error = true;
-  } elseif ( tep_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && (!isset($_POST['callbackPW']) || ($_POST['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) ) {
+  } elseif ( osc_not_null(MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD) && (!isset($_POST['callbackPW']) || ($_POST['callbackPW'] != MODULE_PAYMENT_RBSWORLDPAY_HOSTED_CALLBACK_PASSWORD)) ) {
     $error = true;
   } elseif ( !isset($_POST['transStatus']) || ($_POST['transStatus'] != 'Y') ) {
     $error = true;
@@ -85,7 +85,7 @@
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>" />
-<title><?php echo tep_output_string_protected(TITLE); ?></title>
+<title><?php echo osc_output_string_protected(TITLE); ?></title>
 <meta http-equiv="refresh" content="3; URL=<?php echo tep_href_link(FILENAME_CHECKOUT_PROCESS, session_name() . '=' . $_POST['M_sid'] . '&hash=' . $_POST['M_hash'], 'SSL', false); ?>">
 </head>
 <body>

@@ -14,7 +14,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'save':
         $error = false;
@@ -35,7 +35,7 @@
         }
 
         if ($error == false) {
-          tep_redirect(tep_href_link(FILENAME_STORE_LOGO));
+          osc_redirect(tep_href_link(FILENAME_STORE_LOGO));
         }
         break;
     }

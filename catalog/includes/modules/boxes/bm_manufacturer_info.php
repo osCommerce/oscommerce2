@@ -40,8 +40,8 @@
 
           $manufacturer_info_string = NULL;
 
-          if (tep_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<p>' . tep_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</p>';
-          if (tep_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<p><a href="' . tep_href_link(FILENAME_REDIRECT, 'action=manufacturer&manufacturers_id=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></p>';
+          if (osc_not_null($manufacturer['manufacturers_image'])) $manufacturer_info_string .= '<p>' . tep_image(DIR_WS_IMAGES . $manufacturer['manufacturers_image'], $manufacturer['manufacturers_name']) . '</p>';
+          if (osc_not_null($manufacturer['manufacturers_url'])) $manufacturer_info_string .= '<p><a href="' . tep_href_link(FILENAME_REDIRECT, 'action=manufacturer&manufacturers_id=' . $manufacturer['manufacturers_id']) . '" target="_blank">' . sprintf(MODULE_BOXES_MANUFACTURER_INFO_BOX_HOMEPAGE, $manufacturer['manufacturers_name']) . '</a></p>';
 
           $data = '<div class="panel panel-default">' .
                    '  <div class="panel-heading">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</div>' .

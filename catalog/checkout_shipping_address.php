@@ -15,12 +15,12 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
   // needs to be included earlier to set the success message in the messageStack
@@ -36,14 +36,14 @@
     $shipping = false;
     if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
     $sendto = false;
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
   }
 
   $error = false;
   $process = false;
   if (isset($_POST['action']) && ($_POST['action'] == 'submit') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
 // process a new shipping address
-    if (tep_not_null($_POST['firstname']) && tep_not_null($_POST['lastname']) && tep_not_null($_POST['street_address'])) {
+    if (osc_not_null($_POST['firstname']) && osc_not_null($_POST['lastname']) && osc_not_null($_POST['street_address'])) {
       $process = true;
 
       if (ACCOUNT_GENDER == 'true') $gender = osc_db_prepare_input($_POST['gender']);
@@ -162,7 +162,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -184,7 +184,7 @@
 
       if ($check_address['total'] == '1') {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
       } else {
         unset($_SESSION['sendto']);
       }
@@ -192,7 +192,7 @@
       if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
       $sendto = $customer_default_address_id;
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
@@ -204,7 +204,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 
-  $addresses_count = tep_count_customer_address_book_entries();
+  $addresses_count = osc_count_customer_address_book_entries();
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -242,7 +242,7 @@
         <div class="panel-heading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $sendto, true, ' ', '<br />'); ?>
+          <?php echo osc_address_label($customer_id, $sendto, true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -277,7 +277,7 @@
 
       $addresses_query = osc_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "'");
       while ($addresses = osc_db_fetch_array($addresses_query)) {
-        $format_id = tep_get_address_format_id($addresses['country_id']);
+        $format_id = osc_get_address_format_id($addresses['country_id']);
 
        if ($addresses['address_book_id'] == $sendto) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
@@ -288,7 +288,7 @@
 
         <td>
           <strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong>
-          <div class="help-block"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></div>
+          <div class="help-block"><?php echo osc_address_format($format_id, $addresses, true, ' ', ', '); ?></div>
         </td>
         <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $sendto)); ?></td>
       </tr>

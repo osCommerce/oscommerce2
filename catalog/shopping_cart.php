@@ -78,8 +78,8 @@
                         '  <td valign="top"><a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
 
       if (STOCK_CHECK == 'true') {
-        $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
-        if (tep_not_null($stock_check)) {
+        $stock_check = osc_check_stock($products[$i]['id'], $products[$i]['quantity']);
+        if (osc_not_null($stock_check)) {
           $any_out_of_stock = 1;
 
           $products_name .= $stock_check;
@@ -96,7 +96,7 @@
 
       $products_name .= '</td>';
 
-      $products_name .= '  <td class="text-right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
+      $products_name .= '  <td class="text-right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], osc_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
                         '</tr>';
     }
     echo $products_name;

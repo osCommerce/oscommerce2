@@ -14,7 +14,7 @@ class mc360 {
         $this->store_id = MODULE_HEADER_TAGS_MAILCHIMP_360_STORE_ID;
         $this->key_valid = ((MODULE_HEADER_TAGS_MAILCHIMP_360_KEY_VALID == 'true') ? true : false);
 
-        if (tep_not_null(MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL)) {
+        if (osc_not_null(MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL)) {
           $this->debug = true;
         }
 
@@ -185,7 +185,7 @@ class mc360 {
         // send!()
 
         if ($this->debug && !empty($debug_email)) {
-            tep_mail('', MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL, 'MailChimp Debug E-Mail', $debug_email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            osc_mail('', MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL, 'MailChimp Debug E-Mail', $debug_email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
   }//update
 }//mc360 class

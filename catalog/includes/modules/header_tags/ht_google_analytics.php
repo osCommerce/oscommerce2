@@ -31,14 +31,14 @@
     function execute() {
       global $PHP_SELF, $oscTemplate, $customer_id;
 
-      if (tep_not_null(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID)) {
+      if (osc_not_null(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID)) {
         if (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT != 'Header') {
           $this->group = 'footer_scripts';
         }
 
         $header = '<script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push([\'_setAccount\', \'' . tep_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
+  _gaq.push([\'_setAccount\', \'' . osc_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
   _gaq.push([\'_trackPageview\']);' . "\n";
 
         if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) && isset($_SESSION['customer_id']) ) {
@@ -56,13 +56,13 @@
 
             $header .= '  _gaq.push([\'_addTrans\',
     \'' . (int)$order['orders_id'] . '\', // order ID - required
-    \'' . tep_output_string(STORE_NAME) . '\', // store name
+    \'' . osc_output_string(STORE_NAME) . '\', // store name
     \'' . (isset($totals['ot_total']) ? $this->format_raw($totals['ot_total'], DEFAULT_CURRENCY) : 0) . '\', // total - required
     \'' . (isset($totals['ot_tax']) ? $this->format_raw($totals['ot_tax'], DEFAULT_CURRENCY) : 0) . '\', // tax
     \'' . (isset($totals['ot_shipping']) ? $this->format_raw($totals['ot_shipping'], DEFAULT_CURRENCY) : 0) . '\', // shipping
-    \'' . tep_output_string_protected($order['billing_city']) . '\', // city
-    \'' . tep_output_string_protected($order['billing_state']) . '\', // state or province
-    \'' . tep_output_string_protected($order['billing_country']) . '\' // country
+    \'' . osc_output_string_protected($order['billing_city']) . '\', // city
+    \'' . osc_output_string_protected($order['billing_state']) . '\', // state or province
+    \'' . osc_output_string_protected($order['billing_country']) . '\' // country
   ]);' . "\n";
 
             $order_products_query = osc_db_query("select op.products_id, pd.products_name, op.final_price, op.products_quantity from " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_LANGUAGES . " l where op.orders_id = '" . (int)$order['orders_id'] . "' and op.products_id = pd.products_id and l.code = '" . osc_db_input(DEFAULT_LANGUAGE) . "' and l.languages_id = pd.language_id");
@@ -73,8 +73,8 @@
               $header .= '  _gaq.push([\'_addItem\',
     \'' . (int)$order['orders_id'] . '\', // order ID - required
     \'' . (int)$order_products['products_id'] . '\', // SKU/code - required
-    \'' . tep_output_string($order_products['products_name']) . '\', // product name
-    \'' . tep_output_string($category['categories_name']) . '\', // category
+    \'' . osc_output_string($order_products['products_name']) . '\', // product name
+    \'' . osc_output_string($category['categories_name']) . '\', // category
     \'' . $this->format_raw($order_products['final_price']) . '\', // unit price - required
     \'' . (int)$order_products['products_quantity'] . '\' // quantity - required
   ]);' . "\n";
@@ -106,7 +106,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function isEnabled() {

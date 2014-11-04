@@ -66,7 +66,7 @@
         $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
       }
 
-      tep_redirect(tep_href_link(FILENAME_SERVER_INFO));
+      osc_redirect(tep_href_link(FILENAME_SERVER_INFO));
     break;
 
     case 'save':
@@ -198,7 +198,7 @@ hr {display: none;}
     $phpinfo = str_replace('border: 1px', '', $phpinfo);
     preg_match('/<body>(.*)<\/body>/is', $phpinfo, $regs);
     echo '<table border="1" cellpadding="3" width="600" style="border: 0px; border-color: #000000;">' .
-         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . tep_get_version() . '" /></a><h1 class="p">osCommerce Online Merchant v' . tep_get_version() . '</h1></td>' .
+         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . osc_get_version() . '" /></a><h1 class="p">osCommerce Online Merchant v' . osc_get_version() . '</h1></td>' .
          '  </tr>' .
          '</table>';
     echo $regs[1];

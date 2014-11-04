@@ -16,15 +16,15 @@
 
   define('OSC_CATALOG_SESSION_ID', 'osCsid');
 
-  function tep_create_random_value($length, $type = 'mixed') {
+  function osc_create_random_value($length, $type = 'mixed') {
     if ( ($type != 'mixed') && ($type != 'chars') && ($type != 'digits')) return false;
 
     $rand_value = '';
     while (strlen($rand_value) < $length) {
       if ($type == 'digits') {
-        $char = tep_rand(0,9);
+        $char = osc_rand(0,9);
       } else {
-        $char = chr(tep_rand(0,255));
+        $char = chr(osc_rand(0,255));
       }
       if ($type == 'mixed') {
         if (preg_match('/^[a-z0-9]$/i', $char)) $rand_value .= $char;
@@ -46,9 +46,9 @@
   $parameter = array();
   $parameter['install'] = 'sofortueberweisung_direct';
   $parameter['action'] = 'install';
-  $parameter['input_passwort'] = tep_create_random_value(12);
-  $parameter['bna_passwort'] = tep_create_random_value(12);
-  $parameter['cnt_passwort'] = tep_create_random_value(12);
+  $parameter['input_passwort'] = osc_create_random_value(12);
+  $parameter['bna_passwort'] = osc_create_random_value(12);
+  $parameter['cnt_passwort'] = osc_create_random_value(12);
 
   $get_parameter = '';
   $x = 0;
@@ -74,7 +74,7 @@
       $module->install();
     }
 
-    tep_redirect(tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_MODULES, 'set=payment&module=sofortueberweisung_direct', 'SSL'));
   }
 ?>
 <html>

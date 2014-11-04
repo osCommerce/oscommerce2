@@ -53,7 +53,7 @@
       }
 
       if ( !isset($braintree_error) && defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
-        if ( !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_PRIVATE_KEY) || !tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ID) || !osc_not_null(MODULE_PAYMENT_BRAINTREE_CC_PUBLIC_KEY) || !osc_not_null(MODULE_PAYMENT_BRAINTREE_CC_PRIVATE_KEY) || !osc_not_null(MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY) ) {
           $braintree_error = MODULE_PAYMENT_BRAINTREE_CC_ERROR_ADMIN_CONFIGURATION;
         }
       }
@@ -61,7 +61,7 @@
       if ( !isset($braintree_error) && defined('MODULE_PAYMENT_BRAINTREE_CC_STATUS') ) {
         $ma_error = true;
 
-        if ( tep_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS) ) {
+        if ( osc_not_null(MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS) ) {
           $mas = explode(';', MODULE_PAYMENT_BRAINTREE_CC_MERCHANT_ACCOUNTS);
 
           foreach ( $mas as $a ) {
@@ -141,16 +141,16 @@
       $months_array = array();
 
       for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => tep_output_string(sprintf('%02d', $i)),
-                                'text' => tep_output_string_protected(sprintf('%02d', $i)));
+        $months_array[] = array('id' => osc_output_string(sprintf('%02d', $i)),
+                                'text' => osc_output_string_protected(sprintf('%02d', $i)));
       }
 
       $today = getdate();
       $years_array = array();
 
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $years_array[] = array('id' => tep_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
-                               'text' => tep_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
+        $years_array[] = array('id' => osc_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
+                               'text' => osc_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
       }
 
       $content = '';
@@ -168,7 +168,7 @@
           while ( $tokens = osc_db_fetch_array($tokens_query) ) {
             $content .= '<tr class="moduleRow" id="braintree_card_' . (int)$tokens['id'] . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="braintree_card" value="' . (int)$tokens['id'] . '" /></td>' .
-                        '  <td valign="top">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_LAST_4 . '&nbsp;' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '&nbsp;&nbsp;' . tep_output_string_protected($tokens['card_type']) . '</td>' .
+                        '  <td valign="top">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_LAST_4 . '&nbsp;' . osc_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . osc_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '&nbsp;&nbsp;' . osc_output_string_protected($tokens['card_type']) . '</td>' .
                         '</tr>';
 
             if ( MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV == 'True' ) {
@@ -253,7 +253,7 @@
               }
 
               if ( !isset($braintree_token_cvv) || empty($braintree_token_cvv) ) {
-                tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
+                osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
               }
             }
           }
@@ -284,28 +284,28 @@
         }
 
         if ( !isset($cc_owner) || empty($cc_owner) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardowner', 'SSL'));
         }
 
         if ( !isset($cc_number) || empty($cc_number) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardnumber', 'SSL'));
         }
 
         if ( !isset($cc_expires_month) || !in_array($cc_expires_month, $months_array) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( !isset($cc_expires_year) || !in_array($cc_expires_year, $years_array) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( ($cc_expires_year == date('Y')) && ($cc_expires_month < date('m')) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardexpires', 'SSL'));
         }
 
         if ( MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV == 'True' ) {
           if ( !isset($cc_cvv) || empty($cc_cvv) ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
+            osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardcvv', 'SSL'));
           }
         }
       }
@@ -333,7 +333,7 @@
                                        'streetAddress' => $order->billing['street_address'],
                                        'extendedAddress' => $order->billing['suburb'],
                                        'locality' => $order->billing['city'],
-                                       'region' => tep_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
+                                       'region' => osc_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
                                        'postalCode' => $order->billing['postcode'],
                                        'countryCodeAlpha2' => $order->billing['country']['iso_code_2']),
                     'options' => array());
@@ -349,7 +349,7 @@
                                   'streetAddress' => $order->delivery['street_address'],
                                   'extendedAddress' => $order->delivery['suburb'],
                                   'locality' => $order->delivery['city'],
-                                  'region' => tep_get_zone_name($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']),
+                                  'region' => osc_get_zone_name($order->delivery['country_id'], $order->delivery['zone_id'], $order->delivery['state']),
                                   'postalCode' => $order->delivery['postcode'],
                                   'countryCodeAlpha2' => $order->delivery['country']['iso_code_2']);
       }
@@ -410,7 +410,7 @@
         }
       }
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
 
     function after_process() {
@@ -658,7 +658,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function getTransactionCurrency() {

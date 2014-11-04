@@ -48,16 +48,16 @@
 
       $module = substr($GLOBALS['shipping']['id'], 0, strpos($GLOBALS['shipping']['id'], '_'));
 
-      if (tep_not_null($order->info['shipping_method'])) {
+      if (osc_not_null($order->info['shipping_method'])) {
         if ($GLOBALS[$module]->tax_class > 0) {
-          $shipping_tax = tep_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_description = tep_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $shipping_tax = osc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+          $shipping_tax_description = osc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
 
-          $order->info['tax'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-          $order->info['tax_groups']["$shipping_tax_description"] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
-          $order->info['total'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          $order->info['tax'] += osc_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          $order->info['tax_groups']["$shipping_tax_description"] += osc_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          $order->info['total'] += osc_calculate_tax($order->info['shipping_cost'], $shipping_tax);
 
-          if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += tep_calculate_tax($order->info['shipping_cost'], $shipping_tax);
+          if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] += osc_calculate_tax($order->info['shipping_cost'], $shipping_tax);
         }
 
         $this->output[] = array('title' => $order->info['shipping_method'] . ':',

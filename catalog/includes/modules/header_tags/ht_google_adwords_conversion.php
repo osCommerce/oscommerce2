@@ -59,10 +59,10 @@
           }
 
           $conversion_id = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID;
-          $conversion_language = tep_output_string_protected($language_code);
+          $conversion_language = osc_output_string_protected($language_code);
           $conversion_format = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT;
-          $conversion_color = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
-          $conversion_label = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
+          $conversion_color = osc_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
+          $conversion_label = osc_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
           $conversion_value = $this->format_raw($order_subtotal['value'], $order['currency'], $order['currency_value']);
 
           $output = <<<EOD
@@ -100,7 +100,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function isEnabled() {

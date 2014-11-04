@@ -46,7 +46,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'insert':
         require('includes/functions/password_funcs.php');
@@ -94,7 +94,7 @@
           $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
+        osc_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
         break;
       case 'save':
         require('includes/functions/password_funcs.php');
@@ -123,7 +123,7 @@
 
         osc_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . osc_db_input($username) . "' where id = '" . (int)$_GET['aID'] . "'");
 
-        if (tep_not_null($password)) {
+        if (osc_not_null($password)) {
 // update password in htpasswd
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
@@ -173,7 +173,7 @@
           fclose($fp);
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
+        osc_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
         break;
       case 'deleteconfirm':
         $id = osc_db_prepare_input($_GET['aID']);
@@ -213,7 +213,7 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
+        osc_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
         break;
     }
   }
@@ -361,7 +361,7 @@
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

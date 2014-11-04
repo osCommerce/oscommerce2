@@ -38,20 +38,20 @@
       $params = array();
 
 // grab the product name (used for description)
-      $params['description'] = tep_get_products_name($_GET['products_id']);
+      $params['description'] = osc_get_products_name($_GET['products_id']);
 
 // and image (used for media)
       $image_query = osc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$_GET['products_id'] . "'");
       $image = osc_db_fetch_array($image_query);
 
-      if (tep_not_null($image['products_image'])) {
+      if (osc_not_null($image['products_image'])) {
         $image_file = $image['products_image'];
 
         $pi_query = osc_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$_GET['products_id'] . "' order by sort_order");
 
         if (osc_db_num_rows($pi_query) > 0) {
           while ($pi = osc_db_fetch_array($pi_query)) {
-            if (tep_not_null($pi['image'])) {
+            if (osc_not_null($pi['image'])) {
               $image_file = $pi['image']; // overwrite image with first multiple product image
               break;
             }

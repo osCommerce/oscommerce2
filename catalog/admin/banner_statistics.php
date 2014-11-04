@@ -18,7 +18,7 @@
 
 // check if the graphs directory exists
   $dir_ok = false;
-  if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
+  if (function_exists('imagecreate') && osc_not_null($banner_extension)) {
     if (is_dir(DIR_WS_IMAGES . 'graphs')) {
       if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
         $dir_ok = true;
@@ -62,7 +62,7 @@
           <tr><?php echo tep_draw_form('year', FILENAME_BANNER_STATISTICS, '', 'get'); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="main" align="right"><?php echo TITLE_TYPE . ' ' . tep_draw_pull_down_menu('type', $type_array, (tep_not_null($type) ? $type : 'daily'), 'onchange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript><br />
+            <td class="main" align="right"><?php echo TITLE_TYPE . ' ' . tep_draw_pull_down_menu('type', $type_array, (osc_not_null($type) ? $type : 'daily'), 'onchange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript><br />
 <?php
   switch ($type) {
     case 'yearly': break;
@@ -85,7 +85,7 @@
       <tr>
         <td align="center">
 <?php
-  if (function_exists('imagecreate') && ($dir_ok == true) && tep_not_null($banner_extension)) {
+  if (function_exists('imagecreate') && ($dir_ok == true) && osc_not_null($banner_extension)) {
     $banner_id = (int)$_GET['bID'];
 
     switch ($type) {

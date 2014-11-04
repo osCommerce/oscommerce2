@@ -84,7 +84,7 @@ if ($ok)
     if (number_format($_POST['invoice_amount'], $currencies->get_decimal_places($order['currency'])) != number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])))
     {
         $ok = false;
-        $result = 'Inpay transaction value ('.tep_output_string_protected($_POST['invoice_amount']).') does not match order value ('.number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])).')';
+        $result = 'Inpay transaction value ('.osc_output_string_protected($_POST['invoice_amount']).') does not match order value ('.number_format($total['value']*$order['currency_value'], $currencies->get_decimal_places($order['currency'])).')';
     }
 }
 if ($ok)
@@ -181,7 +181,7 @@ if ($result == 'VERIFIED')
                                     ON p.products_id=pa.products_id
                                     LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
                                     ON pa.products_attributes_id=pad.products_attributes_id
-                                    WHERE p.products_id = '".tep_get_prid($order->products[$i]['id'])."'";
+                                    WHERE p.products_id = '".osc_get_prid($order->products[$i]['id'])."'";
                     // Will work with only one option for downloadable products
                     // otherwise, we have to build the query dynamically with a loop
                     $products_attributes = $order->products[$i]['attributes'];
@@ -192,7 +192,7 @@ if ($result == 'VERIFIED')
                     $stock_query = osc_db_query($stock_query_raw);
                 } else
                 {
-                    $stock_query = osc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    $stock_query = osc_db_query("select products_quantity from ".TABLE_PRODUCTS." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                 }
                 if (osc_db_num_rows($stock_query) > 0)
                 {
@@ -205,20 +205,20 @@ if ($result == 'VERIFIED')
                     {
                         $stock_left = $stock_values['products_quantity'];
                     }
-                    osc_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                    osc_db_query("update ".TABLE_PRODUCTS." set products_quantity = '".$stock_left."' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     if (($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false'))
                     {
-                        osc_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+                        osc_db_query("update ".TABLE_PRODUCTS." set products_status = '0' where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
                     }
                 }
             } // decrease stock end
 
             // Update products_ordered (for bestsellers list)
-            osc_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".tep_get_prid($order->products[$i]['id'])."'");
+            osc_db_query("update ".TABLE_PRODUCTS." set products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])." where products_id = '".osc_get_prid($order->products[$i]['id'])."'");
 
             // Let's get all the info together for the email
             $total_weight += ($order->products[$i]['qty']*$order->products[$i]['weight']);
-            $total_tax += tep_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
+            $total_tax += osc_calculate_tax($total_products_price, $products_tax)*$order->products[$i]['qty'];
             $total_cost += $total_products_price;
 
             // Let's get the attributes
@@ -301,12 +301,12 @@ if ($result == 'VERIFIED')
             // EOF content type fix by AlexStudio
             $email_order .= "\n".EMAIL_TEXT_DELIVERY_ADDRESS."\n".
             EMAIL_SEPARATOR."\n".
-            tep_address_format($order->delivery['format_id'], $order->delivery, 0, '', "\n")."\n";
+            osc_address_format($order->delivery['format_id'], $order->delivery, 0, '', "\n")."\n";
         }
 
         $email_order .= "\n".EMAIL_TEXT_BILLING_ADDRESS."\n".
         EMAIL_SEPARATOR."\n".
-        tep_address_format($order->billing['format_id'], $order->billing, 0, '', "\n")."\n\n";
+        osc_address_format($order->billing['format_id'], $order->billing, 0, '', "\n")."\n\n";
         if (is_object($$payment))
         {
             $email_order .= EMAIL_TEXT_PAYMENT_METHOD."\n".
@@ -318,12 +318,12 @@ if ($result == 'VERIFIED')
                 $email_order .= $payment_class->email_footer."\n\n";
             }
         }
-        tep_mail($order->customer['name'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, nl2br($email_order), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail($order->customer['name'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, nl2br($email_order), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
         // send emails to other people
         if (SEND_EXTRA_ORDER_EMAILS_TO != '')
         {
-            tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, nl2br($email_order), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            osc_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, nl2br($email_order), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
     } // END oreder approved LOOP
 
@@ -337,7 +337,7 @@ if ($result == 'VERIFIED')
     //
     // send warning email
     //
-    if (tep_not_null(MODULE_PAYMENT_INPAY_DEBUG_EMAIL))
+    if (osc_not_null(MODULE_PAYMENT_INPAY_DEBUG_EMAIL))
     {
         $email_body = '$_POST:'."\n\n";
 
@@ -353,7 +353,7 @@ if ($result == 'VERIFIED')
             $email_body .= $key.'='.$value."\n";
         }
 
-        tep_mail('', MODULE_PAYMENT_INPAY_DEBUG_EMAIL, 'Inpay Invalid Process', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail('', MODULE_PAYMENT_INPAY_DEBUG_EMAIL, 'Inpay Invalid Process', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
     }
     //
     // add error message to history if order can be found

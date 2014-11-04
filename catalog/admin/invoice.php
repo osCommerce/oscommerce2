@@ -51,7 +51,7 @@
             <td class="main"><strong><?php echo ENTRY_SOLD_TO; ?></strong></td>
           </tr>
           <tr>
-            <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
+            <td class="main"><?php echo osc_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
           </tr>
           <tr>
             <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
@@ -68,7 +68,7 @@
             <td class="main"><strong><?php echo ENTRY_SHIP_TO; ?></strong></td>
           </tr>
           <tr>
-            <td class="main"><?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
+            <td class="main"><?php echo osc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -115,11 +115,11 @@
 
       echo '        </td>' . "\n" .
            '        <td class="dataTableContent" valign="top">' . $order->products[$i]['model'] . '</td>' . "\n";
-      echo '        <td class="dataTableContent" align="right" valign="top">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n" .
+      echo '        <td class="dataTableContent" align="right" valign="top">' . osc_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n" .
            '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format($order->products[$i]['final_price'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true), true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true), true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
            '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format($order->products[$i]['final_price'] * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n" .
-           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n";
+           '        <td class="dataTableContent" align="right" valign="top"><strong>' . $currencies->format(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax'], true) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</strong></td>' . "\n";
       echo '      </tr>' . "\n";
     }
 ?>

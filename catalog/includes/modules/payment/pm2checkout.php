@@ -104,7 +104,7 @@
         $process_button_string .= tep_draw_hidden_field('c_prod_' . ($i+1), (int)$order->products[$i]['id'] . ',' . (int)$order->products[$i]['qty']) .
                                   tep_draw_hidden_field('c_name_' . ($i+1), $order->products[$i]['name']) .
                                   tep_draw_hidden_field('c_description_' . ($i+1), $order->products[$i]['name']) .
-                                  tep_draw_hidden_field('c_price_' . ($i+1), $this->format_raw(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), MODULE_PAYMENT_2CHECKOUT_CURRENCY));
+                                  tep_draw_hidden_field('c_price_' . ($i+1), $this->format_raw(osc_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']), MODULE_PAYMENT_2CHECKOUT_CURRENCY));
       }
 
       $process_button_string .= tep_draw_hidden_field('id_type', '1') .
@@ -133,7 +133,7 @@
 
     function before_process() {
       if ( ($_POST['credit_card_processed'] != 'Y') && ($_POST['credit_card_processed'] != 'K') ){
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL', true, false));
       }
     }
 
@@ -151,7 +151,7 @@
       }
 
 // The KEY value returned from the gateway is intentionally broken for Test transactions so it is only checked in Production mode
-      if (tep_not_null(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD) && (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Production')) {
+      if (osc_not_null(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD) && (MODULE_PAYMENT_2CHECKOUT_TESTMODE == 'Production')) {
         if (strtoupper(md5(MODULE_PAYMENT_2CHECKOUT_SECRET_WORD . MODULE_PAYMENT_2CHECKOUT_LOGIN . $_POST['order_number'] . $this->order_format($order->info['total'], MODULE_PAYMENT_2CHECKOUT_CURRENCY))) != strtoupper($_POST['key'])) {
           $sql_data_array = array('orders_id' => (int)$insert_id,
                                   'orders_status_id' => (int)$order->info['order_status'],
@@ -211,7 +211,7 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function getCurrencies($value, $key = '') {

@@ -41,11 +41,11 @@
     $banners_query = osc_db_query("select b.banners_id, b.expires_date, b.expires_impressions, sum(bh.banners_shown) as banners_shown from " . TABLE_BANNERS . " b, " . TABLE_BANNERS_HISTORY . " bh where b.status = '1' and b.banners_id = bh.banners_id group by b.banners_id");
     if (osc_db_num_rows($banners_query)) {
       while ($banners = osc_db_fetch_array($banners_query)) {
-        if (tep_not_null($banners['expires_date'])) {
+        if (osc_not_null($banners['expires_date'])) {
           if (date('Y-m-d H:i:s') >= $banners['expires_date']) {
             osc_set_banner_status($banners['banners_id'], '0');
           }
-        } elseif (tep_not_null($banners['expires_impressions'])) {
+        } elseif (osc_not_null($banners['expires_impressions'])) {
           if ( ($banners['expires_impressions'] > 0) && ($banners['banners_shown'] >= $banners['expires_impressions']) ) {
             osc_set_banner_status($banners['banners_id'], '0');
           }
@@ -61,7 +61,7 @@
       $banners_query = osc_db_query("select count(*) as count from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
       $banners = osc_db_fetch_array($banners_query);
       if ($banners['count'] > 0) {
-        $banner = tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
+        $banner = osc_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
       } else {
         return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> No banners with group \'' . $identifier . '\' found!</strong>';
       }
@@ -80,7 +80,7 @@
       return '<strong>TEP ERROR! (tep_display_banner(' . $action . ', ' . $identifier . ') -> Unknown $action parameter value - it must be either \'dynamic\' or \'static\'</strong>';
     }
 
-    if (tep_not_null($banner['banners_html_text'])) {
+    if (osc_not_null($banner['banners_html_text'])) {
       $banner_string = $banner['banners_html_text'];
     } else {
       $banner_string = '<a href="' . tep_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '" target="_blank">' . tep_image(DIR_WS_IMAGES . $banner['banners_image'], $banner['banners_title']) . '</a>';
@@ -95,7 +95,7 @@
 // Check to see if a banner exists
   function osc_banner_exists($action, $identifier) {
     if ($action == 'dynamic') {
-      return tep_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
+      return osc_random_select("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_group = '" . osc_db_input($identifier) . "'");
     } elseif ($action == 'static') {
       $banner_query = osc_db_query("select banners_id, banners_title, banners_image, banners_html_text from " . TABLE_BANNERS . " where status = '1' and banners_id = '" . (int)$identifier . "'");
       return osc_db_fetch_array($banner_query);

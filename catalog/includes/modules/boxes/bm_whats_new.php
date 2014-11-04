@@ -33,15 +33,15 @@
     function execute() {
       global $currencies, $oscTemplate;
 
-      if ($random_product = tep_random_select("select products_id, products_image, products_tax_class_id, products_price from " . TABLE_PRODUCTS . " where products_status = '1' order by products_date_added desc limit " . MAX_RANDOM_SELECT_NEW)) {
-        $random_product['products_name'] = tep_get_products_name($random_product['products_id']);
-        $random_product['specials_new_products_price'] = tep_get_products_special_price($random_product['products_id']);
+      if ($random_product = osc_random_select("select products_id, products_image, products_tax_class_id, products_price from " . TABLE_PRODUCTS . " where products_status = '1' order by products_date_added desc limit " . MAX_RANDOM_SELECT_NEW)) {
+        $random_product['products_name'] = osc_get_products_name($random_product['products_id']);
+        $random_product['specials_new_products_price'] = osc_get_products_special_price($random_product['products_id']);
 
-        if (tep_not_null($random_product['specials_new_products_price'])) {
-          $whats_new_price = '<del>' . $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])) . '</del><br />';
-          $whats_new_price .= '<span class="productSpecialPrice">' . $currencies->display_price($random_product['specials_new_products_price'], tep_get_tax_rate($random_product['products_tax_class_id'])) . '</span>';
+        if (osc_not_null($random_product['specials_new_products_price'])) {
+          $whats_new_price = '<del>' . $currencies->display_price($random_product['products_price'], osc_get_tax_rate($random_product['products_tax_class_id'])) . '</del><br />';
+          $whats_new_price .= '<span class="productSpecialPrice">' . $currencies->display_price($random_product['specials_new_products_price'], osc_get_tax_rate($random_product['products_tax_class_id'])) . '</span>';
         } else {
-          $whats_new_price = $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id']));
+          $whats_new_price = $currencies->display_price($random_product['products_price'], osc_get_tax_rate($random_product['products_tax_class_id']));
         }
                 
         $data = '<div class="panel panel-default">' .

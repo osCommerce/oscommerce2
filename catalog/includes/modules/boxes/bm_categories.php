@@ -58,14 +58,14 @@
         $categories_string .= '</strong>';
       }
 
-      if (tep_has_category_subcategories($counter)) {
+      if (osc_has_category_subcategories($counter)) {
         $categories_string .= '-&gt;';
       }
 
       $categories_string .= '</a>';
 
       if (SHOW_COUNTS == 'true') {
-        $products_in_category = tep_count_products_in_category($counter);
+        $products_in_category = osc_count_products_in_category($counter);
         if ($products_in_category > 0) {
           $categories_string .= '&nbsp;(' . $products_in_category . ')';
         }
@@ -103,7 +103,7 @@
         }
       }
 
-      if (tep_not_null($cPath)) {
+      if (osc_not_null($cPath)) {
         $new_path = '';
         foreach($cPath_array as $key => $value) {
           unset($parent_id);

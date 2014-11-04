@@ -29,7 +29,7 @@
 
     function getOutput() {
       $cache_file = DIR_FS_CACHE . 'oscommerce_version_check.cache';
-      $current_version = tep_get_version();
+      $current_version = osc_get_version();
       $new_version = false;
 
       if (file_exists($cache_file)) {

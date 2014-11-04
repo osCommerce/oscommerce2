@@ -15,23 +15,23 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $cartID) {
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
@@ -39,8 +39,8 @@
   if ( (STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true') ) {
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-      if (tep_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      if (osc_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+        osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
         break;
       }
     }
@@ -67,7 +67,7 @@
   $order = new order;
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
-  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+  if (isset($_POST['comments']) && osc_not_null($_POST['comments'])) {
     $comments = osc_db_prepare_input($_POST['comments']);
   }
 
@@ -101,9 +101,9 @@
 ?>
 
   <div class="contentText">
-    <?php echo '<strong>' . tep_output_string_protected($error['title']) . '</strong>'; ?>
+    <?php echo '<strong>' . osc_output_string_protected($error['title']) . '</strong>'; ?>
 
-    <p class="messageStackError"><?php echo tep_output_string_protected($error['error']); ?></p>
+    <p class="messageStackError"><?php echo osc_output_string_protected($error['error']); ?></p>
   </div>
 
 <?php
@@ -129,7 +129,7 @@
         <div class="panel-heading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+          <?php echo osc_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>

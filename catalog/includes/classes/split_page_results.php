@@ -75,7 +75,7 @@
 
       $class = 'class="pageResults"';
 
-      if (tep_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
+      if (osc_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
 // previous button - not displayed on first page
       if ($this->current_page_number > 1) $display_links_string .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_name . '=' . ($this->current_page_number - 1), $request_type) . '" class="pageResults" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' "><u>' . PREVNEXT_BUTTON_PREV . '</u></a>&nbsp;&nbsp;';

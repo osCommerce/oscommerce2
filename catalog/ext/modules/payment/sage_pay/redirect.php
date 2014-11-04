@@ -16,11 +16,11 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
-    $redirect_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
+  if ( isset($_GET['payment_error']) && osc_not_null($_GET['payment_error']) ) {
+    $redirect_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && osc_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
   } else {
     $hidden_params = '';
 

@@ -49,7 +49,7 @@
           }
 
           if ( $this->enabled === true ) {
-            if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+            if ( !osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
               $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
             }
           }
@@ -65,7 +65,7 @@
     function execute() {
       global $oscTemplate;
 
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
+      if ( osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
         if ( isset($_GET['action']) ) {
           if ( $_GET['action'] == 'paypal_login' ) {
             $this->preLogin();
@@ -152,7 +152,7 @@
                                         'customers_newsletter' => '0',
                                         'customers_password' => '');
 
-                if ($this->hasAttribute('phone') && isset($response['phone_number']) && tep_not_null($response['phone_number'])) {
+                if ($this->hasAttribute('phone') && isset($response['phone_number']) && osc_not_null($response['phone_number'])) {
                   $customers_telephone = osc_db_prepare_input($response['phone_number']);
 
                   $sql_data_array['customers_telephone'] = $customers_telephone;
@@ -274,7 +274,7 @@
 
 // Register PayPal Express Checkout as the default payment method
       if ( !isset($_SESSION['payment']) || ($payment != 'paypal_express') ) {
-        if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
+        if (defined('MODULE_PAYMENT_INSTALLED') && osc_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
               include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_express.php');
@@ -423,7 +423,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_PROXY) ) {
+      if ( osc_not_null(MODULE_CONTENT_PAYPAL_LOGIN_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_CONTENT_PAYPAL_LOGIN_PROXY);
       }

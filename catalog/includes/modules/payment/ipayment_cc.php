@@ -116,7 +116,7 @@
                                tep_draw_hidden_field('trx_paymenttyp', 'cc') .
                                tep_draw_hidden_field('trxuser_id', MODULE_PAYMENT_IPAYMENT_CC_USER_ID) .
                                tep_draw_hidden_field('trxpassword', MODULE_PAYMENT_IPAYMENT_CC_PASSWORD) .
-                               tep_draw_hidden_field('from_ip', tep_get_ip_address()) .
+                               tep_draw_hidden_field('from_ip', osc_get_ip_address()) .
                                tep_draw_hidden_field('trx_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('trx_amount', $this->format_raw($order->info['total'])*100) .
                                tep_draw_hidden_field('trx_typ', ((MODULE_PAYMENT_IPAYMENT_CC_TRANSACTION_METHOD == 'Capture') ? 'auth' : 'preauth')) .
@@ -133,7 +133,7 @@
                                tep_draw_hidden_field('client_name', 'oscommerce') .
                                tep_draw_hidden_field('client_version', $this->signature);
 
-      if (tep_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
+      if (osc_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
         $process_button_string .= tep_draw_hidden_field('trx_securityhash', md5(MODULE_PAYMENT_IPAYMENT_CC_USER_ID . ($this->format_raw($order->info['total']) * 100) . $_SESSION['currency'] . MODULE_PAYMENT_IPAYMENT_CC_PASSWORD . MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD));
       }
 
@@ -144,10 +144,10 @@
       global $order;
 
       if ($_GET['ret_errorcode'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . tep_output_string_protected($_GET['ret_errormsg'])));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . osc_output_string_protected($_GET['ret_errormsg'])));
       }
 
-      if (tep_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
+      if (osc_not_null(MODULE_PAYMENT_IPAYMENT_CC_SECRET_HASH_PASSWORD)) {
         $pass = true;
 
 // verify ret_param_checksum
@@ -163,7 +163,7 @@
         }
 
         if ($pass != true) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code));
         }
       }
 
@@ -222,11 +222,11 @@
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function sendDebugEmail($checksum_match = 0) {
-      if (tep_not_null(MODULE_PAYMENT_IPAYMENT_CC_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_IPAYMENT_CC_DEBUG_EMAIL)) {
         $email_body = 'iPayment (Credit Card) Transaction' . "\n\n" .
                       'Date: ' . strftime(DATE_TIME_FORMAT) . "\n" .
                       'Checksum Match: ';
@@ -267,7 +267,7 @@
           $email_body .= '(empty)' . "\n";
         }
 
-        tep_mail('', MODULE_PAYMENT_IPAYMENT_CC_DEBUG_EMAIL, 'iPayment (Credit Card) Transaction', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        osc_mail('', MODULE_PAYMENT_IPAYMENT_CC_DEBUG_EMAIL, 'iPayment (Credit Card) Transaction', $email_body, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
       }
     }
   }

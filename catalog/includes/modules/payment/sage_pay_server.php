@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_SAGE_PAY_SERVER_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -134,7 +134,7 @@
       } else {
         if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
           tep_session_register('sagepay_server_skey_code');
-          $sagepay_server_skey_code = tep_create_random_value(16);
+          $sagepay_server_skey_code = osc_create_random_value(16);
         }
 
         $params = array('VPSProtocol' => $this->api_version,
@@ -162,7 +162,7 @@
                         'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                         'Apply3DSecure' => '0');
 
-        $ip_address = tep_get_ip_address();
+        $ip_address = osc_get_ip_address();
 
         if ( (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
           $params['ClientIPAddress']= $ip_address;
@@ -177,11 +177,11 @@
         }
 
         if ($params['BillingCountry'] == 'US') {
-          $params['BillingState'] = tep_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], '');
+          $params['BillingState'] = osc_get_zone_code($order->billing['country']['id'], $order->billing['zone_id'], '');
         }
 
         if ($params['DeliveryCountry'] == 'US') {
-          $params['DeliveryState'] = tep_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], '');
+          $params['DeliveryState'] = osc_get_zone_code($order->delivery['country']['id'], $order->delivery['zone_id'], '');
         }
 
         if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE != 'Normal' ) {
@@ -246,7 +246,7 @@
           }
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            tep_redirect($return['NextURL']);
+            osc_redirect($return['NextURL']);
           } else {
             if ( !isset($_SESSION['sage_pay_server_nexturl']) ) {
               tep_session_register('sage_pay_server_nexturl');
@@ -254,7 +254,7 @@
 
             $sage_pay_server_nexturl = $return['NextURL'];
 
-            tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
+            osc_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -263,7 +263,7 @@
         }
       }
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . (osc_not_null($error) ? '&error=' . $error : ''), 'SSL'));
     }
 
     function after_process() {
@@ -289,7 +289,7 @@
 
         unset($_SESSION['sage_pay_server_nexturl']);
 
-        tep_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
+        osc_redirect(tep_href_link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
       }
     }
 
@@ -503,7 +503,7 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_SAGE_PAY_SERVER_PROXY);
       }
@@ -527,7 +527,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '.', '');
     }
 
     function loadErrorMessages() {
@@ -665,7 +665,7 @@ EOD;
                       'Amount' => 0,
                       'Currency' => DEFAULT_CURRENCY);
 
-      $ip_address = tep_get_ip_address();
+      $ip_address = osc_get_ip_address();
 
       if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
         $params['ClientIPAddress']= $ip_address;
@@ -687,7 +687,7 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -703,7 +703,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, 'Sage Pay Server Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, 'Sage Pay Server Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

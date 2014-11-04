@@ -53,7 +53,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
+    osc_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -77,7 +77,7 @@
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
     }
   }
 
@@ -111,7 +111,7 @@
         <?php
         echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_TEXT . '</span>';
         ?>
       </div>
     </div>
@@ -121,7 +121,7 @@
         <?php
         echo tep_draw_password_field('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
+        if (osc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>';
         ?>
       </div>
     </div>

@@ -14,7 +14,7 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'insert':
       case 'save':
@@ -51,7 +51,7 @@
           osc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . osc_db_input($orders_status_id) . "' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         }
 
-        tep_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status_id));
+        osc_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status_id));
         break;
       case 'deleteconfirm':
         $oID = osc_db_prepare_input($_GET['oID']);
@@ -65,7 +65,7 @@
 
         osc_db_query("delete from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . osc_db_input($oID) . "'");
 
-        tep_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']));
+        osc_redirect(tep_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']));
         break;
       case 'delete':
         $oID = osc_db_prepare_input($_GET['oID']);
@@ -226,7 +226,7 @@
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

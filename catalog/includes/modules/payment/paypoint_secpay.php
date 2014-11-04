@@ -150,10 +150,10 @@
         list($REQUEST_URI, $CHECK_SUM) = split('hash=', $_SERVER['REQUEST_URI']);
 
         if ($_GET['hash'] != md5($REQUEST_URI . $DIGEST_PASSWORD)) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
+          osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code ."&detail=hash", 'SSL', false, false));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
+        osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, session_name() . '=' . $_GET[session_name()] . '&payment_error=' . $this->code, 'SSL', false, false));
       }
     }
 

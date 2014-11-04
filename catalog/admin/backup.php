@@ -14,14 +14,14 @@
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'forget':
         osc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
 
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        osc_redirect(tep_href_link(FILENAME_BACKUP));
         break;
       case 'backupnow':
         tep_set_time_limit(0);
@@ -108,7 +108,7 @@
               foreach ( $table_list as $i ) {
                 if (!isset($rows[$i])) {
                   $schema .= 'NULL, ';
-                } elseif (tep_not_null($rows[$i])) {
+                } elseif (osc_not_null($rows[$i])) {
                   $row = addslashes($rows[$i]);
                   $row = preg_replace("/\n#/", "\n".'\#', $row);
 
@@ -157,7 +157,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_SAVED, 'success');
         }
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        osc_redirect(tep_href_link(FILENAME_BACKUP));
         break;
       case 'restorenow':
       case 'restorelocalnow':
@@ -278,7 +278,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_RESTORED, 'success');
         }
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        osc_redirect(tep_href_link(FILENAME_BACKUP));
         break;
       case 'download':
         $extension = substr($_GET['file'], -3);
@@ -300,14 +300,14 @@
         }
         break;
       case 'deleteconfirm':
-        if (strstr($_GET['file'], '..')) tep_redirect(tep_href_link(FILENAME_BACKUP));
+        if (strstr($_GET['file'], '..')) osc_redirect(tep_href_link(FILENAME_BACKUP));
 
         tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
 
-          tep_redirect(tep_href_link(FILENAME_BACKUP));
+          osc_redirect(tep_href_link(FILENAME_BACKUP));
         }
         break;
     }
@@ -434,7 +434,7 @@
     case 'restore':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
-      $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
+      $contents[] = array('text' => osc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     case 'restorelocal':
@@ -466,7 +466,7 @@
       break;
   }
 
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
+  if ( (osc_not_null($heading)) && (osc_not_null($contents)) ) {
     echo '            <td width="25%" valign="top">' . "\n";
 
     $box = new box;

@@ -15,31 +15,31 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot(array('mode' => 'SSL', 'page' => FILENAME_CHECKOUT_PAYMENT));
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $cartID) {
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   }
 
   if (!isset($_SESSION['payment'])) tep_session_register('payment');
   if (isset($_POST['payment'])) $payment = $_POST['payment'];
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
-  if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
+  if (isset($_POST['comments']) && osc_not_null($_POST['comments'])) {
     $comments = osc_db_prepare_input($_POST['comments']);
   }
 
@@ -53,7 +53,7 @@
   $payment_modules->update_status();
 
   if ( ($payment_modules->selected_module != $payment) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
   if (is_array($payment_modules->modules)) {
@@ -72,13 +72,13 @@
   $any_out_of_stock = false;
   if (STOCK_CHECK == 'true') {
     for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-      if (tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
+      if (osc_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
         $any_out_of_stock = true;
       }
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      osc_redirect(tep_href_link(FILENAME_SHOPPING_CART));
     }
   }
 
@@ -137,7 +137,7 @@
            '            <td valign="top">' . $order->products[$i]['name'];
 
       if (STOCK_CHECK == 'true') {
-        echo tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
+        echo osc_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
       }
 
       if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
@@ -148,7 +148,7 @@
 
       echo '</td>' . "\n";
 
-      if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+      if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . osc_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
 
       echo '            <td align="right" valign="top">' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . '</td>' . "\n" .
            '          </tr>' . "\n";
@@ -177,7 +177,7 @@
           <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
 
           <div class="panel-body">
-            <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
+            <?php echo osc_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
         </div>
       </div>
@@ -256,7 +256,7 @@
           <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
 
           <div class="panel-body">
-            <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
+            <?php echo osc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@
   </div>
 
 <?php
-  if (tep_not_null($order->info['comments'])) {
+  if (osc_not_null($order->info['comments'])) {
 ?>
 
   <div class="page-header">
@@ -285,7 +285,7 @@
 
   <div class="contentText">
     <blockquote>
-      <small><?php echo nl2br(tep_output_string_protected($order->info['comments'])) . tep_draw_hidden_field('comments', $order->info['comments']); ?></small>
+      <small><?php echo nl2br(osc_output_string_protected($order->info['comments'])) . tep_draw_hidden_field('comments', $order->info['comments']); ?></small>
     </blockquote>
   </div>
 

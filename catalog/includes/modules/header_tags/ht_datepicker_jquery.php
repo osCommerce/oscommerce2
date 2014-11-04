@@ -31,7 +31,7 @@
     function execute() {
       global $PHP_SELF, $oscTemplate;
 
-      if (tep_not_null(MODULE_HEADER_TAGS_DATEPICKER_JQUERY_PAGES)) {
+      if (osc_not_null(MODULE_HEADER_TAGS_DATEPICKER_JQUERY_PAGES)) {
         $pages_array = array();
 
         foreach (explode(';', MODULE_HEADER_TAGS_DATEPICKER_JQUERY_PAGES) as $page) {
@@ -109,7 +109,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= tep_draw_checkbox_field('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= tep_draw_checkbox_field('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . osc_output_string($file) . '<br />';
     }
 
     if (!empty($output)) {

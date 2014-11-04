@@ -18,7 +18,7 @@
 ?>
 
 <?php
-  if (isset($_GET['error_message']) && tep_not_null($_GET['error_message'])) {
+  if (isset($_GET['error_message']) && osc_not_null($_GET['error_message'])) {
 ?>
 <div class="clearfix"></div>
 <div class="col-xs-12">
@@ -30,7 +30,7 @@
 <?php
   }
 
-  if (isset($_GET['info_message']) && tep_not_null($_GET['info_message'])) {
+  if (isset($_GET['info_message']) && osc_not_null($_GET['info_message'])) {
 ?>
 <div class="clearfix"></div>
 <div class="col-xs-12">

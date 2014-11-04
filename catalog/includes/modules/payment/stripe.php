@@ -43,7 +43,7 @@
       }
 
       if ( $this->enabled === true ) {
-        if ( !tep_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !tep_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
+        if ( !osc_not_null(MODULE_PAYMENT_STRIPE_PUBLISHABLE_KEY) || !osc_not_null(MODULE_PAYMENT_STRIPE_SECRET_KEY) ) {
           $this->description = '<div class="secWarning">' . MODULE_PAYMENT_STRIPE_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
 
           $this->enabled = false;
@@ -118,27 +118,27 @@
       $months_array = array();
 
       for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => tep_output_string(sprintf('%02d', $i)),
-                                'text' => tep_output_string_protected(sprintf('%02d', $i)));
+        $months_array[] = array('id' => osc_output_string(sprintf('%02d', $i)),
+                                'text' => osc_output_string_protected(sprintf('%02d', $i)));
       }
 
       $today = getdate();
       $years_array = array();
 
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $years_array[] = array('id' => tep_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
-                               'text' => tep_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
+        $years_array[] = array('id' => osc_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
+                               'text' => osc_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
       }
 
       $months_string = '<select data-stripe="exp_month">';
       foreach ( $months_array as $m ) {
-        $months_string .= '<option value="' . tep_output_string($m['id']) . '">' . tep_output_string($m['text']) . '</option>';
+        $months_string .= '<option value="' . osc_output_string($m['id']) . '">' . osc_output_string($m['text']) . '</option>';
       }
       $months_string .= '</select>';
 
       $years_string = '<select data-stripe="exp_year">';
       foreach ( $years_array as $y ) {
-        $years_string .= '<option value="' . tep_output_string($y['id']) . '">' . tep_output_string($y['text']) . '</option>';
+        $years_string .= '<option value="' . osc_output_string($y['id']) . '">' . osc_output_string($y['text']) . '</option>';
       }
       $years_string .= '</select>';
 
@@ -153,7 +153,7 @@
           while ( $tokens = osc_db_fetch_array($tokens_query) ) {
             $content .= '<tr class="moduleRow" id="stripe_card_' . (int)$tokens['id'] . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="stripe_card" value="' . (int)$tokens['id'] . '" /></td>' .
-                        '  <td valign="top"><strong>' . tep_output_string_protected($tokens['card_type']) . '</strong>&nbsp;&nbsp;****' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '</td>' .
+                        '  <td valign="top"><strong>' . osc_output_string_protected($tokens['card_type']) . '</strong>&nbsp;&nbsp;****' . osc_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . osc_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)) . '</td>' .
                         '</tr>';
           }
 
@@ -169,7 +169,7 @@
                   '<table id="stripe_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_STRIPE_CREDITCARD_OWNER . '</td>' .
-                  '  <td><input type="text" data-stripe="name" value="' . tep_output_string($order->billing['firstname'] . ' ' . $order->billing['lastname']) . '" /></td>' .
+                  '  <td><input type="text" data-stripe="name" value="' . osc_output_string($order->billing['firstname'] . ' ' . $order->billing['lastname']) . '" /></td>' .
                   '</tr>' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_STRIPE_CREDITCARD_NUMBER . '</td>' .
@@ -199,11 +199,11 @@
       $address = array('address_line1' => $order->billing['street_address'],
                        'address_city' => $order->billing['city'],
                        'address_zip' => $order->billing['postcode'],
-                       'address_state' => tep_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
+                       'address_state' => osc_get_zone_name($order->billing['country_id'], $order->billing['zone_id'], $order->billing['state']),
                        'address_country' => $order->billing['country']['iso_code_2']);
 
       foreach ( $address as $k => $v ) {
-        $content .= '<input type="hidden" data-stripe="' . tep_output_string($k) . '" value="' . tep_output_string($v) . '" />';
+        $content .= '<input type="hidden" data-stripe="' . osc_output_string($k) . '" value="' . osc_output_string($v) . '" />';
       }
 
       if ( !$this->templateClassExists() ) {
@@ -238,7 +238,7 @@
             $params['customer'] = $stripe_token_array[0];
             $params['card'] = $stripe_token_array[1];
           } else {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
+            osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=cardstored', 'SSL'));
           }
         }
       }
@@ -290,7 +290,7 @@
 
       $this->sendDebugEmail($stripe_result);
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code, 'SSL'));
     }
 
     function after_process() {
@@ -527,7 +527,7 @@ EOD;
       }
 
       $header = array('Stripe-Version: ' . $this->api_version,
-                      'User-Agent: OSCOM ' . tep_get_version());
+                      'User-Agent: OSCOM ' . osc_get_version());
 
       if ( is_array($parameters) && !empty($parameters) ) {
         $post_string = '';
@@ -568,7 +568,7 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
       }
 
-      if ( tep_not_null(MODULE_PAYMENT_STRIPE_PROXY) ) {
+      if ( osc_not_null(MODULE_PAYMENT_STRIPE_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, MODULE_PAYMENT_STRIPE_PROXY);
       }
@@ -673,7 +673,7 @@ EOD;
         $currency_value = $currencies->currencies[$currency_code]['value'];
       }
 
-      return number_format(tep_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
+      return number_format(osc_round($number * $currency_value, $currencies->currencies[$currency_code]['decimal_places']), $currencies->currencies[$currency_code]['decimal_places'], '', '');
     }
 
     function templateClassExists() {
@@ -787,7 +787,7 @@ EOD;
     }
 
     function sendDebugEmail($response = array()) {
-      if (tep_not_null(MODULE_PAYMENT_STRIPE_DEBUG_EMAIL)) {
+      if (osc_not_null(MODULE_PAYMENT_STRIPE_DEBUG_EMAIL)) {
         $email_body = '';
 
         if (!empty($response)) {
@@ -803,7 +803,7 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_STRIPE_DEBUG_EMAIL, 'Stripe Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          osc_mail('', MODULE_PAYMENT_STRIPE_DEBUG_EMAIL, 'Stripe Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
       }
     }

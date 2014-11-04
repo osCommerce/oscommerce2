@@ -33,7 +33,7 @@
     function execute() {
       global $PHP_SELF, $oscTemplate;
 
-      if ( (substr(basename($PHP_SELF), 0, 8) != 'checkout') && tep_not_null(MODULE_BOXES_CARD_ACCEPTANCE_LOGOS) ) {
+      if ( (substr(basename($PHP_SELF), 0, 8) != 'checkout') && osc_not_null(MODULE_BOXES_CARD_ACCEPTANCE_LOGOS) ) {
         $output = '<div class="panel panel-default">' .
                   '  <div class="panel-heading">' . MODULE_BOXES_CARD_ACCEPTANCE_BOX_TITLE . '</div>' .
                   '  <div class="panel-body text-center">';

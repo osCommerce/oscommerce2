@@ -15,10 +15,10 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('braintree_cc.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
+  if ( defined('MODULE_PAYMENT_INSTALLED') && osc_not_null(MODULE_PAYMENT_INSTALLED) && in_array('braintree_cc.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
     if ( !class_exists('braintree_cc') ) {
       include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/braintree_cc.php');
       include(DIR_WS_MODULES . 'payment/braintree_cc.php');
@@ -27,10 +27,10 @@
     $braintree_cc = new braintree_cc();
 
     if ( !$braintree_cc->enabled ) {
-      tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
     }
   } else {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_braintree_cards.php');
@@ -38,7 +38,7 @@
   $braintree_cards = new cm_account_braintree_cards();
 
   if ( !$braintree_cards->isEnabled() ) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    osc_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
   }
 
   if ( isset($_GET['action']) ) {
@@ -54,7 +54,7 @@
       }
     }
 
-    tep_redirect(tep_href_link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
+    osc_redirect(tep_href_link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
   }
 
   $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -87,7 +87,7 @@
 
     <div>
       <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('ext/modules/content/account/braintree/cards.php', 'action=delete&id=' . (int)$tokens['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
-      <p><strong><?php echo tep_output_string_protected($tokens['card_type']); ?></strong>&nbsp;&nbsp;****<?php echo tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)); ?></p>
+      <p><strong><?php echo osc_output_string_protected($tokens['card_type']); ?></strong>&nbsp;&nbsp;****<?php echo osc_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . osc_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)); ?></p>
     </div>
 
 <?php

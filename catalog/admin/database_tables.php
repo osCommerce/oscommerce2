@@ -79,9 +79,9 @@
 
         $sql_query = osc_db_query($action . " table " . $table);
         while ( $sql = osc_db_fetch_array($sql_query) ) {
-          $table_data[] = array(($table != $current_table) ? tep_output_string_protected($table) : '',
-                                tep_output_string_protected($sql['Msg_type']),
-                                tep_output_string_protected($sql['Msg_text']),
+          $table_data[] = array(($table != $current_table) ? osc_output_string_protected($table) : '',
+                                osc_output_string_protected($sql['Msg_type']),
+                                osc_output_string_protected($sql['Msg_text']),
                                 ($table != $current_table) ? tep_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
 
           $current_table = $table;
@@ -107,7 +107,7 @@
       }
 
       if ( $charset_pass === false ) {
-        tep_redirect(tep_href_link('database_tables.php'));
+        osc_redirect(tep_href_link('database_tables.php'));
       }
 
       tep_set_time_limit(0);
@@ -163,8 +163,8 @@
         }
 
         if ( !isset($_POST['dryrun']) ) {
-          $table_data[] = array(tep_output_string_protected($table),
-                                tep_output_string_protected($result),
+          $table_data[] = array(osc_output_string_protected($table),
+                                osc_output_string_protected($result),
                                 tep_draw_checkbox_field('id[]', $table, true));
         }
       }
@@ -183,11 +183,11 @@
 
       $sql_query = osc_db_query('show table status');
       while ( $sql = osc_db_fetch_array($sql_query) ) {
-        $table_data[] = array(tep_output_string_protected($sql['Name']),
-                              tep_output_string_protected($sql['Rows']),
+        $table_data[] = array(osc_output_string_protected($sql['Name']),
+                              osc_output_string_protected($sql['Rows']),
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
-                              tep_output_string_protected($sql['Engine']),
-                              tep_output_string_protected($sql['Collation']),
+                              osc_output_string_protected($sql['Engine']),
+                              osc_output_string_protected($sql['Collation']),
                               tep_draw_checkbox_field('id[]', $sql['Name']));
       }
   }

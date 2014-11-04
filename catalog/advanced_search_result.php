@@ -52,8 +52,8 @@
     }
 
     $date_check_error = false;
-    if (tep_not_null($dfrom)) {
-      if (!tep_checkdate($dfrom, DOB_FORMAT_STRING, $dfrom_array)) {
+    if (osc_not_null($dfrom)) {
+      if (!osc_checkdate($dfrom, DOB_FORMAT_STRING, $dfrom_array)) {
         $error = true;
         $date_check_error = true;
 
@@ -61,8 +61,8 @@
       }
     }
 
-    if (tep_not_null($dto)) {
-      if (!tep_checkdate($dto, DOB_FORMAT_STRING, $dto_array)) {
+    if (osc_not_null($dto)) {
+      if (!osc_checkdate($dto, DOB_FORMAT_STRING, $dto_array)) {
         $error = true;
         $date_check_error = true;
 
@@ -70,7 +70,7 @@
       }
     }
 
-    if (($date_check_error == false) && tep_not_null($dfrom) && tep_not_null($dto)) {
+    if (($date_check_error == false) && osc_not_null($dfrom) && osc_not_null($dto)) {
       if (mktime(0, 0, 0, $dfrom_array[1], $dfrom_array[2], $dfrom_array[0]) > mktime(0, 0, 0, $dto_array[1], $dto_array[2], $dto_array[0])) {
         $error = true;
 
@@ -79,7 +79,7 @@
     }
 
     $price_check_error = false;
-    if (tep_not_null($pfrom)) {
+    if (osc_not_null($pfrom)) {
       if (!settype($pfrom, 'double')) {
         $error = true;
         $price_check_error = true;
@@ -88,7 +88,7 @@
       }
     }
 
-    if (tep_not_null($pto)) {
+    if (osc_not_null($pto)) {
       if (!settype($pto, 'double')) {
         $error = true;
         $price_check_error = true;
@@ -105,8 +105,8 @@
       }
     }
 
-    if (tep_not_null($keywords)) {
-      if (!tep_parse_search_string($keywords, $search_keywords)) {
+    if (osc_not_null($keywords)) {
+      if (!osc_parse_search_string($keywords, $search_keywords)) {
         $error = true;
 
         $messageStack->add_session('search', ERROR_INVALID_KEYWORDS);
@@ -121,11 +121,11 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link(FILENAME_ADVANCED_SEARCH, tep_get_all_get_params(), 'NONSSL', true, false));
+    osc_redirect(tep_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(), 'NONSSL', true, false));
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ADVANCED_SEARCH));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, tep_get_all_get_params(), 'NONSSL', true, false));
+  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, osc_get_all_get_params(), 'NONSSL', true, false));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -179,13 +179,13 @@
 
   $select_str = "select distinct " . $select_column_list . " m.manufacturers_id, p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, IF(s.status, s.specials_new_products_price, NULL) as specials_new_products_price, IF(s.status, s.specials_new_products_price, p.products_price) as final_price ";
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     $select_str .= ", SUM(tr.tax_rate) as tax_rate ";
   }
 
   $from_str = "from " . TABLE_PRODUCTS . " p left join " . TABLE_MANUFACTURERS . " m using(manufacturers_id) left join " . TABLE_SPECIALS . " s on p.products_id = s.products_id";
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     if (!isset($_SESSION['customer_country_id'])) {
       $customer_country_id = STORE_COUNTRY;
       $customer_zone_id = STORE_ZONE;
@@ -197,10 +197,10 @@
 
   $where_str = " where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id ";
 
-  if (isset($_GET['categories_id']) && tep_not_null($_GET['categories_id'])) {
+  if (isset($_GET['categories_id']) && osc_not_null($_GET['categories_id'])) {
     if (isset($_GET['inc_subcat']) && ($_GET['inc_subcat'] == '1')) {
       $subcategories_array = array();
-      tep_get_subcategories($subcategories_array, $_GET['categories_id']);
+      osc_get_subcategories($subcategories_array, $_GET['categories_id']);
 
       $where_str .= " and p2c.products_id = p.products_id and p2c.products_id = pd.products_id and (p2c.categories_id = '" . (int)$_GET['categories_id'] . "'";
 
@@ -214,7 +214,7 @@
     }
   }
 
-  if (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
+  if (isset($_GET['manufacturers_id']) && osc_not_null($_GET['manufacturers_id'])) {
     $where_str .= " and m.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'";
   }
 
@@ -239,15 +239,15 @@
     $where_str .= " )";
   }
 
-  if (tep_not_null($dfrom)) {
+  if (osc_not_null($dfrom)) {
     $where_str .= " and p.products_date_added >= '" . tep_date_raw($dfrom) . "'";
   }
 
-  if (tep_not_null($dto)) {
+  if (osc_not_null($dto)) {
     $where_str .= " and p.products_date_added <= '" . tep_date_raw($dto) . "'";
   }
 
-  if (tep_not_null($pfrom)) {
+  if (osc_not_null($pfrom)) {
     if ($currencies->is_set($_SESSION['currency'])) {
       $rate = $currencies->get_value($_SESSION['currency']);
 
@@ -255,7 +255,7 @@
     }
   }
 
-  if (tep_not_null($pto)) {
+  if (osc_not_null($pto)) {
     if (isset($rate)) {
       $pto = $pto / $rate;
     }
@@ -269,7 +269,7 @@
     if ($pto > 0) $where_str .= " and (IF(s.status, s.specials_new_products_price, p.products_price) <= " . (double)$pto . ")";
   }
 
-  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
+  if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (osc_not_null($pfrom) || osc_not_null($pto)) ) {
     $where_str .= " group by p.products_id, tr.tax_priority";
   }
 
@@ -318,7 +318,7 @@
   <br />
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADVANCED_SEARCH, tep_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ADVANCED_SEARCH, osc_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
   </div>
 </div>
 

@@ -22,7 +22,7 @@
     $action = 'logoff';
   }
 
-  if (tep_not_null($action)) {
+  if (osc_not_null($action)) {
     switch ($action) {
       case 'process':
         if (tep_session_is_registered('redirect_origin') && isset($redirect_origin['auth_user']) && !isset($_POST['username'])) {
@@ -65,9 +65,9 @@
 
                 tep_session_unregister('redirect_origin');
 
-                tep_redirect(tep_href_link($page, $get_string));
+                osc_redirect(tep_href_link($page, $get_string));
               } else {
-                tep_redirect(tep_href_link(FILENAME_DEFAULT));
+                osc_redirect(tep_href_link(FILENAME_DEFAULT));
               }
             }
           }
@@ -93,7 +93,7 @@
           $auth_ignore = true;
         }
 
-        tep_redirect(tep_href_link(FILENAME_DEFAULT));
+        osc_redirect(tep_href_link(FILENAME_DEFAULT));
 
         break;
 
@@ -109,7 +109,7 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_LOGIN));
+        osc_redirect(tep_href_link(FILENAME_LOGIN));
 
         break;
     }

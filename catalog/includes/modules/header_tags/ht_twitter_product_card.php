@@ -40,11 +40,11 @@
           $data = array('card' => 'product',
                         'title' => $product_info['products_name']);
 
-          if ( tep_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID) ) {
+          if ( osc_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID) ) {
             $data['site'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_SITE_ID;
           }
 
-          if ( tep_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID) ) {
+          if ( osc_not_null(MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID) ) {
             $data['creator'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_USER_ID;
           }
 
@@ -68,10 +68,10 @@
 
           $data['image:src'] = tep_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
 
-          if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
-            $products_price = $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id']));
+          if ($new_price = osc_get_products_special_price($product_info['products_id'])) {
+            $products_price = $currencies->display_price($new_price, osc_get_tax_rate($product_info['products_tax_class_id']));
           } else {
-            $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+            $products_price = $currencies->display_price($product_info['products_price'], osc_get_tax_rate($product_info['products_tax_class_id']));
           }
 
           $data['data1'] = $products_price;
@@ -79,7 +79,7 @@
 
           if ( $product_info['products_date_available'] > date('Y-m-d H:i:s') ) {
             $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_PRE_ORDER;
-            $data['label2'] = tep_date_short($product_info['products_date_available']);
+            $data['label2'] = osc_date_short($product_info['products_date_available']);
           } elseif ( $product_info['products_quantity'] > 0 ) {
             $data['data2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_IN_STOCK;
             $data['label2'] = MODULE_HEADER_TAGS_TWITTER_PRODUCT_CARD_TEXT_BUY_NOW;
@@ -91,7 +91,7 @@
           $result = '';
 
           foreach ( $data as $key => $value ) {
-            $result .= '<meta name="twitter:' . tep_output_string_protected($key) . '" content="' . tep_output_string_protected($value) . '" />' . "\n";
+            $result .= '<meta name="twitter:' . osc_output_string_protected($key) . '" content="' . osc_output_string_protected($value) . '" />' . "\n";
           }
 
           $oscTemplate->addBlock($result, $this->group);

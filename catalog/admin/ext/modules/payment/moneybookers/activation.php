@@ -34,7 +34,7 @@
                       'Store URL: ' . tep_catalog_href_link() . "\n" .
                       'Language: ' . $language . "\n";
 
-        tep_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
+        osc_mail('', 'ecommerce@moneybookers.com', 'Quick Checkout Account Activation', $email_body, '', $_POST['mb_email']);
       }
 
       break;
