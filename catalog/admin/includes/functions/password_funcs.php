@@ -93,7 +93,7 @@
 ////
 // This function produces a crypted string using the APR-MD5 algorithm
 // Source: http://www.php.net/crypt
-  function tep_crypt_apr_md5($password, $salt = null) {
+  function osc_crypt_apr_md5($password, $salt = null) {
     if (empty($salt)) {
       $salt_string = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
