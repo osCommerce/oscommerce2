@@ -386,8 +386,8 @@
 
 // auto activate and expire banners
   require('includes/functions/banner.php');
-  tep_activate_banners();
-  tep_expire_banners();
+  osc_activate_banners();
+  osc_expire_banners();
 
 // auto expire special products
   require('includes/functions/specials.php');
