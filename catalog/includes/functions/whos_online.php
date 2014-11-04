@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  function tep_update_whos_online() {
+  function osc_update_whos_online() {
     global $customer_id;
 
     if (isset($_SESSION['customer_id'])) {
@@ -49,7 +49,7 @@
     }
   }
 
-  function tep_whos_online_update_session_id($old_id, $new_id) {
+  function osc_whos_online_update_session_id($old_id, $new_id) {
     osc_db_query("update " . TABLE_WHOS_ONLINE . " set session_id = '" . osc_db_input($new_id) . "' where session_id = '" . osc_db_input($old_id) . "'");
   }
 ?>

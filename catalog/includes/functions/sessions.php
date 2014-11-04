@@ -124,6 +124,6 @@
         $SID = session_name() . '=' . session_id();
       }
 
-      tep_whos_online_update_session_id($old_id, session_id());
+      osc_whos_online_update_session_id($old_id, session_id());
   }
 ?>
