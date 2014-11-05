@@ -700,6 +700,14 @@
         if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
           tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
         }
+      } elseif ( !empty($order->info['comments']) ) {
+        $sql_data_array = array('orders_id' => $order_id,
+                                'orders_status_id' => (int)$check['orders_status'],
+                                'date_added' => 'now()',
+                                'customer_notified' => '0',
+                                'comments' => $order->info['comments']);
+
+        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
       }
 
 // load the after_process function from the payment modules
