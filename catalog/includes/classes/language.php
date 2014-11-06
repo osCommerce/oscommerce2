@@ -72,7 +72,7 @@
                                'vi' => 'vi|vietnamese',
                                'tw' => 'zh[-_]tw|chinese traditional',
                                'zh' => 'zh|chinese simplified',
-                               'ji' => 'ji|yiddish'
+                               'ji' => 'ji|yiddish',
                                'zu' => 'zu|zulu');
 
       $this->catalog_languages = array();
