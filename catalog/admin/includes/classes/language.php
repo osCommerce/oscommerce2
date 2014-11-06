@@ -14,7 +14,7 @@
 */
 
   class language {
-    var $languages, $catalog_languages, $browser_languages, $language
+    var $languages, $catalog_languages, $browser_languages, $language;
 
     function language($lng = '') {
     $this->languages = array('af' => 'af|afrikaans',
