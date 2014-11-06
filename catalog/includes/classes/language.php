@@ -32,8 +32,8 @@
                                'et' => 'et|estonian',
                                'eu' => 'eu|basque',
                                'fa' => 'fa|farsi',
-                               'fo' => 'fo|faeroese'
                                'fi' => 'fi|finnish',
+                               'fo' => 'fo|faeroese',
                                'fr' => 'fr([-_][[:alpha:]]{2})?|french',
                                'ga' => 'ga|irish',
                                'gl' => 'gl|galician',
