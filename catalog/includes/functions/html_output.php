@@ -58,7 +58,7 @@
       $link .= $separator . tep_output_string($_sid);
     }
 
-    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+    while (strpos($link, '&&') !=== false) $link = str_replace('&&', '&', $link);
 
     if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
       $link = str_replace('?', '/', $link);
