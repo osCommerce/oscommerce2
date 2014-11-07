@@ -100,7 +100,7 @@
                     'server' => ($server == 'live') ? 1 : -1,
                     'request' => trim($request_string),
                     'response' => trim($response_string),
-                    'ip_address' => sprintf('%u', ip2long(tep_get_ip_address())),
+                    'ip_address' => sprintf('%u', ip2long($this->getIpAddress())),
                     'date_added' => 'now()');
 
       tep_db_perform('oscom_app_paypal_log', $data);
@@ -861,6 +861,59 @@
       }
 
       return str_replace('/', DIRECTORY_SEPARATOR, $pathname);
+    }
+// OSCOM v2.2rc2a compatibility
+    function getIpAddress() {
+      if ( function_exists('tep_get_ip_address') ) {
+        return tep_get_ip_address();
+      }
+      global $HTTP_SERVER_VARS;
+      $ip_address = null;
+      $ip_addresses = array();
+      if (isset($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR']) && !empty($HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) {
+        foreach ( array_reverse(explode(',', $HTTP_SERVER_VARS['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
+          $x_ip = trim($x_ip);
+          if ($this->isValidIpAddress($x_ip)) {
+            $ip_addresses[] = $x_ip;
+          }
+        }
+      }
+      if (isset($HTTP_SERVER_VARS['HTTP_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_CLIENT_IP'])) {
+        $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_CLIENT_IP'];
+      }
+      if (isset($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'])) {
+        $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_X_CLUSTER_CLIENT_IP'];
+      }
+      if (isset($HTTP_SERVER_VARS['HTTP_PROXY_USER']) && !empty($HTTP_SERVER_VARS['HTTP_PROXY_USER'])) {
+        $ip_addresses[] = $HTTP_SERVER_VARS['HTTP_PROXY_USER'];
+      }
+      $ip_addresses[] = $HTTP_SERVER_VARS['REMOTE_ADDR'];
+      foreach ( $ip_addresses as $ip ) {
+        if (!empty($ip) && $this->isValidIpAddress($ip)) {
+          $ip_address = $ip;
+          break;
+        }
+      }
+      return $ip_address;
+    }
+// OSCOM v2.2rc2a compatibility
+    function isValidIpAddress($ip_address) {
+      if ( function_exists('tep_validate_ip_address') ) {
+        return tep_validate_ip_address($ip_address);
+      }
+      if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
+        return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
+      }
+      if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
+        $parts = explode('.', $ip_address);
+        foreach ($parts as $ip_parts) {
+          if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
+            return false; // number is not within 0-255
+          }
+        }
+        return true;
+      }
+      return false;
     }
   }
 ?>

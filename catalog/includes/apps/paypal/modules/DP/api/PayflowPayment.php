@@ -23,7 +23,7 @@
                     'PWD' => $OSCOM_PayPal->getCredentials('DP', 'payflow_password'),
                     'TENDER' => 'C',
                     'TRXTYPE' => (OSCOM_APP_PAYPAL_DP_TRANSACTION_METHOD == '1') ? 'S' : 'A',
-                    'CUSTIP' => tep_get_ip_address(),
+                    'CUSTIP' => $OSCOM_PayPal->getIpAddress(),
                     'BUTTONSOURCE' => 'OSCOM23_DP');
 
     if ( is_array($extra_params) && !empty($extra_params) ) {
