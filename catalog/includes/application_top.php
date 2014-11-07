@@ -18,17 +18,11 @@
   ini_set('display_errors', true); // TODO remove on release
 
 // load server configuration parameters
-  if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
-  } else {
-    include('includes/configure.php');
-  }
+  include (file_exists('includes/local/configure.php') ? 'includes/local/configure.php' : 'includes/configure.php');
 
-  if (DB_SERVER == '') {
-    if (is_dir('install')) {
+  if ( DB_SERVER == '' && is_dir('install') )  {
       header('Location: install/index.php');
       exit;
-    }
   }
 
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
@@ -53,49 +47,45 @@
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
 // include the list of project filenames
-  require('includes/filenames.php');
+  require 'includes/filenames.php';
 
 // include the list of project database tables
-  require('includes/database_tables.php');
+  require 'includes/database_tables.php';
 
 // include the database functions
-  require('includes/functions/database.php');
+  require 'includes/functions/database.php';
 
 // make a connection to the database... now
   tep_db_connect() or die('Unable to connect to database server!');
 
 // set the application parameters
   $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey'], $configuration['cfgValue']);
-  }
+  while ($configuration = tep_db_fetch_array($configuration_query)) define($configuration['cfgKey'], $configuration['cfgValue']);
 
 // if gzip_compression is enabled, start to buffer the output
   if ( (GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent() ) {
     if ( (int)ini_get('zlib.output_compression') < 1 ) {
-      if ( (PHP_VERSION < '5.4') || (PHP_VERSION > '5.4.5') ) { // see PHP bug 55544
-        ob_start('ob_gzhandler');
-      }
+      if ( (PHP_VERSION < '5.4') || (PHP_VERSION > '5.4.5') ) ob_start('ob_gzhandler'); // see PHP bug 55544
     } elseif ( function_exists('ini_set') ) {
       ini_set('zlib.output_compression_level', GZIP_LEVEL);
     }
   }
 
 // define general functions used application-wide
-  require('includes/functions/general.php');
-  require('includes/functions/html_output.php');
+  require 'includes/functions/general.php';
+  require 'includes/functions/html_output.php';
 
 // include cache functions if enabled
-  if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
+  if ( USE_CACHE == 'true' ) include 'includes/functions/cache.php';
 
 // include shopping cart class
-  require('includes/classes/shopping_cart.php');
+  require 'includes/classes/shopping_cart.php';
 
 // include navigation history class
-  require('includes/classes/navigation_history.php');
+  require 'includes/classes/navigation_history.php';
 
 // define how the session functions will be used
-  require('includes/functions/sessions.php');
+  require 'includes/functions/sessions.php';
 
 // set the session name and save path
   session_name('osCsid');
@@ -104,18 +94,14 @@
 // set the session cookie parameters
   session_set_cookie_params(0, $cookie_path, $cookie_domain);
 
-  if ( function_exists('ini_set') ) {
-    ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-  }
+  if ( function_exists('ini_set') ) ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
 
 // set the session ID if it exists
   if ( SESSION_FORCE_COOKIE_USE == 'False' ) {
-    if ( isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()])) ) {
-      session_id($_GET[session_name()]);
+    if ( isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()])) ) session_id($_GET[session_name()]);
     } elseif ( isset($_POST[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_POST[session_name()])) ) {
       session_id($_POST[session_name()]);
     }
-  }
 
 // start the session
   $session_started = false;
@@ -139,11 +125,9 @@
 
     if ( !empty($user_agent) ) {
       foreach ( file('includes/spiders.txt') as $spider ) {
-        if ( !empty($spider) ) {
-          if ( strpos($user_agent, $spider) !== false ) {
+        if ( !empty($spider) && strpos($user_agent, $spider) !== false ) {
             $spider_flag = true;
             break;
-          }
         }
       }
     }
@@ -158,31 +142,24 @@
   }
 
 // initialize a session token
-  if ( !isset($_SESSION['sessiontoken']) ) {
-    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
-  }
+  if ( !isset($_SESSION['sessiontoken']) ) $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // set SID once, even if empty
   $SID = (defined('SID') ? SID : '');
 
 // verify the ssl_session_id if the feature is enabled
   if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started === true) ) {
-    if ( !isset($_SESSION['SSL_SESSION_ID']) ) {
-      $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
-    }
+    if ( !isset($_SESSION['SSL_SESSION_ID']) ) $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
 
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
       tep_session_destroy();
-
       tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
     }
   }
 
 // verify the browser user agent if the feature is enabled
   if ( SESSION_CHECK_USER_AGENT == 'True' ) {
-    if ( !isset($_SESSION['SESSION_USER_AGENT']) ) {
-      $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-    }
+    if ( !isset($_SESSION['SESSION_USER_AGENT']) ) $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
 
     if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
       tep_session_destroy();
@@ -192,9 +169,7 @@
 
 // verify the IP address if the feature is enabled
   if ( SESSION_CHECK_IP_ADDRESS == 'True' ) {
-    if ( !isset($_SESSION['SESSION_IP_ADDRESS']) ) {
-      $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
-    }
+    if ( !isset($_SESSION['SESSION_IP_ADDRESS']) ) $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address() ) {
       tep_session_destroy();
@@ -203,21 +178,19 @@
   }
 
 // create the shopping cart
-  if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) {
-    $_SESSION['cart'] = new shoppingCart();
-  }
+  if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) $_SESSION['cart'] = new shoppingCart();
 
 // include currencies class and create an instance
-  require('includes/classes/currencies.php');
+  require 'includes/classes/currencies.php';
   $currencies = new currencies();
 
 // include the mail classes
-  require('includes/classes/mime.php');
-  require('includes/classes/email.php');
+  require 'includes/classes/mime.php';
+  require 'includes/classes/email.php';
 
 // set the language
   if ( !isset($_SESSION['language']) || isset($_GET['language']) ) {
-    include('includes/classes/language.php');
+    include 'includes/classes/language.php';
     $lng = new language();
 
     if ( isset($_GET['language']) && !empty($_GET['language']) ) {
@@ -232,7 +205,7 @@
 
 // include the language translations
   $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
-  require('includes/languages/' . basename($_SESSION['language']) . '.php');
+  require 'includes/languages/' . basename($_SESSION['language']) . '.php';
   setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
 // currency
@@ -245,37 +218,29 @@
   }
 
 // navigation history
-  if ( !isset($_SESSION['navigation']) || !is_object($_SESSION['navigation']) || (get_class($_SESSION['navigation']) != 'navigationHistory') ) {
-    $_SESSION['navigation'] = new navigationHistory();
-  }
+  if ( !isset($_SESSION['navigation']) || !is_object($_SESSION['navigation']) || (get_class($_SESSION['navigation']) != 'navigationHistory') ) $_SESSION['navigation'] = new navigationHistory();
 
   $_SESSION['navigation']->add_current_page();
 
 // action recorder
-  require('includes/classes/action_recorder.php');
+  require 'includes/classes/action_recorder.php';
+
 // initialize the message stack for output messages
-  require('includes/classes/alertbox.php');
-  require('includes/classes/message_stack.php');
+  require 'includes/classes/alertbox.php';
+  require 'includes/classes/message_stack.php';
   $messageStack = new messageStack();
 
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( $session_started == false ) {
-      tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
-    }
+    if ( $session_started == false ) tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
 
     if ( DISPLAY_CART == 'true' ) {
       $goto =  FILENAME_SHOPPING_CART;
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = $PHP_SELF;
-
-      if ( $_GET['action'] == 'buy_now') {
-        $parameters = array('action', 'pid', 'products_id');
-      } else {
-        $parameters = array('action', 'pid');
-      }
+      $parameters = ( $_GET['action'] == 'buy_now') ? array('action', 'pid', 'products_id') : array('action', 'pid');
     }
 
     switch ( $_GET['action'] ) {
@@ -369,52 +334,48 @@
   }
 
 // include the who's online functions
-  require('includes/functions/whos_online.php');
+  require 'includes/functions/whos_online.php';
   tep_update_whos_online();
 
 // include the password crypto functions
-  require('includes/functions/password_funcs.php');
+  require 'includes/functions/password_funcs.php';
 
 // include validation functions (right now only email address)
-  require('includes/functions/validations.php');
+  require 'includes/functions/validations.php';
 
 // split-page-results
-  require('includes/classes/split_page_results.php');
+  require 'includes/classes/split_page_results.php';
 
 // infobox
-  require('includes/classes/boxes.php');
+  require 'includes/classes/boxes.php';
 
 // auto activate and expire banners
-  require('includes/functions/banner.php');
+  require 'includes/functions/banner.php';
   tep_activate_banners();
   tep_expire_banners();
 
 // auto expire special products
-  require('includes/functions/specials.php');
+  require 'includes/functions/specials.php';
   tep_expire_specials();
 
-  require('includes/classes/osc_template.php');
+// template class
+  require 'includes/classes/osc_template.php';
   $oscTemplate = new oscTemplate();
 
 // calculate category path
-  if ( isset($_GET['cPath']) ) {
-    $cPath = $_GET['cPath'];
-  } elseif ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) {
-    $cPath = tep_get_product_path($_GET['products_id']);
-  } else {
-    $cPath = '';
-  }
-
+  $cPath = isset($_GET['cPath']) ? $_GET['cPath'] : '';
+  if ( isset($_GET['products_id']) && !isset($_GET['manufacturers_id']) ) $cPath = tep_get_product_path($_GET['products_id']);
+  
+  $current_category_id = 0;  
+  
   if ( !empty($cPath) ) {
     $cPath_array = tep_parse_category_path($cPath);
     $cPath = implode('_', $cPath_array);
     $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
-  } else {
-    $current_category_id = 0;
-  }
+  } 
 
 // include the breadcrumb class and start the breadcrumb trail
-  require('includes/classes/breadcrumb.php');
+  require 'includes/classes/breadcrumb.php';
   $breadcrumb = new breadcrumb;
 
   $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
@@ -444,6 +405,4 @@
   }
 
 // TODO remove when no more global sessions exist
-  if ( $session_started == true ) {
-    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
+  if ( $session_started == true ) extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
