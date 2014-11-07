@@ -435,7 +435,7 @@
         curl_setopt($curl, CURLOPT_USERPWD, $server['user'] . ':' . $server['pass']);
       }
 
-      if ( OSCOM_APP_PAYPAL_VERIFY_SSL == '1' ) {
+      if ( defined('OSCOM_APP_PAYPAL_VERIFY_SSL') && (OSCOM_APP_PAYPAL_VERIFY_SSL == '1') ) {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
@@ -449,7 +449,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
       }
 
-      if ( tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
+      if ( defined('OSCOM_APP_PAYPAL_VERIFY_SSL') && tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, OSCOM_APP_PAYPAL_PROXY);
       }
