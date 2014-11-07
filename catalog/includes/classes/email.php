@@ -14,9 +14,14 @@
   The original class was made by Richard Heyes <richard@phpguru.org>
   and can be found here: http://www.phpguru.org
 
-  Renamed and Modified by Jan Wildeboer for osCommerce
+  @author Jan Wildeboer
 */
 
+/**
+ * Class email
+ * 
+ * contains the logic to send emails
+ */
   class email {
     var $html;
     var $text;
@@ -27,7 +32,10 @@
     var $build_params;
     var $attachments;
     var $headers;
-
+  
+  /**
+  * @param array $headers
+  */
     function email($headers = '') {
       if ($headers == '') $headers = array();
 
@@ -81,8 +89,10 @@
  * it. This can then be given as the first
  * argument of the the functions
  * add_html_image() or add_attachment().
+ * 
+ * @param string $filename
+ * @return boolean
  */
-
     function get_file($filename) {
       $return = '';
 
@@ -107,12 +117,11 @@
  * If the file exists it will read it in and
  * embed it, (not an attachment).
  *
- * Function contributed by Dan Allen
+ * @author Dan Allen
+ * @param string $images_dir
  */
-
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      
       $extensions[] = array_keys( $this->image_types);
 
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);
@@ -141,8 +150,8 @@
 /**
  * Adds plain text. Use this function
  * when NOT sending html email
+ * @param string $text
  */
-
     function add_text($text = '') {
       $this->text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
     }
@@ -151,8 +160,11 @@
  * Adds a html part to the mail.
  * Also replaces image names with
  * content-id's.
+ *
+ * @param string $html
+ * @param string $text
+ * @param string $images_dir
  */
-
     function add_html($html, $text = NULL, $images_dir = NULL) {
       $this->html = tep_convert_linefeeds(array("\r\n", "\n", "\r"), '<br />', $html);
       $this->html_text = tep_convert_linefeeds(array("\r\n", "\n", "\r"), $this->lf, $text);
@@ -163,8 +175,11 @@
 /**
  * Adds an image to the list of embedded
  * images.
+ *
+ * @param string $file
+ * @param string $name
+ * @param string $c_type
  */
-
     function add_html_image($file, $name = '', $c_type='application/octet-stream') {
       $this->html_images[] = array('body' => $file,
                                    'name' => $name,
@@ -174,8 +189,12 @@
 
 /**
  * Adds a file to the list of attachments.
- */
-
+ *
+ * @param string $file
+ * @param string $name
+ * @param string $c_type
+ * @param string $encoding
+ */ 
     function add_attachment($file, $name = '', $c_type='application/octet-stream', $encoding = 'base64') {
       $this->attachments[] = array('body' => $file,
                                    'name' => $name,
@@ -185,8 +204,11 @@
 
 /**
  * Adds a text subpart to a mime_part object
+ *
+ * @param object $obj
+ * @param string $text
+ * @return object|\mime
  */
-
     function add_text_part(&$obj, $text) {
       $params['content_type'] = 'text/plain';
       $params['encoding'] = $this->build_params['text_encoding'];
@@ -201,8 +223,10 @@
 
 /**
  * Adds a html subpart to a mime_part object
+ *
+ * @param object $obj
+ * @return object|\mime
  */
-
     function add_html_part(&$obj) {
       $params['content_type'] = 'text/html';
       $params['encoding'] = $this->build_params['html_encoding'];
@@ -217,8 +241,9 @@
 
 /**
  * Starts a message with a mixed part
+ *
+ * @return object|\mime
  */
-
     function add_mixed_part() {
       $params['content_type'] = 'multipart/mixed';
 
@@ -227,8 +252,10 @@
 
 /**
  * Adds an alternative part to a mime_part object
+ *
+ * @param object $obj
+ * @return object|\mime
  */
-
     function add_alternative_part(&$obj) {
       $params['content_type'] = 'multipart/alternative';
 
@@ -241,8 +268,10 @@
 
 /**
  * Adds a html subpart to a mime_part object
+ * 
+ * @param object $obj
+ * @return object|\mime
  */
-
     function add_related_part(&$obj) {
       $params['content_type'] = 'multipart/related';
 
@@ -255,8 +284,10 @@
 
 /**
  * Adds an html image subpart to a mime_part object
+ *
+ * @param object $obj
+ * @param string $value
  */
-
     function add_html_image_part(&$obj, $value) {
       $params['content_type'] = $value['c_type'];
       $params['encoding'] = 'base64';
@@ -269,8 +300,9 @@
 
 /**
  * Adds an attachment subpart to a mime_part object
+ * @param object $obj
+ * @param string $value
  */
-
     function add_attachment_part(&$obj, $value) {
       $params['content_type'] = $value['c_type'];
       $params['encoding'] = $value['encoding'];
@@ -298,8 +330,9 @@
  *                            Default is iso-8859-1
  * $params['text_charset']  - The character set to use for a text section.
  *                          - Default is iso-8859-1
+ * @param array $params
+ * @return boolean
  */
-
     function build_message($params = '') {
       if ($params == '') $params = array();
 
@@ -417,9 +450,16 @@
     }
 
 /**
- * Sends the mail.
- */
-
+  * Sends the mail.
+  *
+  * @param string $to_name
+  * @param string $to_addr
+  * @param string $from_name
+  * @param string $from_addr
+  * @param string $subject
+  * @param string $headers
+  * @return callable
+  */
     function send($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
       if ((strstr($to_name, "\n") != false) || (strstr($to_name, "\r") != false)) {
         return false;
@@ -480,14 +520,16 @@
  * an attachment. there's a commented
  * out example in example.php.
  *
- * string get_rfc822(string To name,
- *       string To email,
- *       string From name,
- *       string From email,
- *       [string Subject,
- *        string Extra headers])
+ * @example get_rfc822(string To name, string To email, string From name, string From email,[string Subject, string Extra headers]);
+ *
+ * @param string $to_name
+ * @param string $to_addr
+ * @param string $from_name
+ * @param string $from_addr
+ * @param string $subject
+ * @param string $headers
+ * @return string
  */
-
     function get_rfc822($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
 // Make up the date header as according to RFC822
       $date = 'Date: ' . date('D, d M y H:i:s');

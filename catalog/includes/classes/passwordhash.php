@@ -29,12 +29,24 @@
 # Obviously, since this code is in the public domain, the above are not
 # requirements (there can be none), but merely suggestions.
 #
+
+/**
+ * Class PasswordHash
+ * 
+ * Generate and encrypted password
+ */
 class PasswordHash {
 	var $itoa64;
 	var $iteration_count_log2;
 	var $portable_hashes;
 	var $random_state;
 
+/**
+ * Passwordhash method
+ * 
+ * @param int $iteration_count_log2
+ * @param string $portable_hashes
+ */        
 	function PasswordHash($iteration_count_log2, $portable_hashes)
 	{
 		$this->itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
@@ -50,6 +62,12 @@ class PasswordHash {
 			$this->random_state .= getmypid();
 	}
 
+/**
+ * Gets random bytes
+ * 
+ * @param int $count
+ * @return string
+ */        
 	function get_random_bytes($count)
 	{
 		$output = '';
@@ -84,6 +102,13 @@ class PasswordHash {
 		return $output;
 	}
 
+/**
+ * return encode64
+ * 
+ * @param string $input
+ * @param int $count
+ * @return string
+ */        
 	function encode64($input, $count)
 	{
 		$output = '';
@@ -107,6 +132,12 @@ class PasswordHash {
 		return $output;
 	}
 
+/**
+ * Password salt
+ * 
+ * @param string $input
+ * @return string
+ */        
 	function gensalt_private($input)
 	{
 		$output = '$P$';
@@ -117,6 +148,14 @@ class PasswordHash {
 		return $output;
 	}
 
+        
+/**
+ * Encrypt password
+ * 
+ * @param string $password
+ * @param string $setting
+ * @return string
+ */        
 	function crypt_private($password, $setting)
 	{
 		$output = '*0';
@@ -155,6 +194,12 @@ class PasswordHash {
 		return $output;
 	}
 
+/**
+ * Extended getsalt
+ * 
+ * @param string $input
+ * @return string
+ */        
 	function gensalt_extended($input)
 	{
 		$count_log2 = min($this->iteration_count_log2 + 8, 24);
@@ -173,6 +218,12 @@ class PasswordHash {
 		return $output;
 	}
 
+/**
+ * Gensalt blowfish method
+ * 
+ * @param string $input
+ * @return string
+ */        
 	function gensalt_blowfish($input)
 	{
 		# This one needs to use a different order of characters and a
@@ -214,6 +265,12 @@ class PasswordHash {
 		return $output;
 	}
 
+/**
+ * Passowrd Hash
+ * 
+ * @param string $password
+ * @return string
+ */        
 	function HashPassword($password)
 	{
 		$random = '';
@@ -249,6 +306,13 @@ class PasswordHash {
 		return '*';
 	}
 
+/**
+ * Checks the password
+ * 
+ * @param string $password
+ * @param string $stored_hash
+ * @return boolean
+ */        
 	function CheckPassword($password, $stored_hash)
 	{
 		$hash = $this->crypt_private($password, $stored_hash);

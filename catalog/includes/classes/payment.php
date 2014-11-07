@@ -10,10 +10,21 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class payment
+ * 
+ * contains the payment methods
+ */
   class payment {
     var $modules, $selected_module;
 
-// class constructor
+/**
+ * class constructor
+ * 
+ * @global string $payment
+ * @global string $PHP_SELF
+ * @param string $module
+ */
     function payment($module = '') {
       global $payment, $PHP_SELF;
 
@@ -53,14 +64,15 @@
       }
     }
 
-// class methods
-/* The following method is needed in the checkout_confirmation.php page
-   due to a chicken and egg problem with the payment class and order class.
-   The payment modules needs the order destination data for the dynamic status
-   feature, and the order class needs the payment module title.
-   The following method is a work-around to implementing the method in all
-   payment modules available which would break the modules in the contributions
-   section. This should be looked into again post 2.2.
+
+/**
+*  The following method is needed in the checkout_confirmation.php page
+*  due to a chicken and egg problem with the payment class and order class.
+*  The payment modules needs the order destination data for the dynamic status
+*  feature, and the order class needs the payment module title.
+*  The following method is a work-around to implementing the method in all
+*  payment modules available which would break the modules in the contributions
+*  section. This should be looked into again post 2.2.
 */
     function update_status() {
       if (is_array($this->modules)) {
@@ -72,6 +84,11 @@
       }
     }
 
+/**
+ * Validates form with javascript 
+ * 
+ * @return string
+ */    
     function javascript_validation() {
       $js = '';
       if (is_array($this->modules)) {
@@ -116,6 +133,11 @@
       return $js;
     }
 
+/**
+ * Returns the cehckout initialiazation method
+ * 
+ * @return array
+ */    
     function checkout_initialization_method() {
       $initialize_array = array();
 
@@ -131,6 +153,11 @@
       return $initialize_array;
     }
 
+/**
+ * Return the selection array
+ * 
+ * @return array
+ */    
     function selection() {
       $selection_array = array();
 
@@ -147,6 +174,9 @@
       return $selection_array;
     }
 
+/**
+ * Pre confirmation check
+ */    
     function pre_confirmation_check() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -155,6 +185,11 @@
       }
     }
 
+/**
+ * Payment confirmation
+ * 
+ * @return string
+ */    
     function confirmation() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -163,6 +198,11 @@
       }
     }
 
+/**
+ * Retrns the process button
+ * 
+ * @return string
+ */    
     function process_button() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -171,6 +211,11 @@
       }
     }
 
+/**
+ * Before process method
+ * 
+ * @return string
+ */    
     function before_process() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -179,6 +224,11 @@
       }
     }
 
+/**
+ * After process method
+ * 
+ * @return string
+ */    
     function after_process() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
@@ -187,6 +237,11 @@
       }
     }
 
+/**
+ * Gets payment error
+ * 
+ * @return string
+ */    
     function get_error() {
       if (is_array($this->modules)) {
         if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {

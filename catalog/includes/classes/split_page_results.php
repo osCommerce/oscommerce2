@@ -10,10 +10,22 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class splitPageResults
+ * 
+ * Splits the result of a query in pages
+ */
   class splitPageResults {
     var $sql_query, $number_of_rows, $current_page_number, $number_of_pages, $number_of_rows_per_page, $page_name;
 
-/* class constructor */
+/**
+ *  class constructor
+ *
+ * @param string $query
+ * @param int $max_rows
+ * @param string $count_key
+ * @param string $page_holder
+ */
     function splitPageResults($query, $max_rows, $count_key = '*', $page_holder = 'page') {
       $this->sql_query = $query;
       $this->page_name = $page_holder;
@@ -65,9 +77,15 @@
       $this->sql_query .= " limit " . max($offset, 0) . ", " . $this->number_of_rows_per_page;
     }
 
-/* class functions */
-
-// display split-page-number-links
+/**
+ * Shows page split links
+ * 
+ * @global string $PHP_SELF
+ * @global string $request_type
+ * @param int $max_page_links
+ * @param string $parameters
+ * @return string
+ */
     function display_links($max_page_links, $parameters = '') {
       global $PHP_SELF, $request_type;
 
@@ -108,7 +126,12 @@
       return $display_links_string;
     }
 
-// display number of total products found
+/**
+ * Shows page count string
+ * 
+ * @param string $text_output
+ * @return string
+ */
     function display_count($text_output) {
       $to_num = ($this->number_of_rows_per_page * $this->current_page_number);
       if ($to_num > $this->number_of_rows) $to_num = $this->number_of_rows;

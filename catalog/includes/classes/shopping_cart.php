@@ -10,13 +10,27 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class shoppingCart
+ * 
+ * The shopping cart controller class
+ */
+
   class shoppingCart {
     var $contents, $total, $weight, $cartID, $content_type;
-
+/**
+ * Class constructor
+ */
     function shoppingCart() {
       $this->reset();
     }
 
+/**
+ * restores contents of the cart
+ * 
+ * @global int $customer_id the customer ID
+ * @return boolean
+ */    
     function restore_contents() {
       global $customer_id;
 
@@ -59,6 +73,12 @@
       $this->cartID = $this->generate_cart_id();
     }
 
+/**
+ * Resets the cart
+ * 
+ * @global int $customer_id
+ * @param boolean $reset_database
+ */
     function reset($reset_database = false) {
       global $customer_id;
 
@@ -76,6 +96,16 @@
       if (isset($_SESSION['cartID'])) unset($_SESSION['cartID']);
     }
 
+/**
+ * Add items to the cart
+ * 
+ * @global int $new_products_id_in_cart
+ * @global int $customer_id
+ * @param int $products_id
+ * @param int $qty
+ * @param mixed $attributes
+ * @param boolean $notify
+ */    
     function add_cart($products_id, $qty = '1', $attributes = '', $notify = true) {
       global $new_products_id_in_cart, $customer_id;
 
@@ -139,6 +169,14 @@
       }
     }
 
+/**
+ * Updates cart quantity
+ * 
+ * @global int $customer_id the customer ID
+ * @param int $products_id The products ID
+ * @param int $quantity Quantity
+ * @param array $attributes Attributes array
+ */
     function update_quantity($products_id, $quantity = '', $attributes = '') {
       global $customer_id;
 
@@ -178,6 +216,12 @@
       }
     }
 
+/**
+ * Deletes customer cart
+ * 
+ * @global int $customer_id the customer ID
+ */
+    
     function cleanup() {
       global $customer_id;
 
@@ -192,8 +236,13 @@
         }
       }
     }
-
-    function count_contents() {  // get total number of items in cart
+    
+/**
+ * Gets total number of items in cart
+ * 
+ * @return int $total_items
+ */
+    function count_contents() {
       $total_items = 0;
       if (is_array($this->contents)) {
         foreach ( array_keys($this->contents) as $products_id ) {
@@ -204,6 +253,12 @@
       return $total_items;
     }
 
+ /**
+  * Gets the cart quantity
+  * 
+  * @param int $products_id The product ID
+  * @return int The cart quantity
+  */
     function get_quantity($products_id) {
       if (isset($this->contents[$products_id])) {
         return $this->contents[$products_id]['qty'];
@@ -212,6 +267,12 @@
       }
     }
 
+/**
+ * Check if the product is in the cart
+ * 
+ * @param int $products_id
+ * @return boolean
+ */    
     function in_cart($products_id) {
       if (isset($this->contents[$products_id])) {
         return true;
@@ -220,6 +281,12 @@
       }
     }
 
+/**
+ * Removes the product from the customer basket
+ * 
+ * @global int $customer_id
+ * @param int $products_id
+ */    
     function remove($products_id) {
       global $customer_id;
 
@@ -234,10 +301,18 @@
       $this->cartID = $this->generate_cart_id();
     }
 
+/**
+ * Removes all products from the cart
+ */    
     function remove_all() {
       $this->reset();
     }
 
+/**
+ * Gets the ptoduct id list
+ * 
+ * @return int
+ */        
     function get_product_id_list() {
       $product_id_list = '';
       if (is_array($this->contents)) {
@@ -249,6 +324,11 @@
       return substr($product_id_list, 2);
     }
 
+/**
+ * Calculate the product and attributes price
+ * 
+ * @global type $currencies
+ */    
     function calculate() {
       global $currencies;
 
@@ -292,6 +372,12 @@
       }
     }
 
+/**
+ * returns the attributes price
+ * 
+ * @param int $products_id
+ * @return array
+ */    
     function attributes_price($products_id) {
       $attributes_price = 0;
 
@@ -310,6 +396,11 @@
       return $attributes_price;
     }
 
+/**
+ * Get the products array
+ * 
+ * @return array
+ */    
     function get_products() {
       if (!is_array($this->contents)) return false;
 
@@ -342,22 +433,43 @@
       return $products_array;
     }
 
+/**
+ * Shows the cart total
+ * 
+ * @return float
+ */    
     function show_total() {
       $this->calculate();
 
       return $this->total;
     }
 
+/**
+ * Shows the product weight
+ * 
+ * @return float
+ */    
     function show_weight() {
       $this->calculate();
 
       return $this->weight;
     }
 
+/**
+ * Generates the cart ID
+ * 
+ * @param int $length
+ * @return string
+ */    
     function generate_cart_id($length = 5) {
       return tep_create_random_value($length, 'digits');
     }
 
+/**
+ * gets the content type
+ * 
+ * @return string
+ */    
     function get_content_type() {
       $this->content_type = false;
 
@@ -412,6 +524,7 @@
       return $this->content_type;
     }
 
+    
     function unserialize($broken) {
       for(reset($broken);$kv=each($broken);) {
         $key=$kv['key'];

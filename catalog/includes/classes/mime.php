@@ -15,6 +15,12 @@
   Renamed and Modified by Jan Wildeboer for osCommerce
 */
 
+/**
+ * Class Mime 
+ * 
+ * a class to assist in building mime-HTML eMails
+ */
+
   class mime {
     var $_encoding;
     var $_subparts;
@@ -23,18 +29,18 @@
     var $_body;
 
 /**
- * Constructor.
+ * Class Constructor
  * 
- * Sets up the object.
+ * Sets up the object
  *
- * @param $body   - The body of the mime part if any.
- * @param $params - An associative array of parameters:
- *                  content_type - The content type for this part eg multipart/mixed
- *                  encoding     - The encoding to use, 7bit, base64, or quoted-printable
- *                  cid          - Content ID to apply
- *                  disposition  - Content disposition, inline or attachment
- *                  dfilename    - Optional filename parameter for content disposition
- *                  description  - Content description
+ * @param string $body   - The body of the mime part if any.
+ * @param array $params - An associative array of parameters:
+ *                 content_type - The content type for this part eg multipart/mixed
+ *                 encoding     - The encoding to use, 7bit, base64, or quoted-printable
+ *                 cid          - Content ID to apply
+ *                 disposition  - Content disposition, inline or attachment
+ *                 dfilename    - Optional filename parameter for content disposition
+ *                 description  - Content description
  * @access public
  */
 
@@ -100,10 +106,9 @@
  * Encodes and returns the email. Also stores
  * it in the encoded member variable
  *
- * @return An associative array containing two elements,
- *         body and headers. The headers element is itself
- *         an indexed array.
+ * @return array An associative array containing two elements, body and headers. The headers element is itself an indexed array.
  * @access public
+ * 
  */
 
     function encode() {
@@ -137,15 +142,15 @@
     }
 
 /**
- * &addSubPart()
+ * addSubPart()
  * 
  * Adds a subpart to current mime part and returns
  * a reference to it
  *
- * @param $body   The body of the subpart, if any.
- * @param $params The parameters for the subpart, same
+ * @param string $body   The body of the subpart, if any.
+ * @param array $params The parameters for the subpart, same
  *                as the $params argument for constructor.
- * @return A reference to the part you just added. It is
+ * @return string A reference to the part you just added. It is
  *         crucial if using multipart/* in your subparts that
  *         you use =& in your script when calling this function,
  *         otherwise you will not be able to add further subparts.
@@ -162,10 +167,10 @@
  * 
  * Returns encoded data based upon encoding passed to it
  *
- * @param $data     The data to encode.
- * @param $encoding The encoding type to use, 7bit, base64,
+ * @param string $data     The data to encode.
+ * @param string $encoding The encoding type to use, 7bit, base64,
  *                  or quoted-printable.
- * @access private
+ * @access public
  */
 
     function _getEncodedData($data, $encoding) {
@@ -187,11 +192,11 @@
  * 
  * Encodes data to quoted-printable standard.
  *
- * @param $input    The data to encode
- * @param $line_max Optional max line length. Should 
+ * @param string $input    The data to encode
+ * @param int $line_max Optional max line length. Should 
  *                  not be more than 76 chars
  *
- * @access private
+ * @access public
  */
 
     function _quotedPrintableEncode($input , $line_max = 76) {

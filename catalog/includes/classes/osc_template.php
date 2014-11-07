@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class oscTemplate
+ * 
+ * The main template class
+ */
   class oscTemplate {
     var $_title;
     var $_blocks = array();
@@ -19,56 +24,120 @@
     var $_grid_column_width = 2;
     var $_data = array();
 
+/**
+* Class constructor 
+*/
     function oscTemplate() {
       $this->_title = TITLE;
     }
 
+/**
+ * Sets the container width
+ * 
+ * @param int $width
+ */
     function setGridContainerWidth($width) {
       $this->_grid_container_width = $width;
     }
-
+    
+/**
+ * Gets the container width
+ * 
+ * @return int 
+ */
     function getGridContainerWidth() {
       return $this->_grid_container_width;
     }
 
+/**
+ * Sets the content width
+ * 
+ * @param int $width
+ */    
     function setGridContentWidth($width) {
       $this->_grid_content_width = $width;
     }
 
+/**
+ * Gets the content width
+ * 
+ * @return int
+ */
     function getGridContentWidth() {
       return $this->_grid_content_width;
     }
 
+/**
+ * Sets the column width
+ * 
+ * @param int $width
+ */
     function setGridColumnWidth($width) {
       $this->_grid_column_width = $width;
     }
 
+/**
+ * Gets the column content width
+ * 
+ * @return int
+ */    
     function getGridColumnWidth() {
       return $this->_grid_column_width;
     }
 
+/**
+ * Sets the title
+ * 
+ * @param string $title
+ */    
     function setTitle($title) {
       $this->_title = $title;
     }
 
+/**
+ * Gets the title
+ * 
+ * @return string
+ */    
     function getTitle() {
       return $this->_title;
     }
 
+/**
+ * Adds a new block
+ * 
+ * @param string $block
+ * @param string $group
+ */    
     function addBlock($block, $group) {
       $this->_blocks[$group][] = $block;
     }
 
+/**
+ * Checks if group has blocks
+ * 
+ * @param string $group
+ * @return boolean
+ */    
     function hasBlocks($group) {
       return (isset($this->_blocks[$group]) && !empty($this->_blocks[$group]));
     }
 
+/**
+ * Gets template blocks
+ * 
+ * @param type $group
+ * @return string
+ */    
     function getBlocks($group) {
       if ($this->hasBlocks($group)) {
         return implode("\n", $this->_blocks[$group]);
       }
     }
 
+/**
+ * Builds the template blocks
+ */    
     function buildBlocks() {
       if ( defined('TEMPLATE_BLOCK_GROUPS') && tep_not_null(TEMPLATE_BLOCK_GROUPS) ) {
         $tbgroups_array = explode(';', TEMPLATE_BLOCK_GROUPS);
@@ -105,14 +174,32 @@
       }
     }
 
+/**
+ * Adds content to the group
+ * 
+ * @param string $content
+ * @param string $group
+ */    
     function addContent($content, $group) {
       $this->_content[$group][] = $content;
     }
 
+/**
+ * Checks if group has content
+ * 
+ * @param string $group
+ * @return string
+ */
     function hasContent($group) {
       return (isset($this->_content[$group]) && !empty($this->_content[$group]));
     }
 
+/**
+ * Gets the content of the group
+ * 
+ * @param string $group
+ * @return string
+ */
     function getContent($group) {
       if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
         include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
@@ -153,6 +240,12 @@
       }
     }
 
+/**
+ * Gets the content modules
+ * 
+ * @param string $group
+ * @return array
+ */    
     function getContentModules($group) {
       $result = array();
 

@@ -10,10 +10,17 @@
   Released under the GNU General Public License
 */
 
+/**
+ * Class order total
+ * 
+ * Loads the order total modules
+ */
   class order_total {
     var $modules;
 
-// class constructor
+/**
+ * Class constructor
+ */
     function order_total() {
       if (defined('MODULE_ORDER_TOTAL_INSTALLED') && tep_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
         $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
@@ -28,6 +35,11 @@
       }
     }
 
+/**
+ * Process the order
+ * 
+ * @return array The total order array
+ */
     function process() {
       $order_total_array = array();
       if (is_array($this->modules)) {
@@ -53,6 +65,11 @@
       return $order_total_array;
     }
 
+/**
+ * Order total output
+ * 
+ * @return string
+ */
     function output() {
       $output_string = '';
       if (is_array($this->modules)) {

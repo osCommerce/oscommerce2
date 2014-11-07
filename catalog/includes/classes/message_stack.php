@@ -9,17 +9,22 @@
 
   Released under the GNU General Public License
 
-  Example usage:
-
-  $messageStack = new messageStack();
-  $messageStack->add('general', 'Error: Error 1', 'error');
-  $messageStack->add('general', 'Error: Error 2', 'warning');
-  if ($messageStack->size('general') > 0) echo $messageStack->output('general');
 */
 
+/**
+* Class messagestack 
+* 
+* Return a new message stack  
+* 
+* @example Example usage: $messageStack = new messageStack(); $messageStack->add('general', 'Error: Error 1', 'error'); $messageStack->add('general', 'Error: Error 2', 'warning'); if ($messageStack->size('general') > 0); echo $messageStack->output('general');
+*/
   class messageStack extends alertBlock {
 
-// class constructor
+/**
+ * Class constructor
+ * 
+ * @global string $messageToStack
+ */
     function messageStack() {
       global $messageToStack;
 
@@ -33,7 +38,13 @@
       }
     }
 
-// class methods
+/**
+ * Adds a new message
+ * 
+ * @param string $class The class of the message
+ * @param string $message The text of the message
+ * @param string $type The type of the message
+ */
     function add($class, $message, $type = 'error') {
       if ($type == 'error') {
         $this->messages[] = array('params' => 'class="alert alert-danger"', 'class' => $class, 'text' => $message);
@@ -46,6 +57,13 @@
       }
     }
 
+/**
+ * Adds the message to the session
+ * 
+ * @param string $class The class of the message
+ * @param string $message The class of the message
+ * @param string $type The class of the message
+ */
     function add_session($class, $message, $type = 'error') {
 
 
@@ -56,11 +74,20 @@
 
       $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
     }
-
+    
+/**
+ * Message reset
+ */
     function reset() {
       $this->messages = array();
     }
-
+    
+/**
+ * Message output
+ * 
+ * @param string $class
+ * @return string
+ */
     function output($class) {
 
       $output = array();
@@ -73,6 +100,12 @@
       return $this->alertBlock($output);
     }
 
+/**
+ * Count the numbers of messages
+ * 
+ * @param string $class
+ * @return int
+ */
     function size($class) {
       $count = 0;
 
