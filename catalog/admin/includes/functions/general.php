@@ -1351,10 +1351,6 @@
       return str_replace($from, $to, $string);
   }
 
-  function tep_string_to_int($string) {
-    return (int)$string;
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
