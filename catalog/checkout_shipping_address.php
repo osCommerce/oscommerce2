@@ -191,6 +191,7 @@
     } else {
       if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
       $sendto = $customer_default_address_id;
+      if (tep_session_is_registered('shipping')) tep_session_unregister('shipping');
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
     }

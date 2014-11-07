@@ -175,10 +175,10 @@
       } else {
         unset($_SESSION['billto']);
       }
-// no addresses to select from - customer decided to keep the current assigned address
     } else {
       if (!isset($_SESSION['billto'])) tep_session_register('billto');
       $billto = $customer_default_address_id;
+      if (tep_session_is_registered('payment')) tep_session_unregister('payment');
 
       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
     }
