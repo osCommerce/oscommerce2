@@ -21,7 +21,7 @@
     }
   }
 
-  if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_output_compression < 1) ) {
-      tep_gzip_output(GZIP_LEVEL);
+  if ( (GZIP_COMPRESSION == 'true') && (extension_loaded('zlib') == true) && (zlib.output_compression < 1) ) {
+    ob_end_flush();
   }
 ?>
