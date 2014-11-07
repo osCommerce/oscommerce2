@@ -26,7 +26,7 @@
 // Stop from parsing any further PHP code
 // v2.3.3.1 now closes the session through a registered shutdown function
   function tep_exit() {
-   exit();
+   exit;
   }
 
 ////
