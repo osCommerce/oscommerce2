@@ -17,7 +17,9 @@
     var $languages, $catalog_languages, $browser_languages, $language;
 
     function language($lng = '') {
-      $this->languages = array('ar' => 'ar([-_][[:alpha:]]{2})?|arabic',
+      $this->languages = array('af' => 'af|afrikaans',
+                               'ar' => 'ar([-_][[:alpha:]]{2})?|arabic',
+                               'be' => 'be|belarusian',
                                'bg' => 'bg|bulgarian',
                                'br' => 'pt[-_]br|brazilian portuguese',
                                'ca' => 'ca|catalan',
@@ -28,10 +30,16 @@
                                'en' => 'en([-_][[:alpha:]]{2})?|english',
                                'es' => 'es([-_][[:alpha:]]{2})?|spanish',
                                'et' => 'et|estonian',
+                               'eu' => 'eu|basque',
+                               'fa' => 'fa|farsi',
                                'fi' => 'fi|finnish',
+                               'fo' => 'fo|faeroese',
                                'fr' => 'fr([-_][[:alpha:]]{2})?|french',
+                               'ga' => 'ga|irish',
                                'gl' => 'gl|galician',
                                'he' => 'he|hebrew',
+                               'hi' => 'hi|hindi',
+                               'hr' => 'hr|croatian',
                                'hu' => 'hu|hungarian',
                                'id' => 'id|indonesian',
                                'it' => 'it|italian',
@@ -40,6 +48,9 @@
                                'ka' => 'ka|georgian',
                                'lt' => 'lt|lithuanian',
                                'lv' => 'lv|latvian',
+                               'mk' => 'mk|macedonian',
+                               'mt' => 'mt|maltese',
+                               'ms' => 'ms|malaysian',
                                'nl' => 'nl([-_][[:alpha:]]{2})?|dutch',
                                'no' => 'no|norwegian',
                                'pl' => 'pl|polish',
@@ -47,13 +58,22 @@
                                'ro' => 'ro|romanian',
                                'ru' => 'ru|russian',
                                'sk' => 'sk|slovak',
+                               'sq' => 'sq|albanian',
                                'sr' => 'sr|serbian',
                                'sv' => 'sv|swedish',
+                               'sz' => 'sz|sami',
+                               'sx' => 'sx|sutu',
                                'th' => 'th|thai',
+                               'ts' => 'ts|tsonga',
                                'tr' => 'tr|turkish',
+                               'tn' => 'tn|tswana',
                                'uk' => 'uk|ukrainian',
+                               'ur' => 'ur|urdu',
+                               'vi' => 'vi|vietnamese',
                                'tw' => 'zh[-_]tw|chinese traditional',
-                               'zh' => 'zh|chinese simplified');
+                               'zh' => 'zh|chinese simplified',
+                               'ji' => 'ji|yiddish',
+                               'zu' => 'zu|zulu');
 
       $this->catalog_languages = array();
       $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
