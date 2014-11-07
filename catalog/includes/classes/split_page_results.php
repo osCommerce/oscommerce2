@@ -73,8 +73,6 @@
 
       $display_links_string = '';
 
-      $class = 'class="pageResults"';
-
       if (tep_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
 
 // previous button - not displayed on first page

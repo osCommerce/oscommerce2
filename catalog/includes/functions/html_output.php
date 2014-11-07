@@ -344,7 +344,7 @@
   }
 
 ////
-// Output a jQuery UI Button
+// Output a Bootstrap button
   function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;
 

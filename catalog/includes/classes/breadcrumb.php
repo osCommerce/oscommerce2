@@ -25,20 +25,20 @@
       $this->_trail[] = array('title' => $title, 'link' => $link);
     }
 
-    function trail($separator = NULL) {
-      $trail_string = '<ol class="breadcrumb">';
-
-      for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
-        if (isset($this->_trail[$i]['link']) && tep_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<li><a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a></li>' . "\n";
-        } else {
-          $trail_string .= '<li>' . $this->_trail[$i]['title'] . '</li>';
-        }
-      }
-
-      $trail_string .= '</ol>';
-
-      return $trail_string;
+    function trail($separator = NULL) { ?>
+      <ol class="breadcrumb">
+<?php
+      foreach ($this->_trail as $trail ) { 
+        if (isset($trail['link']) && tep_not_null($trail['link'])) { 
+?>
+          <li><a href="<?php echo $trail['link'] . '">' . $trail['title']; ?></a></li>
+<?php      } else { ?>
+          <li><?php echo $trail['title']; ?></li>
+<?php       }
+    }
+?>
+       </ol>
+<?php
     }
   }
 ?>
