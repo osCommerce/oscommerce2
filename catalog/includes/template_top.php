@@ -28,6 +28,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
+<link rel="shortcut icon" href="favicon.ico" />
 
 <!-- Bootstrap -->
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">

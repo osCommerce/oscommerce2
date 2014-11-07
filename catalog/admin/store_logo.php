@@ -23,10 +23,26 @@
         $store_logo->set_extensions(array('png', 'gif', 'jpg'));
         $store_logo->set_destination(DIR_FS_CATALOG_IMAGES);
 
+        $store_favicon = new upload('store_favicon');
+        $store_favicon->set_extensions('ico');
+        $store_favicon->set_destination(DIR_FS_CATALOG);      
+      
         if ($store_logo->parse()) {
           if ($store_logo->save()) {
             $messageStack->add_session(SUCCESS_LOGO_UPDATED, 'success');
             tep_db_query("update configuration set configuration_value = '" . tep_db_input($store_logo->filename) . "', last_modified = now() where configuration_value = '" . STORE_LOGO . "'");
+          } else {
+            $error = true;
+          }
+        } else {
+          $error = true;
+        }
+      
+        if ($store_favicon->parse()) {
+          $store_favicon->set_filename('favicon.ico');
+
+          if ($store_favicon->save()) {
+            $messageStack->add_session(SUCCESS_FAVICON_UPDATED, 'success');
           } else {
             $error = true;
           }
@@ -71,6 +87,11 @@
               <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
               <td class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
             </tr>
+            <tr>
+              <td class="main" valign="top"><?php echo TEXT_FAVICON_IMAGE; ?></td>
+              <td class="main"><?php echo tep_draw_file_field('store_favicon'); ?></td>
+              <td class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
+            </tr>
           </table>
         </form></td>
       </tr>
@@ -85,6 +106,18 @@
       </tr>
       <tr>
         <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . STORE_LOGO; ?></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+        <td class="main"><?php echo TEXT_FAVICON_FORMAT_AND_LOCATION; ?></td>
+      </tr>
+      <tr>
+        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+      </tr>
+      <tr>
+        <td class="main"><?php echo DIR_FS_CATALOG . 'favicon.ico'; ?></td>
       </tr>
     </table>
 
