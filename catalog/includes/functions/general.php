@@ -394,7 +394,7 @@
 ////
 // Return the number of products in a category
 // TABLES: products, products_to_categories, categories
-  function tep_count_products_in_category($category_id, $include_inactive = false) {
+  function tep_count_products_in_category($category_id, $include_inactive = false, $count_subs = true) {
     $products_count = 0;
     if ($include_inactive == true) {
       $products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$category_id . "'");
@@ -404,11 +404,13 @@
     $products = tep_db_fetch_array($products_query);
     $products_count += $products['total'];
 
-    $child_categories_query = tep_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$category_id . "'");
-    if (tep_db_num_rows($child_categories_query)) {
-      while ($child_categories = tep_db_fetch_array($child_categories_query)) {
-        $products_count += tep_count_products_in_category($child_categories['categories_id'], $include_inactive);
-      }
+    if ($count_subs == true) {
+      $child_categories_query = tep_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$category_id . "'");
+      if (tep_db_num_rows($child_categories_query)) {
+        while ($child_categories = tep_db_fetch_array($child_categories_query)) {
+          $products_count += tep_count_products_in_category($child_categories['categories_id'], $include_inactive, $count_subs);
+        }
+      }  
     }
 
     return $products_count;
