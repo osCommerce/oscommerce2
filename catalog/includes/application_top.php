@@ -439,7 +439,7 @@
     if ( tep_db_num_rows($manufacturers_query) ) {
       $manufacturers = tep_db_fetch_array($manufacturers_query);
 
-      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id']));
+      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id'], $request_type));
     }
   }
 
