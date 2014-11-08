@@ -23,7 +23,7 @@
 
   if (isset($product_info['products_model'])) {
 // add the products model to the breadcrumb trail
-  $breadcrumb->add($product_info['products_model'], tep_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $product_info['products_id'], $request_type));
+  $breadcrumb->add($product_info['products_model'], tep_href_link(FILENAME_PRODUCT_INFO, 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
   }
   
   require(DIR_WS_INCLUDES . 'template_top.php');
