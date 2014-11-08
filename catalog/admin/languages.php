@@ -76,6 +76,11 @@
         $directory = tep_db_prepare_input($_POST['directory']);
         $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
 
+        if (!is_dir(DIR_WS_LANGUAGES . '/' . $_POST['directory'])){
+            $messageStack->add(ERROR_DIRECTORY_LANGUAGE, 'error');           
+            break;
+        }
+        
         tep_db_query("update " . TABLE_LANGUAGES . " set name = '" . tep_db_input($name) . "', code = '" . tep_db_input($code) . "', image = '" . tep_db_input($image) . "', directory = '" . tep_db_input($directory) . "', sort_order = '" . tep_db_input($sort_order) . "' where languages_id = '" . (int)$lID . "'");
 
         if ($_POST['default'] == 'on') {
