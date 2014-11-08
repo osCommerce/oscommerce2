@@ -40,7 +40,7 @@
               '      <li><a href="' . tep_href_link(FILENAME_SHIPPING) . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
               '      <li><a href="' . tep_href_link(FILENAME_PRIVACY) . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a></li>' .
               '      <li><a href="' . tep_href_link(FILENAME_CONDITIONS) . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a></li>' .
-              '      <li><a href="' . tep_href_link(FILENAME_CONTACT_US) . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>' .
+              '      <li><a href="' . tep_href_link(FILENAME_CONTACT_US, '', 'SSL') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>' .
               '    </ul>' .
               '  </div>' .
               '</div>';
