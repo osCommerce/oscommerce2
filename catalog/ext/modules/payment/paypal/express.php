@@ -375,7 +375,8 @@ EOD;
                                     'customers_telephone' => '',
                                     'customers_fax' => '',
                                     'customers_newsletter' => '0',
-                                    'customers_password' => '');
+                                    'customers_password' => '',
+                                    'customers_gender' => ''); // v22rc2a compatibility
 
             if ( isset($appPayPalEcResult['PHONENUM']) && tep_not_null($appPayPalEcResult['PHONENUM']) ) {
               $customers_telephone = tep_db_prepare_input($appPayPalEcResult['PHONENUM']);
@@ -466,7 +467,8 @@ EOD;
                                   'entry_street_address' => $ship_address,
                                   'entry_postcode' => $ship_postcode,
                                   'entry_city' => $ship_city,
-                                  'entry_country_id' => $ship_country_id);
+                                  'entry_country_id' => $ship_country_id,
+                                  'entry_gender' => ''); // v22rc2a compatibility
 
           if (ACCOUNT_STATE == 'true') {
             if ($ship_zone_id > 0) {
