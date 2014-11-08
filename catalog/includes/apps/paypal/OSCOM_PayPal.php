@@ -449,7 +449,7 @@
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
       }
 
-      if ( defined('OSCOM_APP_PAYPAL_VERIFY_SSL') && tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
+      if ( defined('OSCOM_APP_PAYPAL_PROXY') && tep_not_null(OSCOM_APP_PAYPAL_PROXY) ) {
         curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
         curl_setopt($curl, CURLOPT_PROXY, OSCOM_APP_PAYPAL_PROXY);
       }
