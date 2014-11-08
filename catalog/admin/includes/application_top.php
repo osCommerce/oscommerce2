@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+// Start the clock for the page parse time log
+  define('PAGE_PARSE_START_TIME', microtime());
+
 // set the level of error reporting
   error_reporting(E_ALL | E_STRICT);
   ini_set('display_errors', true); // TODO remove on release
