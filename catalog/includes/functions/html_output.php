@@ -12,17 +12,13 @@
 
 ////
 // The HTML href link wrapper function
-  function tep_href_link($page = '', $parameters = '', $connection = '', $add_session_id = true, $search_engine_safe = true) {
+  function tep_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
     global $request_type, $session_started, $SID;
 
     $page = tep_output_string($page);
 
     if (!tep_not_null($page)) {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
-    }
-    
-    if ( empty($connection) ) {
-      $connection = $request_type;
     }
 
     if ($connection == 'NONSSL') {
