@@ -219,6 +219,10 @@
   if ( !isset($_SESSION['language']) || isset($_GET['language']) ) {
     include('includes/classes/language.php');
     $lng = new language();
+    
+    if (!array_key_exists($_GET['language'], $lng->catalog_languages)) {
+      tep_redirect(tep_href_link(FILENAME_DEFAULT));
+    } 
 
     if ( isset($_GET['language']) && !empty($_GET['language']) ) {
       $lng->set_language($_GET['language']);
