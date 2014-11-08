@@ -185,7 +185,7 @@
                   </tr>
 <?php
   if (empty($action) || ($messageStack->size) !== 0) {
-?>                  
+?>
                   <tr>
                     <td class="smallText" align="right" colspan="2"><?php echo tep_draw_button(IMAGE_NEW_LANGUAGE, 'plus', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new')); ?></td>
                   </tr>
