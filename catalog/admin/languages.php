@@ -76,7 +76,7 @@
         $directory = tep_db_prepare_input($_POST['directory']);
         $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
 
-        if (!is_dir(DIR_WS_LANGUAGES . '/' . $_POST['directory'])){
+        if (!is_dir(DIR_WS_LANGUAGES . '/' . $directory)){
             $messageStack->add(ERROR_DIRECTORY_LANGUAGE, 'error');           
             break;
         }
