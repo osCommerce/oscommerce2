@@ -258,4 +258,4 @@ define('PRODUCT_SUBSCRIBED', '%s has been added to your Notification List');
 define('PRODUCT_UNSUBSCRIBED', '%s has been removed from your Notification List');
 define('PRODUCT_ADDED', '%s has been added to your Cart');
 define('PRODUCT_REMOVED', '%s has been removed from your Cart');
-
+define('PRODUCT_UPDATED', '%s has been updated to your Cart');
