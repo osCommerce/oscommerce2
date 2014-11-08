@@ -417,8 +417,8 @@
   require('includes/classes/breadcrumb.php');
   $breadcrumb = new breadcrumb;
 
-  $breadcrumb->add(HEADER_TITLE_TOP, ($request_type = 'SSL') ? HTTPS_SERVER : HTTP_SERVER);
-  $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link(FILENAME_DEFAULT, '', $request_type));
+  $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
+  $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link(FILENAME_DEFAULT));
 
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
@@ -428,7 +428,7 @@
       if ( tep_db_num_rows($categories_query) > 0 ) {
         $categories = tep_db_fetch_array($categories_query);
 
-        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1))), $request_type));
+        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
       } else {
         break;
       }
@@ -439,7 +439,7 @@
     if ( tep_db_num_rows($manufacturers_query) ) {
       $manufacturers = tep_db_fetch_array($manufacturers_query);
 
-      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id'], $request_type));
+      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
 
