@@ -428,7 +428,7 @@
       if ( tep_db_num_rows($categories_query) > 0 ) {
         $categories = tep_db_fetch_array($categories_query);
 
-        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+        $breadcrumb->add($categories['categories_name'], tep_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1))), $request_type));
       } else {
         break;
       }
