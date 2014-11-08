@@ -22,7 +22,12 @@
         $image = tep_db_prepare_input($_POST['image']);
         $directory = tep_db_prepare_input($_POST['directory']);
         $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
-
+        
+        if (!is_dir(DIR_WS_LANGUAGES . '/' . $directory)){
+            $messageStack->add(ERROR_DIRECTORY_LANGUAGE, 'error');           
+            break;
+        }
+        
         tep_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, sort_order) values ('" . tep_db_input($name) . "', '" . tep_db_input($code) . "', '" . tep_db_input($image) . "', '" . tep_db_input($directory) . "', '" . tep_db_input($sort_order) . "')");
         $insert_id = tep_db_insert_id();
 
