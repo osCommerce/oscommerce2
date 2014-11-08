@@ -417,7 +417,7 @@
   require('includes/classes/breadcrumb.php');
   $breadcrumb = new breadcrumb;
 
-  $breadcrumb->add(HEADER_TITLE_TOP, ($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER);
+  $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
   $breadcrumb->add(HEADER_TITLE_CATALOG, tep_href_link(FILENAME_DEFAULT));
 
 // add category names or the manufacturer name to the breadcrumb trail
