@@ -19,7 +19,7 @@ The web server must support PHP either as a module or allow execution of CGI scr
 
 PHP
 ==============================
-osCommerce Online Merchant is compatible with PHP 5.3 For performance and security reasons it is recommended to use the latest PHP 5 version on the web server.
+osCommerce Online Merchant is compatible with PHP 5.3. For performance and security reasons it is recommended to use the latest PHP 5 version on the web server.
 
 The following PHP options are recommended to be set in the php.ini configuration file:
 
