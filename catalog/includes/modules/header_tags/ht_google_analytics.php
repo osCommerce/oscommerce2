@@ -82,12 +82,10 @@
             });' . "\n";
             }
 
-             $header .= '        ga(\'ecommerce:send\'); //submits transaction to the Analytics servers' . "\n";
+            $header .= '        ga(\'ecommerce:send\'); //submits transaction to the Analytics servers' . "\n";
           }
         }
 
-       
-    
      $header .= '</script>' . "\n";
 
         $oscTemplate->addBlock($header, $this->group);
