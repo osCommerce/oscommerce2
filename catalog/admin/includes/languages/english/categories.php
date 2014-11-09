@@ -68,6 +68,10 @@ define('TEXT_CATEGORIES_NAME', 'Category Name:');
 define('TEXT_CATEGORIES_IMAGE', 'Category Image:');
 define('TEXT_SORT_ORDER', 'Sort Order:');
 
+define('SECTION_HEADING_GENERAL', 'General');
+define('SECTION_HEADING_DATA', 'Data');
+define('SECTION_HEADING_IMAGES', 'Images');
+
 define('TEXT_PRODUCTS_STATUS', 'Products Status:');
 define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date Available:');
 define('TEXT_PRODUCT_AVAILABLE', 'In Stock');

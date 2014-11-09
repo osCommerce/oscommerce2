@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2014 osCommerce
 
   Released under the GNU General Public License
 */
@@ -84,6 +84,21 @@
       }
 
       return $quotes_array;
+    }
+
+    function get_first() {
+      foreach ( $this->modules as $value ) {
+        $class = substr($value, 0, strrpos($value, '.'));
+        if ( $GLOBALS[$class]->enabled ) {
+          foreach ( $GLOBALS[$class]->quotes['methods'] as $method ) {
+            if ( isset($method['cost']) && tep_not_null($method['cost']) ) {
+              return array('id' => $GLOBALS[$class]->quotes['id'] . '_' . $method['id'],
+                           'title' => $GLOBALS[$class]->quotes['module'] . ' (' . $method['title'] . ')',
+                           'cost' => $method['cost']);
+            }
+          }
+        }
+      }
     }
 
     function cheapest() {
