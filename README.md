@@ -23,12 +23,12 @@ osCommerce Online Merchant is compatible with PHP 5.3. For performance and secur
 
 The following PHP options are recommended to be set in the php.ini configuration file:
 
-PHP Setting	Value     | Value
+PHP Setting Value     | Value
 --------------------- | -------------
-register_globals      |	Off
-magic_quotes_gpc      |	Off
-file_uploads	        | On
-session.auto_start    |	Off
+register_globals      | Off
+magic_quotes_gpc      | Off
+file_uploads          | On
+session.auto_start    | Off
 session.use_trans_sid | Off
 
 **Required PHP Extensions**
