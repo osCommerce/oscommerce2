@@ -210,7 +210,7 @@ $(function() {
           </tr>
           <tr>
             <td>MySQLi</td>
-            <td align="right"><img src="images/<?php echo extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <td align="right"><img src="images/<?php echo (extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
           </tr>
         </table>
 
