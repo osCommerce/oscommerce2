@@ -86,7 +86,7 @@
           }
         }
 
-     $header .= '</script>' . "\n";
+        $header .= '</script>' . "\n";
 
         $oscTemplate->addBlock($header, $this->group);
       }
