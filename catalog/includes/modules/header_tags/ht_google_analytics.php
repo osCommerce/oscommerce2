@@ -74,7 +74,7 @@
 
               $header .= '        ga(\'ecommerce:addItem\',{
         \'id\': \'' . (int)$order['orders_id'] . '\', // order ID - required
-        \'sku\': \'' . $order_products['products_model'] . '\', // SKU/code - required
+        \'sku\': \'' . tep_output_string($order_products['products_model']) . '\', // SKU/code - required
         \'name\': \'' . tep_output_string($order_products['products_name']) . '\', // product name
         \'category\': \'' . tep_output_string($category['categories_name']) . '\', // category
         \'price\': \'' . $this->format_raw($order_products['final_price']) . '\', // unit price - required
