@@ -668,8 +668,8 @@ EOD;
             $comment_status .= '; ' . $tx_reason_code;
           }
 
-          if ( $tx_amount != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
-            $comment_status .= '; PayPal transaction value (' . $tx_amount . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+          if ( $tx_amount != $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) ) {
+            $comment_status .= '; PayPal transaction value (' . $tx_amount . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
           } elseif ( $tx_payment_status == 'Completed' ) {
             $new_order_status = (OSCOM_APP_PAYPAL_HS_ORDER_STATUS_ID > 0 ? OSCOM_APP_PAYPAL_HS_ORDER_STATUS_ID : $new_order_status);
           }

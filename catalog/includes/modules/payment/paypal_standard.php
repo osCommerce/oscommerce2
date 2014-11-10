@@ -779,8 +779,8 @@
             $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
           }
 
-          if ( $HTTP_POST_VARS['mc_gross'] != number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) ) {
-            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . number_format($total['value'] * $order['currency_value'], $currencies->get_decimal_places($order['currency'])) . ')';
+          if ( $HTTP_POST_VARS['mc_gross'] != $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) ) {
+            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
           }
 
           if ( $is_ipn === true ) {
