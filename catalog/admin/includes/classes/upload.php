@@ -33,7 +33,7 @@
     }
 
     function parse() {
-      global $HTTP_POST_FILES, $messageStack;
+      global $messageStack;
 
       $file = array();
 
@@ -42,11 +42,11 @@
                       'type' => $_FILES[$this->file]['type'],
                       'size' => $_FILES[$this->file]['size'],
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
-      } elseif (isset($HTTP_POST_FILES[$this->file])) {
-        $file = array('name' => $HTTP_POST_FILES[$this->file]['name'],
-                      'type' => $HTTP_POST_FILES[$this->file]['type'],
-                      'size' => $HTTP_POST_FILES[$this->file]['size'],
-                      'tmp_name' => $HTTP_POST_FILES[$this->file]['tmp_name']);
+      } elseif (isset($_FILES[$this->file])) {
+        $file = array('name' => $_FILES[$this->file]['name'],
+                      'type' => $_FILES[$this->file]['type'],
+                      'size' => $_FILES[$this->file]['size'],
+                      'tmp_name' => $_FILES[$this->file]['tmp_name']);
       }
 
       if ( tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
