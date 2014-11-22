@@ -53,7 +53,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link(FILENAME_PASSWORD_FORGOTTEN));
+    tep_redirect(tep_href_link('password_forgotten.php'));
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
