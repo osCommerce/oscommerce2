@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SPECIALS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/specials.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SPECIALS));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('specials.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

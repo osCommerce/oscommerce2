@@ -34,9 +34,9 @@
         'link' => tep_href_link(FILENAME_REVIEWS)
       ),
       array(
-        'code' => FILENAME_SPECIALS,
+        'code' => 'specials.php',
         'title' => BOX_CATALOG_SPECIALS,
-        'link' => tep_href_link(FILENAME_SPECIALS)
+        'link' => tep_href_link('specials.php')
       ),
       array(
         'code' => FILENAME_PRODUCTS_EXPECTED,
