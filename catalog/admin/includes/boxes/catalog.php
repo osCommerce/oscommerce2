@@ -24,9 +24,9 @@
         'link' => tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES)
       ),
       array(
-        'code' => FILENAME_MANUFACTURERS,
+        'code' => 'manufacturers.php',
         'title' => BOX_CATALOG_MANUFACTURERS,
-        'link' => tep_href_link(FILENAME_MANUFACTURERS)
+        'link' => tep_href_link('manufacturers.php')
       ),
       array(
         'code' => 'reviews.php',

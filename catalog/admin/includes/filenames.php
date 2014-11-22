@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_MANUFACTURERS', 'manufacturers.php');
   define('FILENAME_MODULES', 'modules.php');
   define('FILENAME_NEWSLETTERS', 'newsletters.php');
   define('FILENAME_ORDERS', 'orders.php');
