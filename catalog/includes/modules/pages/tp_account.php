@@ -24,7 +24,7 @@
                                                                                                             'link' => tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'),
                                                                                                             'icon' => 'glyphicon glyphicon-home'),
                                                                                     'password' => array('title' => MY_ACCOUNT_PASSWORD,
-                                                                                                        'link' => tep_href_link(FILENAME_ACCOUNT_PASSWORD, '', 'SSL'),
+                                                                                                        'link' => tep_href_link('account_password.php', '', 'SSL'),
                                                                                                         'icon' => 'glyphicon glyphicon-cog'))),
                                                 'orders' => array('title' => MY_ORDERS_TITLE,
                                                                   'links' => array('history' => array('title' => MY_ORDERS_VIEW,
