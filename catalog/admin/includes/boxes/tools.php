@@ -29,9 +29,9 @@
         'link' => tep_href_link('banner_manager.php')
       ),
       array(
-        'code' => FILENAME_CACHE,
+        'code' => 'cache.php',
         'title' => BOX_TOOLS_CACHE,
-        'link' => tep_href_link(FILENAME_CACHE)
+        'link' => tep_href_link('cache.php')
       ),
       array(
         'code' => FILENAME_DEFINE_LANGUAGE,
