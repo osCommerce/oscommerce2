@@ -16,8 +16,8 @@
   );
 
   foreach ($cfgModules->getAll() as $m) {
-    $cl_box_groups[sizeof($cl_box_groups)-1]['apps'][] = array('code' => FILENAME_MODULES,
+    $cl_box_groups[sizeof($cl_box_groups)-1]['apps'][] = array('code' => 'modules.php',
                                                                'title' => $m['title'],
-                                                               'link' => tep_href_link(FILENAME_MODULES, 'set=' . $m['code']));
+                                                               'link' => tep_href_link('modules.php', 'set=' . $m['code']));
   }
 ?>
