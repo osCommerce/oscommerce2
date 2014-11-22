@@ -262,7 +262,7 @@
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
     if ( $session_started == false ) {
-      tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+      tep_redirect(tep_href_link('cookie_usage.php'));
     }
 
     if ( DISPLAY_CART == 'true' ) {

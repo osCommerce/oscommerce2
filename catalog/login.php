@@ -20,7 +20,7 @@
       tep_redirect(tep_href_link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
     }
 
-    tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+    tep_redirect(tep_href_link('cookie_usage.php'));
   }
 
 // login content module must return $login_customer_id as an integer after successful customer authentication
