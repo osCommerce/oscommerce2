@@ -38,7 +38,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_LOGIN), null, null, 'btn-default btn-block'); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('login.php'), null, null, 'btn-default btn-block'); ?>
   </div>
 </div>
 

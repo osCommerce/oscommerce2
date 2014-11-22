@@ -315,7 +315,7 @@
 
               $navigation->set_snapshot();
 
-              $login_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
+              $login_url = tep_href_link('login.php', '', 'SSL');
               $login_email_address = tep_output_string($response_array['EMAIL']);
 
       $output = <<<EOD
