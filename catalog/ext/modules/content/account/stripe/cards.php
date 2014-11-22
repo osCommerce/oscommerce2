@@ -27,10 +27,10 @@
     $stripe = new stripe();
 
     if ( !$stripe->enabled ) {
-      tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+      tep_redirect(tep_href_link('account.php', '', 'SSL'));
     }
   } else {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    tep_redirect(tep_href_link('account.php', '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_stripe_cards.php');
@@ -38,7 +38,7 @@
   $stripe_cards = new cm_account_stripe_cards();
 
   if ( !$stripe_cards->isEnabled() ) {
-    tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+    tep_redirect(tep_href_link('account.php', '', 'SSL'));
   }
 
   if ( isset($_GET['action']) ) {
@@ -59,7 +59,7 @@
     tep_redirect(tep_href_link('ext/modules/content/account/stripe/cards.php', '', 'SSL'));
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_STRIPE_CARDS_NAVBAR_TITLE_1, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_STRIPE_CARDS_NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
   $breadcrumb->add(MODULE_CONTENT_ACCOUNT_STRIPE_CARDS_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/stripe/cards.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -108,7 +108,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT, '', 'SSL')); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?>
   </div>
 </div>
 

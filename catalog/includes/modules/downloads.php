@@ -61,7 +61,7 @@
     if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
 ?>
 
-    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
+    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link('account.php', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 
 <?php
     }
