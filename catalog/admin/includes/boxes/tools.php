@@ -19,9 +19,9 @@
         'link' => tep_href_link('action_recorder.php')
       ),
       array(
-        'code' => FILENAME_BACKUP,
+        'code' => 'backup.php',
         'title' => BOX_TOOLS_BACKUP,
-        'link' => tep_href_link(FILENAME_BACKUP)
+        'link' => tep_href_link('backup.php')
       ),
       array(
         'code' => FILENAME_BANNER_MANAGER,
