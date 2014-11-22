@@ -44,9 +44,9 @@
         'link' => tep_href_link('mail.php')
       ),
       array(
-        'code' => FILENAME_NEWSLETTERS,
+        'code' => 'newsletters.php',
         'title' => BOX_TOOLS_NEWSLETTER_MANAGER,
-        'link' => tep_href_link(FILENAME_NEWSLETTERS)
+        'link' => tep_href_link('newsletters.php')
       ),
       array(
         'code' => FILENAME_SEC_DIR_PERMISSIONS,
