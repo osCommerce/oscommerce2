@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_LOCALIZATION,
     'apps' => array(
       array(
-        'code' => FILENAME_CURRENCIES,
+        'code' => 'currencies.php',
         'title' => BOX_LOCALIZATION_CURRENCIES,
-        'link' => tep_href_link(FILENAME_CURRENCIES)
+        'link' => tep_href_link('currencies.php')
       ),
       array(
         'code' => FILENAME_LANGUAGES,
