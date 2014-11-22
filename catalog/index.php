@@ -236,7 +236,7 @@
       }
     }
 
-    include(DIR_WS_MODULES . 'products_listing.php');
+    include(DIR_WS_MODULES . 'product_listing.php');
 ?>
 
 </div>
