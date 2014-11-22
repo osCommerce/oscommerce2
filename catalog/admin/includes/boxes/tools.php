@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_TOOLS,
     'apps' => array(
       array(
-        'code' => FILENAME_ACTION_RECORDER,
+        'code' => 'action_recorder.php',
         'title' => BOX_TOOLS_ACTION_RECORDER,
-        'link' => tep_href_link(FILENAME_ACTION_RECORDER)
+        'link' => tep_href_link('action_recorder.php')
       ),
       array(
         'code' => FILENAME_BACKUP,
