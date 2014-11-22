@@ -19,9 +19,9 @@
         'link' => tep_href_link('currencies.php')
       ),
       array(
-        'code' => FILENAME_LANGUAGES,
+        'code' => 'languages.php',
         'title' => BOX_LOCALIZATION_LANGUAGES,
-        'link' => tep_href_link(FILENAME_LANGUAGES)
+        'link' => tep_href_link('languages.php')
       ),
       array(
         'code' => FILENAME_ORDERS_STATUS,

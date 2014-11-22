@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_LANGUAGES', 'languages.php');
   define('FILENAME_MAIL', 'mail.php');
   define('FILENAME_MANUFACTURERS', 'manufacturers.php');
   define('FILENAME_MODULES', 'modules.php');
