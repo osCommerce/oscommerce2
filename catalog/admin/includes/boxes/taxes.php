@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_LOCATION_AND_TAXES,
     'apps' => array(
       array(
-        'code' => FILENAME_COUNTRIES,
+        'code' => 'countries.php',
         'title' => BOX_TAXES_COUNTRIES,
-        'link' => tep_href_link(FILENAME_COUNTRIES)
+        'link' => tep_href_link('countries.php')
       ),
       array(
         'code' => FILENAME_ZONES,

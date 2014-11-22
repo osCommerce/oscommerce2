@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_COUNTRIES', 'countries.php');
   define('FILENAME_CURRENCIES', 'currencies.php');
   define('FILENAME_CUSTOMERS', 'customers.php');
   define('FILENAME_DEFINE_LANGUAGE', 'define_language.php');
