@@ -125,7 +125,7 @@
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('advanced_search.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, tep_get_all_get_params(), 'NONSSL', true, false));
+  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('advanced_search_result.php', tep_get_all_get_params(), 'NONSSL', true, false));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

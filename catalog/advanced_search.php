@@ -29,7 +29,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('advanced_search', tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', 'NONSSL', false), 'get', 'class="form-horizontal" role="form"') . tep_hide_session_id(); ?>
+<?php echo tep_draw_form('advanced_search', tep_href_link('advanced_search_result.php', '', 'NONSSL', false), 'get', 'class="form-horizontal" role="form"') . tep_hide_session_id(); ?>
 
 <div class="contentContainer">
 
