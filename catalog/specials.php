@@ -64,7 +64,7 @@
                     <?php echo '<del>' . $currencies->display_price($specials['products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($specials['specials_new_products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</span>'; ?>
                   </div>
                   <div class="col-sm-6 text-right">
-                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $specials['products_id']), null, null, 'btn-success'); ?>
+                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link('products_new.php', tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $specials['products_id']), null, null, 'btn-success'); ?>
                   </div>
                 </div>
              </div>

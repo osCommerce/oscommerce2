@@ -39,7 +39,6 @@
   define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
   define('FILENAME_PRODUCT_REVIEWS', 'product_reviews.php');
   define('FILENAME_PRODUCT_REVIEWS_WRITE', 'product_reviews_write.php');
-  define('FILENAME_PRODUCTS_NEW', 'products_new.php');
   define('FILENAME_REDIRECT', 'redirect.php');
   define('FILENAME_REVIEWS', 'reviews.php');
   define('FILENAME_SHOPPING_CART', 'shopping_cart.php');

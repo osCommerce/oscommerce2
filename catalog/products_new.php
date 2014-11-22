@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCTS_NEW);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/products_new.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRODUCTS_NEW));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('products_new.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -76,7 +76,7 @@
                     <?php echo TEXT_PRICE . ' ' . $products_price; ?>
                   </div>
                   <div class="col-sm-6 text-right">
-                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $products_new['products_id']), null, null, 'btn-success'); ?>
+                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link('products_new.php', tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $products_new['products_id']), null, null, 'btn-success'); ?>
                   </div>
                 </div>
              </div>
