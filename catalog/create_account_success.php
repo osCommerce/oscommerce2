@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT_SUCCESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/create_account_success.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);
