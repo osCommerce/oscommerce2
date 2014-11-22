@@ -189,7 +189,7 @@
 
       $process_button_string = tep_draw_hidden_field('MerchantID', MODULE_PAYMENT_PSIGATE_MERCHANT_ID) .
                                tep_draw_hidden_field('FullTotal', number_format($order->info['total'] * $currencies->get_value(MODULE_PAYMENT_PSIGATE_CURRENCY), $currencies->currencies[MODULE_PAYMENT_PSIGATE_CURRENCY]['decimal_places'])) .
-                               tep_draw_hidden_field('ThanksURL', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
+                               tep_draw_hidden_field('ThanksURL', tep_href_link('checkout_process.php', '', 'SSL', true)) .
                                tep_draw_hidden_field('NoThanksURL', tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'NONSSL', true)) .
                                tep_draw_hidden_field('Bname', $order->billing['firstname'] . ' ' . $order->billing['lastname']) .
                                tep_draw_hidden_field('Baddr1', $order->billing['street_address']) .

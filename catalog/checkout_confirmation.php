@@ -102,7 +102,7 @@
   if (isset($$payment->form_action_url)) {
     $form_action_url = $$payment->form_action_url;
   } else {
-    $form_action_url = tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
+    $form_action_url = tep_href_link('checkout_process.php', '', 'SSL');
   }
 
   echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');

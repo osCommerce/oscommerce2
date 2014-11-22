@@ -151,7 +151,7 @@ EOD;
                       'x_show_form' => 'PAYMENT_FORM',
                       'x_delim_data' => 'FALSE',
                       'x_relay_response' => 'TRUE',
-                      'x_relay_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
+                      'x_relay_url' => tep_href_link('checkout_process.php', '', 'SSL', false),
                       'x_company' => substr($order->billing['company'], 0, 50),
                       'x_address' => substr($order->billing['street_address'], 0, 60),
                       'x_city' => substr($order->billing['city'], 0, 40),

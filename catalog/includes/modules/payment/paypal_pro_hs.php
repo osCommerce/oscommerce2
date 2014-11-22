@@ -308,7 +308,7 @@
                         'invoice' => $order_id,
                         'custom' => $customer_id,
                         'paymentaction' => MODULE_PAYMENT_PAYPAL_PRO_HS_TRANSACTION_METHOD == 'Sale' ? 'sale' : 'authorization',
-                        'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
+                        'return' => tep_href_link('checkout_process.php', '', 'SSL'),
                         'notify_url' => tep_href_link('ext/modules/payment/paypal/pro_hosted_ipn.php', '', 'SSL', false, false),
                         'shipping' => $this->format_raw($order->info['shipping_cost']),
                         'tax' => $this->format_raw($order->info['tax']),

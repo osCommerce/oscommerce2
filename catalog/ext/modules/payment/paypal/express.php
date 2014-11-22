@@ -588,7 +588,7 @@ EOD;
           $sendto = false;
         }
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_process.php', '', 'SSL'));
       } else {
         $messageStack->add_session('header', stripslashes($response_array['L_LONGMESSAGE0']), 'error');
 

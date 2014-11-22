@@ -127,7 +127,7 @@
                                tep_draw_hidden_field('addr_country', $order->billing['country']['iso_code_2']) .
                                tep_draw_hidden_field('addr_state', $zone_code) .
                                tep_draw_hidden_field('addr_telefon', $order->customer['telephone']) .
-                               tep_draw_hidden_field('redirect_url', tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', true)) .
+                               tep_draw_hidden_field('redirect_url', tep_href_link('checkout_process.php', '', 'SSL', true)) .
                                tep_draw_hidden_field('silent_error_url', tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL', true)) .
                                tep_draw_hidden_field('hidden_trigger_url', tep_href_link('ext/modules/payment/ipayment/callback_cc.php', '', 'SSL', false)) .
                                tep_draw_hidden_field('client_name', 'oscommerce') .

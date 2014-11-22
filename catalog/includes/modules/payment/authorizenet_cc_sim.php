@@ -105,7 +105,7 @@
                       'x_show_form' => 'PAYMENT_FORM',
                       'x_delim_data' => 'FALSE',
                       'x_relay_response' => 'TRUE',
-                      'x_relay_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
+                      'x_relay_url' => tep_href_link('checkout_process.php', '', 'SSL', false),
                       'x_first_name' => substr($order->billing['firstname'], 0, 50),
                       'x_last_name' => substr($order->billing['lastname'], 0, 50),
                       'x_company' => substr($order->billing['company'], 0, 50),
