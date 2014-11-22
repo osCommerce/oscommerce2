@@ -174,7 +174,7 @@
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
       tep_session_destroy();
 
-      tep_redirect(tep_href_link(FILENAME_SSL_CHECK));
+      tep_redirect(tep_href_link('ssl_check.php'));
     }
   }
 
