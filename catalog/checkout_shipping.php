@@ -160,7 +160,7 @@
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && !isset($_SESSION['shipping']) && ($shipping == false) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout_shipping_address.php', '', 'SSL'));
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
@@ -186,7 +186,7 @@
         <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
       </div>
       <div class="clearfix"></div>
-      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
       <br>
       <div class="clearfix"></div>
     </div>

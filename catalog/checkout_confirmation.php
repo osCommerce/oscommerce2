@@ -174,7 +174,7 @@
     <div class="row">
       <div class="col-sm-4">
         <div class="panel panel-primary">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
 
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>

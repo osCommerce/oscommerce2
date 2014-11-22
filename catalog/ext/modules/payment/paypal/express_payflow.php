@@ -323,7 +323,7 @@ EOD;
               tep_session_register('ppecuk_right_turn');
               $ppecuk_right_turn = true;
 
-              tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+              tep_redirect(tep_href_link('checkout_shipping_address.php', '', 'SSL'));
             }
           }
 
@@ -487,7 +487,7 @@ EOD;
 
             $messageStack->add_session('checkout_address', MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+            tep_redirect(tep_href_link('checkout_shipping_address.php', '', 'SSL'));
           }
         }
       }
