@@ -32,7 +32,7 @@
                                                                                                       'icon' => 'glyphicon glyphicon-shopping-cart'))),
                                                 'notifications' => array('title' => EMAIL_NOTIFICATIONS_TITLE,
                                                                          'links' => array('newsletters' => array('title' => EMAIL_NOTIFICATIONS_NEWSLETTERS,
-                                                                                                                 'link' => tep_href_link(FILENAME_ACCOUNT_NEWSLETTERS, '', 'SSL'),
+                                                                                                                 'link' => tep_href_link('account_newsletter.php', '', 'SSL'),
                                                                                                                  'icon' => 'glyphicon glyphicon-envelope'),
                                                                                           'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
                                                                                                               'link' => tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL'),
