@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
   define('FILENAME_CATEGORIES', 'categories.php');
   define('FILENAME_CONFIGURATION', 'configuration.php');
   define('FILENAME_COUNTRIES', 'countries.php');
