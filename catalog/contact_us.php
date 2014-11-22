@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CONTACT_US);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'contact_us.php');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
@@ -41,11 +41,11 @@
 
       $actionRecorder->record();
 
-      tep_redirect(tep_href_link(FILENAME_CONTACT_US, 'action=success'));
+      tep_redirect(tep_href_link('contact_us.php', 'action=success'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_CONTACT_US));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('contact_us.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -76,7 +76,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('contact_us', tep_href_link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
