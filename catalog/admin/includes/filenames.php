@@ -12,5 +12,4 @@
 
 // define the filenames used in the project
 
-  define('FILENAME_ZONES', 'zones.php');
 ?>

@@ -19,9 +19,9 @@
         'link' => tep_href_link('countries.php')
       ),
       array(
-        'code' => FILENAME_ZONES,
+        'code' => 'zones.php',
         'title' => BOX_TAXES_ZONES,
-        'link' => tep_href_link(FILENAME_ZONES)
+        'link' => tep_href_link('zones.php')
       ),
       array(
         'code' => 'geo_zones.php',
