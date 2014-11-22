@@ -14,14 +14,14 @@
     'heading' => BOX_HEADING_REPORTS,
     'apps' => array(
       array(
-        'code' => FILENAME_STATS_PRODUCTS_VIEWED,
+        'code' => 'stats_products_viewed.php',
         'title' => BOX_REPORTS_PRODUCTS_VIEWED,
-        'link' => tep_href_link(FILENAME_STATS_PRODUCTS_VIEWED)
+        'link' => tep_href_link('stats_products_viewed.php')
       ),
       array(
-        'code' => FILENAME_STATS_PRODUCTS_PURCHASED,
+        'code' => 'stats_products_purchased.php',
         'title' => BOX_REPORTS_PRODUCTS_PURCHASED,
-        'link' => tep_href_link(FILENAME_STATS_PRODUCTS_PURCHASED)
+        'link' => tep_href_link('stats_products_purchased.php')
       ),
       array(
         'code' => 'stats_customers.php',

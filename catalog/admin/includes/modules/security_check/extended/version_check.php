@@ -29,7 +29,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link(FILENAME_VERSION_CHECK) . '">' . MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_ERROR . '</a>';
+      return '<a href="' . tep_href_link('version_check.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_ERROR . '</a>';
     }
   }
 ?>

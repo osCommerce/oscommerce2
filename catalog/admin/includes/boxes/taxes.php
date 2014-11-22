@@ -29,14 +29,14 @@
         'link' => tep_href_link('geo_zones.php')
       ),
       array(
-        'code' => FILENAME_TAX_CLASSES,
+        'code' => 'tax_classes.php',
         'title' => BOX_TAXES_TAX_CLASSES,
-        'link' => tep_href_link(FILENAME_TAX_CLASSES)
+        'link' => tep_href_link('tax_classes.php')
       ),
       array(
-        'code' => FILENAME_TAX_RATES,
+        'code' => 'tax_rates.php',
         'title' => BOX_TAXES_TAX_RATES,
-        'link' => tep_href_link(FILENAME_TAX_RATES)
+        'link' => tep_href_link('tax_rates.php')
       )
     )
   );

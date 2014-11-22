@@ -19,9 +19,9 @@
         'link' => tep_href_link('administrators.php')
       ),
       array(
-        'code' => FILENAME_STORE_LOGO,
+        'code' => 'store_logo.php',
         'title' => BOX_CONFIGURATION_STORE_LOGO,
-        'link' => tep_href_link(FILENAME_STORE_LOGO)
+        'link' => tep_href_link('store_logo.php')
       )
     )
   );

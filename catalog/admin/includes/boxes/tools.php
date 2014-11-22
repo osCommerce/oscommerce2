@@ -59,9 +59,9 @@
         'link' => tep_href_link('server_info.php')
       ),
       array(
-        'code' => FILENAME_VERSION_CHECK,
+        'code' => 'version_check.php',
         'title' => BOX_TOOLS_VERSION_CHECK,
-        'link' => tep_href_link(FILENAME_VERSION_CHECK)
+        'link' => tep_href_link('version_check.php')
       ),
       array(
         'code' => FILENAME_WHOS_ONLINE,
