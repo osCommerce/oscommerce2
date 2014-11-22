@@ -20,7 +20,6 @@
   define('FILENAME_ACCOUNT_PASSWORD', 'account_password.php');
   define('FILENAME_ADDRESS_BOOK', 'address_book.php');
   define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process.php');
-  define('FILENAME_ALSO_PURCHASED_PRODUCTS', 'also_purchased_products.php');
   define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation.php');
   define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment.php');
   define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address.php');
