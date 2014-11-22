@@ -18,7 +18,7 @@
 
       $oscTemplate->_data[$this->group] = array('account' => array('title' => MY_ACCOUNT_TITLE,
                                                                    'links' => array('edit' => array('title' => MY_ACCOUNT_INFORMATION,
-                                                                                                    'link' => tep_href_link(FILENAME_ACCOUNT_EDIT, '', 'SSL'),
+                                                                                                    'link' => tep_href_link('account_edit.php', '', 'SSL'),
                                                                                                     'icon' => 'glyphicon glyphicon-user'),
                                                                                     'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
                                                                                                             'link' => tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'),
