@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_SERVER_INFO', 'server_info.php');
   define('FILENAME_SHIPPING_MODULES', 'shipping_modules.php');
   define('FILENAME_SPECIALS', 'specials.php');
   define('FILENAME_STATS_CUSTOMERS', 'stats_customers.php');

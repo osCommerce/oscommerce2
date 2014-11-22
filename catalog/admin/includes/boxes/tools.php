@@ -54,9 +54,9 @@
         'link' => tep_href_link('sec_dir_permissions.php')
       ),
       array(
-        'code' => FILENAME_SERVER_INFO,
+        'code' => 'server_info.php',
         'title' => BOX_TOOLS_SERVER_INFO,
-        'link' => tep_href_link(FILENAME_SERVER_INFO)
+        'link' => tep_href_link('server_info.php')
       ),
       array(
         'code' => FILENAME_VERSION_CHECK,
