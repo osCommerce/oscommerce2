@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SHIPPING);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'shipping.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHIPPING));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('shipping.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

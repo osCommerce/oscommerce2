@@ -37,7 +37,7 @@
               '  <div class="panel-heading">' . MODULE_BOXES_INFORMATION_BOX_TITLE . '</div>' .
               '  <div class="panel-body">' .
               '    <ul class="list-unstyled">' .
-              '      <li><a href="' . tep_href_link(FILENAME_SHIPPING) . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
+              '      <li><a href="' . tep_href_link('shipping.php') . '">' . MODULE_BOXES_INFORMATION_BOX_SHIPPING . '</a></li>' .
               '      <li><a href="' . tep_href_link('privacy.php') . '">' . MODULE_BOXES_INFORMATION_BOX_PRIVACY . '</a></li>' .
               '      <li><a href="' . tep_href_link('conditions.php') . '">' . MODULE_BOXES_INFORMATION_BOX_CONDITIONS . '</a></li>' .
               '      <li><a href="' . tep_href_link('contact_us.php') . '">' . MODULE_BOXES_INFORMATION_BOX_CONTACT . '</a></li>' .
