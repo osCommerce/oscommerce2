@@ -31,7 +31,7 @@
     tep_redirect(tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id']));
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_TELL_A_FRIEND);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/tell_a_friend.php');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
@@ -102,7 +102,7 @@
     $from_email_address = $account['customers_email_address'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_TELL_A_FRIEND, 'products_id=' . (int)$_GET['products_id']));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('tell_a_friend.php', 'products_id=' . (int)$_GET['products_id']));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -117,7 +117,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('email_friend', tep_href_link(FILENAME_TELL_A_FRIEND, 'action=process&products_id=' . (int)$_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . (int)$_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
