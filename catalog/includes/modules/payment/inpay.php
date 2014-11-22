@@ -565,7 +565,7 @@ class inpay
 
         unset($_SESSION['cart_inpay_Standard_ID']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_success.php', '', 'SSL'));
     }
 
     function after_process()

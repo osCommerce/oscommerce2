@@ -328,7 +328,7 @@ EOD;
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $redirect_url = tep_href_link('checkout_success.php', '', 'SSL');
 
         echo <<<EOD
 <form name="redirect" action="{$redirect_url}" method="post" target="_top">

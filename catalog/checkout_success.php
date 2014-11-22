@@ -34,7 +34,7 @@
     tep_redirect(tep_href_link('index.php'));
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SUCCESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_success.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);
@@ -46,7 +46,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('order', tep_href_link(FILENAME_CHECKOUT_SUCCESS, 'action=update', 'SSL'), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo tep_draw_form('order', tep_href_link('checkout_success.php', 'action=update', 'SSL'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div class="contentContainer">
   <?php echo $page_content; ?>

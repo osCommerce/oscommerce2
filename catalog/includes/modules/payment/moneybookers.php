@@ -530,7 +530,7 @@
 
         unset($_SESSION[$this->_mbcartID]);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_success.php', '', 'SSL'));
       } else {
         tep_redirect(tep_href_link('shopping_cart.php'));
       }

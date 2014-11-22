@@ -294,7 +294,7 @@
   unset($_SESSION['payment']);
   unset($_SESSION['comments']);
 
-  tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+  tep_redirect(tep_href_link('checkout_success.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>
