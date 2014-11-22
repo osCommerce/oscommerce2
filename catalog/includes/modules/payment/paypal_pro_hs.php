@@ -303,7 +303,7 @@
         $params = array('business' => MODULE_PAYMENT_PAYPAL_PRO_HS_ID,
                         'bn' => 'OSCOM23_HS',
                         'buyer_email' => $order->customer['email_address'],
-                        'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                        'cancel_return' => tep_href_link('checkout_payment.php', '', 'SSL'),
                         'currency_code' => $_SESSION['currency'],
                         'invoice' => $order_id,
                         'custom' => $customer_id,
@@ -374,7 +374,7 @@
       }
 
       $iframe_url = tep_href_link('ext/modules/payment/paypal/hosted_checkout.php', 'key=' . $pphs_key, 'SSL');
-      $form_url = tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=paypal_pro_hs', 'SSL');
+      $form_url = tep_href_link('checkout_payment.php', 'payment_error=paypal_pro_hs', 'SSL');
 
 // include jquery if it doesn't exist in the template
       $output = <<<EOD

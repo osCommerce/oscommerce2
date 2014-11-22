@@ -149,7 +149,7 @@
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
       }
 // process the selected billing destination
     } elseif (isset($_POST['address'])) {
@@ -171,7 +171,7 @@
 
       if ($check_address['total'] == '1') {
         if ($reset_payment == true) unset($_SESSION['payment']);
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
       } else {
         unset($_SESSION['billto']);
       }
@@ -180,7 +180,7 @@
       if (!isset($_SESSION['billto'])) tep_session_register('billto');
       $billto = $customer_default_address_id;
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+      tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
     }
   }
 
@@ -189,7 +189,7 @@
     $billto = $customer_default_address_id;
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_payment.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'));
 
   $addresses_count = tep_count_customer_address_book_entries();
@@ -320,7 +320,7 @@
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
           <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link('checkout_payment.php', '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
       </table>

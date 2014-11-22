@@ -310,7 +310,7 @@
                                tep_draw_hidden_field('product_price_currency', $_SESSION['currency']) .
                                tep_draw_hidden_field('cb_url', urlencode(tep_href_link('ext/modules/payment/chronopay/callback.php', '' , 'SSL', true, true, true))) .
                                tep_draw_hidden_field('cb_type', 'P') .
-                               tep_draw_hidden_field('decline_url', urlencode(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'))) .
+                               tep_draw_hidden_field('decline_url', urlencode(tep_href_link('checkout_payment.php', '', 'SSL'))) .
                                tep_draw_hidden_field('language', $language_code) .
                                tep_draw_hidden_field('f_name', $order->billing['firstname']) .
                                tep_draw_hidden_field('s_name', $order->billing['lastname']) .

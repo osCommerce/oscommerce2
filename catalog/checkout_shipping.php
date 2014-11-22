@@ -60,7 +60,7 @@
     if (!isset($_SESSION['shipping'])) tep_session_register('shipping');
     $shipping = false;
     $sendto = false;
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -128,7 +128,7 @@
                                 'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                 'cost' => $quote[0]['methods'][0]['cost']);
 
-              tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+              tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
             }
           }
         } else {
@@ -141,7 +141,7 @@
       } else {
         $shipping = false;
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
       }
     }
   }

@@ -57,7 +57,7 @@
       }
 
 // When changing the shipping address due to no shipping rates being available, head straight to the checkout confirmation page
-      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == FILENAME_CHECKOUT_PAYMENT) && isset($_SESSION['ppec_right_turn']) ) {
+      if ( defined('FILENAME_CHECKOUT_PAYMENT') && (basename($PHP_SELF) == 'checkout_payment.php') && isset($_SESSION['ppec_right_turn']) ) {
         unset($_SESSION['ppec_right_turn']);
 
         if ( isset($_SESSION['payment']) && ($payment == $this->code) ) {

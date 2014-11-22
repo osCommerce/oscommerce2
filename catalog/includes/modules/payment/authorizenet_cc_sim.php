@@ -216,7 +216,7 @@
         $authorizenet_cc_sim_error = $_POST['x_response_reason_text'];
         tep_session_register('authorizenet_cc_sim_error');
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
 
       if ( isset($_SESSION['authorizenet_cc_sim_error']) ) {

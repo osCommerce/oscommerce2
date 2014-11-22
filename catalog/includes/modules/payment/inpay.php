@@ -324,7 +324,7 @@ class inpay
         'no_note'=>'1',
         'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
         'return_url'=>tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-        'cancel_url'=>tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+        'cancel_url'=>tep_href_link('checkout_payment.php', '', 'SSL'),
         'bn'=>'osCommerce22_Default_ST',
         'buyer_email'=>$order->customer['email_address'],
         'merchant_id'=>MODULE_PAYMENT_INPAY_MERCHANT_ID,

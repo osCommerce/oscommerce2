@@ -288,7 +288,7 @@
                             'return_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]), 'SSL'),
                             'return_url_text' => MODULE_PAYMENT_MONEYBOOKERS_RETURN_TEXT,
                             'return_url_target' => 1,
-                            'cancel_url' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+                            'cancel_url' => tep_href_link('checkout_payment.php', '', 'SSL'),
                             'cancel_url_target' => 1,
                             'status_url' => tep_href_link('ext/modules/payment/moneybookers/callback.php', '', 'SSL', false, false),
                             'language' => MODULE_PAYMENT_MONEYBOOKERS_LANGUAGE_CODE,

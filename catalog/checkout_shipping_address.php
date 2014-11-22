@@ -36,7 +36,7 @@
     $shipping = false;
     if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
     $sendto = false;
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
   }
 
   $error = false;
