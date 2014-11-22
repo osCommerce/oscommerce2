@@ -29,5 +29,4 @@
   define('FILENAME_CHECKOUT_SUCCESS', 'checkout_success.php');
   define('FILENAME_CREATE_ACCOUNT', 'create_account.php');
   define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php');
-  define('FILENAME_PASSWORD_RESET', 'password_reset.php');
 ?>
