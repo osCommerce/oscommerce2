@@ -42,7 +42,7 @@
   }
 
   if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) {
-    $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, tep_href_link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
+    $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, tep_href_link('sec_dir_permissions.php')), 'error');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

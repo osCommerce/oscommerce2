@@ -19,9 +19,9 @@
         'link' => tep_href_link('categories.php')
       ),
       array(
-        'code' => FILENAME_PRODUCTS_ATTRIBUTES,
+        'code' => 'products_attributes.php',
         'title' => BOX_CATALOG_CATEGORIES_PRODUCTS_ATTRIBUTES,
-        'link' => tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES)
+        'link' => tep_href_link('products_attributes.php')
       ),
       array(
         'code' => 'manufacturers.php',
@@ -39,9 +39,9 @@
         'link' => tep_href_link('specials.php')
       ),
       array(
-        'code' => FILENAME_PRODUCTS_EXPECTED,
+        'code' => 'products_expected.php',
         'title' => BOX_CATALOG_PRODUCTS_EXPECTED,
-        'link' => tep_href_link(FILENAME_PRODUCTS_EXPECTED)
+        'link' => tep_href_link('products_expected.php')
       )
     )
   );

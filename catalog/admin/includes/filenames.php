@@ -11,10 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_ORDERS_STATUS', 'orders_status.php');
-  define('FILENAME_PRODUCTS_ATTRIBUTES', 'products_attributes.php');
-  define('FILENAME_PRODUCTS_EXPECTED', 'products_expected.php');
-  define('FILENAME_SEC_DIR_PERMISSIONS', 'sec_dir_permissions.php');
   define('FILENAME_SERVER_INFO', 'server_info.php');
   define('FILENAME_SHIPPING_MODULES', 'shipping_modules.php');
   define('FILENAME_SPECIALS', 'specials.php');

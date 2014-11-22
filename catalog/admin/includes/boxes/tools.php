@@ -49,9 +49,9 @@
         'link' => tep_href_link('newsletters.php')
       ),
       array(
-        'code' => FILENAME_SEC_DIR_PERMISSIONS,
+        'code' => 'sec_dir_permissions.php',
         'title' => BOX_TOOLS_SEC_DIR_PERMISSIONS,
-        'link' => tep_href_link(FILENAME_SEC_DIR_PERMISSIONS)
+        'link' => tep_href_link('sec_dir_permissions.php')
       ),
       array(
         'code' => FILENAME_SERVER_INFO,
