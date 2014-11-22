@@ -52,7 +52,7 @@
         }
 
         $data = '<div class="panel panel-default">' .
-                '  <div class="panel-heading"><a href="' . tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
+                '  <div class="panel-heading"><a href="' . tep_href_link('account_notifications.php', '', 'SSL') . '">' . MODULE_BOXES_PRODUCT_NOTIFICATIONS_BOX_TITLE . '</a></div>' .
                 '  <div class="panel-body">' . $notif_contents . '</div>' .
                 '</div>';
 

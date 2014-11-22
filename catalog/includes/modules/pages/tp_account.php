@@ -35,7 +35,7 @@
                                                                                                                  'link' => tep_href_link('account_newsletter.php', '', 'SSL'),
                                                                                                                  'icon' => 'glyphicon glyphicon-envelope'),
                                                                                           'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
-                                                                                                              'link' => tep_href_link(FILENAME_ACCOUNT_NOTIFICATIONS, '', 'SSL'),
+                                                                                                              'link' => tep_href_link('account_notifications.php', '', 'SSL'),
                                                                                                               'icon' => 'glyphicon glyphicon-heart'))));
     }
 
