@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_ORDERS', 'orders.php');
   define('FILENAME_ORDERS_INVOICE', 'invoice.php');
   define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip.php');
   define('FILENAME_ORDERS_STATUS', 'orders_status.php');

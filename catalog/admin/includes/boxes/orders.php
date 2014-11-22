@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_ORDERS,
     'apps' => array(
       array(
-        'code' => FILENAME_ORDERS,
+        'code' => 'orders.php',
         'title' => BOX_ORDERS_ORDERS,
-        'link' => tep_href_link(FILENAME_ORDERS)
+        'link' => tep_href_link('orders.php')
       )
     )
   );
