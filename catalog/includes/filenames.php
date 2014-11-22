@@ -11,6 +11,5 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_CREATE_ACCOUNT', 'create_account.php');
   define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php');
 ?>

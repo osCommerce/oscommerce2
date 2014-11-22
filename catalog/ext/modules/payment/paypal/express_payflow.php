@@ -26,7 +26,7 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/paypal_pro_payflow_ec.php');
   require('includes/modules/payment/paypal_pro_payflow_ec.php');
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CREATE_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'create_account.php');
 
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
