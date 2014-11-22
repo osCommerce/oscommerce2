@@ -42,5 +42,4 @@
   define('FILENAME_SHOPPING_CART', 'shopping_cart.php');
   define('FILENAME_SSL_CHECK', 'ssl_check.php');
   define('FILENAME_TELL_A_FRIEND', 'tell_a_friend.php');
-  define('FILENAME_UPCOMING_PRODUCTS', 'upcoming_products.php');
 ?>

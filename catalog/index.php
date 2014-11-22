@@ -268,7 +268,7 @@
     }
 
     include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
-    include(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
+    include(DIR_WS_MODULES . 'upcoming_products.php');
 ?>
 
 </div>
