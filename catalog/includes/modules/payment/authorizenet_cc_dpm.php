@@ -151,7 +151,7 @@ EOD;
                       'x_show_form' => 'PAYMENT_FORM',
                       'x_delim_data' => 'FALSE',
                       'x_relay_response' => 'TRUE',
-                      'x_relay_url' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL', false),
+                      'x_relay_url' => tep_href_link('checkout_process.php', '', 'SSL', false),
                       'x_company' => substr($order->billing['company'], 0, 50),
                       'x_address' => substr($order->billing['street_address'], 0, 60),
                       'x_city' => substr($order->billing['city'], 0, 40),
@@ -171,7 +171,7 @@ EOD;
                       'x_fp_sequence' => $sequence,
                       'x_fp_timestamp' => $tstamp,
                       'x_fp_hash' => $this->_hmac(MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TRANSACTION_KEY, MODULE_PAYMENT_AUTHORIZENET_CC_DPM_LOGIN_ID . '^' . $sequence . '^' . $tstamp . '^' . $this->format_raw($order->info['total']) . '^' . $_SESSION['currency']),
-                      'x_cancel_url' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'),
+                      'x_cancel_url' => tep_href_link('shopping_cart.php', '', 'SSL'),
                       'x_cancel_url_text' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_RETURN_BUTTON);
 
       if (is_numeric($sendto) && ($sendto > 0)) {
@@ -260,7 +260,7 @@ EOD;
         $authorizenet_cc_dpm_error = $_POST['x_response_reason_text'];
         tep_session_register('authorizenet_cc_dpm_error');
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
+        tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
 
       if ( isset($_SESSION['authorizenet_cc_dpm_error']) ) {
@@ -328,7 +328,7 @@ EOD;
         unset($_SESSION['payment']);
         unset($_SESSION['comments']);
 
-        $redirect_url = tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $redirect_url = tep_href_link('checkout_success.php', '', 'SSL');
 
         echo <<<EOD
 <form name="redirect" action="{$redirect_url}" method="post" target="_top">

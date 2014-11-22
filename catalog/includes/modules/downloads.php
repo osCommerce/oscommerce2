@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+  if (!strstr($PHP_SELF, 'account_history_info.php')) {
 // Get last order id for checkout_success
     $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by orders_id desc limit 1");
     $orders = tep_db_fetch_array($orders_query);
@@ -44,7 +44,7 @@
 // - No expiry date is enforced (maxdays == 0), OR
 // - The expiry date is not reached
       if ( ($downloads['download_count'] > 0) && (file_exists(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'])) && ( ($downloads['download_maxdays'] == 0) || ($download_timestamp > time())) ) {
-        echo '        <td><a href="' . tep_href_link(FILENAME_DOWNLOAD, 'order=' . $last_order . '&id=' . $downloads['orders_products_download_id']) . '">' . $downloads['products_name'] . '</a></td>' . "\n";
+        echo '        <td><a href="' . tep_href_link('download.php', 'order=' . $last_order . '&id=' . $downloads['orders_products_download_id']) . '">' . $downloads['products_name'] . '</a></td>' . "\n";
       } else {
         echo '        <td>' . $downloads['products_name'] . '</td>' . "\n";
       }
@@ -58,10 +58,10 @@
     </table>
 
 <?php
-    if (!strstr($PHP_SELF, FILENAME_ACCOUNT_HISTORY_INFO)) {
+    if (!strstr($PHP_SELF, 'account_history_info.php')) {
 ?>
 
-    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link(FILENAME_ACCOUNT, '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
+    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link('account.php', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 
 <?php
     }

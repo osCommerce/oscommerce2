@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SPECIALS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/specials.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SPECIALS));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('specials.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -55,16 +55,16 @@
       <div class="col-sm-6">
         <div class="well well-sm">
            <div class="row">
-              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
+              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
               <div class="col-xs-9 col-md-9 info-box">
-                <h4><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a>'; ?></h4>
+                <h4><?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a>'; ?></h4>
                 <hr />
                 <div class="row">
                   <div class="col-sm-6">
                     <?php echo '<del>' . $currencies->display_price($specials['products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($specials['specials_new_products_price'], tep_get_tax_rate($specials['products_tax_class_id'])) . '</span>'; ?>
                   </div>
                   <div class="col-sm-6 text-right">
-                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_PRODUCTS_NEW, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $specials['products_id']), null, null, 'btn-success'); ?>
+                    <?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link('products_new.php', tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $specials['products_id']), null, null, 'btn-success'); ?>
                   </div>
                 </div>
              </div>

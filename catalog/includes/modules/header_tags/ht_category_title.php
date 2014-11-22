@@ -31,7 +31,7 @@
     function execute() {
       global $PHP_SELF, $oscTemplate, $categories, $current_category_id;
 
-      if (basename($PHP_SELF) == FILENAME_DEFAULT) {
+      if (basename($PHP_SELF) == 'index.php') {
 // $categories is set in application_top.php to add the category to the breadcrumb
         if (isset($categories) && (sizeof($categories) == 1) && isset($categories['categories_name'])) {
           $oscTemplate->setTitle($categories['categories_name'] . ', ' . $oscTemplate->getTitle());

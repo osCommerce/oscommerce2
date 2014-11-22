@@ -17,10 +17,10 @@
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
-      tep_redirect(tep_href_link(FILENAME_LOGIN, $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
+      tep_redirect(tep_href_link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
     }
 
-    tep_redirect(tep_href_link(FILENAME_COOKIE_USAGE));
+    tep_redirect(tep_href_link('cookie_usage.php'));
   }
 
 // login content module must return $login_customer_id as an integer after successful customer authentication
@@ -65,12 +65,12 @@
       tep_redirect($origin_href);
     }
 
-    tep_redirect(tep_href_link(FILENAME_DEFAULT));
+    tep_redirect(tep_href_link('index.php'));
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_LOGIN);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'login.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('login.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

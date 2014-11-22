@@ -37,7 +37,7 @@
       $mc360 = new mc360();
       $mc360->set_cookies();
 
-      if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS) {
+      if (basename($PHP_SELF) == 'checkout_success.php') {
         $mc360->process();
       }
     }

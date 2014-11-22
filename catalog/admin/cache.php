@@ -19,7 +19,7 @@
       tep_reset_cache_block($_GET['block']);
     }
 
-    tep_redirect(tep_href_link(FILENAME_CACHE));
+    tep_redirect(tep_href_link('cache.php'));
   }
 
 // check if the cache directory exists
@@ -84,7 +84,7 @@
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo $cache_blocks[$i]['title']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $cache_mtime; ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . tep_href_link(FILENAME_CACHE, 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . tep_href_link('cache.php', 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?>&nbsp;</td>
               </tr>
 <?php
     }

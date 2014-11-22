@@ -14,29 +14,29 @@
     'heading' => BOX_HEADING_LOCATION_AND_TAXES,
     'apps' => array(
       array(
-        'code' => FILENAME_COUNTRIES,
+        'code' => 'countries.php',
         'title' => BOX_TAXES_COUNTRIES,
-        'link' => tep_href_link(FILENAME_COUNTRIES)
+        'link' => tep_href_link('countries.php')
       ),
       array(
-        'code' => FILENAME_ZONES,
+        'code' => 'zones.php',
         'title' => BOX_TAXES_ZONES,
-        'link' => tep_href_link(FILENAME_ZONES)
+        'link' => tep_href_link('zones.php')
       ),
       array(
-        'code' => FILENAME_GEO_ZONES,
+        'code' => 'geo_zones.php',
         'title' => BOX_TAXES_GEO_ZONES,
-        'link' => tep_href_link(FILENAME_GEO_ZONES)
+        'link' => tep_href_link('geo_zones.php')
       ),
       array(
-        'code' => FILENAME_TAX_CLASSES,
+        'code' => 'tax_classes.php',
         'title' => BOX_TAXES_TAX_CLASSES,
-        'link' => tep_href_link(FILENAME_TAX_CLASSES)
+        'link' => tep_href_link('tax_classes.php')
       ),
       array(
-        'code' => FILENAME_TAX_RATES,
+        'code' => 'tax_rates.php',
         'title' => BOX_TAXES_TAX_RATES,
-        'link' => tep_href_link(FILENAME_TAX_RATES)
+        'link' => tep_href_link('tax_rates.php')
       )
     )
   );

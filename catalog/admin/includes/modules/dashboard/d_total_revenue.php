@@ -50,7 +50,7 @@
       }
 
       $chart_label = tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
-      $chart_label_link = tep_href_link(FILENAME_ORDERS);
+      $chart_label_link = tep_href_link('orders.php');
 
       $output = <<<EOD
 <div id="d_total_revenue" style="width: 100%; height: 150px;"></div>

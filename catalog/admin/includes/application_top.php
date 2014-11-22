@@ -48,9 +48,6 @@
   define('LOCAL_EXE_ZIP', 'zip');
   define('LOCAL_EXE_UNZIP', 'unzip');
 
-// include the list of project filenames
-  require(DIR_WS_INCLUDES . 'filenames.php');
-
 // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
@@ -134,12 +131,12 @@
 
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
-    if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
-      $current_page = FILENAME_DEFAULT;
+    if ( ($current_page == 'login.php') && !tep_session_is_registered('redirect_origin') ) {
+      $current_page = 'index.php';
       $_GET = array();
     }
 
-    if ($current_page != FILENAME_LOGIN) {
+    if ($current_page != 'login.php') {
       if (!tep_session_is_registered('redirect_origin')) {
         tep_session_register('redirect_origin');
 
@@ -163,7 +160,7 @@
     }
 
     if ($redirect == true) {
-      tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
+      tep_redirect(tep_href_link('login.php', (isset($redirect_origin['auth_user']) ? 'action=process' : '')));
     }
 
     unset($redirect);

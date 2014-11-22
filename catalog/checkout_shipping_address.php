@@ -15,16 +15,16 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
   // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING_ADDRESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping_address.php');
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
@@ -36,7 +36,7 @@
     $shipping = false;
     if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
     $sendto = false;
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
   }
 
   $error = false;
@@ -162,7 +162,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -184,7 +184,7 @@
 
       if ($check_address['total'] == '1') {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
       } else {
         unset($_SESSION['sendto']);
       }
@@ -192,7 +192,7 @@
       if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
       $sendto = $customer_default_address_id;
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
     }
   }
 
@@ -201,8 +201,8 @@
     $sendto = $customer_default_address_id;
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('checkout_shipping_address.php', '', 'SSL'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
@@ -219,7 +219,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('checkout_address', tep_href_link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -331,7 +331,7 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link('checkout_shipping.php', '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
@@ -352,7 +352,7 @@ $('#coProgressBar').progressbar({
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL')); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('checkout_shipping_address.php', '', 'SSL')); ?>
   </div>
 
 <?php
