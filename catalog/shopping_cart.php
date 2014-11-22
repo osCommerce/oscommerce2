@@ -127,7 +127,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', tep_href_link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
   </div>
 
 <?php

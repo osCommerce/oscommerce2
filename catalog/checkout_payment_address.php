@@ -319,7 +319,7 @@
 
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr>
-          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
+          <td align="center" width="33%" class="checkoutBarFrom"><?php echo '<a href="' . tep_href_link('checkout_shipping.php', '', 'SSL') . '" class="checkoutBarFrom">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link('checkout_payment.php', '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_PAYMENT . '</a>'; ?></td>
           <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
         </tr>
