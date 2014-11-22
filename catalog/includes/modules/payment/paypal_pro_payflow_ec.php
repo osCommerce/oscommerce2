@@ -167,7 +167,7 @@
         if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
           tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
-          tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+          tep_redirect(tep_href_link('checkout_confirmation.php', '', 'SSL'));
         }
       } else {
         tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));

@@ -271,7 +271,7 @@
 
             $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
           } elseif ( isset($_POST['StatusDetail']) && ($_POST['StatusDetail'] == 'Paypal transaction cancelled by client.') ) {
-            tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+            tep_redirect(tep_href_link('checkout_confirmation.php', '', 'SSL'));
           }
         }
       } else {
