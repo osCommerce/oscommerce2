@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_CHECKOUT_PAYMENT_ADDRESS', 'checkout_payment_address.php');
   define('FILENAME_CHECKOUT_PROCESS', 'checkout_process.php');
   define('FILENAME_CHECKOUT_SHIPPING', 'checkout_shipping.php');
   define('FILENAME_CHECKOUT_SHIPPING_ADDRESS', 'checkout_shipping_address.php');

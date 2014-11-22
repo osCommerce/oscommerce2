@@ -120,7 +120,7 @@
         <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?>
       </div>
       <div class="clearfix"></div>
-      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link('checkout_payment_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
       <br>
       <div class="clearfix"></div>
     </div>
