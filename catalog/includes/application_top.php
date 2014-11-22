@@ -52,9 +52,6 @@
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
-// include the list of project filenames
-  require('includes/filenames.php');
-
 // include the list of project database tables
   require('includes/database_tables.php');
 
