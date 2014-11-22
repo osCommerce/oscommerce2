@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADVANCED_SEARCH);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/advanced_search.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_ADVANCED_SEARCH));
+  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('advanced_search.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>

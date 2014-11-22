@@ -40,7 +40,7 @@
               '    <div class="input-group">' .
               '    ' . tep_draw_input_field('keywords', '', 'required aria-required="true" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"') .
               '      <span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="glyphicon glyphicon-search"></i></button></span>' .
-              '    </div>' . tep_draw_hidden_field('search_in_description', '0') . tep_hide_session_id() . '<br />' . MODULE_BOXES_SEARCH_BOX_TEXT . '<br /><a href="' . tep_href_link(FILENAME_ADVANCED_SEARCH) . '"><strong>' . MODULE_BOXES_SEARCH_BOX_ADVANCED_SEARCH . '</strong></a>' .
+              '    </div>' . tep_draw_hidden_field('search_in_description', '0') . tep_hide_session_id() . '<br />' . MODULE_BOXES_SEARCH_BOX_TEXT . '<br /><a href="' . tep_href_link('advanced_search.php') . '"><strong>' . MODULE_BOXES_SEARCH_BOX_ADVANCED_SEARCH . '</strong></a>' .
               '    </form>' .
               '  </div>' .
               '</div>';
