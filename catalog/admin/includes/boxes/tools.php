@@ -64,9 +64,9 @@
         'link' => tep_href_link('version_check.php')
       ),
       array(
-        'code' => FILENAME_WHOS_ONLINE,
+        'code' => 'whos_online.php',
         'title' => BOX_TOOLS_WHOS_ONLINE,
-        'link' => tep_href_link(FILENAME_WHOS_ONLINE)
+        'link' => tep_href_link('whos_online.php')
       )
     )
   );

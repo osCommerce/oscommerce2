@@ -12,6 +12,5 @@
 
 // define the filenames used in the project
 
-  define('FILENAME_WHOS_ONLINE', 'whos_online.php');
   define('FILENAME_ZONES', 'zones.php');
 ?>
