@@ -46,7 +46,7 @@
           $data = '<div class="panel panel-default">' .
                    '  <div class="panel-heading">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_TITLE . '</div>' .
                    '  <div class="panel-body text-center">' . $manufacturer_info_string . '</div>';
-          $data .= '  <div class="panel-footer clearfix"><a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></div>';
+          $data .= '  <div class="panel-footer clearfix"><a href="' . tep_href_link('index.php', 'manufacturers_id=' . $manufacturer['manufacturers_id']) . '">' . MODULE_BOXES_MANUFACTURER_INFO_BOX_OTHER_PRODUCTS . '</a></div>';
           $data .= '</div>';
 
           $oscTemplate->addBlock($data, $this->group);

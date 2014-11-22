@@ -135,7 +135,7 @@
 // if the first page request is to the login page, set the current page to the index page
 // so the redirection on a successful login is not made to the login page again
     if ( ($current_page == FILENAME_LOGIN) && !tep_session_is_registered('redirect_origin') ) {
-      $current_page = FILENAME_DEFAULT;
+      $current_page = 'index.php';
       $_GET = array();
     }
 

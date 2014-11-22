@@ -35,7 +35,7 @@
     global $request_type;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
+      tep_redirect(tep_href_link('index.php', '', 'NONSSL', false));
     }
 
     if ( (ENABLE_SSL == true) && ($request_type == 'SSL') ) { // We are loading an SSL page

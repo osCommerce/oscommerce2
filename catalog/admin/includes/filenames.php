@@ -23,7 +23,6 @@
   define('FILENAME_COUNTRIES', 'countries.php');
   define('FILENAME_CURRENCIES', 'currencies.php');
   define('FILENAME_CUSTOMERS', 'customers.php');
-  define('FILENAME_DEFAULT', 'index.php');
   define('FILENAME_DEFINE_LANGUAGE', 'define_language.php');
   define('FILENAME_GEO_ZONES', 'geo_zones.php');
   define('FILENAME_LANGUAGES', 'languages.php');

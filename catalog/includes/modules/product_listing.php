@@ -109,7 +109,7 @@
             }
             break;
           case 'PRODUCT_LIST_MANUFACTURER':
-            $prod_list_contents .= '        <td><a href="' . tep_href_link(FILENAME_DEFAULT, 'manufacturers_id=' . $listing['manufacturers_id']) . '">' . $listing['manufacturers_name'] . '</a></td>';
+            $prod_list_contents .= '        <td><a href="' . tep_href_link('index.php', 'manufacturers_id=' . $listing['manufacturers_id']) . '">' . $listing['manufacturers_name'] . '</a></td>';
             break;
           case 'PRODUCT_LIST_PRICE':
             if (tep_not_null($listing['specials_new_products_price'])) {

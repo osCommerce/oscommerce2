@@ -21,7 +21,7 @@
     $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
     $navigation->clear_snapshot();
   } else {
-    $origin_href = tep_href_link(FILENAME_DEFAULT);
+    $origin_href = tep_href_link('index.php');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

@@ -67,7 +67,7 @@
 
                 tep_redirect(tep_href_link($page, $get_string));
               } else {
-                tep_redirect(tep_href_link(FILENAME_DEFAULT));
+                tep_redirect(tep_href_link('index.php'));
               }
             }
           }
@@ -93,7 +93,7 @@
           $auth_ignore = true;
         }
 
-        tep_redirect(tep_href_link(FILENAME_DEFAULT));
+        tep_redirect(tep_href_link('index.php'));
 
         break;
 
@@ -144,7 +144,7 @@
   if (sizeof($languages_array) > 1) {
 ?>
 
-        <td class="pageHeading" align="right"><?php echo tep_draw_form('adminlanguage', FILENAME_DEFAULT, '', 'get') . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . tep_hide_session_id() . '</form>'; ?></td>
+        <td class="pageHeading" align="right"><?php echo tep_draw_form('adminlanguage', 'index.php', '', 'get') . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . tep_hide_session_id() . '</form>'; ?></td>
 
 <?php
   }
