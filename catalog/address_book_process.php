@@ -18,7 +18,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ADDRESS_BOOK_PROCESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book_process.php');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_GET['delete']) && is_numeric($_GET['delete']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
     if ((int)$_GET['delete'] == $customer_default_address_id) {
@@ -240,11 +240,11 @@
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('address_book.php', '', 'SSL'));
 
   if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-    $breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'edit=' . $_GET['edit'], 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_MODIFY_ENTRY, tep_href_link('address_book_process.php', 'edit=' . $_GET['edit'], 'SSL'));
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'], 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_DELETE_ENTRY, tep_href_link('address_book_process.php', 'delete=' . $_GET['delete'], 'SSL'));
   } else {
-    $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, '', 'SSL'));
+    $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, tep_href_link('address_book_process.php', '', 'SSL'));
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -286,7 +286,7 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('address_book.php', '', 'SSL')); ?></div>
   </div>
 
@@ -296,7 +296,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('addressbook', tep_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('addressbook', tep_href_link('address_book_process.php', (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
