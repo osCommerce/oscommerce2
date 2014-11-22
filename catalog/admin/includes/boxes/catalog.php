@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_CATALOG,
     'apps' => array(
       array(
-        'code' => FILENAME_CATEGORIES,
+        'code' => 'categories.php',
         'title' => BOX_CATALOG_CATEGORIES_PRODUCTS,
-        'link' => tep_href_link(FILENAME_CATEGORIES)
+        'link' => tep_href_link('categories.php')
       ),
       array(
         'code' => FILENAME_PRODUCTS_ATTRIBUTES,
