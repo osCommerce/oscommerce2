@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_REVIEWS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/reviews.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_REVIEWS));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('reviews.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
