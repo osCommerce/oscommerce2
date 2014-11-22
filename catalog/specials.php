@@ -55,9 +55,9 @@
       <div class="col-sm-6">
         <div class="well well-sm">
            <div class="row">
-              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
+              <div class="col-xs-3 col-md-3 text-center"><?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $specials['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $specials['products_image'], $specials['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>'; ?></div>
               <div class="col-xs-9 col-md-9 info-box">
-                <h4><?php echo '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a>'; ?></h4>
+                <h4><?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $specials['products_id']) . '">' . $specials['products_name'] . '</a>'; ?></h4>
                 <hr />
                 <div class="row">
                   <div class="col-sm-6">

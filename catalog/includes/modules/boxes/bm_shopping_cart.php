@@ -48,7 +48,7 @@
 
           $cart_contents_string .= $products[$i]['quantity'] . '&nbsp;x&nbsp;';
 
-          $cart_contents_string .= '<a href="' . tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $products[$i]['id']) . '">';
+          $cart_contents_string .= '<a href="' . tep_href_link('product_info.php', 'products_id=' . $products[$i]['id']) . '">';
 
           $cart_contents_string .= $products[$i]['name'];
 

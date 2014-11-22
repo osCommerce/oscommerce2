@@ -310,7 +310,7 @@
       // performed by the 'buy now' button in product listings and review page
       case 'buy_now' :        if (isset($_GET['products_id'])) {
                                 if (tep_has_product_attributes($_GET['products_id'])) {
-                                  tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id']));
+                                  tep_redirect(tep_href_link('product_info.php', 'products_id=' . $_GET['products_id']));
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_GET['products_id'])), 'success');
@@ -358,7 +358,7 @@
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {
                                 if (tep_has_product_attributes($_GET['pid'])) {
-                                  tep_redirect(tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['pid']));
+                                  tep_redirect(tep_href_link('product_info.php', 'products_id=' . $_GET['pid']));
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['pid'], $_SESSION['cart']->get_quantity($_GET['pid'])+1);
                                 }
