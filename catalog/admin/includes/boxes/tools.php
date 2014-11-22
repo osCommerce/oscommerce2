@@ -34,9 +34,9 @@
         'link' => tep_href_link('cache.php')
       ),
       array(
-        'code' => FILENAME_DEFINE_LANGUAGE,
+        'code' => 'define_language.php',
         'title' => BOX_TOOLS_DEFINE_LANGUAGE,
-        'link' => tep_href_link(FILENAME_DEFINE_LANGUAGE)
+        'link' => tep_href_link('define_language.php')
       ),
       array(
         'code' => FILENAME_MAIL,

@@ -227,7 +227,7 @@
       if (is_object($lInfo)) {
         $heading[] = array('text' => '<strong>' . $lInfo->name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . tep_draw_button(IMAGE_DETAILS, 'info', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
+        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . tep_draw_button(IMAGE_DETAILS, 'info', tep_href_link('define_language.php', 'lngdir=' . $lInfo->directory)));
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
         $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
         $contents[] = array('text' => '<br />' . tep_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, '', 'SSL'), $lInfo->name));
