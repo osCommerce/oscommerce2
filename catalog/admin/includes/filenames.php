@@ -11,7 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_BANNER_MANAGER', 'banner_manager.php');
   define('FILENAME_BANNER_STATISTICS', 'banner_statistics.php');
   define('FILENAME_CACHE', 'cache.php');
   define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info.php');

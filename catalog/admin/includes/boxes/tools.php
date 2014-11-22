@@ -24,9 +24,9 @@
         'link' => tep_href_link('backup.php')
       ),
       array(
-        'code' => FILENAME_BANNER_MANAGER,
+        'code' => 'banner_manager.php',
         'title' => BOX_TOOLS_BANNER_MANAGER,
-        'link' => tep_href_link(FILENAME_BANNER_MANAGER)
+        'link' => tep_href_link('banner_manager.php')
       ),
       array(
         'code' => FILENAME_CACHE,
