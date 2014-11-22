@@ -85,7 +85,7 @@
 
 <div class="clearfix"></div>
 
-<?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?>
+<?php include(DIR_WS_MODULES . 'new_products.php'); ?>
 
   </div>
 </div>
@@ -267,7 +267,7 @@
 <?php
     }
 
-    include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
+    include(DIR_WS_MODULES . 'new_products.php');
     include(DIR_WS_MODULES . 'upcoming_products.php');
 ?>
 

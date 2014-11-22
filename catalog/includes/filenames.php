@@ -33,7 +33,6 @@
   define('FILENAME_CREATE_ACCOUNT', 'create_account.php');
   define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php');
   define('FILENAME_DOWNLOAD', 'download.php');
-  define('FILENAME_NEW_PRODUCTS', 'new_products.php');
   define('FILENAME_PASSWORD_FORGOTTEN', 'password_forgotten.php');
   define('FILENAME_PASSWORD_RESET', 'password_reset.php');
   define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
