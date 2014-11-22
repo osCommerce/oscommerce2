@@ -48,9 +48,6 @@
   define('LOCAL_EXE_ZIP', 'zip');
   define('LOCAL_EXE_UNZIP', 'unzip');
 
-// include the list of project filenames
-  require(DIR_WS_INCLUDES . 'filenames.php');
-
 // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
