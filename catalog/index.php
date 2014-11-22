@@ -30,7 +30,7 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'index.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/index.php');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 
