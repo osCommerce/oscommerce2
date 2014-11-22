@@ -14,9 +14,9 @@
     'heading' => BOX_HEADING_CONFIGURATION,
     'apps' => array(
       array(
-        'code' => FILENAME_ADMINISTRATORS,
+        'code' => 'administrators.php',
         'title' => BOX_CONFIGURATION_ADMINISTRATORS,
-        'link' => tep_href_link(FILENAME_ADMINISTRATORS)
+        'link' => tep_href_link('administrators.php')
       ),
       array(
         'code' => FILENAME_STORE_LOGO,
