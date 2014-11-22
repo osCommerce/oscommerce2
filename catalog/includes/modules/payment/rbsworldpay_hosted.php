@@ -338,7 +338,7 @@
       if (!isset($_GET['hash']) || ($_GET['hash'] != md5(session_id() . $customer_id . $order_id . $_SESSION['language'] . number_format($order->info['total'], 2) . MODULE_PAYMENT_RBSWORLDPAY_HOSTED_MD5_PASSWORD))) {
         $this->sendDebugEmail();
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
@@ -346,7 +346,7 @@
       if (!tep_db_num_rows($check_query)) {
         $this->sendDebugEmail();
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $check = tep_db_fetch_array($check_query);

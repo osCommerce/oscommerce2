@@ -20,7 +20,7 @@
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
@@ -78,7 +78,7 @@
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      tep_redirect(tep_href_link('shopping_cart.php'));
     }
   }
 
@@ -116,14 +116,14 @@
       <?php
       if (sizeof($order->info['tax_groups']) > 1) {
         ?>
-        <th colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link(FILENAME_SHOPPING_CART), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
+        <th colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
         <th align="right"><strong><?php echo HEADING_TAX; ?></strong></th>
         <th align="right"><strong><?php echo HEADING_TOTAL; ?></strong></th>
         <?php
       }
       else {
         ?>
-        <th colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link(FILENAME_SHOPPING_CART), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
+        <th colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
         <?php
       }
       ?>

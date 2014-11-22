@@ -15,7 +15,7 @@
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
 // initialize variables if the customer is not logged in
@@ -31,7 +31,7 @@
   $paypal_pro_payflow_ec = new paypal_pro_payflow_ec();
 
   if (!$paypal_pro_payflow_ec->check() || !$paypal_pro_payflow_ec->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
   if ( !isset($_SESSION['sendto']) ) {
@@ -72,7 +72,7 @@
 
       if ($response_array['RESULT'] == '0') {
         if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         }
 
         if (!isset($_SESSION['payment'])) tep_session_register('payment');
@@ -361,7 +361,7 @@ EOD;
 /* useraction=commit       tep_redirect(tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL')); */
         tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       break;
@@ -607,13 +607,13 @@ EOD;
       if ($response_array['RESULT'] == '0') {
         tep_redirect($paypal_url . '&token=' . $response_array['TOKEN'] /*. '&useraction=commit'*/);
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       break;
   }
 
-  tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

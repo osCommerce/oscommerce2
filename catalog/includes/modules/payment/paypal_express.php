@@ -149,9 +149,9 @@
       $response_array = $this->getExpressCheckoutDetails($ppe_token);
 
       if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       } elseif ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
       if ( isset($_SESSION['ppe_order_total_check']) ) {
@@ -193,7 +193,7 @@
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !isset($_SESSION['ppe_order_total_check']) ) {
           tep_session_register('ppe_order_total_check');
           $ppe_order_total_check = true;
@@ -201,7 +201,7 @@
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       if ( isset($_SESSION['ppe_order_total_check']) ) {
@@ -245,7 +245,7 @@
           tep_redirect($paypal_url);
         }
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
     }
 

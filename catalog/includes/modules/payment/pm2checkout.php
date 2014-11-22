@@ -114,7 +114,7 @@
         $process_button_string .= tep_draw_hidden_field('demo', 'Y');
       }
 
-      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link(FILENAME_SHOPPING_CART));
+      $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link('shopping_cart.php'));
 
       $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);

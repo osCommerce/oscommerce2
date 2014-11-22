@@ -414,7 +414,7 @@ EOD;
       }
 
       if ( !is_array($result) || !isset($result['ACK']) || (($result['ACK'] != 'Success') && ($result['ACK'] != 'SuccessWithWarning')) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
       }
 
       $order_id = substr($cart_PayPal_Pro_HS_ID, strpos($cart_PayPal_Pro_HS_ID, '-')+1);
@@ -426,7 +426,7 @@ EOD;
       }
 
       if ( !isset($result['RECEIVERBUSINESS']) || !in_array($result['RECEIVERBUSINESS'], $seller_accounts) || ($result['INVNUM'] != $order_id) || ($result['CUSTOM'] != $customer_id) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $pphs_result = $result;
@@ -437,7 +437,7 @@ EOD;
       $tx_customer_id = $pphs_result['CUSTOM'];
 
       if (!tep_db_num_rows($check_query) || ($order_id != $tx_order_id) || ($customer_id != $tx_customer_id)) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $check = tep_db_fetch_array($check_query);

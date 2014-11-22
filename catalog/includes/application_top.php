@@ -266,7 +266,7 @@
     }
 
     if ( DISPLAY_CART == 'true' ) {
-      $goto =  FILENAME_SHOPPING_CART;
+      $goto =  'shopping_cart.php';
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = $PHP_SELF;

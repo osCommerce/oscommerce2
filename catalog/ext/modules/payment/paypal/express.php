@@ -26,7 +26,7 @@
   $paypal_express = new paypal_express();
 
   if (!$paypal_express->check() || !$paypal_express->enabled) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+    tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
   }
 
   if ( !isset($_SESSION['sendto']) ) {
@@ -74,7 +74,7 @@
         unset($_SESSION['billto']);
       }
 
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+      tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
 
       break;
     case 'callbackSet':
@@ -272,14 +272,14 @@
     case 'retrieve':
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($_SESSION['cart']->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
       $response_array = $paypal_express->getExpressCheckoutDetails($_GET['token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         }
 
         if (!isset($_SESSION['payment'])) tep_session_register('payment');
@@ -592,7 +592,7 @@ EOD;
       } else {
         $messageStack->add_session('header', stripslashes($response_array['L_LONGMESSAGE0']), 'error');
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
       break;
@@ -600,7 +600,7 @@ EOD;
     default:
 // if there is nothing in the customers cart, redirect them to the shopping cart page
       if ($_SESSION['cart']->count_contents() < 1) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
       if (MODULE_PAYMENT_PAYPAL_EXPRESS_TRANSACTION_SERVER == 'Live') {
@@ -864,13 +864,13 @@ EOD;
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
         tep_redirect($paypal_url . 'token=' . $response_array['TOKEN'] . '&useraction=commit');
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
       }
 
       break;
   }
 
-  tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+  tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

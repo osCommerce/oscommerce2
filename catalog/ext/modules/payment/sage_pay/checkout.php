@@ -21,7 +21,7 @@
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
@@ -75,7 +75,7 @@
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+      tep_redirect(tep_href_link('shopping_cart.php'));
     }
   }
 

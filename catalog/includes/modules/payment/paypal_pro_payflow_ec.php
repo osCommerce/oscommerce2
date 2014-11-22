@@ -120,9 +120,9 @@
       $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
 
       if ($response_array['RESULT'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
       if (!isset($_SESSION['ppeuk_order_total_check'])) tep_session_register('ppeuk_order_total_check');
@@ -165,12 +165,12 @@
 
       if ($response_array['RESULT'] == '0') {
         if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
-          tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+          tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
           tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
 
       if ( isset($_SESSION['ppeuk_order_total_check']) ) {
@@ -203,7 +203,7 @@
       $response_array = $this->doExpressCheckoutPayment($params);
 
       if ($response_array['RESULT'] != '0') {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
+        tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
       }
     }
 
@@ -462,7 +462,7 @@
                       'TRXTYPE' => ((MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TRANSACTION_METHOD == 'Sale') ? 'S' : 'A'),
                       'ACTION' => 'S',
                       'RETURNURL' => tep_href_link('ext/modules/payment/paypal/express_payflow.php', 'osC_Action=retrieve', 'SSL'),
-                      'CANCELURL' => tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
+                      'CANCELURL' => tep_href_link('shopping_cart.php', '', 'SSL'));
 
       if (is_array($parameters) && !empty($parameters)) {
         $params = array_merge($params, $parameters);

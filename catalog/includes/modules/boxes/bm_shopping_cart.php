@@ -67,7 +67,7 @@
       }
 
       $data = '<div class="panel panel-default">' .
-              '  <div class="panel-heading"><a href="' . tep_href_link(FILENAME_SHOPPING_CART) . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></div>' .
+              '  <div class="panel-heading"><a href="' . tep_href_link('shopping_cart.php') . '">' . MODULE_BOXES_SHOPPING_CART_BOX_TITLE . '</a></div>' .
               '  <div class="panel-body">' . $cart_contents_string . '</div>' .
               '</div>';
 

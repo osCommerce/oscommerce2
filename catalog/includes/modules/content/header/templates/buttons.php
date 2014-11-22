@@ -1,7 +1,7 @@
 <div id="headerShortcuts" class="col-sm-<?php echo $content_width; ?> text-right">
   <div class="btn-group">
 <?php
-  echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'glyphicon glyphicon-shopping-cart', tep_href_link(FILENAME_SHOPPING_CART)) .
+  echo tep_draw_button(HEADER_TITLE_CART_CONTENTS . ($_SESSION['cart']->count_contents() > 0 ? ' (' . $_SESSION['cart']->count_contents() . ')' : ''), 'glyphicon glyphicon-shopping-cart', tep_href_link('shopping_cart.php')) .
        tep_draw_button(HEADER_TITLE_CHECKOUT, 'glyphicon glyphicon-credit-card', tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL')) .
        tep_draw_button(HEADER_TITLE_MY_ACCOUNT, 'glyphicon glyphicon-user', tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 

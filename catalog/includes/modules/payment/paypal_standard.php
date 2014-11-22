@@ -516,7 +516,7 @@
 
         $this->sendDebugEmail($result);
 
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $this->verifyTransaction();
@@ -526,7 +526,7 @@
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
       if (!tep_db_num_rows($check_query) || ($order_id != $_POST['invoice']) || ($customer_id != $_POST['custom'])) {
-        tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+        tep_redirect(tep_href_link('shopping_cart.php'));
       }
 
       $check = tep_db_fetch_array($check_query);

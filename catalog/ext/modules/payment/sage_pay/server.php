@@ -152,7 +152,7 @@
         }
       } else {
         $result = 'Status=INVALID' . chr(13) . chr(10) .
-                  'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
+                  'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
 
         $sage_pay_server->sendDebugEmail();
       }
@@ -161,7 +161,7 @@
 
   if ( !isset($result) ) {
     $result = 'Status=ERROR' . chr(13) . chr(10) .
-              'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link(FILENAME_SHOPPING_CART, '', 'SSL', false));
+              'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
   }
 
   echo $result;
