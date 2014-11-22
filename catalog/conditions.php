@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'conditions.php');
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/conditions.php');
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link('conditions.php'));
 
