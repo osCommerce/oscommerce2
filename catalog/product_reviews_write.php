@@ -12,7 +12,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCT_REVIEWS_WRITE);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_reviews_write.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
@@ -89,7 +89,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&products_id=' . $_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . $_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 

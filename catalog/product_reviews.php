@@ -155,7 +155,7 @@
   <div class="clearfix"></div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'glyphicon glyphicon-comment', tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'glyphicon glyphicon-comment', tep_href_link('product_reviews_write.php', tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_info.php', tep_get_all_get_params())); ?></div>
   </div>
 

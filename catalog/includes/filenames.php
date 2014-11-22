@@ -32,5 +32,4 @@
   define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php');
   define('FILENAME_PASSWORD_FORGOTTEN', 'password_forgotten.php');
   define('FILENAME_PASSWORD_RESET', 'password_reset.php');
-  define('FILENAME_PRODUCT_REVIEWS_WRITE', 'product_reviews_write.php');
 ?>

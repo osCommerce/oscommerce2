@@ -52,7 +52,7 @@
         $reviews_box_contents .= '<div class="text-center"><a href="' . tep_href_link('product_reviews.php', 'products_id=' . $random_product['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $random_product['products_image'], $random_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . tep_href_link('product_reviews.php', 'products_id=' . $random_product['products_id']) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $random_product['reviews_rating']) . '">' . tep_draw_stars((int)$random_product['reviews_rating']) . '</div>';
       } elseif (isset($_GET['products_id'])) {
 // display 'write a review' box
-        $reviews_box_contents .= '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . tep_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'products_id=' . $_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
+        $reviews_box_contents .= '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . tep_href_link('product_reviews_write.php', 'products_id=' . $_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
       } else {
 // display 'no reviews' box
         $reviews_box_contents .= '<p>' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</p>';
