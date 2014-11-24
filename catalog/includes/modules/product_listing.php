@@ -35,21 +35,19 @@
                         '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingHeader">' .
                         '      <tr>';
 
+  $lc_align = '';
+  
   for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
-    $lc_align = '';
-
+    
     switch ($column_list[$col]) {
       case 'PRODUCT_LIST_MODEL':
         $lc_text = TABLE_HEADING_MODEL;
-        $lc_align = '';
         break;
       case 'PRODUCT_LIST_NAME':
         $lc_text = TABLE_HEADING_PRODUCTS;
-        $lc_align = '';
         break;
       case 'PRODUCT_LIST_MANUFACTURER':
         $lc_text = TABLE_HEADING_MANUFACTURER;
-        $lc_align = '';
         break;
       case 'PRODUCT_LIST_PRICE':
         $lc_text = TABLE_HEADING_PRICE;
