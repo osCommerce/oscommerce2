@@ -11,30 +11,7 @@
 */
 
   if (!isset($process)) $process = false;
-?>
 
-  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-
-  <?php
-  if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-    ?>
-    <div class="page-header">
-      <h4><?php echo EDIT_ADDRESS_TITLE; ?></h4>
-    </div>
-    <?php
-  }
-  else {
-    ?>
-    <div class="page-header">
-      <h4><?php echo NEW_ADDRESS_TITLE; ?></h4>
-    </div>
-    <?php
-  }
-  ?>
-
-  <div class="contentText">
-
-<?php
   if (ACCOUNT_GENDER == 'true') {
     $male = $female = false;
     if (isset($gender)) {
@@ -195,23 +172,3 @@
           ?>
         </div>
       </div>
-
-<?php
-  if ((isset($_GET['edit']) && ($customer_default_address_id != $_GET['edit'])) || (isset($_GET['edit']) == false) ) {
-?>
-
-      <div class="form-group">
-        <label class="control-label col-xs-3"><?php echo SET_AS_PRIMARY; ?></label>
-        <div class="col-xs-9">
-          <div class="checkbox">
-            <label>
-              <?php echo tep_draw_checkbox_field('primary', 'on', false, 'id="primary"') . '&nbsp;'; ?>
-            </label>
-          </div>
-        </div>
-      </div>
-
-<?php
-  }
-?>
-  </div>

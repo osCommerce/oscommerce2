@@ -307,7 +307,9 @@
     </div>
   </div>
 
-  <?php require(DIR_WS_MODULES . 'checkout_new_address.php'); ?>
+  <div class="contentText">
+    <?php require(DIR_WS_MODULES . 'address_book_details.php'); ?>
+  </div>
 
 <?php
   }
