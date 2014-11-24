@@ -519,6 +519,8 @@
 
       $result = false;
 
+      $pptx_params = array();
+
       $seller_accounts = array($this->_app->getCredentials('PS', 'email'));
 
       if ( tep_not_null($this->_app->getCredentials('PS', 'email_primary')) ) {
@@ -537,16 +539,46 @@
         $parameters = substr($parameters, 0, -1);
 
         $result = $this->_app->makeApiCall($this->form_action_url, $parameters);
-      }
 
-      $log_params = $HTTP_POST_VARS;
-      $log_params['cmd'] = '_notify-validate';
+        $pptx_params = $HTTP_POST_VARS;
+        $pptx_params['cmd'] = '_notify-validate';
+      } elseif ( isset($HTTP_GET_VARS['tx']) ) { // PDT
+        $pptx_params['cmd'] = '_notify-synch';
+
+        $parameters = 'cmd=_notify-synch&tx=' . urlencode($HTTP_GET_VARS['tx']) . '&at=' . urlencode(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN);
+
+        $pdt_raw = $this->_app->makeApiCall($this->form_action_url, $parameters);
+
+        if ( !empty($pdt_raw) ) {
+          $pdt = explode("\n", trim($pdt_raw));
+
+          if ( isset($pdt[0]) ) {
+            if ( $pdt[0] == 'SUCCESS' ) {
+              $result = 'VERIFIED';
+
+              unset($pdt[0]);
+            } else {
+              $result = $pdt_raw;
+            }
+          }
+
+          if ( is_array($pdt) && !empty($pdt) ) {
+            foreach ( $pdt as $line ) {
+              $p = explode('=', $line, 2);
+
+              if ( count($p) === 2 ) {
+                $pptx_params[trim($p[0])] = trim(urldecode($p[1]));
+              }
+            }
+          }
+        }
+      }
 
       foreach ( $HTTP_GET_VARS as $key => $value ) {
-        $log_params['GET ' . $key] = $value;
+        $pptx_params['GET ' . $key] = $value;
       }
 
-      $this->_app->log('PS', '_notify-validate', ($result == 'VERIFIED') ? 1 : -1, $log_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
+      $this->_app->log('PS', isset($pptx_params['cmd']) ? $pptx_params['cmd'] : 'unknown', ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
 
       if ( $result != 'VERIFIED' ) {
         $messageStack->add_session('header', $this->_app->getDef('module_ps_error_invalid_transaction'));
@@ -554,13 +586,13 @@
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
-      $this->verifyTransaction();
+      $this->verifyTransaction($pptx_params);
 
       $order_id = substr($cart_PayPal_Standard_ID, strpos($cart_PayPal_Standard_ID, '-')+1);
 
       $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "' and customers_id = '" . (int)$customer_id . "'");
 
-      if (!tep_db_num_rows($check_query) || ($order_id != $HTTP_POST_VARS['invoice']) || ($customer_id != $HTTP_POST_VARS['custom'])) {
+      if (!tep_db_num_rows($check_query) || ($order_id != $pptx_params['invoice']) || ($customer_id != $pptx_params['custom'])) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
       }
 
@@ -758,11 +790,11 @@
       return array('OSCOM_APP_PAYPAL_PS_SORT_ORDER');
     }
 
-    function verifyTransaction($is_ipn = false) {
-      global $HTTP_POST_VARS, $currencies;
+    function verifyTransaction($pptx_params, $is_ipn = false) {
+      global $currencies;
 
-      if ( isset($HTTP_POST_VARS['invoice']) && is_numeric($HTTP_POST_VARS['invoice']) && ($HTTP_POST_VARS['invoice'] > 0) && isset($HTTP_POST_VARS['custom']) && is_numeric($HTTP_POST_VARS['custom']) && ($HTTP_POST_VARS['custom'] > 0) ) {
-        $order_query = tep_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$HTTP_POST_VARS['invoice'] . "' and customers_id = '" . (int)$HTTP_POST_VARS['custom'] . "'");
+      if ( isset($pptx_params['invoice']) && is_numeric($pptx_params['invoice']) && ($pptx_params['invoice'] > 0) && isset($pptx_params['custom']) && is_numeric($pptx_params['custom']) && ($pptx_params['custom'] > 0) ) {
+        $order_query = tep_db_query("select orders_id, currency, currency_value from " . TABLE_ORDERS . " where orders_id = '" . (int)$pptx_params['invoice'] . "' and customers_id = '" . (int)$pptx_params['custom'] . "'");
 
         if ( tep_db_num_rows($order_query) === 1 ) {
           $order = tep_db_fetch_array($order_query);
@@ -770,17 +802,17 @@
           $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class = 'ot_total' limit 1");
           $total = tep_db_fetch_array($total_query);
 
-          $comment_status = 'Transaction ID: ' . $HTTP_POST_VARS['txn_id'] . '; ' .
-                            $HTTP_POST_VARS['payment_status'] . ' (' . ucfirst($HTTP_POST_VARS['payer_status']) . '; ' . $currencies->format($HTTP_POST_VARS['mc_gross'], false, $HTTP_POST_VARS['mc_currency']) . ')';
+          $comment_status = 'Transaction ID: ' . $pptx_params['txn_id'] . '; ' .
+                            $pptx_params['payment_status'] . ' (' . ucfirst($pptx_params['payer_status']) . '; ' . $currencies->format($pptx_params['mc_gross'], false, $pptx_params['mc_currency']) . ')';
 
-          if ( $HTTP_POST_VARS['payment_status'] == 'Pending' ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['pending_reason'];
-          } elseif ( ($HTTP_POST_VARS['payment_status'] == 'Reversed') || ($HTTP_POST_VARS['payment_status'] == 'Refunded') ) {
-            $comment_status .= '; ' . $HTTP_POST_VARS['reason_code'];
+          if ( $pptx_params['payment_status'] == 'Pending' ) {
+            $comment_status .= '; ' . $pptx_params['pending_reason'];
+          } elseif ( ($pptx_params['payment_status'] == 'Reversed') || ($pptx_params['payment_status'] == 'Refunded') ) {
+            $comment_status .= '; ' . $pptx_params['reason_code'];
           }
 
-          if ( $HTTP_POST_VARS['mc_gross'] != $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) ) {
-            $comment_status .= '; PayPal transaction value (' . $HTTP_POST_VARS['mc_gross'] . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
+          if ( $pptx_params['mc_gross'] != $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) ) {
+            $comment_status .= '; PayPal transaction value (' . $pptx_params['mc_gross'] . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
           }
 
           if ( $is_ipn === true ) {

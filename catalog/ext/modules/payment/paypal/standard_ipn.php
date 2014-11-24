@@ -56,7 +56,7 @@
   $paypal_standard->_app->log('PS', '_notify-validate', ($result == 'VERIFIED') ? 1 : -1, $log_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox', true);
 
   if ( $result == 'VERIFIED' ) {
-    $paypal_standard->verifyTransaction(true);
+    $paypal_standard->verifyTransaction($HTTP_POST_VARS, true);
 
     $order_id = (int)$HTTP_POST_VARS['invoice'];
     $customer_id = (int)$HTTP_POST_VARS['custom'];
