@@ -395,6 +395,14 @@ EOD;
         $result = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_POST_VARS['txn_id']), (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
       }
 
+      if ( OSCOM_APP_PAYPAL_GATEWAY == '0' ) { // Payflow
+        echo '<pre>';
+        var_dump($HTTP_GET_VARS);
+        var_dump($HTTP_POST_VARS);
+        var_dump($result);
+        exit;
+      }
+
       if ( !in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
         tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($result['L_LONGMESSAGE0'])));
       }
