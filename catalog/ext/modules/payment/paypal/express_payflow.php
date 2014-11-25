@@ -106,7 +106,7 @@
             if ( ($response_array['PAYERSTATUS'] == 'unverified') && !empty($check['customers_password']) ) {
               $messageStack->add_session('login', MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_WARNING_LOCAL_LOGIN_REQUIRED, 'warning');
 
-              $navigation->set_snapshot();
+              $_SESSION['navigation']->set_snapshot();
 
               $login_url = tep_href_link(FILENAME_LOGIN, '', 'SSL');
               $login_email_address = tep_output_string($response_array['EMAIL']);
