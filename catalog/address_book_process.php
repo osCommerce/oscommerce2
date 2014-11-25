@@ -13,7 +13,7 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
+    $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
@@ -334,8 +334,8 @@
 
 <?php
     } else {
-      if (sizeof($navigation->snapshot) > 0) {
-        $back_link = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
+      if (sizeof($_SESSION['navigation']->snapshot) > 0) {
+        $back_link = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
       } else {
         $back_link = tep_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL');
       }
