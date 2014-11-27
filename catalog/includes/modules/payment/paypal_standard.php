@@ -542,43 +542,67 @@
 
         $pptx_params = $HTTP_POST_VARS;
         $pptx_params['cmd'] = '_notify-validate';
+
+        foreach ( $HTTP_GET_VARS as $key => $value ) {
+          $pptx_params['GET ' . $key] = $value;
+        }
+
+        $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
       } elseif ( isset($HTTP_GET_VARS['tx']) ) { // PDT
-        $pptx_params['cmd'] = '_notify-synch';
+        if ( tep_not_null(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN) ) {
+          $pptx_params['cmd'] = '_notify-synch';
 
-        $parameters = 'cmd=_notify-synch&tx=' . urlencode($HTTP_GET_VARS['tx']) . '&at=' . urlencode(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN);
+          $parameters = 'cmd=_notify-synch&tx=' . urlencode($HTTP_GET_VARS['tx']) . '&at=' . urlencode(OSCOM_APP_PAYPAL_PS_PDT_IDENTITY_TOKEN);
 
-        $pdt_raw = $this->_app->makeApiCall($this->form_action_url, $parameters);
+          $pdt_raw = $this->_app->makeApiCall($this->form_action_url, $parameters);
 
-        if ( !empty($pdt_raw) ) {
-          $pdt = explode("\n", trim($pdt_raw));
+          if ( !empty($pdt_raw) ) {
+            $pdt = explode("\n", trim($pdt_raw));
 
-          if ( isset($pdt[0]) ) {
-            if ( $pdt[0] == 'SUCCESS' ) {
-              $result = 'VERIFIED';
+            if ( isset($pdt[0]) ) {
+              if ( $pdt[0] == 'SUCCESS' ) {
+                $result = 'VERIFIED';
 
-              unset($pdt[0]);
-            } else {
-              $result = $pdt_raw;
+                unset($pdt[0]);
+              } else {
+                $result = $pdt_raw;
+              }
             }
-          }
 
-          if ( is_array($pdt) && !empty($pdt) ) {
-            foreach ( $pdt as $line ) {
-              $p = explode('=', $line, 2);
+            if ( is_array($pdt) && !empty($pdt) ) {
+              foreach ( $pdt as $line ) {
+                $p = explode('=', $line, 2);
 
-              if ( count($p) === 2 ) {
-                $pptx_params[trim($p[0])] = trim(urldecode($p[1]));
+                if ( count($p) === 2 ) {
+                  $pptx_params[trim($p[0])] = trim(urldecode($p[1]));
+                }
               }
             }
           }
+
+          foreach ( $HTTP_GET_VARS as $key => $value ) {
+            $pptx_params['GET ' . $key] = $value;
+          }
+
+          $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
+        } else {
+          $details = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
+
+          if ( in_array($details['ACK'], array('Success', 'SuccessWithWarning')) ) {
+            $result = 'VERIFIED';
+
+            $pptx_params = array('txn_id' => $details['TRANSACTIONID'],
+                                 'invoice' => $details['INVNUM'],
+                                 'custom' => $details['CUSTOM'],
+                                 'payment_status' => $details['PAYMENTSTATUS'],
+                                 'payer_status' => $details['PAYERSTATUS'],
+                                 'mc_gross' => $details['AMT'],
+                                 'mc_currency' => $details['CURRENCYCODE'],
+                                 'pending_reason' => $details['PENDINGREASON'],
+                                 'reason_code' => $details['REASONCODE']);
+          }
         }
       }
-
-      foreach ( $HTTP_GET_VARS as $key => $value ) {
-        $pptx_params['GET ' . $key] = $value;
-      }
-
-      $this->_app->log('PS', isset($pptx_params['cmd']) ? $pptx_params['cmd'] : 'unknown', ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
 
       if ( $result != 'VERIFIED' ) {
         $messageStack->add_session('header', $this->_app->getDef('module_ps_error_invalid_transaction'));
