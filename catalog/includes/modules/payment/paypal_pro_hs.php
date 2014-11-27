@@ -39,12 +39,6 @@
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
-
-        if ( OSCOM_APP_PAYPAL_HS_STATUS == '1' ) {
-          $this->api_url = 'https://api-3t.paypal.com/nvp';
-        } else {
-          $this->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
-        }
       }
 
       if ( !function_exists('curl_init') ) {
