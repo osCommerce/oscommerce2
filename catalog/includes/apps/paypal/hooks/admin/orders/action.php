@@ -64,6 +64,8 @@
                 $this->refundTransaction($pp, $o);
                 break;
             }
+
+            tep_redirect(tep_href_link(FILENAME_ORDERS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $HTTP_GET_VARS['oID'] . '&action=edit#section_status_history_content'));
           }
         }
       }
