@@ -599,7 +599,9 @@
                                  'mc_gross' => $details['AMT'],
                                  'mc_currency' => $details['CURRENCYCODE'],
                                  'pending_reason' => $details['PENDINGREASON'],
-                                 'reason_code' => $details['REASONCODE']);
+                                 'reason_code' => $details['REASONCODE'],
+                                 'address_status' => $details['ADDRESSSTATUS'],
+                                 'payment_type' => $details['PAYMENTTYPE']);
           }
         }
       }
@@ -826,30 +828,26 @@
           $total_query = tep_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order['orders_id'] . "' and class = 'ot_total' limit 1");
           $total = tep_db_fetch_array($total_query);
 
-          $comment_status = 'Transaction ID: ' . $pptx_params['txn_id'] . '; ' .
-                            $pptx_params['payment_status'] . ' (' . ucfirst($pptx_params['payer_status']) . '; ' . $currencies->format($pptx_params['mc_gross'], false, $pptx_params['mc_currency']) . ')';
-
-          if ( $pptx_params['payment_status'] == 'Pending' ) {
-            $comment_status .= '; ' . $pptx_params['pending_reason'];
-          } elseif ( ($pptx_params['payment_status'] == 'Reversed') || ($pptx_params['payment_status'] == 'Refunded') ) {
-            $comment_status .= '; ' . $pptx_params['reason_code'];
-          }
+          $comment_status = 'Transaction ID: ' . tep_output_string_protected($pptx_params['txn_id']) . "\n" .
+                            'Payer Status: ' . tep_output_string_protected($pptx_params['payer_status']) . "\n" .
+                            'Address Status: ' . tep_output_string_protected($pptx_params['address_status']) . "\n" .
+                            'Payment Status: ' . tep_output_string_protected($pptx_params['payment_status']) . "\n" .
+                            'Payment Type: ' . tep_output_string_protected($pptx_params['payment_type']) . "\n" .
+                            'Pending Reason: ' . tep_output_string_protected($pptx_params['pending_reason']);
 
           if ( $pptx_params['mc_gross'] != $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) ) {
-            $comment_status .= '; PayPal transaction value (' . $pptx_params['mc_gross'] . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
+            $comment_status .= "\n" . 'OSCOM Error Total Mismatch: PayPal transaction value (' . tep_output_string_protected($pptx_params['mc_gross']) . ') does not match order value (' . $this->_app->formatCurrencyRaw($total['value'], $order['currency'], $order['currency_value']) . ')';
           }
 
           if ( $is_ipn === true ) {
-            $source = 'PayPal IPN Verified';
-          } else {
-            $source = 'PayPal Verified';
+            $comment_status .= "\n" . 'Source: IPN';
           }
 
           $sql_data_array = array('orders_id' => (int)$order['orders_id'],
                                   'orders_status_id' => OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID,
                                   'date_added' => 'now()',
                                   'customer_notified' => '0',
-                                  'comments' => $source . ' [' . tep_output_string_protected($comment_status) . ']');
+                                  'comments' => $comment_status);
 
           tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
