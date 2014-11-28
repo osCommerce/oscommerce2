@@ -45,46 +45,23 @@
             $status[trim($entry[0])] = trim($entry[1]);
           }
         }
-      } else { // Payments Standard, Hosted Payment
-        $ppstatus_query = tep_db_query("select comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . (int)$oID . "' and orders_status_id = '" . (int)OSCOM_APP_PAYPAL_TRANSACTIONS_ORDER_STATUS_ID . "' and comments like 'PayPal%[Transaction ID:%]' order by date_added desc limit 1");
-        if ( tep_db_num_rows($ppstatus_query) ) {
-          $ppstatus = tep_db_fetch_array($ppstatus_query);
 
-          preg_match('/^PayPal[ IPN]? Verified \[Transaction ID\: ([^;]*)\; ([^\s]+) \(([^;]*)\;.*\)(.*)\]$/', $ppstatus['comments'], $res);
+        if ( isset($status['Transaction ID']) ) {
+          $order_query = tep_db_query("select o.orders_id, o.payment_method, o.currency, o.currency_value, ot.value as total from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_TOTAL . " ot where o.orders_id = '" . (int)$oID . "' and o.orders_id = ot.orders_id and ot.class = 'ot_total'");
+          $order = tep_db_fetch_array($order_query);
 
-          if ( count($res) >= 4 ) {
-            $status['Transaction ID'] = $res[1];
-            $status['Payment Status'] = $res[2];
-            $status['Payer Status'] = strtolower($res[3]);
-            $status['Pending Reason'] = null;
+          $pp_server = (strpos(strtolower($order['payment_method']), 'sandbox') !== false) ? 'sandbox' : 'live';
 
-            if ( isset($res[4]) ) {
-              preg_match('/^\; ([^\s]+).*$/', $res[4], $res2);
+          $info_button = $this->_app->drawButton($this->_app->getDef('button_details'), tep_href_link(FILENAME_ORDERS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oID . '&action=edit&tabaction=getTransactionDetails'), 'primary', null, true);
+          $capture_button = $this->getCaptureButton($status, $order);
+          $void_button = $this->getVoidButton($status, $order);
+          $refund_button = $this->getRefundButton($status, $order);
+          $paypal_button = $this->_app->drawButton($this->_app->getDef('button_view_at_paypal'), 'https://www.' . ($pp_server == 'sandbox' ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id=' . $status['Transaction ID'], 'info', 'target="_blank"', true);
 
-              if ( count($res2) == 2 ) {
-                $status['Pending Reason'] = $res2[1];
-              }
-            }
-          }
-        }
-      }
+          $tab_title = addslashes($this->_app->getDef('tab_title'));
+          $tab_link = substr(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_paypal_content';
 
-      if ( isset($status['Transaction ID']) ) {
-        $order_query = tep_db_query("select o.orders_id, o.payment_method, o.currency, o.currency_value, ot.value as total from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_TOTAL . " ot where o.orders_id = '" . (int)$oID . "' and o.orders_id = ot.orders_id and ot.class = 'ot_total'");
-        $order = tep_db_fetch_array($order_query);
-
-        $pp_server = (strpos(strtolower($order['payment_method']), 'sandbox') !== false) ? 'sandbox' : 'live';
-
-        $info_button = $this->_app->drawButton($this->_app->getDef('button_details'), tep_href_link(FILENAME_ORDERS, 'page=' . $HTTP_GET_VARS['page'] . '&oID=' . $oID . '&action=edit&tabaction=getTransactionDetails'), 'primary', null, true);
-        $capture_button = $this->getCaptureButton($status, $order);
-        $void_button = $this->getVoidButton($status, $order);
-        $refund_button = $this->getRefundButton($status, $order);
-        $paypal_button = $this->_app->drawButton($this->_app->getDef('button_view_at_paypal'), 'https://www.' . ($pp_server == 'sandbox' ? 'sandbox.' : '') . 'paypal.com/cgi-bin/webscr?cmd=_view-a-trans&id=' . $status['Transaction ID'], 'info', 'target="_blank"', true);
-
-        $tab_title = addslashes($this->_app->getDef('tab_title'));
-        $tab_link = substr(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_paypal_content';
-
-        $output = <<<EOD
+          $output = <<<EOD
 <script>
 $(function() {
   $('#orderTabs ul').append('<li><a href="{$tab_link}">{$tab_title}</a></li>');
@@ -96,6 +73,7 @@ $(function() {
 </div>
 EOD;
 
+        }
       }
 
       return $output;
