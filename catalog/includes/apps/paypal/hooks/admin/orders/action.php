@@ -35,11 +35,28 @@
 
           $pp = array();
 
-          foreach ( explode("\n", $ppstatus['comments']) as $s ) {
-            if ( !empty($s) && (strpos($s, ':') !== false) ) {
-              $entry = explode(':', $s, 2);
+          preg_match('/^PayPal[ IPN]? Verified \[Transaction ID\: ([^;]*)\; ([^\s]+) \(([^;]*)\;.*\)(.*)\]$/', $ppstatus['comments'], $res);
 
-              $pp[trim($entry[0])] = trim($entry[1]);
+          if ( count($res) >= 4 ) {
+            $pp['Transaction ID'] = $res[1];
+            $pp['Payment Status'] = $res[2];
+            $pp['Payer Status'] = strtolower($res[3]);
+            $pp['Pending Reason'] = null;
+
+            if ( isset($res[4]) ) {
+              preg_match('/^\; ([^\s]+).*$/', $res[4], $res2);
+
+              if ( count($res2) == 2 ) {
+                $pp['Pending Reason'] = $res2[1];
+              }
+            }
+          } else {
+            foreach ( explode("\n", $ppstatus['comments']) as $s ) {
+              if ( !empty($s) && (strpos($s, ':') !== false) ) {
+                $entry = explode(':', $s, 2);
+
+                $pp[trim($entry[0])] = trim($entry[1]);
+              }
             }
           }
 
