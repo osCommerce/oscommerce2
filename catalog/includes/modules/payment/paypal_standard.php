@@ -586,7 +586,7 @@
 
           $this->_app->log('PS', $pptx_params['cmd'], ($result == 'VERIFIED') ? 1 : -1, $pptx_params, $result, (OSCOM_APP_PAYPAL_PS_STATUS == '1') ? 'live' : 'sandbox');
         } else {
-          $details = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
+          $details = $this->_app->getApiResult('PS', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_DP_STATUS == '1') ? 'live' : 'sandbox');
 
           if ( in_array($details['ACK'], array('Success', 'SuccessWithWarning')) ) {
             $result = 'VERIFIED';
