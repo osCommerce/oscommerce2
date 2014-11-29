@@ -27,7 +27,7 @@
   function tep_redirect($url) {
     global $logger;
 
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
+    if ( (strpos($url, "\n") !== false) || (strpos($url, "\r") !== false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
