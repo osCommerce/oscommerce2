@@ -421,23 +421,23 @@
  */
 
     function send($to_name, $to_addr, $from_name, $from_addr, $subject = '', $headers = '') {
-      if ((strstr($to_name, "\n") != false) || (strstr($to_name, "\r") != false)) {
+      if ((strpos($to_name, "\n") !== false) || (strpos($to_name, "\r") !== false)) {
         return false;
       }
 
-      if ((strstr($to_addr, "\n") != false) || (strstr($to_addr, "\r") != false)) {
+      if ((strpos($to_addr, "\n") !== false) || (strpos($to_addr, "\r") !== false)) {
         return false;
       }
 
-      if ((strstr($subject, "\n") != false) || (strstr($subject, "\r") != false)) {
+      if ((strpos($subject, "\n") !== false) || (strpos($subject, "\r") !== false)) {
         return false;
       }
 
-      if ((strstr($from_name, "\n") != false) || (strstr($from_name, "\r") != false)) {
+      if ((strpos($from_name, "\n") !== false) || (strpos($from_name, "\r") !== false)) {
         return false;
       }
 
-      if ((strstr($from_addr, "\n") != false) || (strstr($from_addr, "\r") != false)) {
+      if ((strpos($from_addr, "\n") !== false) || (strpos($from_addr, "\r") !== false)) {
         return false;
       }
 
