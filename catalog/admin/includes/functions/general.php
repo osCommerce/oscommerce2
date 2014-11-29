@@ -476,7 +476,7 @@
 
   function tep_get_uprid($prid, $params) {
     $uprid = $prid;
-    if ( (is_array($params)) && (!strstr($prid, '{')) ) {
+    if ( (is_array($params)) && (strpos($prid, '{') !== false) ) {
       foreach ( $params as $option => $value ) {
         $uprid = $uprid . '{' . $option . '}' . $value;
       }
