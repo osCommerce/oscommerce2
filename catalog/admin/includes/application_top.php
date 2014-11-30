@@ -116,7 +116,7 @@
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language();
 
-    if (isset($_GET['language']) && tep_not_null($_GET['language'])) {
+    if ( !empty($_GET['language']) ) {
       $lng->set_language($_GET['language']);
     } else {
       $lng->get_browser_language();
