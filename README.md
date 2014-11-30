@@ -41,7 +41,7 @@ session.use_trans_sid | Off
 
 MySQL Database Server
 ==============================
-The minimum MySQL version required is v3.23. It is recommended to use the latest MySQL 4 or MySQL 5 version on the database server.
+The minimum MySQL version required is v4.1.13. It is recommended to use the latest MySQL 4 or MySQL 5 version on the database server.
 
 The following MySQL storage engines are supported:
 - MyISAM
