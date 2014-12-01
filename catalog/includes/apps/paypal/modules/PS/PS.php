@@ -14,6 +14,7 @@
     var $_title;
     var $_short_title;
     var $_introduction;
+    var $_req_notes;
     var $_pm_code = 'paypal_standard';
     var $_sort_order = 400;
 
@@ -23,6 +24,16 @@
       $this->_title = $OSCOM_PayPal->getDef('module_ps_title');
       $this->_short_title = $OSCOM_PayPal->getDef('module_ps_short_title');
       $this->_introduction = $OSCOM_PayPal->getDef('module_ps_introduction');
+
+      $this->_req_notes = array();
+
+      if ( !function_exists('curl_init') ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ps_error_curl');
+      }
+
+      if ( !$OSCOM_PayPal->hasCredentials('PS', 'email') ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ps_error_credentials');
+      }
     }
 
     function getTitle() {

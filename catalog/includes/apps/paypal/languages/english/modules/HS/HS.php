@@ -14,6 +14,7 @@ module_hs_introduction = <ul>
 
 module_hs_error_curl = This module requires cURL to be enabled in PHP and will not load until it has been enabled on this webserver.
 module_hs_error_credentials = This module will not load until the API credentials have been configured. Please edit and configure the settings of the PayPal App.
+module_hs_error_payflow = This module is not yet suited for Payflow and will not load. This will be enabled in the next update to the PayPal App.
 
 module_hs_button_return_to_store = Back to :storename
 

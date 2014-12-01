@@ -68,6 +68,13 @@ $(function() {
 <?php
   if ( $OSCOM_PayPal->isInstalled($current_module) || ($current_module == 'G') ) {
     $current_module_title = ($current_module != 'G') ? $OSCOM_PayPal->getModuleInfo($current_module, 'title') : $OSCOM_PayPal->getDef('section_general');
+    $req_notes = ($current_module != 'G') ? $OSCOM_PayPal->getModuleInfo($current_module, 'req_notes') : null;
+
+    if ( is_array($req_notes) && !empty($req_notes) ) {
+      foreach ( $req_notes as $rn ) {
+        echo '<div class="pp-panel pp-panel-warning"><p>' . $rn . '</p></div>';
+      }
+    }
 ?>
 
 <form name="paypalConfigure" action="<?php echo tep_href_link('paypal.php', 'action=configure&subaction=process&module=' . $current_module); ?>" method="post" class="pp-form">

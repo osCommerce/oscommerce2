@@ -14,6 +14,7 @@
     var $_title;
     var $_short_title;
     var $_introduction;
+    var $_req_notes;
     var $_pm_code = 'paypal_pro_hs';
     var $_sort_order = 300;
 
@@ -23,6 +24,18 @@
       $this->_title = $OSCOM_PayPal->getDef('module_hs_title');
       $this->_short_title = $OSCOM_PayPal->getDef('module_hs_short_title');
       $this->_introduction = $OSCOM_PayPal->getDef('module_hs_introduction');
+
+      $this->_req_notes = array();
+
+      if ( !function_exists('curl_init') ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_hs_error_curl');
+      }
+
+      if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && !$OSCOM_PayPal->hasCredentials('HS') ) { // PayPal
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_hs_error_credentials');
+      } elseif ( OSCOM_APP_PAYPAL_GATEWAY == '0' ) { // Payflow
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_hs_error_payflow');
+      }
     }
 
     function getTitle() {

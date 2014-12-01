@@ -14,6 +14,7 @@
     var $_title;
     var $_short_title;
     var $_introduction;
+    var $_req_notes;
     var $_pm_code = 'paypal_pro_dp';
     var $_pm_pf_code = 'paypal_pro_payflow_dp';
     var $_sort_order = 200;
@@ -24,6 +25,18 @@
       $this->_title = $OSCOM_PayPal->getDef('module_dp_title');
       $this->_short_title = $OSCOM_PayPal->getDef('module_dp_short_title');
       $this->_introduction = $OSCOM_PayPal->getDef('module_dp_introduction');
+
+      $this->_req_notes = array();
+
+      if ( !function_exists('curl_init') ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_dp_error_curl');
+      }
+
+      if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && !$OSCOM_PayPal->hasCredentials('DP') ) { // PayPal
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_dp_error_credentials');
+      } elseif ( (OSCOM_APP_PAYPAL_GATEWAY == '0') && !$OSCOM_PayPal->hasCredentials('DP', 'payflow') ) { // Payflow
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_dp_error_credentials_payflow');
+      }
     }
 
     function getTitle() {

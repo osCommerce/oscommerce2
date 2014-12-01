@@ -14,6 +14,7 @@
     var $_title;
     var $_short_title;
     var $_introduction;
+    var $_req_notes;
     var $_cm_code = 'login/cm_paypal_login';
     var $_sort_order = 1000;
 
@@ -23,6 +24,16 @@
       $this->_title = $OSCOM_PayPal->getDef('module_login_title');
       $this->_short_title = $OSCOM_PayPal->getDef('module_login_short_title');
       $this->_introduction = $OSCOM_PayPal->getDef('module_login_introduction');
+
+      $this->_req_notes = array();
+
+      if ( !function_exists('curl_init') ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_error_curl');
+      }
+
+      if ( ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_SECRET))) || ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '0') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET))) ) {
+        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_login_error_credentials');
+      }
     }
 
     function getTitle() {
