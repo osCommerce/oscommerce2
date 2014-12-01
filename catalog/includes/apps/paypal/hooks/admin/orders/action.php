@@ -23,6 +23,8 @@
       }
 
       $this->_app = $OSCOM_PayPal;
+
+      $this->_app->loadLanguageFile('hooks/admin/orders/action.php');
     }
 
     function execute() {
@@ -72,6 +74,8 @@
     }
 
     function getTransactionDetails($comments, $order) {
+      global $messageStack;
+
       $result = null;
 
       if ( !isset($comments['Gateway']) ) {
@@ -174,11 +178,15 @@
                                 'comments' => $result);
 
         tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        $messageStack->add_session($this->_app->getDef('ms_success_getTransactionDetails'), 'success');
+      } else {
+        $messageStack->add_session($this->_app->getDef('ms_error_getTransactionDetails'), 'error');
       }
     }
 
     function doCapture($comments, $order) {
-      global $HTTP_POST_VARS;
+      global $HTTP_POST_VARS, $messageStack;
 
       $pass = false;
 
@@ -233,10 +241,16 @@
                                 'comments' => $result);
 
         tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        $messageStack->add_session($this->_app->getDef('ms_success_doCapture'), 'success');
+      } else {
+        $messageStack->add_session($this->_app->getDef('ms_error_doCapture'), 'error');
       }
     }
 
     function doVoid($comments, $order) {
+      global $messageStack;
+
       $pass = false;
 
       if ( !isset($comments['Gateway']) ) {
@@ -272,11 +286,15 @@
                                 'comments' => $result);
 
         tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        $messageStack->add_session($this->_app->getDef('ms_success_doVoid'), 'success');
+      } else {
+        $messageStack->add_session($this->_app->getDef('ms_error_doVoid'), 'error');
       }
     }
 
     function refundTransaction($comments, $order) {
-      global $HTTP_POST_VARS;
+      global $HTTP_POST_VARS, $messageStack;
 
       if ( isset($HTTP_POST_VARS['ppRefund']) ) {
         $tids = array();
@@ -339,6 +357,10 @@
                                     'comments' => $result);
 
             tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+            $messageStack->add_session($this->_app->getDef('ms_success_refundTransaction', array('refund_amount' => $tids[$id]['Amount'])), 'success');
+          } else {
+            $messageStack->add_session($this->_app->getDef('ms_error_refundTransaction', array('refund_amount' => $tids[$id]['Amount'])), 'error');
           }
         }
       }
