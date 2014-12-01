@@ -64,4 +64,6 @@ define('ERROR_UNKNOWN_STATUS_FLAG', 'Error: Unknown status flag.');
 
 define('ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST', 'Error: Graphs directory does not exist. Please create a \'graphs\' directory inside \'images\'.');
 define('ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE', 'Error: Graphs directory is not writeable.');
+
+define('TEXT_VIEW_BANNER', 'View Banner');
 ?>

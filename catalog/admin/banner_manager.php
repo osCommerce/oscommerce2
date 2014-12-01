@@ -183,12 +183,6 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<script type="text/javascript"><!--
-function popupImageWindow(url) {
-  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -344,7 +338,7 @@ $('#expires_date').datepicker({
         echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . FILENAME_POPUP_IMAGE . '?banner=' . $banners['banners_id'] . '\')">' . tep_image(DIR_WS_IMAGES . 'icon_popup.gif', 'View Banner') . '</a>&nbsp;' . $banners['banners_title']; ?></td>
+                <td class="dataTableContent"><?php echo '<a onclick="event.stopPropagation();" href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $banners['banners_image'] . '" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icon_popup.gif', TEXT_VIEW_BANNER) . '</a> ' . $banners['banners_title']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $banners['banners_group']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                 <td class="dataTableContent" align="right">
