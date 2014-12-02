@@ -410,6 +410,13 @@ if ( typeof OSCOM.APP.PAYPAL.versionCheckResult != 'undefined' ) {
 ?>
 
   <div style="padding: 0 10px 10px 10px;">
+<script>
+// Make sure jQuery >= v1.5 is loaded for jQuery Deferred Objects (eg $.get().fail())
+if ( !$.isFunction($.Deferred) ) {
+  document.write('<div class="pp-panel pp-panel-error"><p>jQuery version is too old (v' + $.fn.jquery + '). Please update your Administration Tool template to use at least v1.5.</p></div>');
+}
+</script>
+
     <?php include(DIR_FS_CATALOG . 'includes/apps/paypal/admin/content/' . basename($content)); ?>
   </div>
 </div>
