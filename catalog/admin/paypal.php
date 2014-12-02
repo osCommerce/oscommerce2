@@ -386,11 +386,6 @@ var OSCOM = {
 if ( typeof OSCOM.APP.PAYPAL.versionCheckResult != 'undefined' ) {
   OSCOM.APP.PAYPAL.versionCheckResult = OSCOM.APP.PAYPAL.versionCheckResult.split('-', 2);
 }
-
-// Make sure jQuery >= v1.5 is loaded for $.get().fail()
-if ( OSCOM.APP.PAYPAL.canApplyOnlineUpdates == true ) {
-  OSCOM.APP.PAYPAL.canApplyOnlineUpdates = $.isFunction($.Deferred);
-}
 </script>
 
 <div class="pp-container">
