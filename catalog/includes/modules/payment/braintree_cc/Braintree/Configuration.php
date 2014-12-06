@@ -224,7 +224,7 @@ class Braintree_Configuration extends Braintree
                    'ssl' . DIRECTORY_SEPARATOR;
 
         $caPath = realpath(
-            dirname(__FILE__) .
+            __DIR__ .
             $sslPath .  'api_braintreegateway_com.ca.crt'
         );
 
