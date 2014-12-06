@@ -1039,7 +1039,7 @@ EOD;
       $errors = array();
 
       if (file_exists(__DIR__) . '/../../../ext/modules/payment/sage_pay/errors.php') {
-        include(__DIR__) . '/../../../ext/modules/payment/sage_pay/errors.php';
+        include(__DIR__ . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 
       $this->_error_messages = $errors;
