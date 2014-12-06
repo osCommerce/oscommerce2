@@ -18,7 +18,7 @@
 
       $this->signature = 'braintree|braintree_cc|1.1|2.3';
       $this->api_version = '1';
-
+di
       $this->code = 'braintree_cc';
       $this->title = MODULE_PAYMENT_BRAINTREE_CC_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_BRAINTREE_CC_TEXT_PUBLIC_TITLE;
@@ -909,7 +909,7 @@ EOD;
 
   function tep_braintree_autoloader($class) {
     if ( substr($class, 0, 10) == 'Braintree_' ) {
-      $file = dirname(__FILE__) . '/braintree_cc/' . str_replace('_', '/', $class) . '.php';
+      $file = __DIR__ . '/braintree_cc/' . str_replace('_', '/', $class) . '.php';
 
       if ( file_exists($file) ) {
         include($file);
