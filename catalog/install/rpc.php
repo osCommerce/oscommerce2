@@ -15,7 +15,7 @@
 
   require('includes/application.php');
 
-  $dir_fs_www_root = dirname(__FILE__);
+  $dir_fs_www_root = __DIR__;
 
   if (isset($_GET['action']) && !empty($_GET['action'])) {
     switch ($_GET['action']) {
