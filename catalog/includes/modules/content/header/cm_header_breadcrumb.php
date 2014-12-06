@@ -20,7 +20,7 @@
 
     function cm_header_breadcrumb() {
       $this->code = get_class($this);
-      $this->group = basename(dirname(__FILE__));
+      $this->group = basename(__DIR__);
 
       $this->title = MODULE_CONTENT_HEADER_BREADCRUMB_TITLE;
       $this->description = MODULE_CONTENT_HEADER_BREADCRUMB_DESCRIPTION;
