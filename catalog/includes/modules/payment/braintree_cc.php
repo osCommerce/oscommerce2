@@ -18,6 +18,7 @@
 
       $this->signature = 'braintree|braintree_cc|1.1|2.3';
       $this->api_version = '1';
+      
       $this->code = 'braintree_cc';
       $this->title = MODULE_PAYMENT_BRAINTREE_CC_TEXT_TITLE;
       $this->public_title = MODULE_PAYMENT_BRAINTREE_CC_TEXT_PUBLIC_TITLE;
