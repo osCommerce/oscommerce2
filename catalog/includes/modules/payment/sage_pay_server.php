@@ -533,7 +533,7 @@ EOD;
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(__DIR__) . '/../../../ext/modules/payment/sage_pay/errors.php') {
+      if (file_exists(__DIR__ . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(__DIR__ . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 
