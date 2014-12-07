@@ -20,7 +20,7 @@
 
     function cm_cs_downloads() {
       $this->code = get_class($this);
-      $this->group = basename(dirname(__FILE__));
+      $this->group = basename(__DIR__);
 
       $this->title = MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_TITLE;
       $this->description = MODULE_CONTENT_CHECKOUT_SUCCESS_DOWNLOADS_DESCRIPTION;

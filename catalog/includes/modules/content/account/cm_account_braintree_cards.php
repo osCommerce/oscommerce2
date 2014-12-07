@@ -20,7 +20,7 @@
 
     function cm_account_braintree_cards() {
       $this->code = get_class($this);
-      $this->group = basename(dirname(__FILE__));
+      $this->group = basename(__DIR__);
 
       $this->title = MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_TITLE;
       $this->description = MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_DESCRIPTION;

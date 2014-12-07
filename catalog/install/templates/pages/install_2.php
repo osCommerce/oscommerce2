@@ -20,7 +20,7 @@
 
   $www_location = substr($www_location, 0, strpos($www_location, 'install'));
 
-  $dir_fs_www_root = osc_realpath(dirname(__FILE__) . '/../../../') . '/';
+  $dir_fs_www_root = osc_realpath(__DIR__ . '/../../../') . '/';
 ?>
 
 

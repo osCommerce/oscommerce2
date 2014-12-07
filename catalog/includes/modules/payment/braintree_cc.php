@@ -909,7 +909,7 @@ EOD;
 
   function tep_braintree_autoloader($class) {
     if ( substr($class, 0, 10) == 'Braintree_' ) {
-      $file = dirname(__FILE__) . '/braintree_cc/' . str_replace('_', '/', $class) . '.php';
+      $file = __DIR__ . '/braintree_cc/' . str_replace('_', '/', $class) . '.php';
 
       if ( file_exists($file) ) {
         include($file);

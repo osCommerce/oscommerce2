@@ -30,20 +30,20 @@
 <?php
     $configfile_array = array();
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php', 0777);
+    if (file_exists(osc_realpath(__DIR__ . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(__DIR__ . '/../../../includes') . '/configure.php')) {
+      @chmod(osc_realpath(__DIR__ . '/../../../includes') . '/configure.php', 0777);
     }
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php', 0777);
+    if (file_exists(osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php')) {
+      @chmod(osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php', 0777);
     }
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php';
+    if (file_exists(osc_realpath(__DIR__ . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(__DIR__ . '/../../../includes') . '/configure.php')) {
+      $configfile_array[] = osc_realpath(__DIR__ . '/../../../includes') . '/configure.php';
     }
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php';
+    if (file_exists(osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php')) {
+      $configfile_array[] = osc_realpath(__DIR__ . '/../../../admin/includes') . '/configure.php';
     }
 
     $warning_array = array();

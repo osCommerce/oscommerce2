@@ -24,7 +24,7 @@
       $this->signature = 'paypal|paypal_login|1.0|2.3';
 
       $this->code = get_class($this);
-      $this->group = basename(dirname(__FILE__));
+      $this->group = basename(__DIR__);
 
       $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE;
       $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
