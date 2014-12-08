@@ -31,8 +31,9 @@
 
       $totals_query = tep_db_query("select title, text, class from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "' order by sort_order");
       while ($totals = tep_db_fetch_array($totals_query)) {
-        $this->totals[$totals['class']] = array('title' => $totals['title'],
-                                                'text' => $totals['text']);
+        $this->totals[] = array('title' => $totals['title'],
+                                'text' => $totals['text'],
+                                'class' => $totals['class']);
       }
 
       $this->info = array('total' => $this->totals['ot_total']['text'],
