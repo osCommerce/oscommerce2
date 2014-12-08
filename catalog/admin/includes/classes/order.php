@@ -36,7 +36,7 @@
                                 'class' => $totals['class']);
       }
 
-      $this->info = array('total' => $this->totals['ot_total']['text'],
+      $this->info = array('total' => null,
                           'currency' => $order['currency'],
                           'currency_value' => $order['currency_value'],
                           'payment_method' => $order['payment_method'],
@@ -48,6 +48,13 @@
                           'status' => $order['orders_status_name'],
                           'orders_status' => $order['orders_status'],
                           'last_modified' => $order['last_modified']);
+
+      foreach ( $this->totals as $t ) {
+        if ( $t['class'] == 'ot_total' ) {
+          $this->info['total'] = $t['text'];
+          break;
+        }
+      }
 
       $this->customer = array('name' => $order['customers_name'],
                               'company' => $order['customers_company'],
