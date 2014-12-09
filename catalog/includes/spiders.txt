@@ -1,4 +1,5 @@
 $Id$
+almaden.ibm.com
 ABACHOBot
 Accoona-AI-Agent
 AddSugarSpiderBot
@@ -21,21 +22,12 @@ Gigabot
 Girafabot
 Googlebot
 Googlebot-Image
-hl_ftien_spider
 Holmes
-htdig
-iaskspider
 ia_archiver
-iCCrawler
 ichiro
 igdeSpyder
 IRLbot
-IssueCrawler
-Jaxified Bot
-Jyxobot
-KoepaBot
 L.webis
-LapozzBot
 Larbin
 LDSpider
 LexxeBot
@@ -47,15 +39,11 @@ mabontland
 magpie-crawler
 Mediapartners-Google
 MJ12bot
-MLBot
 Mnogosearch
-mogimogi
 MojeekBot
 Moreoverbot
 Morning Paper
 msnbot
-MSRBot
-MVAClient
 mxbot
 NetResearchServer
 NetSeer Crawler
@@ -63,87 +51,45 @@ NewsGator
 NG-Search
 nicebot
 noxtrumbot
-Nusearch Spider
 NutchCVS
-Nymesis
 obot
-oegp
-omgilibot
-OmniExplorer_Bot
 OOZBOT
 OrangeBot
-Orbiter
-PageBitesHyperBot
-Peew
 polybot
-Pompos
-PostPost
 Psbot
 PycURL
-Qseero
-Radian6
-RAMPyBot
-RufusBot
-SandCrawler
-SBIder
 ScoutJet
 Scrubby
-SearchSight
 Seekbot
-semanticdiscovery
-Sensis Web Crawler
 SEOChat::Bot
 SeznamBot
 Shim-Crawler
 ShopWiki
 Shoula robot
 silk
-Sitebot
 Snappy
 sogou spider
 Sosospider
 Speedy Spider
-Sqworm
 StackRambler
 suggybot
-SurveyBot
 SynooBot
 Teoma
-TerrawizBot
-TheSuBot
 Thumbnail.CZ robot
 TinEye
-truwoGPS
 TurnitinBot
-TweetedTimes Bot
 TwengaBot
-updated
 Urlfilebot
 Vagabondo
 Voltron
-Vortex
-voyager
-VYU2
-webcollage
 Websquash.com
-wf84
-WoFindeIch Robot
-WomlpeFactory
-Xaldon_WebSpider
 yacy
 Yahoo! Slurp
-Yahoo! Slurp China
 YahooSeeker
-YahooSeeker-Testing
 YandexBot
 YandexImages
-YandexMetrika
-Yasaklibot
 Yeti
 YodaoBot
-yoogliFetchAgent
 YoudaoBot
-Zao
 Zealbot
-zspider
 ZyBorg
