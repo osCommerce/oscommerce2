@@ -14,7 +14,6 @@ envolk[ITS]spider
 Exabot
 FAST Enterprise Crawler
 FAST-WebCrawler
-FDSE robot
 FindLinks
 FurlBot
 FyberSpider
