@@ -2,7 +2,6 @@ $Id$
 ABACHOBot
 Accoona-AI-Agent
 AddSugarSpiderBot
-AnyApexBot
 Arachmo
 B-l-i-t-z-B-O-T
 Baiduspider
