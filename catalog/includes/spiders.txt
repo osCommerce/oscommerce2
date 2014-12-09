@@ -11,7 +11,6 @@ Bingbot
 DataparkSearch
 Dotbot
 envolk[ITS]spider
-EsperanzaBot
 Exabot
 FAST Enterprise Crawler
 FAST-WebCrawler
