@@ -1,5 +1,4 @@
 $Id$
-008
 ABACHOBot
 Accoona-AI-Agent
 AddSugarSpiderBot
@@ -146,6 +145,7 @@ TwengaBot
 updated
 Urlfilebot
 Vagabondo
+Voltron
 Vortex
 voyager
 VYU2
