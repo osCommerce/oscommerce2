@@ -3,14 +3,12 @@ ABACHOBot
 Accoona-AI-Agent
 AddSugarSpiderBot
 Arachmo
-B-l-i-t-z-B-O-T
 Baiduspider
 BecomeBot
 BeslistBot
 BillyBobBot
 Bimbot
 Bingbot
-BlitzBOT
 boitho.com-dc
 boitho.com-robot
 btbot
