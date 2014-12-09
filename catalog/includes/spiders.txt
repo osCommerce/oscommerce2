@@ -21,7 +21,6 @@ Gigabot
 Girafabot
 Googlebot
 Googlebot-Image
-HappyFunBot
 hl_ftien_spider
 Holmes
 htdig
