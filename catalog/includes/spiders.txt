@@ -1,95 +1,95 @@
-$Id$
+$id$
 almaden.ibm.com
-ABACHOBot
-Accoona-AI-Agent
-AddSugarSpiderBot
-Arachmo
-Baiduspider
-BecomeBot
-BeslistBot
-Bimbot
-Bingbot
-DataparkSearch
-Dotbot
-envolk[ITS]spider
-Exabot
-FAST Enterprise Crawler
-FAST-WebCrawler
-FurlBot
-FyberSpider
-GalaxyBot
-Gigabot
-Girafabot
-Googlebot
-Googlebot-Image
-Holmes
+abachobot
+accoona-ai-agent
+addsugarspiderbot
+arachmo
+baiduspider
+becomebot
+beslistbot
+bimbot
+bingbot
+dataparksearch
+dotbot
+envolk[its]spider
+exabot
+fast enterprise crawler
+fast-webcrawler
+furlbot
+fyberspider
+galaxybot
+gigabot
+girafabot
+googlebot
+googlebot-image
+holmes
 ia_archiver
 ichiro
-igdeSpyder
-IRLbot
-L.webis
-Larbin
-LDSpider
-LexxeBot
-Linguee Bot
-LinkWalker
+igdespyder
+irlbot
+l.webis
+larbin
+ldspider
+lexxebot
+linguee bot
+linkwalker
 lmspider
 lwp-trivial
 mabontland
 magpie-crawler
-Mediapartners-Google
-MJ12bot
-Mnogosearch
-MojeekBot
-Moreoverbot
-Morning Paper
+mediapartners-google
+mj12bot
+mnogosearch
+mojeekbot
+moreoverbot
+morning paper
 msnbot
 mxbot
-NetResearchServer
-NetSeer Crawler
-NewsGator
-NG-Search
+netresearchserver
+netseer crawler
+newsgator
+ng-search
 nicebot
 noxtrumbot
-NutchCVS
+nutchcvs
 obot
-OOZBOT
-OrangeBot
+oozbot
+orangebot
 polybot
-Psbot
-PycURL
-ScoutJet
-Scrubby
-Seekbot
-SEOChat::Bot
-SeznamBot
-Shim-Crawler
-ShopWiki
-Shoula robot
+psbot
+pycurl
+scoutjet
+scrubby
+seekbot
+seochat::bot
+seznambot
+shim-crawler
+shopwiki
+shoula robot
 silk
-Snappy
+snappy
 sogou spider
-Sosospider
-Speedy Spider
-StackRambler
+sosospider
+speedy spider
+stackrambler
 suggybot
-SynooBot
-Teoma
-Thumbnail.CZ robot
-TinEye
-TurnitinBot
-TwengaBot
-Urlfilebot
-Vagabondo
-Voltron
-Websquash.com
+synoobot
+teoma
+thumbnail.cz robot
+tineye
+turnitinbot
+twengabot
+urlfilebot
+vagabondo
+voltron
+websquash.com
 yacy
-Yahoo! Slurp
-YahooSeeker
-YandexBot
-YandexImages
-Yeti
-YodaoBot
-YoudaoBot
-Zealbot
-ZyBorg
+yahoo! slurp
+yahooseeker
+yandexbot
+yandeximages
+yeti
+yodaobot
+youdaobot
+zealbot
+zyborg
