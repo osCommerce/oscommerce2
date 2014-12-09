@@ -8,8 +8,6 @@ BecomeBot
 BeslistBot
 Bimbot
 Bingbot
-boitho.com-dc
-boitho.com-robot
 btbot
 CatchBot
 Cerberian Drtrs
