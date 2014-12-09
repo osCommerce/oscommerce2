@@ -356,7 +356,7 @@ var OSCOM = {
             } catch (ex) {
             }
 
-            if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) && (data['releases'].length > 0) ) {
+            if ( (typeof data == 'object') && ('rpcStatus' in data) && (data['rpcStatus'] == 1) && ('releases' in data) && (data['releases'].length > 0) ) {
               for ( var i = 0; i < data['releases'].length; i++ ) {
                 versions.push(data['releases'][i]['version']);
               }
