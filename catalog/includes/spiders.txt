@@ -9,7 +9,6 @@ BeslistBot
 Bimbot
 Bingbot
 DataparkSearch
-DiamondBot
 Discobot
 Dotbot
 EARTHCOM.info
