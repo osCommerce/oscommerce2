@@ -17,7 +17,6 @@ FAST-WebCrawler
 FurlBot
 FyberSpider
 GalaxyBot
-genieBot
 Gigabot
 Girafabot
 Googlebot
