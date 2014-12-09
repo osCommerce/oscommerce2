@@ -8,7 +8,6 @@ BecomeBot
 BeslistBot
 Bimbot
 Bingbot
-Charlotte
 ConveraCrawler
 cosmos
 Covario IDS
