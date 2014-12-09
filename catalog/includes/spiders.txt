@@ -8,7 +8,6 @@ BecomeBot
 BeslistBot
 Bimbot
 Bingbot
-btbot
 CatchBot
 Cerberian Drtrs
 Charlotte
