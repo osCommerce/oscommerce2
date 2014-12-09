@@ -10,7 +10,6 @@ Bimbot
 Bingbot
 DataparkSearch
 Dotbot
-EARTHCOM.info
 EmeraldShield.com WebBot
 envolk[ITS]spider
 EsperanzaBot
