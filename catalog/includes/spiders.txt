@@ -6,7 +6,6 @@ Arachmo
 Baiduspider
 BecomeBot
 BeslistBot
-BillyBobBot
 Bimbot
 Bingbot
 boitho.com-dc
