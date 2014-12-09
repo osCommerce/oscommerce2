@@ -27,7 +27,8 @@ CREATE TABLE oscom_app_paypal_log (
   date_added datetime,
   PRIMARY KEY (id),
   KEY idx_oapl_module (module)
-);
+) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+
 EOD;
 
     tep_db_query($sql);
