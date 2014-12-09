@@ -8,8 +8,6 @@ BecomeBot
 BeslistBot
 Bimbot
 Bingbot
-ConveraCrawler
-cosmos
 Covario IDS
 DataparkSearch
 DiamondBot
