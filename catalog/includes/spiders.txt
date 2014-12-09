@@ -16,7 +16,6 @@ FAST Enterprise Crawler
 FAST-WebCrawler
 FurlBot
 FyberSpider
-Gaisbot
 GalaxyBot
 genieBot
 Gigabot
