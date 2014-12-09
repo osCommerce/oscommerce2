@@ -9,7 +9,6 @@ BeslistBot
 Bimbot
 Bingbot
 DataparkSearch
-Discobot
 Dotbot
 EARTHCOM.info
 EmeraldShield.com WebBot
