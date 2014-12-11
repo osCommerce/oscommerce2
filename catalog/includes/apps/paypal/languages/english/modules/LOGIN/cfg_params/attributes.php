@@ -1,0 +1,29 @@
+cfg_login_attributes_title = Information Requested From Customers
+cfg_login_attributes_desc = The attributes the customer must share with you.
+
+cfg_login_attributes_group_personal = Personal Information
+cfg_login_attributes_group_address = Address Information
+cfg_login_attributes_group_account = Account Information
+cfg_login_attributes_group_checkout = Checkout Express
+
+cfg_login_attributes_attribute_full_name = Full Name
+cfg_login_attributes_attribute_date_of_birth = Date of Birth
+cfg_login_attributes_attribute_age_range = Age Range
+cfg_login_attributes_attribute_gender = Gender
+
+cfg_login_attributes_attribute_email_address = E-Mail Address
+cfg_login_attributes_attribute_street_address = Street Address
+cfg_login_attributes_attribute_city = City
+cfg_login_attributes_attribute_state = State
+cfg_login_attributes_attribute_country = Country
+cfg_login_attributes_attribute_zip_code = Zip Code
+cfg_login_attributes_attribute_phone = Telephone Number
+
+cfg_login_attributes_attribute_account_status = Account Status (verified)
+cfg_login_attributes_attribute_account_type = Account Type
+cfg_login_attributes_attribute_account_creation_date = Account Creation Date
+cfg_login_attributes_attribute_time_zone = Time Zone
+cfg_login_attributes_attribute_locale = Locale
+cfg_login_attributes_attribute_language = Language
+
+cfg_login_attributes_attribute_seamless_checkout = Seamless Checkout

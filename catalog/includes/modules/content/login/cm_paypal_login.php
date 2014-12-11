@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  if ( !class_exists('OSCOM_PayPal') ) {
+    include(DIR_FS_CATALOG . 'includes/apps/paypal/OSCOM_PayPal.php');
+  }
+
   class cm_paypal_login {
     var $code;
     var $group;
@@ -17,84 +21,79 @@
     var $description;
     var $sort_order;
     var $enabled = false;
+    var $_app;
 
     function cm_paypal_login() {
-      global $HTTP_GET_VARS, $PHP_SELF;
+      global $PHP_SELF;
 
-      $this->signature = 'paypal|paypal_login|1.0|2.3';
+      $this->_app = new OSCOM_PayPal();
+      $this->_app->loadLanguageFile('modules/LOGIN/LOGIN.php');
+
+      $this->signature = 'paypal|paypal_login|4.0|2.3';
 
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_PAYPAL_LOGIN_TITLE;
-      $this->description = MODULE_CONTENT_PAYPAL_LOGIN_DESCRIPTION;
+      $this->title = $this->_app->getDef('module_login_title');
+      $this->description = '<div align="center">' . $this->_app->drawButton($this->_app->getDef('module_login_legacy_admin_app_button'), tep_href_link('paypal.php', 'action=configure&module=LOGIN'), 'primary', null, true) . '</div>';
 
-      if ( defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS') ) {
-        $this->sort_order = MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER;
-        $this->enabled = (MODULE_CONTENT_PAYPAL_LOGIN_STATUS == 'True');
+      if ( defined('OSCOM_APP_PAYPAL_LOGIN_STATUS') ) {
+        $this->sort_order = OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER;
+        $this->enabled = in_array(OSCOM_APP_PAYPAL_LOGIN_STATUS, array('1', '0'));
 
-        if ( basename($GLOBALS['PHP_SELF']) == 'modules_content.php' ) {
-          $this->description .= $this->getTestLinkInfo();
+        if ( OSCOM_APP_PAYPAL_LOGIN_STATUS == '0' ) {
+          $this->title .= ' [Sandbox]';
+        }
 
-          $this->description .= $this->getShowUrlsInfo();
+        if ( !function_exists('curl_init') ) {
+          $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_login_error_curl') . '</div>';
 
-          if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Sandbox' ) {
-            $this->title .= ' [Sandbox]';
-          }
+          $this->enabled = false;
+        }
 
-          if ( !function_exists('curl_init') ) {
-            $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CURL . '</div>' . $this->description;
+        if ( $this->enabled === true ) {
+          if ( ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '1') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_LIVE_SECRET))) || ((OSCOM_APP_PAYPAL_LOGIN_STATUS == '0') && (!tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_CLIENT_ID) || !tep_not_null(OSCOM_APP_PAYPAL_LOGIN_SANDBOX_SECRET))) ) {
+            $this->description .= '<div class="secWarning">' . $this->_app->getDef('module_login_error_credentials') . '</div>';
 
             $this->enabled = false;
           }
-
-          if ( $this->enabled === true ) {
-            if ( !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) || !tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-              $this->description = '<div class="secWarning">' . MODULE_CONTENT_PAYPAL_LOGIN_ERROR_ADMIN_CONFIGURATION . '</div>' . $this->description;
-            }
-          }
         }
-      }
-
-      if ( defined('FILENAME_MODULES') && ($PHP_SELF == 'modules_content.php') && isset($HTTP_GET_VARS['action']) && ($HTTP_GET_VARS['action'] == 'install') && isset($HTTP_GET_VARS['subaction']) && ($HTTP_GET_VARS['subaction'] == 'conntest') ) {
-        echo $this->getTestConnectionResult();
-        exit;
       }
     }
 
     function execute() {
       global $HTTP_GET_VARS, $oscTemplate;
 
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID) && tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_SECRET) ) {
-        if ( isset($HTTP_GET_VARS['action']) ) {
-          if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
-            $this->preLogin();
-          } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
-            $this->postLogin();
-          }
+      if ( isset($HTTP_GET_VARS['action']) ) {
+        if ( $HTTP_GET_VARS['action'] == 'paypal_login' ) {
+          $this->preLogin();
+        } elseif ( $HTTP_GET_VARS['action'] == 'paypal_login_process' ) {
+          $this->postLogin();
         }
+      }
 
-        $scopes = cm_paypal_login_get_attributes();
-        $use_scopes = array('openid');
+      $scopes = cm_paypal_login_get_attributes();
+      $use_scopes = array('openid');
 
-        foreach ( explode(';', MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES) as $a ) {
-          foreach ( $scopes as $group => $attributes ) {
-            foreach ( $attributes as $attribute => $scope ) {
-              if ( $a == $attribute ) {
-                if ( !in_array($scope, $use_scopes) ) {
-                  $use_scopes[] = $scope;
-                }
+      foreach ( explode(';', OSCOM_APP_PAYPAL_LOGIN_ATTRIBUTES) as $a ) {
+        foreach ( $scopes as $group => $attributes ) {
+          foreach ( $attributes as $attribute => $scope ) {
+            if ( $a == $attribute ) {
+              if ( !in_array($scope, $use_scopes) ) {
+                $use_scopes[] = $scope;
               }
             }
           }
         }
-
-        ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
-        $template = ob_get_clean();
-
-        $oscTemplate->addContent($template, $this->group);
       }
+
+      $cm_paypal_login = $this;
+
+      ob_start();
+      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/paypal_login.php');
+      $template = ob_get_clean();
+
+      $oscTemplate->addContent($template, $this->group);
     }
 
     function preLogin() {
@@ -105,20 +104,21 @@
       if ( isset($HTTP_GET_VARS['code']) ) {
         $paypal_login_customer_id = false;
 
-        $params = array('code' => $HTTP_GET_VARS['code']);
+        $params = array('code' => $HTTP_GET_VARS['code'],
+                        'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
 
-        $response_token = $this->getToken($params);
+        $response_token = $this->_app->getApiResult('LOGIN', 'GrantToken', $params);
 
         if ( !isset($response_token['access_token']) && isset($response_token['refresh_token']) ) {
           $params = array('refresh_token' => $response_token['refresh_token']);
 
-          $response_token = $this->getRefreshToken($params);
+          $response_token = $this->_app->getApiResult('LOGIN', 'RefreshToken', $params);
         }
 
         if ( isset($response_token['access_token']) ) {
           $params = array('access_token' => $response_token['access_token']);
 
-          $response = $this->getUserInfo($params);
+          $response = $this->_app->getApiResult('LOGIN', 'UserInfo', $params);
 
           if ( isset($response['email']) ) {
             $paypal_login_access_token = $response_token['access_token'];
@@ -297,328 +297,23 @@
     }
 
     function check() {
-      return defined('MODULE_CONTENT_PAYPAL_LOGIN_STATUS');
+      return defined('OSCOM_APP_PAYPAL_LOGIN_STATUS');
     }
 
-    function install($parameter = null) {
-      $params = $this->getParams();
-
-      if (isset($parameter)) {
-        if (isset($params[$parameter])) {
-          $params = array($parameter => $params[$parameter]);
-        } else {
-          $params = array();
-        }
-      }
-
-      foreach ($params as $key => $data) {
-        $sql_data_array = array('configuration_title' => $data['title'],
-                                'configuration_key' => $key,
-                                'configuration_value' => (isset($data['value']) ? $data['value'] : ''),
-                                'configuration_description' => $data['desc'],
-                                'configuration_group_id' => '6',
-                                'sort_order' => '0',
-                                'date_added' => 'now()');
-
-        if (isset($data['set_func'])) {
-          $sql_data_array['set_function'] = $data['set_func'];
-        }
-
-        if (isset($data['use_func'])) {
-          $sql_data_array['use_function'] = $data['use_func'];
-        }
-
-        tep_db_perform(TABLE_CONFIGURATION, $sql_data_array);
-      }
+    function install() {
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=install&module=LOGIN'));
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      tep_redirect(tep_href_link('paypal.php', 'action=configure&subaction=uninstall&module=LOGIN'));
     }
 
     function keys() {
-      $keys = array_keys($this->getParams());
-
-      if ($this->check()) {
-        foreach ($keys as $key) {
-          if (!defined($key)) {
-            $this->install($key);
-          }
-        }
-      }
-
-      return $keys;
-    }
-
-    function getParams() {
-      $params = array('MODULE_CONTENT_PAYPAL_LOGIN_STATUS' => array('title' => 'Enable Log In with PayPal',
-                                                                    'desc' => 'Do you want to enable the Log In with PayPal module?',
-                                                                    'value' => 'True',
-                                                                    'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID' => array('title' => 'Client ID',
-                                                                       'desc' => 'Your PayPal Application Client ID.'),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_SECRET' => array('title' => 'Secret',
-                                                                    'desc' => 'Your PayPal Application Secret.'),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_THEME' => array('title' => 'Theme',
-                                                                   'desc' => 'Which theme should be used for the button?',
-                                                                   'value' => 'Blue',
-                                                                   'set_func' => 'tep_cfg_select_option(array(\'Blue\', \'Neutral\'), '),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES' => array('title' => 'Information Requested From Customers',
-                                                                    'desc' => 'The attributes the customer must share with you.',
-                                                                    'value' => implode(';', $this->get_default_attributes()),
-                                                                    'use_func' => 'cm_paypal_login_show_attributes',
-                                                                    'set_func' => 'cm_paypal_login_edit_attributes('),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE' => array('title' => 'Server Type',
-                                                                         'desc' => 'Which server should be used? Live for production or Sandbox for testing.',
-                                                                         'value' => 'Live',
-                                                                         'set_func' => 'tep_cfg_select_option(array(\'Live\', \'Sandbox\'), '),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL' => array('title' => 'Verify SSL Certificate',
-                                                                        'desc' => 'Verify gateway server SSL certificate on connection?',
-                                                                        'value' => 'True',
-                                                                        'set_func' => 'tep_cfg_select_option(array(\'True\', \'False\'), '),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_PROXY' => array('title' => 'Proxy Server',
-                                                                   'desc' => 'Send API requests through this proxy server. (host:port, eg: 123.45.67.89:8080 or proxy.example.com:8080)'),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_CONTENT_WIDTH' => array('title' => 'Content Width',
-                                                                           'desc' => 'Should the content be shown in a full or half width container?',
-                                                                           'value' => 'Full',
-                                                                           'set_func' => 'tep_cfg_select_option(array(\'Full\', \'Half\'), '),
-                      'MODULE_CONTENT_PAYPAL_LOGIN_SORT_ORDER' => array('title' => 'Sort order of display',
-                                                                        'desc' => 'Sort order of display. Lowest is displayed first.',
-                                                                        'value' => '0'));
-
-      return $params;
-    }
-
-    function sendRequest($url, $parameters = null) {
-      $server = parse_url($url);
-
-      if ( !isset($server['port']) ) {
-        $server['port'] = ($server['scheme'] == 'https') ? 443 : 80;
-      }
-
-      if ( !isset($server['path']) ) {
-        $server['path'] = '/';
-      }
-
-      $curl = curl_init($server['scheme'] . '://' . $server['host'] . $server['path'] . (isset($server['query']) ? '?' . $server['query'] : ''));
-      curl_setopt($curl, CURLOPT_PORT, $server['port']);
-      curl_setopt($curl, CURLOPT_HEADER, false);
-      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($curl, CURLOPT_FORBID_REUSE, true);
-      curl_setopt($curl, CURLOPT_FRESH_CONNECT, true);
-      curl_setopt($curl, CURLOPT_POST, true);
-      curl_setopt($curl, CURLOPT_POSTFIELDS, $parameters);
-      curl_setopt($curl, CURLOPT_ENCODING, '');
-
-      if ( MODULE_CONTENT_PAYPAL_LOGIN_VERIFY_SSL == 'True' ) {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
-        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
-
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/paypal/paypal.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
-        }
-      } else {
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-      }
-
-      if ( tep_not_null(MODULE_CONTENT_PAYPAL_LOGIN_PROXY) ) {
-        curl_setopt($curl, CURLOPT_HTTPPROXYTUNNEL, true);
-        curl_setopt($curl, CURLOPT_PROXY, MODULE_CONTENT_PAYPAL_LOGIN_PROXY);
-      }
-
-      $result = curl_exec($curl);
-
-      curl_close($curl);
-
-      return $result;
-    }
-
-    function getToken($params) {
-      if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Live' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $parameters = array('client_id' => MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID,
-                          'client_secret' => MODULE_CONTENT_PAYPAL_LOGIN_SECRET,
-                          'grant_type' => 'authorization_code',
-                          'code' => $params['code'],
-                          'redirect_uri' => str_replace('&amp;', '&', tep_href_link(FILENAME_LOGIN, 'action=paypal_login', 'SSL')));
-
-      $post_string = '';
-
-      foreach ($parameters as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/tokenservice', $post_string);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
-    function getRefreshToken($params) {
-      if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Live' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $parameters = array('client_id' => MODULE_CONTENT_PAYPAL_LOGIN_CLIENT_ID,
-                          'client_secret' => MODULE_CONTENT_PAYPAL_LOGIN_SECRET,
-                          'grant_type' => 'refresh_token',
-                          'refresh_token' => $params['refresh_token']);
-
-      $post_string = '';
-
-      foreach ($parameters as $key => $value) {
-        $post_string .= $key . '=' . urlencode(utf8_encode(trim($value))) . '&';
-      }
-
-      $post_string = substr($post_string, 0, -1);
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/tokenservice', $post_string);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
-    function getUserInfo($params) {
-      if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Live' ) {
-        $api_server = 'api.paypal.com';
-      } else {
-        $api_server = 'api.sandbox.paypal.com';
-      }
-
-      $result = $this->sendRequest('https://' . $api_server . '/v1/identity/openidconnect/userinfo/?schema=openid&access_token=' . $params['access_token']);
-
-      $result_array = json_decode($result, true);
-
-      return $result_array;
-    }
-
-    function getTestLinkInfo() {
-      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TITLE;
-      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_BUTTON_CLOSE;
-      $dialog_success = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_SUCCESS;
-      $dialog_failed = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_FAILED;
-      $dialog_error = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_ERROR;
-      $dialog_connection_time = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_TIME;
-
-      $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
-
-      $js = <<<EOD
-<script type="text/javascript">
-$(function() {
-  $('#tcdprogressbar').progressbar({
-    value: false
-  });
-});
-
-function openTestConnectionDialog() {
-  var d = $('<div>').html($('#testConnectionDialog').html()).dialog({
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    }
-  });
-
-  var timeStart = new Date().getTime();
-
-  $.ajax({
-    url: '{$test_url}'
-  }).done(function(data) {
-    if ( data == '1' ) {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: green;">{$dialog_success}</p>');
-    } else {
-      d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_failed}</p>');
-    }
-  }).fail(function() {
-    d.find('#testConnectionDialogProgress').html('<p style="font-weight: bold; color: red;">{$dialog_error}</p>');
-  }).always(function() {
-    var timeEnd = new Date().getTime();
-    var timeTook = new Date(0, 0, 0, 0, 0, 0, timeEnd-timeStart);
-
-    d.find('#testConnectionDialogProgress').append('<p>{$dialog_connection_time} ' + timeTook.getSeconds() + '.' + timeTook.getMilliseconds() + 's</p>');
-  });
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icons/locked.gif" border="0">&nbsp;<a href="javascript:openTestConnectionDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_LINK_TITLE . '</a></p>' .
-              '<div id="testConnectionDialog" style="display: none;"><p>';
-
-      if ( MODULE_CONTENT_PAYPAL_LOGIN_SERVER_TYPE == 'Live' ) {
-        $info .= 'Live Server:<br />https://api.paypal.com';
-      } else {
-        $info .= 'Sandbox Server:<br />https://api.sandbox.paypal.com';
-      }
-
-      $info .= '</p><div id="testConnectionDialogProgress"><p>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_CONNECTION_GENERAL_TEXT . '</p><div id="tcdprogressbar"></div></div></div>' .
-               $js;
-
-      return $info;
-    }
-
-    function getTestConnectionResult() {
-      $params = array('code' => 'oscom2_conn_test');
-
-      $response = $this->getToken($params);
-
-      if ( is_array($response) && isset($response['error']) ) {
-        return 1;
-      }
-
-      return -1;
-    }
-
-    function getShowUrlsInfo() {
-      $dialog_title = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TITLE;
-      $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_BUTTON_CLOSE;
-
-      $js = <<<EOD
-<script type="text/javascript">
-function openShowUrlsDialog() {
-  var d = $('<div>').html($('#showUrlsDialog').html()).dialog({
-    autoOpen: false,
-    modal: true,
-    title: '{$dialog_title}',
-    buttons: {
-      '{$dialog_button_close}': function () {
-        $(this).dialog('destroy');
-      }
-    },
-    width: 600
-  });
-
-  d.dialog('open');
-}
-</script>
-EOD;
-
-      $info = '<p><img src="images/icon_info.gif" border="0">&nbsp;<a href="javascript:openShowUrlsDialog();" style="text-decoration: underline; font-weight: bold;">' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_LINK_TITLE . '</a></p>' .
-              '<div id="showUrlsDialog" style="display: none;">' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_RETURN_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('login.php', 'action=paypal_login', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_PRIVACY_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('privacy.php', '', 'SSL'))) . '</p>' .
-              '  <p><strong>' . MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_TERMS_TEXT . '</strong><br /><br />' . htmlspecialchars(str_replace('&amp;', '&', tep_catalog_href_link('conditions.php', '', 'SSL'))) . '</p>' .
-              '</div>' .
-              $js;
-
-      return $info;
+      return array('OSCOM_APP_PAYPAL_LOGIN_CONTENT_WIDTH', 'OSCOM_APP_PAYPAL_LOGIN_SORT_ORDER');
     }
 
     function hasAttribute($attribute) {
-      return in_array($attribute, explode(';', MODULE_CONTENT_PAYPAL_LOGIN_ATTRIBUTES));
+      return in_array($attribute, explode(';', OSCOM_APP_PAYPAL_LOGIN_ATTRIBUTES));
     }
 
     function get_default_attributes() {
@@ -653,99 +348,5 @@ EOD;
                                     'locale' => 'profile',
                                     'language' => 'profile'),
                  'checkout' => array('seamless_checkout' => 'https://uri.paypal.com/services/expresscheckout'));
-  }
-
-  function cm_paypal_login_get_required_attributes() {
-    return array('full_name',
-                 'email_address',
-                 'street_address',
-                 'city',
-                 'state',
-                 'country',
-                 'zip_code');
-  }
-
-  function cm_paypal_login_show_attributes($text) {
-    $active = explode(';', $text);
-
-    $output = '';
-
-    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
-      foreach ( $attributes as $attribute => $scope ) {
-        if ( in_array($attribute, $active) ) {
-          $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
-        }
-      }
-    }
-
-    if ( !empty($output) ) {
-      $output = substr($output, 0, -6);
-    }
-
-    return $output;
-  }
-
-  function cm_paypal_login_edit_attributes($values, $key) {
-    $values_array = explode(';', $values);
-
-    $required_array = cm_paypal_login_get_required_attributes();
-
-    $output = '';
-
-    foreach ( cm_paypal_login_get_attributes() as $group => $attributes ) {
-      $output .= '<strong>' . constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_GROUP_' . $group) . '</strong><br />';
-
-      foreach ( $attributes as $attribute => $scope ) {
-        if ( in_array($attribute, $required_array) ) {
-          $output .= tep_draw_radio_field('cm_paypal_login_attributes_tmp_' . $attribute, $attribute, true) . '&nbsp;';
-        } else {
-          $output .= tep_draw_checkbox_field('cm_paypal_login_attributes[]', $attribute, in_array($attribute, $values_array)) . '&nbsp;';
-        }
-
-        $output .= constant('MODULE_CONTENT_PAYPAL_LOGIN_ATTR_' . $attribute) . '<br />';
-      }
-    }
-
-    if (!empty($output)) {
-      $output = '<br />' . substr($output, 0, -6);
-    }
-
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
-
-    $output .= '<script type="text/javascript">
-                function cmpl_update_cfg_value() {
-                  var cmpl_selected_attributes = \'\';
-
-                  if ($(\'input[name^="cm_paypal_login_attributes_tmp_"]\').length > 0) {
-                    $(\'input[name^="cm_paypal_login_attributes_tmp_"]\').each(function() {
-                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
-                    });
-                  }
-
-                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
-                    $(\'input[name="cm_paypal_login_attributes[]"]:checked\').each(function() {
-                      cmpl_selected_attributes += $(this).attr(\'value\') + \';\';
-                    });
-                  }
-
-                  if (cmpl_selected_attributes.length > 0) {
-                    cmpl_selected_attributes = cmpl_selected_attributes.substring(0, cmpl_selected_attributes.length - 1);
-                  }
-
-                  $(\'#cmpl_attributes\').val(cmpl_selected_attributes);
-                }
-
-                $(function() {
-                  cmpl_update_cfg_value();
-
-                  if ($(\'input[name="cm_paypal_login_attributes[]"]\').length > 0) {
-                    $(\'input[name="cm_paypal_login_attributes[]"]\').change(function() {
-                      cmpl_update_cfg_value();
-                    });
-                  }
-                });
-                </script>';
-
-    return $output;
   }
 ?>
