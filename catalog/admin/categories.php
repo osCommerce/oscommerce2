@@ -510,7 +510,7 @@ function updateNet() {
 <h1 class="pageHeading"><?php echo sprintf(TEXT_NEW_PRODUCT, tep_output_generated_category_path($current_category_id)); ?></h1>
 
 <div id="productTabs" style="overflow: auto;">
-  <ul>
+  <ul id="productTabsMain">
     <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_general_content">' . SECTION_HEADING_GENERAL . '</a>'; ?></li>
     <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_data_content">' . SECTION_HEADING_DATA . '</a>'; ?></li>
     <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_images_content">' . SECTION_HEADING_IMAGES . '</a>'; ?></li>
