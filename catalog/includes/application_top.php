@@ -47,7 +47,7 @@
     $cookie_domain = HTTP_COOKIE_DOMAIN;
     $cookie_path = HTTP_COOKIE_PATH;
   }
-  
+
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
@@ -128,9 +128,9 @@
       $session_started = true;
     }
   } elseif ( SESSION_BLOCK_SPIDERS == 'True' ) {
-    
+
     $user_agent = '';
-    
+
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
       $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
     }
@@ -281,11 +281,11 @@
     switch ( $_GET['action'] ) {
       // customer wants to update the product quantity in their shopping cart
       case 'update_product' : for ($i=0, $n=sizeof($_POST['products_id']); $i<$n; $i++) {
-                                if (in_array($_POST['products_id'][$i], (is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
+                                if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array()))) {
                                   $_SESSION['cart']->remove($_POST['products_id'][$i]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($_POST['products_id'][$i])), 'warning');
                                 } else {
-                                  $attributes = ($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
+                                  $attributes = (isset($_POST['id']) && $_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
                                   $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'][$i])), 'success');
                                 }
