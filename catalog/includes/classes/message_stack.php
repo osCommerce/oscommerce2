@@ -76,9 +76,11 @@
     function size($class) {
       $count = 0;
 
-      for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
-        if ($this->messages[$i]['class'] == $class) {
-          $count++;
+      if (!empty($this->messages)) {
+        foreach ( $this->messages as $message ) {
+          if ($message['class'] == $class) {
+            $count++;
+          }
         }
       }
 
