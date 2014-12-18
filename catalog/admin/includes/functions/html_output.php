@@ -335,7 +335,7 @@
 
     $field .= '>';
 
-    if (empty($default) && ( (isset($_GET[$name]) ) || (isset($_POST[$name]) ) ) ) {
+    if ( empty($default) ) {
       if ( isset($_GET[$name]) ) {
         $default = stripslashes($_GET[$name]);
       } elseif ( isset($_POST[$name]) ) {
