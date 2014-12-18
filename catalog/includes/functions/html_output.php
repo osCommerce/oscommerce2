@@ -275,7 +275,6 @@
     } elseif ( isset($_POST[$name]) ) {
       $field .= ' value="' . tep_output_string(stripslashes($_POST[$name])) . '"';
     }
-  }
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
