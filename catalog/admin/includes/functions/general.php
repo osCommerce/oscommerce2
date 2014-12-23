@@ -319,13 +319,19 @@
 
   function tep_not_null($value) {
     if (is_array($value)) {
-      if (sizeof($value) > 0) {
+      if (!empty($value)) {
         return true;
       } else {
         return false;
       }
+    } elseif(is_object($value)) {
+      if (count(get_object_vars($value)) === 0) {
+        return false;
+      } else {
+        return true;
+      }
     } else {
-      if ( (is_string($value) || is_int($value)) && ($value != '') && ($value != 'NULL') && (strlen(trim($value)) > 0)) {
+      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
         return true;
       } else {
         return false;
