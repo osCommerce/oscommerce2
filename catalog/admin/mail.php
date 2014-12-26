@@ -97,7 +97,7 @@
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo $mail_sent_to; ?></td>
+                <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo htmlspecialchars(stripslashes($mail_sent_to)); ?></td>
               </tr>
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
