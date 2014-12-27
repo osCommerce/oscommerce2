@@ -381,9 +381,6 @@
 // split-page-results
   require('includes/classes/split_page_results.php');
 
-// infobox
-  require('includes/classes/boxes.php');
-
 // auto activate and expire banners
   require('includes/functions/banner.php');
   tep_activate_banners();
