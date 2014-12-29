@@ -1223,9 +1223,9 @@
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
-    return array_keys(array_flip(array_map (function ($string) {
-    return (int)$string;
-    }, explode('_', $cPath))));
+    return array_unique(array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath)));
   }
 
 ////
