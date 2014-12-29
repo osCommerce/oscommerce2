@@ -49,14 +49,13 @@
 <?php
     if (isset($cPath) && strpos('_', $cPath)) {
 // check to see if there are deeper categories within the current category
-      $category_links = array_reverse($cPath_array);
-      for($i=0, $n=sizeof($category_links); $i<$n; $i++) {
-        $categories_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      foreach (array_reverse($cPath_array) as $category_links) {
+        $categories_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
         $categories = tep_db_fetch_array($categories_query);
         if ($categories['total'] < 1) {
           // do nothing, go through the loop
         } else {
-          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$category_links . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
           break; // we've found the deepest category the customer is in
         }
       }
@@ -111,8 +110,8 @@
 
     $select_column_list = '';
 
-    for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
-      switch ($column_list[$i]) {
+    foreach ($column_list as $value) {
+      switch ($value) {
         case 'PRODUCT_LIST_MODEL':
           $select_column_list .= 'p.products_model, ';
           break;
@@ -155,9 +154,9 @@
     }
 
     if ( (!isset($_GET['sort'])) || (!preg_match('/^[1-8][ad]$/', $_GET['sort'])) || (substr($_GET['sort'], 0, 1) > sizeof($column_list)) ) {
-      for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
-        if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
-          $_GET['sort'] = $i+1 . 'a';
+      foreach(array_keys($column_list) as $key) {
+        if ($key == 'PRODUCT_LIST_NAME') {
+          $_GET['sort'] = $key+1 . 'a';
           $listing_sql .= " order by pd.products_name";
           break;
         }

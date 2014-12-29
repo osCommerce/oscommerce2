@@ -28,11 +28,11 @@
     function trail($separator = NULL) {
       $trail_string = '<ol class="breadcrumb">';
 
-      for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
-        if (isset($this->_trail[$i]['link']) && tep_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<li><a href="' . $this->_trail[$i]['link'] . '">' . $this->_trail[$i]['title'] . '</a></li>' . "\n";
+      foreach ($this->_trail as $trail ) { 
+        if (isset($trail['link']) && tep_not_null($trail['link'])) {
+          $trail_string .= '<li><a href="' . $trail['link'] . '">' . $trail['title'] . '</a></li>' . "\n";
         } else {
-          $trail_string .= '<li>' . $this->_trail[$i]['title'] . '</li>';
+          $trail_string .= '<li>' . $trail['title'] . '</li>';
         }
       }
 

@@ -35,10 +35,10 @@
                         '    <table border="0" width="100%" cellspacing="0" cellpadding="2" class="productListingHeader">' .
                         '      <tr>';
 
-  for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
+  foreach ($column_list as $key => $value) {
     $lc_align = '';
 
-    switch ($column_list[$col]) {
+    switch ($value) {
       case 'PRODUCT_LIST_MODEL':
         $lc_text = TABLE_HEADING_MODEL;
         $lc_align = '';
@@ -73,8 +73,8 @@
         break;
     }
 
-    if ( ($column_list[$col] != 'PRODUCT_LIST_BUY_NOW') && ($column_list[$col] != 'PRODUCT_LIST_IMAGE') ) {
-      $lc_text = tep_create_sort_heading($_GET['sort'], $col+1, $lc_text);
+   if ( ($value != 'PRODUCT_LIST_BUY_NOW') && ($value != 'PRODUCT_LIST_IMAGE') ) {
+      $lc_text = tep_create_sort_heading($_GET['sort'], $key+1, $lc_text);
     }
 
     $prod_list_contents .= '        <td' . (tep_not_null($lc_align) ? ' align="' . $lc_align . '"' : '') . '>' . $lc_text . '</td>';
@@ -96,8 +96,8 @@
 
       $prod_list_contents .= '      <tr>';
 
-      for ($col=0, $n=sizeof($column_list); $col<$n; $col++) {
-        switch ($column_list[$col]) {
+      foreach ($column_list as $key => $value) {
+        switch ($value) {
           case 'PRODUCT_LIST_MODEL':
             $prod_list_contents .= '        <td>' . $listing['products_model'] . '</td>';
             break;
