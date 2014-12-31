@@ -333,8 +333,6 @@
   }
 
   function tep_browser_detect($component) {
-    global $_SERVER;
-
     return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
