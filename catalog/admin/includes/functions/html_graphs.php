@@ -199,16 +199,7 @@
       }
 
       $vertical_graph_string .= '<img src="' . $bars[$i] . '" width="5" height="';
-
-// values of zero are displayed wrong because a image height of zero 
-// gives a strange behavior in Netscape. For this reason the height 
-// is set at 1 pixel if the value is zero. - Jan Diepens
-      if ($values[$i] != 0) {
-        $vertical_graph_string .= $values[$i] * $vals['scale'];
-      } else {
-        $vertical_graph_string .= '1';
-      } 
-
+      $vertical_graph_string .= $values[$i] * $vals['scale'];
       $vertical_graph_string .= '"></td>' . "\n";
     } // endfor
 
