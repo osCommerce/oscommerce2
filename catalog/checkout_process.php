@@ -284,6 +284,7 @@
 
 // load the after_process function from the payment modules
   $payment_modules->after_process();
+  $shipping_modules->after_process();
 
   $_SESSION['cart']->reset(true);
 
