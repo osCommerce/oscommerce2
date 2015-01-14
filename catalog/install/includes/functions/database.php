@@ -113,7 +113,7 @@
           if ($next == '') { // get the last insert query
             $next = 'insert';
           }
-          if ( (preg_match('/create/i', $next)) || (preg_match('/insert/i', $next)) || (preg_match('/drop t/i', $next)) ) {
+          if ( (stripos($next, 'create') !== false) || (stripos($next, 'insert') !== false) || (stripos($next, 'drop t') !== false) ) {
             $next = '';
             $sql_array[] = substr($restore_query, 0, $i);
             $restore_query = ltrim(substr($restore_query, $i+1));
