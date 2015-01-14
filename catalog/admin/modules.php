@@ -262,7 +262,7 @@
           $keys .= '<strong>' . $value['title'] . '</strong><br />';
           if ($value['use_function']) {
             $use_function = $value['use_function'];
-            if (preg_match('/->/', $use_function)) {
+            if (strpos($use_function, '->') !== false) {
               $class_method = explode('->', $use_function);
               if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
                 include(DIR_WS_CLASSES . $class_method[0] . '.php');
