@@ -247,7 +247,7 @@
                 $sql_length = strlen($restore_query);
                 $i = strpos($restore_query, ';')-1;
 
-                if (stripos($query, 'create') !== false) {
+                if (preg_match('/^create*/i', $query)) {
                   $table_name = trim(substr($query, stripos($query, 'table ')+6));
                   $table_name = substr($table_name, 0, strpos($table_name, ' '));
 
