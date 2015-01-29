@@ -35,7 +35,6 @@
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
-          reset($currencies->currencies);
           $currencies_array = array();
           foreach($currencies->currencies as $key => $value) {
             $currencies_array[] = array('id' => $key, 'text' => $value['title']);
