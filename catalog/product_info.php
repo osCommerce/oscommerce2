@@ -56,7 +56,7 @@
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action')) . 'action=add_product')); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link(FILENAME_PRODUCT_INFO, tep_get_all_get_params(array('action'), $request_type) . 'action=add_product')); ?>
 
 <div>
   <h1 style="float: right;"><?php echo $products_price; ?></h1>

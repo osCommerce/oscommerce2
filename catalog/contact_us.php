@@ -74,7 +74,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send'), 'post', '', true); ?>
+<?php echo tep_draw_form('contact_us', tep_href_link(FILENAME_CONTACT_US, 'action=send', $request_type), 'post', '', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
