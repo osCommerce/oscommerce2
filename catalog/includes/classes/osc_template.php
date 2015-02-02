@@ -87,8 +87,8 @@
                   include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
                 }
 
-                if ( file_exists(DIR_WS_MODULES . $group . '/' . $class . '.php') ) {
-                  include(DIR_WS_MODULES . $group . '/' . $class . '.php');
+                if ( file_exists(DIR_WS_MODULES . $group . '/' . $module) ) {
+                  include(DIR_WS_MODULES . $group . '/' . $module);
                 }
               }
 

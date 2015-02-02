@@ -43,7 +43,7 @@
 
           if ( !class_exists($class) ) {
             include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
-            include(DIR_WS_MODULES . 'social_bookmarks/' . $class . '.php');
+            include(DIR_WS_MODULES . 'social_bookmarks/' . $sbm);
           }
 
           $sb = new $class();
