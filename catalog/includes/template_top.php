@@ -54,7 +54,7 @@
 
   <?php echo $oscTemplate->getContent('navigation'); ?>
 
-  <div id="bodyWrapper" class="container-fluid">
+  <div id="bodyWrapper" class="<?php echo BOOTSTRAP_CONTAINER; ?>">
 
     <div class="row">
 

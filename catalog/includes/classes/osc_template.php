@@ -15,8 +15,8 @@
     var $_blocks = array();
     var $_content = array();
     var $_grid_container_width = 12;
-    var $_grid_content_width = 8;
-    var $_grid_column_width = 2;
+    var $_grid_content_width = BOOTSTRAP_CONTENT;
+    var $_grid_column_width = 0; // deprecated
     var $_data = array();
 
     function oscTemplate() {
@@ -44,7 +44,7 @@
     }
 
     function getGridColumnWidth() {
-      return $this->_grid_column_width;
+      return (12 - BOOTSTRAP_CONTENT) / 2;
     }
 
     function setTitle($title) {

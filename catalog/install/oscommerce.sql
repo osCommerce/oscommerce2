@@ -862,6 +862,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, last_modified, date_added) VALUES ('Store Logo', 'STORE_LOGO', 'store_logo.png', 'This is the filename of your Store Logo.  This should be updated at Admin > Configuration > Store Logo', '6', '0', NULL, now());
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Bootstrap Container', 'BOOTSTRAP_CONTAINER', 'container-fluid', 'What type of container should the page content be shown in? See http://getbootstrap.com/css/#overview-container', '16', '1', 'tep_cfg_select_option(array(\'container-fluid\', \'container\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Bootstrap Content', 'BOOTSTRAP_CONTENT', '8', 'What width should the page content default to?  (8 = two thirds width, 6 = half width, 4 = one third width) Note that the Side Column(s) - if installed - will adjust automatically.', '16', '2', 'tep_cfg_select_option(array(\'8\', \'6\', \'4\'), ', now());
+
 INSERT INTO configuration_group VALUES ('1', 'My Store', 'General information about my store', '1', '1');
 INSERT INTO configuration_group VALUES ('2', 'Minimum Values', 'The minimum values for functions / data', '2', '1');
 INSERT INTO configuration_group VALUES ('3', 'Maximum Values', 'The maximum values for functions / data', '3', '1');
@@ -877,6 +880,7 @@ INSERT INTO configuration_group VALUES ('12', 'E-Mail Options', 'General setting
 INSERT INTO configuration_group VALUES ('13', 'Download', 'Downloadable products options', '13', '1');
 INSERT INTO configuration_group VALUES ('14', 'GZip Compression', 'GZip compression options', '14', '1');
 INSERT INTO configuration_group VALUES ('15', 'Sessions', 'Session options', '15', '1');
+INSERT INTO configuration_group VALUES ('16', 'Bootstrap Setup', 'Bootstrap Options', '16', '1');
 
 INSERT INTO countries VALUES (1,'Afghanistan','AF','AFG','1');
 INSERT INTO countries VALUES (2,'Albania','AL','ALB','1');
