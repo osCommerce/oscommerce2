@@ -413,6 +413,9 @@
     $current_category_id = 0;
   }
 
+// include category tree class
+  require('includes/classes/category_tree.php');
+
 // include the breadcrumb class and start the breadcrumb trail
   require('includes/classes/breadcrumb.php');
   $breadcrumb = new breadcrumb;
