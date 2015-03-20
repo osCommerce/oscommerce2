@@ -247,3 +247,11 @@ footer .footer-extra A {
   text-decoration: underline;
 }
 
+/* searchbox ---------------------------------------------------------------- */
+
+.searchbox-margin {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+
