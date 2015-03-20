@@ -54,8 +54,8 @@
       }
     }
 
-    if (!extension_loaded('mysql')) {
-      $warning_array['mysql'] = 'The MySQL extension is required but is not installed. Please enable it to continue installation.';
+    if (!extension_loaded('mysqli')) {
+      $warning_array['mysqli'] = 'The MySQLi extension is required but is not installed. Please enable it to continue installation.';
     }
 
     if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
@@ -209,8 +209,8 @@ $(function() {
             <td colspan="2"><strong>Required PHP Extensions</strong></td>
           </tr>
           <tr>
-            <td>MySQL</td>
-            <td align="right"><img src="images/<?php echo (extension_loaded('mysql') || extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <td>MySQLi</td>
+            <td align="right"><img src="images/<?php echo (extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
           </tr>
         </table>
 
