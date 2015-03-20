@@ -242,3 +242,8 @@ footer .footer-extra {
   padding-top: 10px;
 }
 
+footer .footer-extra A {
+  color: white;
+  text-decoration: underline;
+}
+
