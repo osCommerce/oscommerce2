@@ -17,9 +17,8 @@ s, del {
   color: red;
 }
 
-#piGal {
-  float: right;
-  width: 250px;
+.piGal {
+  width: 250px !important;
   margin-bottom: 20px;
 }
 
