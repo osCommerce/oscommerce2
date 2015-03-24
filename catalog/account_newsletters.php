@@ -57,8 +57,8 @@
 
   <div class="contentText">
     <div class="form-group">
-      <label class="control-label col-xs-3"><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER; ?></label>
-      <div class="col-xs-9">
+      <label class="control-label col-sm-4"><?php echo MY_NEWSLETTERS_GENERAL_NEWSLETTER; ?></label>
+      <div class="col-sm-8">
         <div class="checkbox">
           <label>
             <?php echo tep_draw_checkbox_field('newsletter_general', '1', (($newsletter['customers_newsletter'] == '1') ? true : false)); ?>
