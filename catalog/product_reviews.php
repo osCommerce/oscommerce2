@@ -95,14 +95,16 @@
     if ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3')) {
 ?>
 
-  <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
-
-    <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
+  <div class="row">
+    <div class="col-sm-6 pagenumber hidden-xs">
+      <?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+    </div>
+    <div class="col-sm-6">
+      <div class="pull-right pagenav"><?php echo $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></div>
+      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    </div>
   </div>
-
-  <br />
-
+  
   <div class="clearfix"></div>
 
 <?php
@@ -140,12 +142,17 @@
 
   if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
 ?>
+
   <div class="clearfix"></div>
 
-  <div class="contentText">
-    <p style="float: right;"><?php echo TEXT_RESULT_PAGE . ' ' . $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></p>
-
-    <p><?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></p>
+  <div class="row">
+    <div class="col-sm-6 pagenumber hidden-xs">
+      <?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+    </div>
+    <div class="col-sm-6">
+      <div class="pull-right pagenav"><?php echo $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></div>
+      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    </div>
   </div>
 
 <?php
