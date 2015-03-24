@@ -30,6 +30,8 @@
 
 <!-- Custom -->
 <link rel="stylesheet" href="templates/main_page/stylesheet.css" />
+<!-- font awesome -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 </head>
 
 <body>

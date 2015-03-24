@@ -67,7 +67,7 @@
       if (sizeof($warning_array) > 0) {
 ?>
 
-        <table class="table table-condensed">
+        <table class="table table-condensed table-striped">
 
 <?php
         foreach ( $warning_array as $key => $value ) {
@@ -156,12 +156,13 @@ $(function() {
       <div class="panel-heading">
         Server Capabilities
       </div>
-      <div class="panel-body">
-        <table class="table table-condensed">
+        <table class="table table-condensed table-striped">
           <tr>
-            <td><strong>PHP Version</strong></td>
-            <td align="right"><?php echo PHP_VERSION; ?></td>
-            <td align="right" width="25"><img src="images/<?php echo ((PHP_VERSION >= 5.3) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th colspan="2">PHP Version</th>
+          </tr>
+          <tr>
+            <th><?php echo PHP_VERSION; ?></th>
+            <td align="right" width="25"><?php echo ((PHP_VERSION >= 5.3) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
         </table>
 
@@ -171,73 +172,72 @@ $(function() {
 
         <br />
 
-        <table class="table table-condensed">
+        <table class="table table-condensed table-striped">
           <tr>
-            <td colspan="3"><strong>PHP Settings</strong></td>
+            <th colspan="3">PHP Settings</th>
           </tr>
           <tr>
-            <td>register_globals</td>
-            <td align="right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><img src="images/<?php echo (($compat_register_globals == true) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>register_globals</th>
+            <td class="text-right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (($compat_register_globals == true) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
           <tr>
-            <td>magic_quotes</td>
-            <td align="right"><?php echo (((int)ini_get('magic_quotes') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><img src="images/<?php echo (((int)ini_get('magic_quotes') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>magic_quotes</th>
+            <td class="text-right"><?php echo (((int)ini_get('magic_quotes') == 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (((int)ini_get('magic_quotes') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
           <tr>
-            <td>file_uploads</td>
-            <td align="right"><?php echo (((int)ini_get('file_uploads') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><img src="images/<?php echo (((int)ini_get('file_uploads') == 1) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>file_uploads</th>
+            <td class="text-right"><?php echo (((int)ini_get('file_uploads') == 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (((int)ini_get('file_uploads') == 1) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
           <tr>
-            <td>session.auto_start</td>
-            <td align="right"><?php echo (((int)ini_get('session.auto_start') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><img src="images/<?php echo (((int)ini_get('session.auto_start') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>session.auto_start</th>
+            <td class="text-right"><?php echo (((int)ini_get('session.auto_start') == 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (((int)ini_get('session.auto_start') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
           <tr>
-            <td>session.use_trans_sid</td>
-            <td align="right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><img src="images/<?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
-          </tr>
-        </table>
-
-        <br />
-
-        <table class="table table-condensed">
-          <tr>
-            <td colspan="2"><strong>Required PHP Extensions</strong></td>
-          </tr>
-          <tr>
-            <td>MySQL</td>
-            <td align="right"><img src="images/<?php echo (extension_loaded('mysql') || extension_loaded('mysqli') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>session.use_trans_sid</th>
+            <td class="text-right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
         </table>
 
         <br />
 
-        <table class="table table-condensed">
+        <table class="table table-condensed table-striped">
           <tr>
-            <td colspan="2"><strong>Recommended PHP Extensions</strong></td>
+            <th colspan="2">Required PHP Extensions</th>
           </tr>
           <tr>
-            <td>GD</td>
-            <td align="right"><img src="images/<?php echo (extension_loaded('gd') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>MySQL</th>
+            <td class="text-right"><?php echo (extension_loaded('mysql') || extension_loaded('mysqli') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
+          </tr>
+        </table>
+
+        <br />
+
+        <table class="table table-condensed table-striped">
+          <tr>
+            <th colspan="2">Recommended PHP Extensions</th>
           </tr>
           <tr>
-            <td>cURL</td>
-            <td align="right"><img src="images/<?php echo (extension_loaded('curl') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>GD</th>
+            <td class="text-right"><?php echo (extension_loaded('gd') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
           <tr>
-            <td>OpenSSL</td>
-            <td align="right"><img src="images/<?php echo (extension_loaded('openssl') ? 'success.gif' : 'failed.gif'); ?>" width="16" height="16" /></td>
+            <th>cURL</th>
+            <td class="text-right"><?php echo (extension_loaded('curl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
+          </tr>
+          <tr>
+            <th>OpenSSL</th>
+            <td class="text-right"><?php echo (extension_loaded('openssl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
         </table>
 
 <?php
   }
 ?>
-      </div>
     </div>
   </div>
 </div>

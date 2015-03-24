@@ -31,7 +31,7 @@
 
     $('#mBox').show();
 
-    $('#mBoxContents').html('<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" />Testing database connection..</p>');
+    $('#mBoxContents').html('<p><i class="fa fa-spinner fa-spin fa-2x"></i> Testing database connection..</p>');
 
     dbServer = $('#DB_SERVER').val();
     dbUsername = $('#DB_SERVER_USERNAME').val();
@@ -43,14 +43,14 @@
       result.shift();
 
       if (result[0] == '1') {
-        $('#mBoxContents').html('<p><img src="images/progress.gif" align="right" hspace="5" vspace="5" />The database structure is now being imported. Please be patient during this procedure.</p>');
+        $('#mBoxContents').html('<p><i class="fa fa-spinner fa-spin fa-2x"></i> The database structure is now being imported. Please be patient during this procedure.</p>');
 
         $.get('rpc.php?action=dbImport&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password='+ encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response2) {
           var result2 = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response2);
           result2.shift();
 
           if (result2[0] == '1') {
-            $('#mBoxContents').html('<p><img src="images/success.gif" align="right" hspace="5" vspace="5" />Database imported successfully.</p>');
+            $('#mBoxContents').html('<p class="text-success"><i class="fa fa-thumbs-up fa-2x"></i> Database imported successfully.</p>');
 
             formSuccess = true;
 
@@ -60,7 +60,7 @@
           } else {
             var result2_error = result2[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-            $('#mBoxContents').html('<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" />There was a problem importing the database. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result2_error));
+            $('#mBoxContents').html('<p class="text-danger"><i class="fa fa-thumbs-down fa-2x text-danger"></i> There was a problem importing the database. The following error had occured:</p><p  class="text-danger"><strong>%s</strong></p><p class="text-danger">Please verify the connection parameters and try again.</p>'.replace('%s', result2_error));
 
             formSubmited = false;
           }
@@ -70,7 +70,7 @@
       } else {
         var result_error = result[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
-        $('#mBoxContents').html('<p><img src="images/failed.gif" align="right" hspace="5" vspace="5" />There was a problem connecting to the database server. The following error had occured:</p><p><strong>%s</strong></p><p>Please verify the connection parameters and try again.</p>'.replace('%s', result_error));
+        $('#mBoxContents').html('<p class="text-danger"><i class="fa fa-thumbs-down fa-2x text-danger"></i> There was a problem connecting to the database server. The following error had occured:</p><p class="text-danger"><strong>%s</strong></p><p class="text-danger">Please verify the connection parameters and try again.</p></div>'.replace('%s', result_error));
 
         formSubmited = false;
       }
@@ -123,7 +123,7 @@
   <div class="col-xs-12 col-sm-push-3 col-sm-9">
 
     <div id="mBox">
-      <div class="alert alert-danger">
+      <div class="well well-sm">
         <div id="mBoxContents"></div>
       </div>
     </div>
