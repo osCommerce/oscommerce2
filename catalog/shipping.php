@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_SHIPPING);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/shipping.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_SHIPPING));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('shipping.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -29,7 +29,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link(FILENAME_DEFAULT)); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('index.php')); ?>
   </div>
 </div>
 
