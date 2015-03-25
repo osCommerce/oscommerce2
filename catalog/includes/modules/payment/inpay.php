@@ -323,8 +323,8 @@ class inpay
         'custom'=>$customer_id,
         'no_note'=>'1',
         'notify_url'=>tep_href_link('ext/modules/payment/inpay/pb_handler.php', '', 'SSL', false, false),
-        'return_url'=>tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
-        'cancel_url'=>tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
+        'return_url'=>tep_href_link('checkout_process.php', '', 'SSL'),
+        'cancel_url'=>tep_href_link('checkout_payment.php', '', 'SSL'),
         'bn'=>'osCommerce22_Default_ST',
         'buyer_email'=>$order->customer['email_address'],
         'merchant_id'=>MODULE_PAYMENT_INPAY_MERCHANT_ID,
@@ -501,7 +501,7 @@ class inpay
         $email_order = STORE_NAME."\n".
         EMAIL_SEPARATOR."\n".
         EMAIL_TEXT_ORDER_NUMBER.' '.$order_id."\n".
-        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$order_id, 'SSL', false)."\n".
+        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link('account_history_info.php', 'order_id='.$order_id, 'SSL', false)."\n".
         EMAIL_TEXT_DATE_ORDERED.' '.strftime(DATE_FORMAT_LONG)."\n\n";
         if ($order->info['comments'])
         {
@@ -565,7 +565,7 @@ class inpay
 
         unset($_SESSION['cart_inpay_Standard_ID']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_success.php', '', 'SSL'));
     }
 
     function after_process()

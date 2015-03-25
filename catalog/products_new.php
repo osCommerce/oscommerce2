@@ -12,9 +12,9 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_PRODUCTS_NEW);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/products_new.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_PRODUCTS_NEW));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('products_new.php'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -112,7 +112,7 @@
   }
 
 
-  include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
+  include('includes/modules/product_listing.php');
 
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
