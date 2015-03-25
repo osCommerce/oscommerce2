@@ -9,13 +9,15 @@
 
   Released under the GNU General Public License
 */
-
-  if ($messageStack->size('header') > 0) {
-    echo '<div>' . $messageStack->output('header') . '</div>';
-  }
-
-  echo $oscTemplate->getContent('header');
 ?>
+
+<div class="modular-header">
+  <?php echo $oscTemplate->getContent('header'); ?>
+</div>
+
+<div class="clearfix"></div>
+
+<div class="body-sans-header clearfix">
 
 <?php
   if (isset($_GET['error_message']) && tep_not_null($_GET['error_message'])) {

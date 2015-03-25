@@ -17,9 +17,8 @@ s, del {
   color: red;
 }
 
-#piGal {
-  float: right;
-  width: 250px;
+.piGal {
+  width: 250px !important;
   margin-bottom: 20px;
 }
 
@@ -242,3 +241,57 @@ footer .footer-extra {
   padding-top: 10px;
 }
 
+footer .footer-extra A {
+  color: white;
+  text-decoration: underline;
+}
+
+/* searchbox ---------------------------------------------------------------- */
+
+.searchbox-margin {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* for the listings module rework ------------------------------------------- */
+
+.productHolder {
+  border: 1px solid #eee;
+  padding: 10px;
+  border-radius: 4px;
+  -webkit-transition: border .5s ease-in-out;
+       -o-transition: border .5s ease-in-out;
+          transition: border .5s ease-in-out;
+}
+
+.productHolder:hover {
+  border: 1px solid #428bca;
+}
+
+.productHolder h2 {
+  font-size: 1.3em;
+}
+
+.item.list-group-item {
+    float: none;
+    width: 100%;
+    background-color: #fff;
+    border: none;
+}
+
+.item.list-group-item img {
+    float: left !important;
+    margin-right: 10px !important;
+}
+
+.grid-group-item {
+  margin-bottom: 20px;
+}
+
+.grid-group-item .list-group-item-text {
+  display: none;
+}
+
+p.lead del {
+  font-size: 0.5em;
+}

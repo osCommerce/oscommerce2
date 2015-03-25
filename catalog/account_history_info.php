@@ -47,31 +47,31 @@
 
   <div class="contentText">
 
-    <div class="panel panel-default">
+    <div class="panel panel-success">
       <div class="panel-heading"><strong><?php echo sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
       <div class="panel-body">
-        <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table-hover order_confirmation">
+        <table class="table table-hover table-striped order_confirmation">
 <?php
   if (sizeof($order->info['tax_groups']) > 1) {
 ?>
           <tr>
-            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
+            <th><?php echo HEADING_PRODUCTS; ?></th>
+            <th><?php echo HEADING_TAX; ?></th>
+            <th><?php echo HEADING_TOTAL; ?></th>
           </tr>
 <?php
   } else {
 ?>
           <tr>
-            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
+            <th colspan="2"><?php echo HEADING_PRODUCTS; ?></th>
+            <th class="text-right"><?php echo HEADING_TOTAL; ?></th>
           </tr>
 <?php
   }
 
   for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
     echo '          <tr>' . "\n" .
-         '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x&nbsp;</td>' . "\n" .
+         '            <td class="text-right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x&nbsp;</td>' . "\n" .
          '            <td valign="top">' . $order->products[$i]['name'];
 
     if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
@@ -83,10 +83,10 @@
     echo '</td>' . "\n";
 
     if (sizeof($order->info['tax_groups']) > 1) {
-      echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+      echo '            <td valign="top" class="text-right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
     }
 
-    echo '            <td align="right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
+    echo '            <td class="text-right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
          '          </tr>' . "\n";
   }
 ?>
@@ -116,7 +116,7 @@
     <?php
     if ($order->delivery != false) {
       ?>
-      <div class="col-sm-6">
+      <div class="col-sm-3">
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>'; ?></div>
           <div class="panel-body">
@@ -127,7 +127,7 @@
       <?php
     }
     ?>
-    <div class="col-sm-6">
+    <div class="col-sm-3">
       <div class="panel panel-warning">
         <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>'; ?></div>
         <div class="panel-body">
@@ -139,7 +139,7 @@
     <?php
     if ($order->info['shipping_method']) {
       ?>
-      <div class="col-sm-6">
+      <div class="col-sm-3">
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>'; ?></div>
           <div class="panel-body">
@@ -150,7 +150,7 @@
       <?php
     }
     ?>
-    <div class="col-sm-6">
+    <div class="col-sm-3">
       <div class="panel panel-warning">
         <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>'; ?></div>
         <div class="panel-body">
@@ -158,8 +158,9 @@
         </div>
       </div>
     </div>
-
   </div>
+  
+  <div class="clearfix"></div>
 
   <div class="page-header">
     <h4><?php echo HEADING_ORDER_HISTORY; ?></h4>
@@ -190,6 +191,7 @@
   if (DOWNLOAD_ENABLED == 'true') include(DIR_WS_MODULES . 'downloads.php');
 ?>
 
+  <div class="clearfix"></div>
   <div>
     <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_ACCOUNT_HISTORY, tep_get_all_get_params(array('order_id')), 'SSL')); ?>
   </div>
