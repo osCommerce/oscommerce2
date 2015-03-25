@@ -19,7 +19,7 @@
 // class constructor
     function currencies() {
       $this->currencies = array();
-      $currencies_query = tep_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from " . TABLE_CURRENCIES);
+      $currencies_query = tep_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from currencies");
       while ($currencies = tep_db_fetch_array($currencies_query)) {
         $this->currencies[$currencies['code']] = array('title' => $currencies['title'],
                                                        'symbol_left' => $currencies['symbol_left'],
