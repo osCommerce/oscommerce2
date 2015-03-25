@@ -1,6 +1,10 @@
 /* DO NOT CHANGE THIS FILE -------------------------------------------------- */
 /* TO OVER-RIDE ANY ASPECT OF THIS CSS, AMEND THE user.css FILE ------------- */
 
+#bodyContent {
+  padding-bottom: 20px;
+}
+
 #storeLogo {
   margin-top: 5px;
 }
@@ -227,11 +231,21 @@ s, del {
 /* Footer  ------------------------------------------------------------------ */
 
 footer .footer {
+  border-top: 2px solid #ddd;
   background: #eee;
 }
 
 footer .footer h2 {
-  font-size: 1.5em;
+  padding: 0;
+  margin-top: 10px;
+  font-size: 1em !important;
+  letter-spacing: 0.1em;
+  color: rgb(142,11,0);
+  text-shadow: 1px 1px 1px rgba(255,255,255,0.6);
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
 }
 
 footer .footer-extra {
@@ -244,6 +258,27 @@ footer .footer-extra {
 footer .footer-extra A {
   color: white;
   text-decoration: underline;
+}
+
+
+
+
+
+
+
+
+
+/* Nav Bars ----------------------------------------------------------------- */
+
+.navbar-no-corners {
+  border-radius: 0 !important;
+  -moz-border-radius: 0 !important;
+  border-left: none;
+  border-right: none;
+}
+
+.navbar-no-margin {
+  margin-bottom: 0 !important;
 }
 
 /* searchbox ---------------------------------------------------------------- */
@@ -295,3 +330,100 @@ footer .footer-extra A {
 p.lead del {
   font-size: 0.5em;
 }
+
+/* Pagination  ------------------------------------------------------- */
+.pagenav {
+   position: relative;
+   top:-25px;
+   left:3px;
+   height: 40px !important;
+}
+.pagenumber {
+  margin-bottom:7px;
+}
+
+/* Responsive Text Alignment ------------------------------------------------ */
+/* https://github.com/twbs/bootstrap/issues/11292 --------------------------- */
+
+.text-left-not-xs, .text-left-not-sm, .text-left-not-md, .text-left-not-lg {
+    text-align: left;
+}
+.text-center-not-xs, .text-center-not-sm, .text-center-not-md, .text-center-not-lg {
+    text-align: center;
+}
+.text-right-not-xs, .text-right-not-sm, .text-right-not-md, .text-right-not-lg {
+    text-align: right;
+}
+.text-justify-not-xs, .text-justify-not-sm, .text-justify-not-md, .text-justify-not-lg {
+    text-align: justify;
+}
+
+@media (max-width: 767px) {
+    .text-left-not-xs, .text-center-not-xs, .text-right-not-xs, .text-justify-not-xs {
+        text-align: inherit;
+    }
+    .text-left-xs {
+        text-align: left;
+    }
+    .text-center-xs {
+        text-align: center;
+    }
+    .text-right-xs {
+        text-align: right;
+    }
+    .text-justify-xs {
+        text-align: justify;
+    }
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    .text-left-not-sm, .text-center-not-sm, .text-right-not-sm, .text-justify-not-sm {
+        text-align: inherit;
+    }
+    .text-left-sm {
+        text-align: left;
+    }
+    .text-center-sm {
+        text-align: center;
+    }
+    .text-right-sm {
+        text-align: right;
+    }
+    .text-justify-sm {
+        text-align: justify;
+    }
+}
+@media (min-width: 992px) and (max-width: 1199px) {
+    .text-left-not-md, .text-center-not-md, .text-right-not-md, .text-justify-not-md {
+        text-align: inherit;
+    }
+    .text-left-md {
+        text-align: left;
+    }
+    .text-center-md {
+        text-align: center;
+    }
+    .text-right-md {
+        text-align: right;
+    }
+    .text-justify-md {
+        text-align: justify;
+    }
+}
+@media (min-width: 1200px) {
+    .text-left-not-lg, .text-center-not-lg, .text-right-not-lg, .text-justify-not-lg {
+        text-align: inherit;
+    }
+    .text-left-lg {
+        text-align: left;
+    }
+    .text-center-lg {
+        text-align: center;
+    }
+    .text-right-lg {
+        text-align: right;
+    }
+    .text-justify-lg {
+        text-align: justify;
+    }
+}
+
