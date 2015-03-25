@@ -142,26 +142,36 @@
     <div class="row">
       <div class="col-sm-6">
 <?php
-      while ($products_options_name = tep_db_fetch_array($products_attributes_query)) {
-        $products_options_array = array();
-        $products_options_query = tep_db_query("select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov where pa.products_id = '" . (int)$_GET['products_id'] . "' and pa.options_id = '" . (int)$products_options_name['products_options_id'] . "' and pa.options_values_id = pov.products_options_values_id and pov.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+        while($products_options_name_array = tep_db_fetch_array($products_attributes_query)) {
+          $products_options_name_arr[$products_options_name_array['products_options_name']] = (int)$products_options_name_array['products_options_id'];
+        }                              
+                                      
+          $products_options_array = array();
+//take all options of the products attributes                                           
+          $products_options_query = tep_db_query("select pa.options_id, pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_ATTRIBUTES . " pa, " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov where pa.products_id = '" . (int)$_GET['products_id'] . "' and pa.options_id in (" .  implode(',', $products_options_name_arr) . ") and pa.options_values_id = pov.products_options_values_id and pov.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+  
         while ($products_options = tep_db_fetch_array($products_options_query)) {
-          $products_options_array[] = array('id' => $products_options['products_options_values_id'], 'text' => $products_options['products_options_values_name']);
+          $text =  $products_options['products_options_values_name'];
+  
           if ($products_options['options_values_price'] != '0') {
-            $products_options_array[sizeof($products_options_array)-1]['text'] .= ' (' . $products_options['price_prefix'] . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) .') ';
-          }
-        }
-
-        if (is_string($_GET['products_id']) && isset($_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']])) {
-          $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'][$products_options_name['products_options_id']];
-        } else {
+            $text .= ' ' . $products_options['price_prefix'] . $currencies->display_price($products_options['options_values_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+          } 
+  
+          $products_options_array[$products_options['options_id']][] = array('id' => $products_options['products_options_values_id'], 
+                                                                   'text' => $text);
+          if (is_string($_GET['products_id']) && !empty($_SESSION['cart']->contents[$_GET['products_id']]['attributes'])) {
+            $selected_attribute = $_SESSION['cart']->contents[$_GET['products_id']]['attributes'];
+          } else {
           $selected_attribute = false;
+          }                                                         
         }
+         
+  foreach ( $products_options_name_arr as $key => $value )  {
 ?>
       <div class="form-group">
-        <label class="control-label col-xs-3"><?php echo $products_options_name['products_options_name'] . ':'; ?></label>
+        <label class="control-label col-xs-3"><?php echo $key . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?>
+          <?php echo tep_draw_pull_down_menu('id[' . $value . ']', $products_options_array[$value], $selected_attribute[$value]); ?>
         </div>
       </div>
     <?php
@@ -169,7 +179,6 @@
 ?>
       </div>
     </div>
-
 <?php
     }
 ?>
