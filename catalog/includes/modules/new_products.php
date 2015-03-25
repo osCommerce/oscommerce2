@@ -24,11 +24,18 @@
 
     while ($new_products = tep_db_fetch_array($new_products_query)) {
       $new_prods_content .= '<div class="col-sm-6 col-md-4">';
-      $new_prods_content .= '  <div class="thumbnail">';
+      $new_prods_content .= '  <div class="thumbnail equal-height">';
       $new_prods_content .= '    <a href="' . tep_href_link('product_info.php', 'products_id=' . $new_products['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $new_products['products_image'], $new_products['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
       $new_prods_content .= '    <div class="caption">';
       $new_prods_content .= '      <p class="text-center"><a href="' . tep_href_link('product_info.php', 'products_id=' . $new_products['products_id']) . '">' . $new_products['products_name'] . '</a></p>';
+      $new_prods_content .= '      <hr>';
       $new_prods_content .= '      <p class="text-center">' . $currencies->display_price($new_products['products_price'], tep_get_tax_rate($new_products['products_tax_class_id'])) . '</p>';
+      $new_prods_content .= '      <div class="text-center">';
+      $new_prods_content .= '        <div class="btn-group">';
+      $new_prods_content .= '          <a href="' . tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . $new_products['products_id']) . '" class="btn btn-default" role="button">' . SMALL_IMAGE_BUTTON_VIEW . '</a>';
+      $new_prods_content .= '          <a href="' . tep_href_link($PHP_SELF, tep_get_all_get_params(array('action')) . 'action=buy_now&products_id=' . $new_products['products_id']) . '" class="btn btn-success" role="button">' . SMALL_IMAGE_BUTTON_BUY . '</a>';
+      $new_prods_content .= '        </div>';
+      $new_prods_content .= '      </div>';
       $new_prods_content .= '    </div>';
       $new_prods_content .= '  </div>';
       $new_prods_content .= '</div>';
