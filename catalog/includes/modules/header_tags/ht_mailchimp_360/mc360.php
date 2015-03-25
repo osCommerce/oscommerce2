@@ -41,11 +41,11 @@ class mc360 {
                 return;
             } else {
                 $this->key_valid = true;
-                tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = 'true' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_KEY_VALID'");
+                tep_db_query("update configuration set configuration_value = 'true' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_KEY_VALID'");
                 
                 if (empty($this->store_id)){
                     $this->store_id = md5(uniqid(rand(), true));
-                    tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $this->store_id . "' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_STORE_ID'");
+                    tep_db_query("update configuration set configuration_value = '" . $this->store_id . "' where configuration_key = 'MODULE_HEADER_TAGS_MAILCHIMP_360_STORE_ID'");
                 }
             }
         }
@@ -101,17 +101,17 @@ class mc360 {
 
         $customer_id = $_SESSION['customer_id'];
 
-        $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
+        $orders_query = tep_db_query("select orders_id from orders where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
         $orders = tep_db_fetch_array($orders_query);
 
         $totals_array = array();
-        $totals_query = tep_db_query("select value, class from " . TABLE_ORDERS_TOTAL . " where orders_id = " . (int)$orders['orders_id']);
+        $totals_query = tep_db_query("select value, class from orders_total where orders_id = " . (int)$orders['orders_id']);
         while ($totals = tep_db_fetch_array($totals_query)) {
             $totals_array[$totals['class']] = $totals['value'];
         }
         
         $products_array = array();
-        $products_query = tep_db_query("select products_id, products_model, products_name, products_tax, products_quantity, final_price from " . TABLE_ORDERS_PRODUCTS . " where orders_id = " . (int)$orders['orders_id']);
+        $products_query = tep_db_query("select products_id, products_model, products_name, products_tax, products_quantity, final_price from orders_products where orders_id = " . (int)$orders['orders_id']);
         while ($products = tep_db_fetch_array($products_query)) {
             $products_array[] = array('id' => $products['products_id'],
                                     'name' => $products['products_name'],
@@ -145,7 +145,7 @@ class mc360 {
             $item['cost'] = $product['final_price'];
 
             //All this to get a silly category name from here
-            $cat_qry = tep_db_query("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = " . (int)$product['id']." limit 1");
+            $cat_qry = tep_db_query("select categories_id from products_to_categories where products_id = " . (int)$product['id']." limit 1");
             $cats = tep_db_fetch_array($cat_qry);
             $cat_id = $cats['categories_id'];
             
@@ -154,7 +154,7 @@ class mc360 {
             $continue = true; 
             while($continue){            
             //now recurse up the categories tree...
-                $cat_qry = tep_db_query("select c.categories_id, c.parent_id, cd.categories_name from  " . TABLE_CATEGORIES . " c inner join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where c.categories_id =".$cat_id);
+                $cat_qry = tep_db_query("select c.categories_id, c.parent_id, cd.categories_name from categories c inner join categories_description cd on c.categories_id = cd.categories_id where c.categories_id =".$cat_id);
                 $cats = tep_db_fetch_array($cat_qry);
                 if ($cat_name == ''){
                     $cat_name = $cats['categories_name'];

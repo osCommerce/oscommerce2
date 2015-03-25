@@ -41,7 +41,7 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_2CHECKOUT_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_2CHECKOUT_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_PAYMENT_2CHECKOUT_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
         while ($check = tep_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
@@ -116,7 +116,7 @@
 
       $process_button_string .= tep_draw_hidden_field('return_url', tep_href_link('shopping_cart.php'));
 
-      $lang_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $lang_query = tep_db_query("select code from languages where languages_id = '" . (int)$_SESSION['languages_id'] . "'");
       $lang = tep_db_fetch_array($lang_query);
 
       switch (strtolower($lang['code'])) {
@@ -147,7 +147,7 @@
                                 'customer_notified' => '0',
                                 'comments' => MODULE_PAYMENT_2CHECKOUT_TEXT_WARNING_DEMO_MODE);
 
-        tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+        tep_db_perform('orders_status_history', $sql_data_array);
       }
 
 // The KEY value returned from the gateway is intentionally broken for Test transactions so it is only checked in Production mode
@@ -159,7 +159,7 @@
                                   'customer_notified' => '0',
                                   'comments' => MODULE_PAYMENT_2CHECKOUT_TEXT_WARNING_TRANSACTION_ORDER);
 
-          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+          tep_db_perform('orders_status_history', $sql_data_array);
         }
       }
     }
@@ -173,26 +173,26 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_2CHECKOUT_STATUS'");
+        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_PAYMENT_2CHECKOUT_STATUS'");
         $this->_check = tep_db_num_rows($check_query);
       }
       return $this->_check;
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable 2Checkout', 'MODULE_PAYMENT_2CHECKOUT_STATUS', 'False', 'Do you want to accept 2CheckOut payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Account', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', '', 'The vendor account number for the 2Checkout gateway.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'Test', 'Transaction mode used for the 2Checkout gateway.', '6', '0', 'tep_cfg_select_option(array(\'Test\', \'Production\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', '', 'The secret word to confirm transactions with. (Must be the same as defined on the Vendor Admin interface)', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Payment Routine', 'MODULE_PAYMENT_2CHECKOUT_ROUTINE', 'Multi-Page', 'The payment routine to use on the 2Checkout gateway.', '6', '0', 'tep_cfg_select_option(array(\'Multi-Page\', \'Single-Page\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Processing Currency', 'MODULE_PAYMENT_2CHECKOUT_CURRENCY', '" . DEFAULT_CURRENCY . "', 'The currency to process transactions in. (Must be the same as defined on the Vendor Admin interface)', '6', '0', 'pm2checkout::getCurrencies(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER', '0', 'Sort order of display. (Lowest is displayed first)', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_2CHECKOUT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable 2Checkout', 'MODULE_PAYMENT_2CHECKOUT_STATUS', 'False', 'Do you want to accept 2CheckOut payments?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Vendor Account', 'MODULE_PAYMENT_2CHECKOUT_LOGIN', '', 'The vendor account number for the 2Checkout gateway.', '6', '0', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Transaction Mode', 'MODULE_PAYMENT_2CHECKOUT_TESTMODE', 'Test', 'Transaction mode used for the 2Checkout gateway.', '6', '0', 'tep_cfg_select_option(array(\'Test\', \'Production\'), ', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Secret Word', 'MODULE_PAYMENT_2CHECKOUT_SECRET_WORD', '', 'The secret word to confirm transactions with. (Must be the same as defined on the Vendor Admin interface)', '6', '0', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Payment Routine', 'MODULE_PAYMENT_2CHECKOUT_ROUTINE', 'Multi-Page', 'The payment routine to use on the 2Checkout gateway.', '6', '0', 'tep_cfg_select_option(array(\'Multi-Page\', \'Single-Page\'), ', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Processing Currency', 'MODULE_PAYMENT_2CHECKOUT_CURRENCY', '" . DEFAULT_CURRENCY . "', 'The currency to process transactions in. (Must be the same as defined on the Vendor Admin interface)', '6', '0', 'pm2checkout::getCurrencies(', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_PAYMENT_2CHECKOUT_SORT_ORDER', '0', 'Sort order of display. (Lowest is displayed first)', '6', '0', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_2CHECKOUT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_2CHECKOUT_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value.', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
@@ -219,7 +219,7 @@
 
       $currencies_array = array();
 
-      $currencies_query = tep_db_query("select code, title from " . TABLE_CURRENCIES . " order by title");
+      $currencies_query = tep_db_query("select code, title from currencies order by title");
       while ($currencies = tep_db_fetch_array($currencies_query)) {
         $currencies_array[] = array('id' => $currencies['code'],
                                     'text' => $currencies['title']);

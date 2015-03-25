@@ -42,7 +42,7 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
+        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
         while ($check = tep_db_fetch_array($check_query)) {
           if ($check['zone_id'] < 1) {
             $check_flag = true;
@@ -69,15 +69,15 @@
       if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
         $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
-        $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
+        $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
         if (tep_db_num_rows($check_query) < 1) {
-          tep_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders where orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_total where orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_status_history where orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_productswhere orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_products_attributes where orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_products_download where orders_id = "' . (int)$order_id . '"');
 
           unset($_SESSION['cart_Sofortueberweisung_Direct_ID']);
         }
@@ -109,19 +109,19 @@
       if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
         $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
-        $curr_check = tep_db_query("select currency from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+        $curr_check = tep_db_query("select currency from orders where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
         if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_Sofortueberweisung_Direct_ID, 0, strlen($cartID))) ) {
-          $check_query = tep_db_query('select orders_id from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '" limit 1');
+          $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
-            tep_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$order_id . '"');
-            tep_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders where orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders_total where orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders_status_history where orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders_productswhere orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders_products_attributes where orders_id = "' . (int)$order_id . '"');
+            tep_db_query('delete from orders_products_download where orders_id = "' . (int)$order_id . '"');
           }
 
           $insert_order = true;
@@ -190,7 +190,7 @@
                                 'currency' => $order->info['currency'],
                                 'currency_value' => $order->info['currency_value']);
 
-        tep_db_perform(TABLE_ORDERS, $sql_data_array);
+        tep_db_perform('orders', $sql_data_array);
 
         $insert_id = tep_db_insert_id();
 
@@ -202,7 +202,7 @@
                                   'class' => $order_totals[$i]['code'],
                                   'sort_order' => $order_totals[$i]['sort_order']);
 
-          tep_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+          tep_db_perform('orders_total', $sql_data_array);
         }
 
         for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
@@ -215,7 +215,7 @@
                                   'products_tax' => $order->products[$i]['tax'],
                                   'products_quantity' => $order->products[$i]['qty']);
 
-          tep_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
+          tep_db_perform('orders_products', $sql_data_array);
 
           $order_products_id = tep_db_insert_id();
 
@@ -225,8 +225,8 @@
             for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
               if (DOWNLOAD_ENABLED == 'true') {
                 $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
-                                     from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                     left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                                     from products_options popt, products_options_values poval, products_attributes pa
+                                     left join products_attributes_download pad
                                      on pa.products_attributes_id=pad.products_attributes_id
                                      where pa.products_id = '" . $order->products[$i]['id'] . "'
                                      and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
@@ -237,7 +237,7 @@
                                      and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
                 $attributes = tep_db_query($attributes_query);
               } else {
-                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+                $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from products_options popt, products_options_values poval, products_attributes pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
               }
               $attributes_values = tep_db_fetch_array($attributes);
 
@@ -248,7 +248,7 @@
                                       'options_values_price' => $attributes_values['options_values_price'],
                                       'price_prefix' => $attributes_values['price_prefix']);
 
-              tep_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
+              tep_db_perform(orders_products_attributes, $sql_data_array);
 
               if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename'])) {
                 $sql_data_array = array('orders_id' => $insert_id,
@@ -257,7 +257,7 @@
                                         'download_maxdays' => $attributes_values['products_attributes_maxdays'],
                                         'download_count' => $attributes_values['products_attributes_maxcount']);
 
-                tep_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
+                tep_db_perform('orders_products_download', $sql_data_array);
               }
             }
           }
@@ -355,7 +355,7 @@
 
       $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
 
-      $check_query = tep_db_query("select orders_status from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
+      $check_query = tep_db_query("select orders_status from orders where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
         $check = tep_db_fetch_array($check_query);
 
@@ -376,11 +376,11 @@
             $sql_data_array['comments'] = (!empty($sql_data_array['comments']) ? $sql_data_array['comments'] . "\n\n" : '') . serialize($_GET) . "\n" . serialize($_POST);
           }
 
-          tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+          tep_db_perform('orders_status_history', $sql_data_array);
         }
       }
 
-      tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
+      tep_db_query("update orders set orders_status = '" . (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID) . "', last_modified = now() where orders_id = '" . (int)$order_id . "'");
 
       $sql_data_array = array('orders_id' => $order_id,
                               'orders_status_id' => (MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID > 0 ? (int)MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID : (int)DEFAULT_ORDERS_STATUS_ID),
@@ -388,7 +388,7 @@
                               'customer_notified' => (SEND_EMAILS == 'true') ? '1' : '0',
                               'comments' => $order->info['comments']);
 
-      tep_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+      tep_db_perform('orders_status_history', $sql_data_array);
 
 // initialized for the email confirmation
       $products_ordered = '';
@@ -400,10 +400,10 @@
         if (STOCK_LIMITED == 'true') {
           if (DOWNLOAD_ENABLED == 'true') {
             $stock_query_raw = "SELECT products_quantity, pad.products_attributes_filename
-                                FROM " . TABLE_PRODUCTS . " p
-                                LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES . " pa
+                                FROM products p
+                                LEFT JOIN products_attributes pa
                                 ON p.products_id=pa.products_id
-                                LEFT JOIN " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                                LEFT JOIN products_attributes_download pad
                                 ON pa.products_attributes_id=pad.products_attributes_id
                                 WHERE p.products_id = '" . tep_get_prid($order->products[$i]['id']) . "'";
 // Will work with only one option for downloadable products
@@ -414,7 +414,7 @@
             }
             $stock_query = tep_db_query($stock_query_raw);
           } else {
-            $stock_query = tep_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            $stock_query = tep_db_query("select products_quantity from products where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
           }
           if (tep_db_num_rows($stock_query) > 0) {
             $stock_values = tep_db_fetch_array($stock_query);
@@ -424,15 +424,15 @@
             } else {
               $stock_left = $stock_values['products_quantity'];
             }
-            tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+            tep_db_query("update products set products_quantity = '" . $stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
             if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-              tep_db_query("update " . TABLE_PRODUCTS . " set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+              tep_db_query("update products set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
             }
           }
         }
 
 // Update products_ordered (for bestsellers list)
-        tep_db_query("update " . TABLE_PRODUCTS . " set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+        tep_db_query("update products set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
 
 //------insert customer choosen option to order--------
         $attributes_exist = '0';
@@ -442,8 +442,8 @@
           for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
             if (DOWNLOAD_ENABLED == 'true') {
               $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
-                                   from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                   left join " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " pad
+                                   from products_options popt, products_options_values poval, products_attributes pa
+                                   left join products_attributes_download pad
                                    on pa.products_attributes_id=pad.products_attributes_id
                                    where pa.products_id = '" . $order->products[$i]['id'] . "'
                                    and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "'
@@ -454,7 +454,7 @@
                                    and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
               $attributes = tep_db_query($attributes_query);
             } else {
-              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from " . TABLE_PRODUCTS_OPTIONS . " popt, " . TABLE_PRODUCTS_OPTIONS_VALUES . " poval, " . TABLE_PRODUCTS_ATTRIBUTES . " pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+              $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from products_options popt, products_options_values poval, products_attributes pa where pa.products_id = '" . $order->products[$i]['id'] . "' and pa.options_id = '" . $order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . $order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
             }
             $attributes_values = tep_db_fetch_array($attributes);
 
@@ -545,7 +545,7 @@
 
     function check() {
       if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS'");
+        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS'");
         $this->_check = tep_db_num_rows($check_query);
       }
       return $this->_check;
@@ -558,10 +558,10 @@
       $bna_passwort = (isset($_GET['bna_passwort']) && !empty($_GET['bna_passwort'])) ? tep_db_prepare_input($_GET['bna_passwort']) : '';
       $cnt_passwort = (isset($_GET['cnt_passwort']) && !empty($_GET['cnt_passwort'])) ? tep_db_prepare_input($_GET['cnt_passwort']) : '';
 
-      $check_query = tep_db_query("select orders_status_id from " . TABLE_ORDERS_STATUS . " where orders_status_name = 'Sofort�berweisung Vorbereitung' limit 1");
+      $check_query = tep_db_query("select orders_status_id from orders_status where orders_status_name = 'Sofort�berweisung Vorbereitung' limit 1");
 
       if (tep_db_num_rows($check_query) < 1) {
-        $status_query = tep_db_query("select max(orders_status_id) as status_id from " . TABLE_ORDERS_STATUS);
+        $status_query = tep_db_query("select max(orders_status_id) as status_id from orders_status");
         $status = tep_db_fetch_array($status_query);
 
         $status_id = $status['status_id']+1;
@@ -569,12 +569,12 @@
         $languages = tep_get_languages();
 
         for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofort�berweisung Vorbereitung')");
+          tep_db_query("insert into orders_status (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $languages[$i]['id'] . "', 'Sofort�berweisung Vorbereitung')");
         }
 
-        $flags_query = tep_db_query("describe " . TABLE_ORDERS_STATUS . " public_flag");
+        $flags_query = tep_db_query("describe orders_status public_flag");
         if (tep_db_num_rows($flags_query) == 1) {
-          tep_db_query("update " . TABLE_ORDERS_STATUS . " set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+          tep_db_query("update orders_status set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
         }
       } else {
         $check = tep_db_fetch_array($check_query);
@@ -582,21 +582,21 @@
         $status_id = $check['orders_status_id'];
       }
 
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sofort�berweisung direkter Modus aktivieren', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS', 'True', 'Bezahlung per Sofort�berweisung acceptieren?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Kundennummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR', '" . (int)$kdnr . "', 'Ihre Kundennummer bei der Sofort�berweisung', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Projektnummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT', '" . (int)$projekt . "', 'Die verantwortliche Projektnummer bei der Sofort�berweisung, zu der die Zahlung geh�rt', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Input-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_INPUT_PASSWORT', '" . tep_db_input($input_passwort) . "', 'Das Input-Passwort (unter Nicht �nderbare Parameter / Input-Passwort)', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Benachrichtigung-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT', '" . tep_db_input($bna_passwort) . "', 'Das Benachrichtigung-Passwort (unter Benachrichtigungen festlegen)', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Contentpasswort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT', '" . tep_db_input($cnt_passwort) . "', 'Das Contentpasswort (unter Content-Passwort)', '6', '1', now());");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Preparing Order Status', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', 'Order Status vor Eingang Bestellung', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID', '0', 'Order Status nach Eingang Bestellung', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Store Transactiondetails', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS', 'False', 'Transactionsdetails bei Benachrichtigung in das Kommentarfeld speichern (zum debuggen, ist f�r Kunden via Konto sichtbar)', '6', '2', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Sofort�berweisung direkter Modus aktivieren', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STATUS', 'True', 'Bezahlung per Sofort�berweisung acceptieren?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Kundennummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR', '" . (int)$kdnr . "', 'Ihre Kundennummer bei der Sofort�berweisung', '6', '1', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Projektnummer:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PROJEKT', '" . (int)$projekt . "', 'Die verantwortliche Projektnummer bei der Sofort�berweisung, zu der die Zahlung geh�rt', '6', '1', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Input-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_INPUT_PASSWORT', '" . tep_db_input($input_passwort) . "', 'Das Input-Passwort (unter Nicht �nderbare Parameter / Input-Passwort)', '6', '1', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Benachrichtigung-Passwort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_BNA_PASSWORT', '" . tep_db_input($bna_passwort) . "', 'Das Benachrichtigung-Passwort (unter Benachrichtigungen festlegen)', '6', '1', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Contentpasswort:', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT', '" . tep_db_input($cnt_passwort) . "', 'Das Contentpasswort (unter Content-Passwort)', '6', '1', now());");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Preparing Order Status', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', 'Order Status vor Eingang Bestellung', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_ORDER_STATUS_ID', '0', 'Order Status nach Eingang Bestellung', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Store Transactiondetails', 'MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_STORE_TRANSACTION_DETAILS', 'False', 'Transactionsdetails bei Benachrichtigung in das Kommentarfeld speichern (zum debuggen, ist f�r Kunden via Konto sichtbar)', '6', '2', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());");
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
