@@ -3,7 +3,7 @@
  $Id: pb_handler.php VER: 1.0.3414 $
  osCommerce, Open Source E-Commerce Solutions
  http://www.oscommerce.com
- Copyright (c) 2008 osCommerce
+ Copyright (c) 2015 osCommerce
  Released under the GNU General Public License
  */
 
