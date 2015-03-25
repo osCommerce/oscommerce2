@@ -15,16 +15,16 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $navigation->set_snapshot();
-    tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
+    tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link(FILENAME_SHOPPING_CART));
+    tep_redirect(tep_href_link('shopping_cart.php'));
   }
 
   // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_CHECKOUT_SHIPPING_ADDRESS);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping_address.php');
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
@@ -36,7 +36,7 @@
     $shipping = false;
     if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
     $sendto = false;
-    tep_redirect(tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
   }
 
   $error = false;
@@ -104,11 +104,11 @@
 
       if (ACCOUNT_STATE == 'true') {
         $zone_id = 0;
-        $check_query = tep_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "'");
+        $check_query = tep_db_query("select count(*) as total from zones where zone_country_id = '" . (int)$country . "'");
         $check = tep_db_fetch_array($check_query);
         $entry_state_has_zones = ($check['total'] > 0);
         if ($entry_state_has_zones == true) {
-          $zone_query = tep_db_query("select distinct zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
+          $zone_query = tep_db_query("select distinct zone_id from zones where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
           if (tep_db_num_rows($zone_query) == 1) {
             $zone = tep_db_fetch_array($zone_query);
             $zone_id = $zone['zone_id'];
@@ -156,13 +156,13 @@
 
         if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
 
-        tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
+        tep_db_perform('address_book', $sql_data_array);
 
         $sendto = tep_db_insert_id();
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -179,12 +179,12 @@
 
       $sendto = $_POST['address'];
 
-      $check_address_query = tep_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
+      $check_address_query = tep_db_query("select count(*) as total from address_book where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
       $check_address = tep_db_fetch_array($check_address_query);
 
       if ($check_address['total'] == '1') {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
       } else {
         unset($_SESSION['sendto']);
       }
@@ -192,7 +192,7 @@
       if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
       $sendto = $customer_default_address_id;
 
-      tep_redirect(tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+      tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
     }
   }
 
@@ -201,8 +201,8 @@
     $sendto = $customer_default_address_id;
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('checkout_shipping_address.php', '', 'SSL'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
@@ -219,7 +219,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('checkout_address', tep_href_link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -275,7 +275,7 @@
 <?php
       $radio_buttons = 0;
 
-      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customer_id . "'");
+      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from address_book where customers_id = '" . (int)$customer_id . "'");
       while ($addresses = tep_db_fetch_array($addresses_query)) {
         $format_id = tep_get_address_format_id($addresses['country_id']);
 
@@ -319,40 +319,22 @@
     </div>
   </div>
 
-  <?php require(DIR_WS_MODULES . 'checkout_new_address.php'); ?>
+  <?php require('includes/modules/checkout_new_address.php'); ?>
 
 <?php
   }
 ?>
 
   <div class="contentText">
-    <div style="float: left; width: 60%; padding-top: 5px; padding-left: 15%;">
-      <div id="coProgressBar" style="height: 5px;"></div>
-
-      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-        <tr>
-          <td align="center" width="33%" class="checkoutBarCurrent"><?php echo '<a href="' . tep_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL') . '" class="checkoutBarCurrent">' . CHECKOUT_BAR_DELIVERY . '</a>'; ?></td>
-          <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_PAYMENT; ?></td>
-          <td align="center" width="33%" class="checkoutBarTo"><?php echo CHECKOUT_BAR_CONFIRMATION; ?></td>
-        </tr>
-      </table>
-    </div>
-
     <div><?php echo tep_draw_hidden_field('action', 'submit') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
-
-<script type="text/javascript">
-$('#coProgressBar').progressbar({
-  value: 33
-});
-</script>
 
 <?php
   if ($process == true) {
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL')); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('checkout_shipping_address.php', '', 'SSL')); ?>
   </div>
 
 <?php
