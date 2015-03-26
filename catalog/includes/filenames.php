@@ -11,11 +11,6 @@
 */
 
 // define the filenames used in the project
-  define('FILENAME_ACCOUNT', 'account.php');
-  define('FILENAME_ACCOUNT_EDIT', 'account_edit.php');
-  define('FILENAME_ACCOUNT_HISTORY', 'account_history.php');
-  define('FILENAME_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
-  define('FILENAME_ACCOUNT_NEWSLETTERS', 'account_newsletters.php');
   define('FILENAME_ACCOUNT_NOTIFICATIONS', 'account_notifications.php');
   define('FILENAME_ACCOUNT_PASSWORD', 'account_password.php');
   define('FILENAME_ADDRESS_BOOK', 'address_book.php');
