@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2015 osCommerce
+  Copyright (c) 2012 osCommerce
 
   Released under the GNU General Public License
 */
@@ -68,7 +68,7 @@
   }
 
   if (tep_not_null($product_info['products_model'])) {
-    $products_name = $product_info['products_name'] . '<br /><span class="smallText">[' . $product_info['products_model'] . ']</span>';
+    $products_name = $product_info['products_name'] . ' <small>[' . $product_info['products_model'] . ']</small>';
   } else {
     $products_name = $product_info['products_name'];
   }
@@ -79,8 +79,10 @@
 ?>
 
 <div class="page-header">
-  <h1 class="pull-right"><?php echo $products_price; ?></h1>
-  <h1><?php echo $products_name; ?></h1>
+  <div class="row">
+    <h1 class="col-sm-8"><?php echo $products_name; ?></h1>
+    <h1 class="col-sm-4 text-right-not-xs"><?php echo $products_price; ?></h1>
+  </div>
 </div>
 
 <?php
@@ -89,7 +91,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . $_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . (int)$_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -98,7 +100,7 @@
 ?>
 
     <div class="col-sm-4 text-center pull-right">
-      <?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $product_info['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$product_info['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $product_info['products_image'], addslashes($product_info['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
       <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
@@ -115,12 +117,12 @@
 
   <div class="contentText">
     <div class="row">
-      <p class="col-xs-3 text-right"><strong><?php echo SUB_TITLE_FROM; ?></strong></p>
-      <p class="col-xs-9"><?php echo tep_output_string_protected($customer['customers_firstname'] . ' ' . $customer['customers_lastname']); ?></p>
+      <p class="col-sm-3 text-right-not-xs"><strong><?php echo SUB_TITLE_FROM; ?></strong></p>
+      <p class="col-sm-9"><?php echo tep_output_string_protected($customer['customers_firstname'] . ' ' . $customer['customers_lastname']); ?></p>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputReview" class="control-label col-xs-3"><?php echo SUB_TITLE_REVIEW; ?></label>
-      <div class="col-xs-9">
+      <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>
+      <div class="col-sm-9">
         <?php
         echo tep_draw_textarea_field('review', 'soft', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . SUB_TITLE_REVIEW . '"');
         echo FORM_REQUIRED_INPUT;
@@ -128,8 +130,8 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-xs-3"><?php echo SUB_TITLE_RATING; ?></label>
-      <div class="col-xs-9">
+      <label class="control-label col-sm-3"><?php echo SUB_TITLE_RATING; ?></label>
+      <div class="col-sm-9">
         <div class="radio">
           <label>
             <?php echo tep_draw_radio_field('rating', '5') . tep_draw_stars(5, false) . ' ' . TEXT_GOOD; ?>
@@ -164,8 +166,8 @@
   <div class="clearfix"></div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+    <div class="col-xs-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
   </div>
 
 </div>
