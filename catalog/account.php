@@ -17,9 +17,9 @@
     tep_redirect(tep_href_link(FILENAME_LOGIN, '', 'SSL'));
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_ACCOUNT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . 'account.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('account.php', '', 'SSL'));
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
