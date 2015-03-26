@@ -177,23 +177,13 @@
   $radio_buttons = 0;
   for ($i=0, $n=sizeof($selection); $i<$n; $i++) {
 ?>
-
-
-
-<?php
-    if ( ($selection[$i]['id'] == $payment) || ($n == 1) ) {
-      echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
-    } else {
-      echo '      <tr class="moduleRow">' . "\n";
-    }
-?>
-
+      <tr>
         <td><strong><?php echo $selection[$i]['module']; ?></strong></td>
         <td align="right">
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $payment));
+      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $payment), 'required aria-required="true"');
     } else {
       echo tep_draw_hidden_field('payment', $selection[$i]['id']);
     }
