@@ -71,7 +71,7 @@
     $average = tep_db_fetch_array($average_query);
 
     echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
-    echo '  <meta itemprop="ratingValue" content="' . (int)round($average['average']) . '" />';
+    echo '  <meta itemprop="ratingValue" content="' . max(1, (int)round($average['average'])) . '" />';
     echo '  <meta itemprop="bestRating" content="5" />';
     echo    sprintf(REVIEWS_TEXT_AVERAGE, tep_output_string_protected($average['count']), tep_draw_stars(tep_output_string_protected(round($average['average']))));
     echo '</div>';
