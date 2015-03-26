@@ -232,8 +232,8 @@ define('FORM_REQUIRED_INPUT', '<span><span class="glyphicon glyphicon-asterisk f
 define('TEXT_SEARCH_PLACEHOLDER', 'Search Keywords...');
 
 // reviews
-define('REVIEWS_TEXT_RATED', 'Rated %s by <cite title="%s">%s</cite>');
-define('REVIEWS_TEXT_AVERAGE', 'Average rating based on %s review(s) %s');
+define('REVIEWS_TEXT_RATED', 'Rated %s by <span title="%s" itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">%s</span></span>');
+define('REVIEWS_TEXT_AVERAGE', 'Average rating based on <span itemprop="ratingCount">%s</span> review(s) %s');
 
 // product notifications
 define('PRODUCT_SUBSCRIBED', '%s has been added to your Notification List');
