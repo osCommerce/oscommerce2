@@ -51,7 +51,7 @@ define('TITLE', STORE_NAME);
 
 // header text in includes/header.php
 define('HEADER_TITLE_MY_ACCOUNT', 'My Account');
-define('HEADER_TITLE_TOP', 'Top');
+define('HEADER_TITLE_TOP', '<i class="glyphicon glyphicon-home"><span class="sr-only">Home</span></i>');
 define('HEADER_TITLE_CATALOG', 'Catalog');
 
 // text for gender
