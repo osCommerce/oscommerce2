@@ -18,10 +18,10 @@ define('FORM_TITLE_CUSTOMER_DETAILS', 'Your Details');
 define('FORM_TITLE_FRIEND_DETAILS', 'Your Friends Details');
 define('FORM_TITLE_FRIEND_MESSAGE', 'Your Message');
 
-define('FORM_FIELD_CUSTOMER_NAME', 'Your Name:');
-define('FORM_FIELD_CUSTOMER_EMAIL', 'Your E-Mail Address:');
-define('FORM_FIELD_FRIEND_NAME', 'Your Friends Name:');
-define('FORM_FIELD_FRIEND_EMAIL', 'Your Friends E-Mail Address:');
+define('FORM_FIELD_CUSTOMER_NAME', 'Your Name');
+define('FORM_FIELD_CUSTOMER_EMAIL', 'Your E-Mail Address');
+define('FORM_FIELD_FRIEND_NAME', 'Your Friends Name');
+define('FORM_FIELD_FRIEND_EMAIL', 'Your Friends E-Mail Address');
 
 define('TEXT_EMAIL_SUCCESSFUL_SENT', 'Your email about <strong>%s</strong> has been successfully sent to <strong>%s</strong>.');
 

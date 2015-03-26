@@ -19,13 +19,13 @@ define('HEADING_TITLE_2', 'Products meeting the search criteria');
 define('HEADING_SEARCH_CRITERIA', 'Search Criteria');
 
 define('TEXT_SEARCH_IN_DESCRIPTION', 'Search In Product Descriptions');
-define('ENTRY_CATEGORIES', 'Categories:');
+define('ENTRY_CATEGORIES', 'Categories');
 define('ENTRY_INCLUDE_SUBCATEGORIES', 'Include Subcategories');
-define('ENTRY_MANUFACTURERS', 'Manufacturers:');
-define('ENTRY_PRICE_FROM', 'Price From:');
-define('ENTRY_PRICE_TO', 'Price To:');
-define('ENTRY_DATE_FROM', 'Date From:');
-define('ENTRY_DATE_TO', 'Date To:');
+define('ENTRY_MANUFACTURERS', 'Manufacturers');
+define('ENTRY_PRICE_FROM', 'Price From');
+define('ENTRY_PRICE_TO', 'Price To');
+define('ENTRY_DATE_FROM', 'Date From');
+define('ENTRY_DATE_TO', 'Date To');
 
 define('TEXT_SEARCH_HELP_LINK', '<u>Search Help</u> [?]');
 

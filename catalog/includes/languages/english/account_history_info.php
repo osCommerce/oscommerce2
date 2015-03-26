@@ -17,8 +17,8 @@ define('NAVBAR_TITLE_3', 'Order #%s');
 define('HEADING_TITLE', 'Order Information');
 
 define('HEADING_ORDER_NUMBER', 'Order #%s');
-define('HEADING_ORDER_DATE', 'Order Date:');
-define('HEADING_ORDER_TOTAL', 'Order Total:');
+define('HEADING_ORDER_DATE', 'Order Date');
+define('HEADING_ORDER_TOTAL', 'Order Total');
 
 define('HEADING_DELIVERY_ADDRESS', 'Delivery Address');
 define('HEADING_SHIPPING_METHOD', 'Shipping Method');
