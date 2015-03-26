@@ -179,7 +179,7 @@
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $products_options_name['products_options_name'] . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute); ?>
+          <?php echo tep_draw_pull_down_menu('id[' . $products_options_name['products_options_id'] . ']', $products_options_array, $selected_attribute, '', true); ?>
         </div>
       </div>
     <?php
