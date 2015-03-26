@@ -201,6 +201,7 @@ define('IMAGE_BUTTON_WRITE_REVIEW', 'Write Review');
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');
 define('SMALL_IMAGE_BUTTON_VIEW', 'View');
+define('SMALL_IMAGE_BUTTON_BUY', 'Buy');
 
 define('ICON_ARROW_RIGHT', 'more');
 
