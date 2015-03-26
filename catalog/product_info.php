@@ -22,8 +22,8 @@
   $product_info = tep_db_fetch_array($product_info_query);
 
   if (isset($product_info['products_model'])) {
-// add the products model to the breadcrumb trail
-  $breadcrumb->add($product_info['products_model'], tep_href_link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
+    // add the products model to the breadcrumb trail
+    $breadcrumb->add($product_info['products_model'], tep_href_link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
   }
   
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -50,23 +50,35 @@
     tep_db_query("update products_description set products_viewed = products_viewed+1 where products_id = '" . (int)$_GET['products_id'] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
 
     if ($new_price = tep_get_products_special_price($product_info['products_id'])) {
-      $products_price = '<del>' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
+      $products_price = '<del>' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</del> <span class="productSpecialPrice" itemprop="price">' . $currencies->display_price($new_price, tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
     } else {
-      $products_price = $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id']));
+      $products_price = '<span itemprop="price">' . $currencies->display_price($product_info['products_price'], tep_get_tax_rate($product_info['products_tax_class_id'])) . '</span>';
+    }
+    
+    if ($product_info['products_date_available'] > date('Y-m-d H:i:s')) {
+      $products_price .= '<link itemprop="availability" href="http://schema.org/PreOrder" />';
+    } elseif ((STOCK_CHECK == 'true') && ($product_info['products_quantity'] < 1)) {
+      $products_price .= '<link itemprop="availability" href="http://schema.org/OutOfStock" />';
+    } else {
+      $products_price .= '<link itemprop="availability" href="http://schema.org/InStock" />';
     }
 
+    $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($currency) . '" />';
+
+    $products_name = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $product_info['products_id']) . '" itemprop="url"><span itemprop="name">' . $product_info['products_name'] . '</span></a>';
+
     if (tep_not_null($product_info['products_model'])) {
-      $products_name = $product_info['products_name'] . '<br /><span class="smallText">[' . $product_info['products_model'] . ']</span>';
-    } else {
-      $products_name = $product_info['products_name'];
+      $products_name .= ' <small>[<span itemprop="model">' . $product_info['products_model'] . '</span>]</small>';
     }
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
+<div itemscope itemtype="http://schema.org/Product">
 
 <div class="page-header">
-  <h1 class="pull-right"><?php echo $products_price; ?></h1>
-  <h1><?php echo $products_name; ?></h1>
+  <div class="row">
+    <h1 class="col-sm-8"><?php echo $products_name; ?></h1>
+    <h1 class="col-sm-4 text-right-not-xs" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><?php echo $products_price; ?></h1>
+  </div>
 </div>
 
 <div class="contentContainer">
@@ -74,6 +86,9 @@
 
 <?php
     if (tep_not_null($product_info['products_image'])) {
+
+      echo tep_image(DIR_WS_IMAGES . $product_info['products_image'], NULL, NULL, NULL, 'itemprop="image" style="display:none;"');
+
       $photoset_layout = '1';
 
       $pi_query = tep_db_query("select image, htmlcontent from products_images where products_id = '" . (int)$product_info['products_id'] . "' order by sort_order");
@@ -127,8 +142,11 @@
     }
 ?>
 
+<div itemprop="description">
+  <?php echo stripslashes($product_info['products_description']); ?>
+</div>
 
-<?php echo stripslashes($product_info['products_description']); ?>
+<?php echo tep_draw_form('cart_quantity', tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <?php
     $products_attributes_query = tep_db_query("select distinct popt.products_options_id, popt.products_options_name from products_options popt, products_attributes patrib where patrib.products_id='" . (int)$_GET['products_id'] . "' and patrib.options_id = popt.products_options_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' order by popt.products_options_name");
@@ -189,13 +207,23 @@
   </div>
 
 <?php
-    $reviews_query = tep_db_query("select count(*) as count from reviews r, reviews_description rd where r.products_id = '" . (int)$_GET['products_id'] . "' and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and reviews_status = 1");
+    $reviews_query = tep_db_query("select count(*) as count, avg(reviews_rating) as avgrating from reviews r, reviews_description rd where r.products_id = '" . (int)$_GET['products_id'] . "' and r.reviews_id = rd.reviews_id and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and reviews_status = 1");
     $reviews = tep_db_fetch_array($reviews_query);
+
+    if ($reviews['count'] > 0) {
+      echo '<span itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating"><meta itemprop="ratingValue" content="' . $reviews['avgrating'] . '" /><meta itemprop="ratingCount" content="' . $reviews['count'] . '" /></span>';
+    }
 ?>
 
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('products_id', $product_info['products_id']) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($reviews['count'] > 0) ? ' (' . $reviews['count'] . ')' : ''), 'glyphicon glyphicon-comment', tep_href_link('product_reviews.php', tep_get_all_get_params())); ?></div>
+  </div>
+
+  </form>
+  
+  <div class="row">
+    <?php echo $oscTemplate->getContent('product_info'); ?>
   </div>
 
 <?php
@@ -204,11 +232,19 @@
     } else {
       include('includes/modules/also_purchased_products.php');
     }
+    
+    if ($product_info['manufacturers_id'] > 0) {
+      $manufacturer_query = tep_db_query("select manufacturers_name from manufacturers where manufacturers_id = '" . (int)$product_info['manufacturers_id'] . "'");
+      if (tep_db_num_rows($manufacturer_query)) {
+        $manufacturer = tep_db_fetch_array($manufacturer_query);
+        echo '<span itemprop="manufacturer" itemscope itemtype="http://schema.org/Organization"><meta itemprop="name" content="' . tep_output_string($manufacturer['manufacturers_name']) . '" /></span>';
+      }
+    }
 ?>
 
 </div>
 
-</form>
+</div>
 
 <?php
   }
