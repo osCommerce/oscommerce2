@@ -83,7 +83,7 @@
     }
 
     if ($sane_session_id == false) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
+      tep_redirect(tep_href_link('index.php', '', 'SSL', false));
     }
 
     register_shutdown_function('session_write_close');

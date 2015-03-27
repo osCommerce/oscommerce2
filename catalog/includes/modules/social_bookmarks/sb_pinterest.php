@@ -62,7 +62,7 @@
       }
 
 // url
-      $params['url'] = tep_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $_GET['products_id'], 'NONSSL', false);
+      $params['url'] = tep_href_link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false);
 
       $output = '<a href="http://pinterest.com/pin/create/button/?';
 

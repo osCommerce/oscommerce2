@@ -30,7 +30,7 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/' . FILENAME_DEFAULT);
+  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/index.php');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 
@@ -70,9 +70,9 @@
       $cPath_new = tep_get_path($categories['categories_id']);
       echo '<div class="col-xs-6 col-sm-4">';
       echo '  <div class="text-center">';
-      echo '    <a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
+      echo '    <a href="' . tep_href_link('index.php', $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $categories['categories_image'], $categories['categories_name'], SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
       echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . tep_href_link(FILENAME_DEFAULT, $cPath_new) . '">' . $categories['categories_name'] . '</a></h5>';
+      echo '      <h5><a href="' . tep_href_link('index.php', $cPath_new) . '">' . $categories['categories_name'] . '</a></h5>';
       echo '    </div>';
       echo '  </div>';
       echo '</div>';
@@ -85,7 +85,7 @@
 
 <div class="clearfix"></div>
 
-<?php include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS); ?>
+<?php include(DIR_WS_MODULES . 'new_products.php'); ?>
 
   </div>
 </div>
@@ -219,7 +219,7 @@
       }
       $filterlist_query = tep_db_query($filterlist_sql);
       if (tep_db_num_rows($filterlist_query) > 1) {
-        echo '<div>' . tep_draw_form('filter', FILENAME_DEFAULT, 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . tep_draw_form('filter', 'index.php', 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo tep_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -236,7 +236,7 @@
       }
     }
 
-    include(DIR_WS_MODULES . FILENAME_PRODUCT_LISTING);
+    include(DIR_WS_MODULES . 'product_listing.php');
 ?>
 
 </div>
@@ -267,8 +267,8 @@
 <?php
     }
 
-    include(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
-    include(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
+    include(DIR_WS_MODULES . 'new_products.php');
+    include(DIR_WS_MODULES . 'upcoming_products.php');
 ?>
 
 </div>

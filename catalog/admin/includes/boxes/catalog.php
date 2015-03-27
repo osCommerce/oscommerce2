@@ -29,14 +29,14 @@
         'link' => tep_href_link(FILENAME_MANUFACTURERS)
       ),
       array(
-        'code' => FILENAME_REVIEWS,
+        'code' => 'reviews.php',
         'title' => BOX_CATALOG_REVIEWS,
-        'link' => tep_href_link(FILENAME_REVIEWS)
+        'link' => tep_href_link('reviews.php')
       ),
       array(
-        'code' => FILENAME_SPECIALS,
+        'code' => 'specials.php',
         'title' => BOX_CATALOG_SPECIALS,
-        'link' => tep_href_link(FILENAME_SPECIALS)
+        'link' => tep_href_link('specials.php')
       ),
       array(
         'code' => FILENAME_PRODUCTS_EXPECTED,
