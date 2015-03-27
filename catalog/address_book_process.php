@@ -249,9 +249,6 @@
 
   require('includes/template_top.php');
 
-  if (!isset($_GET['delete'])) {
-    include('includes/form_check.js.php');
-  }
 ?>
 
 <div class="page-header">
