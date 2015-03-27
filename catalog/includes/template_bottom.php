@@ -39,7 +39,7 @@
 
   </div> <!-- bodyWrapper //-->
 
-  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <?php require('includes/footer.php'); ?>
 
   <script src="ext/bootstrap/js/bootstrap.min.js"></script>
   

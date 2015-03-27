@@ -296,5 +296,5 @@
 
   tep_redirect(tep_href_link('checkout_success.php', '', 'SSL'));
 
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/application_bottom.php');
 ?>
