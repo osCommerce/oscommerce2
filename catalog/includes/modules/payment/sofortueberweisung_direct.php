@@ -213,7 +213,8 @@
                                   'products_price' => $order->products[$i]['price'],
                                   'final_price' => $order->products[$i]['final_price'],
                                   'products_tax' => $order->products[$i]['tax'],
-                                  'products_quantity' => $order->products[$i]['qty']);
+                                  'products_quantity' => $order->products[$i]['qty'],
+                                  'products_full_id' => $order->products[$i]['id']);
 
           tep_db_perform('orders_products', $sql_data_array);
 
