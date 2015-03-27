@@ -30,7 +30,6 @@
   define('FILENAME_LOGIN', 'login.php');
   define('FILENAME_MAIL', 'mail.php');
   define('FILENAME_MANUFACTURERS', 'manufacturers.php');
-  define('FILENAME_MODULES', 'modules.php');
   define('FILENAME_NEWSLETTERS', 'newsletters.php');
   define('FILENAME_ORDERS', 'orders.php');
   define('FILENAME_ORDERS_INVOICE', 'invoice.php');

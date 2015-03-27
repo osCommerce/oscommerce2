@@ -78,7 +78,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_ACTIVATE_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_ACTIVATE_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=install&active=true&email=' . $_POST['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
+          <form name="activation" action="<?php echo tep_href_link('modules.php', 'set=payment&module=moneybookers&action=install&active=true&email=' . $_POST['mb_email'] . '&custid=' . $result[1]); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
@@ -107,7 +107,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_SECRET_WORD_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_SECRET_WORD_SUCCESS_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
+          <form name="activation" action="<?php echo tep_href_link('modules.php', 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
@@ -123,7 +123,7 @@
 ?>
           <p><strong><u><?php echo MB_ACTIVATION_SECRET_WORD_TITLE; ?></u></strong></p>
           <p><?php echo MB_ACTIVATION_SECRET_WORD_FAIL_TEXT; ?></p>
-          <form name="activation" action="<?php echo tep_href_link(FILENAME_MODULES, 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
+          <form name="activation" action="<?php echo tep_href_link('modules.php', 'set=payment&module=moneybookers&action=edit'); ?>" method="post">
             <p><input type="submit" value="<?php echo MB_ACTIVATION_CONTINUE_BUTTON; ?>"></p>
           </form>
 <?php
