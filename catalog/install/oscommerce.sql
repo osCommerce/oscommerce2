@@ -336,6 +336,7 @@ CREATE TABLE orders_products (
   final_price decimal(15,4) NOT NULL,
   products_tax decimal(7,4) NOT NULL,
   products_quantity int(2) NOT NULL,
+  products_full_id varchar(64) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_products_orders_id (orders_id),
   KEY idx_orders_products_products_id (products_id)
