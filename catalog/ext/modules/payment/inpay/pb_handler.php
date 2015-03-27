@@ -3,7 +3,7 @@
  $Id: pb_handler.php VER: 1.0.3414 $
  osCommerce, Open Source E-Commerce Solutions
  http://www.oscommerce.com
- Copyright (c) 2008 osCommerce
+ Copyright (c) 2015 osCommerce
  Released under the GNU General Public License
  */
 
@@ -276,7 +276,7 @@ if ($result == 'VERIFIED')
         $email_order = STORE_NAME."\n".
         EMAIL_SEPARATOR."\n".
         EMAIL_TEXT_ORDER_NUMBER.' '.$_POST['order_id']."\n".
-        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.$_POST['order_id'], 'SSL', false)."\n".
+        EMAIL_TEXT_INVOICE_URL.' '.tep_href_link('account_history_info.php', 'order_id='.$_POST['order_id'], 'SSL', false)."\n".
         EMAIL_TEXT_DATE_ORDERED.' '.strftime(DATE_FORMAT_LONG)."\n\n";
         // BOF order comment fix by AlexStudio
         if ($comments)

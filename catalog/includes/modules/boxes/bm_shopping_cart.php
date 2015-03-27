@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -59,11 +59,11 @@
           }
         }
 
-        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>' .
-                                 '</ul>';
-
+        $cart_contents_string .= '</ul>';
+        $cart_footer_string = '<div class="panel-footer text-right">' . $currencies->format($_SESSION['cart']->show_total()) . '</div>';
       } else {
         $cart_contents_string .= '<p>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</p>';
+        $cart_footer_string = NULL;
       }
 
       ob_start();

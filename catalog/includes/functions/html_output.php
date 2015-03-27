@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -299,13 +299,20 @@
 // Output a form pull down menu
 // 2.4 - automatically pass form-control css class
   function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {
-    $field = '<select name="' . tep_output_string($name) . '"';
+    $field = '<select ';
+
+    if ($required == true) $field .= 'required aria-required="true" ';
+
+    $field .= 'name="' . tep_output_string($name) . '"';
+
 
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     if (tep_not_null($class)) $field .= ' class="' . $class . '"';
 
     $field .= '>';
+    
+    if ($required == true) $field .= '<option value="">' . PULL_DOWN_DEFAULT . '</option>';
 
     if (empty($default) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
       if (isset($_GET[$name]) && is_string($_GET[$name])) {
@@ -402,11 +409,10 @@
   }
 
   // review stars
-  function tep_draw_stars($rating = 0, $empty = true) {
+  function tep_draw_stars($rating = 0, $meta = false) {
     $stars = str_repeat('<span class="glyphicon glyphicon-star"></span>', (int)$rating);
-    if ($empty === true) $stars .= str_repeat('<span class="glyphicon glyphicon-star-empty"></span>', 5-(int)$rating);
+    $stars .= str_repeat('<span class="glyphicon glyphicon-star-empty"></span>', 5-(int)$rating);
+    if ($meta !== false) $stars .= '<meta itemprop="rating" content="' . (int)$rating . '" />';
 
     return $stars;
   }
-
-?>

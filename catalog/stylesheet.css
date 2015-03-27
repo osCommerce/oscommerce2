@@ -427,3 +427,9 @@ p.lead del {
     }
 }
 
+/* reviews ------------------------------------------------------------------ */
+
+.reviews blockquote p {
+  font-size: 0.9em !important;
+}
+

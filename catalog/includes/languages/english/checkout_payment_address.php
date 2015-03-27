@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2003 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,7 @@ define('HEADING_TITLE', 'Payment Information');
 
 define('TABLE_HEADING_PAYMENT_ADDRESS', 'Billing Address');
 define('TEXT_SELECTED_PAYMENT_DESTINATION', 'This is the currently selected billing address where the invoice to this order will be delivered to.');
-define('TITLE_PAYMENT_ADDRESS', 'Billing Address:');
+define('TITLE_PAYMENT_ADDRESS', 'Billing Address');
 
 define('TABLE_HEADING_ADDRESS_BOOK_ENTRIES', 'Address Book Entries');
 define('TEXT_SELECT_OTHER_PAYMENT_DESTINATION', 'Please select the preferred billing address if the invoice to this order is to be delivered elsewhere.');
