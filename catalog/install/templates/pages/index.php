@@ -57,6 +57,8 @@
     if (!extension_loaded('mysql')) {
       $warning_array['mysql'] = 'The MySQL extension is required but is not installed. Please enable it to continue installation.';
     }
+    
+    if (PHP_VERSION < 5.5) $warning_array['PHP'] = 'Minimum Required PHP Version is 5.5 - please ask your host to upgrade the server.';
 
     if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
 ?>
@@ -72,7 +74,7 @@
 <?php
         foreach ( $warning_array as $key => $value ) {
           echo '        <tr>' . "\n" .
-               '          <td valign="top"><strong>' . $key . '</strong></td>' . "\n" .
+               '          <th valign="top">' . $key . '</th>' . "\n" .
                '          <td valign="top">' . $value . '</td>' . "\n" .
                '        </tr>' . "\n";
         }
@@ -162,7 +164,7 @@ $(function() {
           </tr>
           <tr>
             <th><?php echo PHP_VERSION; ?></th>
-            <td align="right" width="25"><?php echo ((PHP_VERSION >= 5.3) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
+            <td align="right" width="25"><?php echo ((PHP_VERSION >= 5.5) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
           </tr>
         </table>
 
