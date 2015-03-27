@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2014 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -17,7 +17,7 @@ define('HEADING_TITLE', 'Delivery Information');
 
 define('TABLE_HEADING_SHIPPING_ADDRESS', 'Shipping Address');
 define('TEXT_CHOOSE_SHIPPING_DESTINATION', 'Please choose from your address book where you would like the items to be delivered to.');
-define('TITLE_SHIPPING_ADDRESS', 'Shipping Address:');
+define('TITLE_SHIPPING_ADDRESS', 'Shipping Address');
 
 define('TABLE_HEADING_SHIPPING_METHOD', 'Shipping Method');
 define('TEXT_CHOOSE_SHIPPING_METHOD', 'Please select the preferred shipping method to use on this order.');

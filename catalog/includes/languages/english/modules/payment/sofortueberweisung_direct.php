@@ -6,7 +6,7 @@
   http://www.oscommerce.com
 
   Copyright (c) 2006 - 2007 Henri Schmidhuber (http://www.in-solution.de)
-  Copyright (c) 2007 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */

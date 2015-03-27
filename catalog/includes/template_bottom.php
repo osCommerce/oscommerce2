@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -39,7 +39,7 @@
 
   </div> <!-- bodyWrapper //-->
 
-  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <?php require('includes/footer.php'); ?>
 
   <script src="ext/bootstrap/js/bootstrap.min.js"></script>
   

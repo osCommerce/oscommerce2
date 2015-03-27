@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2010 osCommerce
+  Copyright (c) 2015 osCommerce
 
   Released under the GNU General Public License
 */
@@ -49,7 +49,7 @@
   }
 ?>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="get" template="<?php echo tep_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords={searchTerms}', 'NONSSL', false); ?>" />
+  <Url type="text/html" method="get" template="<?php echo tep_href_link('advanced_search_result.php', 'keywords={searchTerms}', 'NONSSL', false); ?>" />
 </OpenSearchDescription>
 <?php
   require('includes/application_bottom.php');
