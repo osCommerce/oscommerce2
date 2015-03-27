@@ -305,7 +305,6 @@
 
     $field .= 'name="' . tep_output_string($name) . '"';
 
-
     if (tep_not_null($parameters)) $field .= ' ' . $parameters;
 
     if (tep_not_null($class)) $field .= ' class="' . $class . '"';
@@ -331,8 +330,6 @@
       $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
     }
     $field .= '</select>';
-
-    if ($required == true) $field .= TEXT_FIELD_REQUIRED;
 
     return $field;
   }
