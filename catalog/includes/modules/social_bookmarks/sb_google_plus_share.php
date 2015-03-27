@@ -58,7 +58,7 @@
 
       $output .= ' data-height="' . $button_height . '" data-align="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ALIGN) . '"></div>';
 
-      $output .= '<script type="text/javascript">
+      $output .= '<script>
   if ( typeof window.___gcfg == "undefined" ) {
     window.___gcfg = { };
   }

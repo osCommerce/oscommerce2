@@ -15,8 +15,8 @@
   </div>
 </div>
 
-<script type="text/javascript" src="https://www.paypalobjects.com/js/external/api.js"></script>
-<script type="text/javascript">
+<script src="https://www.paypalobjects.com/js/external/api.js"></script>
+<script>
 paypal.use( ["login"], function(login) {
   login.render ({
 

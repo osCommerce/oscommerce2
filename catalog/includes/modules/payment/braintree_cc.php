@@ -717,8 +717,8 @@ EOD;
       $braintree_client_key = MODULE_PAYMENT_BRAINTREE_CC_CLIENT_KEY;
 
       $js = <<<EOD
-<script type="text/javascript" src="https://js.braintreegateway.com/v1/braintree.js"></script>
-<script type="text/javascript">
+<script src="https://js.braintreegateway.com/v1/braintree.js"></script>
+<script>
 $(function() {
   $('form[name="checkout_confirmation"]').attr('id', 'braintree-payment-form');
 
@@ -842,7 +842,7 @@ EOD;
     $result .= tep_draw_hidden_field('configuration[' . $key . ']', $value);
 
     $result .= <<<EOD
-<script type="text/javascript">
+<script>
 $(function() {
   $('form[name="modules"]').submit(function() {
     var ma_string = '';

@@ -115,7 +115,7 @@
 <form name="pe" action="{$login_url}" method="post" target="_top">
   <input type="hidden" name="email_address" value="{$login_email_address}" />
 </form>
-<script type="text/javascript">
+<script>
 document.pe.submit();
 </script>
 EOD;

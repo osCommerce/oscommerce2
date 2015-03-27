@@ -46,7 +46,7 @@
 <NOSCRIPT>
 <?php echo '<center><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_INFO . '</p><p><input type="submit" value="' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_BUTTON . '"/></p></center>'; ?>
 </NOSCRIPT>
-<script type="text/javascript"><!--
+<script><!--
 document.form.submit();
 //--></script>
 </body>

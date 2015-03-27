@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 ?>
-<script type="text/javascript"><!--
+<script><!--
 var form = "";
 var submitted = false;
 var error = false;

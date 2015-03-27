@@ -515,7 +515,7 @@
       $test_url = tep_href_link('modules_content.php', 'module=' . $this->code . '&action=install&subaction=conntest');
 
       $js = <<<EOD
-<script type="text/javascript">
+<script>
 $(function() {
   $('#tcdprogressbar').progressbar({
     value: false
@@ -587,7 +587,7 @@ EOD;
       $dialog_button_close = MODULE_CONTENT_PAYPAL_LOGIN_DIALOG_URLS_BUTTON_CLOSE;
 
       $js = <<<EOD
-<script type="text/javascript">
+<script>
 function openShowUrlsDialog() {
   var d = $('<div>').html($('#showUrlsDialog').html()).dialog({
     autoOpen: false,
@@ -712,7 +712,7 @@ EOD;
 
     $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="cmpl_attributes"');
 
-    $output .= '<script type="text/javascript">
+    $output .= '<script>
                 function cmpl_update_cfg_value() {
                   var cmpl_selected_attributes = \'\';
 
