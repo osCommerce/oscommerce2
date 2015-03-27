@@ -66,7 +66,7 @@
           $conversion_value = $this->format_raw($order_subtotal['value'], $order['currency'], $order['currency_value']);
 
           $output = <<<EOD
-<script type="text/javascript">
+<script>
 /* <![CDATA[ */
 var google_conversion_id = {$conversion_id};
 var google_conversion_language = "{$conversion_language}";
@@ -76,7 +76,7 @@ var google_conversion_label = "{$conversion_label}";
 var google_conversion_value = {$conversion_value};
 /* ]]> */
 </script>
-<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js"></script>
+<script src="//www.googleadservices.com/pagead/conversion.js"></script>
 <noscript>
 <div style="display:inline;">
 <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/{$conversion_id}/?value={$conversion_value}&amp;label={$conversion_label}&amp;guid=ON&amp;script=0"/>

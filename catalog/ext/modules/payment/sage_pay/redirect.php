@@ -49,9 +49,9 @@
   <p align="center" class="main"><input type="submit" value="Continue" /></p>
 </noscript>
 </form>
-<script type="text/javascript">
+<script>
 document.redirect.submit();
 </script>
 </body>
 </html>
-<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require('includes/application_bottom.php'); ?>

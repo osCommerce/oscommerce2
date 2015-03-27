@@ -52,7 +52,7 @@
 
       $output .= '></div>';
 
-      $output .= '<script type="text/javascript">
+      $output .= '<script>
   if ( typeof window.___gcfg == "undefined" ) {
     window.___gcfg = { };
   }

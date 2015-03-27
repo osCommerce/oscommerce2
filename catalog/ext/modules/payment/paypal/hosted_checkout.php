@@ -69,5 +69,5 @@
 </html>
 
 <?php
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -115,7 +115,7 @@
 <form name="pe" action="{$login_url}" method="post" target="_top">
   <input type="hidden" name="email_address" value="{$login_email_address}" />
 </form>
-<script type="text/javascript">
+<script>
 document.pe.submit();
 </script>
 EOD;
@@ -615,5 +615,5 @@ EOD;
 
   tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
 
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/application_bottom.php');
 ?>

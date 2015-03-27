@@ -135,7 +135,7 @@
 
     $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="htrn_files"');
 
-    $output .= '<script type="text/javascript">
+    $output .= '<script>
                 function htrn_update_cfg_value() {
                   var htrn_selected_files = \'\';
 

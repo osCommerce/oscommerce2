@@ -90,11 +90,11 @@
     $iframe_url = $sage_pay_server_nexturl;
   }
 
-  if ( !file_exists(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'template_top.php') ) {
+  if ( !file_exists(DIR_FS_CATALOG . 'includes/template_top.php') ) {
     tep_redirect($iframe_url);
   }
 
-  include(DIR_WS_INCLUDES . 'template_top.php');
+  include('includes/template_top.php');
 ?>
 
     <iframe src="<?php echo $iframe_url; ?>" width="100%" height="600" frameborder="0">
@@ -102,6 +102,6 @@
     </iframe>
 
 <?php
-  include(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  include('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

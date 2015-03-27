@@ -36,7 +36,7 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order($_GET['order_id']);
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="page-header">
@@ -198,6 +198,6 @@
 </div>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

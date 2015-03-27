@@ -45,7 +45,7 @@
     // add the products model to the breadcrumb trail
     $breadcrumb->add($product_info['products_model'], tep_href_link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $product_info['products_id']));
   }
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <?php
@@ -189,6 +189,6 @@
 </div>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>
