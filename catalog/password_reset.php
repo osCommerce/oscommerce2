@@ -26,7 +26,7 @@
     $email_address = tep_db_prepare_input($_GET['account']);
     $password_key = tep_db_prepare_input($_GET['key']);
 
-    if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
+    if ( tep_validate_email($email_address) == false ) {
       $error = true;
 
       $messageStack->add_session('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);

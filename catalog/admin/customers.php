@@ -65,12 +65,7 @@
           }
         }
 
-        if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
-          $error = true;
-          $entry_email_address_error = true;
-        } else {
-          $entry_email_address_error = false;
-        }
+        $entry_email_address_error = false;
 
         if (!tep_validate_email($customers_email_address)) {
           $error = true;
@@ -273,11 +268,6 @@ function check_form() {
     error = 1;
   }
 <?php } ?>
-
-  if (customers_email_address.length < <?php echo ENTRY_EMAIL_ADDRESS_MIN_LENGTH; ?>) {
-    error_message = error_message + "<?php echo JS_EMAIL_ADDRESS; ?>";
-    error = 1;
-  }
 
   if (entry_street_address.length < <?php echo ENTRY_STREET_ADDRESS_MIN_LENGTH; ?>) {
     error_message = error_message + "<?php echo JS_ADDRESS; ?>";

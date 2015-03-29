@@ -59,12 +59,6 @@
       }
     }
 
-    if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
-      $error = true;
-
-      $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
-    }
-
     if (!tep_validate_email($email_address)) {
       $error = true;
 
