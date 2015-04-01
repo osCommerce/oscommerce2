@@ -486,7 +486,7 @@
 
     function getParams() {
       if (!defined('MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from order_status where orders_status_name = 'Authorize.net [Transactions]' limit 1");
+        $check_query = tep_db_query("select orders_status_id from orders_status where orders_status_name = 'Authorize.net [Transactions]' limit 1");
 
         if (tep_db_num_rows($check_query) < 1) {
           $status_query = tep_db_query("select max(orders_status_id) as status_id from orders_status");
