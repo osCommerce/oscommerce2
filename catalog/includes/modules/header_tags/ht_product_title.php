@@ -29,11 +29,11 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $product_check;
+      global $PHP_SELF, $oscTemplate;
 
       if (basename($PHP_SELF) == 'product_info.php') {
         if (isset($_GET['products_id'])) {
-          if ($product_check['total'] > 0) {
+          if (is_numeric($_GET['products_id'])) {
             $product_info_query = tep_db_query("select pd.products_name from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
             $product_info = tep_db_fetch_array($product_info_query);
 
