@@ -200,7 +200,7 @@
         }
       }
 
-      tep_db_perform('adress_book', $sql_data_array);
+      tep_db_perform('address_book', $sql_data_array);
 
       $address_id = tep_db_insert_id();
 
