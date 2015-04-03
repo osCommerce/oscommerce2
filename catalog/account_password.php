@@ -83,25 +83,22 @@
     <div class="form-group has-feedback">
       <label for="inputCurrent" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CURRENT; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_password_field('password_current', NULL, 'required aria-required="true" autofocus="autofocus" id="inputCurrent" placeholder="' . ENTRY_PASSWORD_CURRENT . '"'); ?>
+        <?php echo tep_draw_password_field('password_current', NULL, 'required aria-required="true" autofocus="autofocus" id="inputCurrent" placeholder="' . ENTRY_PASSWORD_CURRENT_TEXT . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_PASSWORD_CURRENT_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CURRENT_TEXT . '</span>'; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputNew" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_password_field('password_new', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputNew" placeholder="' . ENTRY_PASSWORD_NEW . '"'); ?>
+        <?php echo tep_draw_password_field('password_new', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputNew" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_PASSWORD_NEW_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_NEW_TEXT . '</span>'; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_password_field('password_confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION . '"'); ?>
+        <?php echo tep_draw_password_field('password_confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT)) echo '<span class="help-block">' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '</span>'; ?>
       </div>
     </div>
   </div>

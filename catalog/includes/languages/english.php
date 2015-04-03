@@ -150,6 +150,20 @@ define('ENTRY_PASSWORD_NEW', 'New Password');
 define('ENTRY_PASSWORD_NEW_TEXT', '');
 define('ENTRY_PASSWORD_NEW_ERROR', 'Your new Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
 define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must match your new Password.');
+// new placeholders
+define('ENTRY_PRICE_FROM_TEXT', '');
+define('ENTRY_PRICE_TO_TEXT', '');
+define('ENTRY_DATE_FROM_TEXT', '');
+define('ENTRY_DATE_FROM_TEXT', '');
+define('ENTRY_COMMENTS_TEXT', '');
+define('ENTRY_NAME_TEXT', '');
+define('ENTRY_ENQUIRY_TEXT', '');
+define('ENTRY_REVIEW_TEXT', '');
+define('ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT', '');
+define('ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT', '');
+define('ENTRY_FORM_FIELD_FRIEND_NAME_TEXT', '');
+define('ENTRY_FORM_FIELD_FRIEND_EMAIL_TEXT', '');
+define('ENTRY_FORM_TITLE_FRIEND_MESSAGE_TEXT', '');
 
 define('FORM_REQUIRED_INFORMATION', '<span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information');
 
