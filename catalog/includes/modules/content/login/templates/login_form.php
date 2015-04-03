@@ -11,14 +11,14 @@
     <div class="form-group">
       <label for="inputEmail" class="control-label col-xs-4"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-8">
-        <?php echo tep_draw_input_field('email_address', NULL, 'autofocus="autofocus" required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS . '"', 'email'); ?>
+        <?php echo tep_draw_input_field('email_address', NULL, 'autofocus="autofocus" required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
       </div>
     </div>
 
     <div class="form-group">
       <label for="inputPassword" class="control-label col-xs-4"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-xs-8">
-        <?php echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD . '"'); ?>
+        <?php echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"'); ?>
       </div>
     </div>
 

@@ -105,7 +105,7 @@
       <label for="PriceFrom" class="control-label col-sm-3"><?php echo ENTRY_PRICE_FROM; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('pfrom', '', 'id="PriceFrom" placeholder="' . ENTRY_PRICE_FROM . '"');
+        echo tep_draw_input_field('pfrom', '', 'id="PriceFrom" placeholder="' . ENTRY_PRICE_FROM_TEXT . '"');
         ?>
       </div>
     </div>
@@ -113,7 +113,7 @@
       <label for="PriceTo" class="control-label col-sm-3"><?php echo ENTRY_PRICE_TO; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('pto', '', 'id="PriceTo" placeholder="' . ENTRY_PRICE_TO . '"');
+        echo tep_draw_input_field('pto', '', 'id="PriceTo" placeholder="' . ENTRY_PRICE_TO_TEXT . '"');
         ?>
       </div>
     </div>
@@ -121,7 +121,7 @@
       <label for="dfrom" class="control-label col-sm-3"><?php echo ENTRY_DATE_FROM; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('dfrom', '', 'id="dfrom" placeholder="' . ENTRY_DATE_FROM . '"');
+        echo tep_draw_input_field('dfrom', '', 'id="dfrom" placeholder="' . ENTRY_DATE_FROM_TEXT . '"');
         ?>
       </div>
     </div>
@@ -129,7 +129,7 @@
       <label for="dto" class="control-label col-sm-3"><?php echo ENTRY_DATE_TO; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('dto', '', 'id="dto" placeholder="' . ENTRY_DATE_TO . '"');
+        echo tep_draw_input_field('dto', '', 'id="dto" placeholder="' . ENTRY_DATE_TO_TEXT . '"');
         ?>
       </div>
     </div>
