@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML;
+
 class Db extends \PDO
 {
     protected $connected = false;
@@ -305,6 +307,21 @@ class Db extends \PDO
         }
 
         return !$error;
+    }
+
+    public static function prepareInput($string)
+    {
+        if (is_string($string)) {
+            return HTML::sanitize($string);
+        } elseif (is_array($string)) {
+            foreach ($string as $k => $v) {
+                $string[$k] = static::prepareInput($v);
+            }
+
+            return $string;
+        } else {
+            return $string;
+        }
     }
 
     protected function autoPrefixTables($statement)
