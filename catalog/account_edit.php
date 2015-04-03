@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  use OSC\OM\Db;
+  use OSC\OM\HTML;
 
   require('includes/application_top.php');
 
@@ -23,13 +23,13 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_edit.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    if (ACCOUNT_GENDER == 'true') $gender = Db::prepareInput($_POST['gender']);
-    $firstname = Db::prepareInput($_POST['firstname']);
-    $lastname = Db::prepareInput($_POST['lastname']);
-    if (ACCOUNT_DOB == 'true') $dob = Db::prepareInput($_POST['dob']);
-    $email_address = Db::prepareInput($_POST['email_address']);
-    $telephone = Db::prepareInput($_POST['telephone']);
-    $fax = Db::prepareInput($_POST['fax']);
+    if (ACCOUNT_GENDER == 'true') $gender = HTML::sanitize($_POST['gender']);
+    $firstname = HTML::sanitize($_POST['firstname']);
+    $lastname = HTML::sanitize($_POST['lastname']);
+    if (ACCOUNT_DOB == 'true') $dob = HTML::sanitize($_POST['dob']);
+    $email_address = HTML::sanitize($_POST['email_address']);
+    $telephone = HTML::sanitize($_POST['telephone']);
+    $fax = HTML::sanitize($_POST['fax']);
 
     $error = false;
 
