@@ -10,8 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
+  use OSC\OM\Db;
+  use OSC\OM\Registry;
+
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
+  define('OSCOM_BASE_DIR', __DIR__ . '/');
 
 // set the level of error reporting
   error_reporting(E_ALL | E_STRICT);
@@ -34,6 +39,8 @@
 // set default timezone if none exists (PHP 5.3 throws an E_WARNING)
   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
 
+  require('includes/autoload.php');
+
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
     $request_type =  'SSL';
@@ -47,7 +54,7 @@
     $cookie_domain = HTTP_COOKIE_DOMAIN;
     $cookie_path = HTTP_COOKIE_PATH;
   }
-  
+
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
@@ -58,10 +65,17 @@
 // make a connection to the database... now
   tep_db_connect() or die('Unable to connect to database server!');
 
+  Registry::set('Cache', new Cache());
+  Registry::set('Db', Db::initialize());
+  $OSCOM_Db = Registry::get('Db');
+
 // set the application parameters
-  $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from configuration');
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey'], $configuration['cfgValue']);
+  $Qcfg = $OSCOM_Db->prepare('select configuration_key as k, configuration_value as v from :table_configuration');
+  $Qcfg->setCache('configuration');
+  $Qcfg->execute();
+
+  foreach ($Qcfg->fetchAll() as $param) {
+    define($param['k'], $param['v']);
   }
 
 // if gzip_compression is enabled, start to buffer the output
@@ -122,9 +136,9 @@
       $session_started = true;
     }
   } elseif ( SESSION_BLOCK_SPIDERS == 'True' ) {
-    
+
     $user_agent = '';
-    
+
     if (isset($_SERVER['HTTP_USER_AGENT'])) {
       $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
     }
