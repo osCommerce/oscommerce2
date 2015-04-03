@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Db;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
@@ -21,13 +23,13 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_edit.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
-    $firstname = tep_db_prepare_input($_POST['firstname']);
-    $lastname = tep_db_prepare_input($_POST['lastname']);
-    if (ACCOUNT_DOB == 'true') $dob = tep_db_prepare_input($_POST['dob']);
-    $email_address = tep_db_prepare_input($_POST['email_address']);
-    $telephone = tep_db_prepare_input($_POST['telephone']);
-    $fax = tep_db_prepare_input($_POST['fax']);
+    if (ACCOUNT_GENDER == 'true') $gender = Db::prepareInput($_POST['gender']);
+    $firstname = Db::prepareInput($_POST['firstname']);
+    $lastname = Db::prepareInput($_POST['lastname']);
+    if (ACCOUNT_DOB == 'true') $dob = Db::prepareInput($_POST['dob']);
+    $email_address = Db::prepareInput($_POST['email_address']);
+    $telephone = Db::prepareInput($_POST['telephone']);
+    $fax = Db::prepareInput($_POST['fax']);
 
     $error = false;
 
@@ -65,9 +67,12 @@
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
 
-    $check_email_query = tep_db_query("select count(*) as total from customers where customers_email_address = '" . tep_db_input($email_address) . "' and customers_id != '" . (int)$customer_id . "'");
-    $check_email = tep_db_fetch_array($check_email_query);
-    if ($check_email['total'] > 0) {
+    $Qcheck = $OSCOM_Db->prepare('select customers_id from :table_customers where customers_email_address = :customers_email_address and customers_id != :customers_id limit 1');
+    $Qcheck->bindValue(':customers_email_address', $email_address);
+    $Qcheck->bindInt(':customers_id', $customer_id);
+    $Qcheck->execute();
+
+    if ($Qcheck->fetch() !== false) {
       $error = true;
 
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR_EXISTS);
@@ -89,14 +94,13 @@
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
 
-      tep_db_perform('customers', $sql_data_array, 'update', "customers_id = '" . (int)$customer_id . "'");
+      $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$customer_id]);
+      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$customer_id]);
 
-      tep_db_query("update customers_info set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
+      $sql_data_array = ['entry_firstname' => $firstname,
+                         'entry_lastname' => $lastname];
 
-      $sql_data_array = array('entry_firstname' => $firstname,
-                              'entry_lastname' => $lastname);
-
-      tep_db_perform('address_book', $sql_data_array, 'update', "customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$customer_default_address_id . "'");
+      $OSCOM_Db->save('address_book', $sql_data_array, ['customers_id' => (int)$customer_id, 'address_book_id' => (int)$customer_default_address_id]);
 
 // reset the session variables
       $customer_first_name = $firstname;
@@ -107,8 +111,9 @@
     }
   }
 
-  $account_query = tep_db_query("select customers_gender, customers_firstname, customers_lastname, customers_dob, customers_email_address, customers_telephone, customers_fax from customers where customers_id = '" . (int)$customer_id . "'");
-  $account = tep_db_fetch_array($account_query);
+  $Qaccount = $OSCOM_Db->prepare('select * from :table_customers where customers_id = :customers_id');
+  $Qaccount->bindInt(':customers_id', $customer_id);
+  $Qaccount->execute();
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('account_edit.php', '', 'SSL'));
@@ -136,7 +141,7 @@
     if (isset($gender)) {
       $male = ($gender == 'm') ? true : false;
     } else {
-      $male = ($account['customers_gender'] == 'm') ? true : false;
+      $male = ($Qaccount->value('customers_gender') == 'm') ? true : false;
     }
     $female = !$male;
 ?>
@@ -162,14 +167,14 @@
       <div class="form-group has-feedback">
         <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('firstname', $account['customers_firstname'], 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
+          <?php echo tep_draw_input_field('firstname', $Qaccount->value('customers_firstname'), 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
       <div class="form-group has-feedback">
         <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('lastname', $account['customers_lastname'], 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
+          <?php echo tep_draw_input_field('lastname', $Qaccount->value('customers_lastname'), 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
@@ -181,7 +186,7 @@
       <div class="form-group has-feedback">
         <label for="inputName" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('dob', tep_date_short($account['customers_dob']), 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
+          <?php echo tep_draw_input_field('dob', tep_date_short($Qaccount->value('customers_dob')), 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
@@ -193,21 +198,21 @@
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('email_address', $account['customers_email_address'], 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo tep_draw_input_field('email_address', $Qaccount->value('customers_email_address'), 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('telephone', $account['customers_telephone'], 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
+        <?php echo tep_draw_input_field('telephone', $Qaccount->value('customers_telephone'), 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
     <div class="form-group">
       <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('fax', $account['customers_fax'], 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
+        <?php echo tep_draw_input_field('fax', $Qaccount->value('customers_fax'), 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
       </div>
     </div>
 
