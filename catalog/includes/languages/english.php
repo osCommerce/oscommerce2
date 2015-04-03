@@ -154,7 +154,7 @@ define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must 
 define('ENTRY_PRICE_FROM_TEXT', '');
 define('ENTRY_PRICE_TO_TEXT', '');
 define('ENTRY_DATE_FROM_TEXT', '');
-define('ENTRY_DATE_FROM_TEXT', '');
+define('ENTRY_DATE_TO_TEXT', '');
 define('ENTRY_COMMENTS_TEXT', '');
 define('ENTRY_NAME_TEXT', '');
 define('ENTRY_ENQUIRY_TEXT', '');
