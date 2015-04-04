@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/password_reset.php');
@@ -23,8 +25,8 @@
   }
 
   if ($error == false) {
-    $email_address = tep_db_prepare_input($_GET['account']);
-    $password_key = tep_db_prepare_input($_GET['key']);
+    $email_address = HTML::sanitize($_GET['account']);
+    $password_key = HTML::sanitize($_GET['key']);
 
     if ( tep_validate_email($email_address) == false ) {
       $error = true;
@@ -35,11 +37,13 @@
 
       $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
     } else {
-      $check_customer_query = tep_db_query("select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from customers c, customers_info ci where c.customers_email_address = '" . tep_db_input($email_address) . "' and c.customers_id = ci.customers_info_id");
-      if (tep_db_num_rows($check_customer_query)) {
-        $check_customer = tep_db_fetch_array($check_customer_query);
+      $Qcheck = $OSCOM_Db->prepare('select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from :table_customers c, :table_customers_info ci where c.customers_email_address = :email_address and c.customers_id = ci.customers_info_id');
+      $Qcheck->bindValue(':email_address', $email_address);
+      $Qcheck->execute();
 
-        if ( empty($check_customer['password_reset_key']) || ($check_customer['password_reset_key'] != $password_key) || (strtotime($check_customer['password_reset_date'] . ' +1 day') <= time()) ) {
+      if ( $Qcheck->fetch() !== false ) {
+
+        if ( empty($Qcheck->value('password_reset_key')) || ($Qcheck->value('password_reset_key') != $password_key) || (strtotime($Qcheck->value('password_reset_date') . ' +1 day') <= time()) ) {
           $error = true;
 
           $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
@@ -57,8 +61,8 @@
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_new = tep_db_prepare_input($_POST['password']);
-    $password_confirmation = tep_db_prepare_input($_POST['confirmation']);
+    $password_new = HTML::sanitize($_POST['password']);
+    $password_confirmation = HTML::sanitize($_POST['confirmation']);
 
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
@@ -71,9 +75,9 @@
     }
 
     if ($error == false) {
-      tep_db_query("update customers set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
+      $OSCOM_Db->save(':table_customers', array('customers_password' => tep_encrypt_password($password_new)), array('customers_id' => $Qcheck->valueInt('customers_id')));
 
-      tep_db_query("update customers_info set customers_info_date_account_last_modified = now(), password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
+      $OSCOM_Db->save(':table_customers_info', array('customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => null, 'password_reset_date' => null), array('customers_info_id' => $Qcheck->valueInt('customers_id')));
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
