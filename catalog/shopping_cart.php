@@ -46,22 +46,26 @@
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         foreach($products[$i]['attributes'] as $option => $value) {
           echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
-          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
-                                      from products_options popt, products_options_values poval, products_attributes pa
-                                      where pa.products_id = '" . (int)$products[$i]['id'] . "'
-                                       and pa.options_id = '" . (int)$option . "'
-                                       and pa.options_id = popt.products_options_id
-                                       and pa.options_values_id = '" . (int)$value . "'
-                                       and pa.options_values_id = poval.products_options_values_id
-                                       and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                       and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-          $attributes_values = tep_db_fetch_array($attributes);
+          $Qattributes = $OSCOM_Db->prepare('select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
+                                              from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
+                                              where pa.products_id = :products_id
+                                                and pa.options_id = :option
+                                                and pa.options_id = popt.products_options_id
+                                                and pa.options_values_id = :value
+                                                and pa.options_values_id = poval.products_options_values_id
+                                                and popt.language_id = :languages_id
+                                                and poval.language_id = :languages_id');
+          $Qattributes->bindValue(':products_id', (int)$products[$i]['id']);
+          $Qattributes->bindValue(':option', $option);
+          $Qattributes->bindValue(':value', (int)$value);
+          $Qattributes->bindValue(':languages_id', (int)$_SESSION['languages_id']);
+          $Qattributes->execute();
 
-          $products[$i][$option]['products_options_name'] = $attributes_values['products_options_name'];
+          $products[$i][$option]['products_options_name'] = $Qattributes->value('products_options_name');
           $products[$i][$option]['options_values_id'] = $value;
-          $products[$i][$option]['products_options_values_name'] = $attributes_values['products_options_values_name'];
-          $products[$i][$option]['options_values_price'] = $attributes_values['options_values_price'];
-          $products[$i][$option]['price_prefix'] = $attributes_values['price_prefix'];
+          $products[$i][$option]['products_options_values_name'] = $Qattributes->value('products_options_values_name');
+          $products[$i][$option]['options_values_price'] = $Qattributes->value('options_values_price');
+          $products[$i][$option]['price_prefix'] = $Qattributes->value('price_prefix');
         }
       }
     }
