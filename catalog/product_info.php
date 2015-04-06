@@ -248,7 +248,7 @@
     }
     
     if ( $product_info->value('manufacturers_id') > 0 ) {
-      $Qm = $OSCOM_Db->prepare('select manufacturers_name from manufacturers where manufacturers_id = :manufacturers_id');
+      $Qm = $OSCOM_Db->prepare('select manufacturers_name from :table_manufacturers where manufacturers_id = :manufacturers_id');
       $Qm->bindInt(':manufacturers_id', $product_info->value('manufacturers_id'));
       $Qm->execute();
 
