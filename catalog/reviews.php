@@ -50,8 +50,10 @@
     ?>
 <div class="row">
 <?php
-    $reviews_query = tep_db_query($reviews_split->sql_query);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
+    $Qreview = $OSCOM_Db->prepare($reviews_split->sql_query);
+    $Qreview->execute();
+
+    while ($reviews = $Qreview->fetch()) {
 ?>
 
   <div class="col-sm-6 review">
