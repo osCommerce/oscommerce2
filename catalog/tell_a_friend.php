@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
@@ -19,11 +21,13 @@
 
   $valid_product = false;
   if (isset($_GET['products_id'])) {
-    $product_info_query = tep_db_query("select pd.products_name from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-    if (tep_db_num_rows($product_info_query)) {
-      $valid_product = true;
+    $product_info = $OSCOM_Db->prepare('select pd.products_name from products p, products_description pd where p.products_status = 1 and p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :languages_id');
+    $product_info->bindInt(':products_id', $_GET['products_id']);
+    $product_info->bindInt(':languages_id', $_SESSION['languages_id']);
+    $product_info->execute();
 
-      $product_info = tep_db_fetch_array($product_info_query);
+    if ( $product_info->rowCount() > 0 ) {
+      $valid_product = true;
     }
   }
 
@@ -36,11 +40,11 @@
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
-    $to_email_address = tep_db_prepare_input($_POST['to_email_address']);
-    $to_name = tep_db_prepare_input($_POST['to_name']);
-    $from_email_address = tep_db_prepare_input($_POST['from_email_address']);
-    $from_name = tep_db_prepare_input($_POST['from_name']);
-    $message = tep_db_prepare_input($_POST['message']);
+    $to_email_address = HTML::sanitize($_POST['to_email_address']);
+    $to_name = HTML::sanitize($_POST['to_name']);
+    $from_email_address = HTML::sanitize($_POST['from_email_address']);
+    $from_name = HTML::sanitize($_POST['from_name']);
+    $message = HTML::sanitize($_POST['message']);
 
     if (empty($from_name)) {
       $error = true;
@@ -77,7 +81,7 @@
 
     if ($error == false) {
       $email_subject = sprintf(TEXT_EMAIL_SUBJECT, $from_name, STORE_NAME);
-      $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $product_info['products_name'], STORE_NAME) . "\n\n";
+      $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $product_info->value('products_name'), STORE_NAME) . "\n\n";
 
       if (tep_not_null($message)) {
         $email_body .= $message . "\n\n";
@@ -90,16 +94,10 @@
 
       $actionRecorder->record();
 
-      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $product_info['products_name'], tep_output_string_protected($to_name)), 'success');
+      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $product_info->value('products_name'), tep_output_string_protected($to_name)), 'success');
 
       tep_redirect(tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id']));
     }
-  } elseif (isset($_SESSION['customer_id'])) {
-    $account_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from customers where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-    $account = tep_db_fetch_array($account_query);
-
-    $from_name = $account['customers_firstname'] . ' ' . $account['customers_lastname'];
-    $from_email_address = $account['customers_email_address'];
   }
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link('tell_a_friend.php', 'products_id=' . (int)$_GET['products_id']));
@@ -108,7 +106,7 @@
 ?>
 
 <div class="page-header">
-  <h1><?php echo sprintf(HEADING_TITLE, $product_info['products_name']); ?></h1>
+  <h1><?php echo sprintf(HEADING_TITLE, $product_info->value('products_name')); ?></h1>
 </div>
 
 <?php
@@ -117,7 +115,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . (int)$_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . (int)$_GET['products_id'], $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
