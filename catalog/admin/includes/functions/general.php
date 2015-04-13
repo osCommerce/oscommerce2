@@ -190,7 +190,7 @@
       $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
     }
 
-    $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and c.parent_id = '" . (int)$parent_id . "' order by c.sort_order, cd.categories_name");
+    $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and c.parent_id = '" . (int)$parent_id . "' order by c.sort_order, cd.categories_name" . COLLATE_CLAUSE);
     while ($categories = tep_db_fetch_array($categories_query)) {
       if ($exclude != $categories['categories_id']) $category_tree_array[] = array('id' => $categories['categories_id'], 'text' => $spacing . $categories['categories_name']);
       $category_tree_array = tep_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
@@ -214,7 +214,7 @@
 
     $select_string .= '>';
 
-    $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_price from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by products_name");
+    $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_price from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by products_name" . COLLATE_CLAUSE);
     while ($products = tep_db_fetch_array($products_query)) {
       if (!in_array($products['products_id'], $exclude)) {
         $select_string .= '<option value="' . $products['products_id'] . '">' . $products['products_name'] . ' (' . $currencies->format($products['products_price']) . ')</option>';
@@ -340,7 +340,7 @@
 
   function tep_tax_classes_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
-    $classes_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
+    $classes_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title" . COLLATE_CLAUSE);
     while ($classes = tep_db_fetch_array($classes_query)) {
       $select_string .= '<option value="' . $classes['tax_class_id'] . '"';
       if ($selected == $classes['tax_class_id']) $select_string .= ' SELECTED';
@@ -353,7 +353,7 @@
 
   function tep_geo_zones_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
-    $zones_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
+    $zones_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name" . COLLATE_CLAUSE);
     while ($zones = tep_db_fetch_array($zones_query)) {
       $select_string .= '<option value="' . $zones['geo_zone_id'] . '"';
       if ($selected == $zones['geo_zone_id']) $select_string .= ' SELECTED';
@@ -629,7 +629,7 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries_query = tep_db_query("select countries_id, countries_name from " . TABLE_COUNTRIES . " order by countries_name");
+    $countries_query = tep_db_query("select countries_id, countries_name from " . TABLE_COUNTRIES . " order by countries_name" . COLLATE_CLAUSE);
     while ($countries = tep_db_fetch_array($countries_query)) {
       $countries_array[] = array('id' => $countries['countries_id'],
                                  'text' => $countries['countries_name']);
@@ -642,7 +642,7 @@
 // return an array with country zones
   function tep_get_country_zones($country_id) {
     $zones_array = array();
-    $zones_query = tep_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' order by zone_name");
+    $zones_query = tep_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' order by zone_name" . COLLATE_CLAUSE);
     while ($zones = tep_db_fetch_array($zones_query)) {
       $zones_array[] = array('id' => $zones['zone_id'],
                              'text' => $zones['zone_name']);
@@ -702,7 +702,7 @@
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
 
     $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
-    $tax_class_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
+    $tax_class_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title" . COLLATE_CLAUSE);
     while ($tax_class = tep_db_fetch_array($tax_class_query)) {
       $tax_class_array[] = array('id' => $tax_class['tax_class_id'],
                                  'text' => $tax_class['tax_class_title']);
@@ -1286,7 +1286,7 @@
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
 
     $zone_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
-    $zone_class_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
+    $zone_class_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name" . COLLATE_CLAUSE);
     while ($zone_class = tep_db_fetch_array($zone_class_query)) {
       $zone_class_array[] = array('id' => $zone_class['geo_zone_id'],
                                   'text' => $zone_class['geo_zone_name']);
@@ -1301,7 +1301,7 @@
     $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
 
     $statuses_array = array(array('id' => '0', 'text' => TEXT_DEFAULT));
-    $statuses_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_name");
+    $statuses_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_name" . COLLATE_CLAUSE);
     while ($statuses = tep_db_fetch_array($statuses_query)) {
       $statuses_array[] = array('id' => $statuses['orders_status_id'],
                                 'text' => $statuses['orders_status_name']);

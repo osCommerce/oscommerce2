@@ -44,7 +44,7 @@
           $product_ids = substr($product_ids, 0, -1);
 
           $customer_orders_string = NULL;
-          $products_query = tep_db_query("select products_id, products_name from products_description where products_id in (" . $product_ids . ") and language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_name");
+          $products_query = tep_db_query("select products_id, products_name from products_description where products_id in (" . $product_ids . ") and language_id = '" . (int)$_SESSION['languages_id'] . "' order by products_name" . COLLATE_CLAUSE);
           while ($products = tep_db_fetch_array($products_query)) {
             $customer_orders_string .= '<li><span class="pull-right"><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . (int)$products['products_id']) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . tep_href_link('product_info.php', 'products_id=' . (int)$products['products_id']) . '">' . $products['products_name'] . '</a></li>';
           }

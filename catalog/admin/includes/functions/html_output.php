@@ -147,7 +147,7 @@
 // javascript to dynamically update the states/provinces list when the country is changed
 // TABLES: zones
   function tep_js_zone_list($country, $form, $field) {
-    $countries_query = tep_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id");
+    $countries_query = tep_db_query("select distinct zone_country_id from " . TABLE_ZONES . " order by zone_country_id" . COLLATE_CLAUSE);
     $num_country = 1;
     $output_string = '';
     while ($countries = tep_db_fetch_array($countries_query)) {
@@ -157,7 +157,7 @@
         $output_string .= '  } else if (' . $country . ' == "' . $countries['zone_country_id'] . '") {' . "\n";
       }
 
-      $states_query = tep_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
+      $states_query = tep_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name" . COLLATE_CLAUSE);
 
       $num_state = 1;
       while ($states = tep_db_fetch_array($states_query)) {

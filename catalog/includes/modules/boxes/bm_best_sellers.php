@@ -35,9 +35,9 @@
 
       if (!isset($_GET['products_id'])) {
         if (isset($current_category_id) && ($current_category_id > 0)) {
-          $best_sellers_query = tep_db_query("select distinct p.products_id, pd.products_name from products p, products_description pd, products_to_categories p2c, categories c where p.products_status = '1' and p.products_ordered > 0 and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and '" . (int)$current_category_id . "' in (c.categories_id, c.parent_id) order by p.products_ordered desc, pd.products_name limit " . MAX_DISPLAY_BESTSELLERS);
+          $best_sellers_query = tep_db_query("select distinct p.products_id, pd.products_name from products p, products_description pd, products_to_categories p2c, categories c where p.products_status = '1' and p.products_ordered > 0 and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and '" . (int)$current_category_id . "' in (c.categories_id, c.parent_id) order by p.products_ordered desc, pd.products_name" . COLLATE_CLAUSE . " limit " . MAX_DISPLAY_BESTSELLERS);
         } else {
-          $best_sellers_query = tep_db_query("select distinct p.products_id, pd.products_name from products p, products_description pd where p.products_status = '1' and p.products_ordered > 0 and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_ordered desc, pd.products_name limit " . MAX_DISPLAY_BESTSELLERS);
+          $best_sellers_query = tep_db_query("select distinct p.products_id, pd.products_name from products p, products_description pd where p.products_status = '1' and p.products_ordered > 0 and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_ordered desc, pd.products_name" . COLLATE_CLAUSE . " limit " . MAX_DISPLAY_BESTSELLERS);
         }
 
         if (tep_db_num_rows($best_sellers_query) >= MIN_DISPLAY_BESTSELLERS) {
