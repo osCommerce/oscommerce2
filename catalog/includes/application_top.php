@@ -242,6 +242,12 @@
   $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
   require('includes/languages/' . basename($_SESSION['language']) . '.php');
   setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
+  
+  if (COLLATE_CLAUSE_COLLATION == '') {
+  	 define('COLLATE_CLAUSE', '');
+  } else {
+  	 define('COLLATE_CLAUSE', ' collate ' . COLLATE_CLAUSE_COLLATION);
+  }
 
 // currency
   if ( !isset($_SESSION['currency']) || isset($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency'])) ) {

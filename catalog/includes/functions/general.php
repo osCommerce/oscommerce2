@@ -190,7 +190,7 @@
     $countries_array = array();
     if (tep_not_null($countries_id)) {
       if ($with_iso_codes == true) {
-        $countries = tep_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from countries where countries_id = '" . (int)$countries_id . "' order by countries_name");
+        $countries = tep_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from countries where countries_id = '" . (int)$countries_id . "' order by countries_name" . COLLATE_CLAUSE);
         $countries_values = tep_db_fetch_array($countries);
         $countries_array = array('countries_name' => $countries_values['countries_name'],
                                  'countries_iso_code_2' => $countries_values['countries_iso_code_2'],
@@ -201,7 +201,7 @@
         $countries_array = array('countries_name' => $countries_values['countries_name']);
       }
     } else {
-      $countries = tep_db_query("select countries_id, countries_name from countries order by countries_name");
+      $countries = tep_db_query("select countries_id, countries_name from countries order by countries_name" . COLLATE_CLAUSE);
       while ($countries_values = tep_db_fetch_array($countries)) {
         $countries_array[] = array('countries_id' => $countries_values['countries_id'],
                                    'countries_name' => $countries_values['countries_name']);
@@ -537,7 +537,7 @@
   function tep_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
     if (!is_array($categories_array)) $categories_array = array();
 
-    $categories_query = tep_db_query("select c.categories_id, cd.categories_name from categories c, categories_description cd where parent_id = '" . (int)$parent_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+    $categories_query = tep_db_query("select c.categories_id, cd.categories_name from categories c, categories_description cd where parent_id = '" . (int)$parent_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name" . COLLATE_CLAUSE);
     while ($categories = tep_db_fetch_array($categories_query)) {
       $categories_array[] = array('id' => $categories['categories_id'],
                                   'text' => $indent . $categories['categories_name']);
@@ -553,7 +553,7 @@
   function tep_get_manufacturers($manufacturers_array = '') {
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
-    $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name");
+    $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name" . COLLATE_CLAUSE);
     while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
       $manufacturers_array[] = array('id' => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
     }

@@ -219,7 +219,7 @@
 
       $currencies_array = array();
 
-      $currencies_query = tep_db_query("select code, title from currencies order by title");
+      $currencies_query = tep_db_query("select code, title from currencies order by title" . COLLATE_CLAUSE);
       while ($currencies = tep_db_fetch_array($currencies_query)) {
         $currencies_array[] = array('id' => $currencies['code'],
                                     'text' => $currencies['title']);

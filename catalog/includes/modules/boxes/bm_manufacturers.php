@@ -35,7 +35,7 @@
 
       $data = '';
 
-      $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name");
+      $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name" . COLLATE_CLAUSE);
       if ($number_of_rows = tep_db_num_rows($manufacturers_query)) {
         if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list

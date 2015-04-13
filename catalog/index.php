@@ -62,12 +62,12 @@
         if ($categories['total'] < 1) {
           // do nothing, go through the loop
         } else {
-          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from categories c, categories_description cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+          $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from categories c, categories_description cd where c.parent_id = '" . (int)$category_links[$i] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name" . COLLATE_CLAUSE);
           break; // we've found the deepest category the customer is in
         }
       }
     } else {
-      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from categories c, categories_description cd where c.parent_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
+      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from categories c, categories_description cd where c.parent_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name" . COLLATE_CLAUSE);
     }
 
     $number_of_categories = tep_db_num_rows($categories_query);
@@ -165,7 +165,7 @@
       for ($i=0, $n=sizeof($column_list); $i<$n; $i++) {
         if ($column_list[$i] == 'PRODUCT_LIST_NAME') {
           $_GET['sort'] = $i+1 . 'a';
-          $listing_sql .= " order by pd.products_name";
+          $listing_sql .= " order by pd.products_name" . COLLATE_CLAUSE;
           break;
         }
       }
@@ -175,25 +175,25 @@
 
       switch ($column_list[$sort_col-1]) {
         case 'PRODUCT_LIST_MODEL':
-          $listing_sql .= " order by p.products_model " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+          $listing_sql .= " order by p.products_model" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name". COLLATE_CLAUSE;
           break;
         case 'PRODUCT_LIST_NAME':
-          $listing_sql .= " order by pd.products_name " . ($sort_order == 'd' ? 'desc' : '');
+          $listing_sql .= " order by pd.products_name" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '');
           break;
         case 'PRODUCT_LIST_MANUFACTURER':
-          $listing_sql .= " order by m.manufacturers_name " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+          $listing_sql .= " order by m.manufacturers_name" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
           break;
         case 'PRODUCT_LIST_QUANTITY':
-          $listing_sql .= " order by p.products_quantity " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+          $listing_sql .= " order by p.products_quantity" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
           break;
         case 'PRODUCT_LIST_IMAGE':
-          $listing_sql .= " order by pd.products_name";
+          $listing_sql .= " order by pd.products_name" . COLLATE_CLAUSE;
           break;
         case 'PRODUCT_LIST_WEIGHT':
-          $listing_sql .= " order by p.products_weight " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+          $listing_sql .= " order by p.products_weight" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
           break;
         case 'PRODUCT_LIST_PRICE':
-          $listing_sql .= " order by final_price " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+          $listing_sql .= " order by final_price" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
           break;
       }
     }
@@ -220,9 +220,9 @@
 // optional Product List Filter
     if (PRODUCT_LIST_FILTER > 0) {
       if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-        $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name from products p, products_to_categories p2c, categories c, categories_description cd where p.products_status = '1' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and p2c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "' order by cd.categories_name";
+        $filterlist_sql = "select distinct c.categories_id as id, cd.categories_name as name from products p, products_to_categories p2c, categories c, categories_description cd where p.products_status = '1' and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and p2c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' and p.manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "' order by cd.categories_name" . COLLATE_CLAUSE;
       } else {
-        $filterlist_sql= "select distinct m.manufacturers_id as id, m.manufacturers_name as name from products p, products_to_categories p2c, manufacturers m where p.products_status = '1' and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$current_category_id . "' order by m.manufacturers_name";
+        $filterlist_sql= "select distinct m.manufacturers_id as id, m.manufacturers_name as name from products p, products_to_categories p2c, manufacturers m where p.products_status = '1' and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$current_category_id . "' order by m.manufacturers_name" . COLLATE_CLAUSE;
       }
       $filterlist_query = tep_db_query($filterlist_sql);
       if (tep_db_num_rows($filterlist_query) > 1) {

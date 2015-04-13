@@ -85,28 +85,28 @@
 
     switch ($column_list[$sort_col-1]) {
       case 'PRODUCT_LIST_MODEL':
-        $listing_sql .= " order by p.products_model " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by p.products_model" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name". COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_NAME':
-        $listing_sql .= " order by pd.products_name " . ($sort_order == 'd' ? 'desc' : '');
+        $listing_sql .= " order by pd.products_name" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '');
         break;
       case 'PRODUCT_LIST_MANUFACTURER':
-        $listing_sql .= " order by m.manufacturers_name " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by m.manufacturers_name" . COLLATE_CLAUSE . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_QUANTITY':
-        $listing_sql .= " order by p.products_quantity " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by p.products_quantity" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_IMAGE':
-        $listing_sql .= " order by pd.products_name";
+        $listing_sql .= " order by pd.products_name" . COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_WEIGHT':
-        $listing_sql .= " order by p.products_weight " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by p.products_weight" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_PRICE':
-        $listing_sql .= " order by final_price " . ($sort_order == 'd' ? 'desc' : '') . ", pd.products_name";
+        $listing_sql .= " order by final_price" . ($sort_order == 'd' ? ' desc' : '') . ", pd.products_name" . COLLATE_CLAUSE;
         break;
       case 'PRODUCT_LIST_ID':
-        $listing_sql .= " order by p.products_id " . ($sort_order == 'd' ? 'desc' : '');
+        $listing_sql .= " order by p.products_id" . ($sort_order == 'd' ? ' desc' : '');
         break;
     }
   }

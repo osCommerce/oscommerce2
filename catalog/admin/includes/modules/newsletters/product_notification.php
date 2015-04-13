@@ -23,7 +23,7 @@
       global $languages_id;
 
       $products_array = array();
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.language_id = '" . $languages_id . "' and pd.products_id = p.products_id and p.products_status = '1' order by pd.products_name");
+      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.language_id = '" . $languages_id . "' and pd.products_id = p.products_id and p.products_status = '1' order by pd.products_name" . COLLATE_CLAUSE);
       while ($products = tep_db_fetch_array($products_query)) {
         $products_array[] = array('id' => $products['products_id'],
                                   'text' => $products['products_name']);

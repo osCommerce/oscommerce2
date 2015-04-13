@@ -18,6 +18,7 @@
 // on Windows try 'en', or 'English'
 @setlocale(LC_ALL, array('en_US.UTF-8', 'en_US.UTF8', 'enu_usa'));
 
+define('COLLATE_CLAUSE_COLLATION', ''); // leave empty to use the collation you have defined for your database
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'm/d/Y'); // this is used for date()
