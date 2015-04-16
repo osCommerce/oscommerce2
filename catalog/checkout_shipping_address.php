@@ -46,22 +46,22 @@
     if (tep_not_null($_POST['firstname']) && tep_not_null($_POST['lastname']) && tep_not_null($_POST['street_address'])) {
       $process = true;
 
-      if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
-      if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
-      $firstname = tep_db_prepare_input($_POST['firstname']);
-      $lastname = tep_db_prepare_input($_POST['lastname']);
-      $street_address = tep_db_prepare_input($_POST['street_address']);
-      if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
-      $postcode = tep_db_prepare_input($_POST['postcode']);
-      $city = tep_db_prepare_input($_POST['city']);
-      $country = tep_db_prepare_input($_POST['country']);
+      if (ACCOUNT_GENDER == 'true') $gender = HTML::sanitize($_POST['gender']);
+      if (ACCOUNT_COMPANY == 'true') $company = HTML::sanitize($_POST['company']);
+      $firstname = HTML::sanitize($_POST['firstname']);
+      $lastname = HTML::sanitize($_POST['lastname']);
+      $street_address = HTML::sanitize($_POST['street_address']);
+      if (ACCOUNT_SUBURB == 'true') $suburb = HTML::sanitize($_POST['suburb']);
+      $postcode = HTML::sanitize($_POST['postcode']);
+      $city = HTML::sanitize($_POST['city']);
+      $country = HTML::sanitize($_POST['country']);
       if (ACCOUNT_STATE == 'true') {
         if (isset($_POST['zone_id'])) {
-          $zone_id = tep_db_prepare_input($_POST['zone_id']);
+          $zone_id = HTML::sanitize($_POST['zone_id']);
         } else {
           $zone_id = false;
         }
-        $state = tep_db_prepare_input($_POST['state']);
+        $state = HTML::sanitize($_POST['state']);
       }
 
       if (ACCOUNT_GENDER == 'true') {
@@ -104,14 +104,22 @@
 
       if (ACCOUNT_STATE == 'true') {
         $zone_id = 0;
-        $check_query = tep_db_query("select count(*) as total from zones where zone_country_id = '" . (int)$country . "'");
-        $check = tep_db_fetch_array($check_query);
-        $entry_state_has_zones = ($check['total'] > 0);
+
+        $Qcheck = $OSCOM_Db->prepare('select zone_id from :table_zones where zone_country_id = :zone_country_id');
+        $Qcheck->bindInt(':zone_country_id', $country);
+        $Qcheck->execute();
+
+        $entry_state_has_zones = ($Qcheck->fetch() !== false);
+
         if ($entry_state_has_zones == true) {
-          $zone_query = tep_db_query("select distinct zone_id from zones where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
-          if (tep_db_num_rows($zone_query) == 1) {
-            $zone = tep_db_fetch_array($zone_query);
-            $zone_id = $zone['zone_id'];
+          $Qzone = $OSCOM_Db->prepare('select distinct zone_id from :table_zones where zone_country_id = :zone_country_id and (zone_name = :zone_name or zone_code = :zone_code)');
+          $Qzone->bindInt(':zone_country_id', $country);
+          $Qzone->bindValue(':zone_name', $state);
+          $Qzone->bindValue(':zone_code', $state);
+          $Qzone->execute();
+
+          if (count($Qzone->fetchAll()) === 1) {
+            $zone_id = $Qzone->valueInt('zone_id');
           } else {
             $error = true;
 
@@ -156,9 +164,9 @@
 
         if (!isset($_SESSION['sendto'])) tep_session_register('sendto');
 
-        tep_db_perform('address_book', $sql_data_array);
+        $OSCOM_Db->save('address_book', $sql_data_array);
 
-        $sendto = tep_db_insert_id();
+        $sendto = $OSCOM_Db->lastInsertId();
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
@@ -179,10 +187,12 @@
 
       $sendto = $_POST['address'];
 
-      $check_address_query = tep_db_query("select count(*) as total from address_book where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+      $Qcheck->bindInt(':address_book_id', $sendto);
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if ($check_address['total'] == '1') {
+      if ($Qcheck->fetch() !== false) {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
         tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
       } else {
@@ -273,13 +283,14 @@
       <tbody>
 
 <?php
-      $radio_buttons = 0;
+      $Qab = $OSCOM_Db->prepare('select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from :table_address_book where customers_id = :customers_id order by firstname, lastname');
+      $Qab->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qab->execute();
 
-      $addresses_query = tep_db_query("select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from address_book where customers_id = '" . (int)$customer_id . "'");
-      while ($addresses = tep_db_fetch_array($addresses_query)) {
-        $format_id = tep_get_address_format_id($addresses['country_id']);
+      while ($Qab->fetch()) {
+        $format_id = tep_get_address_format_id($Qab->valueInt('country_id'));
 
-       if ($addresses['address_book_id'] == $sendto) {
+        if ($Qab->valueInt('address_book_id') == $sendto) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
         } else {
           echo '      <tr class="moduleRow">' . "\n";
@@ -287,14 +298,13 @@
 ?>
 
         <td>
-          <strong><?php echo $addresses['firstname'] . ' ' . $addresses['lastname']; ?></strong>
-          <div class="help-block"><?php echo tep_address_format($format_id, $addresses, true, ' ', ', '); ?></div>
+          <strong><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong>
+          <div class="help-block"><?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', ', '); ?></div>
         </td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $addresses['address_book_id'], ($addresses['address_book_id'] == $sendto)); ?></td>
+        <td align="right"><?php echo tep_draw_radio_field('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $sendto)); ?></td>
       </tr>
 
 <?php
-        $radio_buttons++;
       }
 ?>
 

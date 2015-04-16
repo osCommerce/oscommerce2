@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/contact_us.php');
@@ -17,9 +19,9 @@
   if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
-    $name = tep_db_prepare_input($_POST['name']);
-    $email_address = tep_db_prepare_input($_POST['email']);
-    $enquiry = tep_db_prepare_input($_POST['enquiry']);
+    $name = HTML::sanitize($_POST['name']);
+    $email_address = HTML::sanitize($_POST['email']);
+    $enquiry = HTML::sanitize($_POST['enquiry']);
 
     if (!tep_validate_email($email_address)) {
       $error = true;

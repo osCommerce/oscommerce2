@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
@@ -21,10 +23,10 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book_process.php');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_GET['delete']) && is_numeric($_GET['delete']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
-    if ((int)$_GET['delete'] == $customer_default_address_id) {
+    if ((int)$_GET['delete'] == $_SESSION['customer_default_address_id']) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
     } else {
-      tep_db_query("delete from address_book where address_book_id = '" . (int)$_GET['delete'] . "' and customers_id = '" . (int)$customer_id . "'");
+      $OSCOM_Db->delete('address_book', ['address_book_id' => (int)$_GET['delete'], 'customers_id' => (int)$_SESSION['customer_id']]);
 
       $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
     }
@@ -38,22 +40,22 @@
     $process = true;
     $error = false;
 
-    if (ACCOUNT_GENDER == 'true') $gender = tep_db_prepare_input($_POST['gender']);
-    if (ACCOUNT_COMPANY == 'true') $company = tep_db_prepare_input($_POST['company']);
-    $firstname = tep_db_prepare_input($_POST['firstname']);
-    $lastname = tep_db_prepare_input($_POST['lastname']);
-    $street_address = tep_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB == 'true') $suburb = tep_db_prepare_input($_POST['suburb']);
-    $postcode = tep_db_prepare_input($_POST['postcode']);
-    $city = tep_db_prepare_input($_POST['city']);
-    $country = tep_db_prepare_input($_POST['country']);
+    if (ACCOUNT_GENDER == 'true') $gender = HTML::sanitize($_POST['gender']);
+    if (ACCOUNT_COMPANY == 'true') $company = HTML::sanitize($_POST['company']);
+    $firstname = HTML::sanitize($_POST['firstname']);
+    $lastname = HTML::sanitize($_POST['lastname']);
+    $street_address = HTML::sanitize($_POST['street_address']);
+    if (ACCOUNT_SUBURB == 'true') $suburb = HTML::sanitize($_POST['suburb']);
+    $postcode = HTML::sanitize($_POST['postcode']);
+    $city = HTML::sanitize($_POST['city']);
+    $country = HTML::sanitize($_POST['country']);
     if (ACCOUNT_STATE == 'true') {
       if (isset($_POST['zone_id'])) {
-        $zone_id = tep_db_prepare_input($_POST['zone_id']);
+        $zone_id = HTML::sanitize($_POST['zone_id']);
       } else {
         $zone_id = false;
       }
-      $state = tep_db_prepare_input($_POST['state']);
+      $state = HTML::sanitize($_POST['state']);
     }
 
     if (ACCOUNT_GENDER == 'true') {
@@ -102,14 +104,22 @@
 
     if (ACCOUNT_STATE == 'true') {
       $zone_id = 0;
-      $check_query = tep_db_query("select count(*) as total from zones where zone_country_id = '" . (int)$country . "'");
-      $check = tep_db_fetch_array($check_query);
-      $entry_state_has_zones = ($check['total'] > 0);
+
+      $Qcheck = $OSCOM_Db->prepare('select zone_id from :table_zones where zone_country_id = :zone_country_id');
+      $Qcheck->bindInt(':zone_country_id', $country);
+      $Qcheck->execute();
+
+      $entry_state_has_zones = ($Qcheck->fetch() !== false);
+
       if ($entry_state_has_zones == true) {
-        $zone_query = tep_db_query("select distinct zone_id from zones where zone_country_id = '" . (int)$country . "' and (zone_name = '" . tep_db_input($state) . "' or zone_code = '" . tep_db_input($state) . "')");
-        if (tep_db_num_rows($zone_query) == 1) {
-          $zone = tep_db_fetch_array($zone_query);
-          $zone_id = $zone['zone_id'];
+        $Qzone = $OSCOM_Db->prepare('select distinct zone_id from :table_zones where zone_country_id = :zone_country_id and (zone_name = :zone_name or zone_code = :zone_code)');
+        $Qzone->bindInt(':zone_country_id', $country);
+        $Qzone->bindValue(':zone_name', $state);
+        $Qzone->bindValue(':zone_code', $state);
+        $Qzone->execute();
+
+        if (count($Qzone->fetchAll()) === 1) {
+          $zone_id = $Qzone->valueInt('zone_id');
         } else {
           $error = true;
 
@@ -146,12 +156,16 @@
       }
 
       if ($_POST['action'] == 'update') {
-        $check_query = tep_db_query("select address_book_id from address_book where address_book_id = '" . (int)$_GET['edit'] . "' and customers_id = '" . (int)$customer_id . "' limit 1");
-        if (tep_db_num_rows($check_query) == 1) {
-          tep_db_perform('address_book', $sql_data_array, 'update', "address_book_id = '" . (int)$_GET['edit'] . "' and customers_id ='" . (int)$customer_id . "'");
+        $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+        $Qcheck->bindInt(':address_book_id', $_GET['edit']);
+        $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+        $Qcheck->execute();
+
+        if ($Qcheck->fetch() !== false) {
+          $OSCOM_Db->save('address_book', $sql_data_array, ['address_book_id' => (int)$_GET['edit'], 'customers_id' => (int)$_SESSION['customer_id']]);
 
 // reregister session variables
-          if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $customer_default_address_id) ) {
+          if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id']) ) {
             $customer_first_name = $firstname;
             $customer_country_id = $country;
             $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
@@ -163,7 +177,7 @@
 
             if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
 
-            tep_db_perform('customers', $sql_data_array, 'update', "customers_id = '" . (int)$customer_id . "'");
+            $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
           }
 
           $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
@@ -171,9 +185,10 @@
       } else {
         if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
           $sql_data_array['customers_id'] = (int)$customer_id;
-          tep_db_perform('address_book', $sql_data_array);
 
-          $new_address_book_id = tep_db_insert_id();
+          $OSCOM_Db->save('address_book', $sql_data_array);
+
+          $new_address_book_id = $OSCOM_Db->lastInsertId();
 
 // reregister session variables
           if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
@@ -188,7 +203,7 @@
             if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
             if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $sql_data_array['customers_default_address_id'] = $new_address_book_id;
 
-            tep_db_perform('customers', $sql_data_array, 'update', "customers_id = '" . (int)$customer_id . "'");
+            $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
 
             $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
           }
@@ -200,25 +215,30 @@
   }
 
   if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-    $entry_query = tep_db_query("select entry_gender, entry_company, entry_firstname, entry_lastname, entry_street_address, entry_suburb, entry_postcode, entry_city, entry_state, entry_zone_id, entry_country_id from address_book where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$_GET['edit'] . "'");
+    $Qentry = $OSCOM_Db->prepare('select entry_gender, entry_company, entry_firstname, entry_lastname, entry_street_address, entry_suburb, entry_postcode, entry_city, entry_state, entry_zone_id, entry_country_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+    $Qentry->bindInt(':address_book_id', $_GET['edit']);
+    $Qentry->bindInt(':customers_id', $_SESSION['customer_id']);
+    $Qentry->execute();
 
-    if (!tep_db_num_rows($entry_query)) {
+    if ($Qentry->fetch() === false) {
       $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
       tep_redirect(tep_href_link('address_book.php', '', 'SSL'));
     }
 
-    $entry = tep_db_fetch_array($entry_query);
+    $entry = $Qentry->toArray();
   } elseif (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    if ($_GET['delete'] == $customer_default_address_id) {
+    if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
       tep_redirect(tep_href_link('address_book.php', '', 'SSL'));
     } else {
-      $check_query = tep_db_query("select count(*) as total from address_book where address_book_id = '" . (int)$_GET['delete'] . "' and customers_id = '" . (int)$customer_id . "'");
-      $check = tep_db_fetch_array($check_query);
+      $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+      $Qcheck->bindInt(':address_book_id', $_GET['delete']);
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if ($check['total'] < 1) {
+      if ($Qcheck->fetch() === false) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
         tep_redirect(tep_href_link('address_book.php', '', 'SSL'));

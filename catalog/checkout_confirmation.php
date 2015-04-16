@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
@@ -40,7 +42,7 @@
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $comments = HTML::sanitize($_POST['comments']);
   }
 
 // load the selected payment module
@@ -171,7 +173,7 @@
   </div>
 
   <div class="contentText">
-  
+
     <div class="row">
 
       <div class="col-sm-4">
@@ -182,7 +184,7 @@
           </div>
         </div>
       </div>
-      
+
       <?php
       if ($order->info['shipping_method']) {
         ?>
@@ -260,7 +262,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="col-sm-4">
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', tep_href_link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
@@ -269,7 +271,7 @@
           </div>
         </div>
       </div>
-      
+
     </div>
     <div class="clearfix"></div>
 
@@ -310,7 +312,7 @@
   <div class="clearfix"></div>
 
   <div class="contentText">
-  
+
     <div class="stepwizard">
       <div class="stepwizard-row">
         <div class="stepwizard-step">
@@ -327,7 +329,7 @@
         </div>
       </div>
     </div>
-    
+
   </div>
 
 </div>

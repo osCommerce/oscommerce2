@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
@@ -21,9 +23,9 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_password.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_current = tep_db_prepare_input($_POST['password_current']);
-    $password_new = tep_db_prepare_input($_POST['password_new']);
-    $password_confirmation = tep_db_prepare_input($_POST['password_confirmation']);
+    $password_current = HTML::sanitize($_POST['password_current']);
+    $password_new = HTML::sanitize($_POST['password_new']);
+    $password_confirmation = HTML::sanitize($_POST['password_confirmation']);
 
     $error = false;
 
@@ -38,13 +40,13 @@
     }
 
     if ($error == false) {
-      $check_customer_query = tep_db_query("select customers_password from customers where customers_id = '" . (int)$customer_id . "'");
-      $check_customer = tep_db_fetch_array($check_customer_query);
+      $Qcheck = $OSCOM_Db->prepare('select customers_password from :table_customers where customers_id = :customers_id');
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if (tep_validate_password($password_current, $check_customer['customers_password'])) {
-        tep_db_query("update customers set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
-
-        tep_db_query("update customers_info set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
+      if (tep_validate_password($password_current, $Qcheck->value('customers_password'))) {
+        $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => (int)$_SESSION['customer_id']]);
+        $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$_SESSION['customer_id']]);
 
         $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 
@@ -107,7 +109,7 @@
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?></div>
   </div>
-  
+
 </div>
 
 </form>

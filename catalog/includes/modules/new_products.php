@@ -11,21 +11,25 @@
 */
 
   if ( (!isset($new_products_category_id)) || ($new_products_category_id == '0') ) {
-    $new_products_query = tep_db_query("select p.products_id, p.products_image, p.products_tax_class_id, pd.products_name, if(s.status, s.specials_new_products_price, p.products_price) as products_price from products p left join specials s on p.products_id = s.products_id, products_description pd where p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_date_added desc limit " . MAX_DISPLAY_NEW_PRODUCTS);
+    $Qnew = $OSCOM_Db->prepare('select p.products_id, p.products_image, p.products_tax_class_id, pd.products_name, if(s.status, s.specials_new_products_price, p.products_price) as products_price from :table_products p left join :table_specials s on p.products_id = s.products_id, products_description pd where p.products_status = "1" and p.products_id = pd.products_id and pd.language_id = :language_id order by p.products_date_added desc, pd.products_name limit :limit');
+    $Qnew->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qnew->bindInt(':limit', MAX_DISPLAY_NEW_PRODUCTS);
+    $Qnew->execute();
   } else {
-    $new_products_query = tep_db_query("select distinct p.products_id, p.products_image, p.products_tax_class_id, pd.products_name, if(s.status, s.specials_new_products_price, p.products_price) as products_price from products p left join specials s on p.products_id = s.products_id, products_description pd, products_to_categories p2c, categories c where p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and c.parent_id = '" . (int)$new_products_category_id . "' and p.products_status = '1' and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by p.products_date_added desc limit " . MAX_DISPLAY_NEW_PRODUCTS);
+    $Qnew = $OSCOM_Db->prepare('select distinct p.products_id, p.products_image, p.products_tax_class_id, pd.products_name, if(s.status, s.specials_new_products_price, p.products_price) as products_price from :table_products p left join :table_specials s on p.products_id = s.products_id, :table_products_description pd, :table_products_to_categories p2c, :table_categories c where p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and c.parent_id = :parent_id and p.products_status = "1" and p.products_id = pd.products_id and pd.language_id = :language_id order by p.products_date_added desc, pd.products_name limit :limit');
+    $Qnew->bindInt(':parent_id', $new_products_category_id);
+    $Qnew->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qnew->bindInt(':limit', MAX_DISPLAY_NEW_PRODUCTS);
+    $Qnew->execute();
   }
 
-  $num_new_products = tep_db_num_rows($new_products_query);
-
-  if ($num_new_products > 0) {
-
+  if ($Qnew->fetch() !== false) {
     echo '<h3>' . sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')) . '</h3>';
 
     echo '<div class="row">';
-    while ($new_products = tep_db_fetch_array($new_products_query)) {
+    do {
       include('includes/modules/templates/new_products.php');
-    }
+    } while ($Qnew->fetch());
     echo '</div>';
   }
 ?>

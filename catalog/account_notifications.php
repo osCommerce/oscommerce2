@@ -76,7 +76,7 @@
       $Qcheck->execute();
 
       if ($Qcheck->fetch() !== false) {
-        $OSCOM_Db->delete('products_notifications', ['customers_id' => (int)$_SESSION['customer_id']]);
+        $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id']]);
       }
     }
 
@@ -123,9 +123,11 @@
   <div class="contentText">
 
 <?php
-    $products_check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "'");
-    $products_check = tep_db_fetch_array($products_check_query);
-    if ($products_check['total'] > 0) {
+    $Qcheck = $OSCOM_Db->prepare('select products_id from :table_products_notifications where customers_id = :customers_id limit 1');
+    $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+    $Qcheck->execute();
+
+    if ($Qcheck->fetch() !== false) {
 ?>
 
     <div class="clearfix"></div>
@@ -138,12 +140,17 @@
 
 <?php
       $counter = 0;
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from products_description pd, products_notifications pn where pn.customers_id = '" . (int)$customer_id . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by pd.products_name");
-      while ($products = tep_db_fetch_array($products_query)) {
+
+      $Qproducts = $OSCOM_Db->prepare('select pd.products_id, pd.products_name from :table_products_description pd, :table_products_notifications pn where pn.customers_id = :customers_id and pn.products_id = pd.products_id and pd.language_id = :language_id order by pd.products_name');
+      $Qproducts->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproducts->execute();
+
+      while ($Qproducts->fetch()) {
 ?>
       <div class="checkbox">
         <label>
-          <?php echo tep_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true) . $products['products_name']; ?>
+          <?php echo tep_draw_checkbox_field('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
         </label>
       </div>
 <?php
