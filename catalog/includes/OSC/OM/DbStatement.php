@@ -16,7 +16,6 @@ class DbStatement extends \PDOStatement
 {
     protected $pdo;
     protected $is_error = false;
-    protected $binded_params = [];
     protected $cache_key;
     protected $cache_expire;
     protected $cache_data;
@@ -26,11 +25,6 @@ class DbStatement extends \PDOStatement
 
     public function bindValue($parameter, $value, $data_type = \PDO::PARAM_STR)
     {
-        $this->binded_params[$parameter] = [
-            'value' => $value,
-            'data_type' => $data_type
-        ];
-
         return parent::bindValue($parameter, $value, $data_type);
     }
 
