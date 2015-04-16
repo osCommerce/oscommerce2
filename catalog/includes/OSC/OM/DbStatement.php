@@ -16,11 +16,14 @@ class DbStatement extends \PDOStatement
 {
     protected $pdo;
     protected $is_error = false;
+    protected $page_set_keyword = 'page';
+    protected $page_set;
+    protected $page_set_results_per_page;
     protected $cache_key;
     protected $cache_expire;
     protected $cache_data;
     protected $cache_read = false;
-    protected $cache_empty = false;
+    protected $cache_empty_results = false;
     protected $query_call;
 
     public function bindValue($parameter, $value, $data_type = \PDO::PARAM_STR)
@@ -45,11 +48,35 @@ class DbStatement extends \PDOStatement
         return $this->bindValue($parameter, null, \PDO::PARAM_NULL);
     }
 
+    public function setPageSet($max_results, $page_set_keyword = null, $placeholder_offset = 'page_set_offset', $placeholder_max_results = 'page_set_max_results')
+    {
+        if (!empty($page_set_keyword)) {
+            $this->page_set_keyword = $page_set_keyword;
+        }
+
+        $this->page_set = (isset($_GET[$this->page_set_keyword]) && is_numeric($_GET[$this->page_set_keyword]) && ($_GET[$this->page_set_keyword] > 0)) ? $_GET[$this->page_set_keyword] : 1;
+        $this->page_set_results_per_page = $max_results;
+
+        $offset = max(($this->page_set * $max_results) - $max_results, 0);
+
+        $this->bindInt(':' . $placeholder_offset, $offset);
+        $this->bindInt(':' . $placeholder_max_results, $max_results);
+    }
+
     public function execute($input_parameters = null)
     {
         if (isset($this->cache_key)) {
+            if (isset($this->page_set)) {
+                $this->cache_key = $this->cache_key . '-pageset' . $this->page_set;
+            }
+
             if (Registry::get('Cache')->read($this->cache_key, $this->cache_expire)) {
                 $this->cache_data = Registry::get('Cache')->getCache();
+
+                if (isset($this->cache_data['data']) && isset($this->cache_data['total'])) {
+                    $this->page_set_total_rows = $this->cache_data['total'];
+                    $this->cache_data = $this->cache_data['data'];
+                }
 
                 $this->cache_read = true;
             }
@@ -64,6 +91,12 @@ class DbStatement extends \PDOStatement
 
             if ($this->is_error === true) {
                 trigger_error($this->queryString);
+            }
+
+            if (strpos($this->queryString, ' SQL_CALC_FOUND_ROWS ') !== false) {
+                $this->page_set_total_rows = $this->pdo->query('select found_rows()')->fetchColumn();
+            } elseif (isset($this->page_set)) {
+                trigger_error('OSC\\OM\\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
             }
         }
     }
@@ -120,11 +153,11 @@ class DbStatement extends \PDOStatement
         return $this->result;
     }
 
-    public function setCache($key, $expire = 0, $cache_empty = false)
+    public function setCache($key, $expire = 0, $cache_empty_results = false)
     {
         $this->cache_key = basename($key);
         $this->cache_expire = $expire;
-        $this->cache_empty = $cache_empty;
+        $this->cache_empty_results = $cache_empty_results;
 
         if ($this->query_call != 'prepare') {
             trigger_error('OSCOM_DbStatement::setCache(): Cannot set cache (\'' . $this->cache_key . '\') on a non-prepare query. Please change the query to a prepare() query.');
@@ -176,6 +209,14 @@ class DbStatement extends \PDOStatement
         return $this->valueMixed($column, 'decimal');
     }
 
+    public function hasValue($column) {
+        if (!isset($this->result)) {
+            $this->fetch();
+        }
+
+        return isset($this->result[$column]);
+    }
+
     public function isError()
     {
         return $this->is_error;
@@ -196,16 +237,117 @@ class DbStatement extends \PDOStatement
         return $this->query_call;
     }
 
+    public function getCurrentPageSet() {
+        return $this->page_set;
+    }
+
+    public function getPageSetResultsPerPage()
+    {
+        return $this->page_set_results_per_page;
+    }
+
+    public function getPageSetTotalRows()
+    {
+        return $this->page_set_total_rows;
+    }
+
     public function setPDO(\PDO $instance)
     {
         $this->pdo = $instance;
     }
 
+    public function getPageSetLabel($text)
+    {
+        if ($this->page_set_total_rows < 1) {
+            $from = 0;
+        } else {
+            $from = max(($this->page_set * $this->page_set_results_per_page) - $this->page_set_results_per_page, 1);
+        }
+
+        $to = min($this->page_set * $this->page_set_results_per_page, $this->page_set_total_rows);
+
+        if ($to > $this->page_set_results_per_page) {
+            $from++;
+        }
+
+        return sprintf($text, $from, $to, $this->page_set_total_rows);
+    }
+
+    public function getPageSetLinks($parameters = null)
+    {
+        global $PHP_SELF, $request_type;
+
+        $number_of_pages = ceil($this->page_set_total_rows / $this->page_set_results_per_page);
+
+        if (!empty($parameters) && (substr($parameters, -1) != '&')) {
+            $parameters .= '&';
+        }
+
+        $output = '<ul class="pagination">';
+
+// previous button - not displayed on first page
+        if ($this->page_set > 1) {
+            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">&laquo;</a></li>';
+        } else {
+            $output .= '<li class="disabled"><span>&laquo;</span></li>';
+        }
+
+// check if number_of_pages > $max_page_links
+        $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
+        if ($this->page_set % $this->page_set_total_rows) {
+            $cur_window_num++;
+        }
+
+        $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
+        if ($number_of_pages % $this->page_set_total_rows) {
+            $max_window_num++;
+        }
+
+// previous window of pages
+        if ($cur_window_num > 1) {
+            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a></li>';
+        }
+
+// page nn button
+        for ($jump_to_page = 1 + (($cur_window_num - 1) * $this->page_set_total_rows); ($jump_to_page <= ($cur_window_num * $this->page_set_total_rows)) && ($jump_to_page <= $number_of_pages); $jump_to_page++) {
+            if ($jump_to_page == $this->page_set) {
+                $output .= '<li class="active"><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
+            } else {
+                $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
+            }
+        }
+
+// next window of pages
+        if ($cur_window_num < $max_window_num) {
+            $output .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1), $request_type) . '" class="pageResults" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a>&nbsp;';
+        }
+
+// next button
+        if (($this->page_set < $number_of_pages) && ($number_of_pages != 1)) {
+            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">&raquo;</a></li>';
+        } else {
+            $output .= '<li class="disabled"><span>&raquo;</span></li>';
+        }
+
+        $output .= '</ul>';
+
+        return $output;
+    }
+
     public function __destruct()
     {
         if (($this->cache_read === false) && isset($this->cache_key) && is_array($this->cache_data)) {
-            if ($this->cache_empty || ($this->cache_data[0] !== false)) {
-                Registry::get('Cache')->write($this->cache_data, $this->cache_key);
+            if ($this->cache_empty_results || ($this->cache_data[0] !== false)) {
+                $cache_data = $this->cache_data;
+
+                if (isset($this->page_set_total_rows)) {
+                    $cache_data = [
+                        'data' => $cache_data,
+                        'total' => $this->page_set_total_rows
+                    ];
+                }
+
+                Registry::get('Cache')->write($cache_data, $this->cache_key);
             }
         }
     }
