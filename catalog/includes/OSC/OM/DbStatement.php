@@ -14,6 +14,7 @@ use OSC\OM\Registry;
 
 class DbStatement extends \PDOStatement
 {
+    protected $pdo;
     protected $is_error = false;
     protected $binded_params = [];
     protected $cache_key;
@@ -199,6 +200,11 @@ class DbStatement extends \PDOStatement
     public function getQueryCall()
     {
         return $this->query_call;
+    }
+
+    public function setPDO(\PDO $instance)
+    {
+        $this->pdo = $instance;
     }
 
     public function __destruct()

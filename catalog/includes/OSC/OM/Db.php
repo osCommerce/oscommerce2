@@ -75,6 +75,7 @@ class Db extends \PDO
 
         $DbStatement = parent::prepare($statement, is_array($driver_options) ? $driver_options : []);
         $DbStatement->setQueryCall('prepare');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
@@ -92,6 +93,7 @@ class Db extends \PDO
         }
 
         $DbStatement->setQueryCall('query');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
