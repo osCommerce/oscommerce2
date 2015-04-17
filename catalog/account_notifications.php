@@ -46,19 +46,19 @@
       }
 
       if (sizeof($products_parsed) > 0) {
-        $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "' and products_id not in (" . implode(',', $products_parsed) . ")");
+        $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id not in (" . implode(',', $products_parsed) . ")");
         $check = tep_db_fetch_array($check_query);
 
         if ($check['total'] > 0) {
-          tep_db_query("delete from products_notifications where customers_id = '" . (int)$customer_id . "' and products_id not in (" . implode(',', $products_parsed) . ")");
+          tep_db_query("delete from products_notifications where customers_id = '" . (int)$_SESSION['customer_id'] . "' and products_id not in (" . implode(',', $products_parsed) . ")");
         }
       }
     } else {
-      $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "'");
+      $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       $check = tep_db_fetch_array($check_query);
 
       if ($check['total'] > 0) {
-        tep_db_query("delete from products_notifications where customers_id = '" . (int)$customer_id . "'");
+        tep_db_query("delete from products_notifications where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       }
     }
 
@@ -105,7 +105,7 @@
   <div class="contentText">
 
 <?php
-    $products_check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "'");
+    $products_check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     $products_check = tep_db_fetch_array($products_check_query);
     if ($products_check['total'] > 0) {
 ?>
@@ -120,7 +120,7 @@
 
 <?php
       $counter = 0;
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from products_description pd, products_notifications pn where pn.customers_id = '" . (int)$customer_id . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by pd.products_name");
+      $products_query = tep_db_query("select pd.products_id, pd.products_name from products_description pd, products_notifications pn where pn.customers_id = '" . (int)$_SESSION['customer_id'] . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by pd.products_name");
       while ($products = tep_db_fetch_array($products_query)) {
 ?>
       <div class="checkbox">
