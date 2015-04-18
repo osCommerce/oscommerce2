@@ -11,12 +11,13 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_GET['products_id'])) {
-    tep_redirect(OSCOM::link('index.php'));
+    HTTP::redirect(OSCOM::link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_info.php');

@@ -11,13 +11,14 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   $valid_product = false;
@@ -33,7 +34,7 @@
   }
 
   if ($valid_product == false) {
-    tep_redirect(OSCOM::link('index.php'));
+    HTTP::redirect(OSCOM::link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/tell_a_friend.php');
@@ -100,7 +101,7 @@
 
       $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), tep_output_string_protected($to_name)), 'success');
 
-      tep_redirect(OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')));
+      HTTP::redirect(OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')));
     }
   } elseif (isset($_SESSION['customer_id'])) {
     $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname', 'customers_email_address'], ['customers_id' => $_SESSION['customer_id']]);

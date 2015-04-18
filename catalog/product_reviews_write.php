@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -19,11 +20,11 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   if (!isset($_GET['products_id'])) {
-    tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
+    HTTP::redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
   }
 
   $Qcheck = $OSCOM_Db->prepare('select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
@@ -32,7 +33,7 @@
   $Qcheck->execute();
 
   if ( $Qcheck->fetch() === false ) {
-    tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
+    HTTP::redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
   }
 
   $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname'], ['customers_id' => $_SESSION['customer_id']]);
@@ -61,7 +62,7 @@
       $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $_SESSION['languages_id'], 'reviews_text' => $review]);
 
       $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
-      tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
+      HTTP::redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
     }
   }
 

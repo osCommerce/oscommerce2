@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -126,7 +127,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(OSCOM::link('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false));
+    HTTP::redirect(OSCOM::link('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false));
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));

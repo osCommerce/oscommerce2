@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -44,7 +45,7 @@
 
       $actionRecorder->record();
 
-      tep_redirect(OSCOM::link('contact_us.php', 'action=success'));
+      HTTP::redirect(OSCOM::link('contact_us.php', 'action=success'));
     }
   }
 

@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -18,12 +19,12 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    HTTP::redirect(OSCOM::link('shopping_cart.php'));
   }
 
   // needs to be included earlier to set the success message in the messageStack
@@ -37,7 +38,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
   }
 
   $error = false;
@@ -169,7 +170,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+        HTTP::redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -191,14 +192,14 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+        HTTP::redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
       } else {
         unset($_SESSION['sendto']);
       }
     } else {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+      HTTP::redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
     }
   }
 

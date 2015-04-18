@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   include('includes/application_top.php');
@@ -18,27 +19,27 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    HTTP::redirect(OSCOM::link('shopping_cart.php'));
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping']) || !isset($_SESSION['sendto'])) {
-    tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
   }
 
   if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset($_SESSION['payment'])) ) {
-    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
  }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+      HTTP::redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
     }
   }
 
@@ -65,14 +66,14 @@
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(OSCOM::link('shopping_cart.php'));
+      HTTP::redirect(OSCOM::link('shopping_cart.php'));
     }
   }
 
   $payment_modules->update_status();
 
   if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
-    tep_redirect(OSCOM::link('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+    HTTP::redirect(OSCOM::link('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
   require(DIR_WS_CLASSES . 'order_total.php');
@@ -335,7 +336,7 @@
   unset($_SESSION['payment']);
   unset($_SESSION['comments']);
 
-  tep_redirect(OSCOM::link('checkout_success.php', '', 'SSL'));
+  HTTP::redirect(OSCOM::link('checkout_success.php', '', 'SSL'));
 
   require('includes/application_bottom.php');
 ?>

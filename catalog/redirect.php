@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -21,7 +22,7 @@
       if ($Qbanner->fetch() !== false) {
         tep_update_banner_click_count($_GET['goto']);
 
-        tep_redirect($Qbanner->value('banners_url'));
+        HTTP::redirect($Qbanner->value('banners_url'));
       }
       break;
 
@@ -29,7 +30,7 @@
       if (isset($_GET['goto']) && tep_not_null($_GET['goto'])) {
         $Qcheck = $OSCOM_Db->get('products_description', 'products_url', ['products_url' => HTML::sanitize($_GET['goto'])], null, 1);
         if ($Qcheck->fetch() !== false) {
-          tep_redirect('http://' . $Qcheck->value('products_url'));
+          HTTP::redirect('http://' . $Qcheck->value('products_url'));
         }
       }
       break;
@@ -46,7 +47,7 @@
             $Qupdate->bindInt(':languages_id', $_SESSION['languages_id']);
             $Qupdate->execute();
 
-            tep_redirect($Qmanufacturer->value('manufacturers_url'));
+            HTTP::redirect($Qmanufacturer->value('manufacturers_url'));
           }
         } else {
 // no url exists for the selected language, lets use the default language then
@@ -62,7 +63,7 @@
               $Qupdate->bindInt(':languages_id', $Qmanufacturer->valueInt('languages_id'));
               $Qupdate->execute();
 
-              tep_redirect($Qmanufacturer->value('manufacturers_url'));
+              HTTP::redirect($Qmanufacturer->value('manufacturers_url'));
             }
           }
         }
@@ -70,5 +71,5 @@
       break;
   }
 
-  tep_redirect(OSCOM::link('index.php'));
+  HTTP::redirect(OSCOM::link('index.php'));
 ?>

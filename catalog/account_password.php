@@ -11,13 +11,14 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -51,7 +52,7 @@
 
         $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 
-        tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+        HTTP::redirect(OSCOM::link('account.php', '', 'SSL'));
       } else {
         $error = true;
 

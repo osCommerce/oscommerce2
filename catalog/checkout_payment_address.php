@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -18,12 +19,12 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    HTTP::redirect(OSCOM::link('shopping_cart.php'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -158,7 +159,7 @@
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
-        tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+        HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
       }
 // process the selected billing destination
     } elseif (isset($_POST['address'])) {
@@ -180,7 +181,7 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_payment == true) unset($_SESSION['payment']);
-        tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+        HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
       } else {
         unset($_SESSION['billto']);
       }
@@ -188,7 +189,7 @@
     } else {
       $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
-      tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+      HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
     }
   }
 
