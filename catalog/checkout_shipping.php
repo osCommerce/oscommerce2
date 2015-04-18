@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
   require('includes/classes/http_client.php');
@@ -18,12 +19,12 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link('shopping_cart.php'));
+    tep_redirect(OSCOM::link('shopping_cart.php'));
   }
 
 // if no shipping destination address was selected, use the customers own address as default
@@ -60,7 +61,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -125,7 +126,7 @@
                                             'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                             'cost' => $quote[0]['methods'][0]['cost']);
 
-              tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
+              tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
             }
           }
         } else {
@@ -138,7 +139,7 @@
       } else {
         $_SESSION['shipping'] = false;
 
-        tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
+        tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
       }
     }
   }
@@ -157,11 +158,11 @@
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && (!isset($_SESSION['shipping']) || ($_SESSION['shipping'] === false)) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-    tep_redirect(tep_href_link('checkout_shipping_address.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('checkout_shipping_address.php', '', 'SSL'));
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -170,7 +171,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link('checkout_shipping.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('checkout_address', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
 
 <div class="contentContainer">
   <div class="page-header">
@@ -183,7 +184,7 @@
         <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
       </div>
       <div class="clearfix"></div>
-      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
       <br>
       <div class="clearfix"></div>
     </div>

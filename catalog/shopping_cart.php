@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require("includes/application_top.php");
 
   if ($_SESSION['cart']->count_contents() > 0) {
@@ -19,7 +21,7 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/shopping_cart.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('shopping_cart.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('shopping_cart.php'));
 
   require('includes/template_top.php');
 ?>
@@ -32,7 +34,7 @@
   if ($_SESSION['cart']->count_contents() > 0) {
 ?>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('shopping_cart.php', 'action=update_product'), 'post', 'role="form"'); ?>
+<?php echo tep_draw_form('cart_quantity', OSCOM::link('shopping_cart.php', 'action=update_product'), 'post', 'role="form"'); ?>
 
 <div class="contentContainer">
 
@@ -78,8 +80,8 @@
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $products_name .= '<tr>';
 
-      $products_name .= '  <td valign="top" class="hidden-xs"><a href="' . tep_href_link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                        '  <td valign="top"><a href="' . tep_href_link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>';
+      $products_name .= '  <td valign="top" class="hidden-xs"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                        '  <td valign="top"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>';
 
       if (STOCK_CHECK == 'true') {
         $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -96,7 +98,7 @@
         }
       }
 
-      $products_name .= '<br>' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', tep_href_link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
+      $products_name .= '<br>' . tep_draw_input_field('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
 
       $products_name .= '</td>';
 
@@ -132,7 +134,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', tep_href_link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
   </div>
 
 <?php
@@ -166,7 +168,7 @@
   <?php echo TEXT_CART_EMPTY; ?>
 </div>
 
-<p class="text-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
+<p class="text-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
 
 
 <?php

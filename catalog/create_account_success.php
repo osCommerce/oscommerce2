@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/create_account_success.php');
@@ -18,10 +20,10 @@
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-    $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+    $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
     $_SESSION['navigation']->clear_snapshot();
   } else {
-    $origin_href = tep_href_link('index.php');
+    $origin_href = OSCOM::link('index.php');
   }
 
   require('includes/template_top.php');

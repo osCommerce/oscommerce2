@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
@@ -17,10 +19,10 @@
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
-      tep_redirect(tep_href_link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
+      tep_redirect(OSCOM::link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
     }
 
-    tep_redirect(tep_href_link('cookie_usage.php'));
+    tep_redirect(OSCOM::link('cookie_usage.php'));
   }
 
 // login content module must return $login_customer_id as an integer after successful customer authentication
@@ -54,17 +56,17 @@
     $_SESSION['cart']->restore_contents();
 
     if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-      $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+      $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
       $_SESSION['navigation']->clear_snapshot();
       tep_redirect($origin_href);
     }
 
-    tep_redirect(tep_href_link('index.php'));
+    tep_redirect(OSCOM::link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/login.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('login.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>

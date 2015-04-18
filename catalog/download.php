@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   include('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) die;
@@ -99,7 +101,7 @@ function tep_unlink_temp_dir($dir)
     mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
     symlink(DIR_FS_DOWNLOAD . $Qdownload->value('orders_products_filename'), DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
     if (file_exists(DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'))) {
-      tep_redirect(tep_href_link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename')));
+      tep_redirect(OSCOM::link(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename')));
     }
   }
 

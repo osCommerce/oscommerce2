@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
 // the following cPath references come from application_top.php
@@ -89,9 +91,9 @@
 
       echo '<div class="col-xs-6 col-sm-4">';
       echo '  <div class="text-center">';
-      echo '    <a href="' . tep_href_link('index.php', $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
+      echo '    <a href="' . OSCOM::link('index.php', $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
       echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . tep_href_link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
+      echo '      <h5><a href="' . OSCOM::link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
       echo '    </div>';
       echo '  </div>';
       echo '</div>';

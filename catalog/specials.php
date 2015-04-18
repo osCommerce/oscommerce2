@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/specials.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('specials.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('specials.php'));
 
   require('includes/template_top.php');
 ?>

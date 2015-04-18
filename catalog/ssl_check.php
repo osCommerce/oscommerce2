@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/ssl_check.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('ssl_check.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('ssl_check.php'));
 
   require('includes/template_top.php');
 ?>
@@ -38,7 +40,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('login.php'), null, null, 'btn-success'); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('login.php'), null, null, 'btn-success'); ?>
   </div>
 </div>
 

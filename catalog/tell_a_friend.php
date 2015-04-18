@@ -11,12 +11,13 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   $valid_product = false;
@@ -32,7 +33,7 @@
   }
 
   if ($valid_product == false) {
-    tep_redirect(tep_href_link('index.php'));
+    tep_redirect(OSCOM::link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/tell_a_friend.php');
@@ -90,7 +91,7 @@
         $email_body .= $message . "\n\n";
       }
 
-      $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false)) . "\n\n" .
+      $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false)) . "\n\n" .
                      sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . HTTP_SERVER . DIR_WS_CATALOG . "\n");
 
       tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
@@ -99,7 +100,7 @@
 
       $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), tep_output_string_protected($to_name)), 'success');
 
-      tep_redirect(tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')));
+      tep_redirect(OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')));
     }
   } elseif (isset($_SESSION['customer_id'])) {
     $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname', 'customers_email_address'], ['customers_id' => $_SESSION['customer_id']]);
@@ -108,7 +109,7 @@
     $from_email_address = $Qcustomer->value('customers_email_address');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
 
   require('includes/template_top.php');
 ?>
@@ -123,7 +124,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('email_friend', OSCOM::link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -197,7 +198,7 @@
 
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'))); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'))); ?></div>
   </div>
 </div>
 

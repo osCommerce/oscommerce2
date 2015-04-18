@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -69,5 +70,5 @@
       break;
   }
 
-  tep_redirect(tep_href_link('index.php'));
+  tep_redirect(OSCOM::link('index.php'));
 ?>

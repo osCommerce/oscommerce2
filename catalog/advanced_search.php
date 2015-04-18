@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/advanced_search.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('advanced_search.php'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
 
   require('includes/template_top.php');
 ?>
@@ -29,7 +31,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('advanced_search', tep_href_link('advanced_search_result.php', '', 'NONSSL', false), 'get', 'class="form-horizontal" role="form"') . tep_hide_session_id(); ?>
+<?php echo tep_draw_form('advanced_search', OSCOM::link('advanced_search_result.php', '', 'NONSSL', false), 'get', 'class="form-horizontal" role="form"') . tep_hide_session_id(); ?>
 
 <div class="contentContainer">
 

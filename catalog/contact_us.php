@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -43,11 +44,11 @@
 
       $actionRecorder->record();
 
-      tep_redirect(tep_href_link('contact_us.php', 'action=success'));
+      tep_redirect(OSCOM::link('contact_us.php', 'action=success'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('contact_us.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('contact_us.php'));
 
   require('includes/template_top.php');
 ?>
@@ -70,7 +71,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -78,7 +79,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 

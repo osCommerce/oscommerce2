@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -56,7 +57,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link('password_forgotten.php'));
+    tep_redirect(OSCOM::link('password_forgotten.php'));
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -80,11 +81,11 @@
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      tep_redirect(tep_href_link('login.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('login.php', '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require('includes/template_top.php');
@@ -100,7 +101,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('password_reset', tep_href_link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
