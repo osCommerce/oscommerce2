@@ -8,17 +8,19 @@
 
 namespace OSC\OM;
 
+use OSC\OM\OSCOM;
+
 class HTTP
 {
     public static function redirect($url)
     {
         global $request_type;
 
-        if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-            tep_redirect(tep_href_link('index.php', '', 'NONSSL', false));
+        if ((strstr($url, "\n") !== false) || (strstr($url, "\r") !== false)) {
+            $url = OSCOM::link('index.php', '', 'NONSSL', false);
         }
 
-        if ( (ENABLE_SSL == true) && ($request_type == 'SSL') ) { // We are loading an SSL page
+        if ((ENABLE_SSL == true) && ($request_type == 'SSL')) { // We are loading an SSL page
             if (substr($url, 0, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)) == HTTP_SERVER . DIR_WS_HTTP_CATALOG) { // NONSSL url
                 $url = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG . substr($url, strlen(HTTP_SERVER . DIR_WS_HTTP_CATALOG)); // Change it to SSL
             }
@@ -30,6 +32,6 @@ class HTTP
 
         header('Location: ' . $url);
 
-        tep_exit();
+        exit();
     }
 }

@@ -8,45 +8,60 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML;
+
 class OSCOM
 {
-    public static function link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
+    public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
     {
         global $request_type, $session_started, $SID;
 
-        $page = tep_output_string($page);
+        $page = HTML::sanitize($page);
 
-        if (!tep_not_null($page)) {
-            die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
+        if (!in_array($connection, ['NONSSL', 'SSL', 'AUTO'])) {
+            $connection = 'NONSSL';
+        }
+
+        if (!is_bool($add_session_id)) {
+            $add_session_id = true;
+        }
+
+        if (!is_bool($search_engine_safe)) {
+            $search_engine_safe = true;
+        }
+
+        if ($connection == 'AUTO') {
+            $connection = ($request_type == 'SSL') ? 'SSL' : 'NONSSL';
+        }
+
+        if (($connection == 'SSL') && (ENABLE_SSL !== true)) {
+            $connection = 'NONSSL';
         }
 
         if ($connection == 'NONSSL') {
             $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
-        } elseif ($connection == 'SSL') {
-            if (ENABLE_SSL == true) {
-                $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
-            } else {
-                $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
-            }
         } else {
-            die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
+            $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
         }
 
-        if (tep_not_null($parameters)) {
-            $link .= $page . '?' . tep_output_string($parameters);
+        $link .= $page;
+
+        if (!empty($parameters)) {
+            $link .= '?' . HTML::sanitize($parameters);
             $separator = '&';
         } else {
-            $link .= $page;
             $separator = '?';
         }
 
-        while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
+        while ((substr($link, -1) == '&') || (substr($link, -1) == '?')) {
+            $link = substr($link, 0, -1);
+        }
 
-    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-        if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-            if (tep_not_null($SID)) {
+// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+        if (($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False')) {
+            if (!empty($SID)) {
                 $_sid = $SID;
-            } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
+            } elseif ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL'))) {
                 if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
                     $_sid = session_name() . '=' . session_id();
                 }
@@ -54,17 +69,15 @@ class OSCOM
         }
 
         if (isset($_sid)) {
-            $link .= $separator . tep_output_string($_sid);
+            $link .= $separator . HTML::sanitize($_sid);
         }
 
-        while (strpos($link, '&&') !== false) $link = str_replace('&&', '&', $link);
+        while (strpos($link, '&&') !== false) {
+            $link = str_replace('&&', '&', $link);
+        }
 
-        if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-            $link = str_replace('?', '/', $link);
-            $link = str_replace('&', '/', $link);
-            $link = str_replace('=', '/', $link);
-        } else {
-            $link = str_replace('&', '&amp;', $link);
+        if ((SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) {
+            $link = str_replace(['?', '&', '='], '/', $link);
         }
 
         return $link;
