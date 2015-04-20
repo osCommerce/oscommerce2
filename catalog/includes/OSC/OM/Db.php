@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML;
+
 class Db extends \PDO
 {
     protected $connected = false;
@@ -73,6 +75,7 @@ class Db extends \PDO
 
         $DbStatement = parent::prepare($statement, is_array($driver_options) ? $driver_options : []);
         $DbStatement->setQueryCall('prepare');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
@@ -90,6 +93,7 @@ class Db extends \PDO
         }
 
         $DbStatement->setQueryCall('query');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
@@ -305,6 +309,21 @@ class Db extends \PDO
         }
 
         return !$error;
+    }
+
+    public static function prepareInput($string)
+    {
+        if (is_string($string)) {
+            return HTML::sanitize($string);
+        } elseif (is_array($string)) {
+            foreach ($string as $k => $v) {
+                $string[$k] = static::prepareInput($v);
+            }
+
+            return $string;
+        } else {
+            return $string;
+        }
     }
 
     protected function autoPrefixTables($statement)

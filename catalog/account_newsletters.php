@@ -20,8 +20,9 @@
 // needs to be included earlier to set the success message in the messageStack
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_newsletters.php');
 
-  $newsletter_query = tep_db_query("select customers_newsletter from customers where customers_id = '" . (int)$customer_id . "'");
-  $newsletter = tep_db_fetch_array($newsletter_query);
+  $Qnewsletter = $OSCOM_Db->prepare('select customers_newsletter from :table_customers where customers_id = :customers_id');
+  $Qnewsletter->bindInt(':customers_id', $_SESSION['customer_id']);
+  $Qnewsletter->execute();
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     if (isset($_POST['newsletter_general']) && is_numeric($_POST['newsletter_general'])) {
@@ -30,10 +31,10 @@
       $newsletter_general = '0';
     }
 
-    if ($newsletter_general != $newsletter['customers_newsletter']) {
-      $newsletter_general = (($newsletter['customers_newsletter'] == '1') ? '0' : '1');
+    if ($newsletter_general != $Qnewsletter->value('customers_newsletter')) {
+      $newsletter_general = (($Qnewsletter->value('customers_newsletter') == '1') ? '0' : '1');
 
-      tep_db_query("update customers set customers_newsletter = '" . (int)$newsletter_general . "' where customers_id = '" . (int)$customer_id . "'");
+      $OSCOM_Db->save('customers', ['customers_newsletter' => (int)$newsletter_general], ['customers_id' => $_SESSION['customer_id']]);
     }
 
     $messageStack->add_session('account', SUCCESS_NEWSLETTER_UPDATED, 'success');
@@ -61,7 +62,7 @@
       <div class="col-sm-8">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('newsletter_general', '1', (($newsletter['customers_newsletter'] == '1') ? true : false)); ?>
+            <?php echo tep_draw_checkbox_field('newsletter_general', '1', (($Qnewsletter->value('customers_newsletter') == '1') ? true : false)); ?>
             <?php if (tep_not_null(MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION)) echo ' ' . MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION; ?>
           </label>
         </div>

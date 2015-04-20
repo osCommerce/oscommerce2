@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
@@ -53,10 +55,12 @@
   } else {
 // verify the selected billing address
     if ( (is_array($billto) && empty($billto)) || is_numeric($billto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from address_book where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$billto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+      $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if ($check_address['total'] != '1') {
+      if ($Qcheck->fetch() === false) {
         $billto = $customer_default_address_id;
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
       }
@@ -68,7 +72,7 @@
 
   if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = tep_db_prepare_input($_POST['comments']);
+    $comments = HTML::sanitize($_POST['comments']);
   }
 
   $total_weight = $_SESSION['cart']->show_weight();

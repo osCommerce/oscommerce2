@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
   require('includes/classes/http_client.php');
 
@@ -31,10 +33,12 @@
   } else {
 // verify the selected shipping address
     if ( (is_array($sendto) && empty($sendto)) || is_numeric($sendto) ) {
-      $check_address_query = tep_db_query("select count(*) as total from address_book where customers_id = '" . (int)$customer_id . "' and address_book_id = '" . (int)$sendto . "'");
-      $check_address = tep_db_fetch_array($check_address_query);
+      $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+      $Qcheck->bindInt(':address_book_id', $_SESSION['sendto']);
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if ($check_address['total'] != '1') {
+      if ($Qcheck->fetch() === false) {
         $sendto = $customer_default_address_id;
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
       }
@@ -103,7 +107,7 @@
   if ( isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken']) ) {
     if (!isset($_SESSION['comments'])) tep_session_register('comments');
     if (tep_not_null($_POST['comments'])) {
-      $comments = tep_db_prepare_input($_POST['comments']);
+      $comments = HTML::sanitize($_POST['comments']);
     }
 
     if (!isset($_SESSION['shipping'])) tep_session_register('shipping');

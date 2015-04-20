@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   include('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
@@ -119,8 +121,10 @@
                           'orders_status' => $order->info['order_status'],
                           'currency' => $order->info['currency'],
                           'currency_value' => $order->info['currency_value']);
-  tep_db_perform('orders', $sql_data_array);
-  $insert_id = tep_db_insert_id();
+
+  $OSCOM_Db->save('orders', $sql_data_array);
+  $insert_id = $OSCOM_Db->lastInsertId();
+
   for ($i=0, $n=sizeof($order_totals); $i<$n; $i++) {
     $sql_data_array = array('orders_id' => $insert_id,
                             'title' => $order_totals[$i]['title'],
@@ -128,7 +132,8 @@
                             'value' => $order_totals[$i]['value'],
                             'class' => $order_totals[$i]['code'],
                             'sort_order' => $order_totals[$i]['sort_order']);
-    tep_db_perform('orders_total', $sql_data_array);
+
+    $OSCOM_Db->save('orders_total', $sql_data_array);
   }
 
   $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
@@ -137,7 +142,8 @@
                           'date_added' => 'now()',
                           'customer_notified' => $customer_notification,
                           'comments' => $order->info['comments']);
-  tep_db_perform('orders_status_history', $sql_data_array);
+
+  $OSCOM_Db->save('orders_status_history', $sql_data_array);
 
 // initialized for the email confirmation
   $products_ordered = '';
@@ -146,40 +152,57 @@
 // Stock Update - Joao Correia
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
-        $stock_query_raw = "SELECT products_quantity, pad.products_attributes_filename
-                            FROM products p
-                            LEFT JOIN products_attributes pa
-                             ON p.products_id=pa.products_id
-                            LEFT JOIN products_attributes_download pad
-                             ON pa.products_attributes_id=pad.products_attributes_id
-                            WHERE p.products_id = '" . tep_get_prid($order->products[$i]['id']) . "'";
+        $stock_query_sql = 'select products_quantity, pad.products_attributes_filename
+                            from :table_products p
+                            left join :table_products_attributes pa
+                            on p.products_id = pa.products_id
+                            left join :table_products_attributes_download pad
+                            on pa.products_attributes_id = pad.products_attributes_id
+                            where p.products_id = :products_id';
+
 // Will work with only one option for downloadable products
 // otherwise, we have to build the query dynamically with a loop
         $products_attributes = (isset($order->products[$i]['attributes'])) ? $order->products[$i]['attributes'] : '';
         if (is_array($products_attributes)) {
-          $stock_query_raw .= " AND pa.options_id = '" . (int)$products_attributes[0]['option_id'] . "' AND pa.options_values_id = '" . (int)$products_attributes[0]['value_id'] . "'";
+          $stock_query_sql .= ' and pa.options_id = :options_id and pa.options_values_id = :options_values_id';
         }
-        $stock_query = tep_db_query($stock_query_raw);
+
+        $Qstock = $OSCOM_Db->prepare($stock_query_sql);
+        $Qstock->bindInt(':products_id', tep_get_prid($order->products[$i]['id']));
+
+        if (is_array($products_attributes)) {
+          $Qstock->bindInt(':options_id', $products_attributes[0]['option_id']);
+          $Qstock->bindInt(':options_values_id', $products_attributes[0]['value_id']);
+        }
+
+        $Qstock->execute();
       } else {
-        $stock_query = tep_db_query("select products_quantity from products where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+        $Qstock = $OSCOM_Db->prepare('select products_quantity from :table_products where products_id = :products_id');
+        $Qstock->bindInt(':products_id', tep_get_prid($order->products[$i]['id']));
+        $Qstock->execute();
       }
-      if (tep_db_num_rows($stock_query) > 0) {
-        $stock_values = tep_db_fetch_array($stock_query);
+
+      if ($Qstock->fetch() !== false) {
 // do not decrement quantities if products_attributes_filename exists
-        if ((DOWNLOAD_ENABLED != 'true') || (!$stock_values['products_attributes_filename'])) {
-          $stock_left = $stock_values['products_quantity'] - $order->products[$i]['qty'];
+        if ((DOWNLOAD_ENABLED != 'true') || tep_not_null($Qstock->value('products_attributes_filename'))) {
+          $stock_left = $Qstock->valueInt('products_quantity') - $order->products[$i]['qty'];
         } else {
-          $stock_left = $stock_values['products_quantity'];
+          $stock_left = $Qstock->valueInt('products_quantity');
         }
-        tep_db_query("update products set products_quantity = '" . (int)$stock_left . "' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+
+        $OSCOM_Db->save('products', ['products_quantity' => (int)$stock_left], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
+
         if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
-          tep_db_query("update products set products_status = '0' where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+         $OSCOM_Db->save('products', ['products_status' => '0'], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
         }
       }
     }
 
 // Update products_ordered (for bestsellers list)
-    tep_db_query("update products set products_ordered = products_ordered + " . sprintf('%d', $order->products[$i]['qty']) . " where products_id = '" . tep_get_prid($order->products[$i]['id']) . "'");
+    $Qupdate = $OSCOM_Db->prepare('update :table_products set products_ordered = products_ordered + :products_ordered where products_id = :products_id');
+    $Qupdate->bindInt(':products_ordered', $order->products[$i]['qty']);
+    $Qupdate->bindInt(':products_id', tep_get_prid($order->products[$i]['id']));
+    $Qupdate->execute();
 
     $sql_data_array = array('orders_id' => $insert_id,
                             'products_id' => tep_get_prid($order->products[$i]['id']),
@@ -191,8 +214,8 @@
                             'products_quantity' => $order->products[$i]['qty'],
                             'products_full_id' => $order->products[$i]['id']);
 
-    tep_db_perform('orders_products', $sql_data_array);
-    $order_products_id = tep_db_insert_id();
+    $OSCOM_Db->save('orders_products', $sql_data_array);
+    $order_products_id = $OSCOM_Db->lastInsertId();
 
 //------insert customer choosen option to order--------
     $attributes_exist = '0';
@@ -201,40 +224,55 @@
       $attributes_exist = '1';
       for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
         if (DOWNLOAD_ENABLED == 'true') {
-          $attributes_query = "select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount , pad.products_attributes_filename
-                               from products_options popt, products_options_values poval, products_attributes pa
-                               left join products_attributes_download pad
-                                on pa.products_attributes_id=pad.products_attributes_id
-                               where pa.products_id = '" . (int)$order->products[$i]['id'] . "'
-                                and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "'
-                                and pa.options_id = popt.products_options_id
-                                and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "'
-                                and pa.options_values_id = poval.products_options_values_id
-                                and popt.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'";
-          $attributes = tep_db_query($attributes_query);
+          $attributes_query = 'select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix, pad.products_attributes_maxdays, pad.products_attributes_maxcount, pad.products_attributes_filename
+                               from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
+                               left join :table_products_attributes_download pad on pa.products_attributes_id = pad.products_attributes_id
+                               where pa.products_id = :products_id
+                               and pa.options_id = :options_id
+                               and pa.options_id = popt.products_options_id
+                               and pa.options_values_id = :options_values_id
+                               and pa.options_values_id = poval.products_options_values_id
+                               and popt.language_id = :language_id
+                               and popt.language_id = poval.language_id';
         } else {
-          $attributes = tep_db_query("select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix from products_options popt, products_options_values poval, products_attributes pa where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_id = '" . (int)$order->products[$i]['attributes'][$j]['option_id'] . "' and pa.options_id = popt.products_options_id and pa.options_values_id = '" . (int)$order->products[$i]['attributes'][$j]['value_id'] . "' and pa.options_values_id = poval.products_options_values_id and popt.language_id = '" . (int)$_SESSION['languages_id'] . "' and poval.language_id = '" . (int)$_SESSION['languages_id'] . "'");
+          $attributes_query = 'select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
+                               from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
+                               where pa.products_id = :products_id
+                               and pa.options_id = :options_id
+                               and pa.options_id = popt.products_options_id
+                               and pa.options_values_id = :options_values_id
+                               and pa.options_values_id = poval.products_options_values_id
+                               and popt.language_id = :language_id
+                               and popt.language_id = poval.language_id';
         }
-        $attributes_values = tep_db_fetch_array($attributes);
+
+        $Qattributes = $OSCOM_Db->prepare($attributes_query);
+        $Qattributes->bindInt(':products_id', $order->products[$i]['id']);
+        $Qattributes->bindInt(':options_id', $order->products[$i]['attributes'][$j]['option_id']);
+        $Qattributes->bindInt(':options_values_id', $order->products[$i]['attributes'][$j]['value_id']);
+        $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qattributes->execute();
 
         $sql_data_array = array('orders_id' => $insert_id,
                                 'orders_products_id' => $order_products_id,
-                                'products_options' => $attributes_values['products_options_name'],
-                                'products_options_values' => $attributes_values['products_options_values_name'],
-                                'options_values_price' => $attributes_values['options_values_price'],
-                                'price_prefix' => $attributes_values['price_prefix']);
-        tep_db_perform('orders_products_attributes', $sql_data_array);
+                                'products_options' => $Qattributes->value('products_options_name'),
+                                'products_options_values' => $Qattributes->value('products_options_values_name'),
+                                'options_values_price' => $Qattributes->value('options_values_price'),
+                                'price_prefix' => $Qattributes->value('price_prefix'));
 
-        if ((DOWNLOAD_ENABLED == 'true') && isset($attributes_values['products_attributes_filename']) && tep_not_null($attributes_values['products_attributes_filename'])) {
+        $OSCOM_Db->save('orders_products_attributes', $sql_data_array);
+
+        if ((DOWNLOAD_ENABLED == 'true') && $Qattributes->hasValue('products_attributes_filename') && tep_not_null($Qattributes->value('products_attributes_filename'))) {
           $sql_data_array = array('orders_id' => $insert_id,
                                   'orders_products_id' => $order_products_id,
-                                  'orders_products_filename' => $attributes_values['products_attributes_filename'],
-                                  'download_maxdays' => $attributes_values['products_attributes_maxdays'],
-                                  'download_count' => $attributes_values['products_attributes_maxcount']);
-          tep_db_perform('orders_products_download', $sql_data_array);
+                                  'orders_products_filename' => $Qattributes->value('products_attributes_filename'),
+                                  'download_maxdays' => $Qattributes->value('products_attributes_maxdays'),
+                                  'download_count' => $Qattributes->value('products_attributes_maxcount'));
+
+          $OSCOM_Db->save('orders_products_download', $sql_data_array);
         }
-        $products_ordered_attributes .= "\n\t" . $attributes_values['products_options_name'] . ' ' . $attributes_values['products_options_values_name'];
+
+        $products_ordered_attributes .= "\n\t" . $Qattributes->value('products_options_name') . ' ' . $Qattributes->value('products_options_values_name');
       }
     }
 //------insert customer choosen option eof ----
@@ -248,7 +286,7 @@
                  EMAIL_TEXT_INVOICE_URL . ' ' . tep_href_link('account_history_info.php', 'order_id=' . $insert_id, 'SSL', false) . "\n" .
                  EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
   if ($order->info['comments']) {
-    $email_order .= tep_db_output($order->info['comments']) . "\n\n";
+    $email_order .= HTML::outputProtected($order->info['comments']) . "\n\n";
   }
   $email_order .= EMAIL_TEXT_PRODUCTS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
