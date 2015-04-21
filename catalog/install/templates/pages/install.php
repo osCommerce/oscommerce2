@@ -18,6 +18,7 @@
   var dbUsername;
   var dbPassword;
   var dbName;
+  var dbNameToCreate;
 
   var formSubmited = false;
   var formSuccess = false;
@@ -38,11 +39,17 @@
     dbPassword = $('#DB_SERVER_PASSWORD').val();
     dbName = $('#DB_DATABASE').val();
 
-    $.get('rpc.php?action=dbCheck&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password=' + encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response) {
+    var dbCheckUrl = 'rpc.php?action=dbCheck&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password=' + encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName);
+
+    if (dbName == dbNameToCreate) {
+      dbCheckUrl = dbCheckUrl + '&createDb=true';
+    }
+
+    $.get(dbCheckUrl, function (response) {
       var result = /\[\[([^|]*?)(?:\|([^|]*?)){0,1}\]\]/.exec(response);
       result.shift();
 
-      if (result[0] == '1') {
+      if ((result[0] == '1') && (result[1] == 'success')) {
         $('#mBoxContents').html('<p><i class="fa fa-spinner fa-spin fa-2x"></i> The database structure is now being imported. Please be patient during this procedure.</p>');
 
         $.get('rpc.php?action=dbImport&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password='+ encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName), function (response2) {
@@ -68,9 +75,17 @@
           formSubmited = false;
         });
       } else {
-        var result_error = result[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        if ((result[0] == '1049') && (dbName != dbNameToCreate)) {
+          dbNameToCreate = dbName;
 
-        $('#mBoxContents').html('<p class="text-danger"><i class="fa fa-thumbs-down fa-2x text-danger"></i> There was a problem connecting to the database server. The following error had occured:</p><p class="text-danger"><strong>%s</strong></p><p class="text-danger">Please verify the connection parameters and try again.</p></div>'.replace('%s', result_error));
+          var result_error = 'The database name of \'' + dbName.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') + '\' does not exist. If you submit the form again with the same database name, an attempt will be made to create it.';
+
+          $('#mBoxContents').html('<p class="text-warning"><i class="fa fa-files-o fa-2x text-warning"></i> <strong>%s</strong></p></div>'.replace('%s', result_error));
+        } else {
+          var result_error = result[1].replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+          $('#mBoxContents').html('<p class="text-danger"><i class="fa fa-thumbs-down fa-2x text-danger"></i> There was a problem connecting to the database server. The following error had occured:</p><p class="text-danger"><strong>%s</strong></p><p class="text-danger">Please verify the connection parameters and try again.</p></div>'.replace('%s', result_error));
+        }
 
         formSubmited = false;
       }
@@ -116,7 +131,7 @@
     </div>
   </div>
 </div>
-  
+
 <div class="clearfix"></div>
 
 <div class="row">
@@ -127,14 +142,14 @@
         <div id="mBoxContents"></div>
       </div>
     </div>
-    
+
     <div class="page-header">
       <p class="inputRequirement pull-right text-right"><span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information</p>
       <h2>Database Server</h2>
     </div>
-    
+
     <form name="install" id="installForm" action="install.php?step=2" method="post" class="form-horizontal" role="form">
-    
+
       <div class="form-group has-feedback">
         <label for="dbServer" class="control-label col-xs-3">Database Server</label>
         <div class="col-xs-9">
@@ -143,7 +158,7 @@
           <span class="help-block">The address of the database server in the form of a hostname or IP address.</span>
         </div>
       </div>
-    
+
       <div class="form-group has-feedback">
         <label for="userName" class="control-label col-xs-3">Username</label>
         <div class="col-xs-9">
@@ -152,7 +167,7 @@
           <span class="help-block">The username used to connect to the database server.</span>
         </div>
       </div>
-    
+
       <div class="form-group has-feedback">
         <label for="passWord" class="control-label col-xs-3">Password</label>
         <div class="col-xs-9">
@@ -161,7 +176,7 @@
           <span class="help-block">The password that is used together with the username to connect to the database server.</span>
         </div>
       </div>
-    
+
       <div class="form-group has-feedback">
         <label for="dbName" class="control-label col-xs-3">Database Name</label>
         <div class="col-xs-9">
@@ -174,7 +189,7 @@
       <p><?php echo osc_draw_button('Continue To Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
     </form>
-    
+
   </div>
   <div class="col-xs-12 col-sm-pull-9 col-sm-3">
     <div class="panel panel-success">
@@ -187,5 +202,5 @@
       </div>
     </div>
   </div>
-  
+
 </div>
