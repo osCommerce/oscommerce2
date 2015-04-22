@@ -326,6 +326,11 @@ class Db extends \PDO
         }
     }
 
+    public static function prepareIdentifier($string)
+    {
+        return '`' . str_replace('`', '``', $string) . '`';
+    }
+
     protected function autoPrefixTables($statement)
     {
         $prefix = '';

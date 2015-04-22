@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Db;
+
   header('Cache-Control: no-cache, must-revalidate');
   header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 
@@ -17,56 +19,75 @@
 
   $dir_fs_www_root = dirname(__FILE__);
 
+  $result = false;
+
   if (isset($_GET['action']) && !empty($_GET['action'])) {
     switch ($_GET['action']) {
       case 'dbCheck':
-        $db = array('DB_SERVER' => trim(rawurldecode($_GET['server'])),
-                    'DB_SERVER_USERNAME' => trim(rawurldecode($_GET['username'])),
-                    'DB_SERVER_PASSWORD' => trim(rawurldecode($_GET['password'])),
-                    'DB_DATABASE' => trim(rawurldecode($_GET['name']))
-                   );
-
-        $db_error = false;
-        osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
-
-        if ($db_error == false) {
-          osc_db_select_db($db['DB_DATABASE']);
+        try {
+          $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], $_GET['name']);
+        } catch (\Exception $e) {
+          $result = $e->getCode() . '|' . $e->getMessage();
         }
 
-        if ($db_error != false) {
-          echo '[[0|' . $db_error . ']]';
+        if ($result === false) {
+          $result = true;
         } else {
-          echo '[[1]]';
+          $error = explode('|', $result, 2);
+
+          if (($error[0] == '1049') && isset($_GET['createDb']) && ($_GET['createDb'] == 'true')) {
+            $result = false;
+
+            try {
+              $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], '');
+
+              $OSCOM_Db->exec('create database ' . Db::prepareIdentifier($_GET['name']) . ' character set utf8 collate utf8_unicode_ci');
+            } catch (\Exception $e) {
+              $result = $e->getCode() . '|' . $e->getMessage();
+            }
+
+            if ($result === false) {
+              $result = true;
+            }
+          }
         }
 
-        exit;
         break;
 
       case 'dbImport':
-        $db = array('DB_SERVER' => trim(rawurldecode($_GET['server'])),
-                    'DB_SERVER_USERNAME' => trim(rawurldecode($_GET['username'])),
-                    'DB_SERVER_PASSWORD' => trim(rawurldecode($_GET['password'])),
-                    'DB_DATABASE' => trim(rawurldecode($_GET['name'])),
-                   );
-
-        osc_db_connect($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
-
-        $db_error = false;
-        $sql_file = $dir_fs_www_root . '/oscommerce.sql';
-
-        osc_set_time_limit(0);
-        osc_db_install($db['DB_DATABASE'], $sql_file);
-
-        if ($db_error != false) {
-          echo '[[0|' . $db_error . ']]';
-        } else {
-          echo '[[1]]';
+        try {
+          $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], $_GET['name']);
+          $OSCOM_Db->importSQL($dir_fs_www_root . '/oscommerce.sql');
+        } catch (\Exception $e) {
+          $result = $e->getCode() . '|' . $e->getMessage();
         }
 
-        exit;
+        if ($result === false) {
+          $result = true;
+        }
+
         break;
     }
   }
 
-  echo '[[-100|noActionError]]';
+  if ($result === true) {
+    echo '[[1|success]]';
+  } else {
+    $error_no = '-100';
+    $error_msg = 'noActionError';
+
+    if ($result !== false) {
+      $error = explode('|', $result, 2);
+
+      if (count($error) === 2) {
+        $error_no = $error[0];
+        $error_msg = $error[1];
+      } else {
+        $error_code = 0;
+        $error_msg = $error[0];
+      }
+    }
+
+    echo '[[' . $error_no . '|' . $error_msg . ']]';
+  }
 ?>

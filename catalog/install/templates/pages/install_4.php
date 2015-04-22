@@ -10,30 +10,33 @@
   Released under the GNU General Public License
 */
 
-  osc_db_connect(trim($_POST['DB_SERVER']), trim($_POST['DB_SERVER_USERNAME']), trim($_POST['DB_SERVER_PASSWORD']));
-  osc_db_select_db(trim($_POST['DB_DATABASE']));
+  use OSC\OM\Db;
 
-  osc_db_query('update configuration set configuration_value = "' . trim($_POST['CFG_STORE_NAME']) . '" where configuration_key = "STORE_NAME"');
-  osc_db_query('update configuration set configuration_value = "' . trim($_POST['CFG_STORE_OWNER_NAME']) . '" where configuration_key = "STORE_OWNER"');
-  osc_db_query('update configuration set configuration_value = "' . trim($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '" where configuration_key = "STORE_OWNER_EMAIL_ADDRESS"');
+  $OSCOM_Db = Db::initialize($_POST['DB_SERVER'], $_POST['DB_SERVER_USERNAME'], $_POST['DB_SERVER_PASSWORD'], $_POST['DB_DATABASE']);
+
+  $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_NAME']], ['configuration_key' => 'STORE_NAME']);
+  $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_NAME']], ['configuration_key' => 'STORE_OWNER']);
+  $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']], ['configuration_key' => 'STORE_OWNER_EMAIL_ADDRESS']);
 
   if (!empty($_POST['CFG_STORE_OWNER_NAME']) && !empty($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS'])) {
-    osc_db_query('update configuration set configuration_value = "\"' . trim($_POST['CFG_STORE_OWNER_NAME']) . '\" <' . trim($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '>" where configuration_key = "EMAIL_FROM"');
+    $OSCOM_Db->save('configuration', ['configuration_value' => '"' . trim($_POST['CFG_STORE_OWNER_NAME']) . '" <' . trim($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '>'], ['configuration_key' => 'EMAIL_FROM']);
   } else {
-    osc_db_query('update configuration set configuration_value = "' . trim($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '" where configuration_key = "EMAIL_FROM"');
+    $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']], ['configuration_key' => 'EMAIL_FROM']);
   }
 
   if ( !empty($_POST['CFG_ADMINISTRATOR_USERNAME']) ) {
-    $check_query = osc_db_query('select user_name from administrators where user_name = "' . trim($_POST['CFG_ADMINISTRATOR_USERNAME']) . '"');
+    $Qcheck = $OSCOM_Db->prepare('select user_name from :table_administrators where user_name = :user_name');
+    $Qcheck->bindValue(':user_name', $_POST['CFG_ADMINISTRATOR_USERNAME']);
+    $Qcheck->execute();
 
-    if (osc_db_num_rows($check_query)) {
-      osc_db_query('update administrators set user_password = "' . osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD'])) . '" where user_name = "' . trim($_POST['CFG_ADMINISTRATOR_USERNAME']) . '"');
+    if ($Qcheck->fetch() !== false) {
+      $OSCOM_Db->save('administrators', ['user_password' => osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))], ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME']]);
     } else {
-      osc_db_query('insert into administrators (user_name, user_password) values ("' . trim($_POST['CFG_ADMINISTRATOR_USERNAME']) . '", "' . osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD'])) . '")');
+      $OSCOM_Db->save('administrators', ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME'], 'user_password' => osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))]);
     }
   }
 
-  osc_db_query('update configuration set configuration_value = "' . trim($_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']) . '" where configuration_key = "MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT"');
+  $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_EMAIL_ADDRESS']], ['configuration_key' => 'MODULE_PAYMENT_PAYPAL_EXPRESS_SELLER_ACCOUNT']);
 ?>
 
 <div class="row">
@@ -70,7 +73,7 @@
     <div class="page-header">
       <h2>Finished!</h2>
     </div>
-    
+
     <?php
     $dir_fs_document_root = $_POST['DIR_FS_DOCUMENT_ROOT'];
     if ((substr($dir_fs_document_root, -1) != '\\') && (substr($dir_fs_document_root, -1) != '/')) {
@@ -81,8 +84,8 @@
       }
     }
 
-    osc_db_query('update configuration set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "DIR_FS_CACHE"');
-    osc_db_query('update configuration set configuration_value = "' . $dir_fs_document_root . 'includes/work/" where configuration_key = "SESSION_WRITE_DIRECTORY"');
+    $OSCOM_Db->save('configuration', ['configuration_value' => $dir_fs_document_root . 'includes/work/'], ['configuration_key' => 'DIR_FS_CACHE']);
+    $OSCOM_Db->save('configuration', ['configuration_value' => $dir_fs_document_root . 'includes/work/'], ['configuration_key' => 'SESSION_WRITE_DIRECTORY']);
 
     if ($handle = opendir($dir_fs_document_root . 'includes/work/')) {
       while (false !== ($filename = readdir($handle))) {
@@ -234,5 +237,5 @@
       </div>
     </div>
   </div>
-  
+
 </div>
