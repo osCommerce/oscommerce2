@@ -64,6 +64,7 @@
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
+
   $shipping_modules = new shipping($shipping);
 
   require(DIR_WS_CLASSES . 'order_total.php');

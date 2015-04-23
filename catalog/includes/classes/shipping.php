@@ -24,6 +24,7 @@
 
         if ( (tep_not_null($module)) && (in_array(substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
           $include_modules[] = array('class' => substr($module['id'], 0, strpos($module['id'], '_')), 'file' => substr($module['id'], 0, strpos($module['id'], '_')) . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+          $this->selected_module = $module;
         } else {
           foreach ($this->modules as $value) {
             $class = substr($value, 0, strrpos($value, '.'));
@@ -82,6 +83,25 @@
       }
 
       return $quotes_array;
+    }
+
+    function after_process()
+    {
+      global $order;
+
+      if(empty($this->selected_module)) {
+        // TODO: handle error here
+        return;
+      }
+
+      // obtain selected module name and method id
+      $id_arr = explode('_', $this->selected_module['id']);
+      $module = $GLOBALS[$id_arr[0]];
+
+      // check is for backwards compatibility
+      if (!empty($module) && method_exists($module, 'after_process')) {
+        $module->after_process();
+      }
     }
 
     function cheapest() {

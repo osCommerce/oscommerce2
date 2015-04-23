@@ -127,10 +127,21 @@
           if (isset($quote['error'])) {
             unset($_SESSION['shipping']);
           } else {
-            if ( (isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost'])) ) {
+            $methods = $quote[0]['methods'];
+            $selectedMethod = null;
+
+            // find selected method
+            foreach ($methods as $key => $methodObj) {
+              if ($methodObj['id'] == $method) {
+                $selectedMethod = $methodObj;
+                break;
+              }
+            }
+            if ( (isset($selectedMethod['title'])) && (isset($selectedMethod['cost'])) ) {
               $shipping = array('id' => $shipping,
-                                'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
-                                'cost' => $quote[0]['methods'][0]['cost']);
+                                'title' => (($free_shipping == true) ?  $selectedMethod['title'] : $quote[0]['module'] . ' (' . $selectedMethod['title'] . ')'),
+                                'cost' => $selectedMethod['cost'],
+                                'info' => $selectedMethod['info']);
 
               tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
             }
