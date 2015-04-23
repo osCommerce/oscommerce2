@@ -74,8 +74,8 @@
   $Qcfg->setCache('configuration');
   $Qcfg->execute();
 
-  foreach ($Qcfg->fetchAll() as $param) {
-    define($param['k'], $param['v']);
+  while ($Qcfg->fetch()) {
+    define($Qcfg->value('k'), $Qcfg->value('v'));
   }
 
 // if gzip_compression is enabled, start to buffer the output
