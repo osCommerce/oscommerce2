@@ -43,6 +43,10 @@ class DbStatement extends \PDOStatement
         return $this->bindValue($parameter, (bool)$value, \PDO::PARAM_BOOL);
     }
 
+    public function bindDecimal($parameter, $value) {
+        return $this->bindValue($parameter, (float)$value); // there is no \PDO::PARAM_FLOAT
+    }
+
     public function bindNull($parameter)
     {
         return $this->bindValue($parameter, null, \PDO::PARAM_NULL);
