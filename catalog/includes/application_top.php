@@ -71,7 +71,7 @@
 
 // set the application parameters
   $Qcfg = $OSCOM_Db->prepare('select configuration_key as k, configuration_value as v from :table_configuration');
-  $Qcfg->setCache('configuration');
+//  $Qcfg->setCache('configuration');
   $Qcfg->execute();
 
   while ($Qcfg->fetch()) {
