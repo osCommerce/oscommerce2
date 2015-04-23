@@ -152,7 +152,7 @@
 // Stock Update - Joao Correia
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
-        $stock_query_sql = 'select products_quantity, pad.products_attributes_filename
+        $stock_query_sql = 'select p.products_quantity, pad.products_attributes_filename
                             from :table_products p
                             left join :table_products_attributes pa
                             on p.products_id = pa.products_id
