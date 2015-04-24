@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\Registry;
+
 ////
 // Get the installed version number
   function tep_get_version() {
@@ -445,37 +448,42 @@
 // Return a formatted address
 // TABLES: address_format
   function tep_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = tep_db_query("select address_format as format from address_format where address_format_id = '" . (int)$address_format_id . "'");
-    $address_format = tep_db_fetch_array($address_format_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    $company = tep_output_string_protected($address['company']);
+    $Qformat = $OSCOM_Db->prepare('select address_format from :table_address_format where address_format_id = :address_format_id');
+    $Qformat->bindInt(':address_format_id', $address_format_id);
+    $Qformat->execute();
+
+    $replace = [
+      '$company' => HTML::outputProtected($address['company']),
+      '$firstname' => '',
+      '$lastname' => '',
+      '$street' => HTML::outputProtected($address['street_address']),
+      '$suburb' => HTML::outputProtected($address['suburb']),
+      '$city' => HTML::outputProtected($address['city']),
+      '$state' => HTML::outputProtected($address['state']),
+      '$postcode' => HTML::outputProtected($address['postcode']),
+      '$country' => ''
+    ];
+
     if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
-      $firstname = tep_output_string_protected($address['firstname']);
-      $lastname = tep_output_string_protected($address['lastname']);
+      $replace['$firstname'] = HTML::outputProtected($address['firstname']);
+      $replace['$lastname'] = HTML::outputProtected($address['lastname']);
     } elseif (isset($address['name']) && tep_not_null($address['name'])) {
-      $firstname = tep_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
+      $replace['$firstname'] = HTML::outputProtected($address['name']);
     }
-    $street = tep_output_string_protected($address['street_address']);
-    $suburb = tep_output_string_protected($address['suburb']);
-    $city = tep_output_string_protected($address['city']);
-    $state = tep_output_string_protected($address['state']);
+
     if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
-      $country = tep_get_country_name($address['country_id']);
+      $replace['$country'] = tep_get_country_name($address['country_id']);
 
       if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
-        $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
+        $replace['$state'] = tep_get_zone_code($address['country_id'], $address['zone_id'], $replace['$state']);
       }
     } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']['title']);
-    } else {
-      $country = '';
+      $replace['$country'] = HTML::outputProtected($address['country']['title']);
     }
-    $postcode = tep_output_string_protected($address['postcode']);
-    $zip = $postcode;
+
+    $replace['$zip'] = $replace['$postcode'];
 
     if ($html) {
 // HTML Mode
@@ -497,16 +505,20 @@
       $hr = '----------------------------------------';
     }
 
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($state != '') $statecomma = $state . ', ';
+    $replace['$CR'] = $CR;
+    $replace['$cr'] = $cr;
+    $replace['$HR'] = $HR;
+    $replace['$hr'] = $hr;
 
-    $fmt = $address_format['format'];
-    eval("\$address = \"$fmt\";");
+    $replace['$statecomma'] = '';
+    $replace['$streets'] = $replace['$street'];
+    if ($replace['$suburb'] != '') $replace['$streets'] = $replace['$street'] . $replace['$cr'] . $replace['$suburb'];
+    if ($replace['$state'] != '') $replace['$statecomma'] = $replace['$state'] . ', ';
 
-    if ( (ACCOUNT_COMPANY == 'true') && (tep_not_null($company)) ) {
-      $address = $company . $cr . $address;
+    $address = strtr($Qformat->value('address_format'), $replace);
+
+    if ( (ACCOUNT_COMPANY == 'true') && tep_not_null($replace['$company']) ) {
+      $address = $replace['$company'] . $replace['$cr'] . $address;
     }
 
     return $address;
