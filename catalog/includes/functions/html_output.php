@@ -323,7 +323,7 @@
 
     for ($i=0, $n=sizeof($values); $i<$n; $i++) {
       $field .= '<option value="' . tep_output_string($values[$i]['id']) . '"';
-      if ($default == $values[$i]['id']) {
+      if ($default == $values[$i]['id'] || (is_array($default) && in_array($values[$i]['id'], $default))) {
         $field .= ' selected="selected"';
       }
 
