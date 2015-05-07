@@ -81,21 +81,6 @@
   }
 
 ////
-// Return a random row from a database query
-  function tep_random_select($query) {
-    $random_product = '';
-    $random_query = tep_db_query($query);
-    $num_rows = tep_db_num_rows($random_query);
-    if ($num_rows > 0) {
-      $random_row = tep_rand(0, ($num_rows - 1));
-      tep_db_data_seek($random_query, $random_row);
-      $random_product = tep_db_fetch_array($random_query);
-    }
-
-    return $random_product;
-  }
-
-////
 // Return a product's name
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {
