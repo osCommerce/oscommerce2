@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   if (STORE_SESSIONS == 'mysql') {
     function _sess_open($save_path, $session_name) {
       return true;
@@ -20,32 +22,47 @@
     }
 
     function _sess_read($key) {
-      $value_query = tep_db_query("select value from sessions where sesskey = '" . tep_db_input($key) . "'");
-      $value = tep_db_fetch_array($value_query);
+      $OSCOM_Db = Registry::get('Db');
 
-      if (isset($value['value'])) {
-        return $value['value'];
+      $Qsession = $OSCOM_Db->prepare('select value from :table_sessions where sesskey = :sesskey');
+      $Qsession->bindValue(':sesskey', $key);
+      $Qsession->execute();
+
+      if ($Qsession->fetch() !== false) {
+        return $Qsession->value('value');
       }
 
       return '';
     }
 
     function _sess_write($key, $value) {
-      $check_query = tep_db_query("select 1 from sessions where sesskey = '" . tep_db_input($key) . "'");
+      $OSCOM_Db = Registry::get('Db');
 
-      if ( tep_db_num_rows($check_query) > 0 ) {
-        return tep_db_query("update sessions set expiry = '" . tep_db_input(time()) . "', value = '" . tep_db_input($value) . "' where sesskey = '" . tep_db_input($key) . "'");
+      $Qcheck = $OSCOM_Db->prepare('select 1 from :table_sessions where sesskey = :sesskey');
+      $Qcheck->bindValue(':sesskey', $key);
+      $Qcheck->execute();
+
+      if ($Qcheck->fetch() !== false) {
+        return $OSCOM_Db->save('sessions', ['expiry' => time(), 'value' => $value], ['sesskey' => $key]);
       } else {
-        return tep_db_query("insert into sessions values ('" . tep_db_input($key) . "', '" . tep_db_input(time()) . "', '" . tep_db_input($value) . "')");
+        return $OSCOM_Db->save('sessions', ['sesskey' => $key, 'expiry' => time(), 'value' => $value]);
       }
     }
 
     function _sess_destroy($key) {
-      return tep_db_query("delete from sessions where sesskey = '" . tep_db_input($key) . "'");
+      $OSCOM_Db = Registry::get('Db');
+
+      return $OSCOM_Db->delete('sessions', ['sesskey' => $key]);
     }
 
     function _sess_gc($maxlifetime) {
-      return tep_db_query("delete from sessions where expiry < '" . (time() - $maxlifetime) . "'");
+      $OSCOM_Db = Registry::get('Db');
+
+      $Qdel = $OSCOM_Db->prepare('delete from :table_sessions where expiry < :expiry');
+      $Qdel->bindValue(':expiry', time() - $maxlifetime);
+      $Qdel->execute();
+
+      return $Qdel->rowCount();
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');

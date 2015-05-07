@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class bm_specials {
     var $code = 'bm_specials';
     var $group = 'boxes';
@@ -33,13 +35,30 @@
     function execute() {
       global $currencies, $oscTemplate;
 
-      if (!isset($_GET['products_id'])) {
-        if ($random_product = tep_random_select("select p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, p.products_image, s.specials_new_products_price from products p, products_description pd, specials s where p.products_status = '1' and p.products_id = s.products_id and pd.products_id = s.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.status = '1' order by s.specials_date_added desc limit " . MAX_RANDOM_SELECT_SPECIALS)) {
-          ob_start();
-          include('includes/modules/boxes/templates/specials.php');
-          $data = ob_get_clean();
+      $OSCOM_Db = Registry::get('Db');
 
-          $oscTemplate->addBlock($data, $this->group);
+      if (!isset($_GET['products_id'])) {
+        $Qcheck = $OSCOM_Db->prepare('select p.products_id from :table_specials s, :table_products p, :table_products_description pd where s.status = 1 and s.products_id = p.products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id order by s.specials_date_added desc limit ' . (int)MAX_RANDOM_SELECT_SPECIALS);
+        $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcheck->execute();
+
+        $result = $Qcheck->fetchAll();
+
+        if (count($result) > 0) {
+          $result = $result[mt_rand(0, count($result)-1)];
+
+          $Qproduct = $OSCOM_Db->prepare('select p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, p.products_image, s.specials_new_products_price from :table_products p, :table_products_description pd, :table_specials s where p.products_id = :products_id and p.products_id = s.products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
+          $Qproduct->bindInt(':products_id', $result['products_id']);
+          $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproduct->execute();
+
+          if (($random_product = $Qproduct->fetch()) !== false) {
+            ob_start();
+            include('includes/modules/boxes/templates/specials.php');
+            $data = ob_get_clean();
+
+            $oscTemplate->addBlock($data, $this->group);
+          }
         }
       }
     }
