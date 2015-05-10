@@ -51,7 +51,7 @@
         }
         ?>
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo (isset($_SESSION['customer_id'])) ? sprintf(MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_IN, $customer_first_name) : MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_OUT; ?></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo (isset($_SESSION['customer_id'])) ? sprintf(MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_IN, $_SESSION['customer_first_name']) : MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_OUT; ?></a>
           <ul class="dropdown-menu">
             <?php
             if (isset($_SESSION['customer_id'])) {

@@ -20,17 +20,16 @@
   }
 
   if ( $error === false ) {
-    if ( !isset($_GET['key']) || !isset($_SESSION['pphs_key']) || ($_GET['key'] != $pphs_key) || !isset($_SESSION['pphs_result']) ) {
+    if ( !isset($_GET['key']) || !isset($_SESSION['pphs_key']) || ($_GET['key'] != $_SESSION['pphs_key']) || !isset($_SESSION['pphs_result']) ) {
       $error = true;
     }
   }
 
   if ( $error === false ) {
-    if (($pphs_result['ACK'] != 'Success') && ($pphs_result['ACK'] != 'SuccessWithWarning')) {
+    if (($_SESSION['pphs_result']['ACK'] != 'Success') && ($_SESSION['pphs_result']['ACK'] != 'SuccessWithWarning')) {
       $error = true;
 
-      tep_session_register('pphs_error_msg');
-      $pphs_error_msg = $pphs_result['L_LONGMESSAGE0'];
+      $_SESSION['pphs_error_msg'] = $_SESSION['pphs_result']['L_LONGMESSAGE0'];
     }
   }
 
@@ -58,7 +57,7 @@
 </div>
 
 <form name="pphs" action="<?php echo $form_url; ?>" method="post" <?php echo ($error == true ? 'target="_top"' : ''); ?>>
-  <input type="hidden" name="hosted_button_id" value="<?php echo (isset($pphs_result['HOSTEDBUTTONID']) ? tep_output_string_protected($pphs_result['HOSTEDBUTTONID']) : ''); ?>" />
+  <input type="hidden" name="hosted_button_id" value="<?php echo (isset($_SESSION['pphs_result']['HOSTEDBUTTONID']) ? tep_output_string_protected($_SESSION['pphs_result']['HOSTEDBUTTONID']) : ''); ?>" />
 </form>
 
 <script>

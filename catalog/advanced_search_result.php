@@ -191,8 +191,8 @@
 
   if ( (DISPLAY_PRICE_WITH_TAX == 'true') && (tep_not_null($pfrom) || tep_not_null($pto)) ) {
     if (!isset($_SESSION['customer_country_id'])) {
-      $customer_country_id = STORE_COUNTRY;
-      $customer_zone_id = STORE_ZONE;
+      $_SESSION['customer_country_id'] = STORE_COUNTRY;
+      $_SESSION['customer_zone_id'] = STORE_ZONE;
     }
     $search_query .= ' left join :table_tax_rates tr on p.products_tax_class_id = tr.tax_class_id left join :table_zones_to_geo_zones gz on tr.tax_zone_id = gz.geo_zone_id and (gz.zone_country_id is null or gz.zone_country_id = "0" or gz.zone_country_id = :zone_country_id) and (gz.zone_id is null or gz.zone_id = "0" or gz.zone_id = :zone_id)';
   }

@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   class paypal_express {
     var $code, $title, $description, $enabled;
 
     function paypal_express() {
-      global $PHP_SELF, $order, $payment;
+      global $PHP_SELF, $order;
 
       $this->signature = 'paypal|paypal_express|3.1|2.3';
       $this->api_version = '112';
@@ -60,7 +62,7 @@
       if (  (basename($PHP_SELF) == 'checkout_payment.php') && isset($_SESSION['ppec_right_turn']) ) {
         unset($_SESSION['ppec_right_turn']);
 
-        if ( isset($_SESSION['payment']) && ($payment == $this->code) ) {
+        if ( isset($_SESSION['payment']) && ($_SESSION['payment'] == $this->code) ) {
           tep_redirect(tep_href_link('checkout_confirmation', '', 'SSL'));
         }
       }
@@ -140,17 +142,17 @@
     }
 
     function pre_confirmation_check() {
-      global $ppe_token, $ppe_secret, $messageStack, $order;
+      global $messageStack, $order;
 
       if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      $response_array = $this->getExpressCheckoutDetails($_SESSION['ppe_token']);
 
       if ( ($response_array['ACK'] != 'Success') && ($response_array['ACK'] != 'SuccessWithWarning') ) {
         tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));
-      } elseif ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+      } elseif ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $_SESSION['ppe_secret']) ) {
         tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
@@ -162,17 +164,11 @@
     }
 
     function confirmation() {
-      global $comments;
-
-      if (!isset($comments)) {
-        $comments = null;
-      }
-
       $confirmation = false;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_EXPRESS_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5'))));
       }
 
       return $confirmation;
@@ -183,20 +179,19 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppe_token, $ppe_payerid, $ppe_secret, $ppe_order_total_check, $comments, $response_array;
+      global $order, $response_array;
 
       if (!isset($_SESSION['ppe_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppe_token);
+      $response_array = $this->getExpressCheckoutDetails($_SESSION['ppe_token']);
 
       if (($response_array['ACK'] == 'Success') || ($response_array['ACK'] == 'SuccessWithWarning')) {
-        if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $ppe_secret) ) {
+        if ( !isset($_SESSION['ppe_secret']) || ($response_array['PAYMENTREQUEST_0_CUSTOM'] != $_SESSION['ppe_secret']) ) {
           tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         } elseif ( ($response_array['PAYMENTREQUEST_0_AMT'] != $this->format_raw($order->info['total'])) && !isset($_SESSION['ppe_order_total_check']) ) {
-          tep_session_register('ppe_order_total_check');
-          $ppe_order_total_check = true;
+          $_SESSION['ppe_order_total_check'] = true;
 
           tep_redirect(tep_href_link('checkout_confirmation.php', '', 'SSL'));
         }
@@ -208,20 +203,20 @@
         unset($_SESSION['ppe_order_total_check']);
       }
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
-          $comments = tep_db_prepare_input($_POST['ppecomments']);
+          $_SESSION['comments'] = HTML::sanitize($_POST['ppecomments']);
 
-          $order->info['comments'] = $comments;
+          $order->info['comments'] = $_SESSION['comments'];
         }
       }
 
-      $params = array('TOKEN' => $ppe_token,
-                      'PAYERID' => $ppe_payerid,
+      $params = array('TOKEN' => $_SESSION['ppe_token'],
+                      'PAYERID' => $_SESSION['ppe_payerid'],
                       'PAYMENTREQUEST_0_AMT' => $this->format_raw($order->info['total']),
                       'PAYMENTREQUEST_0_CURRENCYCODE' => $order->info['currency']);
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['PAYMENTREQUEST_0_SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['PAYMENTREQUEST_0_SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['PAYMENTREQUEST_0_SHIPTOCITY'] = $order->delivery['city'];
@@ -240,7 +235,7 @@
             $paypal_url = 'https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_express-checkout';
           }
 
-          $paypal_url .= '&token=' . $ppe_token . '&useraction=commit';
+          $paypal_url .= '&token=' . $_SESSION['ppe_token'] . '&useraction=commit';
 
           tep_redirect($paypal_url);
         }
@@ -250,11 +245,11 @@
     }
 
     function after_process() {
-      global $response_array, $insert_id, $ppe_payerstatus, $ppe_addressstatus;
+      global $response_array, $insert_id;
 
       $pp_result = 'Transaction ID: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_TRANSACTIONID']) . "\n" .
-                   'Payer Status: ' . tep_output_string_protected($ppe_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppe_addressstatus) . "\n\n" .
+                   'Payer Status: ' . tep_output_string_protected($_SESSION['ppe_payerstatus']) . "\n" .
+                   'Address Status: ' . tep_output_string_protected($_SESSION['ppe_addressstatus']) . "\n\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTSTATUS']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PAYMENTTYPE']) . "\n" .
                    'Pending Reason: ' . tep_output_string_protected($response_array['PAYMENTINFO_0_PENDINGREASON']) . "\n" .

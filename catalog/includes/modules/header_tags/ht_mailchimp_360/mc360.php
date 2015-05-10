@@ -99,9 +99,7 @@ class mc360 {
                             date('Y-m-d H:i:s') . ' cid =' . $_COOKIE['mailchimp_campaign_id'] . "\n";
         }
 
-        $customer_id = $_SESSION['customer_id'];
-
-        $orders_query = tep_db_query("select orders_id from orders where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
+        $orders_query = tep_db_query("select orders_id from orders where customers_id = '" . (int)$_SESSION['customer_id'] . "' order by date_purchased desc limit 1");
         $orders = tep_db_fetch_array($orders_query);
 
         $totals_array = array();

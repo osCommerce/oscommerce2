@@ -64,10 +64,8 @@
     }
 
     function selection() {
-      global $cart_Sofortueberweisung_Direct_ID;
-
       if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
-        $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+        $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
         $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -89,30 +87,24 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID;
-
       // We need the cartID
       if (empty($_SESSION['cart']->cartID)) {
-        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-      }
-
-      if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
     }
 
     function confirmation() {
-      global $cartID, $cart_Sofortueberweisung_Direct_ID, $customer_id, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
       $insert_order = false;
 
       if (isset($_SESSION['cart_Sofortueberweisung_Direct_ID'])) {
-        $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+        $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
         $curr_check = tep_db_query("select currency from orders where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($cart_Sofortueberweisung_Direct_ID, 0, strlen($cartID))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], 0, strlen($_SESSION['cartID']))) ) {
           $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -150,7 +142,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -264,17 +256,16 @@
           }
         }
 
-        $cart_Sofortueberweisung_Direct_ID = $cartID . '-' . $insert_id;
-        tep_session_register('cart_Sofortueberweisung_Direct_ID');
+        $_SESSION['cart_Sofortueberweisung_Direct_ID'] = $_SESSION['cartID'] . '-' . $insert_id;
       }
 
       return array('title' => MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_TEXT_DESCRIPTION_CHECKOUT_CONFIRMATION);
     }
 
     function process_button() {
-      global $order, $customer_id, $currencies, $cart_Sofortueberweisung_Direct_ID;
+      global $order, $currencies;
 
-      $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
       $parameter= array();
       $parameter['kdnr']	= MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_KDNR;  // Repr�sentiert Ihre Kundennummer bei der Sofort�berweisung
@@ -286,8 +277,8 @@
       $vzweck1 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck1);
       $vzweck2 = str_replace('{{order_date}}', strftime(DATE_FORMAT_SHORT), $vzweck2);
 
-      $vzweck1 = str_replace('{{customer_id}}', $customer_id, $vzweck1);
-      $vzweck2 = str_replace('{{customer_id}}', $customer_id, $vzweck2);
+      $vzweck1 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck1);
+      $vzweck2 = str_replace('{{customer_id}}', $_SESSION['customer_id'], $vzweck2);
 
       $vzweck1 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck1);
       $vzweck2 = str_replace('{{customer_name}}', $order->customer['firstname'] . ' ' . $order->customer['lastname'], $vzweck2);
@@ -306,7 +297,7 @@
       $parameter['v_zweck_2'] = tep_output_string($vzweck2);  // Definieren Sie hier Ihre Verwendungszwecke
 
       $parameter['kunden_var_0'] = tep_output_string($order_id);  // Eindeutige Identifikation der Zahlung, z.B. Session ID oder Auftragsnummer.
-      $parameter['kunden_var_1'] = tep_output_string($customer_id);
+      $parameter['kunden_var_1'] = tep_output_string($_SESSION['customer_id']);
       $parameter['kunden_var_2'] = tep_output_string(session_id());
       $parameter['kunden_var_3'] = tep_output_string($_SESSION['cart']->cartID);
       $parameter['kunden_var_4'] = '';
@@ -340,8 +331,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies, $cart_Sofortueberweisung_Direct_ID;
-      global $$payment;
+      global $order, $order_totals, $currencies;
 
       $md5var4 = md5($_GET['sovar3'] . MODULE_PAYMENT_SOFORTUEBERWEISUNG_DIRECT_CNT_PASSWORT);
       // Statusupdate nur wenn keine Cart�nderung vorgenommen
@@ -354,7 +344,7 @@
         $order_total_integer = '0' . $order_total_integer;
       }
 
-      $order_id = substr($cart_Sofortueberweisung_Direct_ID, strpos($cart_Sofortueberweisung_Direct_ID, '-')+1);
+      $order_id = substr($_SESSION['cart_Sofortueberweisung_Direct_ID'], strpos($_SESSION['cart_Sofortueberweisung_Direct_ID'], '-')+1);
 
       $check_query = tep_db_query("select orders_status from orders where orders_id = '" . (int)$order_id . "'");
       if (tep_db_num_rows($check_query)) {
@@ -491,17 +481,17 @@
       if ($order->content_type != 'virtual') {
         $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
       }
 
       $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                       EMAIL_SEPARATOR . "\n" .
-                      tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                      tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-      if (is_object($$payment)) {
+      if (is_object($GLOBALS[$_SESSION['payment']])) {
         $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                         EMAIL_SEPARATOR . "\n";
-        $payment_class = $$payment;
+        $payment_class = $GLOBALS[$_SESSION['payment']];
         $email_order .= $payment_class->title . "\n\n";
         if ($payment_class->email_footer) {
           $email_order .= $payment_class->email_footer . "\n\n";

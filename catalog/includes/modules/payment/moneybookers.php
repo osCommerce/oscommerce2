@@ -73,7 +73,7 @@
 
     function _deletePreparing() {
       if (isset($_SESSION[$this->_mbcartID])) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
@@ -98,29 +98,23 @@
     }
 
     function pre_confirmation_check() {
-      global $cartID;
-
       if (empty($_SESSION['cart']->cartID)) {
-        $cartID = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
-      }
-
-      if (!isset($_SESSION['cartID'])) {
-        tep_session_register('cartID');
+        $_SESSION['cartID'] = $_SESSION['cart']->cartID = $_SESSION['cart']->generate_cart_id();
       }
     }
 
     function _prepareOrder() {
-      global $cartID, $customer_id, $order, $order_total_modules;
+      global $order, $order_total_modules;
 
       $insert_order = false;
 
       if (isset($_SESSION[$this->_mbcartID])) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $curr_check = tep_db_query("select currency from orders where orders_id = '" . (int)$order_id . "'");
         $curr = tep_db_fetch_array($curr_check);
 
-        if ( ($curr['currency'] != $order->info['currency']) || ($cartID != substr($GLOBALS[$this->_mbcartID], 0, strlen($cartID))) ) {
+        if ( ($curr['currency'] != $order->info['currency']) || ($_SESSION['cartID'] != substr($_SESSION[$this->_mbcartID], 0, strlen($_SESSION['cartID']))) ) {
           $check_query = tep_db_query('select orders_id from orders_status_history where orders_id = "' . (int)$order_id . '" limit 1');
 
           if (tep_db_num_rows($check_query) < 1) {
@@ -158,7 +152,7 @@
           }
         }
 
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                                 'customers_company' => $order->customer['company'],
                                 'customers_street_address' => $order->customer['street_address'],
@@ -272,21 +266,20 @@
           }
         }
 
-        $GLOBALS[$this->_mbcartID] = $cartID . '-' . $insert_id;
-        tep_session_register($this->_mbcartID);
+        $_SESSION[$this->_mbcartID] = $_SESSION['cartID'] . '-' . $insert_id;
       }
     }
 
     function confirmation() {
-      global $customer_id, $order;
+      global $order;
 
       if (isset($_SESSION['cartID'])) {
         $this->_prepareOrder();
 
         $parameters = array('pay_to_email' => MODULE_PAYMENT_MONEYBOOKERS_PAY_TO,
                             'recipient_description' => STORE_NAME,
-                            'transaction_id' => substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1),
-                            'return_url' => tep_href_link('checkout_process.php', 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]), 'SSL'),
+                            'transaction_id' => substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1),
+                            'return_url' => tep_href_link('checkout_process.php', 'osig=' . md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $_SESSION[$this->_mbcartID]), 'SSL'),
                             'return_url_text' => MODULE_PAYMENT_MONEYBOOKERS_RETURN_TEXT,
                             'return_url_target' => 1,
                             'cancel_url' => tep_href_link('checkout_payment.php', '', 'SSL'),
@@ -307,7 +300,7 @@
                             'currency' => $_SESSION['currency'],
                             'hide_login' => '1',
                             'merchant_fields' => 'osc_custid,referring_platform',
-                            'osc_custid' => $customer_id,
+                            'osc_custid' => $_SESSION['customer_id'],
                             'referring_platform' => 'osCommerce|' . $this->signature);
 
         if (MODULE_PAYMENT_MONEYBOOKERS_IFRAME == 'False') {
@@ -350,23 +343,22 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $sendto, $billto, $payment, $currencies;
-      global $$payment;
+      global $order, $order_totals, $currencies;
 
       $pass = false;
 
       if (isset($_GET['transaction_id']) && isset($_GET['msid'])) {
-        if ($_GET['transaction_id'] == substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1)) {
+        if ($_GET['transaction_id'] == substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1)) {
           if ($_GET['msid'] == strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_MERCHANT_ID . $_GET['transaction_id'] . strtoupper(md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD))))) {
             $pass = true;
           }
         }
-      } elseif (isset($_GET['osig']) && ($_GET['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $GLOBALS[$this->_mbcartID]))) {
+      } elseif (isset($_GET['osig']) && ($_GET['osig'] == md5(MODULE_PAYMENT_MONEYBOOKERS_SECRET_WORD . $_SESSION[$this->_mbcartID]))) {
         $pass = true;
       }
 
       if ($pass == true) {
-        $order_id = substr($GLOBALS[$this->_mbcartID], strpos($GLOBALS[$this->_mbcartID], '-')+1);
+        $order_id = substr($_SESSION[$this->_mbcartID], strpos($_SESSION[$this->_mbcartID], '-')+1);
 
         $check_query = tep_db_query("select orders_status from orders where orders_id = '" . (int)$order_id . "'");
         if (tep_db_num_rows($check_query)) {
@@ -493,17 +485,17 @@
         if ($order->content_type != 'virtual') {
           $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                           EMAIL_SEPARATOR . "\n" .
-                          tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                          tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
         }
 
         $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                         EMAIL_SEPARATOR . "\n" .
-                        tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
+                        tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
 
-        if (is_object($$payment)) {
+        if (is_object($GLOBALS[$_SESSION['payment']])) {
           $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                           EMAIL_SEPARATOR . "\n";
-          $payment_class = $$payment;
+          $payment_class = $GLOBALS[$_SESSION['payment']];
           $email_order .= $payment_class->title . "\n\n";
           if ($payment_class->email_footer) {
             $email_order .= $payment_class->email_footer . "\n\n";

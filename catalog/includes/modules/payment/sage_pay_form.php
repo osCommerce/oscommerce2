@@ -101,7 +101,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $cartID;
+      global $order;
 
       $process_button_string = '';
 
@@ -117,7 +117,7 @@
       }
 
       $crypt = array('ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
-                     'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                     'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),

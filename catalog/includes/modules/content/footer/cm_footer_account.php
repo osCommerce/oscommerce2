@@ -32,7 +32,7 @@
     }
 
     function execute() {
-      global $oscTemplate, $customer_id;
+      global $oscTemplate;
       
       $content_width = (int)MODULE_CONTENT_FOOTER_ACCOUNT_CONTENT_WIDTH;
       

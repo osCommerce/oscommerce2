@@ -66,7 +66,7 @@
       $messageStack->add('friend', ERROR_TO_ADDRESS);
     }
 
-    $actionRecorder = new actionRecorder('ar_tell_a_friend', (isset($_SESSION['customer_id']) ? $customer_id : null), $from_name);
+    $actionRecorder = new actionRecorder('ar_tell_a_friend', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : null), $from_name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
 
@@ -95,7 +95,7 @@
       tep_redirect(tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id']));
     }
   } elseif (isset($_SESSION['customer_id'])) {
-    $account_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from customers where customers_id = '" . (int)$customer_id . "'");
+    $account_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from customers where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     $account = tep_db_fetch_array($account_query);
 
     $from_name = $account['customers_firstname'] . ' ' . $account['customers_lastname'];

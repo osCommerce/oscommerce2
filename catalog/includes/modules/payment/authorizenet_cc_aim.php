@@ -128,7 +128,7 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $response;
+      global $order, $response;
 
       $params = array('x_login' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_LOGIN_ID, 0, 20),
                       'x_tran_key' => substr(MODULE_PAYMENT_AUTHORIZENET_CC_AIM_TRANSACTION_KEY, 0, 16),
@@ -151,14 +151,14 @@
                       'x_country' => substr($order->billing['country']['title'], 0, 60),
                       'x_phone' => substr($order->customer['telephone'], 0, 25),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
-                      'x_cust_id' => substr($customer_id, 0, 20),
+                      'x_cust_id' => substr($_SESSION['customer_id'], 0, 20),
                       'x_customer_ip' => tep_get_ip_address(),
                       'x_relay_response' => 'FALSE',
                       'x_delim_data' => 'TRUE',
                       'x_delim_char' => ',',
                       'x_encap_char' => '|');
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
         $params['x_ship_to_last_name'] = substr($order->delivery['lastname'], 0, 50);
         $params['x_ship_to_company'] = substr($order->delivery['company'], 0, 50);

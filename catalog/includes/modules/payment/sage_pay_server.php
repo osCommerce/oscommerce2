@@ -106,14 +106,14 @@
     }
 
     function before_process() {
-      global $sagepay_server_skey_code, $sagepay_server_transaction_details, $sage_pay_server_nexturl, $customer_id, $order, $order_totals, $cartID;
+      global $sagepay_server_transaction_details, $order, $order_totals;
 
       $sagepay_server_transaction_details = null;
 
       $error = null;
 
       if (isset($_GET['check']) && ($_GET['check'] == 'PROCESS')) {
-        if ( isset($_GET['skcode']) && isset($_SESSION['sagepay_server_skey_code']) && ($_GET['skcode'] == $sagepay_server_skey_code) ) {
+        if ( isset($_GET['skcode']) && isset($_SESSION['sagepay_server_skey_code']) && ($_GET['skcode'] == $_SESSION['sagepay_server_skey_code']) ) {
           $skcode = tep_db_prepare_input($_GET['skcode']);
 
           $sp_query = tep_db_query('select verified, transaction_details from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
@@ -133,18 +133,17 @@
         }
       } else {
         if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
-          tep_session_register('sagepay_server_skey_code');
-          $sagepay_server_skey_code = tep_create_random_value(16);
+          $_SESSION['sagepay_server_skey_code'] = tep_create_random_value(16);
         }
 
         $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_SERVER_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(tep_href_link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $sagepay_server_skey_code, 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(tep_href_link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $_SESSION['sagepay_server_skey_code'], 'SSL', false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -233,7 +232,7 @@
         }
 
         if ($return['Status'] == 'OK') {
-          $sp_query = tep_db_query('select id, securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($sagepay_server_skey_code) . '" limit 1');
+          $sp_query = tep_db_query('select id, securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($_SESSION['sagepay_server_skey_code']) . '" limit 1');
 
           if ( tep_db_num_rows($sp_query) ) {
             $sp = tep_db_fetch_array($sp_query);
@@ -242,17 +241,13 @@
               tep_db_query('update sagepay_server_securitykeys set securitykey = "' . tep_db_input($return['SecurityKey']) . '", date_added = now() where id = "' . (int)$sp['id'] . '"');
             }
           } else {
-            tep_db_query('insert into sagepay_server_securitykeys (code, securitykey, date_added) values ("' . tep_db_input($sagepay_server_skey_code) . '", "' . tep_db_input($return['SecurityKey']) . '", now())');
+            tep_db_query('insert into sagepay_server_securitykeys (code, securitykey, date_added) values ("' . tep_db_input($_SESSION['sagepay_server_skey_code']) . '", "' . tep_db_input($return['SecurityKey']) . '", now())');
           }
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
             tep_redirect($return['NextURL']);
           } else {
-            if ( !isset($_SESSION['sage_pay_server_nexturl']) ) {
-              tep_session_register('sage_pay_server_nexturl');
-            }
-
-            $sage_pay_server_nexturl = $return['NextURL'];
+            $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
             tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
           }

@@ -32,7 +32,7 @@
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
-    if ($_SESSION['cart']->cartID != $cartID) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
       tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
     }
   }
@@ -50,18 +50,17 @@
 
 // if no billing destination address was selected, use the customers own address as default
   if (!isset($_SESSION['billto'])) {
-    tep_session_register('billto');
-    $billto = $customer_default_address_id;
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   } else {
 // verify the selected billing address
-    if ( (is_array($billto) && empty($billto)) || is_numeric($billto) ) {
+    if ( (is_array($_SESSION['billto']) && empty($_SESSION['billto'])) || is_numeric($_SESSION['billto']) ) {
       $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
       $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
       $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
       $Qcheck->execute();
 
       if ($Qcheck->fetch() === false) {
-        $billto = $customer_default_address_id;
+        $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
       }
     }
@@ -70,9 +69,8 @@
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
-  if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = HTML::sanitize($_POST['comments']);
+    $_SESSION['comments'] = HTML::sanitize($_POST['comments']);
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -133,7 +131,7 @@
         <div class="panel-heading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+          <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -187,7 +185,7 @@
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $payment), 'required aria-required="true"');
+      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $_SESSION['payment']), 'required aria-required="true"');
     } else {
       echo tep_draw_hidden_field('payment', $selection[$i]['id']);
     }
@@ -249,7 +247,7 @@
       <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
       <div class="col-xs-8">
         <?php
-        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $comments, 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $_SESSION['comments'], 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
         ?>
       </div>
     </div>

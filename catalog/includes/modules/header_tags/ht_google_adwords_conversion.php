@@ -29,14 +29,14 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $customer_id, $lng;
+      global $PHP_SELF, $oscTemplate, $lng;
 
       if (MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_JS_PLACEMENT != 'Footer') {
         $this->group = 'header_tags';
       }
 
       if ( ($PHP_SELF == 'checkout_success.php') && isset($_SESSION['customer_id']) ) {
-        $order_query = tep_db_query("select orders_id, currency, currency_value from orders where customers_id = '" . (int)$customer_id . "' order by date_purchased desc limit 1");
+        $order_query = tep_db_query("select orders_id, currency, currency_value from orders where customers_id = '" . (int)$_SESSION['customer_id'] . "' order by date_purchased desc limit 1");
 
         if (tep_db_num_rows($order_query) == 1) {
           $order = tep_db_fetch_array($order_query);

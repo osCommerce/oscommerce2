@@ -341,7 +341,6 @@
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
   function tep_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
-    global $customer_zone_id, $customer_country_id;
     static $tax_rates = array();
 
     $OSCOM_Db = Registry::get('Db');
@@ -351,8 +350,8 @@
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
-        $country_id = $customer_country_id;
-        $zone_id = $customer_zone_id;
+        $country_id = $_SESSION['customer_country_id'];
+        $zone_id = $_SESSION['customer_zone_id'];
       }
     }
 
@@ -1095,10 +1094,8 @@
 ////
 // Return a customer greeting
   function tep_customer_greeting() {
-    global $customer_id, $customer_first_name;
-
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($customer_first_name), tep_href_link('products_new.php'));
+      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link('products_new.php'));
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('login.php', '', 'SSL'), tep_href_link('create_account.php', '', 'SSL'));
     }

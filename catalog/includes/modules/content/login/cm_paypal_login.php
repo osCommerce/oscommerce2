@@ -98,12 +98,10 @@
     }
 
     function preLogin() {
-      global $paypal_login_access_token, $paypal_login_customer_id, $sendto, $billto;
-
       $return_url = tep_href_link('login.php', '', 'SSL');
 
       if ( isset($_GET['code']) ) {
-        $paypal_login_customer_id = false;
+        $_SESSION['paypal_login_customer_id'] = false;
 
         $params = array('code' => $_GET['code']);
 
@@ -121,15 +119,14 @@
           $response = $this->getUserInfo($params);
 
           if ( isset($response['email']) ) {
-            $paypal_login_access_token = $response_token['access_token'];
-            tep_session_register('paypal_login_access_token');
+            $_SESSION['paypal_login_access_token'] = $response_token['access_token'];
 
             $force_login = false;
 
 // check if e-mail address exists in database and login or create customer account
             if ( !isset($_SESSION['customer_id']) ) {
-              $customer_id = 0;
-              $customer_default_address_id = 0;
+              $_SESSION['customer_id'] = 0;
+              $_SESSION['customer_default_address_id'] = 0;
 
               $force_login = true;
 
@@ -139,7 +136,7 @@
               if (tep_db_num_rows($check_query)) {
                 $check = tep_db_fetch_array($check_query);
 
-                $customer_id = (int)$check['customers_id'];
+                $_SESSION['customer_id'] = (int)$check['customers_id'];
               } else {
                 $customers_firstname = tep_db_prepare_input($response['given_name']);
                 $customers_lastname = tep_db_prepare_input($response['family_name']);
@@ -160,9 +157,9 @@
 
                 tep_db_perform('customers', $sql_data_array);
 
-                $customer_id = (int)tep_db_insert_id();
+                $_SESSION['customer_id'] = (int)tep_db_insert_id();
 
-                tep_db_query("insert into customers_info (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$customer_id . "', '0', now())");
+                tep_db_query("insert into customers_info (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) values ('" . (int)$_SESSION['customer_id'] . "', '0', now())");
               }
             }
 
@@ -195,13 +192,13 @@
               }
             }
 
-            $check_query = tep_db_query("select address_book_id from address_book where customers_id = '" . (int)$customer_id . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
+            $check_query = tep_db_query("select address_book_id from address_book where customers_id = '" . (int)$_SESSION['customer_id'] . "' and entry_firstname = '" . tep_db_input($ship_firstname) . "' and entry_lastname = '" . tep_db_input($ship_lastname) . "' and entry_street_address = '" . tep_db_input($ship_address) . "' and entry_postcode = '" . tep_db_input($ship_postcode) . "' and entry_city = '" . tep_db_input($ship_city) . "' and (entry_state = '" . tep_db_input($ship_zone) . "' or entry_zone_id = '" . (int)$ship_zone_id . "') and entry_country_id = '" . (int)$ship_country_id . "' limit 1");
             if (tep_db_num_rows($check_query)) {
               $check = tep_db_fetch_array($check_query);
 
-              $sendto = $check['address_book_id'];
+              $_SESSION['sendto'] = $check['address_book_id'];
             } else {
-              $sql_data_array = array('customers_id' => $customer_id,
+              $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                       'entry_firstname' => $ship_firstname,
                                       'entry_lastname' => $ship_lastname,
                                       'entry_street_address' => $ship_address,
@@ -223,33 +220,21 @@
 
               $address_id = tep_db_insert_id();
 
-              $sendto = $address_id;
+              $_SESSION['sendto'] = $address_id;
 
-              if ($customer_default_address_id < 1) {
-                tep_db_query("update customers set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$customer_id . "'");
-                $customer_default_address_id = $address_id;
+              if ($_SESSION['customer_default_address_id'] < 1) {
+                tep_db_query("update customers set customers_default_address_id = '" . (int)$address_id . "' where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+                $_SESSION['customer_default_address_id'] = $address_id;
               }
             }
 
             if ($force_login == true) {
-              $paypal_login_customer_id = $customer_id;
+              $_SESSION['paypal_login_customer_id'] = $_SESSION['customer_id'];
             } else {
-              $paypal_login_customer_id = false;
+              $_SESSION['paypal_login_customer_id'] = false;
             }
 
-            if ( !isset($_SESSION['paypal_login_customer_id']) ) {
-              tep_session_register('paypal_login_customer_id');
-            }
-
-            $billto = $sendto;
-
-            if ( !isset($_SESSION['sendto']) ) {
-              tep_session_register('sendto');
-            }
-
-            if ( !isset($_SESSION['billto']) ) {
-              tep_session_register('billto');
-            }
+            $_SESSION['billto'] = $_SESSION['sendto'];
 
             $return_url = tep_href_link('login.php', 'action=paypal_login_process', 'SSL');
           }
@@ -262,18 +247,18 @@
     }
 
     function postLogin() {
-      global $paypal_login_customer_id, $login_customer_id, $payment;
+      global $login_customer_id;
 
       if ( isset($_SESSION['paypal_login_customer_id']) ) {
-        if ( $paypal_login_customer_id !== false ) {
-          $login_customer_id = $paypal_login_customer_id;
+        if ( $_SESSION['paypal_login_customer_id'] !== false ) {
+          $login_customer_id = $_SESSION['paypal_login_customer_id'];
         }
 
         unset($_SESSION['paypal_login_customer_id']);
       }
 
 // Register PayPal Express Checkout as the default payment method
-      if ( !isset($_SESSION['payment']) || ($payment != 'paypal_express') ) {
+      if ( !isset($_SESSION['payment']) || ($_SESSION['payment'] != 'paypal_express') ) {
         if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
           if ( in_array('paypal_express.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
             if ( !class_exists('paypal_express') ) {
@@ -284,8 +269,7 @@
             $ppe = new paypal_express();
 
             if ( $ppe->enabled ) {
-              $payment = 'paypal_express';
-              tep_session_register('payment');
+              $_SESSION['payment'] = 'paypal_express';
             }
           }
         }

@@ -29,7 +29,7 @@
   }
 
   if ( is_array($result) && isset($result['ACK']) && (($result['ACK'] == 'Success') || ($result['ACK'] == 'SuccessWithWarning')) ) {
-    $pphs_result = $result;
+    $_SESSION['pphs_result'] = $result;
 
     $paypal_pro_hs->verifyTransaction(true);
   }

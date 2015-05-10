@@ -141,7 +141,7 @@ EOD;
     }
 
     function process_button() {
-      global $customer_id, $order, $sendto;
+      global $order;
 
       $tstamp = time();
       $sequence = rand(1, 1000);
@@ -159,7 +159,7 @@ EOD;
                       'x_zip' => substr($order->billing['postcode'], 0, 20),
                       'x_country' => substr($order->billing['country']['title'], 0, 60),
                       'x_phone' => substr(preg_replace('/[^0-9]/', '', $order->customer['telephone']), 0, 25),
-                      'x_cust_id' => substr($customer_id, 0, 20),
+                      'x_cust_id' => substr($_SESSION['customer_id'], 0, 20),
                       'x_customer_ip' => tep_get_ip_address(),
                       'x_email' => substr($order->customer['email_address'], 0, 255),
                       'x_description' => substr(STORE_NAME, 0, 255),
@@ -174,7 +174,7 @@ EOD;
                       'x_cancel_url' => tep_href_link('shopping_cart.php', '', 'SSL'),
                       'x_cancel_url_text' => MODULE_PAYMENT_AUTHORIZENET_CC_DPM_TEXT_RETURN_BUTTON);
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['x_ship_to_first_name'] = substr($order->delivery['firstname'], 0, 50);
         $params['x_ship_to_last_name'] = substr($order->delivery['lastname'], 0, 50);
         $params['x_ship_to_company'] = substr($order->delivery['company'], 0, 50);
@@ -217,10 +217,10 @@ EOD;
     }
 
     function before_process() {
-      global $order, $authorizenet_cc_dpm_error;
+      global $order;
 
       $error = false;
-      $authorizenet_cc_dpm_error = false;
+      $_SESSION['authorizenet_cc_dpm_error'] = false;
 
       $check_array = array('x_response_code',
                            'x_response_reason_text',
@@ -257,8 +257,7 @@ EOD;
       if ( $error !== false ) {
         $this->sendDebugEmail();
 
-        $authorizenet_cc_dpm_error = $_POST['x_response_reason_text'];
-        tep_session_register('authorizenet_cc_dpm_error');
+        $_SESSION['authorizenet_cc_dpm_error'] = $_POST['x_response_reason_text'];
 
         tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code . '&error=' . $error, 'SSL'));
       }
@@ -347,8 +346,6 @@ EOD;
     }
 
     function get_error() {
-      global $authorizenet_cc_dpm_error;
-
       $error_message = MODULE_PAYMENT_AUTHORIZENET_CC_DPM_ERROR_GENERAL;
 
       switch ($_GET['error']) {
@@ -366,7 +363,7 @@ EOD;
       }
 
       if ( ($_GET['error'] != 'verification') && isset($_SESSION['authorizenet_cc_dpm_error']) ) {
-        $error_message = $authorizenet_cc_dpm_error;
+        $error_message = $_SESSION['authorizenet_cc_dpm_error'];
 
         unset($_SESSION['authorizenet_cc_dpm_error']);
       }

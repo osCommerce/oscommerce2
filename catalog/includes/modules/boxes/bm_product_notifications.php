@@ -31,11 +31,11 @@
     }
 
     function execute() {
-      global $customer_id, $PHP_SELF, $request_type, $oscTemplate;
+      global $PHP_SELF, $request_type, $oscTemplate;
 
       if (isset($_GET['products_id'])) {
         if (isset($_SESSION['customer_id'])) {
-          $check_query = tep_db_query("select count(*) as count from products_notifications where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$customer_id . "'");
+          $check_query = tep_db_query("select count(*) as count from products_notifications where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
           $check = tep_db_fetch_array($check_query);
 
           $notification_exists = (($check['count'] > 0) ? true : false);

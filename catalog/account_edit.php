@@ -69,7 +69,7 @@
 
     $Qcheck = $OSCOM_Db->prepare('select customers_id from :table_customers where customers_email_address = :customers_email_address and customers_id != :customers_id limit 1');
     $Qcheck->bindValue(':customers_email_address', $email_address);
-    $Qcheck->bindInt(':customers_id', $customer_id);
+    $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
     $Qcheck->execute();
 
     if ($Qcheck->fetch() !== false) {
@@ -94,16 +94,16 @@
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
 
-      $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$customer_id]);
-      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$customer_id]);
+      $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
+      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$_SESSION['customer_id']]);
 
       $sql_data_array = ['entry_firstname' => $firstname,
                          'entry_lastname' => $lastname];
 
-      $OSCOM_Db->save('address_book', $sql_data_array, ['customers_id' => (int)$customer_id, 'address_book_id' => (int)$customer_default_address_id]);
+      $OSCOM_Db->save('address_book', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id'], 'address_book_id' => (int)$_SESSION['customer_default_address_id']]);
 
 // reset the session variables
-      $customer_first_name = $firstname;
+      $_SESSION['customer_first_name'] = $firstname;
 
       $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
@@ -112,7 +112,7 @@
   }
 
   $Qaccount = $OSCOM_Db->prepare('select * from :table_customers where customers_id = :customers_id');
-  $Qaccount->bindInt(':customers_id', $customer_id);
+  $Qaccount->bindInt(':customers_id', $_SESSION['customer_id']);
   $Qaccount->execute();
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));

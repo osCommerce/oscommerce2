@@ -32,7 +32,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $cart, $lng, $language, $currencies, $request_type, $oscTemplate, $customer_first_name;
+      global $PHP_SELF, $cart, $lng, $currencies, $request_type, $oscTemplate;
 
       ob_start();
       include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/navbar.php');

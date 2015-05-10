@@ -166,10 +166,10 @@
 
 // reregister session variables
           if ( (isset($_POST['primary']) && ($_POST['primary'] == 'on')) || ($_GET['edit'] == $_SESSION['customer_default_address_id']) ) {
-            $customer_first_name = $firstname;
-            $customer_country_id = $country;
-            $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
-            $customer_default_address_id = (int)$_GET['edit'];
+            $_SESSION['customer_first_name'] = $firstname;
+            $_SESSION['customer_country_id'] = $country;
+            $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
+            $_SESSION['customer_default_address_id'] = (int)$_GET['edit'];
 
             $sql_data_array = array('customers_firstname' => $firstname,
                                     'customers_lastname' => $lastname,
@@ -184,7 +184,7 @@
         }
       } else {
         if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
-          $sql_data_array['customers_id'] = (int)$customer_id;
+          $sql_data_array['customers_id'] = (int)$_SESSION['customer_id'];
 
           $OSCOM_Db->save('address_book', $sql_data_array);
 
@@ -192,10 +192,10 @@
 
 // reregister session variables
           if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) {
-            $customer_first_name = $firstname;
-            $customer_country_id = $country;
-            $customer_zone_id = (($zone_id > 0) ? (int)$zone_id : '0');
-            if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $customer_default_address_id = $new_address_book_id;
+            $_SESSION['customer_first_name'] = $firstname;
+            $_SESSION['customer_country_id'] = $country;
+            $_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int)$zone_id : '0');
+            if (isset($_POST['primary']) && ($_POST['primary'] == 'on')) $_SESSION['customer_default_address_id'] = $new_address_book_id;
 
             $sql_data_array = array('customers_firstname' => $firstname,
                                     'customers_lastname' => $lastname);
@@ -296,7 +296,7 @@
         <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $_GET['delete'], true, ' ', '<br />'); ?>
+          <?php echo tep_address_label($_SESSION['customer_id'], $_GET['delete'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -329,7 +329,7 @@
         <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, (int)$_GET['edit'], true, ' ', '<br />'); ?>
+          <?php echo tep_address_label($_SESSION['customer_id'], (int)$_GET['edit'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>

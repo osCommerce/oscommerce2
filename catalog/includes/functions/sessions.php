@@ -107,18 +107,6 @@
     return session_start();
   }
 
-  function tep_session_register($variable) {
-    global $session_started;
-
-    if ($session_started == true) {
-      if (!isset($GLOBALS[$variable])) {
-        $GLOBALS[$variable] = null;
-      }
-      $_SESSION[$variable] =& $GLOBALS[$variable];
-    }
-    return false;
-  }
-
   function tep_session_destroy() {
     if ( isset($_COOKIE[session_name()]) ) {
       $session_data = session_get_cookie_params();

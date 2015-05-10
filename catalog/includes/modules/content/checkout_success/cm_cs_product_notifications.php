@@ -32,10 +32,10 @@
     }
 
     function execute() {
-      global $oscTemplate, $customer_id, $order_id;
+      global $oscTemplate, $order_id;
 
       if ( isset($_SESSION['customer_id']) ) {
-        $global_query = tep_db_query("select global_product_notifications from customers_info where customers_info_id = '" . (int)$customer_id . "'");
+        $global_query = tep_db_query("select global_product_notifications from customers_info where customers_info_id = '" . (int)$_SESSION['customer_id'] . "'");
         $global = tep_db_fetch_array($global_query);
 
         if ( $global['global_product_notifications'] != '1' ) {
@@ -45,10 +45,10 @@
 
               foreach ( $notify as $n ) {
                 if ( is_numeric($n) && ($n > 0) ) {
-                  $check_query = tep_db_query("select products_id from products_notifications where products_id = '" . (int)$n . "' and customers_id = '" . (int)$customer_id . "' limit 1");
+                  $check_query = tep_db_query("select products_id from products_notifications where products_id = '" . (int)$n . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "' limit 1");
 
                   if ( !tep_db_num_rows($check_query) ) {
-                    tep_db_query("insert into products_notifications (products_id, customers_id, date_added) values ('" . (int)$n . "', '" . (int)$customer_id . "', now())");
+                    tep_db_query("insert into products_notifications (products_id, customers_id, date_added) values ('" . (int)$n . "', '" . (int)$_SESSION['customer_id'] . "', now())");
                   }
                 }
               }

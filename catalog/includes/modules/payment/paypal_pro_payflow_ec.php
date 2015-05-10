@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   class paypal_pro_payflow_ec {
     var $code, $title, $description, $enabled;
 
@@ -111,22 +113,21 @@
     }
 
     function pre_confirmation_check() {
-      global $ppeuk_token, $ppeuk_secret, $ppeuk_order_total_check, $messageStack, $order;
+      global $messageStack, $order;
 
       if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
+      $response_array = $this->getExpressCheckoutDetails($_SESSION['ppeuk_token']);
 
       if ($response_array['RESULT'] != '0') {
         tep_redirect(tep_href_link('shopping_cart.php', 'error_message=' . urlencode($response_array['OSCOM_ERROR_MESSAGE']), 'SSL'));
-      } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+      } elseif ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $_SESSION['ppeuk_secret']) ) {
         tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
       }
 
-      if (!isset($_SESSION['ppeuk_order_total_check'])) tep_session_register('ppeuk_order_total_check');
-      $ppeuk_order_total_check = true;
+      $_SESSION['ppeuk_order_total_check'] = true;
 
       $messageStack->add('checkout_confirmation', '<span id="PayPalNotice">' . MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_NOTICE_CHECKOUT_CONFIRMATION . '</span><script>$("#PayPalNotice").parent().css({backgroundColor: "#fcf8e3", border: "1px #faedd0 solid", color: "#a67d57", padding: "5px" });</script>', 'paypal');
 
@@ -134,17 +135,11 @@
     }
 
     function confirmation() {
-      global $comments;
-
-      if (!isset($comments)) {
-        $comments = null;
-      }
-
       $confirmation = false;
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         $confirmation = array('fields' => array(array('title' => MODULE_PAYMENT_PAYPAL_PRO_PAYFLOW_EC_TEXT_COMMENTS,
-                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5', $comments))));
+                                                      'field' => tep_draw_textarea_field('ppecomments', 'soft', '60', '5'))));
       }
 
       return $confirmation;
@@ -155,16 +150,16 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $sendto, $ppeuk_token, $ppeuk_payerid, $ppeuk_secret, $ppeuk_order_total_check, $comments, $response_array;
+      global $order, $response_array;
 
       if (!isset($_SESSION['ppeuk_token'])) {
         tep_redirect(tep_href_link('ext/modules/payment/paypal/express_payflow.php', '', 'SSL'));
       }
 
-      $response_array = $this->getExpressCheckoutDetails($ppeuk_token);
+      $response_array = $this->getExpressCheckoutDetails($_SESSION['ppeuk_token']);
 
       if ($response_array['RESULT'] == '0') {
-        if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $ppeuk_secret) ) {
+        if ( !isset($_SESSION['ppeuk_secret']) || ($response_array['CUSTOM'] != $_SESSION['ppeuk_secret']) ) {
           tep_redirect(tep_href_link('shopping_cart.php', '', 'SSL'));
         } elseif ( !isset($_SESSION['ppeuk_order_total_check']) ) {
           tep_redirect(tep_href_link('checkout_confirmation.php', '', 'SSL'));
@@ -177,21 +172,21 @@
         unset($_SESSION['ppeuk_order_total_check']);
       }
 
-      if (empty($comments)) {
+      if (empty($_SESSION['comments'])) {
         if (isset($_POST['ppecomments']) && tep_not_null($_POST['ppecomments'])) {
-          $comments = tep_db_prepare_input($_POST['ppecomments']);
+          $_SESSION['comments'] = HTML::sanitize($_POST['ppecomments']);
 
-          $order->info['comments'] = $comments;
+          $order->info['comments'] = $_SESSION['comments'];
         }
       }
 
       $params = array('EMAIL' => $order->customer['email_address'],
-                      'TOKEN' => $ppeuk_token,
-                      'PAYERID' => $ppeuk_payerid,
+                      'TOKEN' => $_SESSION['ppeuk_token'],
+                      'PAYERID' => $_SESSION['ppeuk_payerid'],
                       'AMT' => $this->format_raw($order->info['total']),
                       'CURRENCY' => $order->info['currency']);
 
-      if (is_numeric($sendto) && ($sendto > 0)) {
+      if (is_numeric($_SESSION['sendto']) && ($_SESSION['sendto'] > 0)) {
         $params['SHIPTONAME'] = $order->delivery['firstname'] . ' ' . $order->delivery['lastname'];
         $params['SHIPTOSTREET'] = $order->delivery['street_address'];
         $params['SHIPTOCITY'] = $order->delivery['city'];
@@ -208,12 +203,12 @@
     }
 
     function after_process() {
-      global $response_array, $insert_id, $ppeuk_payerstatus, $ppeuk_addressstatus;
+      global $response_array, $insert_id;
 
       $pp_result = 'Payflow ID: ' . tep_output_string_protected($response_array['PNREF']) . "\n" .
                    'PayPal ID: ' . tep_output_string_protected($response_array['PPREF']) . "\n\n" .
-                   'Payer Status: ' . tep_output_string_protected($ppeuk_payerstatus) . "\n" .
-                   'Address Status: ' . tep_output_string_protected($ppeuk_addressstatus) . "\n\n" .
+                   'Payer Status: ' . tep_output_string_protected($_SESSION['ppeuk_payerstatus']) . "\n" .
+                   'Address Status: ' . tep_output_string_protected($_SESSION['ppeuk_addressstatus']) . "\n\n" .
                    'Payment Status: ' . tep_output_string_protected($response_array['PENDINGREASON']) . "\n" .
                    'Payment Type: ' . tep_output_string_protected($response_array['PAYMENTTYPE']) . "\n" .
                    'Response: ' . tep_output_string_protected($response_array['RESPMSG']);
@@ -378,7 +373,7 @@
     }
 
     function sendTransactionToGateway($url, $parameters) {
-      global $cartID, $order;
+      global $order;
 
       $server = parse_url($url);
 
@@ -390,7 +385,7 @@
         $server['path'] = '/';
       }
 
-      $request_id = (isset($order) && is_object($order)) ? md5($cartID . session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
+      $request_id = (isset($order) && is_object($order)) ? md5($_SESSION['cartID'] . session_id() . $this->format_raw($order->info['total'])) : 'oscom_conn_test';
 
       $headers = array('X-VPS-REQUEST-ID: ' . $request_id,
                        'X-VPS-CLIENT-TIMEOUT: 45',

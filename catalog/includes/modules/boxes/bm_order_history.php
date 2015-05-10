@@ -31,11 +31,11 @@
     }
 
     function execute() {
-      global $customer_id, $PHP_SELF, $oscTemplate;
+      global $PHP_SELF, $oscTemplate;
 
       if (isset($_SESSION['customer_id'])) {
 // retreive the last x products purchased
-        $orders_query = tep_db_query("select distinct op.products_id from orders o, orders_products op, products p where o.customers_id = '" . (int)$customer_id . "' and o.orders_id = op.orders_id and op.products_id = p.products_id and p.products_status = '1' group by products_id order by o.date_purchased desc limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
+        $orders_query = tep_db_query("select distinct op.products_id from orders o, orders_products op, products p where o.customers_id = '" . (int)$_SESSION['customer_id'] . "' and o.orders_id = op.orders_id and op.products_id = p.products_id and p.products_status = '1' group by products_id order by o.date_purchased desc limit " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
         if (tep_db_num_rows($orders_query)) {
           $product_ids = '';
           while ($orders = tep_db_fetch_array($orders_query)) {

@@ -36,7 +36,7 @@
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
-    if ($_SESSION['cart']->cartID != $cartID) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
       tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
     }
   }
@@ -45,11 +45,11 @@
 
 // load selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($payment);
+  $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($shipping);
+  $shipping_modules = new shipping($_SESSION['shipping']);
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
@@ -70,7 +70,7 @@
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $payment) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
     tep_redirect(tep_href_link('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
@@ -82,7 +82,7 @@
 // load the before_process function from the payment modules
   $payment_modules->before_process();
 
-  $sql_data_array = array('customers_id' => $customer_id,
+  $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                           'customers_name' => $order->customer['firstname'] . ' ' . $order->customer['lastname'],
                           'customers_company' => $order->customer['company'],
                           'customers_street_address' => $order->customer['street_address'],
@@ -300,16 +300,16 @@
   if ($order->content_type != 'virtual') {
     $email_order .= "\n" . EMAIL_TEXT_DELIVERY_ADDRESS . "\n" .
                     EMAIL_SEPARATOR . "\n" .
-                    tep_address_label($customer_id, $sendto, 0, '', "\n") . "\n";
+                    tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], 0, '', "\n") . "\n";
   }
 
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
-                  tep_address_label($customer_id, $billto, 0, '', "\n") . "\n\n";
-  if (is_object($$payment)) {
+                  tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
+  if (is_object($$_SESSION['payment'])) {
     $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                     EMAIL_SEPARATOR . "\n";
-    $payment_class = $$payment;
+    $payment_class = $$_SESSION['payment'];
     $email_order .= $order->info['payment_method'] . "\n\n";
     if (isset($payment_class->email_footer)) {
       $email_order .= $payment_class->email_footer . "\n\n";
