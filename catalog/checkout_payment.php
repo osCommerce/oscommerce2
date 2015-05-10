@@ -185,7 +185,7 @@
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['id'] == $_SESSION['payment']), 'required aria-required="true"');
+      echo tep_draw_radio_field('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])), 'required aria-required="true"');
     } else {
       echo tep_draw_hidden_field('payment', $selection[$i]['id']);
     }
@@ -247,7 +247,7 @@
       <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
       <div class="col-xs-8">
         <?php
-        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $_SESSION['comments'], 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo tep_draw_textarea_field('comments', 'soft', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
         ?>
       </div>
     </div>

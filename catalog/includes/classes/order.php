@@ -168,73 +168,94 @@
 
       $customer_address = $Qcustomer->toArray();
 
-      if (is_array($_SESSION['sendto']) && !empty($_SESSION['sendto'])) {
-        $shipping_address = array('entry_firstname' => $_SESSION['sendto']['firstname'],
-                                  'entry_lastname' => $_SESSION['sendto']['lastname'],
-                                  'entry_company' => $_SESSION['sendto']['company'],
-                                  'entry_street_address' => $_SESSION['sendto']['street_address'],
-                                  'entry_suburb' => $_SESSION['sendto']['suburb'],
-                                  'entry_postcode' => $_SESSION['sendto']['postcode'],
-                                  'entry_city' => $_SESSION['sendto']['city'],
-                                  'entry_zone_id' => $_SESSION['sendto']['zone_id'],
-                                  'zone_name' => $_SESSION['sendto']['zone_name'],
-                                  'entry_country_id' => $_SESSION['sendto']['country_id'],
-                                  'countries_id' => $_SESSION['sendto']['country_id'],
-                                  'countries_name' => $_SESSION['sendto']['country_name'],
-                                  'countries_iso_code_2' => $_SESSION['sendto']['country_iso_code_2'],
-                                  'countries_iso_code_3' => $_SESSION['sendto']['country_iso_code_3'],
-                                  'address_format_id' => $_SESSION['sendto']['address_format_id'],
-                                  'entry_state' => $_SESSION['sendto']['zone_name']);
-      } elseif (is_numeric($_SESSION['sendto'])) {
-        $Qaddress = $OSCOM_Db->prepare('select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries c on (ab.entry_country_id = c.countries_id) where ab.customers_id = :customers_id and ab.address_book_id = :address_book_id');
-        $Qaddress->bindInt(':customers_id', $_SESSION['customer_id']);
-        $Qaddress->bindInt(':address_book_id', $_SESSION['sendto']);
-        $Qaddress->execute();
+      $shipping_address = array('entry_firstname' => null,
+                                'entry_lastname' => null,
+                                'entry_company' => null,
+                                'entry_street_address' => null,
+                                'entry_suburb' => null,
+                                'entry_postcode' => null,
+                                'entry_city' => null,
+                                'entry_zone_id' => null,
+                                'zone_name' => null,
+                                'entry_country_id' => null,
+                                'countries_id' => null,
+                                'countries_name' => null,
+                                'countries_iso_code_2' => null,
+                                'countries_iso_code_3' => null,
+                                'address_format_id' => 0,
+                                'entry_state' => null);
 
-        $shipping_address = $Qaddress->toArray();
-      } else {
-        $shipping_address = array('entry_firstname' => null,
-                                  'entry_lastname' => null,
-                                  'entry_company' => null,
-                                  'entry_street_address' => null,
-                                  'entry_suburb' => null,
-                                  'entry_postcode' => null,
-                                  'entry_city' => null,
-                                  'entry_zone_id' => null,
-                                  'zone_name' => null,
-                                  'entry_country_id' => null,
-                                  'countries_id' => null,
-                                  'countries_name' => null,
-                                  'countries_iso_code_2' => null,
-                                  'countries_iso_code_3' => null,
-                                  'address_format_id' => 0,
-                                  'entry_state' => null);
+      if (isset($_SESSION['sendto'])) {
+        if (is_array($_SESSION['sendto']) && !empty($_SESSION['sendto'])) {
+          $shipping_address = array('entry_firstname' => $_SESSION['sendto']['firstname'],
+                                    'entry_lastname' => $_SESSION['sendto']['lastname'],
+                                    'entry_company' => $_SESSION['sendto']['company'],
+                                    'entry_street_address' => $_SESSION['sendto']['street_address'],
+                                    'entry_suburb' => $_SESSION['sendto']['suburb'],
+                                    'entry_postcode' => $_SESSION['sendto']['postcode'],
+                                    'entry_city' => $_SESSION['sendto']['city'],
+                                    'entry_zone_id' => $_SESSION['sendto']['zone_id'],
+                                    'zone_name' => $_SESSION['sendto']['zone_name'],
+                                    'entry_country_id' => $_SESSION['sendto']['country_id'],
+                                    'countries_id' => $_SESSION['sendto']['country_id'],
+                                    'countries_name' => $_SESSION['sendto']['country_name'],
+                                    'countries_iso_code_2' => $_SESSION['sendto']['country_iso_code_2'],
+                                    'countries_iso_code_3' => $_SESSION['sendto']['country_iso_code_3'],
+                                    'address_format_id' => $_SESSION['sendto']['address_format_id'],
+                                    'entry_state' => $_SESSION['sendto']['zone_name']);
+        } elseif (is_numeric($_SESSION['sendto'])) {
+          $Qaddress = $OSCOM_Db->prepare('select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries c on (ab.entry_country_id = c.countries_id) where ab.customers_id = :customers_id and ab.address_book_id = :address_book_id');
+          $Qaddress->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qaddress->bindInt(':address_book_id', $_SESSION['sendto']);
+          $Qaddress->execute();
+
+          $shipping_address = $Qaddress->toArray();
+        }
       }
 
-      if (is_array($_SESSION['billto']) && !empty($_SESSION['billto'])) {
-        $billing_address = array('entry_firstname' => $_SESSION['billto']['firstname'],
-                                 'entry_lastname' => $_SESSION['billto']['lastname'],
-                                 'entry_company' => $_SESSION['billto']['company'],
-                                 'entry_street_address' => $_SESSION['billto']['street_address'],
-                                 'entry_suburb' => $_SESSION['billto']['suburb'],
-                                 'entry_postcode' => $_SESSION['billto']['postcode'],
-                                 'entry_city' => $_SESSION['billto']['city'],
-                                 'entry_zone_id' => $_SESSION['billto']['zone_id'],
-                                 'zone_name' => $_SESSION['billto']['zone_name'],
-                                 'entry_country_id' => $_SESSION['billto']['country_id'],
-                                 'countries_id' => $_SESSION['billto']['country_id'],
-                                 'countries_name' => $_SESSION['billto']['country_name'],
-                                 'countries_iso_code_2' => $_SESSION['billto']['country_iso_code_2'],
-                                 'countries_iso_code_3' => $_SESSION['billto']['country_iso_code_3'],
-                                 'address_format_id' => $_SESSION['billto']['address_format_id'],
-                                 'entry_state' => $_SESSION['billto']['zone_name']);
-      } else {
-        $Qaddress = $OSCOM_Db->prepare('select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries c on (ab.entry_country_id = c.countries_id) where ab.customers_id = :customers_id and ab.address_book_id = :address_book_id');
-        $Qaddress->bindInt(':customers_id', $_SESSION['customer_id']);
-        $Qaddress->bindInt(':address_book_id', $_SESSION['billto']);
-        $Qaddress->execute();
+      $billing_address = array('entry_firstname' => null,
+                               'entry_lastname' => null,
+                               'entry_company' => null,
+                               'entry_street_address' => null,
+                               'entry_suburb' => null,
+                               'entry_postcode' => null,
+                               'entry_city' => null,
+                               'entry_zone_id' => null,
+                               'zone_name' => null,
+                               'entry_country_id' => null,
+                               'countries_id' => null,
+                               'countries_name' => null,
+                               'countries_iso_code_2' => null,
+                               'countries_iso_code_3' => null,
+                               'address_format_id' => 0,
+                               'entry_state' => null);
 
-        $billing_address = $Qaddress->toArray();
+      if (isset($_SESSION['billto'])) {
+        if (is_array($_SESSION['billto']) && !empty($_SESSION['billto'])) {
+          $billing_address = array('entry_firstname' => $_SESSION['billto']['firstname'],
+                                   'entry_lastname' => $_SESSION['billto']['lastname'],
+                                   'entry_company' => $_SESSION['billto']['company'],
+                                   'entry_street_address' => $_SESSION['billto']['street_address'],
+                                   'entry_suburb' => $_SESSION['billto']['suburb'],
+                                   'entry_postcode' => $_SESSION['billto']['postcode'],
+                                   'entry_city' => $_SESSION['billto']['city'],
+                                   'entry_zone_id' => $_SESSION['billto']['zone_id'],
+                                   'zone_name' => $_SESSION['billto']['zone_name'],
+                                   'entry_country_id' => $_SESSION['billto']['country_id'],
+                                   'countries_id' => $_SESSION['billto']['country_id'],
+                                   'countries_name' => $_SESSION['billto']['country_name'],
+                                   'countries_iso_code_2' => $_SESSION['billto']['country_iso_code_2'],
+                                   'countries_iso_code_3' => $_SESSION['billto']['country_iso_code_3'],
+                                   'address_format_id' => $_SESSION['billto']['address_format_id'],
+                                   'entry_state' => $_SESSION['billto']['zone_name']);
+        } elseif (is_numeric($_SESSION['billto'])) {
+          $Qaddress = $OSCOM_Db->prepare('select ab.entry_firstname, ab.entry_lastname, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, ab.entry_country_id, c.countries_id, c.countries_name, c.countries_iso_code_2, c.countries_iso_code_3, c.address_format_id, ab.entry_state from :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries c on (ab.entry_country_id = c.countries_id) where ab.customers_id = :customers_id and ab.address_book_id = :address_book_id');
+          $Qaddress->bindInt(':customers_id', $_SESSION['customer_id']);
+          $Qaddress->bindInt(':address_book_id', $_SESSION['billto']);
+          $Qaddress->execute();
+
+          $billing_address = $Qaddress->toArray();
+        }
       }
 
       if ($this->content_type == 'virtual') {
@@ -248,19 +269,19 @@
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                           'currency' => $_SESSION['currency'],
                           'currency_value' => $currencies->currencies[$_SESSION['currency']]['value'],
-                          'payment_method' => $_SESSION['payment'],
+                          'payment_method' => isset($_SESSION['payment']) ? $_SESSION['payment'] : '',
                           'cc_type' => '',
                           'cc_owner' => '',
                           'cc_number' => '',
                           'cc_expires' => '',
-                          'shipping_method' => $_SESSION['shipping']['title'],
-                          'shipping_cost' => $_SESSION['shipping']['cost'],
+                          'shipping_method' => isset($_SESSION['shipping']) ? $_SESSION['shipping']['title'] : '',
+                          'shipping_cost' => isset($_SESSION['shipping']) ? $_SESSION['shipping']['cost'] : 0,
                           'subtotal' => 0,
                           'tax' => 0,
                           'tax_groups' => array(),
                           'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
-      if (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+      if (isset($_SESSION['payment']) && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
         if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
           $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
         } else {

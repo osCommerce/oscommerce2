@@ -323,7 +323,7 @@
       <label for="inputComments" class="control-label col-sm-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
       <div class="col-sm-8">
         <?php
-        echo tep_draw_textarea_field('comments', 'soft', 60, 5, $_SESSION['comments'], 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo tep_draw_textarea_field('comments', 'soft', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
         ?>
       </div>
     </div>
