@@ -453,8 +453,3 @@
       $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link('index.php', 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
-
-// TODO remove when no more global sessions exist
-  if ( $session_started == true ) {
-    extract($_SESSION, EXTR_OVERWRITE+EXTR_REFS);
-  }
