@@ -16,7 +16,7 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
+    $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
