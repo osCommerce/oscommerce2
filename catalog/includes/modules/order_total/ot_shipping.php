@@ -46,7 +46,7 @@
         }
       }
 
-      $module = substr($GLOBALS['shipping']['id'], 0, strpos($GLOBALS['shipping']['id'], '_'));
+      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
 
       if (tep_not_null($order->info['shipping_method'])) {
         if ($GLOBALS[$module]->tax_class > 0) {
