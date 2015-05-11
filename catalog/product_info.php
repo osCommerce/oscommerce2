@@ -63,7 +63,7 @@
       $products_price .= '<link itemprop="availability" href="http://schema.org/InStock" />';
     }
 
-    $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($currency) . '" />';
+    $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($_SESSION['currency']) . '" />';
 
     $products_name = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $product_info['products_id']) . '" itemprop="url"><span itemprop="name">' . $product_info['products_name'] . '</span></a>';
 
