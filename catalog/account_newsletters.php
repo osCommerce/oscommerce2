@@ -25,16 +25,12 @@
   $Qnewsletter->execute();
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    if (isset($_POST['newsletter_general']) && is_numeric($_POST['newsletter_general'])) {
-      $newsletter_general = tep_db_prepare_input($_POST['newsletter_general']);
-    } else {
-      $newsletter_general = '0';
-    }
+    $newsletter_general = (isset($_POST['newsletter_general']) && ($_POST['newsletter_general'] == '1')) ? 1 : 0;
 
-    if ($newsletter_general != $Qnewsletter->value('customers_newsletter')) {
-      $newsletter_general = (($Qnewsletter->value('customers_newsletter') == '1') ? '0' : '1');
+    if ($newsletter_general !== $Qnewsletter->valueInt('customers_newsletter')) {
+      $newsletter_general = ($Qnewsletter->valueInt('customers_newsletter') === 1) ? 0 : 1;
 
-      $OSCOM_Db->save('customers', ['customers_newsletter' => (int)$newsletter_general], ['customers_id' => $_SESSION['customer_id']]);
+      $OSCOM_Db->save('customers', ['customers_newsletter' => $newsletter_general], ['customers_id' => $_SESSION['customer_id']]);
     }
 
     $messageStack->add_session('account', SUCCESS_NEWSLETTER_UPDATED, 'success');
