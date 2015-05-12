@@ -1388,7 +1388,7 @@
 
   function tep_get_ip_address() {
 
-    $ip_address = null;
+    $ip_address = '0.0.0.0';
     $ip_addresses = array();
 
     if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {

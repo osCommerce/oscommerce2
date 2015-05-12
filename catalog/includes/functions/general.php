@@ -1358,7 +1358,7 @@
     static $_ip_address;
 
     if ( !isset($_ip_address) ) {
-      $_ip_address = null;
+      $_ip_address = '0.0.0.0';
       $ip_addresses = array();
 
       if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
