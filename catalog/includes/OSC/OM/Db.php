@@ -98,7 +98,7 @@ class Db extends \PDO
         return $DbStatement;
     }
 
-    public function get($table, $fields, array $where = null, $cache = null)
+    public function get($table, $fields, array $where = null, $order = null, $cache = null)
     {
         if (!is_array($table)) {
             $table = [ $table ];
@@ -114,9 +114,17 @@ class Db extends \PDO
             $fields = [ $fields ];
         }
 
+        if (isset($order) && !is_array($order)) {
+            $order = [ $order ];
+        }
+
         $statement = 'select ' . implode(', ', $fields) . ' from ' . implode(', ', $table);
 
         if (!isset($where) && !isset($cache)) {
+            if (isset($order)) {
+                $statement .= ' order by ' . implode(', ', $order);
+            }
+
             return $this->query($statement);
         }
 
@@ -128,6 +136,10 @@ class Db extends \PDO
             }
 
             $statement = substr($statement, 0, -5);
+        }
+
+        if (isset($order)) {
+            $statement .= ' order by ' . implode(', ', $order);
         }
 
         $Q = $this->prepare($statement);
