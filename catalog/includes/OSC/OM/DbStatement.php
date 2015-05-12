@@ -157,8 +157,16 @@ class DbStatement extends \PDOStatement
         return $this->result;
     }
 
-    public function setCache($key, $expire = 0, $cache_empty_results = false)
+    public function setCache($key, $expire = null, $cache_empty_results = false)
     {
+        if (!is_numeric($expire)) {
+            $expire = 0;
+        }
+
+        if (!is_bool($cache_empty_results)) {
+            $cache_empty_results = false;
+        }
+
         $this->cache_key = basename($key);
         $this->cache_expire = $expire;
         $this->cache_empty_results = $cache_empty_results;

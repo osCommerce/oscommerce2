@@ -70,9 +70,7 @@
   $OSCOM_Db = Registry::get('Db');
 
 // set the application parameters
-  $Qcfg = $OSCOM_Db->prepare('select configuration_key as k, configuration_value as v from :table_configuration');
-//  $Qcfg->setCache('configuration');
-  $Qcfg->execute();
+  $Qcfg = $OSCOM_Db->get('configuration', ['configuration_key as k', 'configuration_value as v']);//, null, 'configuration'); // TODO add cache when supported by admin
 
   while ($Qcfg->fetch()) {
     define($Qcfg->value('k'), $Qcfg->value('v'));
@@ -338,10 +336,10 @@
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
                                 for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-                                  $check_query = tep_db_query("select count(*) as count from products_notifications where products_id = '" . (int)$notify[$i] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-                                  $check = tep_db_fetch_array($check_query);
-                                  if ($check['count'] < 1) {
-                                    tep_db_query("insert into products_notifications (products_id, customers_id, date_added) values ('" . (int)$notify[$i] . "', '" . (int)$_SESSION['customer_id'] . "', now())");
+                                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $notify[$i]]);
+
+                                  if ($Qcheck->fetch() === false) {
+                                    $OSCOM_Db->save('products_notifications', ['products_id' => $notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
                                     $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
@@ -352,10 +350,10 @@
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
-                                $check_query = tep_db_query("select count(*) as count from products_notifications where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
-                                $check = tep_db_fetch_array($check_query);
-                                if ($check['count'] > 0) {
-                                  tep_db_query("delete from products_notifications where products_id = '" . (int)$_GET['products_id'] . "' and customers_id = '" . (int)$_SESSION['customer_id'] . "'");
+                                $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+
+                                if ($Qcheck->fetch() !== false) {
+                                  $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
                                 tep_redirect(tep_href_link($PHP_SELF, tep_get_all_get_params(array('action'))));
@@ -434,22 +432,18 @@
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
     for ( $i=0, $n=sizeof($cPath_array); $i<$n; $i++ ) {
-      $categories_query = tep_db_query("select categories_name from categories_description where categories_id = '" . (int)$cPath_array[$i] . "' and language_id = '" . (int)$_SESSION['languages_id'] . "'");
+      $Qcategories = $OSCOM_Db->get('categories_description', 'categories_name', ['categories_id' => $cPath_array[$i], 'language_id' => $_SESSION['languages_id']]);
 
-      if ( tep_db_num_rows($categories_query) > 0 ) {
-        $categories = tep_db_fetch_array($categories_query);
-
-        $breadcrumb->add($categories['categories_name'], tep_href_link('index.php', 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
+      if ($Qcategories->fetch() !== false) {
+        $breadcrumb->add($Qcategories->value('categories_name'), tep_href_link('index.php', 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));
       } else {
         break;
       }
     }
   } elseif ( isset($_GET['manufacturers_id']) ) {
-    $manufacturers_query = tep_db_query("select manufacturers_name from manufacturers where manufacturers_id = '" . (int)$_GET['manufacturers_id'] . "'");
+    $Qmanufacturer = $OSCOM_Db->get('manufacturers', 'manufacturers_name', ['manufacturers_id' => $_GET['manufacturers_id']]);
 
-    if ( tep_db_num_rows($manufacturers_query) ) {
-      $manufacturers = tep_db_fetch_array($manufacturers_query);
-
-      $breadcrumb->add($manufacturers['manufacturers_name'], tep_href_link('index.php', 'manufacturers_id=' . $_GET['manufacturers_id']));
+    if ($Qmanufacturer->fetch() !== false) {
+      $breadcrumb->add($Qmanufacturer->value('manufacturers_name'), tep_href_link('index.php', 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
