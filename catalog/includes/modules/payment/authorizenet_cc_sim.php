@@ -184,7 +184,7 @@
                            'x_amount');
 
       foreach ( $check_array as $check ) {
-        if ( !isset($_POST[$check]) || !is_string($_POST[$check]) || (strlen($_POST[$check]) < 1) ) {
+        if ( !isset($_POST[$check]) || (strlen($_POST[$check]) < 1) ) {
           $error = 'general';
           break;
         }
@@ -232,7 +232,7 @@
 
       $avs_response = '?';
 
-      if ( isset($_POST['x_avs_code']) && is_string($_POST['x_avs_code']) && !empty($_POST['x_avs_code']) ) {
+      if ( isset($_POST['x_avs_code']) && !empty($_POST['x_avs_code']) ) {
         if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_AVS_' . $_POST['x_avs_code']) ) {
           $avs_response = constant('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_AVS_' . $_POST['x_avs_code']) . ' (' . $_POST['x_avs_code'] . ')';
         } else {
@@ -244,7 +244,7 @@
 
       $cvv2_response = '?';
 
-      if ( isset($_POST['x_cvv2_resp_code']) && is_string($_POST['x_cvv2_resp_code']) && !empty($_POST['x_cvv2_resp_code']) ) {
+      if ( isset($_POST['x_cvv2_resp_code']) && !empty($_POST['x_cvv2_resp_code']) ) {
         if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_CVV2_' . $_POST['x_cvv2_resp_code']) ) {
           $cvv2_response = constant('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_CVV2_' . $_POST['x_cvv2_resp_code']) . ' (' . $_POST['x_cvv2_resp_code'] . ')';
         } else {
@@ -256,7 +256,7 @@
 
       $cavv_response = '?';
 
-      if ( isset($_POST['x_cavv_response']) && is_string($_POST['x_cavv_response']) && !empty($_POST['x_cavv_response']) ) {
+      if ( isset($_POST['x_cavv_response']) && !empty($_POST['x_cavv_response']) ) {
         if ( defined('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_CAVV_' . $_POST['x_cavv_response']) ) {
           $cavv_response = constant('MODULE_PAYMENT_AUTHORIZENET_CC_SIM_TEXT_CAVV_' . $_POST['x_cavv_response']) . ' (' . $_POST['x_cavv_response'] . ')';
         } else {
