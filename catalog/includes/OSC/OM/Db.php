@@ -98,7 +98,7 @@ class Db extends \PDO
         return $DbStatement;
     }
 
-    public function get($table, $fields, array $where = null, $order = null, $cache = null)
+    public function get($table, $fields, array $where = null, $order = null, $limit = null, $cache = null)
     {
         if (!is_array($table)) {
             $table = [ $table ];
@@ -116,6 +116,14 @@ class Db extends \PDO
 
         if (isset($order) && !is_array($order)) {
             $order = [ $order ];
+        }
+
+        if (isset($limit)) {
+            if (is_array($limit) && (count($limit) === 2) && is_numeric($limit[0]) && is_numeric($limit[1])) {
+                $limit = implode(', ', $limit);
+            } elseif (!is_numeric($limit)) {
+                $limit = null;
+            }
         }
 
         $statement = 'select ' . implode(', ', $fields) . ' from ' . implode(', ', $table);
@@ -140,6 +148,10 @@ class Db extends \PDO
 
         if (isset($order)) {
             $statement .= ' order by ' . implode(', ', $order);
+        }
+
+        if (isset($limit)) {
+            $statement .= ' limit ' . $limit;
         }
 
         $Q = $this->prepare($statement);

@@ -70,7 +70,7 @@
   $OSCOM_Db = Registry::get('Db');
 
 // set the application parameters
-  $Qcfg = $OSCOM_Db->get('configuration', ['configuration_key as k', 'configuration_value as v']);//, null, null, 'configuration'); // TODO add cache when supported by admin
+  $Qcfg = $OSCOM_Db->get('configuration', ['configuration_key as k', 'configuration_value as v']);//, null, null, null, 'configuration'); // TODO add cache when supported by admin
 
   while ($Qcfg->fetch()) {
     define($Qcfg->value('k'), $Qcfg->value('v'));
