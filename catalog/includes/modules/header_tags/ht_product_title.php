@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ht_product_title {
     var $code = 'ht_product_title';
     var $group = 'header_tags';
@@ -29,15 +31,19 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $product_check;
+      global $PHP_SELF, $oscTemplate;
+
+      $OSCOM_Db = Registry::get('Db');
 
       if (basename($PHP_SELF) == 'product_info.php') {
         if (isset($_GET['products_id'])) {
-          if ($product_check['total'] > 0) {
-            $product_info_query = tep_db_query("select pd.products_name from products p, products_description pd where p.products_status = '1' and p.products_id = '" . (int)$_GET['products_id'] . "' and pd.products_id = p.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-            $product_info = tep_db_fetch_array($product_info_query);
+          $Qproduct = $OSCOM_Db->prepare('select pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
+          $Qproduct->bindInt(':products_id', $_GET['products_id']);
+          $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproduct->execute();
 
-            $oscTemplate->setTitle($product_info['products_name'] . ', ' . $oscTemplate->getTitle());
+          if ($Qproduct->fetch() !== false) {
+            $oscTemplate->setTitle($Qproduct->value('products_name') . ', ' . $oscTemplate->getTitle());
           }
         }
       }
@@ -52,12 +58,32 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Product Title Module', 'MODULE_HEADER_TAGS_PRODUCT_TITLE_STATUS', 'True', 'Do you want to allow product titles to be added to the page title?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_PRODUCT_TITLE_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Product Title Module',
+        'configuration_key' => 'MODULE_HEADER_TAGS_PRODUCT_TITLE_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to allow product titles to be added to the page title?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_HEADER_TAGS_PRODUCT_TITLE_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

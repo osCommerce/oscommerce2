@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ht_table_click_jquery {
     var $code = 'ht_table_click_jquery';
     var $group = 'footer_scripts';
@@ -57,13 +59,44 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Clickable Table Rows Module', 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_STATUS', 'True', 'Do you want to enable the Clickable Table Rows module?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Pages', 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_PAGES', '" . implode(';', $this->get_default_pages()) . "', 'The pages to add the jQuery Scripts to.', '6', '0', 'ht_table_click_jquery_show_pages', 'ht_table_click_jquery_edit_pages(', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Clickable Table Rows Module',
+        'configuration_key' => 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to enable the Clickable Table Rows module?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Pages',
+        'configuration_key' => 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_PAGES',
+        'configuration_value' => implode(';', $this->get_default_pages()),
+        'configuration_description' => 'The pages to add the jQuery Scripts to.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'ht_table_click_jquery_show_pages',
+        'set_function' => 'ht_table_click_jquery_edit_pages(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

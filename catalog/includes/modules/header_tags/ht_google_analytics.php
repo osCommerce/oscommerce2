@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ht_google_analytics {
     var $code = 'ht_google_analytics';
     var $group = 'header_tags';
@@ -31,6 +33,8 @@
     function execute() {
       global $PHP_SELF, $oscTemplate;
 
+      $OSCOM_Db = Registry::get('Db');
+
       if (tep_not_null(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID)) {
         if (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT != 'Header') {
           $this->group = 'footer_scripts';
@@ -42,41 +46,46 @@
   _gaq.push([\'_trackPageview\']);' . "\n";
 
         if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && (basename($PHP_SELF) == 'checkout_success.php') && isset($_SESSION['customer_id']) ) {
-          $order_query = tep_db_query("select orders_id, billing_city, billing_state, billing_country from orders where customers_id = '" . (int)$_SESSION['customer_id'] . "' order by date_purchased desc limit 1");
+          $Qorder = $OSCOM_Db->get('orders', ['orders_id', 'billing_city', 'billing_state', 'billing_country'], ['customers_id' => $_SESSION['customer_id']], 'date_purchased desc', 1);
 
-          if (tep_db_num_rows($order_query) == 1) {
-            $order = tep_db_fetch_array($order_query);
-
+          if ($Qorder->fetch() !== false) {
             $totals = array();
 
-            $order_totals_query = tep_db_query("select value, class from orders_total where orders_id = '" . (int)$order['orders_id'] . "'");
-            while ($order_totals = tep_db_fetch_array($order_totals_query)) {
-              $totals[$order_totals['class']] = $order_totals['value'];
+            $Qtotals = $OSCOM_Db->get('orders_total', ['value', 'class'], ['orders_id' => $Qorder->valueInt('orders_id')]);
+
+            while ($Qtotals->fetch()) {
+              $totals[$Qtotals->value('class')] = $Qtotals->value('value');
             }
 
             $header .= '  _gaq.push([\'_addTrans\',
-    \'' . (int)$order['orders_id'] . '\', // order ID - required
+    \'' . $Qorder->valueInt('orders_id') . '\', // order ID - required
     \'' . tep_output_string(STORE_NAME) . '\', // store name
     \'' . (isset($totals['ot_total']) ? $this->format_raw($totals['ot_total'], DEFAULT_CURRENCY) : 0) . '\', // total - required
     \'' . (isset($totals['ot_tax']) ? $this->format_raw($totals['ot_tax'], DEFAULT_CURRENCY) : 0) . '\', // tax
     \'' . (isset($totals['ot_shipping']) ? $this->format_raw($totals['ot_shipping'], DEFAULT_CURRENCY) : 0) . '\', // shipping
-    \'' . tep_output_string_protected($order['billing_city']) . '\', // city
-    \'' . tep_output_string_protected($order['billing_state']) . '\', // state or province
-    \'' . tep_output_string_protected($order['billing_country']) . '\' // country
+    \'' . $Qorder->valueProtected('billing_city') . '\', // city
+    \'' . $Qorder->valueProtected('billing_state') . '\', // state or province
+    \'' . $Qorder->valueProtected('billing_country') . '\' // country
   ]);' . "\n";
 
-            $order_products_query = tep_db_query("select op.products_id, pd.products_name, op.final_price, op.products_quantity from orders_products op, products_description pd, languages l where op.orders_id = '" . (int)$order['orders_id'] . "' and op.products_id = pd.products_id and l.code = '" . tep_db_input(DEFAULT_LANGUAGE) . "' and l.languages_id = pd.language_id");
-            while ($order_products = tep_db_fetch_array($order_products_query)) {
-              $category_query = tep_db_query("select cd.categories_name from categories_description cd, products_to_categories p2c, languages l where p2c.products_id = '" . (int)$order_products['products_id'] . "' and p2c.categories_id = cd.categories_id and l.code = '" . tep_db_input(DEFAULT_LANGUAGE) . "' and l.languages_id = cd.language_id limit 1");
-              $category = tep_db_fetch_array($category_query);
+            $Qproducts = $OSCOM_Db->prepare('select op.products_id, pd.products_name, op.final_price, op.products_quantity from :table_orders_products op, :table_products_description pd, :table_languages l where op.orders_id = :orders_id and op.products_id = pd.products_id and pd.language_id = l.languages_id and l.code = :code');
+            $Qproducts->bindInt(':orders_id', $Qorder->valueInt('orders_id'));
+            $Qproducts->bindValue(':code', DEFAULT_LANGUAGE);
+            $Qproducts->execute();
+
+            while ($Qproducts->fetch()) {
+              $Qcategory = $OSCOM_Db->prepare('select cd.categories_name from :table_categories_description cd, :table_products_to_categories p2c, :table_languages l where p2c.products_id = :products_id and p2c.categories_id = cd.categories_id and cd.language_id = l.languages_id and l.code = :code');
+              $Qcategory->bindInt(':products_id', $Qproducts->valueInt('products_id'));
+              $Qcategory->bindValue(':code', DEFAULT_LANGUAGE);
+              $Qcategory->execute();
 
               $header .= '  _gaq.push([\'_addItem\',
-    \'' . (int)$order['orders_id'] . '\', // order ID - required
-    \'' . (int)$order_products['products_id'] . '\', // SKU/code - required
-    \'' . tep_output_string($order_products['products_name']) . '\', // product name
-    \'' . tep_output_string($category['categories_name']) . '\', // category
-    \'' . $this->format_raw($order_products['final_price']) . '\', // unit price - required
-    \'' . (int)$order_products['products_quantity'] . '\' // quantity - required
+    \'' . $Qorder->valueInt('orders_id') . '\', // order ID - required
+    \'' . $Qproducts->valueInt('products_id') . '\', // SKU/code - required
+    \'' . $Qproducts->valueProtected('products_name') . '\', // product name
+    \'' . $Qcategory->valueProtected('categories_name') . '\', // category
+    \'' . $this->format_raw($Qproducts->value('final_price')) . '\', // unit price - required
+    \'' . $Qproducts->valueInt('products_quantity') . '\' // quantity - required
   ]);' . "\n";
             }
 
@@ -118,15 +127,64 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Google Analytics Module', 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_STATUS', 'True', 'Do you want to add Google Analytics to your shop?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Google Analytics ID', 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID', '', 'The Google Analytics profile ID to track.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('E-Commerce Tracking', 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING', 'True', 'Do you want to enable e-commerce tracking? (E-Commerce tracking must also be enabled in your Google Analytics profile settings)', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Javascript Placement', 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT', 'Header', 'Should the Google Analytics javascript be loaded in the header or footer?', '6', '1', 'tep_cfg_select_option(array(\'Header\', \'Footer\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Google Analytics Module',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to add Google Analytics to your shop?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Google Analytics ID',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID',
+        'configuration_value' => '',
+        'configuration_description' => 'The Google Analytics profile ID to track.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'E-Commerce Tracking',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to enable e-commerce tracking? (E-Commerce tracking must also be enabled in your Google Analytics profile settings)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Javascript Placement',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_JS_PLACEMENT',
+        'configuration_value' => 'Header',
+        'configuration_description' => 'Should the Google Analytics javascript be loaded in the header or footer?',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'set_function' => 'tep_cfg_select_option(array(\'Header\', \'Footer\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
