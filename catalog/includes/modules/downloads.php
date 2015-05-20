@@ -12,16 +12,20 @@
 
   if (!strstr($PHP_SELF, 'account_history_info.php')) {
 // Get last order id for checkout_success
-    $orders_query = tep_db_query("select orders_id from orders where customers_id = '" . (int)$_SESSION['customer_id'] . "' order by orders_id desc limit 1");
-    $orders = tep_db_fetch_array($orders_query);
-    $last_order = $orders['orders_id'];
+    $Qorders = $OSCOM_Db->get('orders', 'orders_id', ['customers_id' => $_SESSION['customer_id']], 'orders_id desc', 1);
+    $last_order = $Qorders->valueInt('orders_id');
   } else {
-    $last_order = $_GET['order_id'];
+    $last_order = (int)$_GET['order_id'];
   }
 
 // Now get all downloadable products in that order
-  $downloads_query = tep_db_query("select date_format(o.date_purchased, '%Y-%m-%d') as date_purchased_day, opd.download_maxdays, op.products_name, opd.orders_products_download_id, opd.orders_products_filename, opd.download_count, opd.download_maxdays from orders o, orders_products op, orders_products_download opd, orders_status os where o.customers_id = '" . (int)$_SESSION['customer_id'] . "' and o.orders_id = '" . (int)$last_order . "' and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_filename != '' and o.orders_status = os.orders_status_id and os.downloads_flag = '1' and os.language_id = '" . (int)$_SESSION['languages_id'] . "'");
-  if (tep_db_num_rows($downloads_query) > 0) {
+  $Qdownloads = $OSCOM_Db->prepare('select date_format(o.date_purchased, "%Y-%m-%d") as date_purchased_day, opd.download_maxdays, op.products_name, opd.orders_products_download_id, opd.orders_products_filename, opd.download_count, opd.download_maxdays from :table_orders o, :table_orders_products op, :table_orders_products_download opd, :table_orders_status os where o.orders_id = :orders_id and o.customers_id = :customers_id and o.orders_id = op.orders_id and op.orders_products_id = opd.orders_products_id and opd.orders_products_filename != "" and o.orders_status = os.orders_status_id and os.downloads_flag = 1 and os.language_id = :language_id');
+  $Qdownloads->bindInt(':orders_id', $last_order);
+  $Qdownloads->bindInt(':customers_id', $_SESSION['customer_id']);
+  $Qdownloads->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qdownloads->execute();
+
+  if ($Qdownloads->fetch() !== false) {
 ?>
 
   <h2><?php echo HEADING_DOWNLOAD; ?></h2>
@@ -30,10 +34,10 @@
     <table border="0" width="100%" cellspacing="1" cellpadding="2">
 
 <?php
-    while ($downloads = tep_db_fetch_array($downloads_query)) {
+    do {
 // MySQL 3.22 does not have INTERVAL
-      list($dt_year, $dt_month, $dt_day) = explode('-', $downloads['date_purchased_day']);
-      $download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + $downloads['download_maxdays'], $dt_year);
+      list($dt_year, $dt_month, $dt_day) = explode('-', $Qdownloads->value('date_purchased_day'));
+      $download_timestamp = mktime(23, 59, 59, $dt_month, $dt_day + $Qdownloads->valueInt('download_maxdays'), $dt_year);
       $download_expiry = date('Y-m-d H:i:s', $download_timestamp);
 
       echo '      <tr>' . "\n";
@@ -43,16 +47,16 @@
 // - The file is present in the DOWNLOAD directory, AND EITHER
 // - No expiry date is enforced (maxdays == 0), OR
 // - The expiry date is not reached
-      if ( ($downloads['download_count'] > 0) && (file_exists(DIR_FS_DOWNLOAD . $downloads['orders_products_filename'])) && ( ($downloads['download_maxdays'] == 0) || ($download_timestamp > time())) ) {
-        echo '        <td><a href="' . tep_href_link('download.php', 'order=' . $last_order . '&id=' . $downloads['orders_products_download_id']) . '">' . $downloads['products_name'] . '</a></td>' . "\n";
+      if ( ($Qdownloads->valueInt('download_count') > 0) && (file_exists(DIR_FS_DOWNLOAD . $Qdownloads->value('orders_products_filename'))) && ( ($Qdownloads->valueInt('download_maxdays') == 0) || ($download_timestamp > time())) ) {
+        echo '        <td><a href="' . tep_href_link('download.php', 'order=' . $last_order . '&id=' . $Qdownloads->valueInt('orders_products_download_id')) . '">' . $Qdownloads->value('products_name') . '</a></td>' . "\n";
       } else {
-        echo '        <td>' . $downloads['products_name'] . '</td>' . "\n";
+        echo '        <td>' . $Qdownloads->value('products_name') . '</td>' . "\n";
       }
 
       echo '        <td>' . TABLE_HEADING_DOWNLOAD_DATE . tep_date_long($download_expiry) . '</td>' . "\n" .
-           '        <td align="right">' . $downloads['download_count'] . TABLE_HEADING_DOWNLOAD_COUNT . '</td>' . "\n" .
+           '        <td align="right">' . $Qdownloads->valueInt('download_count') . TABLE_HEADING_DOWNLOAD_COUNT . '</td>' . "\n" .
            '      </tr>' . "\n";
-    }
+    } while ($Qdownloads->fetch());
 ?>
 
     </table>
