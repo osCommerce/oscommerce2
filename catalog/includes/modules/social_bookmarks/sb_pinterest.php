@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class sb_pinterest {
     var $code = 'sb_pinterest';
     var $title;
@@ -32,6 +34,8 @@
     function getOutput() {
       global $oscTemplate;
 
+      $OSCOM_Db = Registry::get('Db');
+
 // add the js in the footer
       $oscTemplate->addBlock('<script src="//assets.pinterest.com/js/pinit.js"></script>', 'footer_scripts');
 
@@ -41,21 +45,20 @@
       $params['description'] = tep_get_products_name($_GET['products_id']);
 
 // and image (used for media)
-      $image_query = tep_db_query("select products_image from products where products_id = '" . (int)$_GET['products_id'] . "'");
-      $image = tep_db_fetch_array($image_query);
+      $Qimage = $OSCOM_Db->get('products', 'products_image', ['products_id' => (int)$_GET['products_id']]);
 
-      if (tep_not_null($image['products_image'])) {
-        $image_file = $image['products_image'];
+      if (!empty($Qimage->value('products_image'))) {
+        $image_file = $Qimage->value('products_image');
 
-        $pi_query = tep_db_query("select image from products_images where products_id = '" . (int)$_GET['products_id'] . "' order by sort_order");
+        $Qimage = $OSCOM_Db->get('products_images', 'image', ['products_id' => (int)$_GET['products_id']], 'sort_order');
 
-        if (tep_db_num_rows($pi_query) > 0) {
-          while ($pi = tep_db_fetch_array($pi_query)) {
-            if (tep_not_null($pi['image'])) {
-              $image_file = $pi['image']; // overwrite image with first multiple product image
+        if ($Qimage->fetch() !== false) {
+          do {
+            if (!empty($Qimage->value('image'))) {
+              $image_file = $Qimage->value('image'); // overwrite image with first multiple product image
               break;
             }
-          }
+          } while ($Qimage->fetch());
         }
 
         $params['media'] = tep_href_link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
@@ -90,13 +93,43 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Pinterest Module', 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_STATUS', 'True', 'Do you want to allow Pinterest Button?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Layout Position', 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_BUTTON_COUNT_POSITION', 'None', 'Horizontal or Vertical or None', '6', '2', 'tep_cfg_select_option(array(\'Horizontal\', \'Vertical\', \'None\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Pinterest Module',
+        'configuration_key' => 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to allow Pinterest Button?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Layout Position',
+        'configuration_key' => 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_BUTTON_COUNT_POSITION',
+        'configuration_value' => 'None',
+        'configuration_description' => 'Horizontal or Vertical or None',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'Horizontal\', \'Vertical\', \'None\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_SOCIAL_BOOKMARKS_PINTEREST_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
