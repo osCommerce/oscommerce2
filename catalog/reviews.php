@@ -26,23 +26,25 @@
 <div class="contentContainer">
 
 <?php
-  $reviews_query_raw = "select r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, p.products_id, pd.products_name, p.products_image, r.customers_name from reviews r, reviews_description rd, products p, products_description pd where p.products_status = '1' and p.products_id = r.products_id and r.reviews_id = rd.reviews_id and p.products_id = pd.products_id and pd.language_id = '" . (int)$_SESSION['languages_id'] . "' and rd.languages_id = '" . (int)$_SESSION['languages_id'] . "' and reviews_status = 1 order by r.reviews_id DESC";
-  $reviews_split = new splitPageResults($reviews_query_raw, MAX_DISPLAY_NEW_REVIEWS);
+  $Qreviews = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, p.products_id, pd.products_name, p.products_image, r.customers_name from :table_reviews r, :table_reviews_description rd, :table_products p, :table_products_description pd where p.products_id = r.products_id and p.products_status = 1 and r.reviews_status = 1 and r.reviews_id = rd.reviews_id and p.products_id = pd.products_id and pd.language_id = :language_id and pd.language_id = rd.languages_id order by r.reviews_id desc limit :page_set_offset, :page_set_max_results');
+  $Qreviews->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qreviews->setPageSet(MAX_DISPLAY_NEW_REVIEWS);
+  $Qreviews->execute();
 
-  if ($reviews_split->number_of_rows > 0) {
+  if ($Qreviews->getPageSetTotalRows() > 0) {
     if ((PREV_NEXT_BAR_LOCATION == '1') || (PREV_NEXT_BAR_LOCATION == '3')) {
 ?>
 
   <div class="row">
     <div class="col-sm-6 pagenumber hidden-xs">
-      <?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
     </div>
     <div class="col-sm-6">
-      <div class="pull-right pagenav"><?php echo $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></div>
+      <div class="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></div>
       <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
     </div>
   </div>
-  
+
   <div class="clearfix"></div>
 
 <?php
@@ -50,21 +52,18 @@
     ?>
 <div class="row">
 <?php
-    $Qreview = $OSCOM_Db->prepare($reviews_split->sql_query);
-    $Qreview->execute();
-
-    while ($reviews = $Qreview->fetch()) {
+    while ($Qreviews->fetch()) {
 ?>
 
   <div class="col-sm-6 review">
-    <h4><?php echo '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . $reviews['products_id'] . '&reviews_id=' . $reviews['reviews_id']) . '">' . $reviews['products_name'] . '</a>'; ?></h4>
+    <h4><?php echo '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id') . '&reviews_id=' . $Qreviews->valueInt('reviews_id')) . '">' . $Qreviews->value('products_name') . '</a>'; ?></h4>
     <blockquote>
-      <p><span class="pull-left"><?php echo tep_image(DIR_WS_IMAGES . tep_output_string_protected($reviews['products_image']), tep_output_string_protected($reviews['products_name']), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo tep_output_string_protected($reviews['reviews_text']) . ' ... '; ?></p>
+      <p><span class="pull-left"><?php echo tep_image(DIR_WS_IMAGES . $Qreviews->value('products_image'), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo $Qreviews->valueProtected('reviews_text') . ' ... '; ?></p>
       <div class="clearfix"></div>
       <footer>
         <?php
-        $review_name = tep_output_string_protected($reviews['customers_name']);
-        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($reviews['reviews_rating']), $review_name, $review_name) . '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . (int)$reviews['products_id']) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
+        $review_name = $Qreviews->valueProtected('customers_name');
+        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
       </footer>
     </blockquote>
   </div>
@@ -73,31 +72,31 @@
     }
     ?>
 </div>
-<?php
-  } else {
-?>
-
-  <div class="contentText">
-    <div class="alert alert-info">
-      <?php echo TEXT_NO_REVIEWS; ?>
-    </div>
-  </div>
 
 <?php
-  }
-
-  if (($reviews_split->number_of_rows > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+    if ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3')) {
 ?>
 
   <div class="clearfix"></div>
 
   <div class="row">
     <div class="col-sm-6 pagenumber hidden-xs">
-      <?php echo $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
     </div>
     <div class="col-sm-6">
-      <div class="pull-right pagenav"><?php echo $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, tep_get_all_get_params(array('page', 'info'))); ?></div>
+      <div class="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></div>
       <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+    </div>
+  </div>
+
+<?php
+    }
+  } else {
+?>
+
+  <div class="contentText">
+    <div class="alert alert-info">
+      <?php echo TEXT_NO_REVIEWS; ?>
     </div>
   </div>
 

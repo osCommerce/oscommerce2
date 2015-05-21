@@ -16,10 +16,8 @@
 
   switch ($_GET['action']) {
     case 'banner':
-      $Qbanner = $OSCOM_Db->prepare('select banners_url from :table_banners where banners_id = :goto');
-      $Qbanner->bindInt(':goto', $_GET['goto']);
-      $Qbanner->execute();
-      if ( $Qbanner->rowCount() > 0 ) {
+      $Qbanner = $OSCOM_Db->get('banners', 'banners_url', ['banners_id' => $_GET['goto']]);
+      if ($Qbanner->fetch() !== false) {
         tep_update_banner_click_count($_GET['goto']);
 
         tep_redirect($Qbanner->value('banners_url'));
@@ -28,27 +26,24 @@
 
     case 'url':
       if (isset($_GET['goto']) && tep_not_null($_GET['goto'])) {
-        $Qcheck = $OSCOM_Db->prepare('select products_url from :table_products_description where products_url = :goto limit 1');
-        $Qcheck->bindValue(':goto', HTML::sanitize($_GET['goto']));
-        $Qcheck->execute();
-        if ( $Qcheck->rowCount() > 0 ) {
-          tep_redirect('http://' . $_GET['goto']);
+        $Qcheck = $OSCOM_Db->get('products_description', 'products_url', ['products_url' => HTML::sanitize($_GET['goto'])], null, 1);
+        if ($Qcheck->fetch() !== false) {
+          tep_redirect('http://' . $Qcheck->value('products_url'));
         }
       }
       break;
 
     case 'manufacturer':
-      if (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
-        $Qmanufacturer = $OSCOM_Db->prepare('select manufacturers_url from :table_manufacturers_info where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
-        $Qmanufacturer->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
-        $Qmanufacturer->bindInt(':languages_id', $_SESSION['languages_id']);
-        $Qmanufacturer->execute();
-        
-        if ( $Qmanufacturer->rowCount() > 0 ) {
-// url exists in selected language
+      if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
+        $Qmanufacturer = $OSCOM_Db->get('manufacturers_info', 'manufacturers_url', ['manufacturers_id' => $_GET['manufacturers_id'], 'languages_id' => $_SESSION['languages_id']]);
 
-          if ( $Qmanufacturer->value('manufacturers_url') ) {
-            $OSCOM_Db->save(':table_manufacturers_info', array('url_clicked' => 'url_clicked'+1, 'date_last_click' => 'now()'), array('manufacturers_id' => (int)$_GET['manufacturers_id'], 'languages_id' => (int)$_SESSION['languages_id']));
+        if ($Qmanufacturer->fetch() !== false) {
+// url exists in selected language
+          if ( !empty($Qmanufacturer->value('manufacturers_url')) ) {
+            $Qupdate = $OSCOM_Db->prepare('update :table_manufacturers_info set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
+            $Qupdate->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
+            $Qupdate->bindInt(':languages_id', $_SESSION['languages_id']);
+            $Qupdate->execute();
 
             tep_redirect($Qmanufacturer->value('manufacturers_url'));
           }
@@ -59,11 +54,12 @@
           $Qmanufacturer->bindValue(':default_language', DEFAULT_LANGUAGE);
           $Qmanufacturer->execute();
 
-          if ( $Qmanufacturer->rowCount() > 0 ) {
-            $manufacturer = tep_db_fetch_array($manufacturer_query);
-
-            if ( $Qmanufacturer->value('manufacturers_url') ) {
-              $OSCOM_Db->save(':table_manufacturers_info', array('url_clicked' => 'url_clicked'+1, 'date_last_click' => 'now()'), array('manufacturers_id' => (int)$_GET['manufacturers_id'], 'languages_id' => (int)$manufacturer['languages_id']));
+          if ($Qmanufacturer->fetch() !== false) {
+            if ( !empty($Qmanufacturer->value('manufacturers_url')) ) {
+              $Qupdate = $OSCOM_Db->prepare('update :table_manufacturers_info set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
+              $Qupdate->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
+              $Qupdate->bindInt(':languages_id', $Qmanufacturer->valueInt('languages_id'));
+              $Qupdate->execute();
 
               tep_redirect($Qmanufacturer->value('manufacturers_url'));
             }

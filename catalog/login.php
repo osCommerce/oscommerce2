@@ -33,30 +33,18 @@
       tep_session_recreate();
     }
 
-    $Qcheck = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_default_address_id, ab.entry_country_id, ab.entry_zone_id from :table_customers c left join :table_address_book ab on (c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id) where c.customers_id = :login_customer_id');
-    $Qcheck->bindInt(':login_customer_id', $login_customer_id);
-    $Qcheck->execute();
+    $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_default_address_id, ab.entry_country_id, ab.entry_zone_id from :table_customers c left join :table_address_book ab on (c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id) where c.customers_id = :customers_id');
+    $Qcustomer->bindInt(':customers_id', $login_customer_id);
+    $Qcustomer->execute();
 
     $_SESSION['customer_id'] = $login_customer_id;
-    $_SESSION['customer_default_address_id'] = $customer_info['customers_default_address_id'];
-    $_SESSION['customer_first_name'] = $customer_info['customers_firstname'];
-    $_SESSION['customer_country_id'] = $customer_info['entry_country_id'];
-    $_SESSION['customer_zone_id'] = $customer_info['entry_zone_id'];
-
-    $customer_default_address_id = $Qcheck->value('customers_default_address_id');
-    tep_session_register('customer_default_address_id');
-
-    $customer_first_name = $Qcheck->value('customers_firstname');
-    tep_session_register('customer_first_name');
-
-    $customer_country_id = $Qcheck->value('entry_country_id');
-    tep_session_register('customer_country_id');
-
-    $customer_zone_id = $Qcheck->value('entry_zone_id');
-    tep_session_register('customer_zone_id');
+    $_SESSION['customer_default_address_id'] = $Qcustomer->valueInt('customers_default_address_id');
+    $_SESSION['customer_first_name'] = $Qcustomer->value('customers_firstname');
+    $_SESSION['customer_country_id'] = $Qcustomer->valueInt('entry_country_id');
+    $_SESSION['customer_zone_id'] = $Qcustomer->valueInt('entry_zone_id');
 
     $Qupdate = $OSCOM_Db->prepare('update :table_customers_info set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = :customers_info_id');
-    $Qupdate->bindInt(':customers_info_id', $customer_id);
+    $Qupdate->bindInt(':customers_info_id', $_SESSION['customer_id']);
     $Qupdate->execute();
 
 // reset session token

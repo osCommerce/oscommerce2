@@ -34,9 +34,7 @@
     tep_redirect(tep_href_link('product_reviews.php', tep_get_all_get_params(array('action'))));
   }
 
-  $Qc = $OSCOM_Db->prepare('select customers_firstname, customers_lastname from :table_customers where customers_id = :customers_id');
-  $Qc->bindInt('customers_id', $_SESSION['customer_id']);
-  $Qc->execute();
+  $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname'], ['customers_id' => $_SESSION['customer_id']]);
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $rating = HTML::sanitize($_POST['rating']);
@@ -56,26 +54,26 @@
     }
 
     if ($error == false) {
-      $OSCOM_Db->save(':table_reviews', array('products_id' => (int)$_GET['products_id'], 'customers_id' => (int)$_SESSION['customer_id'], 'customers_name' => tep_db_input($Qc->value('customers_firstname')) . ' ' . tep_db_input($Qc->value('customers_lastname')), 'reviews_rating' => tep_db_input($rating), 'date_added' => 'now()'));
+      $OSCOM_Db->save('reviews', ['products_id' => $Qcheck->valueInt('products_id'), 'customers_id' => $_SESSION['customer_id'], 'customers_name' => $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'), 'reviews_rating' => $rating, 'date_added' => 'now()']);
       $insert_id = $OSCOM_Db->lastInsertId();
 
-      $OSCOM_Db->save(':table_reviews_description', array('reviews_id' => (int)$insert_id, 'languages_id' => (int)$_SESSION['languages_id'], 'reviews_text' => tep_db_input($review)));
+      $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $_SESSION['languages_id'], 'reviews_text' => $review]);
 
       $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
       tep_redirect(tep_href_link('product_reviews.php', tep_get_all_get_params(array('action'))));
     }
   }
 
-  if ($new_price = tep_get_products_special_price($Qcheck->value('products_id'))) {
-    $products_price = '<del>' . $currencies->display_price($Qcheck->value('products_price'), tep_get_tax_rate($Qcheck->value('products_tax_class_id'))) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($Qcheck->value('products_tax_class_id'))) . '</span>';
+  if ($new_price = tep_get_products_special_price($Qcheck->valueInt('products_id'))) {
+    $products_price = '<del>' . $currencies->display_price($Qcheck->valueDecimal('products_price'), tep_get_tax_rate($Qcheck->valueInt('products_tax_class_id'))) . '</del> <span class="productSpecialPrice">' . $currencies->display_price($new_price, tep_get_tax_rate($Qcheck->valueInt('products_tax_class_id'))) . '</span>';
   } else {
-    $products_price = $currencies->display_price($Qcheck->value('products_price'), tep_get_tax_rate($Qcheck->value('products_tax_class_id')));
+    $products_price = $currencies->display_price($Qcheck->valueDecimal('products_price'), tep_get_tax_rate($Qcheck->valueInt('products_tax_class_id')));
   }
 
-  if ( $Qcheck->value('products_model') ) {
-    $products_name = $Qcheck->value('products_name') . ' <small>[' . $Qcheck->value('products_model') . ']</small>';
-  } else {
-    $products_name = $Qcheck->value('products_name');
+  $products_name = $Qcheck->value('products_name');
+
+  if ( !empty($Qcheck->value('products_model')) ) {
+    $products_name .= ' <small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
   $breadcrumb->add(NAVBAR_TITLE, tep_href_link('product_reviews.php', tep_get_all_get_params()));
@@ -96,16 +94,16 @@
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . (int)$_GET['products_id']), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
 <?php
-  if ( $Qcheck->value('products_image') ) {
+  if ( !empty($Qcheck->value('products_image')) ) {
 ?>
 
     <div class="col-sm-4 text-center pull-right">
-      <?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qcheck->value('products_image'), addslashes($Qcheck->value('products_name')), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
       <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
@@ -123,7 +121,7 @@
   <div class="contentText">
     <div class="row">
       <p class="col-sm-3 text-right-not-xs"><strong><?php echo SUB_TITLE_FROM; ?></strong></p>
-      <p class="col-sm-9"><?php echo tep_output_string_protected($Qc->value('customers_firstname') . ' ' . $Qc->value('customers_lastname')); ?></p>
+      <p class="col-sm-9"><?php echo HTML::sanitize($Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname')); ?></p>
     </div>
     <div class="form-group has-feedback">
       <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>

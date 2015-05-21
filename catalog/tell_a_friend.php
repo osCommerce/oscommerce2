@@ -21,21 +21,24 @@
 
   $valid_product = false;
   if (isset($_GET['products_id'])) {
-    $product_info = $OSCOM_Db->prepare('select pd.products_name from products p, products_description pd where p.products_status = 1 and p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :languages_id');
-    $product_info->bindInt(':products_id', $_GET['products_id']);
-    $product_info->bindInt(':languages_id', $_SESSION['languages_id']);
-    $product_info->execute();
+    $Qproduct = $OSCOM_Db->prepare('select p.products_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
+    $Qproduct->bindInt(':products_id', $_GET['products_id']);
+    $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qproduct->execute();
 
-    if ( $product_info->rowCount() > 0 ) {
+    if ($Qproduct->fetch() !== false) {
       $valid_product = true;
     }
   }
 
   if ($valid_product == false) {
-    tep_redirect(tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id']));
+    tep_redirect(tep_href_link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/tell_a_friend.php');
+
+  $from_name = null;
+  $from_email_address = null;
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
@@ -81,32 +84,37 @@
 
     if ($error == false) {
       $email_subject = sprintf(TEXT_EMAIL_SUBJECT, $from_name, STORE_NAME);
-      $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $product_info->value('products_name'), STORE_NAME) . "\n\n";
+      $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $Qproduct->value('products_name'), STORE_NAME) . "\n\n";
 
       if (tep_not_null($message)) {
         $email_body .= $message . "\n\n";
       }
 
-      $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id'], 'NONSSL', false)) . "\n\n" .
+      $email_body .= sprintf(TEXT_EMAIL_LINK, tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false)) . "\n\n" .
                      sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . HTTP_SERVER . DIR_WS_CATALOG . "\n");
 
       tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
 
       $actionRecorder->record();
 
-      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $product_info->value('products_name'), tep_output_string_protected($to_name)), 'success');
+      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), tep_output_string_protected($to_name)), 'success');
 
-      tep_redirect(tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id']));
+      tep_redirect(tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')));
     }
+  } elseif (isset($_SESSION['customer_id'])) {
+    $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname', 'customers_email_address'], ['customers_id' => $_SESSION['customer_id']]);
+
+    $from_name = $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname');
+    $from_email_address = $Qcustomer->value('customers_email_address');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('tell_a_friend.php', 'products_id=' . (int)$_GET['products_id']));
+  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
 
   require('includes/template_top.php');
 ?>
 
 <div class="page-header">
-  <h1><?php echo sprintf(HEADING_TITLE, $product_info->value('products_name')); ?></h1>
+  <h1><?php echo sprintf(HEADING_TITLE, $Qproduct->value('products_name')); ?></h1>
 </div>
 
 <?php
@@ -115,7 +123,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . (int)$_GET['products_id'], $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo tep_draw_form('email_friend', tep_href_link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 
@@ -130,7 +138,7 @@
       <label for="inputFromName" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('from_name', NULL, 'required aria-required="true" id="inputFromName" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT . '"');
+        echo tep_draw_input_field('from_name', $from_name, 'required aria-required="true" id="inputFromName" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -139,7 +147,7 @@
       <label for="inputFromEmail" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_EMAIL; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('from_email_address', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT . '"', 'email');
+        echo tep_draw_input_field('from_email_address', $from_email_address, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -189,7 +197,7 @@
 
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id'])); ?></div>
+    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'))); ?></div>
   </div>
 </div>
 

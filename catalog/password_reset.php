@@ -37,12 +37,11 @@
 
       $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
     } else {
-      $Qcheck = $OSCOM_Db->prepare('select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from :table_customers c, :table_customers_info ci where c.customers_email_address = :email_address and c.customers_id = ci.customers_info_id');
-      $Qcheck->bindValue(':email_address', $email_address);
+      $Qcheck = $OSCOM_Db->prepare('select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from :table_customers c, :table_customers_info ci where c.customers_email_address = :customers_email_address and c.customers_id = ci.customers_info_id');
+      $Qcheck->bindValue(':customers_email_address', $email_address);
       $Qcheck->execute();
 
       if ( $Qcheck->fetch() !== false ) {
-
         if ( empty($Qcheck->value('password_reset_key')) || ($Qcheck->value('password_reset_key') != $password_key) || (strtotime($Qcheck->value('password_reset_date') . ' +1 day') <= time()) ) {
           $error = true;
 
@@ -75,9 +74,9 @@
     }
 
     if ($error == false) {
-      $OSCOM_Db->save(':table_customers', array('customers_password' => tep_encrypt_password($password_new)), array('customers_id' => $Qcheck->valueInt('customers_id')));
+      $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
 
-      $OSCOM_Db->save(':table_customers_info', array('customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => null, 'password_reset_date' => null), array('customers_info_id' => $Qcheck->valueInt('customers_id')));
+      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => 'null', 'password_reset_date' => 'null'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 

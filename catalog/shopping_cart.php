@@ -47,18 +47,18 @@
         foreach($products[$i]['attributes'] as $option => $value) {
           echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $Qattributes = $OSCOM_Db->prepare('select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
-                                              from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
-                                              where pa.products_id = :products_id
-                                                and pa.options_id = :option
-                                                and pa.options_id = popt.products_options_id
-                                                and pa.options_values_id = :value
-                                                and pa.options_values_id = poval.products_options_values_id
-                                                and popt.language_id = :languages_id
-                                                and poval.language_id = :languages_id');
-          $Qattributes->bindValue(':products_id', (int)$products[$i]['id']);
-          $Qattributes->bindValue(':option', $option);
-          $Qattributes->bindValue(':value', (int)$value);
-          $Qattributes->bindValue(':languages_id', (int)$_SESSION['languages_id']);
+                                             from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
+                                             where pa.products_id = :products_id
+                                             and pa.options_id = :options_id
+                                             and pa.options_id = popt.products_options_id
+                                             and pa.options_values_id = :options_values_id
+                                             and pa.options_values_id = poval.products_options_values_id
+                                             and popt.language_id = :language_id
+                                             and popt.language_id = poval.language_id');
+          $Qattributes->bindInt(':products_id', $products[$i]['id']);
+          $Qattributes->bindInt(':options_id', $option);
+          $Qattributes->bindInt(':options_values_id', $value);
+          $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
           $Qattributes->execute();
 
           $products[$i][$option]['products_options_name'] = $Qattributes->value('products_options_name');
