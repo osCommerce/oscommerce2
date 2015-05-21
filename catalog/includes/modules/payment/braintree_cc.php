@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -197,7 +198,7 @@
       $content .= '<table id="braintree_table_new_card" border="0" width="100%" cellspacing="0" cellpadding="2">' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_OWNER . '</td>' .
-                  '  <td>' . tep_draw_input_field('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
+                  '  <td>' . HTML::inputField('name', $order->billing['firstname'] . ' ' . $order->billing['lastname']) . '</td>' .
                   '</tr>' .
                   '<tr>' .
                   '  <td width="30%">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_NUMBER . '</td>' .
@@ -833,7 +834,7 @@ EOD;
         $result .= '</strong>';
       }
 
-      $result .= '&nbsp;' . tep_draw_input_field('braintree_ma[' . $c . ']', (isset($data[$c]) ? $data[$c] : '')) . '<br />';
+      $result .= '&nbsp;' . HTML::inputField('braintree_ma[' . $c . ']', (isset($data[$c]) ? $data[$c] : '')) . '<br />';
     }
 
     if ( !empty($result) ) {

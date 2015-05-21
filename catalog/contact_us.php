@@ -90,7 +90,7 @@
       <label for="inputFromName" class="control-label col-sm-3"><?php echo ENTRY_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
+        echo HTML::inputField('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -99,7 +99,7 @@
       <label for="inputFromEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
+        echo HTML::inputField('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>

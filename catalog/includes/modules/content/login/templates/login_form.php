@@ -1,4 +1,5 @@
 <?php
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 ?>
 <div class="contentContainer <?php echo (MODULE_CONTENT_LOGIN_FORM_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
@@ -14,7 +15,7 @@ use OSC\OM\OSCOM;
     <div class="form-group">
       <label for="inputEmail" class="control-label col-xs-4"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-8">
-        <?php echo tep_draw_input_field('email_address', NULL, 'autofocus="autofocus" required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo HTML::inputField('email_address', NULL, 'autofocus="autofocus" required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
       </div>
     </div>
 

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -43,7 +44,7 @@
       $search_box = '<div class="searchbox-margin">';
       $search_box .= tep_draw_form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get', 'class="form-horizontal"');
       $search_box .= '  <div class="input-group">' .
-                          tep_draw_input_field('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-search"></i></button></span>' .
+                          HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-search"></i></button></span>' .
                      '  </div>';
       $search_box .=  tep_hide_session_id() . '</form>';
       $search_box .= '</div>';

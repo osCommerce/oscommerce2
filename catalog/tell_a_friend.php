@@ -139,7 +139,7 @@
       <label for="inputFromName" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('from_name', $from_name, 'required aria-required="true" id="inputFromName" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT . '"');
+        echo HTML::inputField('from_name', $from_name, 'required aria-required="true" id="inputFromName" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -148,7 +148,7 @@
       <label for="inputFromEmail" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_EMAIL; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('from_email_address', $from_email_address, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT . '"', 'email');
+        echo HTML::inputField('from_email_address', $from_email_address, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -164,7 +164,7 @@
       <label for="inputToName" class="control-label col-sm-3"><?php echo FORM_FIELD_FRIEND_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('to_name', NULL, 'required aria-required="true" id="inputToName" placeholder="' . ENTRY_FORM_FIELD_FRIEND_NAME_TEXT . '"');
+        echo HTML::inputField('to_name', NULL, 'required aria-required="true" id="inputToName" placeholder="' . ENTRY_FORM_FIELD_FRIEND_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -173,7 +173,7 @@
       <label for="inputToEmail" class="control-label col-sm-3"><?php echo FORM_FIELD_FRIEND_EMAIL; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('to_email_address', NULL, 'required aria-required="true" id="inputToEmail" placeholder="' . ENTRY_FORM_FIELD_FRIEND_EMAIL_TEXT . '"', 'email');
+        echo HTML::inputField('to_email_address', NULL, 'required aria-required="true" id="inputToEmail" placeholder="' . ENTRY_FORM_FIELD_FRIEND_EMAIL_TEXT . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>

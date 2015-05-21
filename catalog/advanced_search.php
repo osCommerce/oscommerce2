@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -43,7 +44,7 @@
       <label for="inputKeywords" class="control-label col-sm-3"><?php echo HEADING_SEARCH_CRITERIA; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('keywords', '', 'required aria-required="true" id="inputKeywords" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"');
+        echo HTML::inputField('keywords', '', 'required aria-required="true" id="inputKeywords" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"');
         echo FORM_REQUIRED_INPUT;
         echo tep_draw_hidden_field('search_in_description', '1');
         ?>
@@ -107,7 +108,7 @@
       <label for="PriceFrom" class="control-label col-sm-3"><?php echo ENTRY_PRICE_FROM; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('pfrom', '', 'id="PriceFrom" placeholder="' . ENTRY_PRICE_FROM_TEXT . '"');
+        echo HTML::inputField('pfrom', '', 'id="PriceFrom" placeholder="' . ENTRY_PRICE_FROM_TEXT . '"');
         ?>
       </div>
     </div>
@@ -115,7 +116,7 @@
       <label for="PriceTo" class="control-label col-sm-3"><?php echo ENTRY_PRICE_TO; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('pto', '', 'id="PriceTo" placeholder="' . ENTRY_PRICE_TO_TEXT . '"');
+        echo HTML::inputField('pto', '', 'id="PriceTo" placeholder="' . ENTRY_PRICE_TO_TEXT . '"');
         ?>
       </div>
     </div>
@@ -123,7 +124,7 @@
       <label for="dfrom" class="control-label col-sm-3"><?php echo ENTRY_DATE_FROM; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('dfrom', '', 'id="dfrom" placeholder="' . ENTRY_DATE_FROM_TEXT . '"');
+        echo HTML::inputField('dfrom', '', 'id="dfrom" placeholder="' . ENTRY_DATE_FROM_TEXT . '"');
         ?>
       </div>
     </div>
@@ -131,7 +132,7 @@
       <label for="dto" class="control-label col-sm-3"><?php echo ENTRY_DATE_TO; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('dto', '', 'id="dto" placeholder="' . ENTRY_DATE_TO_TEXT . '"');
+        echo HTML::inputField('dto', '', 'id="dto" placeholder="' . ENTRY_DATE_TO_TEXT . '"');
         ?>
       </div>
     </div>

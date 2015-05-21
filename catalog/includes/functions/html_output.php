@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
 ////
 // The HTML image wrapper function
   function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '') {
@@ -112,36 +114,9 @@
   }
 
 ////
-// Output a form input field
-// 2.4 - automatically pass form-control css class
-  function tep_draw_input_field($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control') {
-    $field = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
-
-    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
-      if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $value = stripslashes($_GET[$name]);
-      } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $value = stripslashes($_POST[$name]);
-      }
-    }
-
-    if (tep_not_null($value)) {
-      $field .= ' value="' . tep_output_string($value) . '"';
-    }
-
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
-
-    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
-
-    $field .= ' />';
-
-    return $field;
-  }
-
-////
 // Output a form password field
   function tep_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
-    return tep_draw_input_field($name, $value, $parameters, 'password', false);
+    return HTML::inputField($name, $value, $parameters, 'password', false);
   }
 
 ////

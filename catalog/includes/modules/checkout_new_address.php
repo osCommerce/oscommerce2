@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   if (!isset($process)) $process = false;
 ?>
 
@@ -47,7 +49,7 @@
       <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('firstname', NULL, 'id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"');
+        echo HTML::inputField('firstname', NULL, 'id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"');
         ?>
       </div>
     </div>
@@ -55,7 +57,7 @@
       <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('lastname', NULL, 'id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"');
+        echo HTML::inputField('lastname', NULL, 'id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"');
         ?>
       </div>
     </div>
@@ -68,7 +70,7 @@
       <label for="inputCompany" class="control-label col-sm-3"><?php echo ENTRY_COMPANY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY_TEXT . '"');
+        echo HTML::inputField('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY_TEXT . '"');
         ?>
       </div>
     </div>
@@ -81,7 +83,7 @@
       <label for="inputStreet" class="control-label col-sm-3"><?php echo ENTRY_STREET_ADDRESS; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('street_address', NULL, 'id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS_TEXT . '"');
+        echo HTML::inputField('street_address', NULL, 'id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS_TEXT . '"');
         ?>
       </div>
     </div>
@@ -94,7 +96,7 @@
       <label for="inputSuburb" class="control-label col-sm-3"><?php echo ENTRY_SUBURB; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB_TEXT . '"');
+        echo HTML::inputField('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB_TEXT . '"');
         ?>
       </div>
     </div>
@@ -107,7 +109,7 @@
       <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('postcode', NULL, 'id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
+        echo HTML::inputField('postcode', NULL, 'id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
         ?>
       </div>
     </div>
@@ -115,7 +117,7 @@
       <label for="inputCity" class="control-label col-sm-3"><?php echo ENTRY_CITY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('city', NULL, 'id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
+        echo HTML::inputField('city', NULL, 'id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
         ?>
       </div>
     </div>
@@ -139,10 +141,10 @@
             }
             echo tep_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');
           } else {
-            echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+            echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
           }
         } else {
-          echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+          echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
         }
         ?>
       </div>
