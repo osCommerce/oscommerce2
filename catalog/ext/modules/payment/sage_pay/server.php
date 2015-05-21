@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   chdir('../../../../');
   require('includes/application_top.php');
 
@@ -24,12 +26,11 @@
   $result = null;
 
   if ( isset($_GET['skcode']) && isset($_POST['VPSSignature']) && isset($_POST['VPSTxId']) && isset($_POST['VendorTxCode']) && isset($_POST['Status']) ) {
-    $skcode = tep_db_prepare_input($_GET['skcode']);
+    $skcode = HTML::sanitize($_GET['skcode']);
 
-    $sp_query = tep_db_query('select securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
-    if ( tep_db_num_rows($sp_query) ) {
-      $sp = tep_db_fetch_array($sp_query);
+    $Qsp = $OSCOM_Db->get('sagepay_server_securitykeys', 'securitykey', ['code' => $skcode], null, 1);
 
+    if ($Qsp->fetch() !== false) {
       $transaction_details = array('ID' => $_POST['VPSTxId']);
 
       $sig = $_POST['VPSTxId'] . $_POST['VendorTxCode'] . $_POST['Status'];
@@ -46,7 +47,7 @@
         $transaction_details['AVS/CV2'] = $_POST['AVSCV2'];
       }
 
-      $sig .= $sp['securitykey'];
+      $sig .= $Qsp->value('securitykey');
 
       if ( isset($_POST['AddressResult']) ) {
         $sig .= $_POST['AddressResult'];
@@ -128,9 +129,9 @@
             $transaction_details_string .= $k . ': ' . $v . "\n";
           }
 
-          $transaction_details_string = tep_db_prepare_input($transaction_details_string);
+          $transaction_details_string = HTML::sanitize($transaction_details_string);
 
-          tep_db_query('update sagepay_server_securitykeys set verified = 1, transaction_details = "' . tep_db_input($transaction_details_string) . '" where code = "' . tep_db_input($skcode) . '"');
+          $OSCOM_Db->save('sagepay_server_securitykeys', ['verified' => 1, 'transaction_details' => $transaction_details_string], ['code' => $skcode]);
 
           $result = 'Status=OK' . chr(13) . chr(10) .
                     'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
@@ -146,7 +147,7 @@
           $result = 'Status=OK' . chr(13) . chr(10) .
                     'RedirectURL=' . $sage_pay_server->formatURL($error_url);
 
-          tep_db_query('delete from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '"');
+          $OSCOM_Db->delete('sagepay_server_securitykeys', ['code' => $skcode]);
 
           $sage_pay_server->sendDebugEmail();
         }
