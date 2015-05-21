@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_opensearch {
@@ -33,7 +34,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
+      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . OSCOM::link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {

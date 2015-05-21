@@ -10,25 +10,27 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   chdir('../../../../');
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
-    $redirect_url = tep_href_link('checkout_payment.php', 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
+    $redirect_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
   } else {
     $hidden_params = '';
 
     if ($_SESSION['payment'] == 'sage_pay_direct') {
-      $redirect_url = tep_href_link('checkout_process.php', 'check=3D', 'SSL');
+      $redirect_url = OSCOM::link('checkout_process.php', 'check=3D', 'SSL');
       $hidden_params = tep_draw_hidden_field('MD', $_POST['MD']) . tep_draw_hidden_field('PaRes', $_POST['PaRes']);
     } else {
-      $redirect_url = tep_href_link('checkout_success.php', '', 'SSL');
+      $redirect_url = OSCOM::link('checkout_success.php', '', 'SSL');
     }
   }
 

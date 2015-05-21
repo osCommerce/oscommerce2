@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   if (!strstr($PHP_SELF, 'account_history_info.php')) {
 // Get last order id for checkout_success
     $Qorders = $OSCOM_Db->get('orders', 'orders_id', ['customers_id' => $_SESSION['customer_id']], 'orders_id desc', 1);
@@ -48,7 +50,7 @@
 // - No expiry date is enforced (maxdays == 0), OR
 // - The expiry date is not reached
       if ( ($Qdownloads->valueInt('download_count') > 0) && (file_exists(DIR_FS_DOWNLOAD . $Qdownloads->value('orders_products_filename'))) && ( ($Qdownloads->valueInt('download_maxdays') == 0) || ($download_timestamp > time())) ) {
-        echo '        <td><a href="' . tep_href_link('download.php', 'order=' . $last_order . '&id=' . $Qdownloads->valueInt('orders_products_download_id')) . '">' . $Qdownloads->value('products_name') . '</a></td>' . "\n";
+        echo '        <td><a href="' . OSCOM::link('download.php', 'order=' . $last_order . '&id=' . $Qdownloads->valueInt('orders_products_download_id')) . '">' . $Qdownloads->value('products_name') . '</a></td>' . "\n";
       } else {
         echo '        <td>' . $Qdownloads->value('products_name') . '</td>' . "\n";
       }
@@ -65,7 +67,7 @@
     if (!strstr($PHP_SELF, 'account_history_info.php')) {
 ?>
 
-    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . tep_href_link('account.php', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
+    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 
 <?php
     }

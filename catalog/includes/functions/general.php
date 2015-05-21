@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
 ////
@@ -38,7 +39,7 @@
     global $request_type;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link('index.php', '', 'NONSSL', false));
+      tep_redirect(OSCOM::link('index.php', '', 'NONSSL', false));
     }
 
     if ( (ENABLE_SSL == true) && ($request_type == 'SSL') ) { // We are loading an SSL page
@@ -967,7 +968,7 @@
     $sort_suffix = '';
 
     if ($sortby) {
-      $sort_prefix = '<a href="' . tep_href_link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . tep_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
+      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . tep_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
       $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? '+' : '-') : '') . '</a>';
     }
 
@@ -1095,9 +1096,9 @@
 // Return a customer greeting
   function tep_customer_greeting() {
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link('products_new.php'));
+      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
     } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('login.php', '', 'SSL'), tep_href_link('create_account.php', '', 'SSL'));
+      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('login.php', '', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
     }
 
     return $greeting_string;

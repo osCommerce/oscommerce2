@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_cs_redirect_old_order {
@@ -45,7 +46,7 @@
         $Qcheck->execute();
 
         if ($Qcheck->fetch() !== false) {
-          tep_redirect(tep_href_link('account.php', '', 'SSL'));
+          tep_redirect(OSCOM::link('account.php', '', 'SSL'));
         }
       }
     }

@@ -1,3 +1,6 @@
+<?php
+use OSC\OM\OSCOM;
+?>
 <div class="contentContainer <?php echo (MODULE_CONTENT_LOGIN_FORM_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
   <h2><?php echo MODULE_CONTENT_LOGIN_HEADING_RETURNING_CUSTOMER; ?></h2>
 
@@ -6,7 +9,7 @@
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_RETURNING_CUSTOMER; ?></p>
     </div>
 
-    <?php echo tep_draw_form('login', tep_href_link('login.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+    <?php echo tep_draw_form('login', OSCOM::link('login.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
     
     <div class="form-group">
       <label for="inputEmail" class="control-label col-xs-4"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
@@ -28,7 +31,7 @@
     
     <hr>
     
-    <p><?php echo '<a href="' . tep_href_link('password_forgotten.php', '', 'SSL') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
+    <p><?php echo '<a href="' . OSCOM::link('password_forgotten.php', '', 'SSL') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
     
   </div>
 </div>

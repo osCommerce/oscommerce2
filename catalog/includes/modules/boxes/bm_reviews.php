@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_reviews {
@@ -70,11 +71,11 @@
 // display random review box
           $rand_review_text = tep_break_string($Qreview->valueProtected('reviews_text'), 15, '-<br />');
 
-          $reviews_box_contents = '<div class="text-center"><a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qreview->value('products_image'), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $Qreview->valueInt('reviews_rating')) . '">' . tep_draw_stars($Qreview->valueInt('reviews_rating')) . '</div>';
+          $reviews_box_contents = '<div class="text-center"><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qreview->value('products_image'), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $Qreview->valueInt('reviews_rating')) . '">' . tep_draw_stars($Qreview->valueInt('reviews_rating')) . '</div>';
         }
       } elseif (isset($_GET['products_id'])) {
 // display 'write a review' box
-        $reviews_box_contents = '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . tep_href_link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
+        $reviews_box_contents = '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . OSCOM::link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
       } else {
 // display 'no reviews' box
         $reviews_box_contents = '<p>' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</p>';

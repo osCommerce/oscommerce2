@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_canonical {
@@ -34,12 +35,12 @@
       global $PHP_SELF, $cPath, $oscTemplate;
 
       if (basename($PHP_SELF) == 'product_info.php') {
-        $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('product_info.php', 'products_id=' . (int)$_GET['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+        $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('product_info.php', 'products_id=' . (int)$_GET['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
       } elseif (basename($PHP_SELF) == 'index.php') {
         if (isset($cPath) && tep_not_null($cPath)) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('index.php', 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
         } elseif (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . tep_href_link('index.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'manufacturers_id=' . (int)$_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
         }
       }
     }

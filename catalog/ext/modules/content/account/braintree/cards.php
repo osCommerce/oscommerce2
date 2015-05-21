@@ -10,12 +10,14 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   chdir('../../../../../');
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('braintree_cc.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
@@ -27,10 +29,10 @@
     $braintree_cc = new braintree_cc();
 
     if ( !$braintree_cc->enabled ) {
-      tep_redirect(tep_href_link('account.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
     }
   } else {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_braintree_cards.php');
@@ -38,7 +40,7 @@
   $braintree_cards = new cm_account_braintree_cards();
 
   if ( !$braintree_cards->isEnabled() ) {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
   }
 
   if ( isset($_GET['action']) ) {
@@ -52,11 +54,11 @@
       }
     }
 
-    tep_redirect(tep_href_link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -84,7 +86,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('ext/modules/content/account/braintree/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
+      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/braintree/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
       <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
     </div>
 
@@ -104,7 +106,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?>
+    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
   </div>
 </div>
 

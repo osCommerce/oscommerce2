@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_order_history {
@@ -58,7 +59,7 @@
           $Qproducts->execute();
 
           while ($Qproducts->fetch()) {
-            $customer_orders_string .= '<li><span class="pull-right"><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $Qproducts->valueInt('products_id')) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . tep_href_link('product_info.php', 'products_id=' . $Qproducts->valueInt('products_id')) . '">' . $Qproducts->value('products_name') . '</a></li>';
+            $customer_orders_string .= '<li><span class="pull-right"><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $Qproducts->valueInt('products_id')) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproducts->valueInt('products_id')) . '">' . $Qproducts->value('products_name') . '</a></li>';
           }
 
           ob_start();

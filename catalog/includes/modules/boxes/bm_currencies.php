@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_currencies {
@@ -50,7 +51,7 @@
             }
           }
 
-          $form_output = tep_draw_form('currencies', tep_href_link($PHP_SELF, '', $request_type, false), 'get') . tep_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
+          $form_output = tep_draw_form('currencies', OSCOM::link($PHP_SELF, '', $request_type, false), 'get') . tep_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
 
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');

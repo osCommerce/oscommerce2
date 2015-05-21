@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class tp_account {
     var $group = 'account';
 
@@ -18,34 +20,34 @@
 
       $oscTemplate->_data[$this->group] = array('account' => array('title' => MY_ACCOUNT_TITLE,
                                                                    'links' => array('edit' => array('title' => MY_ACCOUNT_INFORMATION,
-                                                                                                    'link' => tep_href_link('account_edit.php', '', 'SSL'),
+                                                                                                    'link' => OSCOM::link('account_edit.php', '', 'SSL'),
                                                                                                     'style' => 'btn btn-info',
                                                                                                     'icon' => 'fa fa-user fa-4x'),
                                                                                     'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
-                                                                                                            'link' => tep_href_link('address_book.php', '', 'SSL'),
+                                                                                                            'link' => OSCOM::link('address_book.php', '', 'SSL'),
                                                                                                             'style' => 'btn btn-info',
                                                                                                             'icon' => 'fa fa-home fa-4x'),
                                                                                     'password' => array('title' => MY_ACCOUNT_PASSWORD,
-                                                                                                        'link' => tep_href_link('account_password.php', '', 'SSL'),
+                                                                                                        'link' => OSCOM::link('account_password.php', '', 'SSL'),
                                                                                                         'style' => 'btn btn-info',
                                                                                                         'icon' => 'fa fa-cog fa-4x'))),
                                                 'orders' => array('title' => MY_ORDERS_TITLE,
                                                                   'links' => array('history' => array('title' => MY_ORDERS_VIEW,
-                                                                                                      'link' => tep_href_link('account_history.php', '', 'SSL'),
+                                                                                                      'link' => OSCOM::link('account_history.php', '', 'SSL'),
                                                                                                       'style' => 'btn btn-info',
                                                                                                       'icon' => 'fa fa-shopping-cart fa-4x'))),
                                                 'notifications' => array('title' => EMAIL_NOTIFICATIONS_TITLE,
                                                                          'links' => array('newsletters' => array('title' => EMAIL_NOTIFICATIONS_NEWSLETTERS,
-                                                                                                                 'link' => tep_href_link('account_newsletters.php', '', 'SSL'),
+                                                                                                                 'link' => OSCOM::link('account_newsletters.php', '', 'SSL'),
                                                                                                                  'style' => 'btn btn-info',
                                                                                                                  'icon' => 'fa fa-envelope fa-4x'),
                                                                                           'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
-                                                                                                              'link' => tep_href_link('account_notifications.php', '', 'SSL'),
+                                                                                                              'link' => OSCOM::link('account_notifications.php', '', 'SSL'),
                                                                                                               'style' => 'btn btn-info',
                                                                                                               'icon' => 'fa fa-send fa-4x'))),
                                                 'logoff' => array('title' => MY_ACCOUNT_LOGOFF,
                                                                   'links' => array('history' => array('title' => MY_ACCOUNT_LOGOFF,
-                                                                                                      'link' => tep_href_link('logoff.php', '', 'SSL'),
+                                                                                                      'link' => OSCOM::link('logoff.php', '', 'SSL'),
                                                                                                       'style' => 'btn btn-danger',
                                                                                                       'icon' => 'fa fa-sign-out fa-4x'))));
     }

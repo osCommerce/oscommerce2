@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sb_email {
@@ -32,7 +33,7 @@
     }
 
     function getOutput() {
-      return '<a href="' . tep_href_link('tell_a_friend.php', 'products_id=' . $_GET['products_id']) . '"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '" /></a>';
+      return '<a href="' . OSCOM::link('tell_a_friend.php', 'products_id=' . $_GET['products_id']) . '"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '" /></a>';
     }
 
     function isEnabled() {

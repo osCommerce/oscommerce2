@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   $Qupcoming = $OSCOM_Db->prepare('select p.products_id, pd.products_name, products_date_available as date_expected from :table_products p, :table_products_description pd where to_days(p.products_date_available) >= to_days(now()) and p.products_id = pd.products_id and pd.language_id = :language_id order by ' . EXPECTED_PRODUCTS_FIELD . ' ' . EXPECTED_PRODUCTS_SORT . ' limit :limit');
   $Qupcoming->bindInt(':language_id', $_SESSION['languages_id']);
   $Qupcoming->bindInt(':limit', MAX_DISPLAY_UPCOMING_PRODUCTS);
@@ -30,7 +32,7 @@
 <?php
   do {
     echo '        <tr>' . "\n" .
-         '          <td><a href="' . tep_href_link('product_info.php', 'products_id=' . $Qupcoming->valueInt('products_id')) . '">' . $Qupcoming->value('products_name') . '</a></td>' . "\n" .
+         '          <td><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qupcoming->valueInt('products_id')) . '">' . $Qupcoming->value('products_name') . '</a></td>' . "\n" .
          '          <td class="text-right">' . tep_date_short($Qupcoming->value('date_expected')) . '</td>' . "\n" .
          '        </tr>' . "\n";
   } while ($Qupcoming->fetch());

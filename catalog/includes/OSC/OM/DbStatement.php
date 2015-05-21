@@ -10,6 +10,7 @@ namespace OSC\OM;
 
 use OSC\OM\Db;
 use OSC\OM\HTML;
+use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
 class DbStatement extends \PDOStatement
@@ -299,7 +300,7 @@ class DbStatement extends \PDOStatement
 
 // previous button - not displayed on first page
         if ($this->page_set > 1) {
-            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">&laquo;</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">&laquo;</a></li>';
         } else {
             $output .= '<li class="disabled"><span>&laquo;</span></li>';
         }
@@ -317,26 +318,26 @@ class DbStatement extends \PDOStatement
 
 // previous window of pages
         if ($cur_window_num > 1) {
-            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a></li>';
         }
 
 // page nn button
         for ($jump_to_page = 1 + (($cur_window_num - 1) * $this->page_set_total_rows); ($jump_to_page <= ($cur_window_num * $this->page_set_total_rows)) && ($jump_to_page <= $number_of_pages); $jump_to_page++) {
             if ($jump_to_page == $this->page_set) {
-                $output .= '<li class="active"><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
+                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
             } else {
-                $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
+                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
             }
         }
 
 // next window of pages
         if ($cur_window_num < $max_window_num) {
-            $output .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1), $request_type) . '" class="pageResults" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a>&nbsp;';
+            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1), $request_type) . '" class="pageResults" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a>&nbsp;';
         }
 
 // next button
         if (($this->page_set < $number_of_pages) && ($number_of_pages != 1)) {
-            $output .= '<li><a href="' . tep_href_link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">&raquo;</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">&raquo;</a></li>';
         } else {
             $output .= '<li class="disabled"><span>&raquo;</span></li>';
         }

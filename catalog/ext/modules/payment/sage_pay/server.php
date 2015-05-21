@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   chdir('../../../../');
   require('includes/application_top.php');
@@ -134,14 +135,14 @@
           $OSCOM_Db->save('sagepay_server_securitykeys', ['verified' => 1, 'transaction_details' => $transaction_details_string], ['code' => $skcode]);
 
           $result = 'Status=OK' . chr(13) . chr(10) .
-                    'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
+                    'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
         } else {
           $error = isset($_POST['StatusDetail']) ? $sage_pay_server->getErrorMessageNumber($_POST['StatusDetail']) : null;
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           } else {
-            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           }
 
           $result = 'Status=OK' . chr(13) . chr(10) .
@@ -153,7 +154,7 @@
         }
       } else {
         $result = 'Status=INVALID' . chr(13) . chr(10) .
-                  'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
+                  'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
 
         $sage_pay_server->sendDebugEmail();
       }
@@ -162,7 +163,7 @@
 
   if ( !isset($result) ) {
     $result = 'Status=ERROR' . chr(13) . chr(10) .
-              'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
+              'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
   }
 
   echo $result;

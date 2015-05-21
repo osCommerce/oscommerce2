@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_best_sellers {
@@ -60,7 +61,7 @@
           $bestsellers_list = '';
 
           foreach ($best as $b) {
-            $bestsellers_list .= '<li><a href="' . tep_href_link('product_info.php', 'products_id=' . $b['products_id']) . '">' . $b['products_name'] . '</a></li>';
+            $bestsellers_list .= '<li><a href="' . OSCOM::link('product_info.php', 'products_id=' . $b['products_id']) . '">' . $b['products_name'] . '</a></li>';
           }
 
           ob_start();
