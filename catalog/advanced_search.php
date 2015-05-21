@@ -90,7 +90,7 @@
         <div class="checkbox">
           <label>
             <?php
-            echo tep_draw_checkbox_field('inc_subcat', '1', true, 'id="entryIncludeSubs"') . '&nbsp;';
+            echo HTML::checkboxField('inc_subcat', '1', true, 'id="entryIncludeSubs"') . '&nbsp;';
             ?>
           </label>
         </div>

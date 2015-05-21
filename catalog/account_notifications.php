@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -110,7 +111,7 @@
       <div class="col-sm-8">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('product_global', '1', (($Qglobal->valueInt('global_product_notifications') === 1) ? true : false)); ?>
+            <?php echo HTML::checkboxField('product_global', '1', (($Qglobal->valueInt('global_product_notifications') === 1) ? true : false)); ?>
             <?php if (tep_not_null(GLOBAL_NOTIFICATIONS_DESCRIPTION)) echo ' ' . GLOBAL_NOTIFICATIONS_DESCRIPTION; ?>
           </label>
         </div>
@@ -152,7 +153,7 @@
 ?>
       <div class="checkbox">
         <label>
-          <?php echo tep_draw_checkbox_field('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
+          <?php echo HTML::checkboxField('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
         </label>
       </div>
 <?php

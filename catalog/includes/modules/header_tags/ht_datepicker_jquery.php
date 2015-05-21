@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_datepicker_jquery {
@@ -142,7 +143,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= tep_draw_checkbox_field('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
     }
 
     if (!empty($output)) {

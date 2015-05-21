@@ -74,4 +74,35 @@ class HTML
     {
         return static::inputField($name, $value, $parameters, 'password', false);
     }
+
+    protected static function selectionField($name, $type, $value = '', $checked = false, $parameters = '')
+    {
+        $selection = '<input type="' . static::output($type) . '" name="' . static::output($name) . '"';
+
+        if (!empty($value)) {
+            $selection .= ' value="' . static::output($value) . '"';
+        }
+
+        if (($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || ($_GET[$name] == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || ($_POST[$name] == $value)))) {
+            $selection .= ' checked="checked"';
+        }
+
+        if (!empty($parameters)) {
+            $selection .= ' ' . $parameters;
+        }
+
+        $selection .= ' />';
+
+        return $selection;
+    }
+
+    public static function checkboxField($name, $value = '', $checked = false, $parameters = '')
+    {
+        return static::selectionField($name, 'checkbox', $value, $checked, $parameters);
+    }
+
+    public static function radioField($name, $value = '', $checked = false, $parameters = '')
+    {
+        return static::selectionField($name, 'radio', $value, $checked, $parameters);
+    }
 }

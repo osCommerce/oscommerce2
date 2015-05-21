@@ -112,36 +112,6 @@
   }
 
 ////
-// Output a selection field - alias function for tep_draw_checkbox_field() and tep_draw_radio_field()
-  function tep_draw_selection_field($name, $type, $value = '', $checked = false, $parameters = '') {
-    $selection = '<input type="' . tep_output_string($type) . '" name="' . tep_output_string($name) . '"';
-
-    if (tep_not_null($value)) $selection .= ' value="' . tep_output_string($value) . '"';
-
-    if ( ($checked == true) || (isset($_GET[$name]) && is_string($_GET[$name]) && (($_GET[$name] == 'on') || (stripslashes($_GET[$name]) == $value))) || (isset($_POST[$name]) && is_string($_POST[$name]) && (($_POST[$name] == 'on') || (stripslashes($_POST[$name]) == $value))) ) {
-      $selection .= ' checked="checked"';
-    }
-
-    if (tep_not_null($parameters)) $selection .= ' ' . $parameters;
-
-    $selection .= ' />';
-
-    return $selection;
-  }
-
-////
-// Output a form checkbox field
-  function tep_draw_checkbox_field($name, $value = '', $checked = false, $parameters = '') {
-    return tep_draw_selection_field($name, 'checkbox', $value, $checked, $parameters);
-  }
-
-////
-// Output a form radio field
-  function tep_draw_radio_field($name, $value = '', $checked = false, $parameters = '') {
-    return tep_draw_selection_field($name, 'radio', $value, $checked, $parameters);
-  }
-
-////
 // Output a form textarea field
 // The $wrap parameter is no longer used in the core xhtml template
 // 2.4 - automatically pass form-control css class

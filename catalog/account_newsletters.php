@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -60,7 +61,7 @@
       <div class="col-sm-8">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('newsletter_general', '1', (($Qnewsletter->value('customers_newsletter') == '1') ? true : false)); ?>
+            <?php echo HTML::checkboxField('newsletter_general', '1', (($Qnewsletter->value('customers_newsletter') == '1') ? true : false)); ?>
             <?php if (tep_not_null(MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION)) echo ' ' . MY_NEWSLETTERS_GENERAL_NEWSLETTER_DESCRIPTION; ?>
           </label>
         </div>

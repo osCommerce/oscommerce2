@@ -52,10 +52,10 @@
         <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
         <div class="col-sm-9">
           <label class="radio-inline">
-            <?php echo tep_draw_radio_field('gender', 'm', $male, 'required aria-required="true"') . ' ' . MALE; ?>
+            <?php echo HTML::radioField('gender', 'm', $male, 'required aria-required="true"') . ' ' . MALE; ?>
           </label>
           <label class="radio-inline">
-            <?php echo tep_draw_radio_field('gender', 'f', $female) . ' ' . FEMALE; ?>
+            <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
           </label>
           <?php echo FORM_REQUIRED_INPUT; ?>
           <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
@@ -201,7 +201,7 @@
         <div class="col-sm-9">
           <div class="checkbox">
             <label>
-              <?php echo tep_draw_checkbox_field('primary', 'on', false, 'id="primary"') . '&nbsp;'; ?>
+              <?php echo HTML::checkboxField('primary', 'on', false, 'id="primary"') . '&nbsp;'; ?>
             </label>
           </div>
         </div>

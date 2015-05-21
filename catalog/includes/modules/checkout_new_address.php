@@ -32,10 +32,10 @@
       <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'm', $male) . ' ' . MALE; ?>
+          <?php echo HTML::radioField('gender', 'm', $male) . ' ' . MALE; ?>
         </label>
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'f', $female) . ' ' . FEMALE; ?>
+          <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
         </label>
         <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
       </div>

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class cm_cs_product_notifications {
@@ -72,7 +73,7 @@
                                                                           '  <label class="control-label col-xs-3">' . $Qproducts->value('products_name') . '</label>' .
                                                                           '  <div class="col-xs-9">' .
                                                                           '    <div class="checkbox">' .
-                                                                          '      <label>' . tep_draw_checkbox_field('notify[]', $Qproducts->valueInt('products_id')) . '&nbsp;</label>' .
+                                                                          '      <label>' . HTML::checkboxField('notify[]', $Qproducts->valueInt('products_id')) . '&nbsp;</label>' .
                                                                           '    </div>' .
                                                                           '  </div>' .
                                                                           '</div>';
