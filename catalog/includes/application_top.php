@@ -59,12 +59,6 @@
   $req = parse_url($_SERVER['SCRIPT_NAME']);
   $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
-// include the database functions
-  require('includes/functions/database.php');
-
-// make a connection to the database... now
-  tep_db_connect() or die('Unable to connect to database server!');
-
   Registry::set('Cache', new Cache());
   Registry::set('Db', Db::initialize());
   $OSCOM_Db = Registry::get('Db');
@@ -383,9 +377,6 @@
 
 // include validation functions (right now only email address)
   require('includes/functions/validations.php');
-
-// split-page-results
-  require('includes/classes/split_page_results.php');
 
 // infobox
   require('includes/classes/boxes.php');
