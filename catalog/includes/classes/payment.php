@@ -15,7 +15,7 @@
 
 // class constructor
     function payment($module = '') {
-      global $payment, $PHP_SELF;
+      global $PHP_SELF;
 
       if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
         $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -41,10 +41,10 @@
         }
 
 // if there is only one payment method, select it as default because in
-// checkout_confirmation.php the $payment variable is being assigned the
+// checkout_confirmation.php the $_SESSION['payment'] variable is being assigned the
 // $_POST['payment'] value which will be empty (no radio button selection possible)
-        if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$payment]) || (isset($GLOBALS[$payment]) && !is_object($GLOBALS[$payment]))) ) {
-          $payment = $include_modules[0]['class'];
+        if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$_SESSION['payment']]) || (isset($GLOBALS[$_SESSION['payment']]) && !is_object($GLOBALS[$_SESSION['payment']]))) ) {
+          $_SESSION['payment'] = $include_modules[0]['class'];
         }
 
         if ( (tep_not_null($module)) && (in_array($module, $this->modules)) && (isset($GLOBALS[$module]->form_action_url)) ) {

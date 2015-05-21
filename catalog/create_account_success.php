@@ -17,9 +17,9 @@
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  if (sizeof($navigation->snapshot) > 0) {
-    $origin_href = tep_href_link($navigation->snapshot['page'], tep_array_to_string($navigation->snapshot['get'], array(session_name())), $navigation->snapshot['mode']);
-    $navigation->clear_snapshot();
+  if (sizeof($_SESSION['navigation']->snapshot) > 0) {
+    $origin_href = tep_href_link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+    $_SESSION['navigation']->clear_snapshot();
   } else {
     $origin_href = tep_href_link('index.php');
   }

@@ -189,9 +189,9 @@
 
       $OSCOM_Db->save('customers', $sql_data_array);
 
-      $customer_id = $OSCOM_Db->lastInsertId();
+      $_SESSION['customer_id'] = $OSCOM_Db->lastInsertId();
 
-      $sql_data_array = array('customers_id' => $customer_id,
+      $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                               'entry_firstname' => $firstname,
                               'entry_lastname' => $lastname,
                               'entry_street_address' => $street_address,
@@ -216,23 +216,18 @@
 
       $address_id = $OSCOM_Db->lastInsertId();
 
-      $OSCOM_Db->save('customers', ['customers_default_address_id' => (int)$address_id], ['customers_id' => (int)$customer_id]);
+      $OSCOM_Db->save('customers', ['customers_default_address_id' => (int)$address_id], ['customers_id' => (int)$_SESSION['customer_id']]);
 
-      $OSCOM_Db->save('customers_info', ['customers_info_id' => (int)$customer_id, 'customers_info_number_of_logons' => '0', 'customers_info_date_account_created' => 'now()']);
+      $OSCOM_Db->save('customers_info', ['customers_info_id' => (int)$_SESSION['customer_id'], 'customers_info_number_of_logons' => '0', 'customers_info_date_account_created' => 'now()']);
 
       if (SESSION_RECREATE == 'True') {
         tep_session_recreate();
       }
 
-      $customer_first_name = $firstname;
-      $customer_default_address_id = $address_id;
-      $customer_country_id = $country;
-      $customer_zone_id = $zone_id;
-      tep_session_register('customer_id');
-      tep_session_register('customer_first_name');
-      tep_session_register('customer_default_address_id');
-      tep_session_register('customer_country_id');
-      tep_session_register('customer_zone_id');
+      $_SESSION['customer_first_name'] = $firstname;
+      $_SESSION['customer_default_address_id'] = $address_id;
+      $_SESSION['customer_country_id'] = $country;
+      $_SESSION['customer_zone_id'] = $zone_id;
 
 // reset session token
       $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());

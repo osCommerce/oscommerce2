@@ -10,12 +10,16 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class table {
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
     function table() {
       global $order;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $this->code = 'table';
       $this->title = MODULE_SHIPPING_TABLE_TEXT_TITLE;
@@ -27,12 +31,12 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
+        $Qcheck = $OSCOM_Db->get('zones_to_geo_zones', 'zone_id', ['geo_zone_id' => MODULE_SHIPPING_TABLE_ZONE, 'zone_country_id' => $order->delivery['country']['id']], 'zone_id');
+        while ($Qcheck->fetch()) {
+          if ($Qcheck->valueInt('zone_id') < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($Qcheck->valueInt('zone_id') == $order->delivery['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -83,25 +87,91 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_SHIPPING_TABLE_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_SHIPPING_TABLE_STATUS');
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Table Method', 'MODULE_SHIPPING_TABLE_STATUS', 'True', 'Do you want to offer table rate shipping?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Table', 'MODULE_SHIPPING_TABLE_COST', '25:8.50,50:5.50,10000:0.00', 'The shipping cost is based on the total cost or weight of items. Example: 25:8.50,50:5.50,etc.. Up to 25 charge 8.50, from there to 50 charge 5.50, etc', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Table Method', 'MODULE_SHIPPING_TABLE_MODE', 'weight', 'The shipping cost is based on the order total or the total weight of the items ordered.', '6', '0', 'tep_cfg_select_option(array(\'weight\', \'price\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Handling Fee', 'MODULE_SHIPPING_TABLE_HANDLING', '0', 'Handling fee for this shipping method.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_TABLE_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_TABLE_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_TABLE_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Table Method',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to offer table rate shipping?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Shipping Table',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_COST',
+        'configuration_value' => '25:8.50,50:5.50,10000:0.00',
+        'configuration_description' => 'The shipping cost is based on the total cost or weight of items. Example: 25:8.50,50:5.50,etc.. Up to 25 charge 8.50, from there to 50 charge 5.50, etc',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Table Method',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_MODE',
+        'configuration_value' => 'weight',
+        'configuration_description' => 'The shipping cost is based on the order total or the total weight of the items ordered.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'weight\', \'price\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Handling Fee',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_HANDLING',
+        'configuration_value' => '0',
+        'configuration_description' => 'Handling fee for this shipping method.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Tax Class',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_TAX_CLASS',
+        'configuration_value' => '0',
+        'configuration_description' => 'Use the following tax class on the shipping fee.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_tax_class_title',
+        'set_function' => 'tep_cfg_pull_down_tax_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Shipping Zone',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_ZONE',
+        'configuration_value' => '0',
+        'configuration_description' => 'If a zone is selected, only enable this shipping method for that zone.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_zone_class_title',
+        'set_function' => 'tep_cfg_pull_down_zone_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_SHIPPING_TABLE_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
@@ -110,6 +180,8 @@
 
     function getShippableTotal() {
       global $order, $currencies;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $order_total = $_SESSION['cart']->show_total();
 
@@ -121,10 +193,12 @@
 
           if (isset($order->products[$i]['attributes'])) {
             foreach ( $order->products[$i]['attributes'] as $option => $value ) {
-              $virtual_check_query = tep_db_query("select count(*) as total from products_attributes pa, products_attributes_download pad where pa.products_id = '" . (int)$order->products[$i]['id'] . "' and pa.options_values_id = '" . (int)$value['value_id'] . "' and pa.products_attributes_id = pad.products_attributes_id");
-              $virtual_check = tep_db_fetch_array($virtual_check_query);
+              $Qcheck = $OSCOM_Db->prepare('select pa.products_id from :table_products_attributes pa, :table_products_attributes_download pad where pa.products_id = :products_id and pa.options_values_id = :options_values_id and pa.products_attributes_id = pad.products_attributes_id');
+              $Qcheck->bindInt(':products_id', $order->products[$i]['id']);
+              $Qcheck->bindInt(':options_values_id', $value['value_id']);
+              $Qcheck->execute();
 
-              if ($virtual_check['total'] > 0) {
+              if ($Qcheck->fetch() !== false) {
                 $order_total -= $currencies->calculate_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']);
               }
             }

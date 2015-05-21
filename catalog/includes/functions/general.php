@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\Registry;
+
 ////
 // Get the installed version number
   function tep_get_version() {
@@ -78,51 +81,51 @@
   }
 
 ////
-// Return a random row from a database query
-  function tep_random_select($query) {
-    $random_product = '';
-    $random_query = tep_db_query($query);
-    $num_rows = tep_db_num_rows($random_query);
-    if ($num_rows > 0) {
-      $random_row = tep_rand(0, ($num_rows - 1));
-      tep_db_data_seek($random_query, $random_row);
-      $random_product = tep_db_fetch_array($random_query);
-    }
-
-    return $random_product;
-  }
-
-////
 // Return a product's name
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {
+    $OSCOM_Db = Registry::get('Db');
+
     if (!isset($language_id)) $language_id = $_SESSION['languages_id'];
 
-    $product_query = tep_db_query("select products_name from products_description where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
-    $product = tep_db_fetch_array($product_query);
+    $Qproduct = $OSCOM_Db->prepare('select products_name from :table_products_description where products_id = :products_id and language_id = :language_id');
+    $Qproduct->bindInt(':products_id', $product_id);
+    $Qproduct->bindInt(':language_id', $language_id);
+    $Qproduct->execute();
 
-    return $product['products_name'];
+    return $Qproduct->value('products_name');
   }
 
 ////
 // Return a product's special price (returns nothing if there is no offer)
 // TABLES: products
   function tep_get_products_special_price($product_id) {
-    $product_query = tep_db_query("select specials_new_products_price from specials where products_id = '" . (int)$product_id . "' and status = 1");
-    $product = tep_db_fetch_array($product_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    return $product['specials_new_products_price'];
+    $result = false;
+
+    $Qproduct = $OSCOM_Db->prepare('select specials_new_products_price from :table_specials where products_id = :products_id and status = 1');
+    $Qproduct->bindInt(':products_id', $product_id);
+    $Qproduct->execute();
+
+    if ($Qproduct->fetch() !== false) {
+      $result = $Qproduct->valueDecimal('specials_new_products_price');
+    }
+
+    return $result;
   }
 
 ////
 // Return a product's stock
 // TABLES: products
   function tep_get_products_stock($products_id) {
-    $products_id = tep_get_prid($products_id);
-    $stock_query = tep_db_query("select products_quantity from products where products_id = '" . (int)$products_id . "'");
-    $stock_values = tep_db_fetch_array($stock_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    return $stock_values['products_quantity'];
+    $Qproduct = $OSCOM_Db->prepare('select products_quantity from :table_products where products_id = :products_id');
+    $Qproduct->bindInt(':products_id', tep_get_prid($products_id));
+    $Qproduct->execute();
+
+    return $Qproduct->valueInt('products_quantity');
   }
 
 ////
@@ -165,14 +168,14 @@
 // Return all $_GET variables, except those passed as a parameter
   function tep_get_all_get_params($exclude_array = '') {
     if (!is_array($exclude_array)) $exclude_array = array();
-   
+
     $exclude_array[] = session_name();
     $exclude_array[] = 'error';
     $exclude_array[] = 'x';
     $exclude_array[] = 'y';
 
     $get_url = '';
-   
+
     if (is_array($_GET) && (!empty($_GET))) {
       foreach ($_GET as $key => $value) {
         if ( !in_array($key, $exclude_array) ) {
@@ -187,25 +190,26 @@
 // Returns an array with countries
 // TABLES: countries
   function tep_get_countries($countries_id = '', $with_iso_codes = false) {
+    $OSCOM_Db = Registry::get('Db');
+
     $countries_array = array();
+
     if (tep_not_null($countries_id)) {
       if ($with_iso_codes == true) {
-        $countries = tep_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from countries where countries_id = '" . (int)$countries_id . "' order by countries_name");
-        $countries_values = tep_db_fetch_array($countries);
-        $countries_array = array('countries_name' => $countries_values['countries_name'],
-                                 'countries_iso_code_2' => $countries_values['countries_iso_code_2'],
-                                 'countries_iso_code_3' => $countries_values['countries_iso_code_3']);
+        $Qcountries = $OSCOM_Db->prepare('select countries_name, countries_iso_code_2, countries_iso_code_3 from :table_countries where countries_id = :countries_id');
+        $Qcountries->bindInt(':countries_id', $countries_id);
+        $Qcountries->execute();
+
+        $countries_array = $Qcountries->toArray();
       } else {
-        $countries = tep_db_query("select countries_name from countries where countries_id = '" . (int)$countries_id . "'");
-        $countries_values = tep_db_fetch_array($countries);
-        $countries_array = array('countries_name' => $countries_values['countries_name']);
+        $Qcountries = $OSCOM_Db->prepare('select countries_name from :table_countries where countries_id = :countries_id');
+        $Qcountries->bindInt(':countries_id', $countries_id);
+        $Qcountries->execute();
+
+        $countries_array = $Qcountries->toArray();
       }
     } else {
-      $countries = tep_db_query("select countries_id, countries_name from countries order by countries_name");
-      while ($countries_values = tep_db_fetch_array($countries)) {
-        $countries_array[] = array('countries_id' => $countries_values['countries_id'],
-                                   'countries_name' => $countries_values['countries_name']);
-      }
+      $countries_array = $OSCOM_Db->query('select countries_id, countries_name from :table_countries order by countries_name')->fetchAll();
     }
 
     return $countries_array;
@@ -222,19 +226,24 @@
   function tep_get_path($current_category_id = '') {
     global $cPath_array;
 
+    $OSCOM_Db = Registry::get('Db');
+
     if (tep_not_null($current_category_id)) {
       $cp_size = sizeof($cPath_array);
       if ($cp_size == 0) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
-        $last_category_query = tep_db_query("select parent_id from categories where categories_id = '" . (int)$cPath_array[($cp_size-1)] . "'");
-        $last_category = tep_db_fetch_array($last_category_query);
 
-        $current_category_query = tep_db_query("select parent_id from categories where categories_id = '" . (int)$current_category_id . "'");
-        $current_category = tep_db_fetch_array($current_category_query);
+        $QlastCategory = $OSCOM_Db->prepare('select parent_id from :table_categories where categories_id = :categories_id');
+        $QlastCategory->bindInt(':categories_id', $cPath_array[($cp_size-1)]);
+        $QlastCategory->execute();
 
-        if ($last_category['parent_id'] == $current_category['parent_id']) {
+        $QcurrentCategory = $OSCOM_Db->prepare('select parent_id from :table_categories where categories_id = :categories_id');
+        $QcurrentCategory->bindInt(':categories_id', $current_category_id);
+        $QcurrentCategory->execute();
+
+        if ($QlastCategory->valueInt('parent_id') == $QcurrentCategory->valueInt('parent_id')) {
           for ($i=0; $i<($cp_size-1); $i++) {
             $cPath_new .= '_' . $cPath_array[$i];
           }
@@ -274,10 +283,15 @@
 // Returns the zone (State/Province) name
 // TABLES: zones
   function tep_get_zone_name($country_id, $zone_id, $default_zone) {
-    $zone_query = tep_db_query("select zone_name from zones where zone_country_id = '" . (int)$country_id . "' and zone_id = '" . (int)$zone_id . "'");
-    if (tep_db_num_rows($zone_query)) {
-      $zone = tep_db_fetch_array($zone_query);
-      return $zone['zone_name'];
+    $OSCOM_Db = Registry::get('Db');
+
+    $Qzone = $OSCOM_Db->prepare('select zone_name from :table_zones where zone_country_id = :zone_country_id and zone_id = :zone_id');
+    $Qzone->bindInt(':zone_country_id', $country_id);
+    $Qzone->bindInt(':zone_id', $zone_id);
+    $Qzone->execute();
+
+    if ($Qzone->fetch() !== false) {
+      return $Qzone->value('zone_name');
     } else {
       return $default_zone;
     }
@@ -287,10 +301,15 @@
 // Returns the zone (State/Province) code
 // TABLES: zones
   function tep_get_zone_code($country_id, $zone_id, $default_zone) {
-    $zone_query = tep_db_query("select zone_code from zones where zone_country_id = '" . (int)$country_id . "' and zone_id = '" . (int)$zone_id . "'");
-    if (tep_db_num_rows($zone_query)) {
-      $zone = tep_db_fetch_array($zone_query);
-      return $zone['zone_code'];
+    $OSCOM_Db = Registry::get('Db');
+
+    $Qzone = $OSCOM_Db->prepare('select zone_code from :table_zones where zone_country_id = :zone_country_id and zone_id = :zone_id');
+    $Qzone->bindInt(':zone_country_id', $country_id);
+    $Qzone->bindInt(':zone_id', $zone_id);
+    $Qzone->execute();
+
+    if ($Qzone->fetch() !== false) {
+      return $Qzone->value('zone_code');
     } else {
       return $default_zone;
     }
@@ -322,26 +341,33 @@
 // Returns the tax rate for a zone / class
 // TABLES: tax_rates, zones_to_geo_zones
   function tep_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
-    global $customer_zone_id, $customer_country_id;
     static $tax_rates = array();
+
+    $OSCOM_Db = Registry::get('Db');
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (!isset($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
       } else {
-        $country_id = $customer_country_id;
-        $zone_id = $customer_zone_id;
+        $country_id = $_SESSION['customer_country_id'];
+        $zone_id = $_SESSION['customer_zone_id'];
       }
     }
 
     if (!isset($tax_rates[$class_id][$country_id][$zone_id]['rate'])) {
-      $tax_query = tep_db_query("select sum(tax_rate) as tax_rate from tax_rates tr left join zones_to_geo_zones za on (tr.tax_zone_id = za.geo_zone_id) left join geo_zones tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' group by tr.tax_priority");
-      if (tep_db_num_rows($tax_query)) {
+      $Qtax = $OSCOM_Db->prepare('select sum(tr.tax_rate) as tax_rate from :table_tax_rates tr left join :table_zones_to_geo_zones za on (tr.tax_zone_id = za.geo_zone_id) left join :table_geo_zones tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = 0 or za.zone_country_id = :zone_country_id) and (za.zone_id is null or za.zone_id = 0 or za.zone_id = :zone_id) and tr.tax_class_id = :tax_class_id group by tr.tax_priority');
+      $Qtax->bindInt(':zone_country_id', $country_id);
+      $Qtax->bindInt(':zone_id', $zone_id);
+      $Qtax->bindInt(':tax_class_id', $class_id);
+      $Qtax->execute();
+
+      if ($Qtax->fetch() !== false) {
         $tax_multiplier = 1.0;
-        while ($tax = tep_db_fetch_array($tax_query)) {
-          $tax_multiplier *= 1.0 + ($tax['tax_rate'] / 100);
-        }
+
+        do {
+          $tax_multiplier *= 1.0 + ($Qtax->valueDecimal('tax_rate') / 100);
+        } while ($Qtax->fetch());
 
         $tax_rates[$class_id][$country_id][$zone_id]['rate'] = ($tax_multiplier - 1.0) * 100;
       } else {
@@ -358,13 +384,22 @@
   function tep_get_tax_description($class_id, $country_id, $zone_id) {
     static $tax_rates = array();
 
+    $OSCOM_Db = Registry::get('Db');
+
     if (!isset($tax_rates[$class_id][$country_id][$zone_id]['description'])) {
-      $tax_query = tep_db_query("select tax_description from tax_rates tr left join zones_to_geo_zones za on (tr.tax_zone_id = za.geo_zone_id) left join geo_zones tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . (int)$country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . (int)$zone_id . "') and tr.tax_class_id = '" . (int)$class_id . "' order by tr.tax_priority");
-      if (tep_db_num_rows($tax_query)) {
+      $Qtax = $OSCOM_Db->prepare('select tr.tax_description from :table_tax_rates tr left join :table_zones_to_geo_zones za on (tr.tax_zone_id = za.geo_zone_id) left join :table_geo_zones tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = 0 or za.zone_country_id = :zone_country_id) and (za.zone_id is null or za.zone_id = 0 or za.zone_id = :zone_id) and tr.tax_class_id = :tax_class_id order by tr.tax_priority');
+      $Qtax->bindInt(':zone_country_id', $country_id);
+      $Qtax->bindInt(':zone_id', $zone_id);
+      $Qtax->bindInt(':tax_class_id', $class_id);
+      $Qtax->execute();
+
+      if ($Qtax->fetch() !== false) {
         $tax_description = '';
-        while ($tax = tep_db_fetch_array($tax_query)) {
-          $tax_description .= $tax['tax_description'] . ' + ';
-        }
+
+        do {
+          $tax_description .= $Qtax->value('tax_description') . ' + ';
+        } while ($Qtax->fetch());
+
         $tax_description = substr($tax_description, 0, -3);
 
         $tax_rates[$class_id][$country_id][$zone_id]['description'] = $tax_description;
@@ -395,20 +430,32 @@
 // Return the number of products in a category
 // TABLES: products, products_to_categories, categories
   function tep_count_products_in_category($category_id, $include_inactive = false) {
-    $products_count = 0;
-    if ($include_inactive == true) {
-      $products_query = tep_db_query("select count(*) as total from products p, products_to_categories p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$category_id . "'");
-    } else {
-      $products_query = tep_db_query("select count(*) as total from products p, products_to_categories p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '" . (int)$category_id . "'");
-    }
-    $products = tep_db_fetch_array($products_query);
-    $products_count += $products['total'];
+    $OSCOM_Db = Registry::get('Db');
 
-    $child_categories_query = tep_db_query("select categories_id from categories where parent_id = '" . (int)$category_id . "'");
-    if (tep_db_num_rows($child_categories_query)) {
-      while ($child_categories = tep_db_fetch_array($child_categories_query)) {
-        $products_count += tep_count_products_in_category($child_categories['categories_id'], $include_inactive);
-      }
+    $products_count = 0;
+
+    $products_query = 'select count(*) as total from :table_products p, :table_products_to_categories p2c where p.products_id = p2c.products_id and p2c.categories_id = :categories_id';
+
+    if ($include_inactive == false) {
+      $products_query .= ' and p.products_status = 1';
+    }
+
+    $Qproducts = $OSCOM_Db->prepare($products_query);
+    $Qproducts->bindInt(':categories_id', $category_id);
+    $Qproducts->execute();
+
+    if ($Qproducts->fetch() !== false) {
+      $products_count += $Qproducts->valueInt('total');
+    }
+
+    $Qcategories = $OSCOM_Db->prepare('select categories_id from :table_categories where parent_id = :parent_id');
+    $Qcategories->bindInt(':parent_id', $category_id);
+    $Qcategories->execute();
+
+    if ($Qcategories->fetch() !== false) {
+      do {
+        $products_count += tep_count_products_in_category($Qcategories->valueInt('categories_id'), $include_inactive);
+      } while ($Qcategories->fetch());
     }
 
     return $products_count;
@@ -418,64 +465,74 @@
 // Return true if the category has subcategories
 // TABLES: categories
   function tep_has_category_subcategories($category_id) {
-    $child_category_query = tep_db_query("select count(*) as count from categories where parent_id = '" . (int)$category_id . "'");
-    $child_category = tep_db_fetch_array($child_category_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    if ($child_category['count'] > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    $Qcheck = $OSCOM_Db->prepare('select categories_id from :table_categories where parent_id = :parent_id limit 1');
+    $Qcheck->bindInt(':parent_id', $category_id);
+    $Qcheck->execute();
+
+    return ($Qcheck->fetch() !== false);
   }
 
 ////
 // Returns the address_format_id for the given country
 // TABLES: countries;
   function tep_get_address_format_id($country_id) {
-    $address_format_query = tep_db_query("select address_format_id as format_id from countries where countries_id = '" . (int)$country_id . "'");
-    if (tep_db_num_rows($address_format_query)) {
-      $address_format = tep_db_fetch_array($address_format_query);
-      return $address_format['format_id'];
-    } else {
-      return '1';
+    $OSCOM_Db = Registry::get('Db');
+
+    $format_id = 1;
+
+    $Qformat = $OSCOM_Db->prepare('select address_format_id from :table_countries where countries_id = :countries_id');
+    $Qformat->bindInt(':countries_id', $country_id);
+    $Qformat->execute();
+
+    if ($Qformat->fetch() !== false) {
+      $format_id = $Qformat->valueInt('address_format_id');
     }
+
+    return $format_id;
   }
 
 ////
 // Return a formatted address
 // TABLES: address_format
   function tep_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = tep_db_query("select address_format as format from address_format where address_format_id = '" . (int)$address_format_id . "'");
-    $address_format = tep_db_fetch_array($address_format_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    $company = tep_output_string_protected($address['company']);
+    $Qformat = $OSCOM_Db->prepare('select address_format from :table_address_format where address_format_id = :address_format_id');
+    $Qformat->bindInt(':address_format_id', $address_format_id);
+    $Qformat->execute();
+
+    $replace = [
+      '$company' => HTML::outputProtected($address['company']),
+      '$firstname' => '',
+      '$lastname' => '',
+      '$street' => HTML::outputProtected($address['street_address']),
+      '$suburb' => HTML::outputProtected($address['suburb']),
+      '$city' => HTML::outputProtected($address['city']),
+      '$state' => HTML::outputProtected($address['state']),
+      '$postcode' => HTML::outputProtected($address['postcode']),
+      '$country' => ''
+    ];
+
     if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
-      $firstname = tep_output_string_protected($address['firstname']);
-      $lastname = tep_output_string_protected($address['lastname']);
+      $replace['$firstname'] = HTML::outputProtected($address['firstname']);
+      $replace['$lastname'] = HTML::outputProtected($address['lastname']);
     } elseif (isset($address['name']) && tep_not_null($address['name'])) {
-      $firstname = tep_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
+      $replace['$firstname'] = HTML::outputProtected($address['name']);
     }
-    $street = tep_output_string_protected($address['street_address']);
-    $suburb = tep_output_string_protected($address['suburb']);
-    $city = tep_output_string_protected($address['city']);
-    $state = tep_output_string_protected($address['state']);
+
     if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
-      $country = tep_get_country_name($address['country_id']);
+      $replace['$country'] = tep_get_country_name($address['country_id']);
 
       if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
-        $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
+        $replace['$state'] = tep_get_zone_code($address['country_id'], $address['zone_id'], $replace['$state']);
       }
     } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']['title']);
-    } else {
-      $country = '';
+      $replace['$country'] = HTML::outputProtected($address['country']['title']);
     }
-    $postcode = tep_output_string_protected($address['postcode']);
-    $zip = $postcode;
+
+    $replace['$zip'] = $replace['$postcode'];
 
     if ($html) {
 // HTML Mode
@@ -497,16 +554,20 @@
       $hr = '----------------------------------------';
     }
 
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($state != '') $statecomma = $state . ', ';
+    $replace['$CR'] = $CR;
+    $replace['$cr'] = $cr;
+    $replace['$HR'] = $HR;
+    $replace['$hr'] = $hr;
 
-    $fmt = $address_format['format'];
-    eval("\$address = \"$fmt\";");
+    $replace['$statecomma'] = '';
+    $replace['$streets'] = $replace['$street'];
+    if ($replace['$suburb'] != '') $replace['$streets'] = $replace['$street'] . $replace['$cr'] . $replace['$suburb'];
+    if ($replace['$state'] != '') $replace['$statecomma'] = $replace['$state'] . ', ';
 
-    if ( (ACCOUNT_COMPANY == 'true') && (tep_not_null($company)) ) {
-      $address = $company . $cr . $address;
+    $address = strtr($Qformat->value('address_format'), $replace);
+
+    if ( (ACCOUNT_COMPANY == 'true') && tep_not_null($replace['$company']) ) {
+      $address = $replace['$company'] . $replace['$cr'] . $address;
     }
 
     return $address;
@@ -516,16 +577,20 @@
 // Return a formatted address
 // TABLES: customers, address_book
   function tep_address_label($customers_id, $address_id = 1, $html = false, $boln = '', $eoln = "\n") {
+    $OSCOM_Db = Registry::get('Db');
+
     if (is_array($address_id) && !empty($address_id)) {
       return tep_address_format($address_id['address_format_id'], $address_id, $html, $boln, $eoln);
     }
 
-    $address_query = tep_db_query("select entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from address_book where customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$address_id . "'");
-    $address = tep_db_fetch_array($address_query);
+    $Qaddress = $OSCOM_Db->prepare('select entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
+    $Qaddress->bindInt(':address_book_id', $address_id);
+    $Qaddress->bindInt(':customers_id', $customers_id);
+    $Qaddress->execute();
 
-    $format_id = tep_get_address_format_id($address['country_id']);
+    $format_id = tep_get_address_format_id($Qaddress->valueInt('country_id'));
 
-    return tep_address_format($format_id, $address, $html, $boln, $eoln);
+    return tep_address_format($format_id, $Qaddress->toArray(), $html, $boln, $eoln);
   }
 
   function tep_row_number_format($number) {
@@ -535,15 +600,21 @@
   }
 
   function tep_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
+    $OSCOM_Db = Registry::get('Db');
+
     if (!is_array($categories_array)) $categories_array = array();
 
-    $categories_query = tep_db_query("select c.categories_id, cd.categories_name from categories c, categories_description cd where parent_id = '" . (int)$parent_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$_SESSION['languages_id'] . "' order by sort_order, cd.categories_name");
-    while ($categories = tep_db_fetch_array($categories_query)) {
-      $categories_array[] = array('id' => $categories['categories_id'],
-                                  'text' => $indent . $categories['categories_name']);
+    $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.sort_order, cd.categories_name');
+    $Qcategories->bindInt(':parent_id', $parent_id);
+    $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qcategories->execute();
 
-      if ($categories['categories_id'] != $parent_id) {
-        $categories_array = tep_get_categories($categories_array, $categories['categories_id'], $indent . '&nbsp;&nbsp;');
+    while ($Qcategories->fetch()) {
+      $categories_array[] = array('id' => $Qcategories->valueInt('categories_id'),
+                                  'text' => $indent . $Qcategories->value('categories_name'));
+
+      if ($Qcategories->valueInt('categories_id') != $parent_id) {
+        $categories_array = tep_get_categories($categories_array, $Qcategories->valueInt('categories_id'), $indent . '&nbsp;&nbsp;');
       }
     }
 
@@ -551,11 +622,14 @@
   }
 
   function tep_get_manufacturers($manufacturers_array = '') {
+    $OSCOM_Db = Registry::get('Db');
+
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
-    $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name");
-    while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-      $manufacturers_array[] = array('id' => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
+    $Qmanufacturers = $OSCOM_Db->query('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+
+    while ($Qmanufacturers->fetch()) {
+      $manufacturers_array[] = array('id' => $Qmanufacturers->valueInt('manufacturers_id'), 'text' => $Qmanufacturers->value('manufacturers_name'));
     }
 
     return $manufacturers_array;
@@ -565,11 +639,17 @@
 // Return all subcategory IDs
 // TABLES: categories
   function tep_get_subcategories(&$subcategories_array, $parent_id = 0) {
-    $subcategories_query = tep_db_query("select categories_id from categories where parent_id = '" . (int)$parent_id . "'");
-    while ($subcategories = tep_db_fetch_array($subcategories_query)) {
-      $subcategories_array[sizeof($subcategories_array)] = $subcategories['categories_id'];
-      if ($subcategories['categories_id'] != $parent_id) {
-        tep_get_subcategories($subcategories_array, $subcategories['categories_id']);
+    $OSCOM_Db = Registry::get('Db');
+
+    $Qsub = $OSCOM_Db->prepare('select categories_id from :table_categories where parent_id = :parent_id');
+    $Qsub->bindInt(':parent_id', $parent_id);
+    $Qsub->execute();
+
+    while ($Qsub->fetch()) {
+      $subcategories_array[sizeof($subcategories_array)] = $Qsub->valueInt('categories_id');
+
+      if ($Qsub->valueInt('categories_id') != $parent_id) {
+        tep_get_subcategories($subcategories_array, $Qsub->valueInt('categories_id'));
       }
     }
   }
@@ -898,12 +978,19 @@
 // Recursively go through the categories and retreive all parent categories IDs
 // TABLES: categories
   function tep_get_parent_categories(&$categories, $categories_id) {
-    $parent_categories_query = tep_db_query("select parent_id from categories where categories_id = '" . (int)$categories_id . "'");
-    while ($parent_categories = tep_db_fetch_array($parent_categories_query)) {
-      if ($parent_categories['parent_id'] == 0) return true;
-      $categories[sizeof($categories)] = $parent_categories['parent_id'];
-      if ($parent_categories['parent_id'] != $categories_id) {
-        tep_get_parent_categories($categories, $parent_categories['parent_id']);
+    $OSCOM_Db = Registry::get('Db');
+
+    $Qparent = $OSCOM_Db->prepare('select parent_id from :table_categories where categories_id = :categories_id');
+    $Qparent->bindInt(':categories_id', $categories_id);
+    $Qparent->execute();
+
+    while ($Qparent->fetch()) {
+      if ($Qparent->valueInt('parent_id') == 0) return true;
+
+      $categories[sizeof($categories)] = $Qparent->valueInt('parent_id');
+
+      if ($Qparent->valueInt('parent_id') != $categories_id) {
+        tep_get_parent_categories($categories, $Qparent->valueInt('parent_id'));
       }
     }
   }
@@ -912,21 +999,24 @@
 // Construct a category path to the product
 // TABLES: products_to_categories
   function tep_get_product_path($products_id) {
+    $OSCOM_Db = Registry::get('Db');
+
     $cPath = '';
 
-    $category_query = tep_db_query("select p2c.categories_id from products p, products_to_categories p2c where p.products_id = '" . (int)$products_id . "' and p.products_status = '1' and p.products_id = p2c.products_id limit 1");
-    if (tep_db_num_rows($category_query)) {
-      $category = tep_db_fetch_array($category_query);
+    $Qcategory = $OSCOM_Db->prepare('select p2c.categories_id from :table_products p, :table_products_to_categories p2c where p.products_id = :products_id and p.products_status = 1 and p.products_id = p2c.products_id limit 1');
+    $Qcategory->bindInt(':products_id', $products_id);
+    $Qcategory->execute();
 
+    if ($Qcategory->fetch() !== false) {
       $categories = array();
-      tep_get_parent_categories($categories, $category['categories_id']);
+      tep_get_parent_categories($categories, $Qcategory->valueInt('categories_id'));
 
       $categories = array_reverse($categories);
 
       $cPath = implode('_', $categories);
 
       if (tep_not_null($cPath)) $cPath .= '_';
-      $cPath .= $category['categories_id'];
+      $cPath .= $Qcategory->valueInt('categories_id');
     }
 
     return $cPath;
@@ -1004,10 +1094,8 @@
 ////
 // Return a customer greeting
   function tep_customer_greeting() {
-    global $customer_id, $customer_first_name;
-
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($customer_first_name), tep_href_link('products_new.php'));
+      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), tep_href_link('products_new.php'));
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, tep_href_link('login.php', '', 'SSL'), tep_href_link('create_account.php', '', 'SSL'));
     }
@@ -1051,14 +1139,13 @@
 ////
 // Check if product has attributes
   function tep_has_product_attributes($products_id) {
-    $attributes_query = tep_db_query("select count(*) as count from products_attributes where products_id = '" . (int)$products_id . "'");
-    $attributes = tep_db_fetch_array($attributes_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    if ($attributes['count'] > 0) {
-      return true;
-    } else {
-      return false;
-    }
+    $Qattributes = $OSCOM_Db->prepare('select products_id from :table_products_attributes where products_id = :products_id limit 1');
+    $Qattributes->bindInt(':products_id', $products_id);
+    $Qattributes->execute();
+
+    return $Qattributes->fetch() !== false;
   }
 
   function tep_count_modules($modules = '') {
@@ -1209,15 +1296,17 @@
 // Checks to see if the currency code exists as a currency
 // TABLES: currencies
   function tep_currency_exists($code) {
-    $code = tep_db_prepare_input($code);
+    $OSCOM_Db = Registry::get('Db');
 
-    $currency_query = tep_db_query("select code from currencies where code = '" . tep_db_input($code) . "' limit 1");
-    if (tep_db_num_rows($currency_query)) {
-      $currency = tep_db_fetch_array($currency_query);
-      return $currency['code'];
-    } else {
-      return false;
+    $Qcurrency = $OSCOM_Db->prepare('select code from :table_currencies where code = :code limit 1');
+    $Qcurrency->bindValue(':code', $code);
+    $Qcurrency->execute();
+
+    if ($Qcurrency->fetch() !== false) {
+      return $Qcurrency->value('code');
     }
+
+    return false;
   }
 
 ////
@@ -1269,7 +1358,7 @@
     static $_ip_address;
 
     if ( !isset($_ip_address) ) {
-      $_ip_address = null;
+      $_ip_address = '0.0.0.0';
       $ip_addresses = array();
 
       if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
@@ -1310,53 +1399,64 @@
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {
-    global $customer_id;
+    $OSCOM_Db = Registry::get('Db');
 
     if (is_numeric($id) == false) {
       if (isset($_SESSION['customer_id'])) {
-        $id = $customer_id;
+        $id = $_SESSION['customer_id'];
       } else {
         return 0;
       }
     }
 
     if ($check_session == true) {
-      if ( (isset($_SESSION['customer_id']) == false) || ($id != $customer_id) ) {
+      if (!isset($_SESSION['customer_id']) || ($id != $_SESSION['customer_id'])) {
         return 0;
       }
     }
 
-    $orders_check_query = tep_db_query("select count(*) as total from orders o, orders_status s where o.customers_id = '" . (int)$id . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.public_flag = '1'");
-    $orders_check = tep_db_fetch_array($orders_check_query);
+    $Qorders = $OSCOM_Db->prepare('select count(*) as total from :table_orders o, :table_orders_status s where o.customers_id = :customers_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = 1');
+    $Qorders->bindInt(':customers_id', $id);
+    $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qorders->execute();
 
-    return $orders_check['total'];
+    if ($Qorders->fetch() !== false) {
+      return $Qorders->valueInt('total');
+    }
+
+    return 0;
   }
 
   function tep_count_customer_address_book_entries($id = '', $check_session = true) {
-    global $customer_id;
+    $OSCOM_Db = Registry::get('Db');
 
     if (is_numeric($id) == false) {
       if (isset($_SESSION['customer_id'])) {
-        $id = $customer_id;
+        $id = $_SESSION['customer_id'];
       } else {
         return 0;
       }
     }
 
     if ($check_session == true) {
-      if ( (isset($_SESSION['customer_id']) == false) || ($id != $customer_id) ) {
+      if (!isset($_SESSION['customer_id']) || ($id != $_SESSION['customer_id'])) {
         return 0;
       }
     }
 
-    $addresses_query = tep_db_query("select count(*) as total from address_book where customers_id = '" . (int)$id . "'");
-    $addresses = tep_db_fetch_array($addresses_query);
+    $Qaddresses = $OSCOM_Db->prepare('select count(*) as total from :table_address_book where customers_id = :customers_id');
+    $Qaddresses->bindInt(':customers_id', $id);
+    $Qaddresses->execute();
 
-    return $addresses['total'];
+    if ($Qaddresses->fetch() !== false) {
+      return $Qaddresses->valueInt('total');
+    }
+
+    return 0;
   }
 
-// Convert linefeeds 
-  function tep_convert_linefeeds($from, $to, $string) {    
+// Convert linefeeds
+  function tep_convert_linefeeds($from, $to, $string) {
       return str_replace($from, $to, $string);
   }
 ?>

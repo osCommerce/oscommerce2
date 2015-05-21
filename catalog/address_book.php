@@ -15,7 +15,7 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
+    $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
@@ -51,7 +51,7 @@
         <div class="panel-heading"><?php echo PRIMARY_ADDRESS_TITLE; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $customer_default_address_id, true, ' ', '<br />'); ?>
+          <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>

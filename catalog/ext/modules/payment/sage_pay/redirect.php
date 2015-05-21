@@ -15,7 +15,7 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
+    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
@@ -24,7 +24,7 @@
   } else {
     $hidden_params = '';
 
-    if ($payment == 'sage_pay_direct') {
+    if ($_SESSION['payment'] == 'sage_pay_direct') {
       $redirect_url = tep_href_link('checkout_process.php', 'check=3D', 'SSL');
       $hidden_params = tep_draw_hidden_field('MD', $_POST['MD']) . tep_draw_hidden_field('PaRes', $_POST['PaRes']);
     } else {

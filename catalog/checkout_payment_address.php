@@ -16,7 +16,7 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
+    $_SESSION['navigation']->set_snapshot();
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
@@ -130,7 +130,7 @@
       }
 
       if ($error == false) {
-        $sql_data_array = array('customers_id' => $customer_id,
+        $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                 'entry_firstname' => $firstname,
                                 'entry_lastname' => $lastname,
                                 'entry_street_address' => $street_address,
@@ -151,11 +151,9 @@
           }
         }
 
-        if (!isset($_SESSION['billto'])) tep_session_register('billto');
-
         $OSCOM_Db->save('address_book', $sql_data_array);
 
-        $billto = $OSCOM_Db->lastInsertId();
+        $_SESSION['billto'] = $OSCOM_Db->lastInsertId();
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
@@ -165,19 +163,17 @@
     } elseif (isset($_POST['address'])) {
       $reset_payment = false;
       if (isset($_SESSION['billto'])) {
-        if ($billto != $_POST['address']) {
+        if ($_SESSION['billto'] != $_POST['address']) {
           if (isset($_SESSION['payment'])) {
             $reset_payment = true;
           }
         }
-      } else {
-        tep_session_register('billto');
       }
 
-      $billto = $_POST['address'];
+      $_SESSION['billto'] = $_POST['address'];
 
       $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
-      $Qcheck->bindInt(':address_book_id', $billto);
+      $Qcheck->bindInt(':address_book_id', $_SESSION['billto']);
       $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
       $Qcheck->execute();
 
@@ -189,8 +185,7 @@
       }
 // no addresses to select from - customer decided to keep the current assigned address
     } else {
-      if (!isset($_SESSION['billto'])) tep_session_register('billto');
-      $billto = $customer_default_address_id;
+      $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
       tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
     }
@@ -198,7 +193,7 @@
 
 // if no billing destination address was selected, use their own address as default
   if (!isset($_SESSION['billto'])) {
-    $billto = $customer_default_address_id;
+    $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_payment.php', '', 'SSL'));
@@ -242,7 +237,7 @@
         <div class="panel-heading"><?php echo TITLE_PAYMENT_ADDRESS; ?></div>
 
         <div class="panel-body">
-          <?php echo tep_address_label($customer_id, $billto, true, ' ', '<br />'); ?>
+          <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
         </div>
       </div>
     </div>
@@ -280,7 +275,7 @@
       while ($Qab->fetch()) {
         $format_id = tep_get_address_format_id($Qab->valueInt('country_id'));
 
-        if ($Qab->valueInt('address_book_id') == $billto) {
+        if ($Qab->valueInt('address_book_id') == $_SESSION['billto']) {
           echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
         } else {
           echo '      <tr class="moduleRow">' . "\n";
@@ -291,7 +286,7 @@
           <strong><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong>
           <div class="help-block"><?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', ', '); ?></div>
         </td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $billto)); ?></td>
+        <td align="right"><?php echo tep_draw_radio_field('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $_SESSION['billto'])); ?></td>
       </tr>
 
 <?php

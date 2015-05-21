@@ -10,12 +10,16 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class flat {
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
     function flat() {
       global $order;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $this->code = 'flat';
       $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
@@ -27,12 +31,12 @@
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_FLAT_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
+        $Qcheck = $OSCOM_Db->get('zones_to_geo_zones', 'zone_id', ['geo_zone_id' => MODULE_SHIPPING_FLAT_ZONE, 'zone_country_id' => $order->delivery['country']['id']], 'zone_id');
+        while ($Qcheck->fetch()) {
+          if ($Qcheck->valueInt('zone_id') < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($Qcheck->valueInt('zone_id') == $order->delivery['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -64,23 +68,70 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_SHIPPING_FLAT_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_SHIPPING_FLAT_STATUS');
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Flat Shipping', 'MODULE_SHIPPING_FLAT_STATUS', 'True', 'Do you want to offer flat rate shipping?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Shipping Cost', 'MODULE_SHIPPING_FLAT_COST', '5.00', 'The shipping cost for all orders using this shipping method.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_FLAT_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Shipping Zone', 'MODULE_SHIPPING_FLAT_ZONE', '0', 'If a zone is selected, only enable this shipping method for that zone.', '6', '0', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_FLAT_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Flat Shipping',
+        'configuration_key' => 'MODULE_SHIPPING_FLAT_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to offer flat rate shipping?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Shipping Cost',
+        'configuration_key' => 'MODULE_SHIPPING_FLAT_COST',
+        'configuration_value' => '5.00',
+        'configuration_description' => 'The shipping cost for all orders using this shipping method.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Tax Class',
+        'configuration_key' => 'MODULE_SHIPPING_FLAT_TAX_CLASS',
+        'configuration_value' => '0',
+        'configuration_description' => 'Use the following tax class on the shipping fee.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_tax_class_title',
+        'set_function' => 'tep_cfg_pull_down_tax_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Shipping Zone',
+        'configuration_key' => 'MODULE_SHIPPING_FLAT_ZONE',
+        'configuration_value' => '0',
+        'configuration_description' => 'If a zone is selected, only enable this shipping method for that zone.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_zone_class_title',
+        'set_function' => 'tep_cfg_pull_down_zone_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_SHIPPING_FLAT_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

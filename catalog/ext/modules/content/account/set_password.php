@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   chdir('../../../../');
   require('includes/application_top.php');
 
@@ -21,10 +23,9 @@
     tep_redirect(tep_href_link('account.php', '', 'SSL'));
   }
 
-  $check_customer_query = tep_db_query("select customers_password from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customer_id . "'");
-  $check_customer = tep_db_fetch_array($check_customer_query);
+  $Qcustomer = $OSCOM_Db-get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
 
-  if ( !empty($check_customer['customers_password']) ) {
+  if (!empty($Qcustomer->value('customers_password'))) {
     tep_redirect(tep_href_link('account.php', '', 'SSL'));
   }
 
@@ -32,8 +33,8 @@
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_set_password.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_new = tep_db_prepare_input($_POST['password_new']);
-    $password_confirmation = tep_db_prepare_input($_POST['password_confirmation']);
+    $password_new = HTML::sanitize($_POST['password_new']);
+    $password_confirmation = HTML::sanitize($_POST['password_confirmation']);
 
     $error = false;
 
@@ -48,9 +49,8 @@
     }
 
     if ($error == false) {
-      tep_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$customer_id . "'");
-
-      tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customer_id . "'");
+      $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => $_SESSION['customer_id']]);
+      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => $_SESSION['customer_id']]);
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 

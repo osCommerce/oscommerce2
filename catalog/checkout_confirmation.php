@@ -16,7 +16,7 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
+    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
     tep_redirect(tep_href_link('login.php', '', 'SSL'));
   }
 
@@ -27,7 +27,7 @@
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
-    if ($_SESSION['cart']->cartID != $cartID) {
+    if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
       tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
     }
   }
@@ -37,24 +37,22 @@
     tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
   }
 
-  if (!isset($_SESSION['payment'])) tep_session_register('payment');
-  if (isset($_POST['payment'])) $payment = $_POST['payment'];
+  if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
 
-  if (!isset($_SESSION['comments'])) tep_session_register('comments');
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
-    $comments = HTML::sanitize($_POST['comments']);
+    $_SESSION['comments'] = HTML::sanitize($_POST['comments']);
   }
 
 // load the selected payment module
   require(DIR_WS_CLASSES . 'payment.php');
-  $payment_modules = new payment($payment);
+  $payment_modules = new payment($_SESSION['payment']);
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order;
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $payment) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$payment) ) || (is_object($$payment) && ($$payment->enabled == false)) ) {
+  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
     tep_redirect(tep_href_link('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 
@@ -64,7 +62,7 @@
 
 // load the selected shipping module
   require(DIR_WS_CLASSES . 'shipping.php');
-  $shipping_modules = new shipping($shipping);
+  $shipping_modules = new shipping($_SESSION['shipping']);
 
   require(DIR_WS_CLASSES . 'order_total.php');
   $order_total_modules = new order_total;
@@ -101,8 +99,8 @@
     echo $messageStack->output('checkout_confirmation');
   }
 
-  if (isset($$payment->form_action_url)) {
-    $form_action_url = $$payment->form_action_url;
+  if (isset($$_SESSION['payment']->form_action_url)) {
+    $form_action_url = $$_SESSION['payment']->form_action_url;
   } else {
     $form_action_url = tep_href_link('checkout_process.php', '', 'SSL');
   }

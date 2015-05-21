@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ar_admin_login {
     var $code = 'ar_admin_login';
     var $title;
@@ -34,18 +36,44 @@
     }
 
     function canPerform($user_id, $user_name) {
-      $check_query = tep_db_query("select id from action_recorder where module = '" . tep_db_input($this->code) . "' and (" . (!empty($user_name) ? "user_name = '" . tep_db_input($user_name) . "' or " : "") . " identifier = '" . tep_db_input($this->identifier) . "') and date_added >= date_sub(now(), interval " . (int)$this->minutes  . " minute) and success = 0 order by date_added desc limit " . (int)$this->attempts);
-      if (tep_db_num_rows($check_query) == $this->attempts) {
-        return false;
+      $OSCOM_Db = Registry::get('Db');
+
+      $sql_query = 'select id from :table_action_recorder where module = :module';
+
+      if (!empty($user_name)) {
+        $sql_query .= ' and (user_name = :user_name or identifier = :identifier)';
       } else {
-        return true;
+        $sql_query .= ' and identifier = :identifier';
       }
+
+      $sql_query .= ' and date_added >= date_sub(now(), interval :limit_minutes minute) and success = 0 limit :limit_attempts';
+
+      $Qcheck = $OSCOM_Db->prepare($sql_query);
+      $Qcheck->bindValue(':module', $this->code);
+
+      if (!empty($user_name)) {
+        $Qcheck->bindValue(':user_name', $user_name);
+      }
+
+      $Qcheck->bindValue(':identifier', $this->identifier);
+      $Qcheck->bindInt(':limit_minutes', $this->minutes);
+      $Qcheck->bindInt(':limit_attempts', $this->attempts);
+      $Qcheck->execute();
+
+      if (count($Qcheck->fetchAll()) == $this->attempts) {
+        return false;
+      }
+
+      return true;
     }
 
     function expireEntries() {
-      tep_db_query("delete from action_recorder where module = '" . $this->code . "' and date_added < date_sub(now(), interval " . (int)$this->minutes  . " minute)");
+      $Qdel = Registry::get('Db')->prepare('delete from :table_action_recorder where module = :module and date_added < date_sub(now(), interval :limit_minutes minute)');
+      $Qdel->bindValue(':module', $this->code);
+      $Qdel->bindInt(':limit_minutes', $this->minutes);
+      $Qdel->execute();
 
-      return tep_db_affected_rows();
+      return $Qdel->rowCount();
     }
 
     function check() {
@@ -53,12 +81,31 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Allowed Minutes', 'MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES', '5', 'Number of minutes to allow login attempts to occur.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Allowed Attempts', 'MODULE_ACTION_RECORDER_ADMIN_LOGIN_ATTEMPTS', '3', 'Number of login attempts to allow within the specified period.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Allowed Minutes',
+        'configuration_key' => 'MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES',
+        'configuration_value' => '5',
+        'configuration_description' => 'Number of minutes to allow login attempts to occur.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Allowed Attempts',
+        'configuration_key' => 'MODULE_ACTION_RECORDER_ADMIN_LOGIN_ATTEMPTS',
+        'configuration_value' => '3',
+        'configuration_description' => 'Number of login attempts to allow within the specified period.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class sage_pay_direct {
     var $code, $title, $description, $enabled;
 
@@ -65,18 +67,20 @@
     function update_status() {
       global $order;
 
+      $OSCOM_Db = Registry::get('Db');
+
       if ( ($this->enabled == true) && ($this->hasCards() == false) ) {
         $this->enabled = false;
       }
 
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
+        $Qcheck = $OSCOM_Db->get('zones_to_geo_zones', 'zone_id', ['geo_zone_id' => MODULE_PAYMENT_SAGE_PAY_DIRECT_ZONE, 'zone_country_id' => $order->billing['country']['id']], 'zone_id');
+        while ($Qcheck->fetch()) {
+          if ($Qcheck->valueInt('zone_id') < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->billing['zone_id']) {
+          } elseif ($Qcheck->valueInt('zone_id') == $order->billing['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -93,14 +97,13 @@
     }
 
     function selection() {
-      global $customer_id, $payment;
+      $OSCOM_Db = Registry::get('Db');
 
       if ( (MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True') && !isset($_SESSION['payment']) ) {
-        $tokens_query = tep_db_query("select 1 from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' limit 1");
+        $Qtokens = $OSCOM_Db->get('customers_sagepay_tokens', '1', ['customers_id' => $_SESSION['customer_id']], null, 1);
 
-        if ( tep_db_num_rows($tokens_query) ) {
-          $payment = $this->code;
-          tep_session_register('payment');
+        if ( $Qtokens->fetch() !== false ) {
+          $_SESSION['payment'] = $this->code;
         }
       }
 
@@ -115,7 +118,9 @@
     }
 
     function confirmation() {
-      global $order, $customer_id;
+      global $order;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $card_types = array();
       foreach ($this->getCardTypes() as $key => $value) {
@@ -143,24 +148,24 @@
       $content = '';
 
       if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
-        $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+        $Qtokens = $OSCOM_Db->get('customers_sagepay_tokens', ['id', 'card_type', 'number_filtered', 'expiry_date'], ['customers_id' => $_SESSION['customer_id']], 'date_added');
 
-        if ( tep_db_num_rows($tokens_query) > 0 ) {
+        if ($Qtokens->fetch() !== false) {
           $content .= '<table id="sagepay_table" border="0" width="100%" cellspacing="0" cellpadding="2">';
 
-          while ( $tokens = tep_db_fetch_array($tokens_query) ) {
-            $content .= '<tr class="moduleRow" id="sagepay_card_' . (int)$tokens['id'] . '">' .
-                        '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="' . (int)$tokens['id'] . '" /></td>' .
-                        '  <td valign="top">' . tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2)) . '/' . strftime('%Y', mktime(0, 0, 0, 1, 1, (2000 + substr($tokens['expiry_date'], 2)))) . '&nbsp;&nbsp;' . tep_output_string_protected($tokens['card_type']) . '</td>' .
+          do {
+            $content .= '<tr class="moduleRow" id="sagepay_card_' . $Qtokens->valueInt('id') . '">' .
+                        '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="' . $Qtokens->valueInt('id') . '" /></td>' .
+                        '  <td valign="top">' . $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2)) . '/' . strftime('%Y', mktime(0, 0, 0, 1, 1, (2000 + substr($Qtokens->value('expiry_date'), 2)))) . '&nbsp;&nbsp;' . $Qtokens->valueProtected('card_type') . '</td>' .
                         '</tr>';
 
             if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
-              $content .= '<tr class="moduleRowExtra" id="sagepay_card_cvc_' . (int)$tokens['id'] . '">' .
+              $content .= '<tr class="moduleRowExtra" id="sagepay_card_cvc_' . $Qtokens->valueInt('id') . '">' .
                           '  <td width="40" valign="top">&nbsp;</td>' .
-                          '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '&nbsp;' . tep_draw_input_field('cc_cvc_tokens_nh-dns[' . (int)$tokens['id'] . ']', '', 'size="5" maxlength="4"') . '</td>' .
+                          '  <td valign="top">' . MODULE_PAYMENT_SAGE_PAY_DIRECT_CREDIT_CARD_CVC . '&nbsp;' . tep_draw_input_field('cc_cvc_tokens_nh-dns[' . $Qtokens->valueInt('id') . ']', '', 'size="5" maxlength="4"') . '</td>' .
                           '</tr>';
             }
-          }
+          } while ($Qtokens->fetch());
 
           $content .= '<tr class="moduleRow" id="sagepay_card_0">' .
                       '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="0" /></td>' .
@@ -231,7 +236,9 @@
     }
 
     function before_process() {
-      global $customer_id, $order, $order_totals, $cartID, $sage_pay_response;
+      global $order, $order_totals, $sage_pay_response;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $transaction_response = null;
       $sage_pay_response = null;
@@ -280,12 +287,10 @@
 
         if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TOKENS == 'True' ) {
           if ( isset($_POST['sagepay_card']) && is_numeric($_POST['sagepay_card']) && ($_POST['sagepay_card'] > 0) ) {
-            $token_query = tep_db_query("select sagepay_token from customers_sagepay_tokens where id = '" . (int)$_POST['sagepay_card'] . "' and customers_id = '" . (int)$customer_id . "'");
+            $Qtoken = $OSCOM_Db->get('customers_sagepay_tokens', 'sagepay_token', ['id' => $_POST['sagepay_card'], 'customers_id' => $_SESSION['customer_id']]);
 
-            if ( tep_db_num_rows($token_query) == 1 ) {
-              $token = tep_db_fetch_array($token_query);
-
-              $sagepay_token = $token['sagepay_token'];
+            if ( $Qtoken->fetch() !== false ) {
+              $sagepay_token = $Qtoken->value('sagepay_token');
 
               if ( isset($_POST['cc_cvc_tokens_nh-dns']) && is_array($_POST['cc_cvc_tokens_nh-dns']) && isset($_POST['cc_cvc_tokens_nh-dns'][$_POST['sagepay_card']]) ) {
                 $sagepay_token_cvc = substr($_POST['cc_cvc_tokens_nh-dns'][$_POST['sagepay_card']], 0, 4);
@@ -377,7 +382,7 @@
         $params = array('VPSProtocol' => $this->api_version,
                         'ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
                         'Vendor' => substr(MODULE_PAYMENT_SAGE_PAY_DIRECT_VENDOR_LOGIN_NAME, 0, 15),
-                        'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                        'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
@@ -397,7 +402,7 @@
                         'DeliveryPhone' => substr($order->customer['telephone'], 0, 20),
                         'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                         'Apply3DSecure' => '0',
-                        'VendorData' => 'Customer ID ' . $customer_id);
+                        'VendorData' => 'Customer ID ' . $_SESSION['customer_id']);
 
         if ( isset($sagepay_token) ) {
           $params['Token'] = $sagepay_token;
@@ -499,29 +504,15 @@
       }
 
       if ( isset($params['CreateToken']) && ($params['CreateToken'] == '1') ) {
-        global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
-
-        tep_session_register('sagepay_token_cc_type');
-        $sagepay_token_cc_type = $params['CardType'];
-
-        tep_session_register('sagepay_token_cc_number');
-        $sagepay_token_cc_number = str_repeat('X', strlen($params['CardNumber']) - 4) . substr($params['CardNumber'], -4);
-
-        tep_session_register('sagepay_token_cc_expiry_date');
-        $sagepay_token_cc_expiry_date = $params['ExpiryDate'];
+        $_SESSION['sagepay_token_cc_type'] = $params['CardType'];
+        $_SESSION['sagepay_token_cc_number'] = str_repeat('X', strlen($params['CardNumber']) - 4) . substr($params['CardNumber'], -4);
+        $_SESSION['sagepay_token_cc_expiry_date'] = $params['ExpiryDate'];
       }
 
       if ($sage_pay_response['Status'] == '3DAUTH') {
-        global $sage_pay_direct_acsurl, $sage_pay_direct_pareq, $sage_pay_direct_md;
-
-        tep_session_register('sage_pay_direct_acsurl');
-        $sage_pay_direct_acsurl = $sage_pay_response['ACSURL'];
-
-        tep_session_register('sage_pay_direct_pareq');
-        $sage_pay_direct_pareq = $sage_pay_response['PAReq'];
-
-        tep_session_register('sage_pay_direct_md');
-        $sage_pay_direct_md = $sage_pay_response['MD'];
+        $_SESSION['sage_pay_direct_acsurl'] = $sage_pay_response['ACSURL'];
+        $_SESSION['sage_pay_direct_pareq'] = $sage_pay_response['PAReq'];
+        $_SESSION['sage_pay_direct_md'] = $sage_pay_response['MD'];
 
         tep_redirect(tep_href_link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
       }
@@ -540,7 +531,9 @@
     }
 
     function after_process() {
-      global $customer_id, $insert_id, $sage_pay_response;
+      global $insert_id, $sage_pay_response;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $result = array();
 
@@ -573,18 +566,17 @@
       }
 
       if ( isset($sage_pay_response['Token']) && isset($_SESSION['sagepay_token_cc_number']) ) {
-        global $sagepay_token_cc_type, $sagepay_token_cc_number, $sagepay_token_cc_expiry_date;
+        $Qcheck = $OSCOM_Db->get('customers_sagepay_tokens', 'id', ['customers_id' => $_SESSION['customer_id'], 'sagepay_token' => $sage_pay_response['Token']], null, 1);
 
-        $check_query = tep_db_query("select id from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' and sagepay_token = '" . tep_db_input($sage_pay_response['Token']) . "' limit 1");
-        if ( tep_db_num_rows($check_query) < 1 ) {
-          $sql_data_array = array('customers_id' => $customer_id,
+        if ($Qcheck->fetch() === false) {
+          $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                   'sagepay_token' => $sage_pay_response['Token'],
-                                  'card_type' => $sagepay_token_cc_type,
-                                  'number_filtered' => $sagepay_token_cc_number,
-                                  'expiry_date' => $sagepay_token_cc_expiry_date,
+                                  'card_type' => $_SESSION['sagepay_token_cc_type'],
+                                  'number_filtered' => $_SESSION['sagepay_token_cc_number'],
+                                  'expiry_date' => $_SESSION['sagepay_token_cc_expiry_date'],
                                   'date_added' => 'now()');
 
-          tep_db_perform('customers_sagepay_tokens', $sql_data_array);
+          $OSCOM_Db->save('customers_sagepay_tokens', $sql_data_array);
         }
 
         $result['Token Created'] = 'Yes';
@@ -613,7 +605,7 @@
                               'customer_notified' => '0',
                               'comments' => trim($result_string));
 
-      tep_db_perform('orders_status_history', $sql_data_array);
+      $OSCOM_Db->save('orders_status_history', $sql_data_array);
 
       if (isset($_SESSION['sage_pay_direct_acsurl'])) {
         unset($_SESSION['sage_pay_direct_acsurl']);
@@ -670,14 +662,12 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_STATUS');
     }
 
     function install($parameter = null) {
+      $OSCOM_Db = Registry::get('Db');
+
       $params = $this->getParams();
 
       if (isset($parameter)) {
@@ -705,12 +695,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform('configuration', $sql_data_array);
+        $OSCOM_Db->save('configuration', $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
@@ -728,7 +718,11 @@
     }
 
     function getParams() {
-      if ( tep_db_num_rows(tep_db_query("show tables like 'customers_sagepay_tokens'")) != 1 ) {
+      $OSCOM_Db = Registry::get('Db');
+
+      $Qcheck = $OSCOM_Db->query('show tables like "customers_sagepay_tokens"');
+
+      if ($Qcheck->fetch() === false) {
         $sql = <<<EOD
 CREATE TABLE customers_sagepay_tokens (
   id int NOT NULL auto_increment,
@@ -744,32 +738,30 @@ CREATE TABLE customers_sagepay_tokens (
 );
 EOD;
 
-        tep_db_query($sql);
+        $OSCOM_Db->exec($sql);
       }
 
       if (!defined('MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from orders_status where orders_status_name = 'Sage Pay [Transactions]' limit 1");
+        $Qcheck = $OSCOM_Db->get('orders_status', 'orders_status_id', ['orders_status_name' => 'Sage Pay [Transactions]'], null, 1);
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from orders_status");
-          $status = tep_db_fetch_array($status_query);
+        if ($Qcheck->fetch() === false) {
+          $Qstatus = $OSCOM_Db->get('orders_status', 'max(orders_status_id) as status_id');
 
-          $status_id = $status['status_id']+1;
+          $status_id = $Qstatus->valueInt('status_id') + 1;
 
           $languages = tep_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into orders_status (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
-          }
-
-          $flags_query = tep_db_query("describe orders_status public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update orders_status set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+            $OSCOM_Db->save('orders_status', [
+              'orders_status_id' => $status_id,
+              'language_id' => $lang['id'],
+              'orders_status_name' => 'Sage Pay [Transactions]',
+              'public_flag' => 0,
+              'downloads_flag' => 0
+            ]);
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
-
-          $status_id = $check['orders_status_id'];
+          $status_id = $Qcheck->valueInt('orders_status_id');
         }
       } else {
         $status_id = MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_ORDER_STATUS_ID;
@@ -999,7 +991,7 @@ EOD;
     }
 
     function deleteCard($token, $token_id) {
-      global $customer_id;
+      $OSCOM_Db = Registry::get('Db');
 
       if ( MODULE_PAYMENT_SAGE_PAY_DIRECT_TRANSACTION_SERVER == 'Live' ) {
         $gateway_url = 'https://live.sagepay.com/gateway/service/removetoken.vsp';
@@ -1030,9 +1022,7 @@ EOD;
         }
       }
 
-      tep_db_query("delete from customers_sagepay_tokens where id = '" . (int)$token_id . "' and customers_id = '" . (int)$customer_id . "' and sagepay_token = '" . tep_db_prepare_input(tep_db_input($token)) . "'");
-
-      return (tep_db_affected_rows() === 1);
+      return $OSCOM_Db->delete('customers_sagepay_tokens', ['id' => $token_id, 'customers_id' => $_SESSION['customer_id'], 'sagepay_token' => $token]) === 1;
     }
 
     function loadErrorMessages() {
