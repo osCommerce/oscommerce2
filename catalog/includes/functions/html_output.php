@@ -10,8 +10,6 @@
   Released under the GNU General Public License
 */
 
-  use OSC\OM\HTML;
-
 ////
 // The HTML image wrapper function
   function tep_image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '') {
@@ -111,12 +109,6 @@
     }
 
     return $form;
-  }
-
-////
-// Output a form password field
-  function tep_draw_password_field($name, $value = '', $parameters = 'maxlength="40"') {
-    return HTML::inputField($name, $value, $parameters, 'password', false);
   }
 
 ////

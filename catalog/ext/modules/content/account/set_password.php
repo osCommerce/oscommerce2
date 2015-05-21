@@ -85,7 +85,7 @@
       <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"');
+        echo HTML::passwordField('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -94,7 +94,7 @@
       <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
+        echo HTML::passwordField('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>

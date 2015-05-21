@@ -22,7 +22,7 @@ use OSC\OM\OSCOM;
     <div class="form-group">
       <label for="inputPassword" class="control-label col-xs-4"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-xs-8">
-        <?php echo tep_draw_password_field('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"'); ?>
+        <?php echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"'); ?>
       </div>
     </div>
 

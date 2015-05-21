@@ -69,4 +69,9 @@ class HTML
 
         return $field;
     }
+
+    public static function passwordField($name, $value = '', $parameters = 'maxlength="40"')
+    {
+        return static::inputField($name, $value, $parameters, 'password', false);
+    }
 }
