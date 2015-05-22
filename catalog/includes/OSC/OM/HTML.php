@@ -168,6 +168,51 @@ class HTML
         return $field;
     }
 
+    public static function selectField($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control')
+    {
+        $field = '<select name="' . static::output($name) . '"';
+
+        if ($required == true) {
+            $field .= ' required aria-required="true"';
+        }
+
+        if (!empty($parameters)) {
+            $field .= ' ' . $parameters;
+        }
+
+        if (!empty($class)) {
+            $field .= ' class="' . $class . '"';
+        }
+
+        $field .= '>';
+
+        if ($required == true) {
+            $field .= '<option value="">' . PULL_DOWN_DEFAULT . '</option>';
+        }
+
+        if (empty($default) && ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])))) {
+            if (isset($_GET[$name]) && is_string($_GET[$name])) {
+                $default = $_GET[$name];
+            } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
+                $default = $_POST[$name];
+            }
+        }
+
+        foreach ($values as $v) {
+            $field .= '<option value="' . static::output($v['id']) . '"';
+
+            if ($v['id'] == $default) {
+                $field .= ' selected="selected"';
+            }
+
+            $field .= '>' . static::outputProtected($v['text']) . '</option>';
+        }
+
+        $field .= '</select>';
+
+        return $field;
+    }
+
     public static function hiddenField($name, $value = '', $parameters = '')
     {
         $field = '<input type="hidden" name="' . static::output($name) . '"';

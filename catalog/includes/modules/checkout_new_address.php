@@ -139,7 +139,7 @@
             while ($Qzones->fetch()) {
               $zones_array[] = array('id' => $Qzones->value('zone_name'), 'text' => $Qzones->value('zone_name'));
             }
-            echo tep_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');
+            echo HTML::selectField('state', $zones_array, 0, 'id="inputState"');
           } else {
             echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
           }

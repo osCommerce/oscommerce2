@@ -1460,4 +1460,17 @@
   function tep_convert_linefeeds($from, $to, $string) {
       return str_replace($from, $to, $string);
   }
+
+////
+// Creates a pull-down list of countries
+  function tep_get_country_list($name, $selected = '', $parameters = '') {
+    $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
+    $countries = tep_get_countries();
+
+    for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
+      $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
+    }
+
+    return HTML::selectField($name, $countries_array, $selected, $parameters);
+  }
 ?>

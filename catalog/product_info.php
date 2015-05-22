@@ -203,7 +203,7 @@
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $Qpa->value('products_options_name') . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, '', true); ?>
+          <?php echo HTML::selectField('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, '', true); ?>
         </div>
       </div>
     <?php

@@ -92,58 +92,6 @@
   }
 
 ////
-// Output a form pull down menu
-// 2.4 - automatically pass form-control css class
-  function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {
-    $field = '<select ';
-
-    if ($required == true) $field .= 'required aria-required="true" ';
-
-    $field .= 'name="' . tep_output_string($name) . '"';
-
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
-
-    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
-
-    $field .= '>';
-    
-    if ($required == true) $field .= '<option value="">' . PULL_DOWN_DEFAULT . '</option>';
-
-    if (empty($default) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
-      if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $default = stripslashes($_GET[$name]);
-      } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $default = stripslashes($_POST[$name]);
-      }
-    }
-
-    for ($i=0, $n=sizeof($values); $i<$n; $i++) {
-      $field .= '<option value="' . tep_output_string($values[$i]['id']) . '"';
-      if ($default == $values[$i]['id']) {
-        $field .= ' selected="selected"';
-      }
-
-      $field .= '>' . tep_output_string($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
-    }
-    $field .= '</select>';
-
-    return $field;
-  }
-
-////
-// Creates a pull-down list of countries
-  function tep_get_country_list($name, $selected = '', $parameters = '') {
-    $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
-    $countries = tep_get_countries();
-
-    for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
-      $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
-    }
-
-    return tep_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
-  }
-
-////
 // Output a jQuery UI Button
   function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
     static $button_counter = 1;

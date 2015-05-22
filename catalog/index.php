@@ -290,7 +290,7 @@
         while ($Qfilter->fetch()) {
           $options[] = array('id' => $Qfilter->valueInt('id'), 'text' => $Qfilter->value('name'));
         }
-        echo tep_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo HTML::selectField('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
         echo '</p></form></div>' . "\n";
       }
     }
