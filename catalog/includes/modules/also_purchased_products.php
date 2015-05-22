@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   if (isset($_GET['products_id'])) {
@@ -27,7 +28,7 @@
       foreach ($orders as $o) {
         $also_pur_prods_content .= '<div class="col-sm-6 col-md-4">';
         $also_pur_prods_content .= '  <div class="thumbnail">';
-        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . tep_image(DIR_WS_IMAGES . $o['products_image'], $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
+        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . $o['products_image'], $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
         $also_pur_prods_content .= '    <div class="caption">';
         $also_pur_prods_content .= '      <p class="text-center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . $o['products_name'] . '</a></p>';
         $also_pur_prods_content .= '    </div>';

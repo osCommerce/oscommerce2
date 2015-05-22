@@ -40,7 +40,7 @@
         $output = NULL;
 
         foreach ( explode(';', MODULE_BOXES_CARD_ACCEPTANCE_LOGOS) as $logo ) {
-          $output .= tep_image(DIR_WS_IMAGES . 'card_acceptance/' . basename($logo), null, null, null, null, false);
+          $output .= HTML::image(DIR_WS_IMAGES . 'card_acceptance/' . basename($logo), null, null, null, null, false);
         }
 
         ob_start();
@@ -123,7 +123,7 @@
       $output = '<ul style="list-style-type: none; margin: 0; padding: 5px; margin-bottom: 10px;">';
 
       foreach (explode(';', $text) as $card) {
-        $output .= '<li style="padding: 2px;">' . tep_image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . basename($card), basename($card)) . '</li>';
+        $output .= '<li style="padding: 2px;">' . HTML::image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . basename($card), basename($card)) . '</li>';
       }
 
       $output .= '</ul>';
@@ -155,7 +155,7 @@
               '<ul id="ca_logos" style="list-style-type: none; margin: 0; padding: 5px; margin-bottom: 10px;">';
 
     foreach ($values_array as $file) {
-      $output .= '<li style="padding: 2px;">' . tep_image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . $file, $file) . HTML::hiddenField('bm_card_acceptance_logos[]', $file) . '</li>';
+      $output .= '<li style="padding: 2px;">' . HTML::image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . $file, $file) . HTML::hiddenField('bm_card_acceptance_logos[]', $file) . '</li>';
     }
 
     $output .= '</ul>';
@@ -164,7 +164,7 @@
 
     foreach ($files_array as $file) {
       if ( !in_array($file, $values_array) ) {
-        $output .= '<li style="padding: 2px;">' . tep_image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . $file, $file) . HTML::hiddenField('bm_card_acceptance_logos[]', $file) . '</li>';
+        $output .= '<li style="padding: 2px;">' . HTML::image(DIR_WS_CATALOG_IMAGES . 'card_acceptance/' . $file, $file) . HTML::hiddenField('bm_card_acceptance_logos[]', $file) . '</li>';
       }
     }
 

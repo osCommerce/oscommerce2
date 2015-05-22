@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -48,7 +49,7 @@
           $manufacturer_info_string = null;
 
           if (!empty($Qmanufacturer->value('manufacturers_image'))) {
-            $manufacturer_info_string .= '<div class="center-block">' . tep_image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
+            $manufacturer_info_string .= '<div class="center-block">' . HTML::image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {

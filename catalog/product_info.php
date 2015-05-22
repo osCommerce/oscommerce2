@@ -98,7 +98,7 @@
 
 <?php
     if ( !empty($Qproduct->value('products_image')) ) {
-      echo '    ' . tep_image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
+      echo '    ' . HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
 
       $photoset_layout = '1';
 
@@ -133,7 +133,7 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $image['htmlcontent'] . '</div>';
           }
 
-          echo '      ' . tep_image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
+          echo '      ' . HTML::image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
         }
 ?>
 
@@ -147,7 +147,7 @@
 ?>
 
     <div class="piGal pull-right">
-      <?php echo tep_image(DIR_WS_IMAGES . $Qproduct->value('products_image'), $Qproduct->value('products_name')); ?>
+      <?php echo HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), $Qproduct->value('products_name')); ?>
     </div>
 
 <?php

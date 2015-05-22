@@ -1,9 +1,10 @@
 <?php
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 ?>
 <div class="col-sm-6 col-md-4">
   <div class="thumbnail equal-height">
-    <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><?php echo tep_image(DIR_WS_IMAGES . $Qnew->value('products_image'), $Qnew->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></a>
+    <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><?php echo HTML::image(DIR_WS_IMAGES . $Qnew->value('products_image'), $Qnew->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></a>
     <div class="caption">
       <p class="text-center"><a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><?php echo $Qnew->value('products_name'); ?></a></p>
       <hr>

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class table {
@@ -81,7 +82,7 @@
         $this->quotes['tax'] = tep_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
 
-      if (tep_not_null($this->icon)) $this->quotes['icon'] = tep_image($this->icon, $this->title);
+      if (tep_not_null($this->icon)) $this->quotes['icon'] = HTML::image($this->icon, $this->title);
 
       return $this->quotes;
     }

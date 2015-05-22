@@ -81,7 +81,7 @@
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $products_name .= '<tr>';
 
-      $products_name .= '  <td valign="top" class="hidden-xs"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . tep_image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+      $products_name .= '  <td valign="top" class="hidden-xs"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . HTML::image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
                         '  <td valign="top"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>';
 
       if (STOCK_CHECK == 'true') {

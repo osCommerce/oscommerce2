@@ -92,7 +92,7 @@
 
       echo '<div class="col-xs-6 col-sm-4">';
       echo '  <div class="text-center">';
-      echo '    <a href="' . OSCOM::link('index.php', $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
+      echo '    <a href="' . OSCOM::link('index.php', $cPath_new) . '">' . HTML::image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
       echo '    <div class="caption text-center">';
       echo '      <h5><a href="' . OSCOM::link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
       echo '    </div>';

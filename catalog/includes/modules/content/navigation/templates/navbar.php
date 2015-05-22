@@ -1,4 +1,5 @@
 <?php
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 ?>
 <nav class="navbar navbar-inverse navbar-no-corners navbar-no-margin" role="navigation">
@@ -35,7 +36,7 @@ use OSC\OM\OSCOM;
               if (count($lng->catalog_languages) > 1) {
                 echo '<li class="divider"></li>';
                 foreach($lng->catalog_languages as $key => $value) {
-                  echo '<li><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . tep_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name'], null, null, null, false) . ' ' . $value['name'] . '</a></li>';
+                  echo '<li><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . HTML::image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name'], null, null, null, false) . ' ' . $value['name'] . '</a></li>';
                 }
               }
               // currencies

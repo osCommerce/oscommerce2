@@ -41,6 +41,64 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
+    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '')
+    {
+        if ((empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false')) {
+            return false;
+        }
+
+// alt is added to the img tag even if it is null to prevent browsers from outputting
+// the image filename as default
+        $image = '<img src="' . static::output($src) . '" alt="' . static::output($alt) . '"';
+
+        if (!empty($alt)) {
+            $image .= ' title="' . static::output($alt) . '"';
+        }
+
+        if ((CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height))) {
+            if ($image_size = @getimagesize($src)) {
+                if (empty($width) && !empty($height)) {
+                    $ratio = $height / $image_size[1];
+                    $width = (int)($image_size[0] * $ratio);
+                } elseif (!empty($width) && empty($height)) {
+                    $ratio = $width / $image_size[0];
+                    $height = (int)($image_size[1] * $ratio);
+                } elseif (empty($width) && empty($height)) {
+                    $width = $image_size[0];
+                    $height = $image_size[1];
+                }
+            } elseif (IMAGE_REQUIRED == 'false') {
+                return false;
+            }
+        }
+
+        if (!empty($width) && !empty($height)) {
+            $image .= ' width="' . static::output($width) . '" height="' . static::output($height) . '"';
+        }
+
+        $class = [];
+
+        if ($responsive === true) {
+            $class[] = 'img-responsive';
+        }
+
+        if (!empty($bootstrap_css)) {
+            $class[] = $bootstrap_css;
+        }
+
+        if (!empty($class)) {
+            $image .= ' class="' . implode(' ', $class) . '"';
+        }
+
+        if (!empty($parameters)) {
+            $image .= ' ' . $parameters;
+        }
+
+        $image .= ' />';
+
+        return $image;
+    }
+
     public static function form($name, $action, $method = 'post', $parameters = '', array $flags = [])
     {
         if (!isset($flags['tokenize']) || !is_bool($flags['tokenize'])) {
