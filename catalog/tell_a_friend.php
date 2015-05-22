@@ -187,7 +187,7 @@
       <label for="inputMessage" class="control-label col-sm-3"><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_textarea_field('message', 'soft', 40, 8, NULL, 'required aria-required="true" id="inputMessage" placeholder="' . ENTRY_FORM_TITLE_FRIEND_MESSAGE_TEXT . '"');
+        echo HTML::textareaField('message', 'soft', 40, 8, NULL, 'required aria-required="true" id="inputMessage" placeholder="' . ENTRY_FORM_TITLE_FRIEND_MESSAGE_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>

@@ -128,7 +128,7 @@
       <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_textarea_field('review', 'soft', 60, 15, NULL, 'minlength="' . REVIEW_TEXT_MIN_LENGTH . '" required aria-required="true" id="inputReview" placeholder="' . ENTRY_REVIEW_TEXT . '"');
+        echo HTML::textareaField('review', 'soft', 60, 15, NULL, 'minlength="' . REVIEW_TEXT_MIN_LENGTH . '" required aria-required="true" id="inputReview" placeholder="' . ENTRY_REVIEW_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>

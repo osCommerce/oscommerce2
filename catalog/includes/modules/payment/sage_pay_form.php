@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -614,6 +615,6 @@
   }
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return HTML::textareaField('configuration[' . $key . ']', 'soft', 60, 5, $value);
   }
 ?>

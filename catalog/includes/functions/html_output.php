@@ -112,34 +112,6 @@
   }
 
 ////
-// Output a form textarea field
-// The $wrap parameter is no longer used in the core xhtml template
-// 2.4 - automatically pass form-control css class
-  function tep_draw_textarea_field($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control') {
-    $field = '<textarea name="' . tep_output_string($name) . '" cols="' . tep_output_string($width) . '" rows="' . tep_output_string($height) . '"';
-
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
-
-    if (tep_not_null($class)) $field .= ' class="' . $class . '"';
-
-    $field .= '>';
-
-    if ( ($reinsert_value == true) && ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) ) {
-      if (isset($_GET[$name]) && is_string($_GET[$name])) {
-        $field .= tep_output_string_protected(stripslashes($_GET[$name]));
-      } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
-        $field .= tep_output_string_protected(stripslashes($_POST[$name]));
-      }
-    } elseif (tep_not_null($text)) {
-      $field .= tep_output_string_protected($text);
-    }
-
-    $field .= '</textarea>';
-
-    return $field;
-  }
-
-////
 // Output a form hidden field
   function tep_draw_hidden_field($name, $value = '', $parameters = '') {
     $field = '<input type="hidden" name="' . tep_output_string($name) . '"';

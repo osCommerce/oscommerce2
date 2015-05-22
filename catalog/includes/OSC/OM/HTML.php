@@ -105,4 +105,33 @@ class HTML
     {
         return static::selectionField($name, 'radio', $value, $checked, $parameters);
     }
+
+    public static function textareaField($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control')
+    {
+        $field = '<textarea name="' . static::output($name) . '" cols="' . static::output($width) . '" rows="' . static::output($height) . '"';
+
+        if (!empty($parameters)) {
+            $field .= ' ' . $parameters;
+        }
+
+        if (!empty($class)) {
+            $field .= ' class="' . $class . '"';
+        }
+
+        $field .= '>';
+
+        if (($reinsert_value == true) && ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])))) {
+            if (isset($_GET[$name]) && is_string($_GET[$name])) {
+                $field .= static::outputProtected($_GET[$name]);
+            } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
+                $field .= static::outputProtected($_POST[$name]);
+            }
+        } elseif (!empty($text)) {
+            $field .= static::outputProtected($text);
+        }
+
+        $field .= '</textarea>';
+
+        return $field;
+    }
 }
