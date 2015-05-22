@@ -26,7 +26,7 @@ use OSC\OM\OSCOM;
       </div>
     </div>
 
-    <p class="text-right"><?php echo tep_draw_button(IMAGE_BUTTON_LOGIN, 'glyphicon glyphicon-log-in', null, 'primary', null, 'btn-success btn-block'); ?></p>
+    <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_LOGIN, 'glyphicon glyphicon-log-in', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
     </form>
     

@@ -99,7 +99,7 @@
         }
       }
 
-      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
+      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . HTML::button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
 
       $products_name .= '</td>';
 
@@ -135,7 +135,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
   </div>
 
 <?php
@@ -169,7 +169,7 @@
   <?php echo TEXT_CART_EMPTY; ?>
 </div>
 
-<p class="text-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
+<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
 
 
 <?php

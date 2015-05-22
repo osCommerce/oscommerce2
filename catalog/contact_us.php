@@ -71,7 +71,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -116,7 +116,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
 

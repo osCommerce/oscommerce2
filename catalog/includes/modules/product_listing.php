@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   if ($messageStack->size('product_action') > 0) {
@@ -143,7 +144,7 @@
     } else {
       $prod_list_contents .= '      <div class="col-xs-6"><div class="btn-group" role="group"><button type="button" class="btn btn-default">' . $currencies->display_price($Qlisting->valueDecimal('products_price'), tep_get_tax_rate($Qlisting->valueInt('products_tax_class_id'))) . '</button></div></div>';
     }
-    $prod_list_contents .= '       <div class="col-xs-6 text-right">' . tep_draw_button(IMAGE_BUTTON_BUY_NOW, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'sort', 'cPath')) . 'action=buy_now&products_id=' . $Qlisting->valueInt('products_id')), NULL, NULL, 'btn-success btn-sm') . '</div>';
+    $prod_list_contents .= '       <div class="col-xs-6 text-right">' . HTML::button(IMAGE_BUTTON_BUY_NOW, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action', 'sort', 'cPath')) . 'action=buy_now&products_id=' . $Qlisting->valueInt('products_id')), NULL, NULL, 'btn-success btn-sm') . '</div>';
     $prod_list_contents .= '      </div>';
 
     $prod_list_contents .= '    </div>';

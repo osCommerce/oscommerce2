@@ -54,7 +54,7 @@
     <br />
 
     <div class="row">
-      <div class="col-xs-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_SEARCH, 'glyphicon glyphicon-search', null, 'primary', null, 'btn-success'); ?></div>
+      <div class="col-xs-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_SEARCH, 'glyphicon glyphicon-search', null, 'primary', null, 'btn-success'); ?></div>
       <div class="col-xs-6"><a data-toggle="modal" data-target="#helpSearch" class="btn btn-link"><?php echo TEXT_SEARCH_HELP_LINK; ?></a></div>
     </div>
 

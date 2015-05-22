@@ -50,7 +50,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), null, null, 'btn-default btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), null, null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -242,8 +242,8 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'glyphicon glyphicon-comment', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'glyphicon glyphicon-comment', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
   </div>
 
   </form>

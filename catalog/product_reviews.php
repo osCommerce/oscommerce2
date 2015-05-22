@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -89,7 +90,7 @@
     <div class="col-sm-4 text-center">
       <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
+      <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
 
     <div class="clearfix"></div>
@@ -187,8 +188,8 @@
   <div class="clearfix"></div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_WRITE_REVIEW, 'glyphicon glyphicon-comment', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('product_info.php', tep_get_all_get_params())); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_WRITE_REVIEW, 'glyphicon glyphicon-comment', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('product_info.php', tep_get_all_get_params())); ?></div>
   </div>
 </div>
 

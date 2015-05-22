@@ -58,7 +58,7 @@
 
   <div class="contentText">
     <div class="panel panel-info">
-      <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_VIEW, 'glyphicon glyphicon-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . (int)$order['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs pull-right'); ?></div>
+      <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'glyphicon glyphicon-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . (int)$order['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs pull-right'); ?></div>
       <div class="panel-body">
         <div class="row">
           <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . tep_date_long($order['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . HTML::outputProtected($order_name); ?></div>
@@ -96,7 +96,7 @@
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
   </div>
 </div>
 

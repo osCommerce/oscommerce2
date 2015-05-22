@@ -235,4 +235,57 @@ class HTML
 
         return $field;
     }
+
+    public static function button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null)
+    {
+        static $button_counter = 1;
+
+        $types = ['submit', 'button', 'reset'];
+
+        if (!isset($params['type'])) {
+            $params['type'] = 'submit';
+        }
+
+        if (!in_array($params['type'], $types)) {
+            $params['type'] = 'submit';
+        }
+
+        if (($params['type'] == 'submit') && isset($link)) {
+              $params['type'] = 'button';
+        }
+
+        $button = '';
+
+        if (($params['type'] == 'button') && isset($link)) {
+            $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+
+            if (isset($params['newwindow'])) {
+                $button .= ' target="_blank"';
+            }
+        } else {
+            $button .= '<button id="tdb' . $button_counter . '" type="' . static::output($params['type']) . '"';
+        }
+
+        if (isset($params['params'])) {
+            $button .= ' ' . $params['params'];
+        }
+
+        $button .= ' class="btn ' . (isset($class) ? $class : 'btn-default') . '">';
+
+        if (isset($icon) && !empty($icon)) {
+            $button .= '<span class="' . $icon . '"></span> ';
+        }
+
+        $button .= $title;
+
+        if (($params['type'] == 'button') && isset($link)) {
+            $button .= '</a>';
+        } else {
+            $button .= '</button>';
+        }
+
+        $button_counter++;
+
+        return $button;
+    }
 }

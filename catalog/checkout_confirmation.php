@@ -117,14 +117,14 @@
       <?php
       if (sizeof($order->info['tax_groups']) > 1) {
         ?>
-        <th colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
+        <th colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
         <th align="right"><strong><?php echo HEADING_TAX; ?></strong></th>
         <th align="right"><strong><?php echo HEADING_TOTAL; ?></strong></th>
         <?php
       }
       else {
         ?>
-        <th colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
+        <th colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
         <?php
       }
       ?>
@@ -177,7 +177,7 @@
 
       <div class="col-sm-4">
         <div class="panel panel-primary">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
@@ -189,7 +189,7 @@
         ?>
         <div class="col-sm-4">
           <div class="panel panel-info">
-            <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+            <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
 
             <div class="panel-body">
               <?php echo $order->info['shipping_method']; ?>
@@ -255,7 +255,7 @@
 
       <div class="col-sm-4">
         <div class="panel panel-primary">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
           </div>
@@ -264,7 +264,7 @@
 
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo $order->info['payment_method']; ?>
           </div>
@@ -281,7 +281,7 @@
 ?>
 
   <div class="page-header">
-    <h4><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . tep_draw_button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></h4>
+    <h4><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></h4>
   </div>
 
   <div class="contentText">
@@ -302,7 +302,7 @@
     echo $payment_modules->process_button();
   }
 
-  echo tep_draw_button(IMAGE_BUTTON_CONFIRM_ORDER, 'glyphicon glyphicon-ok', null, 'primary', null, 'btn-success btn-block');
+  echo HTML::button(IMAGE_BUTTON_CONFIRM_ORDER, 'glyphicon glyphicon-ok', null, 'primary', null, 'btn-success btn-block');
 ?>
 
     </div>

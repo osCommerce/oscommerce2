@@ -91,64 +91,6 @@
     return tep_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
-////
-// Output a jQuery UI Button
-  function tep_draw_button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null) {
-    static $button_counter = 1;
-
-    $types = array('submit', 'button', 'reset');
-
-    if ( !isset($params['type']) ) {
-      $params['type'] = 'submit';
-    }
-
-    if ( !in_array($params['type'], $types) ) {
-      $params['type'] = 'submit';
-    }
-
-    if ( ($params['type'] == 'submit') && isset($link) ) {
-      $params['type'] = 'button';
-    }
-
-    $button = NULL;
-
-    if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
-
-      if ( isset($params['newwindow']) ) {
-        $button .= ' target="_blank"';
-      }
-    } else {
-      $button .= '<button id="tdb' . $button_counter . '" type="' . tep_output_string($params['type']) . '"';
-    }
-
-    if ( isset($params['params']) ) {
-      $button .= ' ' . $params['params'];
-    }
-
-    $button .= ' class="btn ';
-    $button .= (isset($class)) ? $class : 'btn-default';
-    $button .= '"';
-
-    $button .= '>';
-
-    if (isset($icon) && tep_not_null($icon)) {
-      $button .= ' <span class="' . $icon . '"></span> ';
-    }
-
-    $button .= $title;
-
-    if ( ($params['type'] == 'button') && isset($link) ) {
-      $button .= '</a>';
-    } else {
-      $button .= '</button>';
-    }
-
-    $button_counter++;
-
-    return $button;
-  }
-
   // review stars
   function tep_draw_stars($rating = 0, $meta = false) {
     $stars = str_repeat('<span class="glyphicon glyphicon-star"></span>', (int)$rating);

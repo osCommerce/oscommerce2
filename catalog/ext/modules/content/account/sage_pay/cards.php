@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   chdir('../../../../../');
@@ -86,7 +87,7 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
+      <span style="float: right;"><?php echo HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
       <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
     </div>
 
@@ -106,7 +107,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
   </div>
 </div>
 

@@ -304,8 +304,8 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
   </div>
 
 </div>
@@ -346,8 +346,8 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
   </div>
 
 <?php
@@ -360,8 +360,8 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
   </div>
 
 <?php

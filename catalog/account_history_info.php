@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -202,7 +203,7 @@
 
   <div class="clearfix"></div>
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
   </div>
 </div>
 

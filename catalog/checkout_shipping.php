@@ -184,7 +184,7 @@
         <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
       </div>
       <div class="clearfix"></div>
-      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
       <br>
       <div class="clearfix"></div>
     </div>
@@ -331,7 +331,7 @@
   </div>
 
   <div class="contentText">
-    <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+    <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
 
   <div class="clearfix"></div>

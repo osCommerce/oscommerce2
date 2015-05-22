@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -40,7 +41,7 @@
     </div>
   </div>
 
-  <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>
+  <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>
 </div>
 
 <?php

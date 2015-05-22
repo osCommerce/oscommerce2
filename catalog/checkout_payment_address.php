@@ -322,7 +322,7 @@
 ?>
 
   <div class="contentText">
-    <div><?php echo HTML::hiddenField('action', 'submit') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+    <div><?php echo HTML::hiddenField('action', 'submit') . HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
 
 <?php
@@ -330,7 +330,7 @@
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('checkout_payment_address.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('checkout_payment_address.php', '', 'SSL')); ?>
   </div>
 
 <?php
