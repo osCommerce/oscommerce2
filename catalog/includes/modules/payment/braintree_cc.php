@@ -790,7 +790,7 @@ EOD;
   }
 
   function tep_cfg_braintree_cc_set_client_key($value, $name) {
-    return HTML::textareaField('configuration[' . $name . ']', '', '50', '12', $value);
+    return HTML::textareaField('configuration[' . $name . ']', '50', '12', $value);
   }
 
   function tep_cfg_braintree_cc_show_client_key($key) {

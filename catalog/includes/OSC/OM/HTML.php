@@ -106,7 +106,7 @@ class HTML
         return static::selectionField($name, 'radio', $value, $checked, $parameters);
     }
 
-    public static function textareaField($name, $wrap, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control')
+    public static function textareaField($name, $width, $height, $text = '', $parameters = '', $reinsert_value = true, $class = 'form-control')
     {
         $field = '<textarea name="' . static::output($name) . '" cols="' . static::output($width) . '" rows="' . static::output($height) . '"';
 

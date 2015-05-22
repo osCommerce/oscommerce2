@@ -615,6 +615,6 @@
   }
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return HTML::textareaField('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return HTML::textareaField('configuration[' . $key . ']', 60, 5, $value);
   }
 ?>
