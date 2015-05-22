@@ -110,7 +110,7 @@
           $result = json_decode($result, true);
 
           if ( is_writable(DIR_FS_CACHE) ) {
-            file_put_contents($filename, serialize($result), LOCK_EX);
+            file_put_contents($filename, serialize($result));
           }
         }
       }

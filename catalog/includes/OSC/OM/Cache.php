@@ -28,7 +28,7 @@ class Cache
         }
 
         if (is_writable(OSCOM_BASE_DIR . 'work/')) {
-            return file_put_contents(OSCOM_BASE_DIR . 'work/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
+            return file_put_contents(OSCOM_BASE_DIR . 'work/' . $key . '.cache', serialize($data)) !== false;
         }
 
         return false;
