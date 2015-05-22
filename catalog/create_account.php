@@ -273,7 +273,7 @@
 
 <div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params(), 'SSL')); ?></div>
 
-<?php echo tep_draw_form('create_account', OSCOM::link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('create_account', OSCOM::link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>

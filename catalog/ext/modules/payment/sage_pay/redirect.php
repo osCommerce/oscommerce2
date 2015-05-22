@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   chdir('../../../../');
@@ -28,7 +29,7 @@
 
     if ($_SESSION['payment'] == 'sage_pay_direct') {
       $redirect_url = OSCOM::link('checkout_process.php', 'check=3D', 'SSL');
-      $hidden_params = tep_draw_hidden_field('MD', $_POST['MD']) . tep_draw_hidden_field('PaRes', $_POST['PaRes']);
+      $hidden_params = HTML::hiddenField('MD', $_POST['MD']) . HTML::hiddenField('PaRes', $_POST['PaRes']);
     } else {
       $redirect_url = OSCOM::link('checkout_success.php', '', 'SSL');
     }

@@ -134,4 +134,27 @@ class HTML
 
         return $field;
     }
+
+    public static function hiddenField($name, $value = '', $parameters = '')
+    {
+        $field = '<input type="hidden" name="' . static::output($name) . '"';
+
+        if (!empty($value)) {
+            $field .= ' value="' . static::output($value) . '"';
+        } elseif ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name]))) {
+            if (isset($_GET[$name]) && is_string($_GET[$name])) {
+                $field .= ' value="' . static::output($_GET[$name]) . '"';
+            } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
+                $field .= ' value="' . static::output($_POST[$name]) . '"';
+            }
+        }
+
+        if (!empty($parameters)) {
+            $field .= ' ' . $parameters;
+        }
+
+        $field .= ' />';
+
+        return $field;
+    }
 }

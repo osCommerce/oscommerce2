@@ -346,7 +346,7 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'update') . tep_draw_hidden_field('edit', $_GET['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . tep_draw_button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
   </div>
 
@@ -360,7 +360,7 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'process') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
     <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
   </div>
 

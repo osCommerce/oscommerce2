@@ -46,7 +46,7 @@
         <?php
         echo HTML::inputField('keywords', '', 'required aria-required="true" id="inputKeywords" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"');
         echo FORM_REQUIRED_INPUT;
-        echo tep_draw_hidden_field('search_in_description', '1');
+        echo HTML::hiddenField('search_in_description', '1');
         ?>
       </div>
     </div>

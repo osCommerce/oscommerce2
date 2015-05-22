@@ -188,7 +188,7 @@
     if (sizeof($selection) > 1) {
       echo HTML::radioField('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])), 'required aria-required="true"');
     } else {
-      echo tep_draw_hidden_field('payment', $selection[$i]['id']);
+      echo HTML::hiddenField('payment', $selection[$i]['id']);
     }
 ?>
 

@@ -76,7 +76,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
 
 <div class="contentContainer">
 

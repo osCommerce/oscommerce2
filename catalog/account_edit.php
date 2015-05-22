@@ -132,7 +132,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo tep_draw_form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>

@@ -208,7 +208,7 @@
       $params['Crypt'] = $this->encryptParams($crypt_string);
 
       foreach ($params as $key => $value) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= HTML::hiddenField($key, $value);
       }
 
       return $process_button_string;

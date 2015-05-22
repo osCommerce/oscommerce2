@@ -112,28 +112,6 @@
   }
 
 ////
-// Output a form hidden field
-  function tep_draw_hidden_field($name, $value = '', $parameters = '') {
-    $field = '<input type="hidden" name="' . tep_output_string($name) . '"';
-
-    if (tep_not_null($value)) {
-      $field .= ' value="' . tep_output_string($value) . '"';
-    } elseif ( (isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name])) ) {
-      if ( (isset($_GET[$name]) && is_string($_GET[$name])) ) {
-        $field .= ' value="' . tep_output_string(stripslashes($_GET[$name])) . '"';
-      } elseif ( (isset($_POST[$name]) && is_string($_POST[$name])) ) {
-        $field .= ' value="' . tep_output_string(stripslashes($_POST[$name])) . '"';
-      }
-    }
-
-    if (tep_not_null($parameters)) $field .= ' ' . $parameters;
-
-    $field .= ' />';
-
-    return $field;
-  }
-
-////
 // Hide form elements
   function tep_hide_session_id() {
     global $session_started, $SID;

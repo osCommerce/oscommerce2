@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -47,7 +48,7 @@
           $hidden_get_variables = '';
           foreach ( $_GET as $key => $value ) {
             if ( is_string($value) && ($key != 'currency') && ($key != session_name()) && ($key != 'x') && ($key != 'y') ) {
-              $hidden_get_variables .= tep_draw_hidden_field($key, $value);
+              $hidden_get_variables .= HTML::hiddenField($key, $value);
             }
           }
 

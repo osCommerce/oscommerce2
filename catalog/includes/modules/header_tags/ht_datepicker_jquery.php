@@ -150,7 +150,7 @@
       $output = '<br />' . substr($output, 0, -6);
     }
 
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="htrn_files"');
+    $output .= HTML::hiddenField('configuration[' . $key . ']', '', 'id="htrn_files"');
 
     $output .= '<script>
                 function htrn_update_cfg_value() {

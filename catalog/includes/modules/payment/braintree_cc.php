@@ -841,7 +841,7 @@ EOD;
       $result = substr($result, 0, -6);
     }
 
-    $result .= tep_draw_hidden_field('configuration[' . $key . ']', $value);
+    $result .= HTML::hiddenField('configuration[' . $key . ']', $value);
 
     $result .= <<<EOD
 <script>

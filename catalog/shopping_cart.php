@@ -48,7 +48,7 @@
 // Push all attributes information in an array
       if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
         foreach($products[$i]['attributes'] as $option => $value) {
-          echo tep_draw_hidden_field('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
+          echo HTML::hiddenField('id[' . $products[$i]['id'] . '][' . $option . ']', $value);
           $Qattributes = $OSCOM_Db->prepare('select popt.products_options_name, poval.products_options_values_name, pa.options_values_price, pa.price_prefix
                                              from :table_products_options popt, :table_products_options_values poval, :table_products_attributes pa
                                              where pa.products_id = :products_id
@@ -99,7 +99,7 @@
         }
       }
 
-      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . tep_draw_hidden_field('products_id[]', $products[$i]['id']) . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
+      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . tep_draw_button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
 
       $products_name .= '</td>';
 

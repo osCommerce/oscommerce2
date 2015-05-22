@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -281,13 +282,13 @@
       if ($QfilterTotalRows > 1) {
         echo '<div>' . tep_draw_form('filter', 'index.php', 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-          echo tep_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
+          echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
         } else {
-          echo tep_draw_hidden_field('cPath', $cPath);
+          echo HTML::hiddenField('cPath', $cPath);
           $options = array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
         }
-        echo tep_draw_hidden_field('sort', $_GET['sort']);
+        echo HTML::hiddenField('sort', $_GET['sort']);
         while ($Qfilter->fetch()) {
           $options[] = array('id' => $Qfilter->valueInt('id'), 'text' => $Qfilter->value('name'));
         }
