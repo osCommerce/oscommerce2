@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
 // the following cPath references come from application_top.php
@@ -89,9 +92,9 @@
 
       echo '<div class="col-xs-6 col-sm-4">';
       echo '  <div class="text-center">';
-      echo '    <a href="' . tep_href_link('index.php', $cPath_new) . '">' . tep_image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
+      echo '    <a href="' . OSCOM::link('index.php', $cPath_new) . '">' . HTML::image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
       echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . tep_href_link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
+      echo '      <h5><a href="' . OSCOM::link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
       echo '    </div>';
       echo '  </div>';
       echo '</div>';
@@ -269,28 +272,26 @@
         $Qfilter->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
         $Qfilter->execute();
       } else {
-        $Qfilter = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS distinct m.manufacturers_id as id, m.manufacturers_name as name from :table_products p, :table_products_to_categories p2c, :table_manufacturers m where p.products_status = "1" and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = :categories_id order by m.manufacturers_name');
+        $Qfilter = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS distinct m.manufacturers_id as id, m.manufacturers_name as name from :table_products p, :table_products_to_categories p2c, :table_manufacturers m where p.products_status = 1 and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = :categories_id order by m.manufacturers_name');
         $Qfilter->bindInt(':categories_id', $current_category_id);
         $Qfilter->execute();
       }
 
-      $QfilterTotalRows = $OSCOM_Db->query('select found_rows()')->fetchColumn();
-
-      if ($QfilterTotalRows > 1) {
-        echo '<div>' . tep_draw_form('filter', 'index.php', 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+      if ($Qfilter->getPageSetTotalRows() > 1) {
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-          echo tep_draw_hidden_field('manufacturers_id', $_GET['manufacturers_id']);
+          echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
         } else {
-          echo tep_draw_hidden_field('cPath', $cPath);
+          echo HTML::hiddenField('cPath', $cPath);
           $options = array(array('id' => '', 'text' => TEXT_ALL_MANUFACTURERS));
         }
-        echo tep_draw_hidden_field('sort', $_GET['sort']);
+        echo HTML::hiddenField('sort', $_GET['sort']);
         while ($Qfilter->fetch()) {
           $options[] = array('id' => $Qfilter->valueInt('id'), 'text' => $Qfilter->value('name'));
         }
-        echo tep_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</p></form></div>' . "\n";
+        echo HTML::selectField('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
+        echo '</p></form></div>' . "\n";
       }
     }
 

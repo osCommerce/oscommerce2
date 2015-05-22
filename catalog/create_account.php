@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -251,11 +252,11 @@
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
       tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-      tep_redirect(tep_href_link('create_account_success.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('create_account_success.php', '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('create_account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -270,9 +271,9 @@
   }
 ?>
 
-<div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, tep_href_link('login.php', tep_get_all_get_params(), 'SSL')); ?></div>
+<div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params(), 'SSL')); ?></div>
 
-<?php echo tep_draw_form('create_account', tep_href_link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo HTML::form('create_account', OSCOM::link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
@@ -291,10 +292,10 @@
       <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'm', NULL, 'required aria-required="true"') . ' ' . MALE; ?>
+          <?php echo HTML::radioField('gender', 'm', NULL, 'required aria-required="true"') . ' ' . MALE; ?>
         </label>
         <label class="radio-inline">
-          <?php echo tep_draw_radio_field('gender', 'f') . ' ' . FEMALE; ?>
+          <?php echo HTML::radioField('gender', 'f') . ' ' . FEMALE; ?>
         </label>
         <?php echo FORM_REQUIRED_INPUT; ?>
         <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
@@ -308,14 +309,14 @@
     <div class="form-group has-feedback">
       <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('firstname', NULL, 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"  required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
+        <?php echo HTML::inputField('firstname', NULL, 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"  required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('lastname', NULL, 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
+        <?php echo HTML::inputField('lastname', NULL, 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
@@ -328,7 +329,7 @@
       <label for="dob" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('dob', '', 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
+        echo HTML::inputField('dob', '', 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -341,7 +342,7 @@
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
@@ -360,7 +361,7 @@
       <label for="inputCompany" class="control-label col-sm-3"><?php echo ENTRY_COMPANY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY_TEXT . '"');
+        echo HTML::inputField('company', NULL, 'id="inputCompany" placeholder="' . ENTRY_COMPANY_TEXT . '"');
         ?>
       </div>
     </div>
@@ -379,7 +380,7 @@
       <label for="inputStreet" class="control-label col-sm-3"><?php echo ENTRY_STREET_ADDRESS; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS_TEXT . '"');
+        echo HTML::inputField('street_address', NULL, 'required aria-required="true" id="inputStreet" placeholder="' . ENTRY_STREET_ADDRESS_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -393,7 +394,7 @@
       <label for="inputSuburb" class="control-label col-sm-3"><?php echo ENTRY_SUBURB; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB_TEXT . '"');
+        echo HTML::inputField('suburb', NULL, 'id="inputSuburb" placeholder="' . ENTRY_SUBURB_TEXT . '"');
         ?>
       </div>
     </div>
@@ -406,7 +407,7 @@
       <label for="inputCity" class="control-label col-sm-3"><?php echo ENTRY_CITY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('city', NULL, 'minlength="' . ENTRY_CITY_MIN_LENGTH . '" required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
+        echo HTML::inputField('city', NULL, 'minlength="' . ENTRY_CITY_MIN_LENGTH . '" required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -415,7 +416,7 @@
       <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('postcode', NULL, 'minlength="' . ENTRY_POSTCODE_MIN_LENGTH . '" required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
+        echo HTML::inputField('postcode', NULL, 'minlength="' . ENTRY_POSTCODE_MIN_LENGTH . '" required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -440,12 +441,12 @@
             while ($Qzones->fetch()) {
               $zones_array[] = array('id' => $Qzones->value('zone_name'), 'text' => $Qzones->value('zone_name'));
             }
-            echo tep_draw_pull_down_menu('state', $zones_array, 0, 'id="inputState"');
+            echo HTML::selectField('state', $zones_array, 0, 'id="inputState"');
           } else {
-            echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+            echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
           }
         } else {
-          echo tep_draw_input_field('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+          echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
         }
         ?>
       </div>
@@ -476,7 +477,7 @@
       <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('telephone', NULL, 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel');
+        echo HTML::inputField('telephone', NULL, 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -485,7 +486,7 @@
       <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"');
+        echo HTML::inputField('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"');
         ?>
       </div>
     </div>
@@ -494,7 +495,7 @@
       <div class="col-sm-9">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('newsletter', '1') . '&nbsp;'; ?>
+            <?php echo HTML::checkboxField('newsletter', '1') . '&nbsp;'; ?>
             <?php if (tep_not_null(ENTRY_NEWSLETTER_TEXT)) echo ENTRY_NEWSLETTER_TEXT; ?>
           </label>
         </div>
@@ -511,7 +512,7 @@
       <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_password_field('password', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"');
+        echo HTML::passwordField('password', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -520,7 +521,7 @@
       <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_password_field('confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
+        echo HTML::passwordField('confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -528,7 +529,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-user', null, 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-user', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
 

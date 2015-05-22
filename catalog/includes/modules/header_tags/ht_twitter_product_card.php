@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_twitter_product_card {
@@ -69,7 +70,7 @@
             $products_image = $Qimage->value('image');
           }
 
-          $data['image:src'] = tep_href_link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
+          $data['image:src'] = OSCOM::link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
 
           if ($new_price = tep_get_products_special_price($Qproduct->valueInt('products_id'))) {
             $products_price = $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id')));

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_currencies {
@@ -46,11 +48,11 @@
           $hidden_get_variables = '';
           foreach ( $_GET as $key => $value ) {
             if ( is_string($value) && ($key != 'currency') && ($key != session_name()) && ($key != 'x') && ($key != 'y') ) {
-              $hidden_get_variables .= tep_draw_hidden_field($key, $value);
+              $hidden_get_variables .= HTML::hiddenField($key, $value);
             }
           }
 
-          $form_output = tep_draw_form('currencies', tep_href_link($PHP_SELF, '', $request_type, false), 'get') . tep_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . tep_hide_session_id() . '</form>';
+          $form_output = HTML::form('currencies', OSCOM::link($PHP_SELF, '', $request_type, false), 'get', null, ['session_id' => true]) . HTML::selectField('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . '</form>';
 
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');

@@ -11,29 +11,30 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link('shopping_cart.php'));
+    tep_redirect(OSCOM::link('shopping_cart.php'));
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
     }
   }
 
@@ -42,7 +43,7 @@
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       if (tep_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
-        tep_redirect(tep_href_link('shopping_cart.php'));
+        tep_redirect(OSCOM::link('shopping_cart.php'));
         break;
       }
     }
@@ -82,8 +83,8 @@
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_payment.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('checkout_payment.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -94,7 +95,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('checkout_payment', tep_href_link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('checkout_payment', OSCOM::link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -122,7 +123,7 @@
         <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?>
       </div>
       <div class="clearfix"></div>
-      <?php echo tep_draw_button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', tep_href_link('checkout_payment_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
+      <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_payment_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
       <br>
       <div class="clearfix"></div>
     </div>
@@ -185,9 +186,9 @@
 
 <?php
     if (sizeof($selection) > 1) {
-      echo tep_draw_radio_field('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])), 'required aria-required="true"');
+      echo HTML::radioField('payment', $selection[$i]['id'], (isset($_SESSION['payment']) && ($selection[$i]['id'] == $_SESSION['payment'])), 'required aria-required="true"');
     } else {
-      echo tep_draw_hidden_field('payment', $selection[$i]['id']);
+      echo HTML::hiddenField('payment', $selection[$i]['id']);
     }
 ?>
 
@@ -247,14 +248,14 @@
       <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
       <div class="col-xs-8">
         <?php
-        echo tep_draw_textarea_field('comments', 'soft', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
         ?>
       </div>
     </div>
   </div>
 
   <div class="contentText">
-    <div><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+    <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
 
   <div class="clearfix"></div>
@@ -263,8 +264,8 @@
     <div class="stepwizard">
       <div class="stepwizard-row">
         <div class="stepwizard-step">
-          <a href="<?php echo tep_href_link('checkout_shipping.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
-          <p><a href="<?php echo tep_href_link('checkout_shipping.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+          <a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
+          <p><a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
         </div>
         <div class="stepwizard-step">
           <button type="button" class="btn btn-primary btn-circle">2</button>

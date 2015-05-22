@@ -11,22 +11,23 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   chdir('../../../../');
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
   }
 
   $Qcustomer = $OSCOM_Db-get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
 
   if (!empty($Qcustomer->value('customers_password'))) {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -54,12 +55,12 @@
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 
-      tep_redirect(tep_href_link('account.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
     }
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SET_PASSWORD_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/set_password.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -74,7 +75,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_password', tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo HTML::form('account_password', OSCOM::link('ext/modules/content/account/set_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
@@ -84,7 +85,7 @@
       <label for="inputPassword" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"');
+        echo HTML::passwordField('password_new', NULL, 'required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -93,7 +94,7 @@
       <label for="inputConfirmation" class="control-label col-xs-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-xs-9">
         <?php
-        echo tep_draw_password_field('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
+        echo HTML::passwordField('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -102,8 +103,8 @@
   </div>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
   </div>
 
 </div>

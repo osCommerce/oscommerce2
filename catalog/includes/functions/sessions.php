@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   if (STORE_SESSIONS == 'mysql') {
@@ -99,7 +100,7 @@
     }
 
     if ($sane_session_id == false) {
-      tep_redirect(tep_href_link('index.php', '', 'NONSSL', false));
+      tep_redirect(OSCOM::link('index.php', '', 'NONSSL', false));
     }
 
     register_shutdown_function('session_write_close');

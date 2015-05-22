@@ -6,6 +6,7 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class category_tree {
@@ -79,7 +80,7 @@
             $link_title = $category['name'];
           }
 
-          $result .= '<a href="' . tep_href_link('index.php', 'cPath=' . $category_link) . '">';
+          $result .= '<a href="' . OSCOM::link('index.php', 'cPath=' . $category_link) . '">';
           $result .= str_repeat($this->spacer_string, $this->spacer_multiplier * $level);
           $result .= $link_title . '</a>';
 

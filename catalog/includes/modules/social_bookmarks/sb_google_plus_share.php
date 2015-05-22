@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sb_google_plus_share {
@@ -52,7 +53,7 @@
         $button_height = 60;
       }
 
-      $output = '<div class="g-plus" data-action="share" data-href="' . tep_href_link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
+      $output = '<div class="g-plus" data-action="share" data-href="' . OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
 
       if ((int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH > 0) {
         $output .= ' data-width="' . (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH . '"';

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_manufacturers {
@@ -55,7 +57,7 @@
               $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
             }
 
-            $manufacturers_list .= '<li><a href="' . tep_href_link('index.php', 'manufacturers_id=' . (int)$m['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
+            $manufacturers_list .= '<li><a href="' . OSCOM::link('index.php', 'manufacturers_id=' . (int)$m['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
           }
 
           $manufacturers_list .= '</ul>';
@@ -76,9 +78,9 @@
                                            'text' => $manufacturers_name);
           }
 
-          $data = tep_draw_form('manufacturers', tep_href_link('index.php', '', $request_type, false), 'get') .
-                     tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') . tep_hide_session_id() .
-                     '</form>';
+          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) .
+                  HTML::selectField('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
+                  '</form>';
         }
       }
 

@@ -11,12 +11,13 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -107,7 +108,7 @@
 
       $messageStack->add_session('account', SUCCESS_ACCOUNT_UPDATED, 'success');
 
-      tep_redirect(tep_href_link('account.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
     }
   }
 
@@ -115,8 +116,8 @@
   $Qaccount->bindInt(':customers_id', $_SESSION['customer_id']);
   $Qaccount->execute();
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('account_edit.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_edit.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -131,7 +132,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('account_edit', tep_href_link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo HTML::form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
@@ -150,10 +151,10 @@
         <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
         <div class="col-sm-9">
           <label class="radio-inline">
-            <?php echo tep_draw_radio_field('gender', 'm', $male, 'required aria-required="true"') . ' ' . MALE; ?>
+            <?php echo HTML::radioField('gender', 'm', $male, 'required aria-required="true"') . ' ' . MALE; ?>
           </label>
           <label class="radio-inline">
-            <?php echo tep_draw_radio_field('gender', 'f', $female) . ' ' . FEMALE; ?>
+            <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
           </label>
           <?php echo FORM_REQUIRED_INPUT; ?>
           <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
@@ -167,14 +168,14 @@
       <div class="form-group has-feedback">
         <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('firstname', $Qaccount->value('customers_firstname'), 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
+          <?php echo HTML::inputField('firstname', $Qaccount->value('customers_firstname'), 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
       <div class="form-group has-feedback">
         <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('lastname', $Qaccount->value('customers_lastname'), 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
+          <?php echo HTML::inputField('lastname', $Qaccount->value('customers_lastname'), 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
@@ -186,7 +187,7 @@
       <div class="form-group has-feedback">
         <label for="inputName" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
         <div class="col-sm-9">
-          <?php echo tep_draw_input_field('dob', tep_date_short($Qaccount->value('customers_dob')), 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
+          <?php echo HTML::inputField('dob', tep_date_short($Qaccount->value('customers_dob')), 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
           <?php echo FORM_REQUIRED_INPUT; ?>
         </div>
       </div>
@@ -198,21 +199,21 @@
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('email_address', $Qaccount->value('customers_email_address'), 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo HTML::inputField('email_address', $Qaccount->value('customers_email_address'), 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('telephone', $Qaccount->value('customers_telephone'), 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
+        <?php echo HTML::inputField('telephone', $Qaccount->value('customers_telephone'), 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
         <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
     <div class="form-group">
       <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
       <div class="col-sm-9">
-        <?php echo tep_draw_input_field('fax', $Qaccount->value('customers_fax'), 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
+        <?php echo HTML::inputField('fax', $Qaccount->value('customers_fax'), 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
       </div>
     </div>
 
@@ -220,8 +221,8 @@
     <br />
 
     <div class="row">
-      <div class="col-xs-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-      <div class="col-xs-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?></div>
+      <div class="col-xs-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+      <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
     </div>
 
   </div>

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_account_braintree_cards {
@@ -65,7 +66,7 @@
       global $oscTemplate;
 
       $oscTemplate->_data['account']['account']['links']['braintree_cards'] = array('title' => $this->public_title,
-                                                                                    'link' => tep_href_link('ext/modules/content/account/braintree/cards.php', '', 'SSL'),
+                                                                                    'link' => OSCOM::link('ext/modules/content/account/braintree/cards.php', '', 'SSL'),
                                                                                     'icon' => 'newwin');
     }
 

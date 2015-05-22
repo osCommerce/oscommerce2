@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_table_click_jquery {
@@ -134,14 +135,14 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= tep_draw_checkbox_field('ht_table_click_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_table_click_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
     }
 
     if (!empty($output)) {
       $output = '<br />' . substr($output, 0, -6);
     }
 
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="htrn_files"');
+    $output .= HTML::hiddenField('configuration[' . $key . ']', '', 'id="htrn_files"');
 
     $output .= '<script>
                 function htrn_update_cfg_value() {

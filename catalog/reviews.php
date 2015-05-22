@@ -10,11 +10,14 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/reviews.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('reviews.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('reviews.php'));
 
   require('includes/template_top.php');
 ?>
@@ -56,14 +59,14 @@
 ?>
 
   <div class="col-sm-6 review">
-    <h4><?php echo '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id') . '&reviews_id=' . $Qreviews->valueInt('reviews_id')) . '">' . $Qreviews->value('products_name') . '</a>'; ?></h4>
+    <h4><?php echo '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id') . '&reviews_id=' . $Qreviews->valueInt('reviews_id')) . '">' . $Qreviews->value('products_name') . '</a>'; ?></h4>
     <blockquote>
-      <p><span class="pull-left"><?php echo tep_image(DIR_WS_IMAGES . $Qreviews->value('products_image'), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo $Qreviews->valueProtected('reviews_text') . ' ... '; ?></p>
+      <p><span class="pull-left"><?php echo HTML::image(DIR_WS_IMAGES . $Qreviews->value('products_image'), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo $Qreviews->valueProtected('reviews_text') . ' ... '; ?></p>
       <div class="clearfix"></div>
       <footer>
         <?php
         $review_name = $Qreviews->valueProtected('customers_name');
-        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . tep_href_link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
+        echo sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
       </footer>
     </blockquote>
   </div>

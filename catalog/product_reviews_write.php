@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -18,11 +19,11 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   if (!isset($_GET['products_id'])) {
-    tep_redirect(tep_href_link('product_reviews.php', tep_get_all_get_params(array('action'))));
+    tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
   }
 
   $Qcheck = $OSCOM_Db->prepare('select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
@@ -31,7 +32,7 @@
   $Qcheck->execute();
 
   if ( $Qcheck->fetch() === false ) {
-    tep_redirect(tep_href_link('product_reviews.php', tep_get_all_get_params(array('action'))));
+    tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
   }
 
   $Qcustomer = $OSCOM_Db->get('customers', ['customers_firstname', 'customers_lastname'], ['customers_id' => $_SESSION['customer_id']]);
@@ -60,7 +61,7 @@
       $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $_SESSION['languages_id'], 'reviews_text' => $review]);
 
       $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
-      tep_redirect(tep_href_link('product_reviews.php', tep_get_all_get_params(array('action'))));
+      tep_redirect(OSCOM::link('product_reviews.php', tep_get_all_get_params(array('action'))));
     }
   }
 
@@ -76,7 +77,7 @@
     $products_name .= ' <small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('product_reviews.php', tep_get_all_get_params()));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
   require('includes/template_top.php');
 ?>
@@ -94,7 +95,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('product_reviews_write', tep_href_link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('product_reviews_write', OSCOM::link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -103,9 +104,9 @@
 ?>
 
     <div class="col-sm-4 text-center pull-right">
-      <?php echo '<a href="' . tep_href_link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . tep_image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
+      <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
     </div>
 
     <div class="clearfix"></div>
@@ -127,7 +128,7 @@
       <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_textarea_field('review', 'soft', 60, 15, NULL, 'minlength="' . REVIEW_TEXT_MIN_LENGTH . '" required aria-required="true" id="inputReview" placeholder="' . ENTRY_REVIEW_TEXT . '"');
+        echo HTML::textareaField('review', 60, 15, NULL, 'minlength="' . REVIEW_TEXT_MIN_LENGTH . '" required aria-required="true" id="inputReview" placeholder="' . ENTRY_REVIEW_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -137,27 +138,27 @@
       <div class="col-sm-9">
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '5') . tep_draw_stars(5, false) . ' ' . TEXT_GOOD; ?>
+            <?php echo HTML::radioField('rating', '5') . HTML::stars(5, false) . ' ' . TEXT_GOOD; ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '4') . tep_draw_stars(4, false); ?>
+            <?php echo HTML::radioField('rating', '4') . HTML::stars(4, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '3') . tep_draw_stars(3, false); ?>
+            <?php echo HTML::radioField('rating', '3') . HTML::stars(3, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '2') . tep_draw_stars(2, false); ?>
+            <?php echo HTML::radioField('rating', '2') . HTML::stars(2, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo tep_draw_radio_field('rating', '1', null, 'required aria-required="true"') . tep_draw_stars(1, false) . ' ' . TEXT_BAD; ?>
+            <?php echo HTML::radioField('rating', '1', null, 'required aria-required="true"') . HTML::stars(1, false) . ' ' . TEXT_BAD; ?>
           </label>
         </div>
       </div>
@@ -169,8 +170,8 @@
   <div class="clearfix"></div>
 
   <div class="row">
-    <div class="col-xs-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-xs-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+    <div class="col-xs-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
   </div>
 
 </div>

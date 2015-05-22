@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
 ////
@@ -93,7 +95,7 @@
       if (!empty($banner['banners_html_text'])) {
         $output = $banner['banners_html_text'];
       } else {
-        $output = '<a href="' . tep_href_link('redirect.php', 'action=banner&goto=' . $banner['banners_id']) . '" target="_blank">' . tep_image(DIR_WS_IMAGES . $banner['banners_image'], $banner['banners_title']) . '</a>';
+        $output = '<a href="' . OSCOM::link('redirect.php', 'action=banner&goto=' . $banner['banners_id']) . '" target="_blank">' . HTML::image(DIR_WS_IMAGES . $banner['banners_image'], $banner['banners_title']) . '</a>';
       }
 
       tep_update_banner_display_count($banner['banners_id']);

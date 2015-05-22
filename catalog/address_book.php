@@ -11,18 +11,19 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('address_book.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -80,7 +81,7 @@
           <div class="panel-body">
             <?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?>
           </div>
-          <div class="panel-footer text-center"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_EDIT, 'glyphicon glyphicon-file', tep_href_link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-info btn-xs') . ' ' . tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-danger btn-xs'); ?></div>
+          <div class="panel-footer text-center"><?php echo HTML::button(SMALL_IMAGE_BUTTON_EDIT, 'glyphicon glyphicon-file', OSCOM::link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-info btn-xs') . ' ' . HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-danger btn-xs'); ?></div>
         </div>
       </div>
 <?php
@@ -95,12 +96,12 @@
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_ADD_ADDRESS, 'glyphicon glyphicon-home', tep_href_link('address_book_process.php', '', 'SSL'), 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('address_book_process.php', '', 'SSL'), 'primary', null, 'btn-success'); ?></div>
 
 <?php
   }
 ?>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
   </div>
 
 </div>

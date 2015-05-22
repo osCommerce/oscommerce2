@@ -11,18 +11,19 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(tep_href_link('shopping_cart.php'));
+    tep_redirect(OSCOM::link('shopping_cart.php'));
   }
 
   // needs to be included earlier to set the success message in the messageStack
@@ -36,7 +37,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    tep_redirect(tep_href_link('checkout_payment.php', '', 'SSL'));
+    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
   }
 
   $error = false;
@@ -168,7 +169,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
+        tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -190,14 +191,14 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
+        tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
       } else {
         unset($_SESSION['sendto']);
       }
     } else {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-      tep_redirect(tep_href_link('checkout_shipping.php', '', 'SSL'));
+      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
     }
   }
 
@@ -206,8 +207,8 @@
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('checkout_shipping_address.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping_address.php', '', 'SSL'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
@@ -224,7 +225,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', tep_href_link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -296,7 +297,7 @@
           <strong><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong>
           <div class="help-block"><?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', ', '); ?></div>
         </td>
-        <td align="right"><?php echo tep_draw_radio_field('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $_SESSION['sendto'])); ?></td>
+        <td align="right"><?php echo HTML::radioField('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $_SESSION['sendto'])); ?></td>
       </tr>
 
 <?php
@@ -331,7 +332,7 @@
 ?>
 
   <div class="contentText">
-    <div><?php echo tep_draw_hidden_field('action', 'submit') . tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+    <div><?php echo HTML::hiddenField('action', 'submit') . HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
   </div>
 
 <?php
@@ -339,7 +340,7 @@
 ?>
 
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('checkout_shipping_address.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('checkout_shipping_address.php', '', 'SSL')); ?>
   </div>
 
 <?php

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sb_pinterest {
@@ -61,11 +62,11 @@
           } while ($Qimage->fetch());
         }
 
-        $params['media'] = tep_href_link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
+        $params['media'] = OSCOM::link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
       }
 
 // url
-      $params['url'] = tep_href_link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false);
+      $params['url'] = OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false);
 
       $output = '<a href="http://pinterest.com/pin/create/button/?';
 

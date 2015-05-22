@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_account_sage_pay_cards {
@@ -65,7 +66,7 @@
       global $oscTemplate;
 
       $oscTemplate->_data['account']['account']['links']['sage_pay_cards'] = array('title' => $this->public_title,
-                                                                                   'link' => tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
+                                                                                   'link' => OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
                                                                                    'icon' => 'newwin');
     }
 

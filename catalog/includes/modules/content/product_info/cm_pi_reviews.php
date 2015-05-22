@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class cm_pi_reviews {
@@ -51,7 +52,7 @@
         do {
           $review_data .= '<blockquote class="col-sm-6">' .
                           '  <p>' . $Qreviews->valueProtected('reviews_text') . ' ... </p>' .
-                          '  <footer>' . sprintf(MODULE_CONTENT_PRODUCT_INFO_REVIEWS_TEXT_RATED, tep_draw_stars($Qreviews->valueInt('reviews_rating')), $Qreviews->valueProtected('customers_name'), $Qreviews->valueProtected('customers_name')) . '</footer>' .
+                          '  <footer>' . sprintf(MODULE_CONTENT_PRODUCT_INFO_REVIEWS_TEXT_RATED, HTML::stars($Qreviews->valueInt('reviews_rating')), $Qreviews->valueProtected('customers_name'), $Qreviews->valueProtected('customers_name')) . '</footer>' .
                           '</blockquote>';
         } while ($Qreviews->fetch());
 

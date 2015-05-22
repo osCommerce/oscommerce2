@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class bm_shopping_cart {
@@ -50,7 +51,7 @@
 
           $cart_contents_string .= $products[$i]['quantity'] . '&nbsp;x&nbsp;';
 
-          $cart_contents_string .= '<a href="' . tep_href_link('product_info.php', 'products_id=' . $products[$i]['id']) . '">';
+          $cart_contents_string .= '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">';
 
           $cart_contents_string .= $products[$i]['name'];
 

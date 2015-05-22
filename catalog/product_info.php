@@ -10,10 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   if (!isset($_GET['products_id'])) {
-    tep_redirect(tep_href_link('index.php'));
+    tep_redirect(OSCOM::link('index.php'));
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_info.php');
@@ -31,7 +34,7 @@
     header('HTTP/1.0 404 Not Found');
   } elseif (!empty($Qproduct->value('products_model'))) {
     // add the products model to the breadcrumb trail
-    $breadcrumb->add($Qproduct->value('products_model'), tep_href_link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $Qproduct->valueInt('products_id')));
+    $breadcrumb->add($Qproduct->value('products_model'), OSCOM::link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $Qproduct->valueInt('products_id')));
   }
 
   require('includes/template_top.php');
@@ -47,7 +50,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('index.php'), null, null, 'btn-default btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), null, null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -74,7 +77,7 @@
 
     $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($_SESSION['currency']) . '" />';
 
-    $products_name = '<a href="' . tep_href_link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')) . '" itemprop="url"><span itemprop="name">' . $Qproduct->value('products_name') . '</span></a>';
+    $products_name = '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')) . '" itemprop="url"><span itemprop="name">' . $Qproduct->value('products_name') . '</span></a>';
 
     if ( !empty($Qproduct->value('products_model')) ) {
       $products_name .= ' <small>[<span itemprop="model">' . $Qproduct->value('products_model') . '</span>]</small>';
@@ -95,7 +98,7 @@
 
 <?php
     if ( !empty($Qproduct->value('products_image')) ) {
-      echo '    ' . tep_image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
+      echo '    ' . HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
 
       $photoset_layout = '1';
 
@@ -130,7 +133,7 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $image['htmlcontent'] . '</div>';
           }
 
-          echo '      ' . tep_image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
+          echo '      ' . HTML::image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
         }
 ?>
 
@@ -144,7 +147,7 @@
 ?>
 
     <div class="piGal pull-right">
-      <?php echo tep_image(DIR_WS_IMAGES . $Qproduct->value('products_image'), $Qproduct->value('products_name')); ?>
+      <?php echo HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), $Qproduct->value('products_name')); ?>
     </div>
 
 <?php
@@ -156,7 +159,7 @@
   <?php echo $Qproduct->value('products_description'); ?>
 </div>
 
-<?php echo tep_draw_form('cart_quantity', tep_href_link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <?php
     $Qpa = $OSCOM_Db->prepare('select distinct popt.products_options_id, popt.products_options_name from :table_products_options popt, :table_products_attributes patrib where patrib.products_id = :products_id and patrib.options_id = popt.products_options_id and popt.language_id = :language_id order by popt.products_options_name');
@@ -200,7 +203,7 @@
       <div class="form-group">
         <label class="control-label col-xs-3"><?php echo $Qpa->value('products_options_name') . ':'; ?></label>
         <div class="col-xs-9">
-          <?php echo tep_draw_pull_down_menu('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, '', true); ?>
+          <?php echo HTML::selectField('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, '', true); ?>
         </div>
       </div>
     <?php
@@ -239,12 +242,12 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_hidden_field('products_id', $Qproduct->valueInt('products_id')) . tep_draw_button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'glyphicon glyphicon-comment', tep_href_link('product_reviews.php', tep_get_all_get_params())); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'glyphicon glyphicon-comment', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
   </div>
 
   </form>
-  
+
   <div class="row">
     <?php echo $oscTemplate->getContent('product_info'); ?>
   </div>

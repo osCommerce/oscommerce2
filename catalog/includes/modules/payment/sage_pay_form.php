@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sage_pay_form {
@@ -125,8 +127,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link('checkout_process.php', '', 'SSL'),
-                     'FailureURL' => tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
+                     'SuccessURL' => OSCOM::link('checkout_process.php', '', 'SSL'),
+                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -206,7 +208,7 @@
       $params['Crypt'] = $this->encryptParams($crypt_string);
 
       foreach ($params as $key => $value) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= HTML::hiddenField($key, $value);
       }
 
       return $process_button_string;
@@ -233,10 +235,10 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+          tep_redirect(OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
         }
       } else {
-        tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'));
+        tep_redirect(OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'));
       }
     }
 
@@ -613,6 +615,6 @@
   }
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return HTML::textareaField('configuration[' . $key . ']', 60, 5, $value);
   }
 ?>
