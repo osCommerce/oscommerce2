@@ -84,7 +84,6 @@
 
 // define general functions used application-wide
   require('includes/functions/general.php');
-  require('includes/functions/html_output.php');
 
 // include cache functions if enabled
   if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
