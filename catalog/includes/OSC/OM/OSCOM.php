@@ -14,7 +14,7 @@ class OSCOM
 {
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
     {
-        global $request_type, $session_started, $SID;
+        global $request_type;
 
         $page = HTML::sanitize($page);
 
@@ -58,9 +58,9 @@ class OSCOM
         }
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-        if (($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False')) {
-            if (!empty($SID)) {
-                $_sid = $SID;
+        if (($add_session_id == true) && (session_status() === PHP_SESSION_ACTIVE) && (SESSION_FORCE_COOKIE_USE == 'False')) {
+            if (defined('SID') && !empty(SID)) {
+                $_sid = SID;
             } elseif ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL'))) {
                 if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
                     $_sid = session_name() . '=' . session_id();
