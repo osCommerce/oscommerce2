@@ -11,18 +11,17 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if (!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
-    HTTP::redirect(OSCOM::link('account_history.php', '', 'SSL'));
+    OSCOM::redirect('account_history.php', '', 'SSL');
   }
 
   $Qcheck = $OSCOM_Db->prepare('select o.customers_id from :table_orders o, :table_orders_status s where o.orders_id = :orders_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1"');
@@ -31,7 +30,7 @@
   $Qcheck->execute();
 
   if (($Qcheck->fetch() === false) || ($Qcheck->valueInt('customers_id') != $_SESSION['customer_id'])) {
-    HTTP::redirect(OSCOM::link('account_history.php', '', 'SSL'));
+    OSCOM::redirect('account_history.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_history_info.php');

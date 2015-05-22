@@ -11,7 +11,6 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -20,12 +19,12 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    HTTP::redirect(OSCOM::link('shopping_cart.php'));
+    OSCOM::redirect('shopping_cart.php');
   }
 
 // if no shipping destination address was selected, use the customers own address as default
@@ -62,7 +61,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    OSCOM::redirect('checkout_payment.php', '', 'SSL');
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -127,7 +126,7 @@
                                             'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                             'cost' => $quote[0]['methods'][0]['cost']);
 
-              HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+              OSCOM::redirect('checkout_payment.php', '', 'SSL');
             }
           }
         } else {
@@ -140,7 +139,7 @@
       } else {
         $_SESSION['shipping'] = false;
 
-        HTTP::redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+        OSCOM::redirect('checkout_payment.php', '', 'SSL');
       }
     }
   }
@@ -159,7 +158,7 @@
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && (!isset($_SESSION['shipping']) || ($_SESSION['shipping'] === false)) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-    HTTP::redirect(OSCOM::link('checkout_shipping_address.php', '', 'SSL'));
+    OSCOM::redirect('checkout_shipping_address.php', '', 'SSL');
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));

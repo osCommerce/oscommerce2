@@ -11,7 +11,6 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -58,7 +57,7 @@
   }
 
   if ($error == true) {
-    HTTP::redirect(OSCOM::link('password_forgotten.php'));
+    OSCOM::redirect('password_forgotten.php');
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -82,7 +81,7 @@
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      HTTP::redirect(OSCOM::link('login.php', '', 'SSL'));
+      OSCOM::redirect('login.php', '', 'SSL');
     }
   }
 

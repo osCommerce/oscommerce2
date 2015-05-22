@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -254,11 +255,11 @@
           }
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            tep_redirect($return['NextURL']);
+            HTTP::redirect($return['NextURL']);
           } else {
             $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
-            tep_redirect(OSCOM::link('ext/modules/payment/sage_pay/checkout.php', '', 'SSL'));
+            OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php', '', 'SSL');
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -267,7 +268,7 @@
         }
       }
 
-      tep_redirect(OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+      OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
     }
 
     function after_process() {
@@ -295,7 +296,7 @@
 
         unset($_SESSION['sage_pay_server_nexturl']);
 
-        tep_redirect(OSCOM::link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'));
+        OSCOM::redirect('ext/modules/payment/sage_pay/redirect.php', '', 'SSL');
       }
     }
 

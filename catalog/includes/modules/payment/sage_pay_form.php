@@ -235,10 +235,10 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          tep_redirect(OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
         }
       } else {
-        tep_redirect(OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'));
+        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code, 'SSL');
       }
     }
 

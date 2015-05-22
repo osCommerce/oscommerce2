@@ -11,13 +11,12 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   if (!isset($_GET['products_id'])) {
-    HTTP::redirect(OSCOM::link('reviews.php'));
+    OSCOM::redirect('reviews.php');
   }
 
   $Qcheck = $OSCOM_Db->prepare('select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
@@ -26,7 +25,7 @@
   $Qcheck->execute();
 
   if ( $Qcheck->fetch() === false ) {
-    HTTP::redirect(OSCOM::link('reviews.php'));
+    OSCOM::redirect('reviews.php');
   }
 
   if ( $new_price = tep_get_products_special_price($Qcheck->valueInt('products_id')) ) {

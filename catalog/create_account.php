@@ -11,7 +11,6 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -253,7 +252,7 @@
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
       tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-      HTTP::redirect(OSCOM::link('create_account_success.php', '', 'SSL'));
+      OSCOM::redirect('create_account_success.php', '', 'SSL');
     }
   }
 

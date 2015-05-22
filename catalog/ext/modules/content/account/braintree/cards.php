@@ -18,7 +18,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('braintree_cc.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
@@ -30,10 +30,10 @@
     $braintree_cc = new braintree_cc();
 
     if ( !$braintree_cc->enabled ) {
-      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+      OSCOM::redirect('account.php', '', 'SSL');
     }
   } else {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_braintree_cards.php');
@@ -41,7 +41,7 @@
   $braintree_cards = new cm_account_braintree_cards();
 
   if ( !$braintree_cards->isEnabled() ) {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   if ( isset($_GET['action']) ) {
@@ -55,7 +55,7 @@
       }
     }
 
-    tep_redirect(OSCOM::link('ext/modules/content/account/braintree/cards.php', '', 'SSL'));
+    OSCOM::redirect('ext/modules/content/account/braintree/cards.php', '', 'SSL');
   }
 
   $breadcrumb->add(MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));

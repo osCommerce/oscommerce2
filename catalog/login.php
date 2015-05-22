@@ -20,10 +20,10 @@
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
-      HTTP::redirect(OSCOM::link('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL'));
+      OSCOM::redirect('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL');
     }
 
-    HTTP::redirect(OSCOM::link('cookie_usage.php'));
+    OSCOM::redirect('cookie_usage.php');
   }
 
 // login content module must return $login_customer_id as an integer after successful customer authentication
@@ -62,7 +62,7 @@
       HTTP::redirect($origin_href);
     }
 
-    HTTP::redirect(OSCOM::link('index.php'));
+    OSCOM::redirect('index.php');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/login.php');

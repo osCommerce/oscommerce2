@@ -71,5 +71,5 @@
       break;
   }
 
-  HTTP::redirect(OSCOM::link('index.php'));
+  OSCOM::redirect('index.php');
 ?>
