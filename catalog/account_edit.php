@@ -132,7 +132,7 @@
   }
 ?>
 
-<?php echo HTML::form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
+<?php echo HTML::form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>

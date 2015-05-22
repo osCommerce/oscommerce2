@@ -41,8 +41,16 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
-    public static function form($name, $action, $method = 'post', $parameters = '', $tokenize = false)
+    public static function form($name, $action, $method = 'post', $parameters = '', array $flags = [])
     {
+        if (!isset($flags['tokenize']) || !is_bool($flags['tokenize'])) {
+            $flags['tokenize'] = false;
+        }
+
+        if (!isset($flags['session_id']) || !is_bool($flags['session_id'])) {
+            $flags['session_id'] = false;
+        }
+
         $form = '<form name="' . static::output($name) . '" action="' . static::output($action) . '" method="' . static::output($method) . '"';
 
         if (!empty($parameters)) {
@@ -51,7 +59,15 @@ class HTML
 
         $form .= '>';
 
-        if (($tokenize == true) && isset($_SESSION['sessiontoken'])) {
+        if (isset($flags['action'])) {
+            $form .= static::hiddenField('action', $flags['action']);
+        }
+
+        if (($flags['session_id'] === true) && (session_status() === PHP_SESSION_ACTIVE) && defined('SID') && !empty(SID)) {
+            $form .= static::hiddenField(session_name(), session_id());
+        }
+
+        if (($flags['tokenize'] === true) && isset($_SESSION['sessiontoken'])) {
             $form .= static::hiddenField('formid', $_SESSION['sessiontoken']);
         }
 

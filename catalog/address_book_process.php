@@ -314,7 +314,7 @@
   } else {
 ?>
 
-<?php echo HTML::form('addressbook', OSCOM::link('address_book_process.php', (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('addressbook', OSCOM::link('address_book_process.php', (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

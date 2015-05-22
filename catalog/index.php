@@ -278,7 +278,7 @@
       }
 
       if ($Qfilter->getPageSetTotalRows() > 1) {
-        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', $request_type, false), 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
@@ -291,7 +291,7 @@
           $options[] = array('id' => $Qfilter->valueInt('id'), 'text' => $Qfilter->value('name'));
         }
         echo tep_draw_pull_down_menu('filter_id', $options, (isset($_GET['filter_id']) ? $_GET['filter_id'] : ''), 'onchange="this.form.submit()"');
-        echo tep_hide_session_id() . '</p></form></div>' . "\n";
+        echo '</p></form></div>' . "\n";
       }
     }
 

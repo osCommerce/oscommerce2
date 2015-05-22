@@ -95,7 +95,7 @@
   }
 ?>
 
-<?php echo HTML::form('product_reviews_write', OSCOM::link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('product_reviews_write', OSCOM::link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

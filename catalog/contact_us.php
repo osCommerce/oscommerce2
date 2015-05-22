@@ -79,7 +79,7 @@
   } else {
 ?>
 
-<?php echo HTML::form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

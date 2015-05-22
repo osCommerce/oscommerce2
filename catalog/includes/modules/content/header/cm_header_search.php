@@ -42,11 +42,11 @@
       $content_width = MODULE_CONTENT_HEADER_SEARCH_CONTENT_WIDTH;
       
       $search_box = '<div class="searchbox-margin">';
-      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get', 'class="form-horizontal"');
+      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get', 'class="form-horizontal"', ['session_id' => true]);
       $search_box .= '  <div class="input-group">' .
                           HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-search"></i></button></span>' .
                      '  </div>';
-      $search_box .=  tep_hide_session_id() . '</form>';
+      $search_box .= '</form>';
       $search_box .= '</div>';
       
       ob_start();

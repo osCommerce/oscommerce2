@@ -92,16 +92,6 @@
   }
 
 ////
-// Hide form elements
-  function tep_hide_session_id() {
-    global $session_started, $SID;
-
-    if (($session_started == true) && tep_not_null($SID)) {
-      return tep_draw_hidden_field(session_name(), session_id());
-    }
-  }
-
-////
 // Output a form pull down menu
 // 2.4 - automatically pass form-control css class
   function tep_draw_pull_down_menu($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control') {

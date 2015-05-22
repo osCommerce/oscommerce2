@@ -95,7 +95,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('checkout_payment', OSCOM::link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('checkout_payment', OSCOM::link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

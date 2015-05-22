@@ -101,7 +101,7 @@
   }
 ?>
 
-<?php echo HTML::form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
   <div class="contentText">

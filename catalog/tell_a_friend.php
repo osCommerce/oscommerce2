@@ -124,7 +124,7 @@
   }
 ?>
 
-<?php echo HTML::form('email_friend', OSCOM::link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), $request_type), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('email_friend', OSCOM::link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), $request_type), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

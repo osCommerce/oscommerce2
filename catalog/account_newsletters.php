@@ -51,7 +51,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('account_newsletter', OSCOM::link('account_newsletters.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
+<?php echo HTML::form('account_newsletter', OSCOM::link('account_newsletters.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
 

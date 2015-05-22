@@ -76,7 +76,7 @@
   }
 ?>
 
-<?php echo HTML::form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . HTML::hiddenField('action', 'process'); ?>
+<?php echo HTML::form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
 

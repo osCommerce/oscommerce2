@@ -78,9 +78,9 @@
                                            'text' => $manufacturers_name);
           }
 
-          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get') .
-                     tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') . tep_hide_session_id() .
-                     '</form>';
+          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) .
+                  tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
+                  '</form>';
         }
       }
 
