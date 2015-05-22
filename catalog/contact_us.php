@@ -44,7 +44,7 @@
 
       $actionRecorder->record();
 
-      tep_redirect(OSCOM::link('contact_us.php', 'action=success'));
+      OSCOM::redirect('contact_us.php', 'action=success');
     }
   }
 

@@ -174,7 +174,7 @@
     if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
       tep_session_destroy();
 
-      tep_redirect(OSCOM::link('ssl_check.php'));
+      OSCOM::redirect('ssl_check.php');
     }
   }
 
@@ -186,7 +186,7 @@
 
     if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
       tep_session_destroy();
-      tep_redirect(OSCOM::link('login.php'));
+      OSCOM::redirect('login.php');
     }
   }
 
@@ -198,7 +198,7 @@
 
     if ( $_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address() ) {
       tep_session_destroy();
-      tep_redirect(OSCOM::link('login.php'));
+      OSCOM::redirect('login.php');
     }
   }
 
@@ -262,7 +262,7 @@
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
     if ( $session_started == false ) {
-      tep_redirect(OSCOM::link('cookie_usage.php'));
+      OSCOM::redirect('cookie_usage.php');
     }
 
     if ( DISPLAY_CART == 'true' ) {
@@ -285,7 +285,7 @@
                                 $_SESSION['cart']->add_cart($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $attributes, false);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'][$i])), 'success');
                               }
-                              tep_redirect(OSCOM::link($goto, tep_get_all_get_params($parameters)));
+                              OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
       // customer adds a product from the products page
       case 'add_product' :    if (isset($_POST['products_id']) && is_numeric($_POST['products_id'])) {
@@ -293,25 +293,25 @@
                                 $_SESSION['cart']->add_cart($_POST['products_id'], $_SESSION['cart']->get_quantity(tep_get_uprid($_POST['products_id'], $attributes))+1, $attributes);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_POST['products_id'])), 'success');
                               }
-                              tep_redirect(OSCOM::link($goto, tep_get_all_get_params($parameters)));
+                              OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
       // customer removes a product from their shopping cart
       case 'remove_product' : if (isset($_GET['products_id'])) {
                                 $_SESSION['cart']->remove($_GET['products_id']);
                                 $messageStack->add_session('product_action', sprintf(PRODUCT_REMOVED, tep_get_products_name($_GET['products_id'])), 'warning');
                               }
-                              tep_redirect(OSCOM::link($goto, tep_get_all_get_params($parameters)));
+                              OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
       // performed by the 'buy now' button in product listings and review page
       case 'buy_now' :        if (isset($_GET['products_id'])) {
                                 if (tep_has_product_attributes($_GET['products_id'])) {
-                                  tep_redirect(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id']));
+                                  OSCOM::redirect('product_info.php', 'products_id=' . $_GET['products_id']);
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['products_id'], $_SESSION['cart']->get_quantity($_GET['products_id'])+1);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_ADDED, tep_get_products_name((int)$_GET['products_id'])), 'success');
                                 }
                               }
-                              tep_redirect(OSCOM::link($goto, tep_get_all_get_params($parameters)));
+                              OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
       case 'notify' :         if ( isset($_SESSION['customer_id']) ) {
                                 if (isset($_GET['products_id'])) {
@@ -321,7 +321,7 @@
                                 } elseif (isset($_POST['notify'])) {
                                   $notify = $_POST['notify'];
                                 } else {
-                                  tep_redirect(OSCOM::link($PHP_SELF, tep_get_all_get_params(array('action', 'notify'))));
+                                  OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
                                 for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
@@ -332,10 +332,10 @@
                                     $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
-                                tep_redirect(OSCOM::link($PHP_SELF, tep_get_all_get_params(array('action', 'notify'))));
+                                OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -345,20 +345,20 @@
                                   $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
-                                tep_redirect(OSCOM::link($PHP_SELF, tep_get_all_get_params(array('action'))));
+                                OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {
                                 if (tep_has_product_attributes($_GET['pid'])) {
-                                  tep_redirect(OSCOM::link('product_info.php', 'products_id=' . $_GET['pid']));
+                                  OSCOM::redirect('product_info.php', 'products_id=' . $_GET['pid']);
                                 } else {
                                   $_SESSION['cart']->add_cart($_GET['pid'], $_SESSION['cart']->get_quantity($_GET['pid'])+1);
                                 }
                               }
-                              tep_redirect(OSCOM::link($goto, tep_get_all_get_params($parameters)));
+                              OSCOM::redirect($goto, tep_get_all_get_params($parameters));
                               break;
     }
   }

@@ -16,7 +16,7 @@
   require('includes/application_top.php');
 
   if (!isset($_GET['products_id'])) {
-    tep_redirect(OSCOM::link('index.php'));
+    OSCOM::redirect('index.php');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_info.php');

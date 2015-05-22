@@ -17,7 +17,7 @@
 
 // if the customer is not logged on, redirect them to the shopping cart page
   if (!isset($_SESSION['customer_id'])) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    OSCOM::redirect('shopping_cart.php');
   }
 
   $Qorders = $OSCOM_Db->prepare('select orders_id from :table_orders where customers_id = :customers_id order by date_purchased desc limit 1');
@@ -26,7 +26,7 @@
 
 // redirect to shopping cart page if no orders exist
   if ($Qorders->fetch() === false) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    OSCOM::redirect('shopping_cart.php');
   }
 
   $orders = $Qorders->toArray(); // TODO replace $orders used in template content modules with $Qorders
@@ -36,7 +36,7 @@
   $page_content = $oscTemplate->getContent('checkout_success');
 
   if ( isset($_GET['action']) && ($_GET['action'] == 'update') ) {
-    tep_redirect(OSCOM::link('index.php'));
+    OSCOM::redirect('index.php');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_success.php');

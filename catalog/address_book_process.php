@@ -17,7 +17,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -32,7 +32,7 @@
       $messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_DELETED, 'success');
     }
 
-    tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+    OSCOM::redirect('address_book.php', '', 'SSL');
   }
 
 // error checking when updating or adding an entry
@@ -211,7 +211,7 @@
         }
       }
 
-      tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+      OSCOM::redirect('address_book.php', '', 'SSL');
     }
   }
 
@@ -224,7 +224,7 @@
     if ($Qentry->fetch() === false) {
       $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-      tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+      OSCOM::redirect('address_book.php', '', 'SSL');
     }
 
     $entry = $Qentry->toArray();
@@ -232,7 +232,7 @@
     if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
       $messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
-      tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+      OSCOM::redirect('address_book.php', '', 'SSL');
     } else {
       $Qcheck = $OSCOM_Db->prepare('select address_book_id from :table_address_book where address_book_id = :address_book_id and customers_id = :customers_id');
       $Qcheck->bindInt(':address_book_id', $_GET['delete']);
@@ -242,7 +242,7 @@
       if ($Qcheck->fetch() === false) {
         $messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
 
-        tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+        OSCOM::redirect('address_book.php', '', 'SSL');
       }
     }
   } else {
@@ -253,7 +253,7 @@
     if (tep_count_customer_address_book_entries() >= MAX_ADDRESS_BOOK_ENTRIES) {
       $messageStack->add_session('addressbook', ERROR_ADDRESS_BOOK_FULL);
 
-      tep_redirect(OSCOM::link('address_book.php', '', 'SSL'));
+      OSCOM::redirect('address_book.php', '', 'SSL');
     }
   }
 

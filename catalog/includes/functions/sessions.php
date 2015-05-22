@@ -100,7 +100,7 @@
     }
 
     if ($sane_session_id == false) {
-      tep_redirect(OSCOM::link('index.php', '', 'NONSSL', false));
+      OSCOM::redirect('index.php', '', 'NONSSL', false);
     }
 
     register_shutdown_function('session_write_close');

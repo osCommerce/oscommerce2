@@ -126,7 +126,7 @@
   }
 
   if ($error == true) {
-    tep_redirect(OSCOM::link('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false));
+    OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false);
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));

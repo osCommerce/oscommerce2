@@ -18,15 +18,15 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if (!isset($_SESSION['sage_pay_direct_acsurl'])) {
-    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    OSCOM::redirect('checkout_payment.php', '', 'SSL');
   }
 
   if (!isset($_SESSION['payment']) || ($_SESSION['payment'] != 'sage_pay_direct')) {
-    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    OSCOM::redirect('checkout_payment.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_confirmation.php');

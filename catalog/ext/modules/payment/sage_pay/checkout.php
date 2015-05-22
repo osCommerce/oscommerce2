@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   chdir('../../../../');
@@ -18,28 +19,28 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    OSCOM::redirect('shopping_cart.php');
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
   }
 
   if (!isset($_SESSION['payment']) || (($_SESSION['payment'] != 'sage_pay_direct') && ($_SESSION['payment'] != 'sage_pay_server')) || (($_SESSION['payment'] == 'sage_pay_server') && !isset($_SESSION['sage_pay_server_nexturl']))) {
-    tep_redirect(OSCOM::link('checkout_payment.php', '', 'SSL'));
+    OSCOM::redirect('checkout_payment.php', '', 'SSL');
   }
 
 // load the selected payment module
@@ -52,7 +53,7 @@
   $payment_modules->update_status();
 
   if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
-    tep_redirect(OSCOM::link('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
   }
 
   if (is_array($payment_modules->modules)) {
@@ -77,7 +78,7 @@
     }
     // Out of Stock
     if ( (STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true) ) {
-      tep_redirect(OSCOM::link('shopping_cart.php'));
+      OSCOM::redirect('shopping_cart.php');
     }
   }
 
@@ -93,7 +94,7 @@
   }
 
   if ( !file_exists(DIR_FS_CATALOG . 'includes/template_top.php') ) {
-    tep_redirect($iframe_url);
+    HTTP::redirect($iframe_url);
   }
 
   include('includes/template_top.php');

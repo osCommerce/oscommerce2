@@ -18,23 +18,23 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
   if ($_SESSION['cart']->count_contents() < 1) {
-    tep_redirect(OSCOM::link('shopping_cart.php'));
+    OSCOM::redirect('shopping_cart.php');
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
   }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      tep_redirect(OSCOM::link('checkout_shipping.php', '', 'SSL'));
+      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
     }
   }
 
@@ -43,7 +43,7 @@
     $products = $_SESSION['cart']->get_products();
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       if (tep_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
-        tep_redirect(OSCOM::link('shopping_cart.php'));
+        OSCOM::redirect('shopping_cart.php');
         break;
       }
     }

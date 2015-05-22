@@ -17,17 +17,17 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   $Qcustomer = $OSCOM_Db-get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
 
   if (!empty($Qcustomer->value('customers_password'))) {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -55,7 +55,7 @@
 
       $messageStack->add_session('account', MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SUCCESS_PASSWORD_SET, 'success');
 
-      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+      OSCOM::redirect('account.php', '', 'SSL');
     }
   }
 

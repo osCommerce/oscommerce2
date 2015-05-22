@@ -18,7 +18,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    tep_redirect(OSCOM::link('login.php', '', 'SSL'));
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
@@ -30,10 +30,10 @@
     $sage_pay_direct = new sage_pay_direct();
 
     if ( !$sage_pay_direct->enabled ) {
-      tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+      OSCOM::redirect('account.php', '', 'SSL');
     }
   } else {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_sage_pay_cards.php');
@@ -41,7 +41,7 @@
   $sage_pay_cards = new cm_account_sage_pay_cards();
 
   if ( !$sage_pay_cards->isEnabled() ) {
-    tep_redirect(OSCOM::link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   if ( isset($_GET['action']) ) {
@@ -55,7 +55,7 @@
       }
     }
 
-    tep_redirect(OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+    OSCOM::redirect('ext/modules/content/account/sage_pay/cards.php', '', 'SSL');
   }
 
   $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
