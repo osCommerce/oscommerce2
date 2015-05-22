@@ -272,15 +272,13 @@
         $Qfilter->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
         $Qfilter->execute();
       } else {
-        $Qfilter = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS distinct m.manufacturers_id as id, m.manufacturers_name as name from :table_products p, :table_products_to_categories p2c, :table_manufacturers m where p.products_status = "1" and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = :categories_id order by m.manufacturers_name');
+        $Qfilter = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS distinct m.manufacturers_id as id, m.manufacturers_name as name from :table_products p, :table_products_to_categories p2c, :table_manufacturers m where p.products_status = 1 and p.manufacturers_id = m.manufacturers_id and p.products_id = p2c.products_id and p2c.categories_id = :categories_id order by m.manufacturers_name');
         $Qfilter->bindInt(':categories_id', $current_category_id);
         $Qfilter->execute();
       }
 
-      $QfilterTotalRows = $OSCOM_Db->query('select found_rows()')->fetchColumn();
-
-      if ($QfilterTotalRows > 1) {
-        echo '<div>' . HTML::form('filter', OSCOM::link('index.php'), 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+      if ($Qfilter->getPageSetTotalRows() > 1) {
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', $request_type, false), 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));
