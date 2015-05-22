@@ -280,7 +280,7 @@
       $QfilterTotalRows = $OSCOM_Db->query('select found_rows()')->fetchColumn();
 
       if ($QfilterTotalRows > 1) {
-        echo '<div>' . tep_draw_form('filter', 'index.php', 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php'), 'get') . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));

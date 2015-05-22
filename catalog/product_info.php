@@ -159,7 +159,7 @@
   <?php echo $Qproduct->value('products_description'); ?>
 </div>
 
-<?php echo tep_draw_form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <?php
     $Qpa = $OSCOM_Db->prepare('select distinct popt.products_options_id, popt.products_options_name from :table_products_options popt, :table_products_attributes patrib where patrib.products_id = :products_id and patrib.options_id = popt.products_options_id and popt.language_id = :language_id order by popt.products_options_name');

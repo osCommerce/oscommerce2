@@ -106,7 +106,7 @@
     $form_action_url = OSCOM::link('checkout_process.php', '', 'SSL');
   }
 
-  echo tep_draw_form('checkout_confirmation', $form_action_url, 'post');
+  echo HTML::form('checkout_confirmation', $form_action_url, 'post');
 ?>
 
 <div class="contentContainer">

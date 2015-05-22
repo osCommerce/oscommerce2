@@ -35,7 +35,7 @@
   if ($_SESSION['cart']->count_contents() > 0) {
 ?>
 
-<?php echo tep_draw_form('cart_quantity', OSCOM::link('shopping_cart.php', 'action=update_product'), 'post', 'role="form"'); ?>
+<?php echo HTML::form('cart_quantity', OSCOM::link('shopping_cart.php', 'action=update_product'), 'post', 'role="form"'); ?>
 
 <div class="contentContainer">
 

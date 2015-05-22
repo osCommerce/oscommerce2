@@ -41,6 +41,23 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
+    public static function form($name, $action, $method = 'post', $parameters = '', $tokenize = false)
+    {
+        $form = '<form name="' . static::output($name) . '" action="' . static::output($action) . '" method="' . static::output($method) . '"';
+
+        if (!empty($parameters)) {
+            $form .= ' ' . $parameters;
+        }
+
+        $form .= '>';
+
+        if (($tokenize == true) && isset($_SESSION['sessiontoken'])) {
+            $form .= static::hiddenField('formid', $_SESSION['sessiontoken']);
+        }
+
+        return $form;
+    }
+
     public static function inputField($name, $value = '', $parameters = '', $type = 'text', $reinsert_value = true, $class = 'form-control')
     {
         $field = '<input type="' . static::output($type) . '" name="' . static::output($name) . '"';

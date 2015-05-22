@@ -37,7 +37,7 @@
     function execute() {
       global $request_type, $oscTemplate;
 
-      $form_output = tep_draw_form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get') .
+      $form_output = HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get') .
                      '<div class="input-group">' . HTML::inputField('keywords', '', 'required aria-required="true" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="glyphicon glyphicon-search"></i></button></span></div>' .
                      HTML::hiddenField('search_in_description', '0') .
                      tep_hide_session_id() .

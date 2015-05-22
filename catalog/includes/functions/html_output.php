@@ -92,26 +92,6 @@
   }
 
 ////
-// Output a form
-// 2.4 - user must explicitly pass
-// class="form-horizontal" role="form"
-// into the parameters on each form
-// as not all forms are horizontal
-  function tep_draw_form($name, $action, $method = 'post', $parameters = '', $tokenize = false) {
-    $form = '<form name="' . tep_output_string($name) . '" action="' . tep_output_string($action) . '" method="' . tep_output_string($method) . '"';
-
-    if (tep_not_null($parameters)) $form .= ' ' . $parameters;
-
-    $form .= '>';
-
-    if ( ($tokenize == true) && isset($_SESSION['sessiontoken']) ) {
-      $form .= '<input type="hidden" name="formid" value="' . tep_output_string($_SESSION['sessiontoken']) . '" />';
-    }
-
-    return $form;
-  }
-
-////
 // Hide form elements
   function tep_hide_session_id() {
     global $session_started, $SID;

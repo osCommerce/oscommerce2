@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -77,7 +78,7 @@
                                            'text' => $manufacturers_name);
           }
 
-          $data = tep_draw_form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get') .
+          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get') .
                      tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') . tep_hide_session_id() .
                      '</form>';
         }

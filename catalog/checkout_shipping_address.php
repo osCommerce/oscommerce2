@@ -225,7 +225,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('checkout_address', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
 

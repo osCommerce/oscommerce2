@@ -83,7 +83,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
 
 <div class="contentContainer">
   <div class="contentText">
