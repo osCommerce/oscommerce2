@@ -374,9 +374,6 @@
 // include validation functions (right now only email address)
   require('includes/functions/validations.php');
 
-// infobox
-  require('includes/classes/boxes.php');
-
 // auto activate and expire banners
   require('includes/functions/banner.php');
   tep_activate_banners();
