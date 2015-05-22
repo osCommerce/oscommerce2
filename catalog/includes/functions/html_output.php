@@ -37,12 +37,3 @@
   function tep_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
     return tep_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
-
-  // review stars
-  function tep_draw_stars($rating = 0, $meta = false) {
-    $stars = str_repeat('<span class="glyphicon glyphicon-star"></span>', (int)$rating);
-    $stars .= str_repeat('<span class="glyphicon glyphicon-star-empty"></span>', 5-(int)$rating);
-    if ($meta !== false) $stars .= '<meta itemprop="rating" content="' . (int)$rating . '" />';
-
-    return $stars;
-  }

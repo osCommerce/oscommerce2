@@ -138,27 +138,27 @@
       <div class="col-sm-9">
         <div class="radio">
           <label>
-            <?php echo HTML::radioField('rating', '5') . tep_draw_stars(5, false) . ' ' . TEXT_GOOD; ?>
+            <?php echo HTML::radioField('rating', '5') . HTML::stars(5, false) . ' ' . TEXT_GOOD; ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo HTML::radioField('rating', '4') . tep_draw_stars(4, false); ?>
+            <?php echo HTML::radioField('rating', '4') . HTML::stars(4, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo HTML::radioField('rating', '3') . tep_draw_stars(3, false); ?>
+            <?php echo HTML::radioField('rating', '3') . HTML::stars(3, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo HTML::radioField('rating', '2') . tep_draw_stars(2, false); ?>
+            <?php echo HTML::radioField('rating', '2') . HTML::stars(2, false); ?>
           </label>
         </div>
         <div class="radio">
           <label>
-            <?php echo HTML::radioField('rating', '1', null, 'required aria-required="true"') . tep_draw_stars(1, false) . ' ' . TEXT_BAD; ?>
+            <?php echo HTML::radioField('rating', '1', null, 'required aria-required="true"') . HTML::stars(1, false) . ' ' . TEXT_BAD; ?>
           </label>
         </div>
       </div>

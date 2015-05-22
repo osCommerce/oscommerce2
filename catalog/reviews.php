@@ -66,7 +66,7 @@
       <footer>
         <?php
         $review_name = $Qreviews->valueProtected('customers_name');
-        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
+        echo sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
       </footer>
     </blockquote>
   </div>

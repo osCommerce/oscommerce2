@@ -79,7 +79,7 @@
     echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
     echo '  <meta itemprop="ratingValue" content="' . max(1, (int)round($Qa->value('average'))) . '" />';
     echo '  <meta itemprop="bestRating" content="5" />';
-    echo    sprintf(REVIEWS_TEXT_AVERAGE, $Qa->valueInt('count'), tep_draw_stars(round($Qa->value('average'))));
+    echo    sprintf(REVIEWS_TEXT_AVERAGE, $Qa->valueInt('count'), HTML::stars(round($Qa->value('average'))));
     echo '</div>';
     ?>
 
@@ -144,7 +144,7 @@
       <footer>
         <?php
         $review_name = $Qreviews->valueProtected('customers_name');
-        echo sprintf(REVIEWS_TEXT_RATED, tep_draw_stars($Qreviews->value('reviews_rating')), $review_name, $review_name);
+        echo sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name);
         ?>
       </footer>
     </blockquote>
