@@ -22,7 +22,7 @@
 
   $www_location = substr($www_location, 0, strpos($www_location, 'install'));
 
-  $dir_fs_www_root = osc_realpath(dirname(__FILE__) . '/../../../') . '/';
+  $dir_fs_www_root = realpath(dirname(__FILE__) . '/../../../') . '/';
 ?>
 
 
@@ -76,7 +76,7 @@
       <div class="form-group has-feedback">
         <label for="webRoot" class="control-label col-xs-3">Webserver Root Directory</label>
         <div class="col-xs-9">
-          <?php echo HTML::inputField('DIR_FS_DOCUMENT_ROOT', $dir_fs_www_root, 'required aria-required="true" id="webRoot"'); ?>
+          <?php echo HTML::inputField('DIR_FS_DOCUMENT_ROOT', str_replace('\\', '/', $dir_fs_www_root), 'required aria-required="true" id="webRoot"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The directory where the online store is installed on the server.</span>
         </div>

@@ -29,22 +29,25 @@
     </div>
 
 <?php
-    $configfile_array = array();
+    $configfile_array = [
+      OSCOM::BASE_DIR . '/configure.php',
+      realpath(OSCOM::BASE_DIR . '/../admin/includes') . '/configure.php'
+    ];
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php', 0777);
-    }
+    foreach ($configfile_array as $key => $f) {
+      if (!file_exists($f)) {
+        continue;
+      } elseif (!is_writable($f)) {
+// try to chmod and try again
+        @chmod($f, 0777);
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php', 0777);
-    }
+        if (!is_writable($f)) {
+          continue;
+        }
+      }
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php';
-    }
-
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php';
+// file exists and is writable
+      unset($configfile_array[$key]);
     }
 
     $warning_array = array();
@@ -95,7 +98,7 @@
 
 <?php
           for ($i=0, $n=sizeof($configfile_array); $i<$n; $i++) {
-            echo $configfile_array[$i];
+            echo str_replace('\\', '/', $configfile_array[$i]); // take care of windows path backslashes
 
             if (isset($configfile_array[$i+1])) {
               echo '<br />';

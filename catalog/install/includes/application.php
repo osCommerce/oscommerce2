@@ -22,6 +22,4 @@
   spl_autoload_register('OSC\\OM\\OSCOM::autoload');
 
   OSCOM::initialize();
-
-  require('includes/functions/general.php');
 ?>

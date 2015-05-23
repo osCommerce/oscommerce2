@@ -108,7 +108,7 @@
       </div>
 
 <?php
-  if (osc_is_writable($dir_fs_document_root) && osc_is_writable($dir_fs_document_root . 'admin')) {
+  if (is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
 ?>
       <div class="form-group has-feedback">
         <label for="adminDir" class="control-label col-xs-3">Administration Directory Name</label>
