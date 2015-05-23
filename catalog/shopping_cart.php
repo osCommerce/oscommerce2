@@ -15,6 +15,8 @@
 
   require("includes/application_top.php");
 
+  $OSCOM_Hooks->register('cart');
+
   if ($_SESSION['cart']->count_contents() > 0) {
     include(DIR_WS_CLASSES . 'payment.php');
     $payment_modules = new payment;
@@ -139,22 +141,7 @@
   </div>
 
 <?php
-    $initialize_checkout_methods = $payment_modules->checkout_initialization_method();
-
-    if (!empty($initialize_checkout_methods)) {
-?>
-
-  <p class="text-right"><?php echo TEXT_ALTERNATIVE_CHECKOUT_METHODS; ?></p>
-
-<?php
-      foreach($initialize_checkout_methods as $value) {
-?>
-
-  <p class="text-right"><?php echo $value; ?></p>
-
-<?php
-      }
-    }
+    echo $OSCOM_Hooks->call('cart', 'displayAlternativeCheckoutButtons');
 ?>
 
 </div>
