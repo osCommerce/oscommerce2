@@ -20,5 +20,4 @@
   require('../includes/autoload.php');
 
   require('includes/functions/general.php');
-  require('includes/functions/html_output.php');
 ?>

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   $www_location = 'http://' . $_SERVER['HTTP_HOST'];
 
   if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
@@ -65,7 +67,7 @@
       <div class="form-group has-feedback">
         <label for="wwwAddress" class="control-label col-xs-3">WWW Address</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_input_field('HTTP_WWW_ADDRESS', $www_location, 'required aria-required="true" id="wwwAddress" placeholder="http://"'); ?>
+          <?php echo HTML::inputField('HTTP_WWW_ADDRESS', $www_location, 'required aria-required="true" id="wwwAddress" placeholder="http://"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The web address to the online store.</span>
         </div>
@@ -74,18 +76,18 @@
       <div class="form-group has-feedback">
         <label for="webRoot" class="control-label col-xs-3">Webserver Root Directory</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_input_field('DIR_FS_DOCUMENT_ROOT', $dir_fs_www_root, 'required aria-required="true" id="webRoot"'); ?>
+          <?php echo HTML::inputField('DIR_FS_DOCUMENT_ROOT', $dir_fs_www_root, 'required aria-required="true" id="webRoot"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The directory where the online store is installed on the server.</span>
         </div>
       </div>
 
-      <p><?php echo osc_draw_button('Continue To Step 3', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
+      <p><?php echo HTML::button('Continue To Step 3', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
       <?php
       foreach ( $_POST as $key => $value ) {
         if (($key != 'x') && ($key != 'y')) {
-          echo osc_draw_hidden_field($key, $value);
+          echo HTML::hiddenField($key, $value);
         }
       }
       ?>

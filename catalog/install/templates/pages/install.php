@@ -9,6 +9,8 @@
 
   Released under the GNU General Public License
 */
+
+  use OSC\OM\HTML;
 ?>
 
 <script>
@@ -34,10 +36,10 @@
 
     $('#mBoxContents').html('<p><i class="fa fa-spinner fa-spin fa-2x"></i> Testing database connection..</p>');
 
-    dbServer = $('#DB_SERVER').val();
-    dbUsername = $('#DB_SERVER_USERNAME').val();
-    dbPassword = $('#DB_SERVER_PASSWORD').val();
-    dbName = $('#DB_DATABASE').val();
+    dbServer = $('#dbServer').val();
+    dbUsername = $('#userName').val();
+    dbPassword = $('#passWord').val();
+    dbName = $('#dbName').val();
 
     var dbCheckUrl = 'rpc.php?action=dbCheck&server=' + encodeURIComponent(dbServer) + '&username=' + encodeURIComponent(dbUsername) + '&password=' + encodeURIComponent(dbPassword) + '&name=' + encodeURIComponent(dbName);
 
@@ -153,7 +155,7 @@
       <div class="form-group has-feedback">
         <label for="dbServer" class="control-label col-xs-3">Database Server</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_input_field('DB_SERVER', NULL, 'required aria-required="true" id="dbServer" placeholder="localhost"'); ?>
+          <?php echo HTML::inputField('DB_SERVER', null, 'required aria-required="true" id="dbServer" placeholder="localhost"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The address of the database server in the form of a hostname or IP address.</span>
         </div>
@@ -162,7 +164,7 @@
       <div class="form-group has-feedback">
         <label for="userName" class="control-label col-xs-3">Username</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_input_field('DB_SERVER_USERNAME', NULL, 'required aria-required="true" id="userName" placeholder="Username"'); ?>
+          <?php echo HTML::inputField('DB_SERVER_USERNAME', null, 'required aria-required="true" id="userName" placeholder="Username"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The username used to connect to the database server.</span>
         </div>
@@ -171,7 +173,7 @@
       <div class="form-group has-feedback">
         <label for="passWord" class="control-label col-xs-3">Password</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_password_field('DB_SERVER_PASSWORD', NULL, 'required aria-required="true" id="passWord"'); ?>
+          <?php echo HTML::passwordField('DB_SERVER_PASSWORD', null, 'required aria-required="true" id="passWord"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The password that is used together with the username to connect to the database server.</span>
         </div>
@@ -180,13 +182,13 @@
       <div class="form-group has-feedback">
         <label for="dbName" class="control-label col-xs-3">Database Name</label>
         <div class="col-xs-9">
-          <?php echo osc_draw_input_field('DB_DATABASE', NULL, 'required aria-required="true" id="dbName" placeholder="Database"'); ?>
+          <?php echo HTML::inputField('DB_DATABASE', null, 'required aria-required="true" id="dbName" placeholder="Database"'); ?>
           <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The name of the database to hold the data in.</span>
         </div>
       </div>
 
-      <p><?php echo osc_draw_button('Continue To Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
+      <p><?php echo HTML::button('Continue To Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
     </form>
 
