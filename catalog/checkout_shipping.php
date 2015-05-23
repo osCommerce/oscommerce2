@@ -147,11 +147,11 @@
 // get all available shipping quotes
   $quotes = $shipping_modules->quote();
 
-// if no shipping method has been selected, automatically select the cheapest method.
+// if no shipping method has been selected, automatically select the first method.
 // if the modules status was changed when none were available, to save on implementing
-// a javascript force-selection method, also automatically select the cheapest shipping
+// a javascript force-selection method, also automatically select the first shipping
 // method if more than one module is now enabled
-  if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($_SESSION['shipping'] === false) && (tep_count_shipping_modules() > 1) ) ) $_SESSION['shipping'] = $shipping_modules->cheapest();
+  if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($_SESSION['shipping'] === false) && (tep_count_shipping_modules() > 1) ) ) $_SESSION['shipping'] = $shipping_modules->get_first();
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping.php');
 

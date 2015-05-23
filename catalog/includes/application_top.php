@@ -430,3 +430,7 @@
       $breadcrumb->add($Qmanufacturer->value('manufacturers_name'), OSCOM::link('index.php', 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
+
+  require(DIR_FS_CATALOG . 'includes/classes/hooks.php');
+  $OSCOM_Hooks = new hooks('shop');
+?>
