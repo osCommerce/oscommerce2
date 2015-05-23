@@ -10,12 +10,13 @@
   Released under the GNU General Public License
 */
 
-  $compat_register_globals = true;
+  use OSC\OM\OSCOM;
 
+  $compat_register_globals = true;
 ?>
 
 <div class="alert alert-info">
-  <h1>Welcome to osCommerce Online Merchant v<?php echo osc_get_version(); ?>!</h1>
+  <h1>Welcome to osCommerce Online Merchant v<?php echo OSCOM::getVersion(); ?>!</h1>
 
   <p>osCommerce Online Merchant helps you sell products worldwide with your own online store. Its Administration Tool manages products, customers, orders, newsletters, specials, and more to successfully build the success of your online business.</p>
   <p>osCommerce has attracted a large community of store owners and developers who support each other and have provided over 7,000 free add-ons that can extend the features and potential of your online store.</p>
@@ -28,22 +29,25 @@
     </div>
 
 <?php
-    $configfile_array = array();
+    $configfile_array = [
+      OSCOM::BASE_DIR . '/configure.php',
+      realpath(OSCOM::BASE_DIR . '/../admin/includes') . '/configure.php'
+    ];
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php', 0777);
-    }
+    foreach ($configfile_array as $key => $f) {
+      if (!file_exists($f)) {
+        continue;
+      } elseif (!is_writable($f)) {
+// try to chmod and try again
+        @chmod($f, 0777);
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      @chmod(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php', 0777);
-    }
+        if (!is_writable($f)) {
+          continue;
+        }
+      }
 
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../includes') . '/configure.php';
-    }
-
-    if (file_exists(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php') && !osc_is_writable(osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php')) {
-      $configfile_array[] = osc_realpath(dirname(__FILE__) . '/../../../admin/includes') . '/configure.php';
+// file exists and is writable
+      unset($configfile_array[$key]);
     }
 
     $warning_array = array();
@@ -94,7 +98,7 @@
 
 <?php
           for ($i=0, $n=sizeof($configfile_array); $i<$n; $i++) {
-            echo $configfile_array[$i];
+            echo str_replace('\\', '/', $configfile_array[$i]); // take care of windows path backslashes
 
             if (isset($configfile_array[$i+1])) {
               echo '<br />';

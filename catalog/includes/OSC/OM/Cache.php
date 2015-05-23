@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\OSCOM;
+
 class Cache
 {
     private $data;
@@ -27,8 +29,8 @@ class Cache
             return false;
         }
 
-        if (is_writable(OSCOM_BASE_DIR . 'work/')) {
-            return file_put_contents(OSCOM_BASE_DIR . 'work/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
+        if (is_writable(OSCOM::BASE_DIR . 'work/')) {
+            return file_put_contents(OSCOM::BASE_DIR . 'work/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
         }
 
         return false;
@@ -46,7 +48,7 @@ class Cache
 
         $this->key = $key;
 
-        $filename = OSCOM_BASE_DIR . 'work/' . $key . '.cache';
+        $filename = OSCOM::BASE_DIR . 'work/' . $key . '.cache';
 
         if (file_exists($filename)) {
             $difference = floor((time() - filemtime($filename)) / 60);
@@ -95,14 +97,14 @@ class Cache
             return false;
         }
 
-        if (is_writable(OSCOM_BASE_DIR . 'work/')) {
+        if (is_writable(OSCOM::BASE_DIR . 'work/')) {
             $key_length = strlen($key);
 
-            $d = dir(OSCOM_BASE_DIR . 'work/');
+            $d = dir(OSCOM::BASE_DIR . 'work/');
 
             while (($entry = $d->read()) !== false) {
                 if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
-                    @unlink(OSCOM_BASE_DIR . 'work/' . $entry);
+                    @unlink(OSCOM::BASE_DIR . 'work/' . $entry);
                 }
             }
 

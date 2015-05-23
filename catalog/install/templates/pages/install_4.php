@@ -11,6 +11,8 @@
 */
 
   use OSC\OM\Db;
+  use OSC\OM\Hash;
+  use OSC\OM\HTML;
 
   $OSCOM_Db = Db::initialize($_POST['DB_SERVER'], $_POST['DB_SERVER_USERNAME'], $_POST['DB_SERVER_PASSWORD'], $_POST['DB_DATABASE']);
 
@@ -30,9 +32,9 @@
     $Qcheck->execute();
 
     if ($Qcheck->fetch() !== false) {
-      $OSCOM_Db->save('administrators', ['user_password' => osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))], ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME']]);
+      $OSCOM_Db->save('administrators', ['user_password' => Hash::encrypt(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))], ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME']]);
     } else {
-      $OSCOM_Db->save('administrators', ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME'], 'user_password' => osc_encrypt_password(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))]);
+      $OSCOM_Db->save('administrators', ['user_name' => $_POST['CFG_ADMINISTRATOR_USERNAME'], 'user_password' => Hash::encrypt(trim($_POST['CFG_ADMINISTRATOR_PASSWORD']))]);
     }
   }
 
@@ -109,7 +111,7 @@
     }
 
     $admin_folder = 'admin';
-    if (isset($_POST['CFG_ADMIN_DIRECTORY']) && !empty($_POST['CFG_ADMIN_DIRECTORY']) && osc_is_writable($dir_fs_document_root) && osc_is_writable($dir_fs_document_root . 'admin')) {
+    if (isset($_POST['CFG_ADMIN_DIRECTORY']) && !empty($_POST['CFG_ADMIN_DIRECTORY']) && is_writable($dir_fs_document_root) && is_writable($dir_fs_document_root . 'admin')) {
       $admin_folder = preg_replace('/[^a-zA-Z0-9]/', '', trim($_POST['CFG_ADMIN_DIRECTORY']));
 
       if (empty($admin_folder)) {
@@ -219,8 +221,8 @@
     <br />
 
     <div class="row">
-      <div class="col-sm-6"><?php echo osc_draw_button('Online Store (Frontend)', 'cart', $http_server . $http_catalog . 'index.php', 'primary', array('newwindow' => 1), 'btn-success btn-block'); ?></div>
-      <div class="col-sm-6"><?php echo osc_draw_button('Administration Tool (Backend)', 'locked', $http_server . $http_catalog . $admin_folder . '/index.php', 'primary', array('newwindow' => 1), 'btn-info btn-block'); ?></div>
+      <div class="col-sm-6"><?php echo HTML::button('Online Store (Frontend)', 'cart', $http_server . $http_catalog . 'index.php', 'primary', array('newwindow' => 1), 'btn-success btn-block'); ?></div>
+      <div class="col-sm-6"><?php echo HTML::button('Administration Tool (Backend)', 'locked', $http_server . $http_catalog . $admin_folder . '/index.php', 'primary', array('newwindow' => 1), 'btn-info btn-block'); ?></div>
     </div>
   </div>
   <div class="col-xs-12 col-sm-pull-9 col-sm-3">

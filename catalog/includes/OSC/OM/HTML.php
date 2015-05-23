@@ -226,8 +226,10 @@ class HTML
         return $field;
     }
 
-    public static function selectField($name, $values, $default = '', $parameters = '', $required = false, $class = 'form-control')
+    public static function selectField($name, array $values, $default = null, $parameters = '', $required = false, $class = 'form-control')
     {
+        $group = false;
+
         $field = '<select name="' . static::output($name) . '"';
 
         if ($required == true) {
@@ -256,14 +258,34 @@ class HTML
             }
         }
 
-        foreach ($values as $v) {
+        $ci = new \CachingIterator(new \ArrayIterator($values), \CachingIterator::TOSTRING_USE_CURRENT); // used for hasNext() below
+
+        foreach ($ci as $v) {
+            if (isset($v['group'])) {
+                if ($group != $v['group']) {
+                    $group = $v['group'];
+
+                    $field .= '<optgroup label="' . static::output($v['group']) . '">';
+                }
+            }
+
             $field .= '<option value="' . static::output($v['id']) . '"';
 
-            if ($v['id'] == $default) {
+            if (isset($default) && ($v['id'] == $default)) {
                 $field .= ' selected="selected"';
             }
 
+            if (isset($v['params'])) {
+                $field .= ' ' . $v['params'];
+            }
+
             $field .= '>' . static::outputProtected($v['text']) . '</option>';
+
+            if (($group !== false) && (($group != $v['group']) || ($ci->hasNext() === false))) {
+                $group = false;
+
+                $field .= '</optgroup>';
+            }
         }
 
         $field .= '</select>';

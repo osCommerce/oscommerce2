@@ -8,11 +8,38 @@
 
 namespace OSC\OM;
 
+use OSC\OM\DateTime;
 use OSC\OM\HTML;
 use OSC\OM\HTTP;
 
 class OSCOM
 {
+    const BASE_DIR = OSCOM_BASE_DIR;
+
+    protected static $version;
+
+    public static function initialize()
+    {
+        DateTime::setTimeZone();
+    }
+
+    public static function getVersion()
+    {
+        if (!isset(static::$version)) {
+            $file = static::BASE_DIR . 'version.php';
+
+            $v = trim(file_get_contents($file));
+
+            if (preg_match('/^(\d+\.)?(\d+\.)?(\d+)$/', $v)) {
+                static::$version = $v;
+            } else {
+                trigger_error('Version number is not numeric. Please verify: ' . $file);
+            }
+        }
+
+        return static::$version;
+    }
+
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
     {
         global $request_type;
@@ -101,5 +128,23 @@ class OSCOM
         }
 
         HTTP::redirect($url);
+    }
+
+    public static function autoload($class)
+    {
+        $prefix = 'OSC\\OM\\';
+
+        if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
+            return false;
+        }
+
+        $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
+        $custom = str_replace('OSCOM/OM/', 'OSCOM/Custom/OM/', $file);
+
+        if (file_exists($custom)) {
+            require($custom);
+        } elseif (file_exists($file)) {
+            require($file);
+        }
     }
 }
