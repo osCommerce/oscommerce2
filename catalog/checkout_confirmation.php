@@ -309,7 +309,7 @@
 
 <script>
 $('form[name="checkout_confirmation"]').submit(function() {
-  $('button[data-button="payNow"]').button('option', { label: '<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>', disabled: true });
+  $('button[data-button="payNow"]').text('<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>').prop('disabled', true);
 });
 </script>
 
