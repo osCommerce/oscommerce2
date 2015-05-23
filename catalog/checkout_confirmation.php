@@ -295,43 +295,23 @@
 ?>
 
   <div class="contentText">
-    <div>
 
 <?php
   if (is_array($payment_modules->modules)) {
     echo $payment_modules->process_button();
   }
 
-  echo HTML::button(IMAGE_BUTTON_CONFIRM_ORDER, 'glyphicon glyphicon-ok', null, 'primary', null, 'btn-success btn-block');
+  echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'glyphicon glyphicon-ok', null, 'primary', array('params' => 'data-button="payNow"'), 'btn-success btn-block');
 ?>
 
-    </div>
   </div>
-
-  <div class="clearfix"></div>
-
-  <div class="contentText">
-
-    <div class="stepwizard">
-      <div class="stepwizard-row">
-        <div class="stepwizard-step">
-          <a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
-        </div>
-        <div class="stepwizard-step">
-          <a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
-        </div>
-        <div class="stepwizard-step">
-          <button type="button" class="btn btn-primary btn-circle">3</button>
-          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
 </div>
+
+<script>
+$('form[name="checkout_confirmation"]').submit(function() {
+  $('button[data-button="payNow"]').button('option', { label: '<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>', disabled: true });
+});
+</script>
 
 </form>
 
