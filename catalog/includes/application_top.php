@@ -37,10 +37,10 @@
     }
   }
 
-// set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-  date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
+  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
 
-  require('includes/autoload.php');
+  OSCOM::initialize();
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
