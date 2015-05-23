@@ -12,11 +12,12 @@
 
   use OSC\OM\Cache;
   use OSC\OM\Db;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
 // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
-  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../') . '/');
+  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
 
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
@@ -28,10 +29,10 @@
     include('includes/configure.php');
   }
 
-// set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
+  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
 
-  require(OSCOM_BASE_DIR . 'includes/autoload.php');
+  OSCOM::initialize();
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
