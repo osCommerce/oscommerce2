@@ -10,7 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   require('includes/application_top.php');
+
+  $OSCOM_Hooks = Registry::get('Hooks');
 
   $OSCOM_Hooks->register('orders');
 
