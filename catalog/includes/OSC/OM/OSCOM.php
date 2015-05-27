@@ -138,8 +138,17 @@ class OSCOM
             return false;
         }
 
-        $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
-        $custom = str_replace('OSCOM/OM/', 'OSCOM/Custom/OM/', $file);
+
+        if (strncmp($prefix . 'Apps\\', $class, strlen($prefix . 'Apps\\')) === 0) {
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['OSC\\Custom\\OM\\', '/'], $class) . '.php';
+        } elseif (strncmp($prefix . 'Module\\', $class, strlen($prefix . 'Module\\')) === 0) {
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['OSC\\Custom\\OM\\', '/'], $class) . '.php';
+        } else {
+          $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
+          $custom = str_replace('OSC/OM/', 'OSC/Custom/OM/', $file);
+        }
 
         if (file_exists($custom)) {
             require($custom);
