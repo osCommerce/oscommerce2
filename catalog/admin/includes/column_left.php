@@ -52,7 +52,7 @@
                             if (!$mfile->isDot() && !$mfile->isDir() && ($mfile->getExtension() == 'php')) {
                                 $class = 'OSC\\OM\\Apps\\' . $file->getFilename() . '\\Module\\Admin\\Menu\\' . $mfile->getBasename('.php');
 
-                                if (in_array('OSC\\OM\\ModuleAdminMenuInterface', class_implements($class))) {
+                                if (is_subclass_of($class, 'OSC\\OM\\ModuleAdminMenuInterface')) {
                                     call_user_func([$class, 'execute']);
                                 }
                             }
