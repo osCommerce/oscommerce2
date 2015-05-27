@@ -1,30 +1,18 @@
 <?php
-/*
-  $Id$
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
+  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  */
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+namespace OSC\OM\Module\Hooks\Shop\Cart;
 
-  Copyright (c) 2014 osCommerce
+class AdditionalCheckoutButtons
+{
+    public static function display() {
+        global $payment_modules;
 
-  Released under the GNU General Public License
-*/
-
-  class hook_shop_cart_alternative_checkout_buttons {
-    function listen_displayAlternativeCheckoutButtons() {
-      global $payment_modules;
-
-      $initialize_checkout_methods = $payment_modules->checkout_initialization_method();
-
-      if ( !empty($initialize_checkout_methods) ) {
-        $output = '<p class="text-right">' . TEXT_ALTERNATIVE_CHECKOUT_METHODS . '</p>';
-
-        foreach ( $initialize_checkout_methods as $value ) {
-          $output .= '<p class="text-right">' . $value . '</p>';
-        }
-
-        return $output;
-      }
+        return $payment_modules->checkout_initialization_method();
     }
-  }
-?>
+}

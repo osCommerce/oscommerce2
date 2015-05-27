@@ -432,5 +432,5 @@
     }
   }
 
-  Registry::set('Hooks', new Hooks('shop'));
+  Registry::set('Hooks', new Hooks('Shop'));
 ?>

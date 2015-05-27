@@ -9,7 +9,6 @@
 namespace OSC\OM;
 
 use OSC\OM\OSCOM;
-use OSC\OM\Registry;
 
 class Hooks
 {
@@ -19,47 +18,67 @@ class Hooks
     public function __construct($site)
     {
         $this->site = basename($site);
-
-        $this->register('global');
     }
 
-    public function register($group)
+    public function call($group, $hook, $action)
+    {
+        if (!isset($this->hooks[$this->site][$group][$hook][$action])) {
+            $this->register($group, $hook, $action);
+        }
+
+        $result = [];
+
+        foreach ($this->hooks[$this->site][$group][$hook][$action] as $ns) {
+            $bait = call_user_func(array($ns . '\\' . $this->site . '\\' . $group . '\\' . $hook, $action));
+
+            if (!empty($bait)) {
+                $result[] = $bait;
+            }
+        }
+
+        if (!empty($result)) {
+            return $result;
+        }
+    }
+
+    protected function register($group, $hook, $action)
     {
         $group = basename($group);
 
-        $directory = OSCOM::BASE_DIR . 'hooks/' . $this->site . '/' . $group;
+        $this->hooks[$this->site][$group][$hook][$action] = [];
+
+        $directory = OSCOM::BASE_DIR . 'Module/Hooks/' . $this->site . '/' . $group;
 
         if (file_exists($directory)) {
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
-                    if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php')) {
-                        $code = $file->getBasename('.php');
-                        $class = 'hook_' . $this->site . '_' . $group . '_' . $code;
+                    if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php') && ($file->getBasename('.php') == $hook)) {
+                        $ns = 'OSC\\OM\\Module\\Hooks';
+                        $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
 
-                        include($directory . '/' . $file);
-                        Registry::set($class, new $class());
-
-                        foreach (get_class_methods(Registry::get($class)) as $method) {
-                            if (substr($method, 0, 7) == 'listen_') {
-                                $this->hooks[$this->site][$group][substr($method, 7)][] = $code;
-                            }
+                        if (method_exists($class, $action)) {
+                            $this->hooks[$this->site][$group][$hook][$action][] = $ns;
                         }
                     }
                 }
             }
         }
-    }
 
-    public function call($group, $action)
-    {
-        $result = '';
+        $directory = OSCOM::BASE_DIR . 'apps';
 
-        foreach ($this->hooks[$this->site][$group][$action] as $hook) {
-            $result .= call_user_func(array(Registry::get('hook_' . $this->site . '_' . $group . '_' . $hook), 'listen_' . $action));
-        }
+        if (file_exists($directory)) {
+            if ($dir = new \DirectoryIterator($directory)) {
+                foreach ($dir as $file) {
+                    if (!$file->isDot() && $file->isDir() && file_exists($directory . '/' . $file->getFilename() . '/Module/Hooks/' . $this->site . '/' . $group . '/' .  $hook . '.php')) {
+                        $ns = 'OSC\\OM\\Apps\\' . $file->getFilename() . '\\Module\\Hooks';
+                        $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
 
-        if (!empty($result)) {
-            return $result;
+                        if (method_exists($class, $action)) {
+                            $this->hooks[$this->site][$group][$hook][$action][] = $ns;
+                        }
+                    }
+                }
+            }
         }
     }
 }
