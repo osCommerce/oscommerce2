@@ -56,11 +56,15 @@
     for ( $i=0, $n=sizeof($adm_array); $i<$n; $i++ ) {
       $adm = $adm_array[$i];
 
-      $class = substr($adm, 0, strrpos($adm, '.'));
+      if (strpos($adm, '\\') !== false) {
+        $class = $adm;
+      } else {
+        $class = substr($adm, 0, strrpos($adm, '.'));
 
-      if ( !class_exists($class) ) {
-        include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
-        include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+        if ( !class_exists($class) ) {
+          include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
+          include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+        }
       }
 
       $ad = new $class();
