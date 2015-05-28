@@ -53,10 +53,10 @@ class Db extends \PDO
         }
 
         if (!isset($driver_options[\PDO::ATTR_STATEMENT_CLASS])) {
-            $driver_options[\PDO::ATTR_STATEMENT_CLASS] = array('OSC\\OM\\DbStatement');
+            $driver_options[\PDO::ATTR_STATEMENT_CLASS] = array('OSC\OM\DbStatement');
         }
 
-        $class = 'OSC\\OM\\Db\\MySQL';
+        $class = 'OSC\OM\Db\MySQL';
         $object = new $class($server, $username, $password, $database, $port, $driver_options);
 
         return $object;

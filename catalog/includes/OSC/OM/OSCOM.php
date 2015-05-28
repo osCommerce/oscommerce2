@@ -132,7 +132,7 @@ class OSCOM
 
     public static function autoload($class)
     {
-        $prefix = 'OSC\\OM\\';
+        $prefix = 'OSC\OM\\';
 
         if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
             return false;
@@ -140,11 +140,11 @@ class OSCOM
 
 
         if (strncmp($prefix . 'Apps\\', $class, strlen($prefix . 'Apps\\')) === 0) {
-          $file = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['', '/'], $class) . '.php';
-          $custom = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['OSC\\Custom\\OM\\', '/'], $class) . '.php';
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
         } elseif (strncmp($prefix . 'Module\\', $class, strlen($prefix . 'Module\\')) === 0) {
-          $file = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['', '/'], $class) . '.php';
-          $custom = OSCOM_BASE_DIR . str_replace(['OSC\\OM\\', '\\'], ['OSC\\Custom\\OM\\', '/'], $class) . '.php';
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
         } else {
           $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
           $custom = str_replace('OSC/OM/', 'OSC/Custom/OM/', $file);

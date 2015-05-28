@@ -53,7 +53,7 @@ class Hooks
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
                     if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php') && ($file->getBasename('.php') == $hook)) {
-                        $ns = 'OSC\\OM\\Module\\Hooks';
+                        $ns = 'OSC\OM\Module\Hooks';
                         $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
 
                         if (method_exists($class, $action)) {
@@ -70,7 +70,7 @@ class Hooks
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
                     if (!$file->isDot() && $file->isDir() && file_exists($directory . '/' . $file->getFilename() . '/Module/Hooks/' . $this->site . '/' . $group . '/' .  $hook . '.php')) {
-                        $ns = 'OSC\\OM\\Apps\\' . $file->getFilename() . '\\Module\\Hooks';
+                        $ns = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Hooks';
                         $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
 
                         if (method_exists($class, $action)) {

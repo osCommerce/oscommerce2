@@ -50,9 +50,9 @@
                     if ($mdir = new \DirectoryIterator($menu_directory)) {
                         foreach ($mdir as $mfile) {
                             if (!$mfile->isDot() && !$mfile->isDir() && ($mfile->getExtension() == 'php')) {
-                                $class = 'OSC\\OM\\Apps\\' . $file->getFilename() . '\\Module\\Admin\\Menu\\' . $mfile->getBasename('.php');
+                                $class = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Admin\Menu\\' . $mfile->getBasename('.php');
 
-                                if (is_subclass_of($class, 'OSC\\OM\\ModuleAdminMenuInterface')) {
+                                if (is_subclass_of($class, 'OSC\OM\ModuleAdminMenuInterface')) {
                                     call_user_func([$class, 'execute']);
                                 }
                             }

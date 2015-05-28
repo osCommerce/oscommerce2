@@ -101,7 +101,7 @@ class DbStatement extends \PDOStatement
             if (strpos($this->queryString, ' SQL_CALC_FOUND_ROWS ') !== false) {
                 $this->page_set_total_rows = $this->pdo->query('select found_rows()')->fetchColumn();
             } elseif (isset($this->page_set)) {
-                trigger_error('OSC\\OM\\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
+                trigger_error('OSC\OM\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
             }
         }
     }
