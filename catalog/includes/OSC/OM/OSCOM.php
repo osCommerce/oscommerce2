@@ -66,10 +66,20 @@ class OSCOM
             $connection = 'NONSSL';
         }
 
-        if ($connection == 'NONSSL') {
-            $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
+        if (strncmp($page, 'admin/', 6) === 0) {
+            $page = substr($page, 6);
+
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . DIR_WS_ADMIN;
+            } else {
+                $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
+            }
         } else {
-            $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
+            } else {
+                $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            }
         }
 
         $link .= $page;
