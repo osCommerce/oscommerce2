@@ -36,9 +36,7 @@ class Hooks
             }
         }
 
-        if (!empty($result)) {
-            return $result;
-        }
+        return $result;
     }
 
     protected function register($group, $hook, $action)
