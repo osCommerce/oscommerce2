@@ -102,9 +102,11 @@ $('#adminAppMenu').accordion({
 
 <?php
     $counter = 0;
+    $menu_found = false;
     foreach ($cl_box_groups as $groups) {
       foreach ($groups['apps'] as $app) {
-        if ($app['code'] == $PHP_SELF) {
+        if (($app['code'] == $PHP_SELF) || (!empty($_GET) && (strncmp($app['code'], 'App/', 4) === 0) && (substr($app['code'], 4) == array_keys($_GET)[0]))){
+          $menu_found = true;
           break 2;
         }
       }
@@ -112,7 +114,7 @@ $('#adminAppMenu').accordion({
       $counter++;
     }
 
-    echo 'active: ' . (isset($app) && ($app['code'] == $PHP_SELF) ? $counter : 'false');
+    echo 'active: ' . (($menu_found === true) ? $counter : 'false');
 ?>
 
 });
