@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\Registry;
+
 abstract class ModuleAdminDashboardAbstract
 {
     public $title;
@@ -28,6 +30,6 @@ abstract class ModuleAdminDashboardAbstract
     }
 
     public function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 }

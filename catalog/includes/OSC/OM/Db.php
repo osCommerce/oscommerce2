@@ -258,13 +258,19 @@ class Db extends \PDO
         return false;
     }
 
-    public function delete($table, array $where_condition)
+    public function delete($table, array $where_condition = [])
     {
         if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
             $table = ':table_' . $table;
         }
 
-        $statement = 'delete from ' . $table . ' where ';
+        $statement = 'delete from ' . $table;
+
+        if (empty($where_condition)) {
+            return $this->exec($statement);
+        }
+
+        $statement .= ' where ';
 
         foreach (array_keys($where_condition) as $c) {
             $statement .= $c . ' = :cond_' . $c . ' and ';
