@@ -3,3 +3,4 @@ catalog/admin/includes/local/configure.php
 catalog/includes/work/*
 catalog/admin/images/graphs/*.png
 catalog/includes/apps/*
+catalog/public/apps/*
