@@ -191,7 +191,9 @@
           $stock_left = $Qstock->valueInt('products_quantity');
         }
 
-        $OSCOM_Db->save('products', ['products_quantity' => (int)$stock_left], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
+        if ($stock_left != $Qstock->valueInt('products_quantity')) {
+          $OSCOM_Db->save('products', ['products_quantity' => (int)$stock_left], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
+        }
 
         if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
          $OSCOM_Db->save('products', ['products_status' => '0'], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
