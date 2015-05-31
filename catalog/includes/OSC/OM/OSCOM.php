@@ -17,10 +17,13 @@ class OSCOM
     const BASE_DIR = OSCOM_BASE_DIR;
 
     protected static $version;
+    protected static $site;
 
     public static function initialize()
     {
         DateTime::setTimeZone();
+
+        static::setSite();
     }
 
     public static function getVersion()
@@ -38,6 +41,20 @@ class OSCOM
         }
 
         return static::$version;
+    }
+
+    public static function setSite($site = null)
+    {
+        if (!isset($site)) {
+            $site = 'Shop';
+        }
+
+        static::$site = $site;
+    }
+
+    public static function getSite()
+    {
+        return static::$site;
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
@@ -66,9 +83,19 @@ class OSCOM
             $connection = 'NONSSL';
         }
 
+        $site = static::$site;
+
         if (strncmp($page, 'admin/', 6) === 0) {
             $page = substr($page, 6);
 
+            $site = 'Admin';
+        } elseif (strncmp($page, 'Shop/', 5) === 0) {
+            $page = substr($page, 5);
+
+            $site = 'Shop';
+        }
+
+        if ($site == 'Admin') {
             if ($connection == 'NONSSL') {
                 $link = HTTP_SERVER . DIR_WS_ADMIN;
             } else {
