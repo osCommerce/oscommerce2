@@ -85,7 +85,7 @@ class OSCOM
 
         $site = static::$site;
 
-        if (strncmp($page, 'admin/', 6) === 0) {
+        if (strncmp($page, 'Admin/', 6) === 0) {
             $page = substr($page, 6);
 
             $site = 'Admin';
@@ -97,13 +97,13 @@ class OSCOM
 
         if ($site == 'Admin') {
             if ($connection == 'NONSSL') {
-                $link = HTTP_SERVER . DIR_WS_ADMIN;
+                $link = HTTP_SERVER . (defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : DIR_WS_HTTP_CATALOG . 'admin/');
             } else {
-                $link = HTTPS_SERVER . DIR_WS_HTTPS_ADMIN;
+                $link = HTTPS_SERVER . (defined('DIR_WS_HTTPS_ADMIN') ? DIR_WS_HTTPS_ADMIN : DIR_WS_HTTPS_CATALOG . 'admin/');
             }
         } else {
             if ($connection == 'NONSSL') {
-                $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
+                $link = HTTP_SERVER . (defined('DIR_WS_HTTP_CATALOG') ? DIR_WS_HTTP_CATALOG : DIR_WS_CATALOG);
             } else {
                 $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
             }
