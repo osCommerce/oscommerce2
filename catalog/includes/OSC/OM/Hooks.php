@@ -20,7 +20,7 @@ class Hooks
         $this->site = basename($site);
     }
 
-    public function call($group, $hook, $action)
+    public function call($group, $hook, $action = 'execute')
     {
         if (!isset($this->hooks[$this->site][$group][$hook][$action])) {
             $this->register($group, $hook, $action);
