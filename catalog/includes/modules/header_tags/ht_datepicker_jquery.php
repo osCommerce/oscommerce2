@@ -125,12 +125,12 @@
   function ht_datepicker_jquery_edit_pages($values, $key) {
     global $PHP_SELF;
 
-    $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+    $file_extension = pathinfo($PHP_SELF, PATHINFO_EXTENSION);
     $files_array = array();
 	  if ($dir = @dir(DIR_FS_CATALOG)) {
 	    while ($file = $dir->read()) {
 	      if (!is_dir(DIR_FS_CATALOG . $file)) {
-	        if (substr($file, strrpos($file, '.')) == $file_extension) {
+	        if (pathinfo($file, PATHINFO_EXTENSION) == $file_extension) {
             $files_array[] = $file;
           }
         }

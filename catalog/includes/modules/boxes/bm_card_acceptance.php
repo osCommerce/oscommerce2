@@ -138,7 +138,7 @@
     if ( $dir = @dir(DIR_FS_CATALOG . DIR_WS_IMAGES . 'card_acceptance') ) {
       while ( $file = $dir->read() ) {
         if ( !is_dir(DIR_FS_CATALOG . DIR_WS_IMAGES . 'card_acceptance/' . $file) ) {
-          if ( in_array(substr($file, strrpos($file, '.')+1), array('gif', 'jpg', 'png')) ) {
+          if ( in_array(pathinfo($file, PATHINFO_EXTENSION), array('gif', 'jpg', 'png')) ) {
             $files_array[] = $file;
           }
         }
