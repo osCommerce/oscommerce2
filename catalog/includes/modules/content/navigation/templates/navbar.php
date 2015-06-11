@@ -1,3 +1,7 @@
+<?php
+use OSC\OM\HTML;
+use OSC\OM\OSCOM;
+?>
 <nav class="navbar navbar-inverse navbar-no-corners navbar-no-margin" role="navigation">
   <div class="<?php echo BOOTSTRAP_CONTAINER; ?>">
     <div class="navbar-header">
@@ -10,10 +14,10 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-navbar-collapse-core-nav">
       <ul class="nav navbar-nav">
-        <?php echo '<li><a class="store-brand" href="' . tep_href_link('index.php') . '">' . MODULE_CONTENT_NAVBAR_HOME . '</a></li>'; ?>
-        <?php echo '<li><a href="' . tep_href_link('products_new.php') . '">' . MODULE_CONTENT_NAVBAR_WHATS_NEW . '</a></li>'; ?>
-        <?php echo '<li><a href="' . tep_href_link('specials.php') . '">' . MODULE_CONTENT_NAVBAR_SPECIALS . '</a></li>'; ?>
-        <?php echo '<li><a href="' . tep_href_link('reviews.php') . '">' . MODULE_CONTENT_NAVBAR_REVIEWS . '</a></li>'; ?>
+        <?php echo '<li><a class="store-brand" href="' . OSCOM::link('index.php') . '">' . MODULE_CONTENT_NAVBAR_HOME . '</a></li>'; ?>
+        <?php echo '<li><a href="' . OSCOM::link('products_new.php') . '">' . MODULE_CONTENT_NAVBAR_WHATS_NEW . '</a></li>'; ?>
+        <?php echo '<li><a href="' . OSCOM::link('specials.php') . '">' . MODULE_CONTENT_NAVBAR_SPECIALS . '</a></li>'; ?>
+        <?php echo '<li><a href="' . OSCOM::link('reviews.php') . '">' . MODULE_CONTENT_NAVBAR_REVIEWS . '</a></li>'; ?>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <?php
@@ -32,7 +36,7 @@
               if (count($lng->catalog_languages) > 1) {
                 echo '<li class="divider"></li>';
                 foreach($lng->catalog_languages as $key => $value) {
-                  echo '<li><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . tep_image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name'], null, null, null, false) . ' ' . $value['name'] . '</a></li>';
+                  echo '<li><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . HTML::image(DIR_WS_LANGUAGES .  $value['directory'] . '/images/' . $value['image'], $value['name'], null, null, null, false) . ' ' . $value['name'] . '</a></li>';
                 }
               }
               // currencies
@@ -41,7 +45,7 @@
                 reset($currencies->currencies);
                 $currencies_array = array();
                 foreach($currencies->currencies as $key => $value) {
-                  echo '<li><a href="' . tep_href_link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'currency=' . $key, $request_type) . '">' . $value['title'] . '</a></li>';
+                  echo '<li><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('language', 'currency')) . 'currency=' . $key, $request_type) . '">' . $value['title'] . '</a></li>';
                 }
               }
               ?>
@@ -51,37 +55,37 @@
         }
         ?>
         <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo (isset($_SESSION['customer_id'])) ? sprintf(MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_IN, $customer_first_name) : MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_OUT; ?></a>
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo (isset($_SESSION['customer_id'])) ? sprintf(MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_IN, $_SESSION['customer_first_name']) : MODULE_CONTENT_NAVBAR_ACCOUNT_LOGGED_OUT; ?></a>
           <ul class="dropdown-menu">
             <?php
             if (isset($_SESSION['customer_id'])) {
-              echo '<li><a href="' . tep_href_link('logoff.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGOFF . '</a>';
+              echo '<li><a href="' . OSCOM::link('logoff.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGOFF . '</a>';
             }
             else {
-               echo '<li><a href="' . tep_href_link('login.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGIN . '</a>';
-               echo '<li><a href="' . tep_href_link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_REGISTER . '</a>';
+               echo '<li><a href="' . OSCOM::link('login.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGIN . '</a>';
+               echo '<li><a href="' . OSCOM::link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_REGISTER . '</a>';
             }
             ?>
             <li class="divider"></li>
-            <li><?php echo '<a href="' . tep_href_link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT . '</a>'; ?></li>
-            <li><?php echo '<a href="' . tep_href_link('account_history.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_HISTORY . '</a>'; ?></li>
-            <li><?php echo '<a href="' . tep_href_link('address_book.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_ADDRESS_BOOK . '</a>'; ?></li>
-            <li><?php echo '<a href="' . tep_href_link('account_password.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_PASSWORD . '</a>'; ?></li>
+            <li><?php echo '<a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT . '</a>'; ?></li>
+            <li><?php echo '<a href="' . OSCOM::link('account_history.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_HISTORY . '</a>'; ?></li>
+            <li><?php echo '<a href="' . OSCOM::link('address_book.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_ADDRESS_BOOK . '</a>'; ?></li>
+            <li><?php echo '<a href="' . OSCOM::link('account_password.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_PASSWORD . '</a>'; ?></li>
           </ul>
         </li>
         <?php
         if ($_SESSION['cart']->count_contents() > 0) {
           ?>
           <li class="dropdown">
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo sprintf(MODULE_CONTENT_NAVBAR_CART_CONTENTS, $cart->count_contents()); ?></a>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><?php echo sprintf(MODULE_CONTENT_NAVBAR_CART_CONTENTS, $_SESSION['cart']->count_contents()); ?></a>
             <ul class="dropdown-menu">
-              <li><?php echo '<a href="' . tep_href_link('shopping_cart.php') . '">' . sprintf(MODULE_CONTENT_NAVBAR_CART_HAS_CONTENTS, $cart->count_contents(), $currencies->format($cart->show_total())) . '</a>'; ?></li>
+              <li><?php echo '<a href="' . OSCOM::link('shopping_cart.php') . '">' . sprintf(MODULE_CONTENT_NAVBAR_CART_HAS_CONTENTS, $_SESSION['cart']->count_contents(), $currencies->format($_SESSION['cart']->show_total())) . '</a>'; ?></li>
               <li class="divider"></li>
-              <li><?php echo '<a href="' . tep_href_link('shopping_cart.php') . '">' . MODULE_CONTENT_NAVBAR_CART_VIEW_CART . '</a>'; ?></li>
+              <li><?php echo '<a href="' . OSCOM::link('shopping_cart.php') . '">' . MODULE_CONTENT_NAVBAR_CART_VIEW_CART . '</a>'; ?></li>
             </ul>
           </li>
           <?php
-          echo '<li><a href="' . tep_href_link('checkout_shipping.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_CART_CHECKOUT . '</a></li>';
+          echo '<li><a href="' . OSCOM::link('checkout_shipping.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_CART_CHECKOUT . '</a></li>';
         }
         else {
           echo '<li class="nav navbar-text">' . MODULE_CONTENT_NAVBAR_CART_NO_CONTENTS . '</li>';

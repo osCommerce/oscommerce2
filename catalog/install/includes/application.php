@@ -10,15 +10,16 @@
   Released under the GNU General Public License
 */
 
-// Set the level of error reporting
-  error_reporting(E_ALL & ~E_NOTICE);
+  use OSC\OM\OSCOM;
 
-// set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-  if ((strlen(ini_get('date.timezone')) < 1) && function_exists('date_default_timezone_set')) {
-    date_default_timezone_set(@date_default_timezone_get());
-  }
+// set the level of error reporting
+  error_reporting(E_ALL | E_STRICT);
+  ini_set('display_errors', true); // TODO remove on release
 
-  require('includes/functions/general.php');
-  require('includes/functions/database.php');
-  require('includes/functions/html_output.php');
+  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
+
+  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
+
+  OSCOM::initialize();
 ?>

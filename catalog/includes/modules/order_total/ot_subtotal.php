@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ot_subtotal {
     var $title, $output;
 
@@ -32,12 +34,7 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_ORDER_TOTAL_SUBTOTAL_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-
-      return $this->_check;
+      return defined('MODULE_ORDER_TOTAL_SUBTOTAL_STATUS');
     }
 
     function keys() {
@@ -45,12 +42,32 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Display Sub-Total', 'MODULE_ORDER_TOTAL_SUBTOTAL_STATUS', 'true', 'Do you want to display the order sub-total cost?', '6', '1','tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER', '1', 'Sort order of display.', '6', '2', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Display Sub-Total',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SUBTOTAL_STATUS',
+        'configuration_value' => 'true',
+        'configuration_description' => 'Do you want to display the order sub-total cost?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'true\', \'false\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER',
+        'configuration_value' => '1',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
   }
 ?>

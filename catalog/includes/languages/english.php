@@ -154,7 +154,7 @@ define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must 
 define('ENTRY_PRICE_FROM_TEXT', '');
 define('ENTRY_PRICE_TO_TEXT', '');
 define('ENTRY_DATE_FROM_TEXT', '');
-define('ENTRY_DATE_FROM_TEXT', '');
+define('ENTRY_DATE_TO_TEXT', '');
 define('ENTRY_COMMENTS_TEXT', '');
 define('ENTRY_NAME_TEXT', '');
 define('ENTRY_ENQUIRY_TEXT', '');
@@ -202,6 +202,8 @@ define('IMAGE_BUTTON_HISTORY', 'Order History');
 define('IMAGE_BUTTON_LOGIN', 'Sign In');
 define('IMAGE_BUTTON_IN_CART', 'Add to Cart');
 define('IMAGE_BUTTON_NOTIFICATIONS', 'Notifications');
+define('IMAGE_BUTTON_PAY_TOTAL_NOW', 'Pay Now (%s)');
+define('IMAGE_BUTTON_PAY_TOTAL_PROCESSING', 'Processing, please wait ..');
 define('IMAGE_BUTTON_QUICK_FIND', 'Quick Find');
 define('IMAGE_BUTTON_REMOVE_NOTIFICATIONS', 'Remove Notifications');
 define('IMAGE_BUTTON_REVIEWS', 'Reviews');

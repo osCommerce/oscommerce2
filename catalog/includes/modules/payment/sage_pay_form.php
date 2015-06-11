@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class sage_pay_form {
     var $code, $title, $description, $enabled;
 
@@ -64,14 +68,16 @@
     function update_status() {
       global $order;
 
+      $OSCOM_Db = Registry::get('Db');
+
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_SAGE_PAY_FORM_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_PAYMENT_SAGE_PAY_FORM_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
+        $Qcheck = $OSCOM_Db->get('zones_to_geo_zones', 'zone_id', ['geo_zone_id' => MODULE_PAYMENT_SAGE_PAY_FORM_ZONE, 'zone_country_id' => $order->billing['country']['id']], 'zone_id');
+        while ($Qcheck->fetch()) {
+          if ($Qcheck->valueInt('zone_id') < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->billing['zone_id']) {
+          } elseif ($Qcheck->valueInt('zone_id') == $order->billing['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -101,7 +107,7 @@
     }
 
     function process_button() {
-      global $customer_id, $order, $cartID;
+      global $order;
 
       $process_button_string = '';
 
@@ -117,12 +123,12 @@
       }
 
       $crypt = array('ReferrerID' => 'C74D7B82-E9EB-4FBD-93DB-76F0F551C802',
-                     'VendorTxCode' => substr(date('YmdHis') . '-' . $customer_id . '-' . $cartID, 0, 40),
+                     'VendorTxCode' => substr(date('YmdHis') . '-' . $_SESSION['customer_id'] . '-' . $_SESSION['cartID'], 0, 40),
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => tep_href_link('checkout_process.php', '', 'SSL'),
-                     'FailureURL' => tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
+                     'SuccessURL' => OSCOM::link('checkout_process.php', '', 'SSL'),
+                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -202,7 +208,7 @@
       $params['Crypt'] = $this->encryptParams($crypt_string);
 
       foreach ($params as $key => $value) {
-        $process_button_string .= tep_draw_hidden_field($key, $value);
+        $process_button_string .= HTML::hiddenField($key, $value);
       }
 
       return $process_button_string;
@@ -229,15 +235,17 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL'));
+          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
         }
       } else {
-        tep_redirect(tep_href_link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'));
+        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code, 'SSL');
       }
     }
 
     function after_process() {
       global $insert_id, $sage_pay_response;
+
+      $OSCOM_Db = Registry::get('Db');
 
       $result = array();
 
@@ -289,7 +297,7 @@
                               'customer_notified' => '0',
                               'comments' => trim($result_string));
 
-      tep_db_perform('orders_status_history', $sql_data_array);
+      $OSCOM_Db->save('orders_status_history', $sql_data_array);
     }
 
     function get_error() {
@@ -335,14 +343,12 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_PAYMENT_SAGE_PAY_FORM_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_PAYMENT_SAGE_PAY_FORM_STATUS');
     }
 
     function install($parameter = null) {
+      $OSCOM_Db = Registry::get('Db');
+
       $params = $this->getParams();
 
       if (isset($parameter)) {
@@ -370,12 +376,12 @@
           $sql_data_array['use_function'] = $data['use_func'];
         }
 
-        tep_db_perform('configuration', $sql_data_array);
+        $OSCOM_Db->save('configuration', $sql_data_array);
       }
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
@@ -393,29 +399,29 @@
     }
 
     function getParams() {
+      $OSCOM_Db = Registry::get('Db');
+
       if (!defined('MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID')) {
-        $check_query = tep_db_query("select orders_status_id from orders_status where orders_status_name = 'Sage Pay [Transactions]' limit 1");
+        $Qcheck = $OSCOM_Db->get('orders_status', 'orders_status_id', ['orders_status_name' => 'Sage Pay [Transactions]'], null, 1);
 
-        if (tep_db_num_rows($check_query) < 1) {
-          $status_query = tep_db_query("select max(orders_status_id) as status_id from orders_status");
-          $status = tep_db_fetch_array($status_query);
+        if ($Qcheck->fetch() === false) {
+          $Qstatus = $OSCOM_Db->get('orders_status', 'max(orders_status_id) as status_id');
 
-          $status_id = $status['status_id']+1;
+          $status_id = $Qstatus->valueInt('status_id') + 1;
 
           $languages = tep_get_languages();
 
           foreach ($languages as $lang) {
-            tep_db_query("insert into orders_status (orders_status_id, language_id, orders_status_name) values ('" . $status_id . "', '" . $lang['id'] . "', 'Sage Pay [Transactions]')");
-          }
-
-          $flags_query = tep_db_query("describe orders_status public_flag");
-          if (tep_db_num_rows($flags_query) == 1) {
-            tep_db_query("update orders_status set public_flag = 0 and downloads_flag = 0 where orders_status_id = '" . $status_id . "'");
+            $OSCOM_Db->save('orders_status', [
+              'orders_status_id' => $status_id,
+              'language_id' => $lang['id'],
+              'orders_status_name' => 'Sage Pay [Transactions]',
+              'public_flag' => 0,
+              'downloads_flag' => 0
+            ]);
           }
         } else {
-          $check = tep_db_fetch_array($check_query);
-
-          $status_id = $check['orders_status_id'];
+          $status_id = $Qcheck->valueInt('orders_status_id');
         }
       } else {
         $status_id = MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_ORDER_STATUS_ID;
@@ -609,6 +615,6 @@
   }
 
   function sage_pay_form_textarea_field($value = '', $key = '') {
-    return tep_draw_textarea_field('configuration[' . $key . ']', 'soft', 60, 5, $value);
+    return HTML::textareaField('configuration[' . $key . ']', 60, 5, $value);
   }
 ?>

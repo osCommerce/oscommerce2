@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/password_reset.php');
@@ -23,8 +26,8 @@
   }
 
   if ($error == false) {
-    $email_address = tep_db_prepare_input($_GET['account']);
-    $password_key = tep_db_prepare_input($_GET['key']);
+    $email_address = HTML::sanitize($_GET['account']);
+    $password_key = HTML::sanitize($_GET['key']);
 
     if ( tep_validate_email($email_address) == false ) {
       $error = true;
@@ -35,11 +38,12 @@
 
       $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
     } else {
-      $check_customer_query = tep_db_query("select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from customers c, customers_info ci where c.customers_email_address = '" . tep_db_input($email_address) . "' and c.customers_id = ci.customers_info_id");
-      if (tep_db_num_rows($check_customer_query)) {
-        $check_customer = tep_db_fetch_array($check_customer_query);
+      $Qcheck = $OSCOM_Db->prepare('select c.customers_id, c.customers_email_address, ci.password_reset_key, ci.password_reset_date from :table_customers c, :table_customers_info ci where c.customers_email_address = :customers_email_address and c.customers_id = ci.customers_info_id');
+      $Qcheck->bindValue(':customers_email_address', $email_address);
+      $Qcheck->execute();
 
-        if ( empty($check_customer['password_reset_key']) || ($check_customer['password_reset_key'] != $password_key) || (strtotime($check_customer['password_reset_date'] . ' +1 day') <= time()) ) {
+      if ( $Qcheck->fetch() !== false ) {
+        if ( empty($Qcheck->value('password_reset_key')) || ($Qcheck->value('password_reset_key') != $password_key) || (strtotime($Qcheck->value('password_reset_date') . ' +1 day') <= time()) ) {
           $error = true;
 
           $messageStack->add_session('password_forgotten', TEXT_NO_RESET_LINK_FOUND);
@@ -53,12 +57,12 @@
   }
 
   if ($error == true) {
-    tep_redirect(tep_href_link('password_forgotten.php'));
+    OSCOM::redirect('password_forgotten.php');
   }
 
   if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    $password_new = tep_db_prepare_input($_POST['password']);
-    $password_confirmation = tep_db_prepare_input($_POST['confirmation']);
+    $password_new = HTML::sanitize($_POST['password']);
+    $password_confirmation = HTML::sanitize($_POST['confirmation']);
 
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
@@ -71,17 +75,17 @@
     }
 
     if ($error == false) {
-      tep_db_query("update customers set customers_password = '" . tep_encrypt_password($password_new) . "' where customers_id = '" . (int)$check_customer['customers_id'] . "'");
+      $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
 
-      tep_db_query("update customers_info set customers_info_date_account_last_modified = now(), password_reset_key = null, password_reset_date = null where customers_info_id = '" . (int)$check_customer['customers_id'] . "'");
+      $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => 'null', 'password_reset_date' => 'null'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      tep_redirect(tep_href_link('login.php', '', 'SSL'));
+      OSCOM::redirect('login.php', '', 'SSL');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require('includes/template_top.php');
@@ -97,7 +101,7 @@
   }
 ?>
 
-<?php echo tep_draw_form('password_reset', tep_href_link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
   <div class="contentText">
@@ -109,7 +113,7 @@
       <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_password_field('password', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"');
+        echo HTML::passwordField('password', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -118,7 +122,7 @@
       <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_password_field('confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
+        echo HTML::passwordField('confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -127,7 +131,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?>
   </div>
 </div>
 

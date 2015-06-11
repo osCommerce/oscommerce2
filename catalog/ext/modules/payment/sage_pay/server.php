@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   chdir('../../../../');
   require('includes/application_top.php');
 
@@ -24,12 +27,11 @@
   $result = null;
 
   if ( isset($_GET['skcode']) && isset($_POST['VPSSignature']) && isset($_POST['VPSTxId']) && isset($_POST['VendorTxCode']) && isset($_POST['Status']) ) {
-    $skcode = tep_db_prepare_input($_GET['skcode']);
+    $skcode = HTML::sanitize($_GET['skcode']);
 
-    $sp_query = tep_db_query('select securitykey from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '" limit 1');
-    if ( tep_db_num_rows($sp_query) ) {
-      $sp = tep_db_fetch_array($sp_query);
+    $Qsp = $OSCOM_Db->get('sagepay_server_securitykeys', 'securitykey', ['code' => $skcode], null, 1);
 
+    if ($Qsp->fetch() !== false) {
       $transaction_details = array('ID' => $_POST['VPSTxId']);
 
       $sig = $_POST['VPSTxId'] . $_POST['VendorTxCode'] . $_POST['Status'];
@@ -46,7 +48,7 @@
         $transaction_details['AVS/CV2'] = $_POST['AVSCV2'];
       }
 
-      $sig .= $sp['securitykey'];
+      $sig .= $Qsp->value('securitykey');
 
       if ( isset($_POST['AddressResult']) ) {
         $sig .= $_POST['AddressResult'];
@@ -128,31 +130,31 @@
             $transaction_details_string .= $k . ': ' . $v . "\n";
           }
 
-          $transaction_details_string = tep_db_prepare_input($transaction_details_string);
+          $transaction_details_string = HTML::sanitize($transaction_details_string);
 
-          tep_db_query('update sagepay_server_securitykeys set verified = 1, transaction_details = "' . tep_db_input($transaction_details_string) . '" where code = "' . tep_db_input($skcode) . '"');
+          $OSCOM_Db->save('sagepay_server_securitykeys', ['verified' => 1, 'transaction_details' => $transaction_details_string], ['code' => $skcode]);
 
           $result = 'Status=OK' . chr(13) . chr(10) .
-                    'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
+                    'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
         } else {
           $error = isset($_POST['StatusDetail']) ? $sage_pay_server->getErrorMessageNumber($_POST['StatusDetail']) : null;
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = tep_href_link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           } else {
-            $error_url = tep_href_link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
           }
 
           $result = 'Status=OK' . chr(13) . chr(10) .
                     'RedirectURL=' . $sage_pay_server->formatURL($error_url);
 
-          tep_db_query('delete from sagepay_server_securitykeys where code = "' . tep_db_input($skcode) . '"');
+          $OSCOM_Db->delete('sagepay_server_securitykeys', ['code' => $skcode]);
 
           $sage_pay_server->sendDebugEmail();
         }
       } else {
         $result = 'Status=INVALID' . chr(13) . chr(10) .
-                  'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
+                  'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
 
         $sage_pay_server->sendDebugEmail();
       }
@@ -161,7 +163,7 @@
 
   if ( !isset($result) ) {
     $result = 'Status=ERROR' . chr(13) . chr(10) .
-              'RedirectURL=' . $sage_pay_server->formatURL(tep_href_link('shopping_cart.php', '', 'SSL', false));
+              'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
   }
 
   echo $result;

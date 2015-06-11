@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class cm_account_set_password {
     var $code;
     var $group;
@@ -32,13 +35,14 @@
     }
 
     function execute() {
-      global $customer_id, $oscTemplate;
+      global $oscTemplate;
+
+      $OSCOM_Db = Registry::get('Db');
 
       if ( isset($_SESSION['customer_id']) ) {
-        $check_query = tep_db_query("select customers_password from customers where customers_id = '" . (int)$customer_id . "'");
-        $check = tep_db_fetch_array($check_query);
+        $Qcheck = $OSCOM_Db->get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
 
-        if ( empty($check['customers_password']) ) {
+        if ( empty($Qcheck->value('customers_password')) ) {
           $counter = 0;
 
           foreach ( array_keys($oscTemplate->_data['account']['account']['links']) as $key ) {
@@ -56,7 +60,7 @@
 
           if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD == 'True' ) {
             $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_LINK_TITLE,
-                                                                        'link' => tep_href_link('ext/modules/content/account/set_password.php', '', 'SSL'),
+                                                                        'link' => OSCOM::link('ext/modules/content/account/set_password.php', '', 'SSL'),
                                                                         'icon' => 'key'));
           }
 
@@ -74,13 +78,43 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Set Account Password', 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_STATUS', 'True', 'Do you want to enable the Set Account Password module?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow Local Passwords', 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD', 'True', 'Allow local account passwords to be set.', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Set Account Password',
+        'configuration_key' => 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to enable the Set Account Password module?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Allow Local Passwords',
+        'configuration_key' => 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Allow local account passwords to be set.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

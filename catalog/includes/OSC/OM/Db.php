@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML;
+
 class Db extends \PDO
 {
     protected $connected = false;
@@ -73,6 +75,7 @@ class Db extends \PDO
 
         $DbStatement = parent::prepare($statement, is_array($driver_options) ? $driver_options : []);
         $DbStatement->setQueryCall('prepare');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
@@ -90,11 +93,89 @@ class Db extends \PDO
         }
 
         $DbStatement->setQueryCall('query');
+        $DbStatement->setPDO($this);
 
         return $DbStatement;
     }
 
-    public function save($table, array $data, $where_condition = null)
+    public function get($table, $fields, array $where = null, $order = null, $limit = null, $cache = null)
+    {
+        if (!is_array($table)) {
+            $table = [ $table ];
+        }
+
+        array_walk($table, function(&$v, &$k) {
+            if ((strlen($v) < 7) || (substr($v, 0, 7) != ':table_')) {
+                $v = ':table_' . $v;
+            }
+        });
+
+        if (!is_array($fields)) {
+            $fields = [ $fields ];
+        }
+
+        if (isset($order) && !is_array($order)) {
+            $order = [ $order ];
+        }
+
+        if (isset($limit)) {
+            if (is_array($limit) && (count($limit) === 2) && is_numeric($limit[0]) && is_numeric($limit[1])) {
+                $limit = implode(', ', $limit);
+            } elseif (!is_numeric($limit)) {
+                $limit = null;
+            }
+        }
+
+        $statement = 'select ' . implode(', ', $fields) . ' from ' . implode(', ', $table);
+
+        if (!isset($where) && !isset($cache)) {
+            if (isset($order)) {
+                $statement .= ' order by ' . implode(', ', $order);
+            }
+
+            return $this->query($statement);
+        }
+
+        if (isset($where)) {
+            $statement .= ' where ';
+
+            foreach (array_keys($where) as $c) {
+                $statement .= $c . ' = :cond_' . $c . ' and ';
+            }
+
+            $statement = substr($statement, 0, -5);
+        }
+
+        if (isset($order)) {
+            $statement .= ' order by ' . implode(', ', $order);
+        }
+
+        if (isset($limit)) {
+            $statement .= ' limit ' . $limit;
+        }
+
+        $Q = $this->prepare($statement);
+
+        if (isset($where)) {
+            foreach ($where as $c => $v) {
+                $Q->bindValue(':cond_' . $c, $v);
+            }
+        }
+
+        if (isset($cache)) {
+            if (!is_array($cache)) {
+                $cache = [ $cache ];
+            }
+
+            call_user_func_array([$Q, 'setCache'], $cache);
+        }
+
+        $Q->execute();
+
+        return $Q;
+    }
+
+    public function save($table, array $data, array $where_condition = null)
     {
         if (empty($data)) {
             return false;
@@ -177,7 +258,7 @@ class Db extends \PDO
         return false;
     }
 
-    public function delete($table, $where_condition)
+    public function delete($table, array $where_condition)
     {
         if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
             $table = ':table_' . $table;
@@ -305,6 +386,26 @@ class Db extends \PDO
         }
 
         return !$error;
+    }
+
+    public static function prepareInput($string)
+    {
+        if (is_string($string)) {
+            return HTML::sanitize($string);
+        } elseif (is_array($string)) {
+            foreach ($string as $k => $v) {
+                $string[$k] = static::prepareInput($v);
+            }
+
+            return $string;
+        } else {
+            return $string;
+        }
+    }
+
+    public static function prepareIdentifier($string)
+    {
+        return '`' . str_replace('`', '``', $string) . '`';
     }
 
     protected function autoPrefixTables($statement)

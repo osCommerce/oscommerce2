@@ -10,16 +10,18 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    $_SESSION['navigation']->set_snapshot();
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>

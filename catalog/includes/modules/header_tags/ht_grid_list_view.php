@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\Registry;
+
   class ht_grid_list_view {
     var $code = 'ht_grid_list_view';
     var $group = 'footer_scripts';
@@ -58,13 +61,44 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Grid List javascript', 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_STATUS', 'True', 'Do you want to enable the Grid/List Javascript module?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-	    tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Pages', 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_PAGES', '" . implode(';', $this->get_default_pages()) . "', 'The pages to add the Grid List JS Scripts to.', '6', '4', 'ht_grid_list_view_show_pages', 'ht_grid_list_view_edit_pages(', now())");
-	    tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '5', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Grid List javascript',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to enable the Grid/List Javascript module?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Pages',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_PAGES',
+        'configuration_value' => implode(';', $this->get_default_pages()),
+        'configuration_description' => 'The pages to add the Grid List JS Scripts to.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'ht_grid_list_view_show_pages',
+        'set_function' => 'ht_grid_list_view_edit_pages(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_HEADER_TAGS_GRID_LIST_VIEW_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {
@@ -104,14 +138,14 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= tep_draw_checkbox_field('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
     }
 
     if (!empty($output)) {
       $output = '<br />' . substr($output, 0, -6);
     }
 
-    $output .= tep_draw_hidden_field('configuration[' . $key . ']', '', 'id="htrn_files"');
+    $output .= HTML::hiddenField('configuration[' . $key . ']', '', 'id="htrn_files"');
 
     $output .= '<script>
                 function htrn_update_cfg_value() {

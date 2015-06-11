@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class bm_manufacturers {
     var $code = 'bm_manufacturers';
     var $group = 'boxes';
@@ -33,17 +37,27 @@
     function getData() {
       global $request_type, $oscTemplate;
 
+      $OSCOM_Db = Registry::get('Db');
+
       $data = '';
 
-      $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from manufacturers order by manufacturers_name");
-      if ($number_of_rows = tep_db_num_rows($manufacturers_query)) {
-        if ($number_of_rows <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
+      $Qmanufacturers = $OSCOM_Db->query('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+
+      $manufacturers = $Qmanufacturers->fetchAll();
+
+      if (!empty($manufacturers)) {
+        if (count($manufacturers) <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
           $manufacturers_list = '<ul class="nav nav-pills nav-stacked">';
-          while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-            $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturers['manufacturers_name']);
-            if (isset($_GET['manufacturers_id']) && ($_GET['manufacturers_id'] == $manufacturers['manufacturers_id'])) $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
-            $manufacturers_list .= '<li><a href="' . tep_href_link('index.php', 'manufacturers_id=' . (int)$manufacturers['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
+
+          foreach ($manufacturers as $m) {
+            $manufacturers_name = ((strlen($m['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($m['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $m['manufacturers_name']);
+
+            if (isset($_GET['manufacturers_id']) && ($_GET['manufacturers_id'] == $m['manufacturers_id'])) {
+              $manufacturers_name = '<strong>' . $manufacturers_name .'</strong>';
+            }
+
+            $manufacturers_list .= '<li><a href="' . OSCOM::link('index.php', 'manufacturers_id=' . (int)$m['manufacturers_id']) . '">' . $manufacturers_name . '</a></li>';
           }
 
           $manufacturers_list .= '</ul>';
@@ -52,19 +66,21 @@
         } else {
 // Display a drop-down
           $manufacturers_array = array();
+
           if (MAX_MANUFACTURERS_LIST < 2) {
             $manufacturers_array[] = array('id' => '', 'text' => PULL_DOWN_DEFAULT);
           }
 
-          while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-            $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $manufacturers['manufacturers_name']);
-            $manufacturers_array[] = array('id' => $manufacturers['manufacturers_id'],
+          foreach ($manufacturers as $m) {
+            $manufacturers_name = ((strlen($m['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($m['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $m['manufacturers_name']);
+
+            $manufacturers_array[] = array('id' => $m['manufacturers_id'],
                                            'text' => $manufacturers_name);
           }
 
-          $data = tep_draw_form('manufacturers', tep_href_link('index.php', '', $request_type, false), 'get') .
-                     tep_draw_pull_down_menu('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') . tep_hide_session_id() .
-                     '</form>';
+          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) .
+                  HTML::selectField('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
+                  '</form>';
         }
       }
 
@@ -96,13 +112,43 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Manufacturers Module', 'MODULE_BOXES_MANUFACTURERS_STATUS', 'True', 'Do you want to add the module to your shop?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Content Placement', 'MODULE_BOXES_MANUFACTURERS_CONTENT_PLACEMENT', 'Left Column', 'Should the module be loaded in the left or right column?', '6', '1', 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_BOXES_MANUFACTURERS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Manufacturers Module',
+        'configuration_key' => 'MODULE_BOXES_MANUFACTURERS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to add the module to your shop?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Content Placement',
+        'configuration_key' => 'MODULE_BOXES_MANUFACTURERS_CONTENT_PLACEMENT',
+        'configuration_value' => 'Left Column',
+        'configuration_description' => 'Should the module be loaded in the left or right column?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_BOXES_MANUFACTURERS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

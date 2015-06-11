@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class ht_opensearch {
     var $code = 'ht_opensearch';
     var $group = 'header_tags';
@@ -31,7 +34,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . tep_href_link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
+      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . OSCOM::link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {
@@ -43,20 +46,113 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable OpenSearch Module', 'MODULE_HEADER_TAGS_OPENSEARCH_STATUS', 'True', 'Add shop search functionality to the browser?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Short Name', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_SHORT_NAME', '" . tep_db_input(STORE_NAME) . "', 'Short name to describe the search engine.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Description', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_DESCRIPTION', 'Search " . tep_db_input(STORE_NAME) . "', 'Description of the search engine.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Contact', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_CONTACT', '" . tep_db_input(STORE_OWNER_EMAIL_ADDRESS) . "', 'E-Mail address of the search engine maintainer. (optional)', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Tags', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_TAGS', '', 'Keywords to identify and categorize the search content, separated by an empty space. (optional)', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Attribution', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ATTRIBUTION', 'Copyright (c) " . tep_db_input(STORE_NAME) . "', 'Attribution for the search content. (optional)', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Adult Content', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ADULT_CONTENT', 'False', 'Search content contains material suitable only for adults.', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('16x16 Icon', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ICON', '" . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . "favicon.ico', 'A 16x16 sized icon (must be in .ico format, eg http://server/favicon.ico). (optional)', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('64x64 Image', 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_IMAGE', '', 'A 64x64 sized image (must be in .png format, eg http://server/images/logo.png). (optional)', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_HEADER_TAGS_OPENSEARCH_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable OpenSearch Module',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Add shop search functionality to the browser?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Short Name',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_SHORT_NAME',
+        'configuration_value' => STORE_NAME,
+        'configuration_description' => 'Short name to describe the search engine.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Description',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_DESCRIPTION',
+        'configuration_value' => 'Search ' . STORE_NAME,
+        'configuration_description' => 'Description of the search engine.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Contact',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_CONTACT',
+        'configuration_value' => STORE_OWNER_EMAIL_ADDRESS,
+        'configuration_description' => 'E-Mail address of the search engine maintainer. (optional)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Tags',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_TAGS',
+        'configuration_value' => '',
+        'configuration_description' => 'Keywords to identify and categorize the search content, separated by an empty space. (optional)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Attribution',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ATTRIBUTION',
+        'configuration_value' => 'Copyright (c) ' . STORE_NAME,
+        'configuration_description' => 'Attribution for the search content. (optional)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Adult Content',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ADULT_CONTENT',
+        'configuration_value' => 'False',
+        'configuration_description' => 'Search content contains material suitable only for adults.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => '16x16 Icon',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ICON',
+        'configuration_value' => HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'favicon.ico',
+        'configuration_description' => 'A 16x16 sized icon (must be in .ico format, eg http://server/favicon.ico). (optional)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => '64x64 Image',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_IMAGE',
+        'configuration_value' => '',
+        'configuration_description' => 'A 64x64 sized image (must be in .png format, eg http://server/images/logo.png). (optional)',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

@@ -10,28 +10,34 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    $_SESSION['navigation']->set_snapshot();
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  if (!isset($_GET['order_id']) || (isset($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
-    tep_redirect(tep_href_link('account_history.php', '', 'SSL'));
+  if (!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
+    OSCOM::redirect('account_history.php', '', 'SSL');
   }
 
-  $customer_info_query = tep_db_query("select o.customers_id from orders o, orders_status s where o.orders_id = '". (int)$_GET['order_id'] . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$_SESSION['languages_id'] . "' and s.public_flag = '1'");
-  $customer_info = tep_db_fetch_array($customer_info_query);
-  if ($customer_info['customers_id'] != $customer_id) {
-    tep_redirect(tep_href_link('account_history.php', '', 'SSL'));
+  $Qcheck = $OSCOM_Db->prepare('select o.customers_id from :table_orders o, :table_orders_status s where o.orders_id = :orders_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1"');
+  $Qcheck->bindInt(':orders_id', $_GET['order_id']);
+  $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qcheck->execute();
+
+  if (($Qcheck->fetch() === false) || ($Qcheck->valueInt('customers_id') != $_SESSION['customer_id'])) {
+    OSCOM::redirect('account_history.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_history_info.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('account_history.php', '', 'SSL'));
-  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), tep_href_link('account_history_info.php', 'order_id=' . $_GET['order_id'], 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php', '', 'SSL'));
+  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id'], 'SSL'));
 
   require(DIR_WS_CLASSES . 'order.php');
   $order = new order($_GET['order_id']);
@@ -159,7 +165,7 @@
       </div>
     </div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="page-header">
@@ -169,16 +175,20 @@
   <div class="contentText">
     <ul class="timeline">
       <?php
-      $statuses_query = tep_db_query("select os.orders_status_name, osh.date_added, osh.comments from orders_status os, orders_status_history osh where osh.orders_id = '" . (int)$_GET['order_id'] . "' and osh.orders_status_id = os.orders_status_id and os.language_id = '" . (int)$_SESSION['languages_id'] . "' and os.public_flag = '1' order by osh.date_added");
-      while ($statuses = tep_db_fetch_array($statuses_query)) {
+      $Qstatuses = $OSCOM_Db->prepare('select os.orders_status_name, osh.date_added, osh.comments from :table_orders_status os, :table_orders_status_history osh where osh.orders_id = :orders_id and osh.orders_status_id = os.orders_status_id and os.language_id = :language_id and os.public_flag = "1" order by osh.date_added');
+      $Qstatuses->bindInt(':orders_id', $_GET['order_id']);
+      $Qstatuses->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qstatuses->execute();
+
+      while ($Qstatuses->fetch()) {
         echo '<li>';
         echo '  <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>';
         echo '  <div class="timeline-panel">';
         echo '    <div class="timeline-heading">';
-        echo '      <p class="pull-right"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> ' . tep_date_short($statuses['date_added']) . '</small></p><h4 class="timeline-title">' . $statuses['orders_status_name'] . '</h4>';
+        echo '      <p class="pull-right"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> ' . tep_date_short($Qstatuses->value('date_added')) . '</small></p><h4 class="timeline-title">' . $Qstatuses->value('orders_status_name') . '</h4>';
         echo '    </div>';
         echo '    <div class="timeline-body">';
-        echo '      <p><blockquote>' . (empty($statuses['comments']) ? TEXT_NO_COMMENTS : nl2br(tep_output_string_protected($statuses['comments']))) . '</blockquote></p>';
+        echo '      <p><blockquote>' . (tep_not_null($Qstatuses->value('comments')) ? nl2br($Qstatuses->valueProtected('comments')) : TEXT_NO_COMMENTS) . '</blockquote></p>';
         echo '    </div>';
         echo '  </div>';
         echo '</li>';
@@ -193,7 +203,7 @@
 
   <div class="clearfix"></div>
   <div>
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
   </div>
 </div>
 
@@ -201,3 +211,4 @@
   require('includes/template_bottom.php');
   require('includes/application_bottom.php');
 ?>
+h

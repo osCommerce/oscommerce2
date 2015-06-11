@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/contact_us.php');
@@ -17,9 +20,9 @@
   if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
 
-    $name = tep_db_prepare_input($_POST['name']);
-    $email_address = tep_db_prepare_input($_POST['email']);
-    $enquiry = tep_db_prepare_input($_POST['enquiry']);
+    $name = HTML::sanitize($_POST['name']);
+    $email_address = HTML::sanitize($_POST['email']);
+    $enquiry = HTML::sanitize($_POST['enquiry']);
 
     if (!tep_validate_email($email_address)) {
       $error = true;
@@ -27,7 +30,7 @@
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
     }
 
-    $actionRecorder = new actionRecorder('ar_contact_us', (isset($_SESSION['customer_id']) ? $customer_id : null), $name);
+    $actionRecorder = new actionRecorder('ar_contact_us', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : null), $name);
     if (!$actionRecorder->canPerform()) {
       $error = true;
 
@@ -41,11 +44,11 @@
 
       $actionRecorder->record();
 
-      tep_redirect(tep_href_link('contact_us.php', 'action=success'));
+      OSCOM::redirect('contact_us.php', 'action=success');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, tep_href_link('contact_us.php'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('contact_us.php'));
 
   require('includes/template_top.php');
 ?>
@@ -68,7 +71,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', tep_href_link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
   </div>
 </div>
 
@@ -76,7 +79,7 @@
   } else {
 ?>
 
-<?php echo tep_draw_form('contact_us', tep_href_link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', true); ?>
+<?php echo HTML::form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -87,7 +90,7 @@
       <label for="inputFromName" class="control-label col-sm-3"><?php echo ENTRY_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
+        echo HTML::inputField('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -96,7 +99,7 @@
       <label for="inputFromEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_input_field('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
+        echo HTML::inputField('email', NULL, 'required aria-required="true" id="inputFromEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -105,7 +108,7 @@
       <label for="inputEnquiry" class="control-label col-sm-3"><?php echo ENTRY_ENQUIRY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_draw_textarea_field('enquiry', 'soft', 50, 15, NULL, 'required aria-required="true" id="inputEnquiry" placeholder="' . ENTRY_ENQUIRY_TEXT . '"');
+        echo HTML::textareaField('enquiry', 50, 15, NULL, 'required aria-required="true" id="inputEnquiry" placeholder="' . ENTRY_ENQUIRY_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -113,7 +116,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
   </div>
 </div>
 

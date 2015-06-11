@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class actionRecorder {
     var $_module;
     var $_user_id;
@@ -72,8 +74,10 @@
     }
 
     function record($success = true) {
+      $OSCOM_Db = Registry::get('Db');
+
       if (tep_not_null($this->_module)) {
-        tep_db_query("insert into action_recorder (module, user_id, user_name, identifier, success, date_added) values ('" . tep_db_input($this->_module) . "', '" . (int)$this->_user_id . "', '" . tep_db_input($this->_user_name) . "', '" . tep_db_input($this->getIdentifier()) . "', '" . ($success == true ? 1 : 0) . "', now())");
+        $OSCOM_Db->save('action_recorder', ['module' => $this->_module, 'user_id' => (int)$this->_user_id, 'user_name' => $this->_user_name, 'identifier' => $this->getIdentifier(), 'success' => ($success == true ? 1 : 0), 'date_added' => 'now()']);
       }
     }
 

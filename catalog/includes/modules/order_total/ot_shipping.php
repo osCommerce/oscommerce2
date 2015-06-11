@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class ot_shipping {
     var $title, $output;
 
@@ -46,7 +48,7 @@
         }
       }
 
-      $module = substr($GLOBALS['shipping']['id'], 0, strpos($GLOBALS['shipping']['id'], '_'));
+      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
 
       if (tep_not_null($order->info['shipping_method'])) {
         if ($GLOBALS[$module]->tax_class > 0) {
@@ -67,12 +69,7 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_ORDER_TOTAL_SHIPPING_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-
-      return $this->_check;
+      return defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS');
     }
 
     function keys() {
@@ -80,15 +77,65 @@
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Display Shipping', 'MODULE_ORDER_TOTAL_SHIPPING_STATUS', 'true', 'Do you want to display the order shipping cost?', '6', '1','tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER', '2', 'Sort order of display.', '6', '2', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Allow Free Shipping', 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING', 'false', 'Do you want to allow free shipping?', '6', '3', 'tep_cfg_select_option(array(\'true\', \'false\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, date_added) values ('Free Shipping For Orders Over', 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER', '50', 'Provide free shipping for orders over the set amount.', '6', '4', 'currencies->format', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Provide Free Shipping For Orders Made', 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION', 'national', 'Provide free shipping for orders sent to the set destination.', '6', '5', 'tep_cfg_select_option(array(\'national\', \'international\', \'both\'), ', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Display Shipping',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SHIPPING_STATUS',
+        'configuration_value' => 'true',
+        'configuration_description' => 'Do you want to display the order shipping cost?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'true\', \'false\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER',
+        'configuration_value' => '2',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Allow Free Shipping',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING',
+        'configuration_value' => 'false',
+        'configuration_description' => 'Do you want to allow free shipping?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'true\', \'false\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Free Shipping For Orders Over',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER',
+        'configuration_value' => '50',
+        'configuration_description' => 'Provide free shipping for orders over the set amount.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'currencies->format',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Provide Free Shipping For Orders Made',
+        'configuration_key' => 'MODULE_ORDER_TOTAL_SHIPPING_DESTINATION',
+        'configuration_value' => 'national',
+        'configuration_description' => 'Provide free shipping for orders sent to the set destination.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'national\', \'international\', \'both\'), ',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
   }
 ?>

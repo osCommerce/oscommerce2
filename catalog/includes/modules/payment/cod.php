@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class cod {
     var $code, $title, $description, $enabled;
 
@@ -33,14 +35,16 @@
     function update_status() {
       global $order;
 
+      $OSCOM_Db = Registry::get('Db');
+
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_COD_ZONE > 0) ) {
         $check_flag = false;
-        $check_query = tep_db_query("select zone_id from zones_to_geo_zones where geo_zone_id = '" . MODULE_PAYMENT_COD_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
-        while ($check = tep_db_fetch_array($check_query)) {
-          if ($check['zone_id'] < 1) {
+        $Qcheck = $OSCOM_Db->get('zones_to_geo_zones', 'zone_id', ['geo_zone_id' => MODULE_PAYMENT_COD_ZONE, 'zone_country_id' => $order->delivery['country']['id']], 'zone_id');
+        while ($Qcheck->fetch()) {
+          if ($Qcheck->valueInt('zone_id') < 1) {
             $check_flag = true;
             break;
-          } elseif ($check['zone_id'] == $order->delivery['zone_id']) {
+          } elseif ($Qcheck->valueInt('zone_id') == $order->delivery['zone_id']) {
             $check_flag = true;
             break;
           }
@@ -93,22 +97,60 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_PAYMENT_COD_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_PAYMENT_COD_STATUS');
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Cash On Delivery Module', 'MODULE_PAYMENT_COD_STATUS', 'True', 'Do you want to accept Cash On Delevery payments?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Payment Zone', 'MODULE_PAYMENT_COD_ZONE', '0', 'If a zone is selected, only enable this payment method for that zone.', '6', '2', 'tep_get_zone_class_title', 'tep_cfg_pull_down_zone_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort order of display.', 'MODULE_PAYMENT_COD_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, use_function, date_added) values ('Set Order Status', 'MODULE_PAYMENT_COD_ORDER_STATUS_ID', '0', 'Set the status of orders made with this payment module to this value', '6', '0', 'tep_cfg_pull_down_order_statuses(', 'tep_get_order_status_name', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Cash On Delivery Module',
+        'configuration_key' => 'MODULE_PAYMENT_COD_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to accept Cash On Delevery payments?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Payment Zone',
+        'configuration_key' => 'MODULE_PAYMENT_COD_ZONE',
+        'configuration_value' => '0',
+        'configuration_description' => 'If a zone is selected, only enable this payment method for that zone.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_zone_class_title',
+        'set_function' => 'tep_cfg_pull_down_zone_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_PAYMENT_COD_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Set Order Status',
+        'configuration_key' => 'MODULE_PAYMENT_COD_ORDER_STATUS_ID',
+        'configuration_value' => '0',
+        'configuration_description' => 'Set the status of orders made with this payment module to this value',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_pull_down_order_statuses(',
+        'use_function' => 'tep_get_order_status_name',
+        'date_added' => 'now()'
+      ]);
    }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

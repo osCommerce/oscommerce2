@@ -10,12 +10,15 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   chdir('../../../../../');
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    $_SESSION['navigation']->set_snapshot();
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
@@ -27,10 +30,10 @@
     $sage_pay_direct = new sage_pay_direct();
 
     if ( !$sage_pay_direct->enabled ) {
-      tep_redirect(tep_href_link('account.php', '', 'SSL'));
+      OSCOM::redirect('account.php', '', 'SSL');
     }
   } else {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_sage_pay_cards.php');
@@ -38,27 +41,25 @@
   $sage_pay_cards = new cm_account_sage_pay_cards();
 
   if ( !$sage_pay_cards->isEnabled() ) {
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
   if ( isset($_GET['action']) ) {
     if ( ($_GET['action'] == 'delete') && isset($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
-      $token_query = tep_db_query("select id, sagepay_token from customers_sagepay_tokens where id = '" . (int)$_GET['id'] . "' and customers_id = '" . (int)$customer_id . "'");
+      $Qtoken = $OSCOM_Db->get('customers_sagepay_tokens', ['id', 'sagepay_token'], ['id' => $_GET['id'], 'customers_id' => $_SESSION['customer_id']]);
 
-      if ( tep_db_num_rows($token_query) ) {
-        $token = tep_db_fetch_array($token_query);
-
-        $sage_pay_direct->deleteCard($token['sagepay_token'], $token['id']);
+      if ($Qtoken->fetch() !== false) {
+        $sage_pay_direct->deleteCard($Qtoken->value('sagepay_token'), $Qtoken->valueInt('id'));
 
         $messageStack->add_session('cards', MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_SUCCESS_DELETED, 'success');
       }
     }
 
-    tep_redirect(tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+    OSCOM::redirect('ext/modules/content/account/sage_pay/cards.php', '', 'SSL');
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, tep_href_link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -79,19 +80,19 @@
   <div class="contentText">
 
 <?php
-  $tokens_query = tep_db_query("select id, card_type, number_filtered, expiry_date from customers_sagepay_tokens where customers_id = '" . (int)$customer_id . "' order by date_added");
+  $Qtokens = $OSCOM_Db->get('customers_sagepay_tokens', ['id', 'card_type', 'number_filtered', 'expiry_date'], ['customers_id' => $_SESSION['customer_id']], 'date_added');
 
-  if ( tep_db_num_rows($tokens_query) > 0 ) {
-    while ( $tokens = tep_db_fetch_array($tokens_query) ) {
+  if ($Qtokens->fetch() !== false) {
+    do {
 ?>
 
     <div>
-      <span style="float: right;"><?php echo tep_draw_button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', tep_href_link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . (int)$tokens['id'] . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
-      <p><strong><?php echo tep_output_string_protected($tokens['card_type']); ?></strong>&nbsp;&nbsp;****<?php echo tep_output_string_protected($tokens['number_filtered']) . '&nbsp;&nbsp;' . tep_output_string_protected(substr($tokens['expiry_date'], 0, 2) . '/' . substr($tokens['expiry_date'], 2)); ?></p>
+      <span style="float: right;"><?php echo HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
+      <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
     </div>
 
 <?php
-    }
+    } while ($Qtokens->fetch());
   } else {
 ?>
 
@@ -106,7 +107,7 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
   </div>
 </div>
 

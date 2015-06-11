@@ -10,65 +10,86 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    $navigation->set_snapshot();
-    tep_redirect(tep_href_link('login.php', '', 'SSL'));
+    $_SESSION['navigation']->set_snapshot();
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // needs to be included earlier to set the success message in the messageStack
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_notifications.php');
 
-  $global_query = tep_db_query("select global_product_notifications from customers_info where customers_info_id = '" . (int)$customer_id . "'");
-  $global = tep_db_fetch_array($global_query);
+  $Qglobal = $OSCOM_Db->prepare('select global_product_notifications from :table_customers_info where customers_info_id = :customers_info_id');
+  $Qglobal->bindInt(':customers_info_id', $_SESSION['customer_id']);
+  $Qglobal->execute();
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
-    if (isset($_POST['product_global']) && is_numeric($_POST['product_global'])) {
-      $product_global = tep_db_prepare_input($_POST['product_global']);
+    if (isset($_POST['product_global']) && is_numeric($_POST['product_global']) && in_array($_POST['product_global'], ['0', '1'])) {
+      $product_global = (int)$_POST['product_global'];
     } else {
-      $product_global = '0';
+      $product_global = 0;
     }
 
     (array)$products = $_POST['products'];
 
-    if ($product_global != $global['global_product_notifications']) {
-      $product_global = (($global['global_product_notifications'] == '1') ? '0' : '1');
+    if ($product_global !== $Qglobal->valueInt('global_product_notifications')) {
+      $product_global = ($Qglobal->valueInt('global_product_notifications') === 1) ? 0 : 1;
 
-      tep_db_query("update customers_info set global_product_notifications = '" . (int)$product_global . "' where customers_info_id = '" . (int)$customer_id . "'");
+      $OSCOM_Db->save('customers_info', ['global_product_notifications' => $product_global], ['customers_info_id' => $_SESSION['customer_id']]);
     } elseif (sizeof($products) > 0) {
       $products_parsed = array();
-      reset($products);
       foreach ($products as $value) {
-        if (is_numeric($value)) {
+        if (is_numeric($value) && !in_array($value, $products_parsed)) {
           $products_parsed[] = $value;
         }
       }
 
       if (sizeof($products_parsed) > 0) {
-        $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "' and products_id not in (" . implode(',', $products_parsed) . ")");
-        $check = tep_db_fetch_array($check_query);
+        $products_id_in = array_map(function($k) {
+          return ':products_id_' . $k;
+        }, array_keys($products_parsed));
 
-        if ($check['total'] > 0) {
-          tep_db_query("delete from products_notifications where customers_id = '" . (int)$customer_id . "' and products_id not in (" . implode(',', $products_parsed) . ")");
+        $Qcheck = $OSCOM_Db->prepare('select products_id from :table_products_notifications where customers_id = :customers_id and products_id not in (' . implode(', ', $products_id_in) . ') limit 1');
+        $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+
+        foreach ($products_parsed as $k => $v) {
+          $Qcheck->bindInt(':products_id_' . $k, $v);
+        }
+
+        $Qcheck->execute();
+
+        if ($Qcheck->fetch() !== false) {
+          $Qdelete = $OSCOM_Db->prepare('delete from :table_products_notifications where customers_id = :customers_id and products_id not in (' . implode(', ', $products_id_in) . ')');
+          $Qdelete->bindInt(':customers_id', $_SESSION['customer_id']);
+
+          foreach ($products_parsed as $k => $v) {
+            $Qdelete->bindInt(':products_id_' . $k, $v);
+          }
+
+          $Qdelete->execute();
         }
       }
     } else {
-      $check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "'");
-      $check = tep_db_fetch_array($check_query);
+      $Qcheck = $OSCOM_Db->prepare('select products_id from :table_products_notifications where customers_id = :customers_id limit 1');
+      $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qcheck->execute();
 
-      if ($check['total'] > 0) {
-        tep_db_query("delete from products_notifications where customers_id = '" . (int)$customer_id . "'");
+      if ($Qcheck->fetch() !== false) {
+        $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id']]);
       }
     }
 
     $messageStack->add_session('account', SUCCESS_NOTIFICATIONS_UPDATED, 'success');
 
-    tep_redirect(tep_href_link('account.php', '', 'SSL'));
+    OSCOM::redirect('account.php', '', 'SSL');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, tep_href_link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, tep_href_link('account_notifications.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php', '', 'SSL'));
 
   require('includes/template_top.php');
 ?>
@@ -77,7 +98,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo tep_draw_form('account_notifications', tep_href_link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', true) . tep_draw_hidden_field('action', 'process'); ?>
+<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <div class="alert alert-info">
@@ -90,7 +111,7 @@
       <div class="col-sm-8">
         <div class="checkbox">
           <label>
-            <?php echo tep_draw_checkbox_field('product_global', '1', (($global['global_product_notifications'] == '1') ? true : false)); ?>
+            <?php echo HTML::checkboxField('product_global', '1', (($Qglobal->valueInt('global_product_notifications') === 1) ? true : false)); ?>
             <?php if (tep_not_null(GLOBAL_NOTIFICATIONS_DESCRIPTION)) echo ' ' . GLOBAL_NOTIFICATIONS_DESCRIPTION; ?>
           </label>
         </div>
@@ -99,15 +120,17 @@
   </div>
 
 <?php
-  if ($global['global_product_notifications'] != '1') {
+  if ($Qglobal->valueInt('global_product_notifications') !== 1) {
 ?>
 
   <div class="contentText">
 
 <?php
-    $products_check_query = tep_db_query("select count(*) as total from products_notifications where customers_id = '" . (int)$customer_id . "'");
-    $products_check = tep_db_fetch_array($products_check_query);
-    if ($products_check['total'] > 0) {
+    $Qcheck = $OSCOM_Db->prepare('select products_id from :table_products_notifications where customers_id = :customers_id limit 1');
+    $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
+    $Qcheck->execute();
+
+    if ($Qcheck->fetch() !== false) {
 ?>
 
     <div class="clearfix"></div>
@@ -120,12 +143,17 @@
 
 <?php
       $counter = 0;
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from products_description pd, products_notifications pn where pn.customers_id = '" . (int)$customer_id . "' and pn.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by pd.products_name");
-      while ($products = tep_db_fetch_array($products_query)) {
+
+      $Qproducts = $OSCOM_Db->prepare('select pd.products_id, pd.products_name from :table_products_description pd, :table_products_notifications pn where pn.customers_id = :customers_id and pn.products_id = pd.products_id and pd.language_id = :language_id order by pd.products_name');
+      $Qproducts->bindInt(':customers_id', $_SESSION['customer_id']);
+      $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproducts->execute();
+
+      while ($Qproducts->fetch()) {
 ?>
       <div class="checkbox">
         <label>
-          <?php echo tep_draw_checkbox_field('products[' . $counter . ']', $products['products_id'], true) . $products['products_name']; ?>
+          <?php echo HTML::checkboxField('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
         </label>
       </div>
 <?php
@@ -156,8 +184,8 @@
 ?>
 
   <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo tep_draw_button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo tep_draw_button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', tep_href_link('account.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
   </div>
 </div>
 

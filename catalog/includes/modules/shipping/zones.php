@@ -94,6 +94,9 @@
 
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\Registry;
+
   class zones {
     var $code, $title, $description, $enabled, $num_zones;
 
@@ -162,7 +165,7 @@
         $this->quotes['tax'] = tep_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
 
-      if (tep_not_null($this->icon)) $this->quotes['icon'] = tep_image($this->icon, $this->title);
+      if (tep_not_null($this->icon)) $this->quotes['icon'] = HTML::image($this->icon, $this->title);
 
       if ($error == true) $this->quotes['error'] = MODULE_SHIPPING_ZONES_INVALID_ZONE;
 
@@ -170,30 +173,85 @@
     }
 
     function check() {
-      if (!isset($this->_check)) {
-        $check_query = tep_db_query("select configuration_value from configuration where configuration_key = 'MODULE_SHIPPING_ZONES_STATUS'");
-        $this->_check = tep_db_num_rows($check_query);
-      }
-      return $this->_check;
+      return defined('MODULE_SHIPPING_ZONES_STATUS');
     }
 
     function install() {
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Enable Zones Method', 'MODULE_SHIPPING_ZONES_STATUS', 'True', 'Do you want to offer zone rate shipping?', '6', '0', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, use_function, set_function, date_added) values ('Tax Class', 'MODULE_SHIPPING_ZONES_TAX_CLASS', '0', 'Use the following tax class on the shipping fee.', '6', '0', 'tep_get_tax_class_title', 'tep_cfg_pull_down_tax_classes(', now())");
-      tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_SHIPPING_ZONES_SORT_ORDER', '0', 'Sort order of display.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Zones Method',
+        'configuration_key' => 'MODULE_SHIPPING_ZONES_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to offer zone rate shipping?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Tax Class',
+        'configuration_key' => 'MODULE_SHIPPING_ZONES_TAX_CLASS',
+        'configuration_value' => '0',
+        'configuration_description' => 'Use the following tax class on the shipping fee.',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'use_function' => 'tep_get_tax_class_title',
+        'set_function' => 'tep_cfg_pull_down_tax_classes(',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_SHIPPING_ZONES_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
+
       for ($i = 1; $i <= $this->num_zones; $i++) {
         $default_countries = '';
         if ($i == 1) {
           $default_countries = 'US,CA';
         }
-        tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Countries', 'MODULE_SHIPPING_ZONES_COUNTRIES_" . $i ."', '" . $default_countries . "', 'Comma separated list of two character ISO country codes that are part of Zone " . $i . ".', '6', '0', now())");
-        tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Shipping Table', 'MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,7:10.50,99:20.00', 'Shipping rates to Zone " . $i . " destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone " . $i . " destinations.', '6', '0', now())");
-        tep_db_query("insert into configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Zone " . $i ." Handling Fee', 'MODULE_SHIPPING_ZONES_HANDLING_" . $i."', '0', 'Handling Fee for this shipping zone', '6', '0', now())");
+
+        $OSCOM_Db->save('configuration', [
+          'configuration_title' => 'Zone ' . $i . ' Countries',
+          'configuration_key' => 'MODULE_SHIPPING_ZONES_COUNTRIES_' . $i,
+          'configuration_value' => $default_countries,
+          'configuration_description' => 'Comma separated list of two character ISO country codes that are part of Zone ' . $i . '.',
+          'configuration_group_id' => '6',
+          'sort_order' => '0',
+          'date_added' => 'now()'
+        ]);
+
+        $OSCOM_Db->save('configuration', [
+          'configuration_title' => 'Zone ' . $i . ' Shipping Table',
+          'configuration_key' => 'MODULE_SHIPPING_ZONES_COST_' . $i,
+          'configuration_value' => '3:8.50,7:10.50,99:20.00',
+          'configuration_description' => 'Shipping rates to Zone ' . $i . ' destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone ' . $i . ' destinations.',
+          'configuration_group_id' => '6',
+          'sort_order' => '0',
+          'date_added' => 'now()'
+        ]);
+
+        $OSCOM_Db->save('configuration', [
+          'configuration_title' => 'Zone ' . $i . ' Handling Fee',
+          'configuration_key' => 'MODULE_SHIPPING_ZONES_HANDLING_' . $i,
+          'configuration_value' => '0',
+          'configuration_description' => 'Handling Fee for this shipping zone',
+          'configuration_group_id' => '6',
+          'sort_order' => '0',
+          'date_added' => 'now()'
+        ]);
       }
     }
 
     function remove() {
-      tep_db_query("delete from configuration where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
     }
 
     function keys() {

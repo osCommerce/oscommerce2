@@ -6,6 +6,9 @@
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class category_tree {
     protected $_data = array();
 
@@ -30,19 +33,20 @@
         $cpath_end_string = '';
 
     public function __construct() {
-      global $languages_id;
-
       static $_category_tree_data;
+
+      $OSCOM_Db = Registry::get('Db');
 
       if ( isset($_category_tree_data) ) {
         $this->_data = $_category_tree_data;
       } else {
+        $Qcategories = $OSCOM_Db->prepare('select c.categories_id, c.parent_id, c.categories_image, cd.categories_name from :table_categories c, :table_categories_description cd where c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.parent_id, c.sort_order, cd.categories_name');
+        $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcategories->execute();
 
-        $categories_query = tep_db_query("select c.categories_id, c.parent_id, c.categories_image, cd.categories_name from categories c, categories_description cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id. "' order by c.parent_id, c.sort_order, cd.categories_name");
-
-        while ( $categories = tep_db_fetch_array($categories_query) ) {
-          $this->_data[$categories['parent_id']][$categories['categories_id']] = array('name' => $categories['categories_name'],
-                                                                                       'image' => $categories['categories_image']);
+        while ($Qcategories->fetch()) {
+          $this->_data[$Qcategories->valueInt('parent_id')][$Qcategories->valueInt('categories_id')] = array('name' => $Qcategories->value('categories_name'),
+                                                                                                             'image' => $Qcategories->value('categories_image'));
         }
 
         $_category_tree_data = $this->_data;
@@ -76,7 +80,7 @@
             $link_title = $category['name'];
           }
 
-          $result .= '<a href="' . tep_href_link('index.php', 'cPath=' . $category_link) . '">';
+          $result .= '<a href="' . OSCOM::link('index.php', 'cPath=' . $category_link) . '">';
           $result .= str_repeat($this->spacer_string, $this->spacer_multiplier * $level);
           $result .= $link_title . '</a>';
 

@@ -10,8 +10,14 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
+  use OSC\OM\Db;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
 // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
+  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
 
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
@@ -23,8 +29,10 @@
     include('includes/configure.php');
   }
 
-// set default timezone if none exists (PHP 5.3 throws an E_WARNING)
-   date_default_timezone_set(defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get());
+  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
+
+  OSCOM::initialize();
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
@@ -65,10 +73,15 @@
 // make a connection to the database... now
   tep_db_connect() or die('Unable to connect to database server!');
 
-// set application wide parameters
-  $configuration_query = tep_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
-  while ($configuration = tep_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey'], $configuration['cfgValue']);
+  Registry::set('Cache', new Cache());
+  Registry::set('Db', Db::initialize());
+  $OSCOM_Db = Registry::get('Db');
+
+// set the application parameters
+  $Qcfg = $OSCOM_Db->get('configuration', ['configuration_key as k', 'configuration_value as v']);//, null, null, null, 'configuration'); // TODO add cache when supported by admin
+
+  while ($Qcfg->fetch()) {
+    define($Qcfg->value('k'), $Qcfg->value('v'));
   }
 
 // define our general functions used application-wide
@@ -234,4 +247,7 @@
                         array('title' => TEXT_CACHE_MANUFACTURERS, 'code' => 'manufacturers', 'file' => 'manufacturers_box-language.cache', 'multiple' => true),
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
+
+  require(DIR_FS_CATALOG . 'includes/classes/hooks.php');
+  $OSCOM_Hooks = new hooks('admin');
 ?>
