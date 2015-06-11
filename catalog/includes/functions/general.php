@@ -1290,19 +1290,12 @@
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    return array_map(function ($string) {
+    $cPath_array = array_map(function ($string) {
       return (int)$string;
     }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
-    $tmp_array = array();
-    $n = sizeof($cPath_array);
-    for ($i=0; $i<$n; $i++) {
-      if (!in_array($cPath_array[$i], $tmp_array)) {
-        $tmp_array[] = $cPath_array[$i];
-      }
-    }
-
+    $tmp_array = array_unique($cPath_array);
     return $tmp_array;
   }
 
