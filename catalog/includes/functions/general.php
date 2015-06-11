@@ -1290,7 +1290,7 @@
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map(function ($string) {
+    return array_map(function ($string) {
       return (int)$string;
     }, explode('_', $cPath));
 
