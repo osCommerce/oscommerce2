@@ -1295,7 +1295,7 @@
     }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
-    return array_unique($cPath_array);
+    return array_keys(array_flip($cPath_array));
   }
 
 ////
