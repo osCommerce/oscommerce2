@@ -42,10 +42,15 @@
         break;
       case 'install':
       case 'remove':
-        if (($module_type == 'dashboard') && (strpos($_GET['module'], '\\') !== false) && class_exists($_GET['module'])) {
-          $file_extension = '';
-          $class = $_GET['module'];
-          $module = new $class();
+        if (($module_type == 'dashboard') && (strpos($_GET['module'], '\\') !== false)) {
+          list($adm_app, $adm_code) = explode('\\', $_GET['module'], 2);
+          $class = 'OSC\OM\Apps\\' . basename($adm_app) . '\Module\Admin\Dashboard\\' . basename($adm_code);
+
+          if (class_exists($class)) {
+            $file_extension = '';
+            $module = new $class();
+            $class = basename($adm_app) . '\\' . basename($adm_code);
+          }
         } else {
           $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
           $class = basename($_GET['module']);
@@ -130,15 +135,16 @@
                         foreach ($ddir as $dfile) {
                             if (!$dfile->isDot() && !$dfile->isDir() && ($dfile->getExtension() == 'php')) {
                                 $class = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Admin\Dashboard\\' . $dfile->getBasename('.php');
+                                $app_code = $file->getFilename() . '\\' . $dfile->getBasename('.php');
 
                                 if (is_subclass_of($class, 'OSC\OM\ModuleAdminDashboardAbstract')) {
                                     if (isset($_GET['list']) && ($_GET['list'] == 'new')) {
-                                        if (!in_array($class, $modules_installed)) {
-                                            $directory_array[] = $class;
+                                        if (!in_array($app_code, $modules_installed)) {
+                                            $directory_array[] = $app_code;
                                         }
                                     } else {
-                                        if (in_array($class, $modules_installed)) {
-                                            $directory_array[] = $class;
+                                        if (in_array($app_code, $modules_installed)) {
+                                            $directory_array[] = $app_code;
                                         } else {
                                             $new_modules_counter++;
                                         }
@@ -188,10 +194,14 @@
 
     if (strpos($file, '\\') !== false) {
       $file_extension = '';
-      $class = $file;
+
+      list($adm_app, $adm_code) = explode('\\', $file, 2);
+      $class = 'OSC\OM\Apps\\' . $adm_app . '\Module\Admin\Dashboard\\' . $adm_code;
 
       $module = new $class();
-      $module->code = $class;
+      $module->code = $file;
+
+      $class = $file;
     } else {
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
 

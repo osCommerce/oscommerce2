@@ -57,7 +57,8 @@
       $adm = $adm_array[$i];
 
       if (strpos($adm, '\\') !== false) {
-        $class = $adm;
+        list($adm_app, $adm_code) = explode('\\', $adm, 2);
+        $class = 'OSC\OM\Apps\\' . $adm_app . '\Module\Admin\Dashboard\\' . $adm_code;
       } else {
         $class = substr($adm, 0, strrpos($adm, '.'));
 
