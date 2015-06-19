@@ -11,15 +11,15 @@ use OSC\OM\OSCOM;
 require('includes/application_top.php');
 
 if (empty($_GET)) {
-    OSCOM::redirect('admin/index.php');
+    OSCOM::redirect('index.php');
 }
 
 $app = basename(array_keys($_GET)[0]);
 
-if (file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/OSCOM_' . $app . '.php') && file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php')) {
-     include(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php');
+if (OSCOM::appExists($app) && file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php')) {
+    include(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php');
 } else {
-    OSCOM::redirect('admin/index.php');
+    OSCOM::redirect('index.php');
 }
 
 require('includes/application_bottom.php');
