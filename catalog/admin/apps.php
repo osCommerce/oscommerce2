@@ -6,6 +6,7 @@
   * @license GPL; http://www.oscommerce.com/gpllicense.txt
   */
 
+use OSC\OM\Apps;
 use OSC\OM\OSCOM;
 
 require('includes/application_top.php');
@@ -16,7 +17,7 @@ if (empty($_GET)) {
 
 $app = basename(array_keys($_GET)[0]);
 
-if (OSCOM::appExists($app) && file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php')) {
+if (Apps::exists($app) && file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php')) {
     include(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php');
 } else {
     OSCOM::redirect('index.php');

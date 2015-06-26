@@ -13,6 +13,6 @@ class AdditionalCheckoutButtons
     public static function display() {
         global $payment_modules;
 
-        return $payment_modules->checkout_initialization_method();
+        return implode('', $payment_modules->checkout_initialization_method());
     }
 }

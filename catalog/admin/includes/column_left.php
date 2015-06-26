@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
   use OSC\OM\OSCOM;
 
   if (tep_session_is_registered('admin')) {
@@ -39,28 +40,8 @@
       }
     }
 
-    $directory = OSCOM::BASE_DIR . 'apps';
-
-    if (file_exists($directory)) {
-        if ($dir = new \DirectoryIterator($directory)) {
-            foreach ($dir as $file) {
-                if (!$file->isDot() && $file->isDir() && file_exists($directory . '/' . $file->getFilename() . '/Module/Admin/Menu')) {
-                    $menu_directory = $directory . '/' . $file->getFilename() . '/Module/Admin/Menu';
-
-                    if ($mdir = new \DirectoryIterator($menu_directory)) {
-                        foreach ($mdir as $mfile) {
-                            if (!$mfile->isDot() && !$mfile->isDir() && ($mfile->getExtension() == 'php')) {
-                                $class = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Admin\Menu\\' . $mfile->getBasename('.php');
-
-                                if (is_subclass_of($class, 'OSC\OM\ModuleAdminMenuInterface')) {
-                                    call_user_func([$class, 'execute']);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    foreach (Apps::getModules('adminMenu') as $m) {
+        call_user_func([$m, 'execute']);
     }
 
     function tep_sort_admin_boxes($a, $b) {

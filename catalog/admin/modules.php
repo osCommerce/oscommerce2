@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -30,6 +31,18 @@
   define('HEADING_TITLE', $cfgModules->get($set, 'title'));
   $template_integration = $cfgModules->get($set, 'template_integration');
 
+  $appModuleType = null;
+
+  switch ($module_type) {
+    case 'dashboard':
+      $appModuleType = 'adminDashboard';
+      break;
+
+    case 'payment':
+      $appModuleType = 'payment';
+      break;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
@@ -42,14 +55,13 @@
         break;
       case 'install':
       case 'remove':
-        if (($module_type == 'dashboard') && (strpos($_GET['module'], '\\') !== false)) {
-          list($adm_app, $adm_code) = explode('\\', $_GET['module'], 2);
-          $class = 'OSC\OM\Apps\\' . basename($adm_app) . '\Module\Admin\Dashboard\\' . basename($adm_code);
+        if (strpos($_GET['module'], '\\') !== false) {
+          $class = Apps::getModuleClass($_GET['module'], $appModuleType);
 
           if (class_exists($class)) {
             $file_extension = '';
             $module = new $class();
-            $class = basename($adm_app) . '\\' . basename($adm_code);
+            $class = $_GET['module'];
           }
         } else {
           $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
@@ -122,40 +134,19 @@
     $dir->close();
   }
 
-  if ($module_type == 'dashboard') {
-    $apps_directory = OSCOM::BASE_DIR . 'apps';
-
-    if (file_exists($apps_directory)) {
-        if ($dir = new \DirectoryIterator($apps_directory)) {
-            foreach ($dir as $file) {
-                if (!$file->isDot() && $file->isDir() && file_exists($apps_directory . '/' . $file->getFilename() . '/Module/Admin/Dashboard')) {
-                    $d_directory = $apps_directory . '/' . $file->getFilename() . '/Module/Admin/Dashboard';
-
-                    if ($ddir = new \DirectoryIterator($d_directory)) {
-                        foreach ($ddir as $dfile) {
-                            if (!$dfile->isDot() && !$dfile->isDir() && ($dfile->getExtension() == 'php')) {
-                                $class = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Admin\Dashboard\\' . $dfile->getBasename('.php');
-                                $app_code = $file->getFilename() . '\\' . $dfile->getBasename('.php');
-
-                                if (is_subclass_of($class, 'OSC\OM\ModuleAdminDashboardAbstract')) {
-                                    if (isset($_GET['list']) && ($_GET['list'] == 'new')) {
-                                        if (!in_array($app_code, $modules_installed)) {
-                                            $directory_array[] = $app_code;
-                                        }
-                                    } else {
-                                        if (in_array($app_code, $modules_installed)) {
-                                            $directory_array[] = $app_code;
-                                        } else {
-                                            $new_modules_counter++;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+  if (isset($appModuleType)) {
+    foreach (Apps::getModules($appModuleType) as $k => $v) {
+      if (isset($_GET['list']) && ($_GET['list'] == 'new')) {
+        if (!in_array($k, $modules_installed)) {
+          $directory_array[] = $k;
         }
+      } else {
+        if (in_array($k, $modules_installed)) {
+          $directory_array[] = $k;
+        } else {
+          $new_modules_counter++;
+        }
+      }
     }
   }
 
@@ -195,8 +186,7 @@
     if (strpos($file, '\\') !== false) {
       $file_extension = '';
 
-      list($adm_app, $adm_code) = explode('\\', $file, 2);
-      $class = 'OSC\OM\Apps\\' . $adm_app . '\Module\Admin\Dashboard\\' . $adm_code;
+      $class = Apps::getModuleClass($file, $appModuleType);
 
       $module = new $class();
       $module->code = $file;

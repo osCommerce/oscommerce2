@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+
   require('includes/application_top.php');
 
   $languages = tep_get_languages();
@@ -57,8 +59,7 @@
       $adm = $adm_array[$i];
 
       if (strpos($adm, '\\') !== false) {
-        list($adm_app, $adm_code) = explode('\\', $adm, 2);
-        $class = 'OSC\OM\Apps\\' . $adm_app . '\Module\Admin\Dashboard\\' . $adm_code;
+        $class = Apps::getModuleClass($adm, 'adminDashboard');
       } else {
         $class = substr($adm, 0, strrpos($adm, '.'));
 

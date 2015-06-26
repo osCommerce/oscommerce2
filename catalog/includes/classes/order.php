@@ -281,15 +281,27 @@
                           'tax_groups' => array(),
                           'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
-      if (isset($_SESSION['payment']) && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
-        if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
-          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
-        } else {
-          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->title;
+      if (isset($_SESSION['payment'])) {
+        if (strpos($_SESSION['payment'], '\\') !== false) {
+          $code = 'Payment_' . str_replace('\\', '_', $_SESSION['payment']);
+
+          if (Registry::exists($code)) {
+            $OSCOM_PM = Registry::get($code);
+          }
+        } elseif (is_object($GLOBALS[$_SESSION['payment']])) {
+          $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
         }
 
-        if ( isset($GLOBALS[$_SESSION['payment']]->order_status) && is_numeric($GLOBALS[$_SESSION['payment']]->order_status) && ($GLOBALS[$_SESSION['payment']]->order_status > 0) ) {
-          $this->info['order_status'] = $GLOBALS[$_SESSION['payment']]->order_status;
+        if (isset($OSCOM_PM)) {
+          if (isset($OSCOM_PM->public_title)) {
+            $this->info['payment_method'] = $OSCOM_PM->public_title;
+          } else {
+            $this->info['payment_method'] = $OSCOM_PM->title;
+          }
+
+          if ( isset($OSCOM_PM->order_status) && is_numeric($OSCOM_PM->order_status) && ($OSCOM_PM->order_status > 0) ) {
+            $this->info['order_status'] = $OSCOM_PM->order_status;
+          }
         }
       }
 

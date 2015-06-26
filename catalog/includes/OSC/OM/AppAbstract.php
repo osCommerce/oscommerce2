@@ -10,42 +10,55 @@ namespace OSC\OM;
 
 abstract class AppAbstract
 {
-    protected $code;
-    protected $title;
-    protected $version;
+    public $code;
+    public $title;
+    public $version;
+    public $modules = [];
+
+    abstract protected function init();
 
     final public function __construct() {
-        $this->code = (new \ReflectionClass($this))->getShortName();
+        $this->setInfo();
 
         $this->init();
     }
 
-    protected function init()
-    {
-    }
-
-    public function getCode()
+    final public function getCode()
     {
         return $this->code;
     }
 
-    public function getTitle()
+    final public function getTitle()
     {
         return $this->title;
     }
 
-    public function getVersion()
+    final public function getVersion()
     {
-        if (!isset($this->version)) {
-            $version = trim(file_get_contents(OSCOM::BASE_DIR . 'apps/' . $this->code . '/version.txt'));
+        return $this->version;
+    }
 
-            if (is_numeric($version)) {
-                $this->version = $version;
-            } else {
-                trigger_error('OSC\OM\AppAbstract::getVersion(): ' . $this->code . ' - Could not read App version number.');
-            }
+    final public function getModules()
+    {
+        return $this->modules;
+    }
+
+    final public function hasModule($module, $type)
+    {
+    }
+
+    final private function setInfo()
+    {
+        $this->code = (new \ReflectionClass($this))->getShortName();
+
+        if (!file_exists(OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json'), true)) === null)) {
+            trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->code . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json.');
+
+            return false;
         }
 
-        return $this->version;
+        $this->title = $json['title'];
+        $this->version = number_format($json['version'], 3);
+        $this->modules = $json['modules'];
     }
 }

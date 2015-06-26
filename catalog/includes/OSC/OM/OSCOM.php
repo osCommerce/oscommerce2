@@ -193,21 +193,4 @@ class OSCOM
             require($file);
         }
     }
-
-    public static function appExists($app)
-    {
-        $app = basename($app);
-
-        if (file_exists(static::BASE_DIR . 'apps/' . $app . '/' . $app . '.php')) {
-            if (is_subclass_of('OSC\OM\Apps\\' . $app . '\\' . $app, 'OSC\OM\AppAbstract')) {
-                return true;
-            } else {
-                trigger_error('OSC\OM\OSCOM::appExists(): ' . $app . ' - App is not a subclass of OSC\OM\AppAbstract and cannot be loaded.');
-            }
-        } else {
-            trigger_error('OSC\OM\OSCOM::appExists(): ' . $app . ' - App class does not exist.');
-        }
-
-        return false;
-    }
 }
