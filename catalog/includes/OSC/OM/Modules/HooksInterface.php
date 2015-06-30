@@ -8,7 +8,6 @@
 
 namespace OSC\OM\Modules;
 
-interface AdminMenuInterface
+interface HooksInterface
 {
-    public static function execute();
 }

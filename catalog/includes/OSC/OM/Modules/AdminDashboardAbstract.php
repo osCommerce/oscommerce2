@@ -6,11 +6,11 @@
   * @license GPL; http://www.oscommerce.com/gpllicense.txt
   */
 
-namespace OSC\OM;
+namespace OSC\OM\Modules;
 
 use OSC\OM\Registry;
 
-abstract class ModuleAdminDashboardAbstract implements \OSC\OM\ModuleAdminDashboardInterface
+abstract class AdminDashboardAbstract implements \OSC\OM\Modules\AdminDashboardInterface
 {
     public $code;
     public $title;

@@ -8,12 +8,12 @@
 
 namespace OSC\OM\Modules;
 
-interface AdminDashboardInterface
+interface ContentInterface
 {
-    public function getOutput();
-    public function install();
-    public function keys();
+    public function execute();
     public function isEnabled();
     public function check();
+    public function install();
     public function remove();
+    public function keys();
 }
