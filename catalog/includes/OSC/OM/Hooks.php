@@ -8,6 +8,7 @@
 
 namespace OSC\OM;
 
+use OSC\OM\Apps;
 use OSC\OM\OSCOM;
 
 class Hooks
@@ -28,8 +29,10 @@ class Hooks
 
         $result = [];
 
-        foreach ($this->hooks[$this->site][$group][$hook][$action] as $ns) {
-            $bait = call_user_func(array($ns . '\\' . $this->site . '\\' . $group . '\\' . $hook, $action));
+        foreach ($this->hooks[$this->site][$group][$hook][$action] as $code) {
+            $class = Apps::getModuleClass($code, 'Hooks');
+
+            $bait = call_user_func(array($class, $action));
 
             if (!empty($bait)) {
                 $result[] = $bait;
@@ -51,30 +54,20 @@ class Hooks
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
                     if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php') && ($file->getBasename('.php') == $hook)) {
-                        $ns = 'OSC\OM\Module\Hooks';
-                        $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
+                        $class = 'OSC\OM\Module\Hooks\\' . $this->site . '\\' . $group . '\\' . $hook;
 
                         if (method_exists($class, $action)) {
-                            $this->hooks[$this->site][$group][$hook][$action][] = $ns;
+                            $this->hooks[$this->site][$group][$hook][$action][] = $class;
                         }
                     }
                 }
             }
         }
 
-        $directory = OSCOM::BASE_DIR . 'apps';
-
-        if (file_exists($directory)) {
-            if ($dir = new \DirectoryIterator($directory)) {
-                foreach ($dir as $file) {
-                    if (!$file->isDot() && $file->isDir() && file_exists($directory . '/' . $file->getFilename() . '/Module/Hooks/' . $this->site . '/' . $group . '/' .  $hook . '.php')) {
-                        $ns = 'OSC\OM\Apps\\' . $file->getFilename() . '\Module\Hooks';
-                        $class = $ns . '\\' . $this->site . '\\' . $group . '\\' . $hook;
-
-                        if (method_exists($class, $action)) {
-                            $this->hooks[$this->site][$group][$hook][$action][] = $ns;
-                        }
-                    }
+        foreach (Apps::getModules('Hooks') as $k => $class) {
+            if (preg_match('/[A-Za-z0-9]\\\\' . $this->site . '\/' . $group . '\\\\' . $hook . '/', $k)) {
+                if (method_exists($class, $action)) {
+                    $this->hooks[$this->site][$group][$hook][$action][] = $k;
                 }
             }
         }

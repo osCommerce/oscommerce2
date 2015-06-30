@@ -59,7 +59,7 @@
       $adm = $adm_array[$i];
 
       if (strpos($adm, '\\') !== false) {
-        $class = Apps::getModuleClass($adm, 'adminDashboard');
+        $class = Apps::getModuleClass($adm, 'AdminDashboard');
       } else {
         $class = substr($adm, 0, strrpos($adm, '.'));
 

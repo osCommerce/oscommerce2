@@ -35,11 +35,11 @@
 
   switch ($module_type) {
     case 'dashboard':
-      $appModuleType = 'adminDashboard';
+      $appModuleType = 'AdminDashboard';
       break;
 
     case 'payment':
-      $appModuleType = 'payment';
+      $appModuleType = 'Payment';
       break;
   }
 
@@ -49,7 +49,10 @@
     switch ($action) {
       case 'save':
         foreach( $_POST['configuration'] as $key => $value ) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
+          $key = tep_db_prepare_input($key);
+          $value = tep_db_prepare_input($value);
+
+          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
         break;

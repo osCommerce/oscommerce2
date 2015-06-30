@@ -9,17 +9,27 @@
 namespace OSC\OM;
 
 use OSC\OM\OSCOM;
+use OSC\OM\Registry;
 
 class Apps
 {
-    protected static $modules_map = [
-        'adminDashboard' => 'OSC\OM\ModuleAdminDashboardInterface',
-        'adminMenu' => 'OSC\OM\ModuleAdminMenuInterface'
-    ];
-
     public static function getModules($type, $app = null)
     {
         $result = [];
+
+        if (!Registry::exists('ModuleType' . $type)) {
+            $class = 'OSC\OM\Modules\\' . $type;
+
+            if (!class_exists($class)) {
+                trigger_error('OSC\OM\Apps::getModules(): ' . $type . ' module class not found in OSC\OM\Modules\\');
+
+                return $result;
+            }
+
+            Registry::set('ModuleType' . $type, new $class());
+        }
+
+        $OSCOM_Type = Registry::get('ModuleType' . $type);
 
         $directory = OSCOM::BASE_DIR . 'apps';
 
@@ -28,12 +38,8 @@ class Apps
                 foreach ($dir as $file) {
                     if (!$file->isDot() && $file->isDir() && (!isset($app) || ($file->getFilename() == $app)) && static::exists($file->getFilename()) && (($json = static::getInfo($file->getFilename())) !== false)) {
                         if (isset($json['modules'][$type])) {
-                            foreach ($json['modules'][$type] as $k => $v) {
-                                $class = 'OSC\OM\Apps\\' . $file->getFilename() . '\\' . $v;
-
-                                if (!isset(static::$modules_map[$type]) || is_subclass_of($class, static::$modules_map[$type])) {
-                                    $result[$file->getFilename() . '\\' . $k] = 'OSC\OM\Apps\\' . $file->getFilename() . '\\' . $v;
-                                }
+                            foreach ($json['modules'][$type] as $key => $data) {
+                                $result = array_merge($result, $OSCOM_Type->getInfo($file->getFilename(), $key, $data));
                             }
                         }
                     }
@@ -63,17 +69,21 @@ class Apps
 
     public static function getModuleClass($module, $type)
     {
-        list($app, $code) = explode('\\', $module, 2);
+        if (!Registry::exists('ModuleType' . $type)) {
+            $class = 'OSC\OM\Modules\\' . $type;
 
-        $info = static::getInfo($app);
+            if (!class_exists($class)) {
+                trigger_error('OSC\OM\Apps::getModuleClass(): ' . $type . ' module class not found in OSC\OM\Modules\\');
 
-        if (isset($info['modules'][$type])) {
-            if (isset($info['modules'][$type][$code])) {
-                return 'OSC\OM\Apps\\' . $app . '\\' . $info['modules'][$type][$code];
+                return $result;
             }
+
+            Registry::set('ModuleType' . $type, new $class());
         }
 
-        return false;
+        $OSCOM_Type = Registry::get('ModuleType' . $type);
+
+        return $OSCOM_Type->getClass($module);
     }
 
     public static function getInfo($app)

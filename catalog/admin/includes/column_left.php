@@ -40,7 +40,7 @@
       }
     }
 
-    foreach (Apps::getModules('adminMenu') as $m) {
+    foreach (Apps::getModules('AdminMenu') as $m) {
         call_user_func([$m, 'execute']);
     }
 

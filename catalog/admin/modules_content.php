@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+  use OSC\OM\Registry;
+
   require('includes/application_top.php');
 
   $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_CONTENT_INSTALLED' limit 1");
@@ -65,6 +68,21 @@
 
     $maindir->close();
 
+    foreach (Apps::getModules('Content') as $k => $class) {
+      $module = new $class();
+
+      if (in_array($k, $modules_installed)) {
+        $modules['installed'][] = array('code' => $k,
+                                        'title' => $module->title,
+                                        'group' => $module->group,
+                                        'sort_order' => (int)$module->sort_order);
+      } else {
+        $modules['new'][] = array('code' => $k,
+                                  'title' => $module->title,
+                                  'group' => $module->group);
+      }
+    }
+
     function _sortContentModulesInstalled($a, $b) {
       return strnatcmp($a['group'] . '-' . (int)$a['sort_order'] . '-' . $a['title'], $b['group'] . '-' . (int)$b['sort_order'] . '-' . $b['title']);
     }
@@ -81,11 +99,15 @@
   $_installed = array();
 
   foreach ( $modules['installed'] as $m ) {
-    $_installed[] = $m['group'] . '/' . $m['code'];
+    if (strpos($m['code'], '\\') !== false) {
+      $_installed[] = $m['code'];
+    } else {
+      $_installed[] = $m['group'] . '/' . $m['code'];
+    }
   }
 
   if ( implode(';', $_installed) != MODULE_CONTENT_INSTALLED ) {
-    tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
+    Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -93,10 +115,8 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
-        $class = basename($_GET['module']);
-
         foreach ( $modules['installed'] as $m ) {
-          if ( $m['code'] == $class ) {
+          if ( $m['code'] == $_GET['module'] ) {
             foreach ($_POST['configuration'] as $key => $value) {
               $key = tep_db_prepare_input($key);
               $value = tep_db_prepare_input($value);
@@ -108,36 +128,44 @@
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $class));
+        tep_redirect(tep_href_link('modules_content.php', 'module=' . $_GET['module']));
 
         break;
 
       case 'install':
-        $class = basename($_GET['module']);
+        $class = $code = $_GET['module'];
 
         foreach ( $modules['new'] as $m ) {
-          if ( $m['code'] == $class ) {
+          if ( $m['code'] == $code ) {
+            if (strpos($code, '\\') !== false) {
+              $class = Apps::getModuleClass($code, 'Content');
+            }
+
             $module = new $class();
 
             $module->install();
 
             $modules_installed[] = $m['group'] . '/' . $m['code'];
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
+            Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
-            tep_redirect(tep_href_link('modules_content.php', 'module=' . $class . '&action=edit'));
+            tep_redirect(tep_href_link('modules_content.php', 'module=' . $code . '&action=edit'));
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'action=list_new&module=' . $class));
+        tep_redirect(tep_href_link('modules_content.php', 'action=list_new&module=' . $code));
 
         break;
 
       case 'remove':
-        $class = basename($_GET['module']);
+        $class = $code = $_GET['module'];
 
         foreach ( $modules['installed'] as $m ) {
-          if ( $m['code'] == $class ) {
+          if ( $m['code'] == $code ) {
+            if (strpos($code, '\\') !== false) {
+              $class = Apps::getModuleClass($code, 'Content');
+            }
+
             $module = new $class();
 
             $module->remove();
@@ -148,13 +176,13 @@
               unset($modules_installed[array_search($m['group'] . '/' . $m['code'], $modules_installed)]);
             }
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = 'MODULE_CONTENT_INSTALLED'");
+            Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
             tep_redirect(tep_href_link('modules_content.php'));
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $class));
+        tep_redirect(tep_href_link('modules_content.php', 'module=' . $code));
 
         break;
     }
@@ -194,7 +222,13 @@
               </tr>
 <?php
     foreach ( $modules['new'] as $m ) {
-      $module = new $m['code']();
+      if (strpos($m['code'], '\\') !== false) {
+        $class = Apps::getModuleClass($m['code'], 'Content');
+
+        $module = new $class();
+      } else {
+        $module = new $m['code']();
+      }
 
       if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $module->code))) && !isset($mInfo)) {
         $module_info = array('code' => $module->code,
@@ -203,18 +237,22 @@
                              'signature' => (isset($module->signature) ? $module->signature : null),
                              'api_version' => (isset($module->api_version) ? $module->api_version : null));
 
+        if (strpos($module->code, '\\') !== false) {
+          $module_info['code'] = addslashes($module->code);
+        }
+
         $mInfo = new objectInfo($module_info);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'action=list_new&module=' . $module->code) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'action=list_new&module=' . addslashes($module->code)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'action=list_new&module=' . addslashes($module->code)) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -232,7 +270,13 @@
               </tr>
 <?php
     foreach ( $modules['installed'] as $m ) {
-      $module = new $m['code']();
+      if (strpos($m['code'], '\\') !== false) {
+        $class = Apps::getModuleClass($m['code'], 'Content');
+
+        $module = new $class();
+      } else {
+        $module = new $m['code']();
+      }
 
       if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $module->code))) && !isset($mInfo)) {
         $module_info = array('code' => $module->code,
@@ -256,19 +300,23 @@
                                              'set_function' => $key_value['set_function']);
         }
 
+        if (strpos($module->code, '\\') !== false) {
+          $module_info['code'] = addslashes($module->code);
+        }
+
         $mInfo = new objectInfo($module_info);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'module=' . $module->code) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'module=' . addslashes($module->code)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
                 <td class="dataTableContent"><?php echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'module=' . addslashes($module->code)) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
