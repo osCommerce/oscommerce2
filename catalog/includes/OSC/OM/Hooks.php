@@ -10,6 +10,7 @@ namespace OSC\OM;
 
 use OSC\OM\Apps;
 use OSC\OM\OSCOM;
+use OSC\OM\Registry;
 
 class Hooks
 {
@@ -31,8 +32,13 @@ class Hooks
 
         foreach ($this->hooks[$this->site][$group][$hook][$action] as $code) {
             $class = Apps::getModuleClass($code, 'Hooks');
+            $regclass = 'Hook_' . str_replace(['/', '\\'], '_', $code);
 
-            $bait = call_user_func(array($class, $action));
+            if (!Registry::exists($regclass)) {
+                Registry::set($regclass, new $class());
+            }
+
+            $bait = Registry::get($regclass)->$action();
 
             if (!empty($bait)) {
                 $result[] = $bait;
