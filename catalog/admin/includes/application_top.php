@@ -250,5 +250,5 @@
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
 
-  Registry::set('Hooks', new Hooks('admin'));
+  Registry::set('Hooks', new Hooks());
 ?>

@@ -16,8 +16,6 @@
 
   $OSCOM_Hooks = Registry::get('Hooks');
 
-  $OSCOM_Hooks->register('orders');
-
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
@@ -96,7 +94,7 @@
 
   include(DIR_WS_CLASSES . 'order.php');
 
-  $OSCOM_Hooks->call('orders', 'orderAction');
+  $OSCOM_Hooks->call('Orders', 'Action');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 
@@ -312,7 +310,7 @@
   </div>
 
 <?php
-    echo $OSCOM_Hooks->call('orders', 'orderTab');
+    echo implode('', $OSCOM_Hooks->call('Orders', 'PageTab', 'display'));
 ?>
 
 </div>

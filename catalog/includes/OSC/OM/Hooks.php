@@ -17,8 +17,12 @@ class Hooks
     protected $site;
     protected $hooks = [];
 
-    public function __construct($site)
+    public function __construct($site = null)
     {
+        if (!isset($site)) {
+            $site = OSCOM::getSite();
+        }
+
         $this->site = basename($site);
     }
 

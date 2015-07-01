@@ -17,13 +17,11 @@ class OSCOM
     const BASE_DIR = OSCOM_BASE_DIR;
 
     protected static $version;
-    protected static $site;
+    protected static $site = 'Shop';
 
     public static function initialize()
     {
         DateTime::setTimeZone();
-
-        static::setSite();
     }
 
     public static function getVersion()
@@ -43,12 +41,8 @@ class OSCOM
         return static::$version;
     }
 
-    public static function setSite($site = null)
+    public static function setSite($site)
     {
-        if (!isset($site)) {
-            $site = 'Shop';
-        }
-
         static::$site = $site;
     }
 
