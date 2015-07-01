@@ -39,7 +39,9 @@
                       $h = new \ReflectionClass($class);
 
                       foreach ($h->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC) as $method) {
-                        $hooks[$site . '/' . $group . '\\' . $hook][] = ['method' => $method->name];
+                        if ($method->name != '__construct') {
+                          $hooks[$site . '/' . $group . '\\' . $hook][] = ['method' => $method->name];
+                        }
                       }
                     }
                   }
@@ -58,10 +60,12 @@
     $h = new \ReflectionClass($v);
 
     foreach ($h->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC) as $method) {
-      $hooks[$code][] = [
-        'app' => $app,
-        'method' => $method->name
-      ];
+      if ($method->name != '__construct') {
+        $hooks[$code][] = [
+          'app' => $app,
+          'method' => $method->name
+        ];
+      }
     }
   }
 
