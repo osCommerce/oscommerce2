@@ -37,4 +37,17 @@ class Hooks extends \OSC\OM\ModulesAbstract
             return $this->ns . $app . '\\' . $info['modules'][$this->code][$group][$code];
         }
     }
+
+    public function filter($modules, $filter)
+    {
+        $result = [];
+
+        foreach ($modules as $key => $data) {
+            if (($key == $filter['site'] . '/' . $filter['group']) && isset($data[$filter['hook']])) {
+                $result[$key] = $data;
+            }
+        }
+
+        return $result;
+    }
 }

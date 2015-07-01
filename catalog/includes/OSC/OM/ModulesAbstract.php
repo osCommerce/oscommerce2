@@ -27,4 +27,9 @@ abstract class ModulesAbstract
     protected function init()
     {
     }
+
+    public function filter($modules, $filter)
+    {
+        return $modules;
+    }
 }

@@ -13,7 +13,7 @@ use OSC\OM\Registry;
 
 class Apps
 {
-    public static function getModules($type, $app = null)
+    public static function getModules($type, $app = null, $filter = null)
     {
         $result = [];
 
@@ -38,7 +38,13 @@ class Apps
                 foreach ($dir as $file) {
                     if (!$file->isDot() && $file->isDir() && (!isset($app) || ($file->getFilename() == $app)) && static::exists($file->getFilename()) && (($json = static::getInfo($file->getFilename())) !== false)) {
                         if (isset($json['modules'][$type])) {
-                            foreach ($json['modules'][$type] as $key => $data) {
+                            $modules = $json['modules'][$type];
+
+                            if (isset($filter)) {
+                                $modules = $OSCOM_Type->filter($modules, $filter);
+                            }
+
+                            foreach ($modules as $key => $data) {
                                 $result = array_merge($result, $OSCOM_Type->getInfo($file->getFilename(), $key, $data));
                             }
                         }

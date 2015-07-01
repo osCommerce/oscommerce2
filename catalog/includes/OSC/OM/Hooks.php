@@ -70,11 +70,15 @@ class Hooks
             }
         }
 
-        foreach (Apps::getModules('Hooks') as $k => $class) {
-            if (preg_match('/[A-Za-z0-9]\\\\' . $this->site . '\/' . $group . '\\\\' . $hook . '/', $k)) {
-                if (method_exists($class, $action)) {
-                    $this->hooks[$this->site][$group][$hook][$action][] = $k;
-                }
+        $filter = [
+            'site' => $this->site,
+            'group' => $group,
+            'hook' => $hook
+        ];
+
+        foreach (Apps::getModules('Hooks', null, $filter) as $k => $class) {
+            if (method_exists($class, $action)) {
+                $this->hooks[$this->site][$group][$hook][$action][] = $k;
             }
         }
     }
