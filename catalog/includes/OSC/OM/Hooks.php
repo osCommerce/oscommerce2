@@ -26,7 +26,7 @@ class Hooks
         $this->site = basename($site);
     }
 
-    public function call($group, $hook, $action = 'execute')
+    public function call($group, $hook, $action = 'execute', $flatten = false)
     {
         if (!isset($this->hooks[$this->site][$group][$hook][$action])) {
             $this->register($group, $hook, $action);
@@ -49,7 +49,16 @@ class Hooks
             }
         }
 
+        if ($flatten === true) {
+            $result = implode('', $result);
+        }
+
         return $result;
+    }
+
+    public function output($group, $hook, $action = 'execute')
+    {
+        return $this->call($group, $hook, $action, true);
     }
 
     protected function register($group, $hook, $action)

@@ -29,6 +29,10 @@ class Hooks extends \OSC\OM\ModulesAbstract
 
     public function getClass($module)
     {
+        if (strpos($module, '/') === false) { // TODO core hook compatibility; to remove
+            return $module;
+        }
+
         list($app, $group, $code) = explode('\\', $module, 3);
 
         $info = Apps::getInfo($app);

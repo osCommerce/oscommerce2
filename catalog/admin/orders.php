@@ -310,7 +310,7 @@
   </div>
 
 <?php
-    echo implode('', $OSCOM_Hooks->call('Orders', 'PageTab', 'display'));
+    echo $OSCOM_Hooks->output('Orders', 'PageTab', 'display');
 ?>
 
 </div>
