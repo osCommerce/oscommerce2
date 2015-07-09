@@ -29,7 +29,7 @@
           $this->selected_module = $module;
 
           if (strpos($module, '\\') !== false) {
-            $class = Apps::getModuleClass($module, 'payment');
+            $class = Apps::getModuleClass($module, 'Payment');
             $include_modules[] = [
               'class' => $module,
               'file' => $class
@@ -40,7 +40,7 @@
         } else {
           foreach($this->modules as $value) {
             if (strpos($value, '\\') !== false) {
-              $class = Apps::getModuleClass($value, 'payment');
+              $class = Apps::getModuleClass($value, 'Payment');
               $include_modules[] = [
                 'class' => $value,
                 'file' => $class
