@@ -14,12 +14,8 @@ class Registry
 
     public static function get($key)
     {
-        if (substr($key, 0, 6) != 'OSCOM_') {
-            $key = 'OSCOM_' . $key;
-        }
-
         if (!static::exists($key)) {
-            trigger_error('OSCOM_Registry::get - ' . $key . ' is not registered');
+            trigger_error('OSC\OM\Registry::get - ' . $key . ' is not registered');
 
             return false;
         }
@@ -29,12 +25,14 @@ class Registry
 
     public static function set($key, $value, $force = false)
     {
-        if (substr($key, 0, 6) != 'OSCOM_') {
-            $key = 'OSCOM_' . $key;
+        if (!is_object($value)) {
+            trigger_error('OSC\OM\Registry::set - ' . $key . ' is not an object and cannot be set in the registry');
+
+            return false;
         }
 
         if (static::exists($key) && ($force !== true)) {
-            trigger_error('OSCOM_Registry::set - ' . $key . ' already registered and is not forced to be replaced');
+            trigger_error('OSC\OM\Registry::set - ' . $key . ' already registered and is not forced to be replaced');
 
             return false;
         }
@@ -44,10 +42,6 @@ class Registry
 
     public static function exists($key)
     {
-        if (substr($key, 0, 6) != 'OSCOM_') {
-            $key = 'OSCOM_' . $key;
-        }
-
         return array_key_exists($key, static::$data);
     }
 }
