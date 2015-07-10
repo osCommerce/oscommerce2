@@ -51,8 +51,8 @@ abstract class AppAbstract
     {
         $this->code = (new \ReflectionClass($this))->getShortName();
 
-        if (!file_exists(OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json'), true)) === null)) {
-            trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->code . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'apps/' . $this->code . '/oscommerce.json.');
+        if (!file_exists(OSCOM::BASE_DIR . 'Apps/' . $this->code . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'Apps/' . $this->code . '/oscommerce.json'), true)) === null)) {
+            trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->code . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'Apps/' . $this->code . '/oscommerce.json.');
 
             return false;
         }

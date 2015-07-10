@@ -31,7 +31,7 @@ class Apps
 
         $OSCOM_Type = Registry::get('ModuleType' . $type);
 
-        $directory = OSCOM::BASE_DIR . 'apps';
+        $directory = OSCOM::BASE_DIR . 'Apps';
 
         if (file_exists($directory)) {
             if ($dir = new \DirectoryIterator($directory)) {
@@ -60,7 +60,7 @@ class Apps
     {
         $app = basename($app);
 
-        if (file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/' . $app . '.php')) {
+        if (file_exists(OSCOM::BASE_DIR . 'Apps/' . $app . '/' . $app . '.php')) {
             if (is_subclass_of('OSC\OM\Apps\\' . $app . '\\' . $app, 'OSC\OM\AppAbstract')) {
                 return true;
             } else {
@@ -96,8 +96,8 @@ class Apps
     {
         $app = basename($app);
 
-        if (!file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'apps/' . $app . '/oscommerce.json'), true)) === null)) {
-            trigger_error('OSC\OM\Apps::getInfo(): ' . $app . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'apps/' . $app . '/oscommerce.json.');
+        if (!file_exists(OSCOM::BASE_DIR . 'Apps/' . $app . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'Apps/' . $app . '/oscommerce.json'), true)) === null)) {
+            trigger_error('OSC\OM\Apps::getInfo(): ' . $app . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'Apps/' . $app . '/oscommerce.json.');
 
             return false;
         }

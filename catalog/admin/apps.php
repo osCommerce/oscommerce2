@@ -17,8 +17,8 @@ if (empty($_GET)) {
 
 $app = basename(array_keys($_GET)[0]);
 
-if (Apps::exists($app) && file_exists(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php')) {
-    include(OSCOM::BASE_DIR . 'apps/' . $app . '/admin/content.php');
+if (Apps::exists($app) && file_exists(OSCOM::BASE_DIR . 'Apps/' . $app . '/admin/content.php')) {
+    include(OSCOM::BASE_DIR . 'Apps/' . $app . '/admin/content.php');
 } else {
     OSCOM::redirect('index.php');
 }
