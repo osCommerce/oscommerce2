@@ -122,9 +122,11 @@ class HTTP
 
         $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
-        curl_close($curl);
+        $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
+        $headers = trim(substr($result, 0, $header_size));
+        $body = trim(substr($result, $header_size));
 
-        list($headers, $body) = explode("\r\n\r\n", $result, 2);
+        curl_close($curl);
 
         if (($http_code == 301) || ($http_code == 302)) {
             if (!isset($parameters['redir_counter']) || ($parameters['redir_counter'] < 6)) {
