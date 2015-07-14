@@ -41,7 +41,7 @@
   </div>
 
   <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('login.php'), null, null, 'btn-success'); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php', 'Account&LogIn'), null, null, 'btn-success'); ?>
   </div>
 </div>
 

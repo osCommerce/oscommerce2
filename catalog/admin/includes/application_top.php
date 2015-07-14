@@ -33,8 +33,7 @@
   require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
   spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  OSCOM::initialize();
-  OSCOM::setSite('Admin');
+  OSCOM::initialize('Admin');
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {

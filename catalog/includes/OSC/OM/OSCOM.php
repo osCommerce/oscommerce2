@@ -11,6 +11,7 @@ namespace OSC\OM;
 use OSC\OM\DateTime;
 use OSC\OM\HTML;
 use OSC\OM\HTTP;
+use OSC\OM\Registry;
 
 class OSCOM
 {
@@ -19,9 +20,11 @@ class OSCOM
     protected static $version;
     protected static $site = 'Shop';
 
-    public static function initialize()
+    public static function initialize($site = null)
     {
         DateTime::setTimeZone();
+
+        static::setSite($site);
     }
 
     public static function getVersion()
@@ -43,12 +46,31 @@ class OSCOM
 
     public static function setSite($site)
     {
-        static::$site = $site;
+        if (!empty($site)) {
+            static::$site = $site;
+        }
+
+        $class = 'OSC\Sites\\' . static::$site . '\\' . static::$site;
+
+        if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
+            $OSCOM_Site = new $class();
+            Registry::set('Site', $OSCOM_Site);
+
+            $OSCOM_Site->setPage();
+        } else {
+            trigger_error('OSC\OM\OSCOM::setSite() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
+            exit;
+        }
     }
 
     public static function getSite()
     {
         return static::$site;
+    }
+
+    public static function getSitePageFile()
+    {
+        return Registry::get('Site')->getPage()->getFile();
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
@@ -161,19 +183,23 @@ class OSCOM
         HTTP::redirect($url);
     }
 
+    public static function hasRoute(array $path)
+    {
+        return array_slice(array_keys($_GET), 0, count($path)) == $path;
+    }
+
     public static function autoload($class)
     {
-        $prefix = 'OSC\OM\\';
+        $prefix = 'OSC\\';
 
         if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
             return false;
         }
 
-
-        if (strncmp($prefix . 'Apps\\', $class, strlen($prefix . 'Apps\\')) === 0) {
+        if (strncmp($prefix . 'OM\Apps\\', $class, strlen($prefix . 'OM\Apps\\')) === 0) {
           $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
           $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
-        } elseif (strncmp($prefix . 'Module\\', $class, strlen($prefix . 'Module\\')) === 0) {
+        } elseif (strncmp($prefix . 'OM\Module\\', $class, strlen($prefix . 'OM\Module\\')) === 0) {
           $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
           $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
         } else {

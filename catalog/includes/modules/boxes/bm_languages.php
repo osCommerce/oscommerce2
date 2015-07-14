@@ -39,7 +39,6 @@
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-          include(DIR_WS_CLASSES . 'language.php');
           $lng = new language;
         }
 

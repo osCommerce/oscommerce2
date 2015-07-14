@@ -104,4 +104,36 @@ class Apps
 
         return $json;
     }
+
+    public static function getRouteDestination($route = null, $app = null)
+    {
+        if (empty($route)) {
+            $route = array_keys($_GET);
+        }
+
+        $result = $routes = [];
+
+        if (empty($route)) {
+            return $result;
+        }
+
+        $directory = OSCOM::BASE_DIR . 'Apps';
+
+        if (file_exists($directory)) {
+            if ($dir = new \DirectoryIterator($directory)) {
+                foreach ($dir as $file) {
+                    if (!$file->isDot() && $file->isDir() && (!isset($app) || ($file->getFilename() == $app)) && static::exists($file->getFilename()) && (($json = static::getInfo($file->getFilename())) !== false)) {
+                        if (isset($json['routes'][OSCOM::getSite()])) {
+                            $routes[$json['vendor']] = $json['routes'][OSCOM::getSite()];
+                        }
+                    }
+                }
+            }
+        }
+
+        return call_user_func([
+            'OSC\Sites\\' . OSCOM::getSite() . '\\' . OSCOM::getSite(),
+            'resolveRoute'
+        ], $route, $routes);
+    }
 }
