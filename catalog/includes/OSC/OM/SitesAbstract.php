@@ -39,6 +39,11 @@ abstract class SitesAbstract implements \OSC\OM\SitesInterface
         return $this->page;
     }
 
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
     public static function resolveRoute(array $route, array $routes)
     {
     }

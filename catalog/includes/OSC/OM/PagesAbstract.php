@@ -18,6 +18,7 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
     protected $site;
     protected $actions_run = [];
     protected $ignored_actions = [];
+    protected $is_rpc = false;
 
     final public function __construct(\OSC\OM\SitesInterface $site)
     {
@@ -86,5 +87,15 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
         }
 
         return false;
+    }
+
+    public function isRPC()
+    {
+        return $this->is_rpc;
+    }
+
+    public function setRPC($boolean)
+    {
+        $this->is_rpc = ($boolean === true);
     }
 }

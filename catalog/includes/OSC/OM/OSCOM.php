@@ -73,6 +73,11 @@ class OSCOM
         return Registry::get('Site')->getPage()->getFile();
     }
 
+    public static function isRPC()
+    {
+        return Registry::get('Site')->getPage()->isRPC();
+    }
+
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
     {
         global $request_type;
