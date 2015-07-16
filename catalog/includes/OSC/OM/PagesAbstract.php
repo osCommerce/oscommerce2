@@ -67,7 +67,12 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
 
             if (!in_array($action, $this->ignored_actions) && $this->actionExists($class)) {
                 $action = new $class($this);
+
                 $action->execute();
+
+                if ($action->isRPC()) {
+                    $this->is_rpc = true;
+                }
             } else {
                 array_pop($this->actions_run);
 
@@ -91,11 +96,6 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
 
     public function isRPC()
     {
-        return $this->is_rpc;
-    }
-
-    public function setRPC($boolean)
-    {
-        $this->is_rpc = ($boolean === true);
+        return ($this->is_rpc === true);
     }
 }

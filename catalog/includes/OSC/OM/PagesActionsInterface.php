@@ -11,4 +11,5 @@ namespace OSC\OM;
 interface PagesActionsInterface
 {
     public function execute();
+    public function isRPC();
 }
