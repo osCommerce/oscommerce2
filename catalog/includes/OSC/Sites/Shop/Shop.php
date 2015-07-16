@@ -52,7 +52,7 @@ class Shop extends \OSC\OM\SitesAbstract
             $cookie_path = HTTP_COOKIE_PATH;
         }
 
-// set php_self in the local scope
+// set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
         $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
 
