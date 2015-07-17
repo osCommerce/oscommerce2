@@ -237,8 +237,8 @@ class Shop extends \OSC\OM\SitesAbstract
                 $page_namespace = explode('\\', $page);
                 $page_code = $page_namespace[count($page_namespace)-1];
 
-                if (class_exists('OSC\OM\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
-                    $class = 'OSC\OM\Apps\\' . $app . '\\' . $page . '\\' . $page_code;
+                if (class_exists('OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
+                    $class = 'OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code;
                 }
             } else {
                 $req = basename(array_keys($_GET)[0]);

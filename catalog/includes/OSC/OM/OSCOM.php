@@ -201,10 +201,7 @@ class OSCOM
             return false;
         }
 
-        if (strncmp($prefix . 'OM\Apps\\', $class, strlen($prefix . 'OM\Apps\\')) === 0) {
-          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
-          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
-        } elseif (strncmp($prefix . 'OM\Module\\', $class, strlen($prefix . 'OM\Module\\')) === 0) {
+        if (strncmp($prefix . 'OM\Module\\', $class, strlen($prefix . 'OM\Module\\')) === 0) { // TODO remove and fix namespace
           $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
           $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
         } else {

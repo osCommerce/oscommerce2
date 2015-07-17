@@ -177,12 +177,12 @@ class Admin extends \OSC\OM\SitesAbstract
                     $page_namespace = explode('\\', $page);
                     $page_code = $page_namespace[count($page_namespace)-1];
 
-                    if (class_exists('OSC\OM\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
+                    if (class_exists('OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
                         $this->app = $app;
                         $this->route = $app . '\\' . $page;
                         $this->actions_index = 2;
 
-                        $class = 'OSC\OM\Apps\\' . $this->app . '\\' . $page . '\\' . $page_code;
+                        $class = 'OSC\Apps\\' . $this->app . '\\' . $page . '\\' . $page_code;
                     }
                 }
             } else {

@@ -12,7 +12,7 @@ abstract class ModulesAbstract
 {
     public $code;
     protected $interface;
-    protected $ns = 'OSC\OM\Apps\\';
+    protected $ns = 'OSC\Apps\\';
 
     abstract public function getInfo($app, $key, $data);
     abstract public function getClass($module);
