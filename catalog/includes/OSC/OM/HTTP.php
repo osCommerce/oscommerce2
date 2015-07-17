@@ -124,7 +124,7 @@ class HTTP
 
         $header_size = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
         $headers = trim(substr($result, 0, $header_size));
-        $body = trim(substr($result, $header_size));
+        $body = substr($result, $header_size);
 
         curl_close($curl);
 
