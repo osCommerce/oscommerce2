@@ -58,7 +58,7 @@
 
 // set php_self in the local scope
   $req = parse_url($_SERVER['SCRIPT_NAME']);
-  $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
+  $PHP_SELF = str_replace(DIR_WS_CATALOG, '', $req['path']);
 
   Registry::set('Cache', new Cache());
   Registry::set('Db', Db::initialize());
