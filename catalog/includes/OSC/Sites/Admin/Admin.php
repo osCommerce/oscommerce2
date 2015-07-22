@@ -170,19 +170,23 @@ class Admin extends \OSC\OM\SitesAbstract
             $req = basename(array_keys($_GET)[0]);
 
             if (($req == 'A') && (count($_GET) > 1)) {
-                $app = basename(array_keys($_GET)[1]);
+                $app = array_keys($_GET)[1];
 
-                if (Apps::exists($app) && ($page = Apps::getRouteDestination(null, $app)) !== null) {
+                if (strpos($app, '\\') !== false) {
+                    list($vendor, $app) = explode('\\', $app);
+
+                    if (Apps::exists($vendor . '\\' . $app) && ($page = Apps::getRouteDestination(null, $vendor . '\\' . $app)) !== null) {
 // get controller class name from namespace
-                    $page_namespace = explode('\\', $page);
-                    $page_code = $page_namespace[count($page_namespace)-1];
+                        $page_namespace = explode('\\', $page);
+                        $page_code = $page_namespace[count($page_namespace)-1];
 
-                    if (class_exists('OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
-                        $this->app = $app;
-                        $this->route = $app . '\\' . $page;
-                        $this->actions_index = 2;
+                        if (class_exists('OSC\Apps\\' . $vendor . '\\' . $app . '\\' . $page . '\\' . $page_code)) {
+                            $this->app = $vendor . '\\' . $app;
+                            $this->route = $this->app . '\\' . $page;
+                            $this->actions_index = 2;
 
-                        $class = 'OSC\Apps\\' . $this->app . '\\' . $page . '\\' . $page_code;
+                            $class = 'OSC\Apps\\' . $this->app . '\\' . $page . '\\' . $page_code;
+                        }
                     }
                 }
             } else {

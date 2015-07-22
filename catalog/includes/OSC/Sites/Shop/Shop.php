@@ -231,14 +231,14 @@ class Shop extends \OSC\OM\SitesAbstract
             if (($route = Apps::getRouteDestination()) !== null) {
                 $this->route = $route;
 
-                list($app, $page) = explode('\\', $route['destination'], 2);
+                list($vendor_app, $page) = explode('/', $route['destination'], 2);
 
 // get controller class name from namespace
                 $page_namespace = explode('\\', $page);
                 $page_code = $page_namespace[count($page_namespace)-1];
 
-                if (class_exists('OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code)) {
-                    $class = 'OSC\Apps\\' . $app . '\\' . $page . '\\' . $page_code;
+                if (class_exists('OSC\Apps\\' . $vendor_app . '\\' . $page . '\\' . $page_code)) {
+                    $class = 'OSC\Apps\\' . $vendor_app . '\\' . $page . '\\' . $page_code;
                 }
             } else {
                 $req = basename(array_keys($_GET)[0]);
@@ -264,7 +264,7 @@ class Shop extends \OSC\OM\SitesAbstract
     {
         $result = [];
 
-        foreach ($routes as $app => $paths) {
+        foreach ($routes as $vendor_app => $paths) {
             foreach ($paths as $path => $page) {
                 $path_array = explode('&', $path);
 
@@ -272,7 +272,7 @@ class Shop extends \OSC\OM\SitesAbstract
                     if ($path_array == array_slice($route, 0, count($path_array))) {
                         $result[] = [
                             'path' => $path,
-                            'destination' => $app . '\\' . $page,
+                            'destination' => $vendor_app . '/' . $page,
                             'score' => count($path_array)
                         ];
                     }

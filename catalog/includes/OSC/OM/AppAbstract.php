@@ -8,10 +8,13 @@
 
 namespace OSC\OM;
 
+use OSC\OM\OSCOM;
+
 abstract class AppAbstract
 {
     public $code;
     public $title;
+    public $vendor;
     public $version;
     public $modules = [];
 
@@ -23,9 +26,54 @@ abstract class AppAbstract
         $this->init();
     }
 
+    final public function link()
+    {
+        $args = func_get_args();
+
+        $parameters = 'A&' . $this->vendor . '\\' . $this->code;
+
+        if (isset($args[0])) {
+            $args[0] = $parameters .= '&' . $args[0];
+        } else {
+            $args[0] = $parameters;
+        }
+
+        array_unshift($args, 'index.php');
+
+        return forward_static_call_array([
+            'OSC\OM\OSCOM',
+            'link'
+        ], $args);
+    }
+
+    final public function redirect()
+    {
+        $args = func_get_args();
+
+        $parameters = 'A&' . $this->vendor . '\\' . $this->code;
+
+        if (isset($args[0])) {
+            $args[0] = $parameters .= '&' . $args[0];
+        } else {
+            $args[0] = $parameters;
+        }
+
+        array_unshift($args, 'index.php');
+
+        return forward_static_call_array([
+            'OSC\OM\OSCOM',
+            'redirect'
+        ], $args);
+    }
+
     final public function getCode()
     {
         return $this->code;
+    }
+
+    final public function getVendor()
+    {
+        return $this->vendor;
     }
 
     final public function getTitle()
@@ -49,10 +97,15 @@ abstract class AppAbstract
 
     final private function setInfo()
     {
-        $this->code = (new \ReflectionClass($this))->getShortName();
+        $r = new \ReflectionClass($this);
 
-        if (!file_exists(OSCOM::BASE_DIR . 'OSC/Apps/' . $this->code . '/oscommerce.json') || (($json = @json_decode(file_get_contents(OSCOM::BASE_DIR . 'OSC/Apps/' . $this->code . '/oscommerce.json'), true)) === null)) {
-            trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->code . ' - Could not read App information in ' . OSCOM::BASE_DIR . 'OSC/Apps/' . $this->code . '/oscommerce.json.');
+        $this->code = $r->getShortName();
+        $this->vendor = array_slice(explode('\\', $r->getNamespaceName()), -1)[0];
+
+        $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . $this->vendor . '/' . $this->code . '/oscommerce.json';
+
+        if (!file_exists($metafile) || (($json = @json_decode(file_get_contents($metafile), true)) === null)) {
+            trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->vendor . '\\' . $this->code . ' - Could not read App information in ' . $metafile . '.');
 
             return false;
         }
