@@ -30,12 +30,12 @@ class Content extends \OSC\OM\ModulesAbstract
     public function getClass($module)
     {
         list($group, $code) = explode('/', $module, 2);
-        list($app, $code) = explode('\\', $code, 2);
+        list($vendor, $app, $code) = explode('\\', $code, 3);
 
-        $info = Apps::getInfo($app);
+        $info = Apps::getInfo($vendor . '\\' . $app);
 
         if (isset($info['modules'][$this->code][$group][$code])) {
-            return $this->ns . $app . '\\' . $info['modules'][$this->code][$group][$code];
+            return $this->ns . $vendor . '\\' . $app . '\\' . $info['modules'][$this->code][$group][$code];
         }
     }
 }

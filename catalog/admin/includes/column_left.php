@@ -86,7 +86,7 @@ $('#adminAppMenu').accordion({
     $menu_found = false;
     foreach ($cl_box_groups as $groups) {
       foreach ($groups['apps'] as $app) {
-        if (($app['code'] == $PHP_SELF) || (!empty($_GET) && (strncmp($app['code'], 'App/', 4) === 0) && (substr($app['code'], 4) == array_keys($_GET)[0]))){
+        if (($app['code'] == $PHP_SELF) || ((count($_GET) > 1) && ($app['code'] == array_keys($_GET)[1]))) {
           $menu_found = true;
           break 2;
         }

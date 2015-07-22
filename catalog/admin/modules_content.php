@@ -164,6 +164,10 @@
           if ( $m['code'] == $code ) {
             if (strpos($code, '\\') !== false) {
               $class = Apps::getModuleClass($code, 'Content');
+
+              $installed_code = $m['code'];
+            } else {
+              $installed_code = $m['group'] . '/' . $m['code'];
             }
 
             $module = new $class();
@@ -172,8 +176,8 @@
 
             $modules_installed = explode(';', MODULE_CONTENT_INSTALLED);
 
-            if (in_array($m['group'] . '/' . $m['code'], $modules_installed)) {
-              unset($modules_installed[array_search($m['group'] . '/' . $m['code'], $modules_installed)]);
+            if (in_array($installed_code, $modules_installed)) {
+              unset($modules_installed[array_search($installed_code, $modules_installed)]);
             }
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
@@ -226,6 +230,7 @@
         $class = Apps::getModuleClass($m['code'], 'Content');
 
         $module = new $class();
+        $module->code = $m['code'];
       } else {
         $module = new $m['code']();
       }
@@ -237,11 +242,7 @@
                              'signature' => (isset($module->signature) ? $module->signature : null),
                              'api_version' => (isset($module->api_version) ? $module->api_version : null));
 
-        if (strpos($module->code, '\\') !== false) {
-          $module_info['code'] = addslashes($module->code);
-        }
-
-        $mInfo = new objectInfo($module_info);
+        $mInfo = new \ArrayObject($module_info, \ArrayObject::ARRAY_AS_PROPS);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
@@ -252,7 +253,7 @@
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'action=list_new&module=' . addslashes($module->code)) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -274,6 +275,7 @@
         $class = Apps::getModuleClass($m['code'], 'Content');
 
         $module = new $class();
+        $module->code = $m['code'];
       } else {
         $module = new $m['code']();
       }
@@ -300,11 +302,7 @@
                                              'set_function' => $key_value['set_function']);
         }
 
-        if (strpos($module->code, '\\') !== false) {
-          $module_info['code'] = addslashes($module->code);
-        }
-
-        $mInfo = new objectInfo($module_info);
+        $mInfo = new \ArrayObject($module_info, \ArrayObject::ARRAY_AS_PROPS);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
@@ -316,7 +314,7 @@
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
                 <td class="dataTableContent"><?php echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'module=' . addslashes($module->code)) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }

@@ -46,7 +46,6 @@
           $Qsubtotal = $OSCOM_Db->get('orders_total', 'value', ['orders_id' => $Qorder->valueInt('orders_id'), 'class' => 'ot_subtotal']);
 
           if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-            include(DIR_WS_CLASSES . 'language.php');
             $lng = new language;
           }
 

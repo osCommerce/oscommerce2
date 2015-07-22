@@ -162,11 +162,33 @@
         $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
       }
 
-      $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from :table_customers c, :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries co on (ab.entry_country_id = co.countries_id) where c.customers_id = :customers_id and c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id');
-      $Qcustomer->bindInt(':customers_id', $_SESSION['customer_id']);
-      $Qcustomer->execute();
+      $customer_address = [
+        'customers_firstname' => null,
+        'customers_lastname' => null,
+        'customers_telephone' => null,
+        'customers_email_address' => null,
+        'entry_company' => null,
+        'entry_street_address' => null,
+        'entry_suburb' => null,
+        'entry_postcode' => null,
+        'entry_city' => null,
+        'entry_zone_id' => null,
+        'zone_name' => null,
+        'countries_id' => null,
+        'countries_name' => null,
+        'countries_iso_code_2' => null,
+        'countries_iso_code_3' => null,
+        'address_format_id' => 0,
+        'entry_state' => null
+      ];
 
-      $customer_address = $Qcustomer->toArray();
+      if (isset($_SESSION['customer_id'])) {
+        $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from :table_customers c, :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries co on (ab.entry_country_id = co.countries_id) where c.customers_id = :customers_id and c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id');
+        $Qcustomer->bindInt(':customers_id', $_SESSION['customer_id']);
+        $Qcustomer->execute();
+
+        $customer_address = $Qcustomer->toArray();
+      }
 
       $shipping_address = array('entry_firstname' => null,
                                 'entry_lastname' => null,

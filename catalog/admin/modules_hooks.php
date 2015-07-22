@@ -55,14 +55,14 @@
   }
 
   foreach (Apps::getModules('Hooks') as $k => $v) {
-    list($app, $code) = explode('\\', $k, 2);
+    list($vendor, $app, $code) = explode('\\', $k, 3);
 
     $h = new \ReflectionClass($v);
 
     foreach ($h->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC) as $method) {
       if ($method->name != '__construct') {
         $hooks[$code][] = [
-          'app' => $app,
+          'app' => $vendor . '\\' . $app,
           'method' => $method->name
         ];
       }

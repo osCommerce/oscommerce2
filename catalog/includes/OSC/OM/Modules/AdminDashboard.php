@@ -27,12 +27,12 @@ class AdminDashboard extends \OSC\OM\ModulesAbstract
 
     public function getClass($module)
     {
-        list($app, $code) = explode('\\', $module, 2);
+        list($vendor, $app, $code) = explode('\\', $module, 3);
 
-        $info = Apps::getInfo($app);
+        $info = Apps::getInfo($vendor . '\\' . $app);
 
         if (isset($info['modules'][$this->code][$code])) {
-            return $this->ns . $app . '\\' . $info['modules'][$this->code][$code];
+            return $this->ns . $vendor . '\\' . $app . '\\' . $info['modules'][$this->code][$code];
         }
     }
 }

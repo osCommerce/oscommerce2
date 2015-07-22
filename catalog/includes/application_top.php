@@ -10,9 +10,6 @@
   Released under the GNU General Public License
 */
 
-  use OSC\OM\Cache;
-  use OSC\OM\Db;
-  use OSC\OM\Hooks;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -41,228 +38,43 @@
   require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
   spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  OSCOM::initialize();
-
-// set the type of request (secure or not)
-  if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
-    $request_type =  'SSL';
-    define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-// set the cookie domain
-    $cookie_domain = HTTPS_COOKIE_DOMAIN;
-    $cookie_path = HTTPS_COOKIE_PATH;
-  } else {
-    $request_type =  'NONSSL';
-    define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
-    $cookie_domain = HTTP_COOKIE_DOMAIN;
-    $cookie_path = HTTP_COOKIE_PATH;
-  }
-
-// set php_self in the local scope
-  $req = parse_url($_SERVER['SCRIPT_NAME']);
-  $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
-
-  Registry::set('Cache', new Cache());
-  Registry::set('Db', Db::initialize());
-  $OSCOM_Db = Registry::get('Db');
-
-// set the application parameters
-  $Qcfg = $OSCOM_Db->get('configuration', ['configuration_key as k', 'configuration_value as v']);//, null, null, null, 'configuration'); // TODO add cache when supported by admin
-
-  while ($Qcfg->fetch()) {
-    define($Qcfg->value('k'), $Qcfg->value('v'));
-  }
-
-// if gzip_compression is enabled, start to buffer the output
-  if ( (GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent() ) {
-    if ( (int)ini_get('zlib.output_compression') < 1 ) {
-      if ( (PHP_VERSION < '5.4') || (PHP_VERSION > '5.4.5') ) { // see PHP bug 55544
-        ob_start('ob_gzhandler');
-      }
-    } elseif ( function_exists('ini_set') ) {
-      ini_set('zlib.output_compression_level', GZIP_LEVEL);
-    }
-  }
-
-// define general functions used application-wide
   require('includes/functions/general.php');
-
-// include cache functions if enabled
-  if ( USE_CACHE == 'true' ) include('includes/functions/cache.php');
-
-// include shopping cart class
+  require('includes/functions/cache.php');
   require('includes/classes/shopping_cart.php');
-
-// include navigation history class
   require('includes/classes/navigation_history.php');
-
-// define how the session functions will be used
   require('includes/functions/sessions.php');
-
-// set the session name and save path
-  session_name('osCsid');
-  session_save_path(SESSION_WRITE_DIRECTORY);
-
-// set the session cookie parameters
-  session_set_cookie_params(0, $cookie_path, $cookie_domain);
-
-  if ( function_exists('ini_set') ) {
-    ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-  }
-
-// set the session ID if it exists
-  if ( SESSION_FORCE_COOKIE_USE == 'False' ) {
-    if ( isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()])) ) {
-      session_id($_GET[session_name()]);
-    } elseif ( isset($_POST[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_POST[session_name()])) ) {
-      session_id($_POST[session_name()]);
-    }
-  }
-
-// start the session
-  $session_started = false;
-
-  if ( SESSION_FORCE_COOKIE_USE == 'True' ) {
-    tep_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30);
-
-    if ( isset($_COOKIE['cookie_test']) ) {
-      tep_session_start();
-      $session_started = true;
-    }
-  } elseif ( SESSION_BLOCK_SPIDERS == 'True' ) {
-
-    $user_agent = '';
-
-    if (isset($_SERVER['HTTP_USER_AGENT'])) {
-      $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-    }
-
-    $spider_flag = false;
-
-    if ( !empty($user_agent) ) {
-      foreach ( file('includes/spiders.txt') as $spider ) {
-        if ( !empty($spider) ) {
-          if ( strpos($user_agent, $spider) !== false ) {
-            $spider_flag = true;
-            break;
-          }
-        }
-      }
-    }
-
-    if ( $spider_flag === false ) {
-      tep_session_start();
-      $session_started = true;
-    }
-  } else {
-    tep_session_start();
-    $session_started = true;
-  }
-
-// initialize a session token
-  if ( !isset($_SESSION['sessiontoken']) ) {
-    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
-  }
-
-// set SID once, even if empty
-  $SID = (defined('SID') ? SID : '');
-
-// verify the ssl_session_id if the feature is enabled
-  if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started === true) ) {
-    if ( !isset($_SESSION['SSL_SESSION_ID']) ) {
-      $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
-    }
-
-    if ( $_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID'] ) {
-      tep_session_destroy();
-
-      OSCOM::redirect('ssl_check.php');
-    }
-  }
-
-// verify the browser user agent if the feature is enabled
-  if ( SESSION_CHECK_USER_AGENT == 'True' ) {
-    if ( !isset($_SESSION['SESSION_USER_AGENT']) ) {
-      $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-    }
-
-    if ( $_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] ) {
-      tep_session_destroy();
-      OSCOM::redirect('login.php');
-    }
-  }
-
-// verify the IP address if the feature is enabled
-  if ( SESSION_CHECK_IP_ADDRESS == 'True' ) {
-    if ( !isset($_SESSION['SESSION_IP_ADDRESS']) ) {
-      $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
-    }
-
-    if ( $_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address() ) {
-      tep_session_destroy();
-      OSCOM::redirect('login.php');
-    }
-  }
-
-// create the shopping cart
-  if ( !isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart') ) {
-    $_SESSION['cart'] = new shoppingCart();
-  }
-
-// include currencies class and create an instance
   require('includes/classes/currencies.php');
-  $currencies = new currencies();
-
-// include the mail classes
   require('includes/classes/mime.php');
   require('includes/classes/email.php');
-
-// set the language
-  if ( !isset($_SESSION['language']) || isset($_GET['language']) ) {
-    include('includes/classes/language.php');
-    $lng = new language();
-
-    if ( isset($_GET['language']) && !empty($_GET['language']) ) {
-      $lng->set_language($_GET['language']);
-    } else {
-      $lng->get_browser_language();
-    }
-
-    $_SESSION['language'] = $lng->language['directory'];
-    $_SESSION['languages_id'] = $lng->language['id'];
-  }
-
-// include the language translations
-  $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
-  require('includes/languages/' . basename($_SESSION['language']) . '.php');
-  setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
-
-// currency
-  if ( !isset($_SESSION['currency']) || isset($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency'])) ) {
-    if ( isset($_GET['currency']) && $currencies->is_set($_GET['currency']) ) {
-      $_SESSION['currency'] = $_GET['currency'];
-    } else {
-      $_SESSION['currency'] = ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && $currencies->is_set(LANGUAGE_CURRENCY)) ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
-    }
-  }
-
-// navigation history
-  if ( !isset($_SESSION['navigation']) || !is_object($_SESSION['navigation']) || (get_class($_SESSION['navigation']) != 'navigationHistory') ) {
-    $_SESSION['navigation'] = new navigationHistory();
-  }
-
-  $_SESSION['navigation']->add_current_page();
-
-// action recorder
+  require('includes/classes/language.php');
   require('includes/classes/action_recorder.php');
-// initialize the message stack for output messages
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');
-  $messageStack = new messageStack();
+  require('includes/functions/whos_online.php');
+  require('includes/functions/password_funcs.php');
+  require('includes/functions/validations.php');
+  require('includes/functions/banner.php');
+  require('includes/functions/specials.php');
+  require('includes/classes/osc_template.php');
+  require('includes/classes/category_tree.php');
+  require('includes/classes/breadcrumb.php');
+
+  OSCOM::initialize();
+  $OSCOM_Db = Registry::get('Db');
+
+// if gzip_compression is enabled, start to buffer the output
+  if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
+    if ((int)ini_get('zlib.output_compression') < 1) {
+      ob_start('ob_gzhandler');
+    }
+  } elseif (function_exists('ini_set')) {
+    ini_set('zlib.output_compression_level', GZIP_LEVEL);
+  }
 
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( $session_started == false ) {
+    if ( session_status() !== PHP_SESSION_ACTIVE ) {
       OSCOM::redirect('cookie_usage.php');
     }
 
@@ -336,7 +148,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('login.php', '', 'SSL');
+                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -349,7 +161,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('login.php', '', 'SSL');
+                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {
@@ -363,28 +175,6 @@
                               break;
     }
   }
-
-// include the who's online functions
-  require('includes/functions/whos_online.php');
-  tep_update_whos_online();
-
-// include the password crypto functions
-  require('includes/functions/password_funcs.php');
-
-// include validation functions (right now only email address)
-  require('includes/functions/validations.php');
-
-// auto activate and expire banners
-  require('includes/functions/banner.php');
-  tep_activate_banners();
-  tep_expire_banners();
-
-// auto expire special products
-  require('includes/functions/specials.php');
-  tep_expire_specials();
-
-  require('includes/classes/osc_template.php');
-  $oscTemplate = new oscTemplate();
 
 // calculate category path
   if ( isset($_GET['cPath']) ) {
@@ -402,16 +192,6 @@
   } else {
     $current_category_id = 0;
   }
-
-// include category tree class
-  require('includes/classes/category_tree.php');
-
-// include the breadcrumb class and start the breadcrumb trail
-  require('includes/classes/breadcrumb.php');
-  $breadcrumb = new breadcrumb;
-
-  $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
-  $breadcrumb->add(HEADER_TITLE_CATALOG, OSCOM::link('index.php'));
 
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
@@ -431,6 +211,4 @@
       $breadcrumb->add($Qmanufacturer->value('manufacturers_name'), OSCOM::link('index.php', 'manufacturers_id=' . $_GET['manufacturers_id']));
     }
   }
-
-  Registry::set('Hooks', new Hooks());
 ?>

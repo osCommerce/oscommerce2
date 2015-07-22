@@ -11,7 +11,6 @@
 */
 
   use OSC\OM\Apps;
-  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -241,11 +240,7 @@
 
         $module_info['keys'] = $keys_extra;
 
-        if (strpos($module->code, '\\') !== false) {
-          $module_info['code'] = addslashes($module->code);
-        }
-
-        $mInfo = new objectInfo($module_info);
+        $mInfo = new \ArrayObject($module_info, \ArrayObject::ARRAY_AS_PROPS);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {

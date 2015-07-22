@@ -53,7 +53,7 @@
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('index.php', 'Account&LogIn', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('password_forgotten.php', '', 'SSL'));
 
   require('includes/template_top.php');
@@ -105,7 +105,7 @@
 
   <div class="row">
     <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('login.php', '', 'SSL')); ?></div>
+    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('index.php', 'Account&LogIn', 'SSL')); ?></div>
   </div>
 
 </div>

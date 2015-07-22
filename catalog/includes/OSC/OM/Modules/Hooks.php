@@ -33,12 +33,12 @@ class Hooks extends \OSC\OM\ModulesAbstract
             return $module;
         }
 
-        list($app, $group, $code) = explode('\\', $module, 3);
+        list($vendor, $app, $group, $code) = explode('\\', $module, 4);
 
-        $info = Apps::getInfo($app);
+        $info = Apps::getInfo($vendor . '\\' . $app);
 
         if (isset($info['modules'][$this->code][$group][$code])) {
-            return $this->ns . $app . '\\' . $info['modules'][$this->code][$group][$code];
+            return $this->ns . $vendor . '\\' . $app . '\\' . $info['modules'][$this->code][$group][$code];
         }
     }
 
