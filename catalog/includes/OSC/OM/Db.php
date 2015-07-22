@@ -53,10 +53,10 @@ class Db extends \PDO
         }
 
         if (!isset($driver_options[\PDO::ATTR_STATEMENT_CLASS])) {
-            $driver_options[\PDO::ATTR_STATEMENT_CLASS] = array('OSC\\OM\\DbStatement');
+            $driver_options[\PDO::ATTR_STATEMENT_CLASS] = array('OSC\OM\DbStatement');
         }
 
-        $class = 'OSC\\OM\\Db\\MySQL';
+        $class = 'OSC\OM\Db\MySQL';
         $object = new $class($server, $username, $password, $database, $port, $driver_options);
 
         return $object;
@@ -258,13 +258,19 @@ class Db extends \PDO
         return false;
     }
 
-    public function delete($table, array $where_condition)
+    public function delete($table, array $where_condition = [])
     {
         if ((strlen($table) < 7) || (substr($table, 0, 7) != ':table_')) {
             $table = ':table_' . $table;
         }
 
-        $statement = 'delete from ' . $table . ' where ';
+        $statement = 'delete from ' . $table;
+
+        if (empty($where_condition)) {
+            return $this->exec($statement);
+        }
+
+        $statement .= ' where ';
 
         foreach (array_keys($where_condition) as $c) {
             $statement .= $c . ' = :cond_' . $c . ' and ';

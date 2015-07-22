@@ -12,6 +12,7 @@
 
   use OSC\OM\Cache;
   use OSC\OM\Db;
+  use OSC\OM\Hooks;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -38,7 +39,7 @@
   }
 
   require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
-  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
+  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
   OSCOM::initialize();
 
@@ -431,6 +432,5 @@
     }
   }
 
-  require(DIR_FS_CATALOG . 'includes/classes/hooks.php');
-  $OSCOM_Hooks = new hooks('shop');
+  Registry::set('Hooks', new Hooks());
 ?>

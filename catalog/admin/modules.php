@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   require('includes/application_top.php');
 
   $set = (isset($_GET['set']) ? $_GET['set'] : '');
@@ -27,23 +31,51 @@
   define('HEADING_TITLE', $cfgModules->get($set, 'title'));
   $template_integration = $cfgModules->get($set, 'template_integration');
 
+  $appModuleType = null;
+
+  switch ($module_type) {
+    case 'dashboard':
+      $appModuleType = 'AdminDashboard';
+      break;
+
+    case 'payment':
+      $appModuleType = 'Payment';
+      break;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
         foreach( $_POST['configuration'] as $key => $value ) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
+          $key = tep_db_prepare_input($key);
+          $value = tep_db_prepare_input($value);
+
+          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
         }
         tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
         break;
       case 'install':
       case 'remove':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        $class = basename($_GET['module']);
-        if (file_exists($module_directory . $class . $file_extension)) {
-          include($module_directory . $class . $file_extension);
-          $module = new $class;
+        if (strpos($_GET['module'], '\\') !== false) {
+          $class = Apps::getModuleClass($_GET['module'], $appModuleType);
+
+          if (class_exists($class)) {
+            $file_extension = '';
+            $module = new $class();
+            $class = $_GET['module'];
+          }
+        } else {
+          $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+          $class = basename($_GET['module']);
+          if (file_exists($module_directory . $class . $file_extension)) {
+            include($module_directory . $class . $file_extension);
+            $module = new $class;
+          }
+        }
+
+        if (isset($module)) {
           if ($action == 'install') {
             if ($module->check() > 0) { // remove module if already installed
               $module->remove();
@@ -57,7 +89,7 @@
               $modules_installed[] = $class . $file_extension;
             }
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
           } elseif ($action == 'remove') {
             $module->remove();
@@ -68,7 +100,7 @@
               unset($modules_installed[array_search($class . $file_extension, $modules_installed)]);
             }
 
-            tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $modules_installed) . "' where configuration_key = '" . $module_key . "'");
+            Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
             tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
           }
         }
@@ -88,7 +120,7 @@
     while ($file = $dir->read()) {
       if (!is_dir($module_directory . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
-          if (isset($_GET['list']) && ($_GET['list'] = 'new')) {
+          if (isset($_GET['list']) && ($_GET['list'] == 'new')) {
             if (!in_array($file, $modules_installed)) {
               $directory_array[] = $file;
             }
@@ -102,9 +134,26 @@
         }
       }
     }
-    sort($directory_array);
     $dir->close();
   }
+
+  if (isset($appModuleType)) {
+    foreach (Apps::getModules($appModuleType) as $k => $v) {
+      if (isset($_GET['list']) && ($_GET['list'] == 'new')) {
+        if (!in_array($k, $modules_installed)) {
+          $directory_array[] = $k;
+        }
+      } else {
+        if (in_array($k, $modules_installed)) {
+          $directory_array[] = $k;
+        } else {
+          $new_modules_counter++;
+        }
+      }
+    }
+  }
+
+  sort($directory_array);
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -137,12 +186,29 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    include($module_language_directory . $language . '/modules/' . $module_type . '/' . $file);
-    include($module_directory . $file);
+    if (strpos($file, '\\') !== false) {
+      $file_extension = '';
 
-    $class = substr($file, 0, strrpos($file, '.'));
-    if (tep_class_exists($class)) {
-      $module = new $class;
+      $class = Apps::getModuleClass($file, $appModuleType);
+
+      $module = new $class();
+      $module->code = $file;
+
+      $class = $file;
+    } else {
+      $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+
+      include($module_language_directory . $language . '/modules/' . $module_type . '/' . $file);
+      include($module_directory . $file);
+
+      $class = substr($file, 0, strrpos($file, '.'));
+
+      if (tep_class_exists($class)) {
+        $module = new $class;
+      }
+    }
+
+    if (isset($module)) {
       if ($module->check() > 0) {
         if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
           $installed_modules[$module->sort_order] = $file;
@@ -175,17 +241,21 @@
 
         $module_info['keys'] = $keys_extra;
 
+        if (strpos($module->code, '\\') !== false) {
+          $module_info['code'] = addslashes($module->code);
+        }
+
         $mInfo = new objectInfo($module_info);
       }
 
       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
         if ($module->check() > 0) {
-          echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
+          echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . addslashes($class) . '&action=edit') . '\'">' . "\n";
         } else {
           echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
         }
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . $class) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . addslashes($class)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
@@ -202,7 +272,7 @@
     if (tep_db_num_rows($check_query)) {
       $check = tep_db_fetch_array($check_query);
       if ($check['configuration_value'] != implode(';', $installed_modules)) {
-        tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $installed_modules) . "', last_modified = now() where configuration_key = '" . $module_key . "'");
+        Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $installed_modules), 'last_modified' => 'now()'], ['configuration_key' => $module_key]);
       }
     } else {
       tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
@@ -231,6 +301,12 @@
 <?php
   $heading = array();
   $contents = array();
+
+  if (isset($mInfo) && (strpos($mInfo->code, '\\') !== false)) {
+    $file_extension = '';
+  } else {
+    $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
+  }
 
   switch ($action) {
     case 'edit':

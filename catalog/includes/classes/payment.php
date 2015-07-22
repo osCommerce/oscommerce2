@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+  use OSC\OM\Registry;
+
   class payment {
     var $modules, $selected_module;
 
@@ -22,33 +25,61 @@
 
         $include_modules = array();
 
-        if ( (tep_not_null($module)) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules)) ) {
+        if ( (tep_not_null($module)) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules) || in_array($module, $this->modules)) ) {
           $this->selected_module = $module;
 
-          $include_modules[] = array('class' => $module, 'file' => $module . '.php');
+          if (strpos($module, '\\') !== false) {
+            $class = Apps::getModuleClass($module, 'Payment');
+            $include_modules[] = [
+              'class' => $module,
+              'file' => $class
+            ];
+          } else {
+            $include_modules[] = array('class' => $module, 'file' => $module . '.php');
+          }
         } else {
           foreach($this->modules as $value) {
-            $class = basename($value, '.php');
-            $include_modules[] = array('class' => $class, 'file' => $value);
+            if (strpos($value, '\\') !== false) {
+              $class = Apps::getModuleClass($value, 'Payment');
+              $include_modules[] = [
+                'class' => $value,
+                'file' => $class
+              ];
+            } else {
+              $class = basename($value, '.php');
+              $include_modules[] = array('class' => $class, 'file' => $value);
+            }
           }
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
-          include(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
+          if (strpos($include_modules[$i]['class'], '\\') !== false) {
+            Registry::set('Payment_' . str_replace('\\', '_', $include_modules[$i]['class']), new $include_modules[$i]['file']);
+          } else {
+            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+            include(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
 
-          $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+            $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+          }
         }
 
 // if there is only one payment method, select it as default because in
 // checkout_confirmation.php the $_SESSION['payment'] variable is being assigned the
 // $_POST['payment'] value which will be empty (no radio button selection possible)
-        if ( (tep_count_payment_modules() == 1) && (!isset($GLOBALS[$_SESSION['payment']]) || (isset($GLOBALS[$_SESSION['payment']]) && !is_object($GLOBALS[$_SESSION['payment']]))) ) {
+        if ( (tep_count_payment_modules() == 1) && (!isset($_SESSION['payment']) || ($_SESSION['payment'] != $include_modules[0]['class'])) ) {
           $_SESSION['payment'] = $include_modules[0]['class'];
         }
 
-        if ( (tep_not_null($module)) && (in_array($module, $this->modules)) && (isset($GLOBALS[$module]->form_action_url)) ) {
-          $this->form_action_url = $GLOBALS[$module]->form_action_url;
+        if ( (tep_not_null($module)) && (in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), $this->modules) || in_array($module, $this->modules)) ) {
+          if (strpos($module, '\\') !== false) {
+            $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $module));
+
+            if (isset($OSCOM_PM->form_action_url)) {
+              $this->form_action_url = $OSCOM_PM->form_action_url;
+            }
+          } elseif (isset($GLOBALS[$module]->form_action_url)) {
+            $this->form_action_url = $GLOBALS[$module]->form_action_url;
+          }
         }
       }
     }
@@ -64,9 +95,21 @@
 */
     function update_status() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module])) {
-          if (method_exists($GLOBALS[$this->selected_module], 'update_status')) {
-            $GLOBALS[$this->selected_module]->update_status();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $code = 'Payment_' . str_replace('\\', '_', $this->selected_module);
+
+          if (Registry::exists($code)) {
+            $OSCOM_PM = Registry::get($code);
+
+            if (method_exists($OSCOM_PM, 'update_status')) {
+              $OSCOM_PM->update_status();
+            }
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module])) {
+            if (method_exists($GLOBALS[$this->selected_module], 'update_status')) {
+              $GLOBALS[$this->selected_module]->update_status();
+            }
           }
         }
       }
@@ -93,9 +136,17 @@
               '  }' . "\n\n";
 
         foreach($this->modules as $value) {
-          $class = basename($value, '.php');
-          if ($GLOBALS[$class]->enabled) {
-            $js .= $GLOBALS[$class]->javascript_validation();
+          if (strpos($value, '\\') !== false) {
+            $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $value));
+
+            if ($OSCOM_PM->enabled) {
+              $js .= $OSCOM_PM->javascript_validation();
+            }
+          } else {
+            $class = basename($value, '.php');
+            if ($GLOBALS[$class]->enabled) {
+              $js .= $GLOBALS[$class]->javascript_validation();
+            }
           }
         }
 
@@ -121,9 +172,17 @@
 
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = basename($value, '.php');
-          if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'checkout_initialization_method')) {
-            $initialize_array[] = $GLOBALS[$class]->checkout_initialization_method();
+          if (strpos($value, '\\') !== false) {
+            $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $value));
+
+            if ($OSCOM_PM->enabled && method_exists($OSCOM_PM, 'checkout_initialization_method')) {
+              $initialize_array[] = $OSCOM_PM->checkout_initialization_method();
+            }
+          } else {
+            $class = basename($value, '.php');
+            if ($GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'checkout_initialization_method')) {
+              $initialize_array[] = $GLOBALS[$class]->checkout_initialization_method();
+            }
           }
         }
       }
@@ -136,10 +195,19 @@
 
       if (is_array($this->modules)) {
         foreach($this->modules as $value) {
-          $class = basename($value, '.php');
-          if ($GLOBALS[$class]->enabled) {
-            $selection = $GLOBALS[$class]->selection();
-            if (is_array($selection)) $selection_array[] = $selection;
+          if (strpos($value, '\\') !== false) {
+            $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $value));
+
+            if ($OSCOM_PM->enabled) {
+              $selection = $OSCOM_PM->selection();
+              if (is_array($selection)) $selection_array[] = $selection;
+            }
+          } else {
+            $class = basename($value, '.php');
+            if ($GLOBALS[$class]->enabled) {
+              $selection = $GLOBALS[$class]->selection();
+              if (is_array($selection)) $selection_array[] = $selection;
+            }
           }
         }
       }
@@ -149,48 +217,96 @@
 
     function pre_confirmation_check() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          $GLOBALS[$this->selected_module]->pre_confirmation_check();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            $OSCOM_PM->pre_confirmation_check();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            $GLOBALS[$this->selected_module]->pre_confirmation_check();
+          }
         }
       }
     }
 
     function confirmation() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->confirmation();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            return $OSCOM_PM->confirmation();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            return $GLOBALS[$this->selected_module]->confirmation();
+          }
         }
       }
     }
 
     function process_button() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->process_button();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            return $OSCOM_PM->process_button();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            return $GLOBALS[$this->selected_module]->process_button();
+          }
         }
       }
     }
 
     function before_process() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->before_process();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            return $OSCOM_PM->before_process();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            return $GLOBALS[$this->selected_module]->before_process();
+          }
         }
       }
     }
 
     function after_process() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->after_process();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            return $OSCOM_PM->after_process();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            return $GLOBALS[$this->selected_module]->after_process();
+          }
         }
       }
     }
 
     function get_error() {
       if (is_array($this->modules)) {
-        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
-          return $GLOBALS[$this->selected_module]->get_error();
+        if (strpos($this->selected_module, '\\') !== false) {
+          $OSCOM_PM = Registry::get('Payment_' . str_replace('\\', '_', $this->selected_module));
+
+          if ($OSCOM_PM->enabled) {
+            return $OSCOM_PM->get_error();
+          }
+        } else {
+          if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+            return $GLOBALS[$this->selected_module]->get_error();
+          }
         }
       }
     }

@@ -12,6 +12,7 @@
 
   use OSC\OM\Cache;
   use OSC\OM\Db;
+  use OSC\OM\Hooks;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -30,9 +31,10 @@
   }
 
   require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
-  spl_autoload_register('OSC\\OM\\OSCOM::autoload');
+  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
   OSCOM::initialize();
+  OSCOM::setSite('Admin');
 
 // set the type of request (secure or not)
   if ( (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443)) ) {
@@ -248,6 +250,5 @@
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
 
-  require(DIR_FS_CATALOG . 'includes/classes/hooks.php');
-  $OSCOM_Hooks = new hooks('admin');
+  Registry::set('Hooks', new Hooks());
 ?>

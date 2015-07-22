@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+
   require('includes/application_top.php');
 
   $languages = tep_get_languages();
@@ -56,11 +58,15 @@
     for ( $i=0, $n=sizeof($adm_array); $i<$n; $i++ ) {
       $adm = $adm_array[$i];
 
-      $class = substr($adm, 0, strrpos($adm, '.'));
+      if (strpos($adm, '\\') !== false) {
+        $class = Apps::getModuleClass($adm, 'AdminDashboard');
+      } else {
+        $class = substr($adm, 0, strrpos($adm, '.'));
 
-      if ( !class_exists($class) ) {
-        include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
-        include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+        if ( !class_exists($class) ) {
+          include(DIR_WS_LANGUAGES . $language . '/modules/dashboard/' . $adm);
+          include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+        }
       }
 
       $ad = new $class();

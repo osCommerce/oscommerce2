@@ -17,6 +17,7 @@ class OSCOM
     const BASE_DIR = OSCOM_BASE_DIR;
 
     protected static $version;
+    protected static $site = 'Shop';
 
     public static function initialize()
     {
@@ -38,6 +39,16 @@ class OSCOM
         }
 
         return static::$version;
+    }
+
+    public static function setSite($site)
+    {
+        static::$site = $site;
+    }
+
+    public static function getSite()
+    {
+        return static::$site;
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
@@ -66,10 +77,30 @@ class OSCOM
             $connection = 'NONSSL';
         }
 
-        if ($connection == 'NONSSL') {
-            $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
+        $site = static::$site;
+
+        if (strncmp($page, 'Admin/', 6) === 0) {
+            $page = substr($page, 6);
+
+            $site = 'Admin';
+        } elseif (strncmp($page, 'Shop/', 5) === 0) {
+            $page = substr($page, 5);
+
+            $site = 'Shop';
+        }
+
+        if ($site == 'Admin') {
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . (defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : DIR_WS_HTTP_CATALOG . 'admin/');
+            } else {
+                $link = HTTPS_SERVER . (defined('DIR_WS_HTTPS_ADMIN') ? DIR_WS_HTTPS_ADMIN : DIR_WS_HTTPS_CATALOG . 'admin/');
+            }
         } else {
-            $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . (defined('DIR_WS_HTTP_CATALOG') ? DIR_WS_HTTP_CATALOG : DIR_WS_CATALOG);
+            } else {
+                $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            }
         }
 
         $link .= $page;
@@ -132,14 +163,23 @@ class OSCOM
 
     public static function autoload($class)
     {
-        $prefix = 'OSC\\OM\\';
+        $prefix = 'OSC\OM\\';
 
         if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
             return false;
         }
 
-        $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
-        $custom = str_replace('OSCOM/OM/', 'OSCOM/Custom/OM/', $file);
+
+        if (strncmp($prefix . 'Apps\\', $class, strlen($prefix . 'Apps\\')) === 0) {
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
+        } elseif (strncmp($prefix . 'Module\\', $class, strlen($prefix . 'Module\\')) === 0) {
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
+        } else {
+          $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
+          $custom = str_replace('OSC/OM/', 'OSC/Custom/OM/', $file);
+        }
 
         if (file_exists($custom)) {
             require($custom);

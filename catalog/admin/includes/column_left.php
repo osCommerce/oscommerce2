@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
+
   if (tep_session_is_registered('admin')) {
     $cl_box_groups = array();
 
@@ -35,6 +38,10 @@
 
         include($dir->path . '/' . $file);
       }
+    }
+
+    foreach (Apps::getModules('AdminMenu') as $m) {
+        call_user_func([$m, 'execute']);
     }
 
     function tep_sort_admin_boxes($a, $b) {
@@ -76,9 +83,11 @@ $('#adminAppMenu').accordion({
 
 <?php
     $counter = 0;
+    $menu_found = false;
     foreach ($cl_box_groups as $groups) {
       foreach ($groups['apps'] as $app) {
-        if ($app['code'] == $PHP_SELF) {
+        if (($app['code'] == $PHP_SELF) || (!empty($_GET) && (strncmp($app['code'], 'App/', 4) === 0) && (substr($app['code'], 4) == array_keys($_GET)[0]))){
+          $menu_found = true;
           break 2;
         }
       }
@@ -86,7 +95,7 @@ $('#adminAppMenu').accordion({
       $counter++;
     }
 
-    echo 'active: ' . (isset($app) && ($app['code'] == $PHP_SELF) ? $counter : 'false');
+    echo 'active: ' . (($menu_found === true) ? $counter : 'false');
 ?>
 
 });

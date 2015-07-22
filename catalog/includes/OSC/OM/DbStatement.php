@@ -101,7 +101,7 @@ class DbStatement extends \PDOStatement
             if (strpos($this->queryString, ' SQL_CALC_FOUND_ROWS ') !== false) {
                 $this->page_set_total_rows = $this->pdo->query('select found_rows()')->fetchColumn();
             } elseif (isset($this->page_set)) {
-                trigger_error('OSC\\OM\\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
+                trigger_error('OSC\OM\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
             }
         }
     }
@@ -306,14 +306,21 @@ class DbStatement extends \PDOStatement
         }
 
 // check if number_of_pages > $max_page_links
-        $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
-        if ($this->page_set % $this->page_set_total_rows) {
-            $cur_window_num++;
-        }
+        $cur_window_num = 0;
+        $max_window_num = 0;
 
-        $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
-        if ($number_of_pages % $this->page_set_total_rows) {
-            $max_window_num++;
+        if ($this->page_set_total_rows > 0) {
+            $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
+
+            if ($this->page_set % $this->page_set_total_rows) {
+                $cur_window_num++;
+            }
+
+            $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
+
+            if ($number_of_pages % $this->page_set_total_rows) {
+                $max_window_num++;
+            }
         }
 
 // previous window of pages
