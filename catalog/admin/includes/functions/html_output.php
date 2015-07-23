@@ -58,7 +58,7 @@
       $link .= $separator . tep_output_string($_sid);
     }
 
-    while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
+    while (strpos($link, '&&') !== false) $link = str_replace('&&', '&', $link);
 
     return $link;
   }
