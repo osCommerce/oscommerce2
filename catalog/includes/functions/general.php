@@ -35,7 +35,7 @@
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
-    function tep_output_string($string, $translate = false, $protected = false) {
+  function tep_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string);
     } else {
