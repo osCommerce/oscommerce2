@@ -48,8 +48,9 @@
                                'id' => 'id|indonesian',
                                'it' => 'it|italian',
                                'ja' => 'ja|japanese',
-                               'ko' => 'ko|korean',
+                               'ji' => 'ji|yiddish',
                                'ka' => 'ka|georgian',
+                               'ko' => 'ko|korean',
                                'lt' => 'lt|lithuanian',
                                'lv' => 'lv|latvian',
                                'mk' => 'mk|macedonian',
@@ -71,12 +72,11 @@
                                'ts' => 'ts|tsonga',
                                'tr' => 'tr|turkish',
                                'tn' => 'tn|tswana',
+                               'tw' => 'zh[-_]tw|chinese traditional',
                                'uk' => 'uk|ukrainian',
                                'ur' => 'ur|urdu',
                                'vi' => 'vi|vietnamese',
-                               'tw' => 'zh[-_]tw|chinese traditional',
                                'zh' => 'zh|chinese simplified',
-                               'ji' => 'ji|yiddish',
                                'zu' => 'zu|zulu');
 
       $this->catalog_languages = array();
