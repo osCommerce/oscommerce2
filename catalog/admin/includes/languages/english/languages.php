@@ -29,4 +29,5 @@ define('TEXT_INFO_HEADING_EDIT_LANGUAGE', 'Edit Language');
 define('TEXT_INFO_HEADING_DELETE_LANGUAGE', 'Delete Language');
 
 define('ERROR_REMOVE_DEFAULT_LANGUAGE', 'Error: The default language can not be removed. Please set another language as default, and try again.');
+define('ERROR_DIRECTORY_LANGUAGE', 'Error: The submitted language folder does not exists, please check that this is a valid folder name and try again.');
 ?>

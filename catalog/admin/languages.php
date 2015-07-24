@@ -22,7 +22,12 @@
         $image = tep_db_prepare_input($_POST['image']);
         $directory = tep_db_prepare_input($_POST['directory']);
         $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
-
+        
+        if (!is_dir(DIR_WS_LANGUAGES . '/' . $directory)){
+            $messageStack->add(ERROR_DIRECTORY_LANGUAGE, 'error');           
+            break;
+        }
+        
         tep_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, sort_order) values ('" . tep_db_input($name) . "', '" . tep_db_input($code) . "', '" . tep_db_input($image) . "', '" . tep_db_input($directory) . "', '" . tep_db_input($sort_order) . "')");
         $insert_id = tep_db_insert_id();
 
@@ -76,6 +81,11 @@
         $directory = tep_db_prepare_input($_POST['directory']);
         $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
 
+        if (!is_dir(DIR_WS_LANGUAGES . '/' . $directory)){
+            $messageStack->add(ERROR_DIRECTORY_LANGUAGE, 'error');           
+            break;
+        }
+        
         tep_db_query("update " . TABLE_LANGUAGES . " set name = '" . tep_db_input($name) . "', code = '" . tep_db_input($code) . "', image = '" . tep_db_input($image) . "', directory = '" . tep_db_input($directory) . "', sort_order = '" . tep_db_input($sort_order) . "' where languages_id = '" . (int)$lID . "'");
 
         if ($_POST['default'] == 'on') {
@@ -174,7 +184,7 @@
                     <td class="smallText" align="right"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
                   </tr>
 <?php
-  if (empty($action)) {
+  if (empty($action) || ($messageStack->size) !== 0) {
 ?>
                   <tr>
                     <td class="smallText" align="right" colspan="2"><?php echo tep_draw_button(IMAGE_NEW_LANGUAGE, 'plus', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new')); ?></td>
