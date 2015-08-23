@@ -173,8 +173,7 @@
       <div class="form-group has-feedback">
         <label for="passWord" class="control-label col-xs-3">Password</label>
         <div class="col-xs-9">
-          <?php echo HTML::passwordField('DB_SERVER_PASSWORD', null, 'required aria-required="true" id="passWord"'); ?>
-          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <?php echo HTML::passwordField('DB_SERVER_PASSWORD', null, 'id="passWord"'); ?>
           <span class="help-block">The password that is used together with the username to connect to the database server.</span>
         </div>
       </div>
