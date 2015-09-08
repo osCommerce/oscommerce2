@@ -105,7 +105,7 @@
           tep_db_query('delete from orders where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from orders_total where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from orders_status_history where orders_id = "' . (int)$order_id . '"');
-          tep_db_query('delete from orders_productswhere orders_id = "' . (int)$order_id . '"');
+          tep_db_query('delete from orders_products where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from orders_products_attributes where orders_id = "' . (int)$order_id . '"');
           tep_db_query('delete from orders_products_download where orders_id = "' . (int)$order_id . '"');
 
@@ -151,7 +151,7 @@
               tep_db_query('delete from orders where orders_id = "' . (int)$order_id . '"');
               tep_db_query('delete from orders_total where orders_id = "' . (int)$order_id . '"');
               tep_db_query('delete from orders_status_history where orders_id = "' . (int)$order_id . '"');
-              tep_db_query('delete from orders_productswhere orders_id = "' . (int)$order_id . '"');
+              tep_db_query('delete from orders_products where orders_id = "' . (int)$order_id . '"');
               tep_db_query('delete from orders_products_attributes where orders_id = "' . (int)$order_id . '"');
               tep_db_query('delete from orders_products_download where orders_id = "' . (int)$order_id . '"');
             }
