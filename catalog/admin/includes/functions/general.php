@@ -45,20 +45,14 @@
     exit;
   }
 
-////
-// Parse the data used in the html tags to ensure the tags will not break
-  function tep_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
-
   function tep_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
       return htmlspecialchars($string);
     } else {
       if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
+        return strtr(trim($string), array('"' => '&quot;'));
       } else {
-        return tep_parse_input_field_data($string, $translate);
+        return strtr(trim($string), $translate);
       }
     }
   }
@@ -118,17 +112,24 @@
   }
 
   function tep_get_all_get_params($exclude_array = '') {
-
-    if ($exclude_array == '') $exclude_array = array();
+   if (!is_array($exclude_array)) $exclude_array = array();
+   
+    $exclude_array[] = session_name();
+    $exclude_array[] = 'error';
+    $exclude_array[] = 'x';
+    $exclude_array[] = 'y';
 
     $get_url = '';
-
-    foreach ( $_GET as $key => $value ) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
-    }
-
-    return $get_url;
+   
+    if (is_array($_GET) && (!empty($_GET))) {
+      foreach ($_GET as $key => $value) {
+        if ( !in_array($key, $exclude_array) ) {
+          $get_url .= $key . '=' . rawurlencode($value) . '&';
+        }
+     }
   }
+    return $get_url;
+}
 
   function tep_date_long($raw_date) {
     if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
@@ -318,13 +319,19 @@
 
   function tep_not_null($value) {
     if (is_array($value)) {
-      if (sizeof($value) > 0) {
+      if (!empty($value)) {
         return true;
       } else {
         return false;
       }
+    } elseif(is_object($value)) {
+      if (count(get_object_vars($value)) === 0) {
+        return false;
+      } else {
+        return true;
+      }
     } else {
-      if ( (is_string($value) || is_int($value)) && ($value != '') && ($value != 'NULL') && (strlen(trim($value)) > 0)) {
+      if (($value != '') && (strtolower($value) != 'null') && (strlen(trim($value)) > 0)) {
         return true;
       } else {
         return false;
@@ -1344,16 +1351,13 @@
       return str_replace($from, $to, $string);
   }
 
-  function tep_string_to_int($string) {
-    return (int)$string;
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
-
+    $cPath_array = array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath));
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
     $n = sizeof($cPath_array);
@@ -1362,7 +1366,6 @@
         $tmp_array[] = $cPath_array[$i];
       }
     }
-
     return $tmp_array;
   }
 
@@ -1413,7 +1416,9 @@
       $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
     }
 
-    $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
+    if ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) {
+        $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
+    }
 
     foreach ( $ip_addresses as $ip ) {
       if (!empty($ip) && tep_validate_ip_address($ip)) {
