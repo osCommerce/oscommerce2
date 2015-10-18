@@ -29,19 +29,19 @@ class Db extends \PDO
         array $driver_options = []
     ) {
         if (!isset($server)) {
-            $server = 'DB_SERVER';
+            $server = DB_SERVER;
         }
 
         if (!isset($username)) {
-            $username = 'DB_SERVER_USERNAME';
+            $username = DB_SERVER_USERNAME;
         }
 
         if (!isset($password)) {
-            $password = 'DB_SERVER_PASSWORD';
+            $password = DB_SERVER_PASSWORD;
         }
 
         if (!isset($database)) {
-            $database = 'DB_DATABASE';
+            $database = DB_DATABASE;
         }
 
         if (!isset($driver_options[\PDO::ATTR_ERRMODE])) {
