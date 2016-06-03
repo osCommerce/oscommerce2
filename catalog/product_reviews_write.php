@@ -74,7 +74,7 @@
   $products_name = $Qcheck->value('products_name');
 
   if ( !empty($Qcheck->value('products_model')) ) {
-    $products_name .= ' <small>[' . $Qcheck->value('products_model') . ']</small>';
+    $products_name .= '<br /><small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
@@ -82,10 +82,37 @@
   require('includes/template_top.php');
 ?>
 
-<div class="page-header">
+<script><!--
+function checkForm() {
+  var error = 0;
+  var error_message = "<?php echo JS_ERROR; ?>";
+
+  var review = document.product_reviews_write.review.value;
+
+  if (review.length < <?php echo REVIEW_TEXT_MIN_LENGTH; ?>) {
+    error_message = error_message + "<?php echo JS_REVIEW_TEXT; ?>";
+    error = 1;
+  }
+
+  if ((document.product_reviews_write.rating[0].checked) || (document.product_reviews_write.rating[1].checked) || (document.product_reviews_write.rating[2].checked) || (document.product_reviews_write.rating[3].checked) || (document.product_reviews_write.rating[4].checked)) {
+  } else {
+    error_message = error_message + "<?php echo JS_REVIEW_RATING; ?>";
+    error = 1;
+  }
+
+  if (error == 1) {
+    alert(error_message);
+    return false;
+  } else {
+    return true;
+  }
+}
+//--></script>
+
+<div class="page-header">  
   <div class="row">
-    <h1 class="col-sm-8"><?php echo $products_name; ?></h1>
-    <h1 class="col-sm-4 text-right-not-xs"><?php echo $products_price; ?></h1>
+    <h1 class="col-sm-4"><?php echo $products_name; ?></h1>
+    <h2 class="col-sm-8 text-right-not-xs"><?php echo $products_price; ?></h2>
   </div>
 </div>
 
@@ -95,7 +122,7 @@
   }
 ?>
 
-<?php echo HTML::form('product_reviews_write', OSCOM::link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('product_reviews_write', OSCOM::link('product_reviews_write.php', 'action=process&products_id=' . $Qcheck->valueInt('products_id')), 'post', 'class="form-horizontal" onsubmit="return checkForm();"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -103,15 +130,11 @@
   if ( !empty($Qcheck->value('products_image')) ) {
 ?>
 
-    <div class="col-sm-4 text-center pull-right">
+    <div class="pull-right text-center">
       <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
-      <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now'), null, null, 'btn-success btn-block'); ?></p>
+      <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
     </div>
-
-    <div class="clearfix"></div>
-
-    <hr>
 
     <div class="clearfix"></div>
 
@@ -128,7 +151,7 @@
       <label for="inputReview" class="control-label col-sm-3"><?php echo SUB_TITLE_REVIEW; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::textareaField('review', 60, 15, NULL, 'minlength="' . REVIEW_TEXT_MIN_LENGTH . '" required aria-required="true" id="inputReview" placeholder="' . ENTRY_REVIEW_TEXT . '"');
+        echo HTML::textareaField('review', 60, 15, NULL, 'required aria-required="true" id="inputReview" placeholder="' . SUB_TITLE_REVIEW_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -136,44 +159,31 @@
     <div class="form-group">
       <label class="control-label col-sm-3"><?php echo SUB_TITLE_RATING; ?></label>
       <div class="col-sm-9">
-        <div class="radio">
-          <label>
-            <?php echo HTML::radioField('rating', '5') . HTML::stars(5, false) . ' ' . TEXT_GOOD; ?>
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <?php echo HTML::radioField('rating', '4') . HTML::stars(4, false); ?>
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <?php echo HTML::radioField('rating', '3') . HTML::stars(3, false); ?>
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <?php echo HTML::radioField('rating', '2') . HTML::stars(2, false); ?>
-          </label>
-        </div>
-        <div class="radio">
-          <label>
-            <?php echo HTML::radioField('rating', '1', null, 'required aria-required="true"') . HTML::stars(1, false) . ' ' . TEXT_BAD; ?>
-          </label>
-        </div>
+        <label class="radio-inline">
+          <?php echo HTML::radioField('rating', '1'); ?>
+        </label>
+        <label class="radio-inline">
+          <?php echo HTML::radioField('rating', '2'); ?>
+        </label>
+        <label class="radio-inline">
+          <?php echo HTML::radioField('rating', '3'); ?>
+        </label>
+        <label class="radio-inline">
+          <?php echo HTML::radioField('rating', '4'); ?>
+        </label>
+        <label class="radio-inline">
+	  <?php echo HTML::radioField('rating', '5', 1); ?>
+        </label>
+        <?php echo '<div class="help-block justify" style="width: 150px;">' . TEXT_BAD . '<p class="pull-right">' . TEXT_GOOD . '</p></div>'; ?>
       </div>
     </div>
 
-
   </div>
 
-  <div class="clearfix"></div>
-
-  <div class="row">
-    <div class="col-xs-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('product_reviews.php', tep_get_all_get_params(array('reviews_id', 'action')))); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-
 </div>
 
 </form>

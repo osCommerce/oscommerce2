@@ -21,7 +21,7 @@
     var $icon = 'twitter.png';
     var $enabled = false;
 
-    function sb_twitter_button() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_DESCRIPTION;

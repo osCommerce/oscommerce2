@@ -121,209 +121,192 @@
 ?>
 
 <div class="contentContainer">
+  <div class="contentText">
 
-  <table class="table table-striped">
-    <thead>
-      <tr>
-      <?php
-      if (sizeof($order->info['tax_groups']) > 1) {
-        ?>
-        <th colspan="2"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
-        <th align="right"><strong><?php echo HEADING_TAX; ?></strong></th>
-        <th align="right"><strong><?php echo HEADING_TOTAL; ?></strong></th>
-        <?php
-      }
-      else {
-        ?>
-        <th colspan="3"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></th>
-        <?php
-      }
-      ?>
-      </tr>
-    <thead>
-    <tbody>
-    <?php
-    for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
-      echo '          <tr>' . "\n" .
-           '            <td class="text-right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x</td>' . "\n" .
-           '            <td valign="top">' . $order->products[$i]['name'];
+    <div class="panel panel-default">
+      <div class="panel-heading"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+      <div class="panel-body">
+    <table width="100%" class="table-hover order_confirmation">
+     <tbody>
 
-      if (STOCK_CHECK == 'true') {
-        echo tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
-      }
+<?php
+  for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
+    echo '          <tr>' . "\n" .
+         '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x&nbsp;</td>' . "\n" .
+         '            <td valign="top">' . $order->products[$i]['name'];
 
-      if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
-        for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
-          echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'] . '</i></small></nobr>';
-        }
-      }
-
-      echo '</td>' . "\n";
-
-      if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
-
-      echo '            <td class="text-right" valign="top">' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . '</td>' . "\n" .
-           '          </tr>' . "\n";
+    if (STOCK_CHECK == 'true') {
+      echo tep_check_stock($order->products[$i]['id'], $order->products[$i]['qty']);
     }
-    ?>
-    </tbody>
-  </table>
-  <table class="table pull-right">
-    <?php
-    if (MODULE_ORDER_TOTAL_INSTALLED) {
-      echo $order_total_modules->output();
+
+    if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
+      for ($j=0, $n2=sizeof($order->products[$i]['attributes']); $j<$n2; $j++) {
+        echo '<br /><nobr><small>&nbsp;<i> - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'] . '</i></small></nobr>';
+      }
     }
-    ?>
-  </table>
+
+    echo '</td>' . "\n";
+
+    if (sizeof($order->info['tax_groups']) > 1) echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+
+    echo '            <td align="right" valign="top">' . $currencies->display_price($order->products[$i]['final_price'], $order->products[$i]['tax'], $order->products[$i]['qty']) . '</td>' . "\n" .
+         '          </tr>' . "\n";
+  }
+?>
+
+
+        </tbody>
+      </table>
+      <hr>
+      <table width="100%" class="pull-right">
+
+<?php
+  if (MODULE_ORDER_TOTAL_INSTALLED) {
+    echo $order_total_modules->output();
+  }
+?>
+
+        </table>
+            </div>
+    </div>
+
+
+
+  </div>
 
   <div class="clearfix"></div>
 
-  <div class="page-header">
-    <h4><?php echo HEADING_SHIPPING_INFORMATION; ?></h4>
-  </div>
-
-  <div class="contentText">
-
-    <div class="row">
-
+  <div class="row">
+    <?php
+    if ($_SESSION['sendto'] != false) {
+      ?>
       <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
+        <div class="panel panel-info">
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
         </div>
       </div>
-
+      <?php
+    }
+    ?>
+    <div class="col-sm-4">
+      <div class="panel panel-warning">
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-body">
+          <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
       <?php
       if ($order->info['shipping_method']) {
         ?>
-        <div class="col-sm-4">
-          <div class="panel panel-info">
-            <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
-
-            <div class="panel-body">
-              <?php echo $order->info['shipping_method']; ?>
-            </div>
+        <div class="panel panel-info">
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-body">
+            <?php echo $order->info['shipping_method']; ?>
           </div>
         </div>
         <?php
       }
       ?>
-
-    </div>
-
-    <div class="clearfix"></div>
-  </div>
-
-  <div class="page-header">
-    <h4><?php echo HEADING_BILLING_INFORMATION; ?></h4>
-  </div>
-
-  <div class="contentText">
-
-    <div class="row">
-
-      <?php
-      if (is_array($payment_modules->modules)) {
-        if ($confirmation = $payment_modules->confirmation()) {
-          ?>
-          <div class="col-sm-4 pull-right">
-            <div class="panel panel-default">
-              <div class="panel-heading"><?php echo HEADING_PAYMENT_INFORMATION; ?></div>
-              <div class="panel-body">
-                <table class="table table-striped table-condensed">
-          <?php
-          if (isset($confirmation['title'])) {
-          ?>
-                  <thead>
-                    <tr>
-                      <td colspan="4"><?php echo $confirmation['title']; ?></td>
-                    </tr>
-                  </thead>
-          <?php
-          }
-          ?>
-                  <tbody>
-                  <?php
-                  if (isset($confirmation['fields'])) {
-                    for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
-                      ?>
-
-                      <tr>
-                        <td class="main"><?php echo $confirmation['fields'][$i]['title']; ?></td>
-                        <td class="main"><?php echo $confirmation['fields'][$i]['field']; ?></td>
-                      </tr>
-
-                      <?php
-                    }
-                  }
-                  ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <?php
-        }
-      }
-      ?>
-
-      <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
-          <div class="panel-body">
-            <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
-          </div>
+      <div class="panel panel-warning">
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-body">
+          <?php echo $order->info['payment_method']; ?>
         </div>
       </div>
-
-      <div class="col-sm-4">
-        <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></div>
-          <div class="panel-body">
-            <?php echo $order->info['payment_method']; ?>
-          </div>
-        </div>
-      </div>
-
     </div>
-    <div class="clearfix"></div>
+
 
   </div>
 
-<?php
-  if (tep_not_null($order->info['comments'])) {
-?>
-
-  <div class="page-header">
-    <h4><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'glyphicon glyphicon-edit', OSCOM::link('checkout_payment.php'), NULL, NULL, 'pull-right btn-default btn-xs' ); ?></h4>
-  </div>
-
-  <div class="contentText">
-    <blockquote>
-      <small><?php echo nl2br(tep_output_string_protected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?></small>
-    </blockquote>
-  </div>
-
-<?php
-  }
-?>
-
-  <div class="contentText">
 
 <?php
   if (is_array($payment_modules->modules)) {
-    echo $payment_modules->process_button();
+    if ($confirmation = $payment_modules->confirmation()) {
+?>
+  <hr>
+
+  <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
+
+  <div class="contentText row">
+<?php
+    if (isset($confirmation['title'])) {
+      echo '<div class="col-sm-6">';
+      echo '  <div class="alert alert-danger">';
+      echo $confirmation['title'];
+      echo '  </div>';
+      echo '</div>';
+    }
+?>
+<?php
+      if (isset($confirmation['fields'])) {
+        echo '<div class="col-sm-6">';
+        echo '  <div class="alert alert-info">';
+        for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
+          echo $confirmation['fields'][$i]['title'] . ' ' . $confirmation['fields'][$i]['field'];
+        }
+        echo '  </div>';
+        echo '</div>';
+      }
+?>
+  </div>
+  <div class="clearfix"></div>
+
+<?php
+    }
   }
 
-  echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'glyphicon glyphicon-ok', null, 'primary', array('params' => 'data-button="payNow"'), 'btn-success btn-block');
+  if (tep_not_null($order->info['comments'])) {
+?>
+  <hr>
+
+  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></h2>
+
+  <blockquote>
+    <?php echo nl2br(tep_output_string_protected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
+  </blockquote>
+
+<?php
+  }
 ?>
 
+  <div class="buttonSet">
+    <div class="text-right">
+      <?php
+      if (is_array($payment_modules->modules)) {
+        echo $payment_modules->process_button();
+      }
+      echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, 'primary', array('params' => 'data-button="payNow"'), 'btn-success');
+      ?>
+    </div>
   </div>
-</div>
 
+  <div class="clearfix"></div>
+
+  <div class="contentText">
+    <div class="stepwizard">
+      <div class="stepwizard-row">
+        <div class="stepwizard-step">
+          <a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
+          <p><a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+        </div>
+        <div class="stepwizard-step">
+          <a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
+          <p><a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-primary btn-circle">3</button>
+          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
 <script>
 $('form[name="checkout_confirmation"]').submit(function() {
   $('button[data-button="payNow"]').text('<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>').prop('disabled', true);

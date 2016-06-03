@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_footer_contact_us() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -35,9 +35,9 @@
 
     function execute() {
       global $oscTemplate;
-      
+
       $content_width = (int)MODULE_CONTENT_FOOTER_CONTACT_US_CONTENT_WIDTH;
-      
+
       ob_start();
       include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/contact_us.php');
       $template = ob_get_clean();

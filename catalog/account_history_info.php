@@ -53,31 +53,32 @@
 
   <div class="contentText">
 
-    <div class="panel panel-success">
+    <div class="panel panel-default">
       <div class="panel-heading"><strong><?php echo sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
       <div class="panel-body">
-        <table class="table table-hover table-striped order_confirmation">
+
+        <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table-hover order_confirmation">
 <?php
   if (sizeof($order->info['tax_groups']) > 1) {
 ?>
           <tr>
-            <th><?php echo HEADING_PRODUCTS; ?></th>
-            <th><?php echo HEADING_TAX; ?></th>
-            <th><?php echo HEADING_TOTAL; ?></th>
+            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
 <?php
   } else {
 ?>
           <tr>
-            <th colspan="2"><?php echo HEADING_PRODUCTS; ?></th>
-            <th class="text-right"><?php echo HEADING_TOTAL; ?></th>
+            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
+            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
           </tr>
 <?php
   }
 
   for ($i=0, $n=sizeof($order->products); $i<$n; $i++) {
     echo '          <tr>' . "\n" .
-         '            <td class="text-right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x&nbsp;</td>' . "\n" .
+         '            <td align="right" valign="top" width="30">' . $order->products[$i]['qty'] . '&nbsp;x&nbsp;</td>' . "\n" .
          '            <td valign="top">' . $order->products[$i]['name'];
 
     if ( (isset($order->products[$i]['attributes'])) && (sizeof($order->products[$i]['attributes']) > 0) ) {
@@ -89,10 +90,10 @@
     echo '</td>' . "\n";
 
     if (sizeof($order->info['tax_groups']) > 1) {
-      echo '            <td valign="top" class="text-right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
+      echo '            <td valign="top" align="right">' . tep_display_tax_value($order->products[$i]['tax']) . '%</td>' . "\n";
     }
 
-    echo '            <td class="text-right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
+    echo '            <td align="right" valign="top">' . $currencies->format(tep_add_tax($order->products[$i]['final_price'], $order->products[$i]['tax']) * $order->products[$i]['qty'], true, $order->info['currency'], $order->info['currency_value']) . '</td>' . "\n" .
          '          </tr>' . "\n";
   }
 ?>
@@ -109,11 +110,12 @@
 ?>
         </table>
       </div>
+
+
       <div class="panel-footer">
         <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . tep_date_long($order->info['date_purchased']); ?>
       </div>
     </div>
-
   </div>
 
   <div class="clearfix"></div>
@@ -122,7 +124,7 @@
     <?php
     if ($order->delivery != false) {
       ?>
-      <div class="col-sm-3">
+      <div class="col-sm-4">
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>'; ?></div>
           <div class="panel-body">
@@ -133,7 +135,7 @@
       <?php
     }
     ?>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
       <div class="panel panel-warning">
         <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>'; ?></div>
         <div class="panel-body">
@@ -141,22 +143,19 @@
         </div>
       </div>
     </div>
-
-    <?php
-    if ($order->info['shipping_method']) {
-      ?>
-      <div class="col-sm-3">
+    <div class="col-sm-4">
+      <?php
+      if ($order->info['shipping_method']) {
+        ?>
         <div class="panel panel-info">
           <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>'; ?></div>
           <div class="panel-body">
             <?php echo $order->info['shipping_method']; ?>
           </div>
         </div>
-      </div>
-      <?php
-    }
-    ?>
-    <div class="col-sm-3">
+        <?php
+      }
+      ?>
       <div class="panel panel-warning">
         <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>'; ?></div>
         <div class="panel-body">
@@ -164,14 +163,16 @@
         </div>
       </div>
     </div>
+
+
   </div>
+
+  <hr>
+
+  <h2><?php echo HEADING_ORDER_HISTORY; ?></h2>
 
   <div class="clearfix"></div>
-
-  <div class="page-header">
-    <h4><?php echo HEADING_ORDER_HISTORY; ?></h4>
-  </div>
-
+  
   <div class="contentText">
     <ul class="timeline">
       <?php
@@ -182,13 +183,13 @@
 
       while ($Qstatuses->fetch()) {
         echo '<li>';
-        echo '  <div class="timeline-badge"><i class="glyphicon glyphicon-check"></i></div>';
+        echo '  <div class="timeline-badge"><i class="fa fa-check-square-o"></i></div>';
         echo '  <div class="timeline-panel">';
         echo '    <div class="timeline-heading">';
-        echo '      <p class="pull-right"><small class="text-muted"><i class="glyphicon glyphicon-time"></i> ' . tep_date_short($Qstatuses->value('date_added')) . '</small></p><h4 class="timeline-title">' . $Qstatuses->value('orders_status_name') . '</h4>';
+        echo '      <p class="pull-right"><small class="text-muted"><i class="fa fa-clock-o"></i> ' . tep_date_short($Qstatuses->value('date_added')) . '</small></p><h2 class="timeline-title">' . $Qstatuses->value('orders_status_name') . '</h2>';
         echo '    </div>';
         echo '    <div class="timeline-body">';
-        echo '      <p><blockquote>' . (tep_not_null($Qstatuses->value('comments')) ? nl2br($Qstatuses->valueProtected('comments')) : TEXT_NO_COMMENTS) . '</blockquote></p>';
+        echo '      <p>' . (tep_not_null($Qstatuses->value('comments')) ? '<blockquote>' . nl2br($Qstatuses->valueProtected('comments')) . '</blockquote>' : '&nbsp;') . '</p>';
         echo '    </div>';
         echo '  </div>';
         echo '</li>';
@@ -202,8 +203,8 @@
 ?>
 
   <div class="clearfix"></div>
-  <div>
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
+  <div class="buttonSet">
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
   </div>
 </div>
 
@@ -211,4 +212,3 @@
   require('includes/template_bottom.php');
   require('includes/application_bottom.php');
 ?>
-h

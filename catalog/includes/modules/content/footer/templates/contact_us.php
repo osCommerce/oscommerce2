@@ -11,7 +11,7 @@ use OSC\OM\OSCOM;
       <abbr title="Email">E:</abbr> <?php echo STORE_OWNER_EMAIL_ADDRESS; ?>
     </address>
     <ul class="list-unstyled">
-      <li><a class="btn btn-success btn-sm btn-block" role="button" href="<?php echo OSCOM::link('contact_us.php'); ?>"><i class="glyphicon glyphicon-send"></i> <?php echo MODULE_CONTENT_FOOTER_CONTACT_US_EMAIL_LINK; ?></a></li>
+      <li><a class="btn btn-success btn-sm btn-block" role="button" href="<?php echo OSCOM::link('contact_us.php'); ?>"><i class="fa fa-send"></i> <?php echo MODULE_CONTENT_FOOTER_CONTACT_US_EMAIL_LINK; ?></a></li>
     </ul>
   </div>
 </div>

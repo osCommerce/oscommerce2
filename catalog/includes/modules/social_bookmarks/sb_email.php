@@ -21,7 +21,7 @@
     var $icon = 'email.png';
     var $enabled = false;
 
-    function sb_email() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_EMAIL_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_EMAIL_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_EMAIL_DESCRIPTION;

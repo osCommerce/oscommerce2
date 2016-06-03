@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_mailchimp_360() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_MAILCHIMP_360_TITLE;
       $this->description = MODULE_HEADER_TAGS_MAILCHIMP_360_DESCRIPTION;
 

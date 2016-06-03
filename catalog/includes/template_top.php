@@ -25,14 +25,15 @@
 <head>
 <meta charset="<?php echo CHARSET; ?>">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title><?php echo tep_output_string_protected($oscTemplate->getTitle()); ?></title>
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>">
 
 <link href="ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-<link href="stylesheet.css" rel="stylesheet">
+<!-- font awesome -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
 
-<!-- User  -->
+<link href="custom.css" rel="stylesheet">
 <link href="user.css" rel="stylesheet">
 
 <!--[if lt IE 9]>
@@ -41,10 +42,7 @@
    <script src="ext/js/excanvas.min.js"></script>
 <![endif]-->
  
-<script src="ext/jquery/jquery-2.1.4.min.js"></script>
-
-<!-- font awesome -->
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<script src="ext/jquery/jquery-2.2.3.min.js"></script>
 
 <?php echo $oscTemplate->getBlocks('header_tags'); ?>
 </head>
@@ -53,7 +51,6 @@
   <?php echo $oscTemplate->getContent('navigation'); ?>
 
   <div id="bodyWrapper" class="<?php echo BOOTSTRAP_CONTAINER; ?>">
-
     <div class="row">
 
       <?php require('includes/header.php'); ?>

@@ -17,7 +17,7 @@
   class braintree_cc {
     var $code, $title, $description, $enabled;
 
-    function braintree_cc() {
+    function __construct() {
       global $order;
 
       $this->signature = 'braintree|braintree_cc|1.1|2.3';

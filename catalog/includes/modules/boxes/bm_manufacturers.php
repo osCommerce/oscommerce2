@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_manufacturers() {
+    function __construct() {
       $this->title = MODULE_BOXES_MANUFACTURERS_TITLE;
       $this->description = MODULE_BOXES_MANUFACTURERS_DESCRIPTION;
 
@@ -48,7 +48,7 @@
       if (!empty($manufacturers)) {
         if (count($manufacturers) <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
-          $manufacturers_list = '<ul class="nav nav-pills nav-stacked">';
+          $manufacturers_list = '<ul class="nav nav-list">';
 
           foreach ($manufacturers as $m) {
             $manufacturers_name = ((strlen($m['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($m['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $m['manufacturers_name']);
@@ -82,7 +82,8 @@
                   HTML::selectField('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
                   '</form>';
         }
-      }
+
+     }
 
       return $data;
     }
@@ -99,7 +100,7 @@
       ob_start();
       include('includes/modules/boxes/templates/manufacturers.php');
       $data = ob_get_clean();
-      
+
       $oscTemplate->addBlock($data, $this->group);
     }
 

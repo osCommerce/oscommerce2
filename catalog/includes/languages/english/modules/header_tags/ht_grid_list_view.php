@@ -13,7 +13,3 @@
   define('MODULE_HEADER_TAGS_GRID_LIST_VIEW_TITLE', 'Grid List Javascript (jQuery)');
   define('MODULE_HEADER_TAGS_GRID_LIST_VIEW_DESCRIPTION', 'Add Grid List javascript to specified pages, which invokes a Grid/List view for product lists');
 
-  define('TEXT_VIEW', 'View: ');
-  define('TEXT_VIEW_LIST', ' List');
-  define('TEXT_VIEW_GRID', ' Grid');
-  

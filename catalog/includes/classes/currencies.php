@@ -19,7 +19,7 @@
     var $currencies;
 
 // class constructor
-    function currencies() {
+    function __construct() {
       $OSCOM_Db = Registry::get('Db');
 
       $this->currencies = array();

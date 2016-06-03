@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_card_acceptance() {
+    function __construct() {
       $this->title = MODULE_BOXES_CARD_ACCEPTANCE_TITLE;
       $this->description = MODULE_BOXES_CARD_ACCEPTANCE_DESCRIPTION;
 

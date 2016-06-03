@@ -20,7 +20,7 @@
     var $minutes = 15;
     var $identifier;
 
-    function ar_tell_a_friend() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_TELL_A_FRIEND_TITLE;
       $this->description = MODULE_ACTION_RECORDER_TELL_A_FRIEND_DESCRIPTION;
 

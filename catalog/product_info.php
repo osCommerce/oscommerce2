@@ -44,13 +44,11 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div class="alert alert-warning">
-      <?php echo TEXT_PRODUCT_NOT_FOUND; ?>
-    </div>
+    <div class="alert alert-warning"><?php echo TEXT_PRODUCT_NOT_FOUND; ?></div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), null, null, 'btn-default btn-block'); ?>
+  <div class="pull-right">
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php')); ?>
   </div>
 </div>
 
@@ -62,9 +60,9 @@
     $Qupdate->execute();
 
     if ($new_price = tep_get_products_special_price($Qproduct->valueInt('products_id'))) {
-      $products_price = '<del>' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</del> <span class="productSpecialPrice" itemprop="price">' . $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
+      $products_price = '<del>' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</del> <span class="productSpecialPrice" itemprop="price" content="' . preg_replace('/[^0-9.]*/', '', $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id')))) . '">' . $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
     } else {
-      $products_price = '<span itemprop="price">' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
+      $products_price = '<span itemprop="price" content="' . preg_replace('/[^0-9.]*/', '', $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id')))) . '">' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
     }
 
     if ($Qproduct->value('products_date_available') > date('Y-m-d H:i:s')) {
@@ -84,23 +82,32 @@
     }
 ?>
 
+<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', 'NONSSL'), 'post', 'class="form-horizontal" role="form"'); ?>
+
 <div itemscope itemtype="http://schema.org/Product">
 
 <div class="page-header">
-  <div class="row">
+  <div class="row">  
     <h1 class="col-sm-8"><?php echo $products_name; ?></h1>
-    <h1 class="col-sm-4 text-right-not-xs" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><?php echo $products_price; ?></h1>
+    <h2 class="col-sm-4 text-right-not-xs" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><?php echo $products_price; ?></h2>
   </div>
 </div>
+
+<?php
+  if ($messageStack->size('product_action') > 0) {
+    echo $messageStack->output('product_action');
+  }
+?>
 
 <div class="contentContainer">
   <div class="contentText">
 
 <?php
     if ( !empty($Qproduct->value('products_image')) ) {
-      echo '    ' . HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
 
-      $photoset_layout = '1';
+      echo HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
+
+      $photoset_layout = (int)MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT;
 
       $Qpi = $OSCOM_Db->get('products_images', ['image', 'htmlcontent'], ['products_id' => $Qproduct->valueInt('products_id')], 'sort_order');
       $pi = $Qpi->fetchAll();
@@ -108,16 +115,6 @@
       $pi_total = count($pi);
 
       if ($pi_total > 0) {
-        $pi_sub = $pi_total-1;
-
-        while ($pi_sub > 5) {
-          $photoset_layout .= 5;
-          $pi_sub = $pi_sub-5;
-        }
-
-        if ($pi_sub > 0) {
-          $photoset_layout .= ($pi_total > 5) ? 5 : $pi_sub;
-        }
 ?>
 
     <div class="piGal pull-right" data-imgcount="<?php echo $photoset_layout; ?>">
@@ -133,7 +130,7 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $image['htmlcontent'] . '</div>';
           }
 
-          echo '      ' . HTML::image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
+          echo HTML::image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
         }
 ?>
 
@@ -159,8 +156,6 @@
   <?php echo $Qproduct->value('products_description'); ?>
 </div>
 
-<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', $request_type), 'post', 'class="form-horizontal" role="form"'); ?>
-
 <?php
     $Qpa = $OSCOM_Db->prepare('select distinct popt.products_options_id, popt.products_options_name from :table_products_options popt, :table_products_attributes patrib where patrib.products_id = :products_id and patrib.options_id = popt.products_options_id and popt.language_id = :language_id order by popt.products_options_name');
     $Qpa->bindInt(':products_id', $Qproduct->valueInt('products_id'));
@@ -170,12 +165,9 @@
     if ($Qpa->fetch() !== false) {
 ?>
 
-    <div class="page-header">
-      <h4><?php echo TEXT_PRODUCT_OPTIONS; ?></h4>
-    </div>
+    <h4><?php echo TEXT_PRODUCT_OPTIONS; ?></h4>
 
-    <div class="row">
-      <div class="col-sm-6">
+    <p>
 <?php
       do {
         $products_options_array = array();
@@ -200,17 +192,11 @@
           $selected_attribute = false;
         }
 ?>
-      <div class="form-group">
-        <label class="control-label col-xs-3"><?php echo $Qpa->value('products_options_name') . ':'; ?></label>
-        <div class="col-xs-9">
-          <?php echo HTML::selectField('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, '', true); ?>
-        </div>
-      </div>
-    <?php
+      <strong><?php echo $Qpa->value('products_options_name') . ':'; ?></strong><br /><?php echo HTML::selectField('id[' . $Qpa->valueInt('products_options_id') . ']', $products_options_array, $selected_attribute, 'style="width: 200px;"'); ?><br />
+<?php
       } while ($Qpa->fetch());
 ?>
-      </div>
-    </div>
+    </p>
 
 <?php
     }
@@ -226,7 +212,11 @@
 
 <?php
     }
+?>
 
+  </div>
+
+<?php
     $has_rating = false;
 
     $Qr = $OSCOM_Db->prepare('select count(*) as count, avg(reviews_rating) as avgrating from :table_reviews r, :table_reviews_description rd where r.products_id = :products_id and r.reviews_id = rd.reviews_id and rd.languages_id = :languages_id and reviews_status = 1');
@@ -241,12 +231,10 @@
     }
 ?>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'glyphicon glyphicon-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'glyphicon glyphicon-comment', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'fa fa-commenting', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-
-  </form>
 
   <div class="row">
     <?php echo $oscTemplate->getContent('product_info'); ?>
@@ -267,14 +255,15 @@
       }
     }
 ?>
-  </div> <!-- contentText //-->
+
 </div>
 
 </div>
+
+</form>
 
 <?php
   }
-
   require('includes/template_bottom.php');
   require('includes/application_bottom.php');
 ?>

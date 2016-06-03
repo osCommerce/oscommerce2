@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_header_messagestack() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -35,7 +35,7 @@
 
     function execute() {
       global $oscTemplate, $messageStack;
-      
+
       if ($messageStack->size('header') > 0) {
 
         ob_start();
@@ -43,7 +43,7 @@
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);
-        
+
       }
     }
 

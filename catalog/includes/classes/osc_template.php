@@ -21,7 +21,7 @@
     var $_grid_column_width = 0; // deprecated
     var $_data = array();
 
-    function oscTemplate() {
+    function __construct() {
       $this->_title = TITLE;
     }
 

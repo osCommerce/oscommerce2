@@ -13,7 +13,7 @@
   class breadcrumb {
     var $_trail;
 
-    function breadcrumb() {
+    function __construct() {
       $this->reset();
     }
 
@@ -28,14 +28,15 @@
     function trail($separator = NULL) {
       $breadcrumb_count = 1;
 
-      $trail_string = '<ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">';
+      $trail_string = '<ol itemscope itemtype="http://schema.org/BreadcrumbList" class="breadcrumb">';
 
       for ($i=0, $n=sizeof($this->_trail); $i<$n; $i++) {
         if (isset($this->_trail[$i]['link']) && tep_not_null($this->_trail[$i]['link'])) {
-          $trail_string .= '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="' . $this->_trail[$i]['link'] . '" itemprop="item"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span></a><meta itemprop="position" content="' . $breadcrumb_count . '" /></li>' . "\n";
+          $trail_string .= '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><a href="' . $this->_trail[$i]['link'] . '" itemprop="item"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span></a>';
         } else {
-          $trail_string .= '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span><meta itemprop="position" content="' . $breadcrumb_count . '" /></li>';
+          $trail_string .= '<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem"><span itemprop="name">' . $this->_trail[$i]['title'] . '</span>';
         }
+        $trail_string .= '<meta itemprop="position" content="' . $breadcrumb_count . '" /></li>' . PHP_EOL;
         $breadcrumb_count++;
       }
 

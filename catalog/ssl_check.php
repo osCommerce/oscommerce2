@@ -36,12 +36,15 @@
       </div>
     </div>
 
-    <?php echo TEXT_INFORMATION; ?>
-
+    <div class="panel panel-danger">
+      <div class="panel-body">
+        <?php echo TEXT_INFORMATION; ?>
+      </div>
+    </div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php', 'Account&LogIn'), null, null, 'btn-success'); ?>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php', 'Account&LogIn')); ?></div>
   </div>
 </div>
 

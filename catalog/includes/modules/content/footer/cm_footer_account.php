@@ -21,12 +21,13 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_footer_account() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
       $this->title = MODULE_CONTENT_FOOTER_ACCOUNT_TITLE;
       $this->description = MODULE_CONTENT_FOOTER_ACCOUNT_DESCRIPTION;
+      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
 
       if ( defined('MODULE_CONTENT_FOOTER_ACCOUNT_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_FOOTER_ACCOUNT_SORT_ORDER;
@@ -43,11 +44,11 @@
         $account_content = '<li><a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
                            '<li><a href="' . OSCOM::link('address_book.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ADDRESS_BOOK . '</a></li>' .
                            '<li><a href="' . OSCOM::link('account_history.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ORDER_HISTORY . '</a></li>' .
-                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php', '', 'SSL') . '"><i class="glyphicon glyphicon-log-out"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGOFF . '</a></li>';
+                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php', '', 'SSL') . '"><i class="fa fa-sign-out"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGOFF . '</a></li>';
       }
       else {
         $account_content = '<li><a href="' . OSCOM::link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_CREATE_ACCOUNT . '</a></li>' .
-                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('index.php', 'Account&LogIn', 'SSL') . '"><i class="glyphicon glyphicon-log-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
+                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('index.php', 'Account&LogIn', 'SSL') . '"><i class="fa fa-sign-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
       }
 
       ob_start();

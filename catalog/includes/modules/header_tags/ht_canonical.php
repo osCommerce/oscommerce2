@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_canonical() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_CANONICAL_TITLE;
       $this->description = MODULE_HEADER_TAGS_CANONICAL_DESCRIPTION;
 

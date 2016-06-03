@@ -73,9 +73,7 @@
 
 <div class="contentContainer">
   <div class="contentText">
-    <div class="alert alert-success">
-      <?php echo TEXT_PASSWORD_RESET_INITIATED; ?>
-    </div>
+    <div class="alert alert-success"><?php echo TEXT_PASSWORD_RESET_INITIATED; ?></div>
   </div>
 </div>
 
@@ -83,31 +81,25 @@
   } else {
 ?>
 
-<?php echo HTML::form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
 
-    <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-sm-9">
-        <?php
-        echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
-        echo FORM_REQUIRED_INPUT;
-        ?>
+        <?php echo HTML::inputField('email_address', NULL, 'required aria-required="true" autofocus="autofocus" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo FORM_REQUIRED_INPUT; ?>
       </div>
     </div>
-
   </div>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('index.php', 'Account&LogIn', 'SSL')); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('index.php', 'Account&LogIn', 'SSL')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-
 </div>
 
 </form>

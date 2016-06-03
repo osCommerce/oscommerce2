@@ -28,7 +28,7 @@
     var $attachments;
     var $headers;
 
-    function email($headers = '') {
+    function __construct($headers = '') {
       if ($headers == '') $headers = array();
 
       $this->html_images = array();
@@ -112,7 +112,7 @@
 
     function find_html_images($images_dir) {
 // Build the list of image extensions
-      
+
       $extensions[] = array_keys( $this->image_types);
 
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);

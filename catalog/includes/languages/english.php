@@ -12,10 +12,10 @@
 
 // look in your $PATH_LOCALE/locale directory for available locales
 // or type locale -a on the server.
-// Examples:
-// on RedHat try 'en_US'
-// on FreeBSD try 'en_US.ISO_8859-1'
-// on Windows try 'en', or 'English'
+// Array examples which should work on all servers:
+// 'en_US.UTF-8', 'en_US.UTF8', 'enu_usa'
+// 'en_GB.UTF-8', 'en_GB.UTF8', 'eng_gb'
+// 'en_AU.UTF-8', 'en_AU.UTF8', 'ena_au'
 @setlocale(LC_ALL, array('en_US.UTF-8', 'en_US.UTF8', 'enu_usa'));
 
 define('DATE_FORMAT_SHORT', '%m/%d/%Y');  // this is used for strftime()
@@ -49,25 +49,21 @@ define('CHARSET', 'utf-8');
 // page title
 define('TITLE', STORE_NAME);
 
-// header text in includes/header.php
+// text in includes/modules/downloads.php
 define('HEADER_TITLE_MY_ACCOUNT', 'My Account');
-define('HEADER_TITLE_TOP', '<i class="glyphicon glyphicon-home"><span class="sr-only">Home</span></i>');
+
+// text in includes/application_top.php
+define('HEADER_TITLE_TOP', '<i class="fa fa-home"><span class="sr-only">Home</span></i>');
 define('HEADER_TITLE_CATALOG', 'Catalog');
 
 // text for gender
-define('MALE', 'Male');
-define('FEMALE', 'Female');
-define('MALE_ADDRESS', 'Mr.');
-define('FEMALE_ADDRESS', 'Ms.');
-
-// text for date of birth example
-define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
+define('MALE', 'M<span class="hidden-xs">ale</span>');
+define('FEMALE', 'F<span class="hidden-xs">emale</span>');
 
 // checkout procedure text
 define('CHECKOUT_BAR_DELIVERY', 'Delivery Information');
 define('CHECKOUT_BAR_PAYMENT', 'Payment Information');
 define('CHECKOUT_BAR_CONFIRMATION', 'Confirmation');
-define('CHECKOUT_BAR_FINISHED', 'Finished!');
 
 // pull down default text
 define('PULL_DOWN_DEFAULT', 'Please Select');
@@ -80,16 +76,7 @@ define('JS_REVIEW_RATING', '* You must rate the product for your review.\n');
 
 define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please select a payment method for your order.\n');
 
-define('JS_ERROR_SUBMITTED', 'This form has already been submitted. Please press Ok and wait for this process to be completed.');
-
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please select a payment method for your order.');
-
-define('CATEGORY_COMPANY', 'Company Details');
-define('CATEGORY_PERSONAL', 'Your Personal Details');
-define('CATEGORY_ADDRESS', 'Your Address');
-define('CATEGORY_CONTACT', 'Your Contact Information');
-define('CATEGORY_OPTIONS', 'Options');
-define('CATEGORY_PASSWORD', 'Your Password');
 
 define('ENTRY_COMPANY', 'Company Name');
 define('ENTRY_COMPANY_TEXT', '');
@@ -104,9 +91,9 @@ define('ENTRY_LAST_NAME_ERROR', 'Your Last Name must contain a minimum of ' . EN
 define('ENTRY_LAST_NAME_TEXT', '');
 define('ENTRY_DATE_OF_BIRTH', 'Date of Birth');
 define('ENTRY_DATE_OF_BIRTH_ERROR', 'Your Date of Birth must be in this format: MM/DD/YYYY (eg 05/21/1970)');
-define('ENTRY_DATE_OF_BIRTH_TEXT', '(eg. 05/21/1970)');
+define('ENTRY_DATE_OF_BIRTH_TEXT', 'eg. 05/21/1970');
 define('ENTRY_EMAIL_ADDRESS', 'E-Mail Address');
-define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your E-Mail Address does not appear to be formatted correctly.');
+define('ENTRY_EMAIL_ADDRESS_ERROR', 'Your E-Mail Address must contain a minimum of ' . ENTRY_EMAIL_ADDRESS_MIN_LENGTH . ' characters.');
 define('ENTRY_EMAIL_ADDRESS_CHECK_ERROR', 'Your E-Mail Address does not appear to be valid - please make any necessary corrections.');
 define('ENTRY_EMAIL_ADDRESS_ERROR_EXISTS', 'Your E-Mail Address already exists in our records - please log in with the e-mail address or create an account with a different address.');
 define('ENTRY_EMAIL_ADDRESS_TEXT', '');
@@ -121,8 +108,9 @@ define('ENTRY_POST_CODE_TEXT', '');
 define('ENTRY_CITY', 'City');
 define('ENTRY_CITY_ERROR', 'Your City must contain a minimum of ' . ENTRY_CITY_MIN_LENGTH . ' characters.');
 define('ENTRY_CITY_TEXT', '');
+define('ENTRY_NAME_TEXT', '');
 define('ENTRY_STATE', 'State/Province');
-define('ENTRY_STATE_ERROR', 'State does not appear to be formatted correctly.');
+define('ENTRY_STATE_ERROR', 'Your State must contain a minimum of ' . ENTRY_STATE_MIN_LENGTH . ' characters.');
 define('ENTRY_STATE_ERROR_SELECT', 'Please select a state from the States pull down menu.');
 define('ENTRY_STATE_TEXT', '');
 define('ENTRY_COUNTRY', 'Country');
@@ -150,30 +138,11 @@ define('ENTRY_PASSWORD_NEW', 'New Password');
 define('ENTRY_PASSWORD_NEW_TEXT', '');
 define('ENTRY_PASSWORD_NEW_ERROR', 'Your new Password must contain a minimum of ' . ENTRY_PASSWORD_MIN_LENGTH . ' characters.');
 define('ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING', 'The Password Confirmation must match your new Password.');
-// new placeholders
-define('ENTRY_PRICE_FROM_TEXT', '');
-define('ENTRY_PRICE_TO_TEXT', '');
-define('ENTRY_DATE_FROM_TEXT', '');
-define('ENTRY_DATE_TO_TEXT', '');
-define('ENTRY_COMMENTS_TEXT', '');
-define('ENTRY_NAME_TEXT', '');
-define('ENTRY_ENQUIRY_TEXT', '');
-define('ENTRY_REVIEW_TEXT', '');
-define('ENTRY_FORM_FIELD_CUSTOMER_NAME_TEXT', '');
-define('ENTRY_FORM_FIELD_CUSTOMER_EMAIL_TEXT', '');
-define('ENTRY_FORM_FIELD_FRIEND_NAME_TEXT', '');
-define('ENTRY_FORM_FIELD_FRIEND_EMAIL_TEXT', '');
-define('ENTRY_FORM_TITLE_FRIEND_MESSAGE_TEXT', '');
-
-define('FORM_REQUIRED_INFORMATION', '<span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information');
 
 // constants for use in tep_prev_next_display function
 define('TEXT_RESULT_PAGE', 'Result Pages:');
 define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> products)');
-define('TEXT_DISPLAY_NUMBER_OF_ORDERS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> orders)');
 define('TEXT_DISPLAY_NUMBER_OF_REVIEWS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> reviews)');
-define('TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> new products)');
-define('TEXT_DISPLAY_NUMBER_OF_SPECIALS', 'Displaying <strong>%d</strong> to <strong>%d</strong> (of <strong>%d</strong> specials)');
 
 define('PREVNEXT_TITLE_FIRST_PAGE', 'First Page');
 define('PREVNEXT_TITLE_PREVIOUS_PAGE', 'Previous Page');
@@ -188,30 +157,18 @@ define('PREVNEXT_BUTTON_NEXT', '[Next&nbsp;&gt;&gt;]');
 define('PREVNEXT_BUTTON_LAST', 'LAST&gt;&gt;');
 
 define('IMAGE_BUTTON_ADD_ADDRESS', 'Add Address');
-define('IMAGE_BUTTON_ADDRESS_BOOK', 'Address Book');
 define('IMAGE_BUTTON_BACK', 'Back');
 define('IMAGE_BUTTON_BUY_NOW', 'Buy Now');
 define('IMAGE_BUTTON_CHANGE_ADDRESS', 'Change Address');
 define('IMAGE_BUTTON_CHECKOUT', 'Checkout');
 define('IMAGE_BUTTON_CONFIRM_ORDER', 'Confirm Order');
 define('IMAGE_BUTTON_CONTINUE', 'Continue');
-define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue Shopping');
 define('IMAGE_BUTTON_DELETE', 'Delete');
-define('IMAGE_BUTTON_EDIT_ACCOUNT', 'Edit Account');
-define('IMAGE_BUTTON_HISTORY', 'Order History');
 define('IMAGE_BUTTON_LOGIN', 'Sign In');
 define('IMAGE_BUTTON_IN_CART', 'Add to Cart');
-define('IMAGE_BUTTON_NOTIFICATIONS', 'Notifications');
-define('IMAGE_BUTTON_PAY_TOTAL_NOW', 'Pay Now (%s)');
-define('IMAGE_BUTTON_PAY_TOTAL_PROCESSING', 'Processing, please wait ..');
-define('IMAGE_BUTTON_QUICK_FIND', 'Quick Find');
-define('IMAGE_BUTTON_REMOVE_NOTIFICATIONS', 'Remove Notifications');
 define('IMAGE_BUTTON_REVIEWS', 'Reviews');
 define('IMAGE_BUTTON_SEARCH', 'Search');
-define('IMAGE_BUTTON_SHIPPING_OPTIONS', 'Shipping Options');
-define('IMAGE_BUTTON_TELL_A_FRIEND', 'Tell a Friend');
 define('IMAGE_BUTTON_UPDATE', 'Update');
-define('IMAGE_BUTTON_UPDATE_CART', 'Update Cart');
 define('IMAGE_BUTTON_WRITE_REVIEW', 'Write Review');
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
@@ -221,19 +178,11 @@ define('SMALL_IMAGE_BUTTON_BUY', 'Buy');
 
 define('ICON_ARROW_RIGHT', 'more');
 
-define('TEXT_GREETING_PERSONAL', 'Welcome back <span class="greetUser">%s!</span> Would you like to see which <a href="%s"><u>new products</u></a> are available to purchase?');
-define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s, please <a href="%s"><u>log yourself in</u></a> with your account information.</small>');
-define('TEXT_GREETING_GUEST', 'Welcome <span class="greetUser">Guest!</span> Would you like to <a href="%s"><u>log yourself in</u></a>? Or would you prefer to <a href="%s"><u>create an account</u></a>?');
-
 define('TEXT_SORT_PRODUCTS', 'Sort products ');
 define('TEXT_DESCENDINGLY', 'descendingly');
 define('TEXT_ASCENDINGLY', 'ascendingly');
 define('TEXT_BY', ' by ');
 
-define('TEXT_REVIEW_BY', 'by %s');
-define('TEXT_REVIEW_WORD_COUNT', '%s words');
-define('TEXT_REVIEW_RATING', 'Rating: %s [%s]');
-define('TEXT_REVIEW_DATE_ADDED', 'Date Added: %s');
 define('TEXT_NO_REVIEWS', 'There are currently no product reviews.');
 
 define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
@@ -242,22 +191,40 @@ define('TEXT_CCVAL_ERROR_INVALID_DATE', 'The expiry date entered for the credit 
 define('TEXT_CCVAL_ERROR_INVALID_NUMBER', 'The credit card number entered is invalid. Please check the number and try again.');
 define('TEXT_CCVAL_ERROR_UNKNOWN_CARD', 'The first four digits of the number entered are: %s. If that number is correct, we do not accept that type of credit card. If it is wrong, please try again.');
 
-// message for required inputs
-define('FORM_REQUIRED_INPUT', '<span><span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span></span>');
+// category views
+define('TEXT_VIEW', 'View: ');
+define('TEXT_VIEW_LIST', ' List');
+define('TEXT_VIEW_GRID', ' Grid');
 
 // search placeholder
-define('TEXT_SEARCH_PLACEHOLDER', 'Search Keywords...');
+define('TEXT_SEARCH_PLACEHOLDER','Search');
+
+// message for required inputs
+define('FORM_REQUIRED_INFORMATION', '<span class="fa fa-asterisk inputRequirement"></span> Required information');
+define('FORM_REQUIRED_INPUT', '<span><span class="fa fa-asterisk form-control-feedback inputRequirement"></span></span>');
 
 // reviews
-define('REVIEWS_TEXT_RATED', 'Rated %s by <span title="%s" itemprop="author" itemscope itemtype="http://schema.org/Person"><span itemprop="name">%s</span></span>');
+define('REVIEWS_TEXT_RATED', 'Rated %s by <cite title="%s" itemprop="author">%s</cite>');
 define('REVIEWS_TEXT_AVERAGE', 'Average rating based on <span itemprop="ratingCount">%s</span> review(s) %s');
+define('REVIEWS_TEXT_TITLE', 'What our customers say...');
 
+// grid/list
+define('TEXT_SORT_BY', 'Sort By ');
+// moved from index
+define('TABLE_HEADING_IMAGE', '');
+define('TABLE_HEADING_MODEL', 'Model');
+define('TABLE_HEADING_PRODUCTS', 'Product Name');
+define('TABLE_HEADING_MANUFACTURER', 'Manufacturer');
+define('TABLE_HEADING_QUANTITY', 'Quantity');
+define('TABLE_HEADING_PRICE', 'Price');
+define('TABLE_HEADING_WEIGHT', 'Weight');
+define('TABLE_HEADING_BUY_NOW', 'Buy Now');
+define('TABLE_HEADING_LATEST_ADDED', 'Latest Products');
 // product notifications
 define('PRODUCT_SUBSCRIBED', '%s has been added to your Notification List');
 define('PRODUCT_UNSUBSCRIBED', '%s has been removed from your Notification List');
 define('PRODUCT_ADDED', '%s has been added to your Cart');
 define('PRODUCT_REMOVED', '%s has been removed from your Cart');
 
-// sorting product_listing module
-define('TEXT_SORT_BY', 'Sort By ');
-
+// bootstrap helper
+define('MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION', '');
