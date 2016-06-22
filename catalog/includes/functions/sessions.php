@@ -44,16 +44,20 @@
       $Qcheck->execute();
 
       if ($Qcheck->fetch() !== false) {
-        return $OSCOM_Db->save('sessions', ['expiry' => time(), 'value' => $value], ['sesskey' => $key]);
+        $result = $OSCOM_Db->save('sessions', ['expiry' => time(), 'value' => $value], ['sesskey' => $key]);
       } else {
-        return $OSCOM_Db->save('sessions', ['sesskey' => $key, 'expiry' => time(), 'value' => $value]);
+        $result = $OSCOM_Db->save('sessions', ['sesskey' => $key, 'expiry' => time(), 'value' => $value]);
       }
+
+      return $result !== false;
     }
 
     function _sess_destroy($key) {
       $OSCOM_Db = Registry::get('Db');
 
-      return $OSCOM_Db->delete('sessions', ['sesskey' => $key]);
+      $result = $OSCOM_Db->delete('sessions', ['sesskey' => $key]);
+
+      return $result !== false;
     }
 
     function _sess_gc($maxlifetime) {
@@ -63,7 +67,7 @@
       $Qdel->bindValue(':expiry', time() - $maxlifetime);
       $Qdel->execute();
 
-      return $Qdel->rowCount();
+      return $Qdel->isError() === false;
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
