@@ -21,7 +21,7 @@
     var $attempts = 3;
     var $identifier;
 
-    function ar_admin_login() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_ADMIN_LOGIN_TITLE;
       $this->description = MODULE_ACTION_RECORDER_ADMIN_LOGIN_DESCRIPTION;
 

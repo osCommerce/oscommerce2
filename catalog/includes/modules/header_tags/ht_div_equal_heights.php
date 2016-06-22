@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_div_equal_heights() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_TITLE;
       $this->description = MODULE_HEADER_TAGS_DIV_EQUAL_HEIGHTS_DESCRIPTION;
 
@@ -44,7 +44,7 @@
             $pages_array[] = $page;
           }
         }
-        
+
 
 $output = <<<EOD
 <script>

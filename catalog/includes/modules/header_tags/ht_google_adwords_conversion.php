@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_google_adwords_conversion() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_TITLE;
       $this->description = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_DESCRIPTION;
 

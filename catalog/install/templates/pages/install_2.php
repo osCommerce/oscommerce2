@@ -58,7 +58,7 @@
   <div class="col-xs-12 col-sm-push-3 col-sm-9">
 
     <div class="page-header">
-      <p class="inputRequirement pull-right text-right"><span class="glyphicon glyphicon-asterisk inputRequirement"></span> Required information</p>
+      <p class="inputRequirement pull-right text-right"><span class="fa fa-asterisk inputRequirement"></span> Required information</p>
       <h2>Web Server</h2>
     </div>
 
@@ -68,7 +68,7 @@
         <label for="wwwAddress" class="control-label col-xs-3">WWW Address</label>
         <div class="col-xs-9">
           <?php echo HTML::inputField('HTTP_WWW_ADDRESS', $www_location, 'required aria-required="true" id="wwwAddress" placeholder="http://"'); ?>
-          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="fa fa-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The web address to the online store.</span>
         </div>
       </div>
@@ -77,7 +77,7 @@
         <label for="webRoot" class="control-label col-xs-3">Webserver Root Directory</label>
         <div class="col-xs-9">
           <?php echo HTML::inputField('DIR_FS_DOCUMENT_ROOT', str_replace('\\', '/', $dir_fs_www_root), 'required aria-required="true" id="webRoot"'); ?>
-          <span class="glyphicon glyphicon-asterisk form-control-feedback inputRequirement"></span>
+          <span class="fa fa-asterisk form-control-feedback inputRequirement"></span>
           <span class="help-block">The directory where the online store is installed on the server.</span>
         </div>
       </div>

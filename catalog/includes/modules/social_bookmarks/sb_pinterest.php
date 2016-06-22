@@ -21,7 +21,7 @@
     var $icon;
     var $enabled = false;
 
-    function sb_pinterest() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_PINTEREST_DESCRIPTION;

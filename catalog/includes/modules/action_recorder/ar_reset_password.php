@@ -21,7 +21,7 @@
     var $attempts = 1;
     var $identifier;
 
-    function ar_reset_password() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_RESET_PASSWORD_TITLE;
       $this->description = MODULE_ACTION_RECORDER_RESET_PASSWORD_DESCRIPTION;
 

@@ -41,9 +41,8 @@
 
   <?php require('includes/footer.php'); ?>
 
-  <script src="ext/bootstrap/js/bootstrap.min.js"></script>
-  
-  <?php echo $oscTemplate->getBlocks('footer_scripts'); ?>
+<script src="ext/bootstrap/js/bootstrap.min.js"></script>
+<?php echo $oscTemplate->getBlocks('footer_scripts'); ?>
 
 </body>
 </html>

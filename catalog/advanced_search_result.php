@@ -387,8 +387,8 @@
 
   <br />
 
-  <div>
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
+  <div class="buttonSet">
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
   </div>
 </div>
 

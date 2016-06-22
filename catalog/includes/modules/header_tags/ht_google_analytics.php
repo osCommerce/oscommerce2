@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_google_analytics() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_TITLE;
       $this->description = MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_DESCRIPTION;
 

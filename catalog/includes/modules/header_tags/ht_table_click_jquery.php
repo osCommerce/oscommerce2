@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_table_click_jquery() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_TITLE;
       $this->description = MODULE_HEADER_TAGS_TABLE_CLICK_JQUERY_DESCRIPTION;
 
@@ -46,7 +46,7 @@
         }
 
         if (in_array(basename($PHP_SELF), $pages_array)) {
-          $oscTemplate->addBlock('<script>$(\'.table tr\').click(function() { $(\'.table tr\').removeClass(\'success\').find(\'input\').prop(\'checked\', false); $(this).addClass(\'success\').find(\'input\').prop(\'checked\', true); });</script>' . "\n", $this->group);
+          $oscTemplate->addBlock('<script>$(\'.table tr.table-selection\').click(function() { $(\'.table tr\').removeClass(\'success\').find(\'input\').prop(\'checked\', false); $(this).addClass(\'success\').find(\'input\').prop(\'checked\', true); });</script>' . "\n", $this->group);
         }
       }
     }
@@ -135,7 +135,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= HTML::checkboxField('ht_table_click_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_table_click_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . HTML::output($file) . '<br />';
     }
 
     if (!empty($output)) {

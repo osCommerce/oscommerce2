@@ -21,7 +21,7 @@
     var $icon = 'facebook.png';
     var $enabled = false;
 
-    function sb_facebook() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_DESCRIPTION;

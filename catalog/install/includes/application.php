@@ -20,7 +20,4 @@
 
   require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
   spl_autoload_register('OSC\OM\OSCOM::autoload');
-
-  OSCOM::initialize();
-  OSCOM::setSite('Setup');
 ?>

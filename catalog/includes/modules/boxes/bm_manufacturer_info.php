@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_manufacturer_info() {
+    function __construct() {
       $this->title = MODULE_BOXES_MANUFACTURER_INFO_TITLE;
       $this->description = MODULE_BOXES_MANUFACTURER_INFO_DESCRIPTION;
 
@@ -49,7 +49,7 @@
           $manufacturer_info_string = null;
 
           if (!empty($Qmanufacturer->value('manufacturers_image'))) {
-            $manufacturer_info_string .= '<div class="center-block">' . HTML::image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
+            $manufacturer_info_string .= '<div>' . HTML::image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {

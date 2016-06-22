@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_currencies() {
+    function __construct() {
       $this->title = MODULE_BOXES_CURRENCIES_TITLE;
       $this->description = MODULE_BOXES_CURRENCIES_DESCRIPTION;
 
@@ -57,7 +57,6 @@
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');
           $data = ob_get_clean();
-
 
           $oscTemplate->addBlock($data, $this->group);
         }

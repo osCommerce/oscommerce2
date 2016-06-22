@@ -17,7 +17,7 @@
   class sage_pay_form {
     var $code, $title, $description, $enabled;
 
-    function sage_pay_form() {
+    function __construct() {
       global $order;
 
       $this->signature = 'sage_pay|sage_pay_form|2.0|2.3';

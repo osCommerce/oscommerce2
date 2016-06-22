@@ -91,6 +91,7 @@
     }
 
     $free_shipping = false;
+
     if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
 
@@ -171,27 +172,25 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
         <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
+        <div class="clearfix"></div>
+        <div class="pull-right">
+          <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'fa fa-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL')); ?>
+        </div>
+        <div class="clearfix"></div>
       </div>
-      <div class="clearfix"></div>
-      <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
-      <br>
-      <div class="clearfix"></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-primary">
         <div class="panel-heading"><?php echo TITLE_SHIPPING_ADDRESS; ?></div>
-
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'); ?>
         </div>
@@ -205,9 +204,7 @@
   if (tep_count_shipping_modules() > 0) {
 ?>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_SHIPPING_METHOD; ?></h2>
 
 <?php
     if (sizeof($quotes) > 1 && sizeof($quotes[0]) > 1) {
@@ -215,11 +212,14 @@
 
   <div class="contentText">
     <div class="alert alert-warning">
-      <div class="pull-right">
-        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+      <div class="row">
+        <div class="col-xs-8">
+          <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
+        </div>
+        <div class="col-xs-4 text-right">
+          <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+        </div>
       </div>
-
-      <?php echo TEXT_CHOOSE_SHIPPING_METHOD; ?>
     </div>
   </div>
 
@@ -236,37 +236,44 @@
 ?>
 
   <div class="contentText">
+    <table class="table table-striped table-condensed table-hover">
+      <tbody>
+
 <?php
     if ($free_shipping == true) {
 ?>
-      <div class="contentText">
-        <div class="panel panel-success">
-          <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
-          <div class="panel-body">
-            <?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . HTML::hiddenField('shipping', 'free_free'); ?>
-          </div>
+
+    <div class="contentText">
+      <div class="panel panel-success">
+        <div class="panel-heading"><strong><?php echo FREE_SHIPPING_TITLE; ?></strong>&nbsp;<?php echo $quotes[$i]['icon']; ?></div>
+        <div class="panel-body">
+          <?php echo sprintf(FREE_SHIPPING_DESCRIPTION, $currencies->format(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER)) . HTML::hiddenField('shipping', 'free_free'); ?>
         </div>
       </div>
+    </div>
 
 <?php
-  } else {
- ?>
-    <table class="table table-striped table-condensed table-hover">
-      <tbody>
- <?php
+    } else {
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
+// set the radio button to be checked if it is the method chosen
+          $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);         
+
 ?>
-        <tr>
+      <tr class="table-selection">
         <td>
           <strong><?php echo $quotes[$i]['module']; ?></strong>
           <?php
           if (isset($quotes[$i]['icon']) && tep_not_null($quotes[$i]['icon'])) echo '&nbsp;' . $quotes[$i]['icon'];
+          ?>
 
+          <?php
           if (isset($quotes[$i]['error'])) {
             echo '<div class="help-block">' . $quotes[$i]['error'] . '</div>';
           }
+          ?>
 
+          <?php
           if (tep_not_null($quotes[$i]['methods'][$j]['title'])) echo '<div class="help-block">' . $quotes[$i]['methods'][$j]['title'] . '</div>';
           ?>
           </td>
@@ -282,7 +289,7 @@
             echo '&nbsp;';
           }
           else {
-            echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?>&nbsp;&nbsp;<?php echo HTML::radioField('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], null, 'required aria-required="true"');
+            echo $currencies->format(tep_add_tax($quotes[$i]['methods'][$j]['cost'], (isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0))); ?>&nbsp;&nbsp;<?php echo HTML::radioField('shipping', $quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'], $checked, 'required aria-required="true"');
           }
           ?>
         </td>
@@ -297,20 +304,16 @@
             }
 ?>
 
-        </tr>
+      </tr>
+
 <?php
-     }
-   }
+        }
+      }
+    }
 ?>
 
       </tbody>
     </table>
-<?php
-
-    }
-?>
-
-
   </div>
 
 <?php
@@ -324,16 +327,16 @@
       <label for="inputComments" class="control-label col-sm-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
       <div class="col-sm-8">
         <?php
-        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . TABLE_HEADING_COMMENTS . '"');
         ?>
       </div>
     </div>
   </div>
 
-  <div class="contentText">
-    <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-
+  
   <div class="clearfix"></div>
 
   <div class="contentText">

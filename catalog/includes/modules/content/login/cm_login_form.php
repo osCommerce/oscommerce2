@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_login_form() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 

@@ -21,12 +21,13 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_pi_reviews() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
       $this->title = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_TITLE;
       $this->description = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_DESCRIPTION;
+      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
 
       if ( defined('MODULE_CONTENT_PRODUCT_INFO_REVIEWS_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_PRODUCT_INFO_REVIEWS_SORT_ORDER;

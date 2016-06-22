@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_reviews() {
+    function __construct() {
       $this->title = MODULE_BOXES_REVIEWS_TITLE;
       $this->description = MODULE_BOXES_REVIEWS_DESCRIPTION;
 
@@ -76,7 +76,7 @@
         }
       } elseif (isset($_GET['products_id'])) {
 // display 'write a review' box
-        $reviews_box_contents = '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . OSCOM::link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
+        $reviews_box_contents = '<span class="fa fa-thumbs-up"></span> <a href="' . OSCOM::link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
       } else {
 // display 'no reviews' box
         $reviews_box_contents = '<p>' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</p>';
@@ -117,7 +117,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

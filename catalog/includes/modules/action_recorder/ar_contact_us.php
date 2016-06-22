@@ -20,7 +20,7 @@
     var $minutes = 15;
     var $identifier;
 
-    function ar_contact_us() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_CONTACT_US_TITLE;
       $this->description = MODULE_ACTION_RECORDER_CONTACT_US_DESCRIPTION;
 

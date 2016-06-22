@@ -62,6 +62,12 @@
       }
     }
 
+    if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+      $error = true;
+
+      $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
+    }
+
     if (!tep_validate_email($email_address)) {
       $error = true;
 
@@ -96,6 +102,7 @@
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
 
       $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$_SESSION['customer_id']]);
+
       $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$_SESSION['customer_id']]);
 
       $sql_data_array = ['entry_firstname' => $firstname,
@@ -137,7 +144,7 @@
 <div class="contentContainer">
   <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
 
-<?php
+  <?php
   if (ACCOUNT_GENDER == 'true') {
     if (isset($gender)) {
       $male = ($gender == 'm') ? true : false;
@@ -145,87 +152,78 @@
       $male = ($Qaccount->value('customers_gender') == 'm') ? true : false;
     }
     $female = !$male;
-?>
-
-      <div class="form-group has-feedback">
-        <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
-        <div class="col-sm-9">
-          <label class="radio-inline">
-            <?php echo HTML::radioField('gender', 'm', $male, 'required aria-required="true"') . ' ' . MALE; ?>
-          </label>
-          <label class="radio-inline">
-            <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
-          </label>
-          <?php echo FORM_REQUIRED_INPUT; ?>
-          <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
-        </div>
-      </div>
-
-<?php
+  ?>
+  <div class="form-group has-feedback">
+    <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
+    <div class="col-sm-9">
+      <label class="radio-inline">
+        <?php echo HTML::radioField('gender', 'm', $male, 'required aria-required="true" aria-describedby="atGender"') . ' ' . MALE; ?>
+      </label>
+      <label class="radio-inline">
+        <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
+      </label>
+      <?php echo FORM_REQUIRED_INPUT; ?>
+      <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span id="atGender" class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
+    </div>
+  </div>
+  <?php
   }
-?>
+  ?>
+  <div class="form-group has-feedback">
+    <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('firstname', $Qaccount->value('customers_firstname'), 'required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
+      <?php echo FORM_REQUIRED_INPUT; ?>
+    </div>
+  </div>
+  <div class="form-group has-feedback">
+    <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('lastname', $Qaccount->value('customers_lastname'), 'required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
+      <?php echo FORM_REQUIRED_INPUT; ?>
+    </div>
+  </div>
 
-      <div class="form-group has-feedback">
-        <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
-        <div class="col-sm-9">
-          <?php echo HTML::inputField('firstname', $Qaccount->value('customers_firstname'), 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
-          <?php echo FORM_REQUIRED_INPUT; ?>
-        </div>
-      </div>
-      <div class="form-group has-feedback">
-        <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
-        <div class="col-sm-9">
-          <?php echo HTML::inputField('lastname', $Qaccount->value('customers_lastname'), 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
-          <?php echo FORM_REQUIRED_INPUT; ?>
-        </div>
-      </div>
-
-<?php
+  <?php
   if (ACCOUNT_DOB == 'true') {
 ?>
-
-      <div class="form-group has-feedback">
-        <label for="inputName" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
-        <div class="col-sm-9">
-          <?php echo HTML::inputField('dob', tep_date_short($Qaccount->value('customers_dob')), 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
-          <?php echo FORM_REQUIRED_INPUT; ?>
-        </div>
-      </div>
-
+  <div class="form-group has-feedback">
+    <label for="inputName" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('dob', tep_date_short($Qaccount->value('customers_dob')), 'required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
+      <?php echo FORM_REQUIRED_INPUT; ?>
+    </div>
+  </div>
 <?php
   }
 ?>
 
-    <div class="form-group has-feedback">
-      <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
-      <div class="col-sm-9">
-        <?php echo HTML::inputField('email_address', $Qaccount->value('customers_email_address'), 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
-      </div>
+  <div class="form-group has-feedback">
+    <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('email_address', $Qaccount->value('customers_email_address'), 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+      <?php echo FORM_REQUIRED_INPUT; ?>
     </div>
-    <div class="form-group has-feedback">
-      <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
-      <div class="col-sm-9">
-        <?php echo HTML::inputField('telephone', $Qaccount->value('customers_telephone'), 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
-      <div class="col-sm-9">
-        <?php echo HTML::inputField('fax', $Qaccount->value('customers_fax'), 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
-      </div>
-    </div>
-
-
-    <br />
-
-    <div class="row">
-      <div class="col-xs-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-      <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
-    </div>
-
   </div>
+  <div class="form-group has-feedback">
+    <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('telephone', $Qaccount->value('customers_telephone'), 'required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel'); ?>
+      <?php echo FORM_REQUIRED_INPUT; ?>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
+    <div class="col-sm-9">
+      <?php echo HTML::inputField('fax', $Qaccount->value('customers_fax'), 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"'); ?>
+    </div>
+  </div>
+
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
+  </div>
+</div>
 
 </form>
 

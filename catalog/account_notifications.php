@@ -98,9 +98,10 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
+
   <div class="alert alert-info">
     <?php echo MY_NOTIFICATIONS_DESCRIPTION; ?>
   </div>
@@ -142,8 +143,6 @@
         <div class="col-sm-8">
 
 <?php
-      $counter = 0;
-
       $Qproducts = $OSCOM_Db->prepare('select pd.products_id, pd.products_name from :table_products_description pd, :table_products_notifications pn where pn.customers_id = :customers_id and pn.products_id = pd.products_id and pd.language_id = :language_id order by pd.products_name');
       $Qproducts->bindInt(':customers_id', $_SESSION['customer_id']);
       $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
@@ -153,11 +152,10 @@
 ?>
       <div class="checkbox">
         <label>
-          <?php echo HTML::checkboxField('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
+          <?php echo HTML::checkboxField('products[]', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
         </label>
       </div>
 <?php
-        $counter++;
       }
 ?>
 
@@ -183,9 +181,9 @@
   }
 ?>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
 </div>
 

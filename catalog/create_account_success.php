@@ -41,7 +41,9 @@
     </div>
   </div>
 
-  <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', $origin_href, null, null, 'btn-success btn-block'); ?></div>
+  <div class="buttonSet">
+    <div> class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', $origin_href, null, null, 'btn-success'); ?></div>
+  </div>
 </div>
 
 <?php

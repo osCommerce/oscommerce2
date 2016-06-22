@@ -9,6 +9,6 @@ use OSC\OM\OSCOM;
       <li><a href="<?php echo OSCOM::link('privacy.php'); ?>"><?php echo MODULE_CONTENT_FOOTER_INFORMATION_PRIVACY; ?></a></li>
       <li><a href="<?php echo OSCOM::link('conditions.php'); ?>"><?php echo MODULE_CONTENT_FOOTER_INFORMATION_CONDITIONS; ?></a></li>
       <li><a href="<?php echo OSCOM::link('contact_us.php'); ?>"><?php echo MODULE_CONTENT_FOOTER_INFORMATION_CONTACT; ?></a></li>
-  	</ul>
+    </ul>
   </div>
 </div>
