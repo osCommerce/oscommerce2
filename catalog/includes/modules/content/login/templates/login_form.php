@@ -10,8 +10,8 @@ use OSC\OM\OSCOM;
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_RETURNING_CUSTOMER; ?></p>
     </div>
 
-    <?php echo HTML::form('login', OSCOM::link('index.php', 'Account&LogIn&Process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
-
+    <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+    
     <div class="form-group">
       <label for="inputEmail" class="control-label col-xs-4"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-8">

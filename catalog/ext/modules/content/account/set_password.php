@@ -17,7 +17,7 @@
   require('includes/application_top.php');
 
   if (!isset($_SESSION['customer_id'])) {
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD != 'True' ) {

@@ -16,7 +16,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');

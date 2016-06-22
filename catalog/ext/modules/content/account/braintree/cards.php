@@ -18,7 +18,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('braintree_cc.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {

@@ -1074,7 +1074,7 @@
     if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
       $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
     } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('index.php', 'Account&LogIn', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
+      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('login.php', '', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
     }
 
     return $greeting_string;

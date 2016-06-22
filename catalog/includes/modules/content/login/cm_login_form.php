@@ -11,7 +11,6 @@
 */
 
   use OSC\OM\HTML;
-  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_login_form {
@@ -42,7 +41,7 @@
 
       $error = false;
 
-      if (OSCOM::hasRoute(['Account', 'LogIn', 'Process']) && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
+      if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
         $email_address = HTML::sanitize($_POST['email_address']);
         $password = HTML::sanitize($_POST['password']);
 
@@ -56,7 +55,7 @@
           if (!tep_validate_password($password, $Qcustomer->value('customers_password'))) {
             $error = true;
           } else {
-// set $login_customer_id globally and perform post login code in Shop/Account/Actions/LogIn
+// set $login_customer_id globally and perform post login code in catalog/login.php
             $login_customer_id = $Qcustomer->valueInt('customers_id');
 
 // migrate old hashed password to new phpass password

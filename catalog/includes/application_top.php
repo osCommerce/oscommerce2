@@ -148,7 +148,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -161,7 +161,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {

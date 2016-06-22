@@ -55,8 +55,6 @@ class OSCOM
         if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
             $OSCOM_Site = new $class();
             Registry::set('Site', $OSCOM_Site);
-
-            $OSCOM_Site->setPage();
         } else {
             trigger_error('OSC\OM\OSCOM::setSite() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
             exit;
@@ -66,16 +64,6 @@ class OSCOM
     public static function getSite()
     {
         return static::$site;
-    }
-
-    public static function getSitePageFile()
-    {
-        return Registry::get('Site')->getPage()->getFile();
-    }
-
-    public static function isRPC()
-    {
-        return Registry::get('Site')->getPage()->isRPC();
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)

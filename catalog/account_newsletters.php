@@ -17,7 +17,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // needs to be included earlier to set the success message in the messageStack

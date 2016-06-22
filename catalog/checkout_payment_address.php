@@ -18,7 +18,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page

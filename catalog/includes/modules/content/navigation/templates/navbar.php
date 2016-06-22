@@ -61,7 +61,7 @@ use OSC\OM\OSCOM;
               echo '<li><a href="' . OSCOM::link('logoff.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGOFF . '</a>';
             }
             else {
-               echo '<li><a href="' . OSCOM::link('index.php', 'Account&LogIn', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGIN . '</a>';
+               echo '<li><a href="' . OSCOM::link('login.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_LOGIN . '</a>';
                echo '<li><a href="' . OSCOM::link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_NAVBAR_ACCOUNT_REGISTER . '</a>';
             }
             ?>
