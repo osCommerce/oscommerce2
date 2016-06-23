@@ -223,10 +223,6 @@ class Shop extends \OSC\OM\SitesAbstract
 
     public function setPage()
     {
-        $page_code = $this->default_page;
-
-        $class = 'OSC\Sites\\' . $this->code . '\Pages\\' . $page_code . '\\' . $page_code;
-
         if (!empty($_GET)) {
             if (($route = Apps::getRouteDestination()) !== null) {
                 $this->route = $route;
@@ -251,12 +247,14 @@ class Shop extends \OSC\OM\SitesAbstract
             }
         }
 
-        if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
-            $this->page = new $class($this);
+        if (isset($class)) {
+            if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
+                $this->page = new $class($this);
 
-            $this->page->runActions();
-        } else {
-            trigger_error('OSC\Sites\Shop\Shop::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+                $this->page->runActions();
+            } else {
+                trigger_error('OSC\Sites\Shop\Shop::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+            }
         }
     }
 

@@ -1,19 +1,29 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
+  */
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
+
+  if (OSCOM::hasSitePage()) {
+    if (OSCOM::isRPC() === false) {
+        $page_file = OSCOM::getSitePageFile();
+
+        if (empty($page_file) || !file_exists($page_file)) {
+          $page_file = DIR_FS_CATALOG . 'includes/error_documents/404.php';
+        }
+
+        include($page_file);
+    }
+
+    goto main_sub3;
+  }
 
 // the following cPath references come from application_top.php
   $category_depth = 'top';
@@ -280,5 +290,8 @@ if (tep_not_null($image['catdesc'])) {
   }
 
   require('includes/template_bottom.php');
+
+  main_sub3: // Sites and Apps skip to here
+
   require('includes/application_bottom.php');
 ?>

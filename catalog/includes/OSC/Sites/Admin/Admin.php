@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\Sites\Admin;
@@ -17,8 +17,6 @@ use OSC\OM\Registry;
 
 class Admin extends \OSC\OM\SitesAbstract
 {
-    public $default_page = 'Dashboard';
-
     protected function init()
     {
         global $request_type, $cookie_domain, $cookie_path, $PHP_SELF, $login_request, $messageStack, $cfgModules;
@@ -162,10 +160,6 @@ class Admin extends \OSC\OM\SitesAbstract
 
     public function setPage()
     {
-        $page_code = $this->default_page;
-
-        $class = 'OSC\Sites\\' . $this->code . '\Pages\\' . $page_code . '\\' . $page_code;
-
         if (!empty($_GET)) {
             $req = basename(array_keys($_GET)[0]);
 
@@ -198,12 +192,14 @@ class Admin extends \OSC\OM\SitesAbstract
             }
         }
 
-        if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
-            $this->page = new $class($this);
+        if (isset($class)) {
+            if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
+                $this->page = new $class($this);
 
-            $this->page->runActions();
-        } else {
-            trigger_error('OSC\Sites\Admin\Admin::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+                $this->page->runActions();
+            } else {
+                trigger_error('OSC\Sites\Admin\Admin::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+            }
         }
     }
 

@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
@@ -55,6 +55,8 @@ class OSCOM
         if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
             $OSCOM_Site = new $class();
             Registry::set('Site', $OSCOM_Site);
+
+            $OSCOM_Site->setPage();
         } else {
             trigger_error('OSC\OM\OSCOM::setSite() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
             exit;
@@ -64,6 +66,23 @@ class OSCOM
     public static function getSite()
     {
         return static::$site;
+    }
+
+    public static function hasSitePage()
+    {
+        return Registry::get('Site')->hasPage();
+    }
+
+    public static function getSitePageFile()
+    {
+        return Registry::get('Site')->getPage()->getFile();
+    }
+
+    public static function isRPC()
+    {
+        $OSCOM_Site = Registry::get('Site');
+
+        return $OSCOM_Site->hasPage() && $OSCOM_Site->getPage()->isRPC();
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)

@@ -1,18 +1,29 @@
 <?php
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2010 osCommerce
-
-  Released under the GNU General Public License
-*/
+/**
+  * osCommerce Online Merchant
+  *
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
+  */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
+
+  if (OSCOM::hasSitePage()) {
+    if (OSCOM::isRPC() === false) {
+        $page_file = OSCOM::getSitePageFile();
+
+        if (empty($page_file) || !file_exists($page_file)) {
+          $page_file = DIR_FS_CATALOG . 'includes/error_documents/404.php';
+        }
+
+        include($page_file);
+    }
+
+    goto main_sub3;
+  }
 
   $languages = tep_get_languages();
   $languages_array = array();
@@ -107,5 +118,8 @@
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
+
+  main_sub3: // Sites and Apps skip to here
+
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>
