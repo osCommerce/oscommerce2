@@ -225,8 +225,8 @@
 </div>
 
 <?php
-if (tep_not_null($image['catdesc'])) {
-  echo '<div class="well well-sm">' . $image['catdesc'] . '</div>';
+if (tep_not_null($Qtitle->value('catdesc'))) {
+  echo '<div class="well well-sm">' . $Qtitle->value('catdesc') . '</div>';
 }
 ?>
 <div class="contentContainer">
