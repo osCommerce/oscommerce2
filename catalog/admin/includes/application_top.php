@@ -17,7 +17,8 @@
   define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
 
 // Set the level of error reporting
-  error_reporting(E_ALL & ~E_NOTICE);
+  error_reporting(E_ALL & ~E_DEPRECATED);
+  ini_set('display_errors', true); // TODO remove on release
 
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers
