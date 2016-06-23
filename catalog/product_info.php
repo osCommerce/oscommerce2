@@ -60,9 +60,9 @@
     $Qupdate->execute();
 
     if ($new_price = tep_get_products_special_price($Qproduct->valueInt('products_id'))) {
-      $products_price = '<del>' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</del> <span class="productSpecialPrice" itemprop="price" content="' . preg_replace('/[^0-9.]*/', '', $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id')))) . '">' . $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
+      $products_price = '<del>' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</del> <span class="productSpecialPrice" itemprop="price" content="' . $currencies->display_raw($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '">' . $currencies->display_price($new_price, tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
     } else {
-      $products_price = '<span itemprop="price" content="' . preg_replace('/[^0-9.]*/', '', $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id')))) . '">' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
+      $products_price = '<span itemprop="price" content="' . $currencies->display_raw($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '">' . $currencies->display_price($Qproduct->valueDecimal('products_price'), tep_get_tax_rate($Qproduct->valueInt('products_tax_class_id'))) . '</span>';
     }
 
     if ($Qproduct->value('products_date_available') > date('Y-m-d H:i:s')) {
@@ -78,7 +78,7 @@
     $products_name = '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')) . '" itemprop="url"><span itemprop="name">' . $Qproduct->value('products_name') . '</span></a>';
 
     if ( !empty($Qproduct->value('products_model')) ) {
-      $products_name .= ' <small>[<span itemprop="model">' . $Qproduct->value('products_model') . '</span>]</small>';
+      $products_name .= '<br /><small>[<span itemprop="model">' . $Qproduct->value('products_model') . '</span>]</small>';
     }
 ?>
 

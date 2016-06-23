@@ -113,7 +113,7 @@
     $out_of_stock = '';
 
     if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      $out_of_stock = '<span class="text-danger"><b>' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</b></span>';
     }
 
     return $out_of_stock;
@@ -1066,18 +1066,6 @@
     } else {
       return false;
     }
-  }
-
-////
-// Return a customer greeting
-  function tep_customer_greeting() {
-    if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
-    } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('login.php', '', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
-    }
-
-    return $greeting_string;
   }
 
 ////

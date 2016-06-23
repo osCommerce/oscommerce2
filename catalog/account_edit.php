@@ -139,10 +139,10 @@
   }
 ?>
 
-<?php echo HTML::form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('account_edit', OSCOM::link('account_edit.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
-  <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
+  <div class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
 
   <?php
   if (ACCOUNT_GENDER == 'true') {

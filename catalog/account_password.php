@@ -78,8 +78,13 @@
 
 <?php echo HTML::form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
+<?php
+  $Qcustomer = $OSCOM_Db->get('customers', 'customers_email_address', ['customers_id' => (int)$_SESSION['customer_id']]);
+  echo HTML::hiddenField('username', $Qcustomer->value('customers_email_address'), 'readonly autocomplete="username"');
+?>
+
 <div class="contentContainer">
-  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+  <p class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
 
   <div class="contentText">
     <div class="form-group has-feedback">

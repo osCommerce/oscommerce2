@@ -19,26 +19,28 @@
 
   if ($Qupcoming->fetch() !== false) {
 ?>
-  <div class="clearfix"></div>
-  <div class="table-responsive">
-    <table class="table table-condensed">
-      <thead>
-        <tr>
-          <th><?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?></th>
-          <th class="text-right"><?php echo TABLE_HEADING_DATE_EXPECTED; ?></th>
-        </tr>
-      </thead>
-      <tbody>
+
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      <div class="pull-left">
+        <?php echo TABLE_HEADING_UPCOMING_PRODUCTS; ?>
+      </div>
+      <div class="pull-right">
+        <?php echo TABLE_HEADING_DATE_EXPECTED; ?>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <div class="panel-body">
 <?php
   do {
-    echo '        <tr>' . "\n" .
-         '          <td><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qupcoming->valueInt('products_id')) . '">' . $Qupcoming->value('products_name') . '</a></td>' . "\n" .
-         '          <td class="text-right">' . tep_date_short($Qupcoming->value('date_expected')) . '</td>' . "\n" .
-         '        </tr>' . "\n";
+    echo '<div class="pull-left"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qupcoming->valueInt('products_id')) . '">' . $Qupcoming->value('products_name') . '</a></div>' . "\n" .
+         '<div class="pull-right">' . tep_date_short($Qupcoming->value('date_expected')) . '</div>' . "\n" .
+         '<div class="clearfix"></div>' . "\n";
   } while ($Qupcoming->fetch());
 ?>
-      </tbody>
-    </table>
+
+    </div>
   </div>
 
 <?php

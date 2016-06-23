@@ -84,7 +84,7 @@
 <div class="contentContainer">
   <div class="contentText">
   
-    <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+    <p class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
     <div class="clearfix"></div>
 
     <div class="form-group has-feedback">

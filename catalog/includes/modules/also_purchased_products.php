@@ -30,18 +30,25 @@
         $also_pur_prods_content .= '  <div class="thumbnail">';
         $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . $o['products_image'], $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
         $also_pur_prods_content .= '    <div class="caption">';
-        $also_pur_prods_content .= '      <p class="text-center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . $o['products_name'] . '</a></p>';
+        $also_pur_prods_content .= '      <h5 class="text-center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '"><span itemprop="itemListElement">' . $o['products_name'] . '</span></a></h5>';
         $also_pur_prods_content .= '    </div>';
         $also_pur_prods_content .= '  </div>';
         $also_pur_prods_content .= '</div>';
       }
+
 ?>
 
-  <br>
-  <h3><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
+  <br />
+  <div itemscope itemtype="http://schema.org/ItemList">
+    <meta itemprop="itemListOrder" content="http://schema.org/ItemListUnordered" />
+    <meta itemprop="numberOfItems" content="<?php echo count($orders); ?>" />
 
-  <div class="row">
-    <?php echo $also_pur_prods_content; ?>
+    <h3 itemprop="name"><?php echo TEXT_ALSO_PURCHASED_PRODUCTS; ?></h3>
+
+    <div class="row">
+      <?php echo $also_pur_prods_content; ?>
+    </div>
+
   </div>
 
 <?php

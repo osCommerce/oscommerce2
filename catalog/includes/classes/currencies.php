@@ -74,5 +74,22 @@
     function display_price($products_price, $products_tax, $quantity = 1) {
       return $this->format($this->calculate_price($products_price, $products_tax, $quantity));
     }
+    
+    function format_raw($number, $calculate_currency_value = true, $currency_type = '', $currency_value = '') {
+      if (empty($currency_type)) $currency_type = $_SESSION['currency'];
+
+      if ($calculate_currency_value == true) {
+        $rate = (tep_not_null($currency_value)) ? $currency_value : $this->currencies[$currency_type]['value'];
+        $format_string = number_format(tep_round($number * $rate, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], '.', '');
+      } else {
+        $format_string = number_format(tep_round($number, $this->currencies[$currency_type]['decimal_places']), $this->currencies[$currency_type]['decimal_places'], '.', '');
+      }
+
+      return $format_string;
+    }
+    
+    function display_raw($products_price, $products_tax, $quantity = 1) {
+      return $this->format_raw($this->calculate_price($products_price, $products_tax, $quantity));
+    }    
   }
 ?>

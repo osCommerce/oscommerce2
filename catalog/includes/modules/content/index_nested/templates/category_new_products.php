@@ -28,7 +28,7 @@ use OSC\OM\OSCOM;
         <div class="caption">
           <p class="text-center"><a itemprop="url" href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$product['products_id']); ?>"><span itemprop="name"><?php echo $product['products_name']; ?></span></a></p>
           <hr>
-          <p class="text-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><span itemprop="price"><?php echo $currencies->display_price($product['products_price'], tep_get_tax_rate($product['products_tax_class_id'])); ?></span></p>
+          <p class="text-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><meta itemprop="priceCurrency" content="<?php echo HTML::output($_SESSION['currency']); ?>" /><span itemprop="price" content="<?php echo $currencies->display_raw($product['products_price'], tep_get_tax_rate($product['products_tax_class_id'])); ?>"><?php echo $currencies->display_price($product['products_price'], tep_get_tax_rate($product['products_tax_class_id'])); ?></span></p>
           <div class="text-center">
             <div class="btn-group">
               <a href="<?php echo OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . (int)$product['products_id']); ?>" class="btn btn-default" role="button"><?php echo MODULE_CONTENT_IN_NEW_PRODUCTS_BUTTON_VIEW; ?></a>

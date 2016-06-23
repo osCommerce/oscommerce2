@@ -324,10 +324,9 @@
     if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 ?>
 
-  <div class="buttonSet">
-    <span class="buttonAction"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh', null, 'primary'); ?></span>
-
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh', null, 'primary'); ?></div>
   </div>
 
 <?php

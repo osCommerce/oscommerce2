@@ -379,7 +379,7 @@
     }
   }
 
-  $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
   $Qlisting->execute();
 
   require('includes/modules/product_listing.php');

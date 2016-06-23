@@ -42,7 +42,7 @@
   require('includes/template_top.php');
 
   if ($category_depth == 'nested') {
-    $Qcategory = $OSCOM_Db->prepare('select cd.categories_name, c.categories_image from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
+    $Qcategory = $OSCOM_Db->prepare('select cd.categories_name, c.categories_image, cd.categories_description from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
     $Qcategory->bindInt(':categories_id', $current_category_id);
     $Qcategory->bindInt(':language_id', $_SESSION['languages_id']);
     $Qcategory->execute();
@@ -59,56 +59,8 @@
 ?>
 
 <div class="contentContainer">
-  <div class="contentText">
-    <div class="row">
-<?php
-    $deepest_category_id = $current_category_id;
-
-    if (isset($cPath) && strpos('_', $cPath)) {
-// check to see if there are deeper categories within the current category
-      $category_links = array_reverse($cPath_array);
-      for($i=0, $n=sizeof($category_links); $i<$n; $i++) {
-        $Qcheck = $OSCOM_Db->prepare('select c.categories_id from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
-        $Qcheck->bindInt(':parent_id', $category_links[$i]);
-        $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
-        $Qcheck->execute();
-
-        if ($Qcheck->fetch() === false) {
-          // do nothing, go through the loop
-        } else {
-          $deepest_category_id = $category_links[$i];
-          break; // we've found the deepest category the customer is in
-        }
-      }
-    }
-
-    $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by sort_order, cd.categories_name');
-    $Qcategories->bindInt(':parent_id', $deepest_category_id);
-    $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
-    $Qcategories->execute();
-
-    while ($Qcategories->fetch()) {
-      $cPath_new = tep_get_path($Qcategories->valueInt('categories_id'));
-
-      echo '<div class="col-xs-6 col-sm-4">';
-      echo '  <div class="text-center">';
-      echo '    <a href="' . OSCOM::link('index.php', $cPath_new) . '">' . HTML::image(DIR_WS_IMAGES . $Qcategories->value('categories_image'), $Qcategories->value('categories_name'), SUBCATEGORY_IMAGE_WIDTH, SUBCATEGORY_IMAGE_HEIGHT) . '</a>';
-      echo '    <div class="caption text-center">';
-      echo '      <h5><a href="' . OSCOM::link('index.php', $cPath_new) . '">' . $Qcategories->value('categories_name') . '</a></h5>';
-      echo '    </div>';
-      echo '  </div>';
-      echo '</div>';
-    }
-
-// needed for the new products module shown below
-    $new_products_category_id = $current_category_id;
-?>
-      </div>
-
-<div class="clearfix"></div>
-
-<?php include('includes/modules/new_products.php'); ?>
-
+  <div class="row">
+    <?php echo $oscTemplate->getContent('index_nested'); ?>
   </div>
 </div>
 
@@ -237,18 +189,19 @@
       }
     }
 
-    $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+    $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
     $Qlisting->execute();
 
     $catname = HEADING_TITLE;
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
-      $Qtitle = $OSCOM_Db->prepare('select manufacturers_image, manufacturers_name as catname from :table_manufacturers where manufacturers_id = :manufacturers_id');
+      $Qtitle = $OSCOM_Db->prepare('select m.manufacturers_image, m.manufacturers_name as catname, mi.manufacturers_description as catdesc from :table_manufacturers m, :table_manufacturers_info mi where m.manufacturers_id = :manufacturers_id and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id');
       $Qtitle->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
+      $Qtitle->bindInt(':languages_id', $_SESSION['languages_id']);
       $Qtitle->execute();
 
       $catname = $Qtitle->value('catname');
     } elseif ($current_category_id) {
-      $Qtitle = $OSCOM_Db->prepare('select c.categories_image, cd.categories_name as catname from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
+      $Qtitle = $OSCOM_Db->prepare('select c.categories_image, cd.categories_name as catname, cd.categories_description as catdesc from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
       $Qtitle->bindInt(':categories_id', $current_category_id);
       $Qtitle->bindInt(':language_id', $_SESSION['languages_id']);
       $Qtitle->execute();
@@ -261,6 +214,11 @@
   <h1><?php echo $catname; ?></h1>
 </div>
 
+<?php
+if (tep_not_null($image['catdesc'])) {
+  echo '<div class="well well-sm">' . $image['catdesc'] . '</div>';
+}
+?>
 <div class="contentContainer">
 
 <?php
@@ -314,26 +272,8 @@
   }
 ?>
 
-<div class="contentContainer">
-   <div class="alert alert-info">
-    <?php echo tep_customer_greeting(); ?>
-  </div>
-
-<?php
-    if (tep_not_null(TEXT_MAIN)) {
-?>
-
-  <div class="contentText">
-    <?php echo TEXT_MAIN; ?>
-  </div>
-
-<?php
-    }
-
-    include('includes/modules/new_products.php');
-    include('includes/modules/upcoming_products.php');
-?>
-
+<div class="row">
+  <?php echo $oscTemplate->getContent('index'); ?>
 </div>
 
 <?php

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 ?>
 <div class="col-sm-<?php echo $content_width; ?> new-products">
@@ -23,11 +24,11 @@ use OSC\OM\OSCOM;
       ?>
     <div class="col-sm-<?php echo $product_width; ?>" itemprop="itemListElement" itemscope="" itemtype="http://schema.org/Product">
       <div class="thumbnail equal-height">
-        <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><?php echo OSCOM::image(DIR_WS_IMAGES . $new_product['products_image'], $new_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
+        <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><?php echo HTML::image(DIR_WS_IMAGES . $new_product['products_image'], $new_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
         <div class="caption">
           <p class="text-center"><a itemprop="url" href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><span itemprop="name"><?php echo $new_product['products_name']; ?></span></a></p>
           <hr>
-          <p class="text-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><span itemprop="price"><?php echo $currencies->display_price($new_product['products_price'], tep_get_tax_rate($new_product['products_tax_class_id'])); ?></span></p>
+          <p class="text-center" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><meta itemprop="priceCurrency" content="<?php echo HTML::output($_SESSION['currency']); ?>" /><span itemprop="price" content="<?php echo $currencies->display_raw($new_product['products_price'], tep_get_tax_rate($new_product['products_tax_class_id'])); ?>"><?php echo $currencies->display_price($new_product['products_price'], tep_get_tax_rate($new_product['products_tax_class_id'])); ?></span></p>
           <div class="text-center">
             <div class="btn-group">
               <a href="<?php echo OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'products_id=' . (int)$new_product['products_id']); ?>" class="btn btn-default" role="button"><?php echo MODULE_CONTENT_NEW_PRODUCTS_BUTTON_VIEW; ?></a>

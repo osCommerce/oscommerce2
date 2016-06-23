@@ -57,7 +57,7 @@
       foreach ( $oscTemplate->_data[$this->group] as $group ) {
         $output .= '<h2>' . $group['title'] . '</h2>' .
                    '<div class="contentText">' .
-                   '  <ul class="accountLinkList">';
+                   '  <ul class="list-unstyled">';
 
         foreach ( $group['links'] as $entry ) {
           $output .= '    <li>';
