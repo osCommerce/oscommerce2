@@ -60,8 +60,8 @@
     if (Registry::exists($code)) {
       $OSCOM_PM = Registry::get($code);
     }
-  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
-    $OSCOM_PM = $$_SESSION['payment'];
+  } elseif (isset($_SESSION['payment']) && is_object($GLOBALS[$_SESSION['payment']])) {
+    $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {

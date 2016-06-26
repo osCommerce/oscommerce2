@@ -78,8 +78,8 @@
     if (Registry::exists($code)) {
       $OSCOM_PM = Registry::get($code);
     }
-  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
-    $OSCOM_PM = $$_SESSION['payment'];
+  } elseif (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+    $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
@@ -225,8 +225,7 @@
                             'products_price' => $order->products[$i]['price'],
                             'final_price' => $order->products[$i]['final_price'],
                             'products_tax' => $order->products[$i]['tax'],
-                            'products_quantity' => $order->products[$i]['qty'],
-                            'products_full_id' => $order->products[$i]['id']);
+                            'products_quantity' => $order->products[$i]['qty']);
 
     $OSCOM_Db->save('orders_products', $sql_data_array);
     $order_products_id = $OSCOM_Db->lastInsertId();

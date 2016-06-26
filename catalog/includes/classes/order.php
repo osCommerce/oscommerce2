@@ -310,7 +310,7 @@
           if (Registry::exists($code)) {
             $OSCOM_PM = Registry::get($code);
           }
-        } elseif (is_object($GLOBALS[$_SESSION['payment']])) {
+        } elseif (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
           $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
         }
 

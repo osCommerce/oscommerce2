@@ -112,7 +112,7 @@
         $_SESSION['shipping'] = $_POST['shipping'];
 
         list($module, $method) = explode('_', $_SESSION['shipping']);
-        if ( is_object($$module) || ($_SESSION['shipping'] == 'free_free') ) {
+        if ( is_object($GLOBALS[$module]) || ($_SESSION['shipping'] == 'free_free') ) {
           if ($_SESSION['shipping'] == 'free_free') {
             $quote[0]['methods'][0]['title'] = FREE_SHIPPING_TITLE;
             $quote[0]['methods'][0]['cost'] = '0';
@@ -257,7 +257,7 @@
       for ($i=0, $n=sizeof($quotes); $i<$n; $i++) {
         for ($j=0, $n2=sizeof($quotes[$i]['methods']); $j<$n2; $j++) {
 // set the radio button to be checked if it is the method chosen
-          $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $shipping['id']) ? true : false);         
+          $checked = (($quotes[$i]['id'] . '_' . $quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
 
 ?>
       <tr class="table-selection">
@@ -336,7 +336,7 @@
   <div class="buttonSet">
     <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="contentText">
