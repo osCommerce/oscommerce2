@@ -166,6 +166,8 @@ define('IMAGE_BUTTON_CONTINUE', 'Continue');
 define('IMAGE_BUTTON_DELETE', 'Delete');
 define('IMAGE_BUTTON_LOGIN', 'Sign In');
 define('IMAGE_BUTTON_IN_CART', 'Add to Cart');
+define('IMAGE_BUTTON_PAY_TOTAL_NOW', 'Pay Now (%s)');
+define('IMAGE_BUTTON_PAY_TOTAL_PROCESSING', 'Processing, please wait ..');
 define('IMAGE_BUTTON_REVIEWS', 'Reviews');
 define('IMAGE_BUTTON_SEARCH', 'Search');
 define('IMAGE_BUTTON_UPDATE', 'Update');
