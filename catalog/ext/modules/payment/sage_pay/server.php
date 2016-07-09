@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   chdir('../../../../');
   require('includes/application_top.php');
@@ -168,7 +169,7 @@
 
   echo $result;
 
-  tep_session_destroy();
+  Registry::get('Session')->kill();
 
   exit;
 

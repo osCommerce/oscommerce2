@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
@@ -224,17 +225,12 @@
 
       $OSCOM_Db->save('customers_info', ['customers_info_id' => (int)$_SESSION['customer_id'], 'customers_info_number_of_logons' => '0', 'customers_info_date_account_created' => 'now()']);
 
-      if (SESSION_RECREATE == 'True') {
-        tep_session_recreate();
-      }
+      Registry::get('Session')->recreate();
 
       $_SESSION['customer_first_name'] = $firstname;
       $_SESSION['customer_default_address_id'] = $address_id;
       $_SESSION['customer_country_id'] = $country;
       $_SESSION['customer_zone_id'] = $zone_id;
-
-// reset session token
-      $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
       $_SESSION['cart']->restore_contents();

@@ -13,7 +13,7 @@
   use OSC\OM\Apps;
   use OSC\OM\OSCOM;
 
-  if (tep_session_is_registered('admin')) {
+  if (isset($_SESSION['admin'])) {
     $cl_box_groups = array();
 
     if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {

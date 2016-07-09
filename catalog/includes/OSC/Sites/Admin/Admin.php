@@ -10,16 +10,21 @@ namespace OSC\Sites\Admin;
 
 use OSC\OM\Apps;
 use OSC\OM\Cache;
+use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\Hooks;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
+use OSC\OM\Session;
 
 class Admin extends \OSC\OM\SitesAbstract
 {
     protected function init()
     {
-        global $request_type, $cookie_domain, $cookie_path, $PHP_SELF, $login_request, $messageStack, $cfgModules;
+        global $request_type, $PHP_SELF, $login_request, $messageStack, $cfgModules;
+
+        $OSCOM_Cookies = new Cookies();
+        Registry::set('Cookies', $OSCOM_Cookies);
 
         Registry::set('Cache', new Cache());
 
@@ -28,6 +33,8 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // TODO legacy
         tep_db_connect() or die('Unable to connect to database server!');
+
+        Registry::set('Hooks', new Hooks());
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
@@ -52,35 +59,19 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // set the type of request (secure or not)
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $request_type =  'SSL';
-
-            $cookie_domain = HTTPS_COOKIE_DOMAIN;
-            $cookie_path = HTTPS_COOKIE_PATH;
+            $request_type = 'SSL';
         } else {
-            $request_type =  'NONSSL';
-
-            $cookie_domain = HTTP_COOKIE_DOMAIN;
-            $cookie_path = HTTP_COOKIE_PATH;
+            $request_type = 'NONSSL';
         }
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
         $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(DIR_WS_HTTPS_ADMIN) : strlen(DIR_WS_ADMIN));
 
-// set the session name and save path
-        tep_session_name('oscomadminid');
-        tep_session_save_path(SESSION_WRITE_DIRECTORY);
+        $OSCOM_Session = Session::load();
+        Registry::set('Session', $OSCOM_Session);
 
-// set the session cookie parameters
-// set the session cookie parameters
-        session_set_cookie_params(0, $cookie_path, $cookie_domain);
-
-        if (function_exists('ini_set')) {
-            ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-        }
-
-// lets start our session
-        tep_session_start();
+        $OSCOM_Session->start();
 
 // TODO remove when no more global sessions exist
         foreach ($_SESSION as $k => $v) {
@@ -154,8 +145,6 @@ class Admin extends \OSC\OM\SitesAbstract
         $messageStack = new \messageStack();
 
         $cfgModules = new \cfg_modules();
-
-        Registry::set('Hooks', new Hooks());
     }
 
     public function setPage()

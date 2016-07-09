@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\Registry;
+
 class HTML
 {
     public static function output($string, $translate = null)
@@ -121,7 +123,7 @@ class HTML
             $form .= static::hiddenField('action', $flags['action']);
         }
 
-        if (($flags['session_id'] === true) && (session_status() === PHP_SESSION_ACTIVE) && defined('SID') && !empty(SID)) {
+        if (($flags['session_id'] === true) && Registry::get('Session')->hasStarted() && (strlen(SID) > 0)) {
             $form .= static::hiddenField(session_name(), session_id());
         }
 

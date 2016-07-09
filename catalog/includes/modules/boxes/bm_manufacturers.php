@@ -89,9 +89,9 @@
     }
 
     function execute() {
-      global $SID, $oscTemplate;
+      global $oscTemplate;
 
-      if ((USE_CACHE == 'true') && empty($SID)) {
+      if ((USE_CACHE == 'true') && Registry::get('Session')->hasStarted() && (strlen(SID) < 1)) {
         $output = tep_cache_manufacturers_box();
       } else {
         $output = $this->getData();

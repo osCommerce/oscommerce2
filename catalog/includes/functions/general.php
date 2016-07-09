@@ -1309,12 +1309,6 @@
     }
   }
 
-  function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
-    global $cookie_path, $cookie_domain;
-
-    setcookie($name, $value, $expire, (isset($path)) ? $path : $cookie_path, (isset($domain)) ? $domain : $cookie_domain, $secure);
-  }
-
   function tep_validate_ip_address($ip_address) {
     return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
   }

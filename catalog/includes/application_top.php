@@ -42,7 +42,6 @@
   require('includes/functions/cache.php');
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
-  require('includes/functions/sessions.php');
   require('includes/classes/currencies.php');
   require('includes/classes/mime.php');
   require('includes/classes/email.php');
@@ -62,6 +61,10 @@
   OSCOM::initialize();
   $OSCOM_Db = Registry::get('Db');
 
+  Registry::get('Hooks')->watch('Session', 'Recreated', 'execute', function($parameters) {
+    tep_whos_online_update_session_id($parameters['old_id'], session_id());
+  });
+
 // if gzip_compression is enabled, start to buffer the output
   if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
     if ((int)ini_get('zlib.output_compression') < 1) {
@@ -74,7 +77,7 @@
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( session_status() !== PHP_SESSION_ACTIVE ) {
+    if ( Registry::get('Session')->hasStarted() === false ) {
       OSCOM::redirect('cookie_usage.php');
     }
 

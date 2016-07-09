@@ -10,10 +10,14 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
 ////
 // The HTML href link wrapper function
   function tep_href_link($page = '', $parameters = '', $connection = 'SSL', $add_session_id = true) {
-    global $request_type, $SID;
+    global $request_type;
+
+    $OSCOM_Session = Registry::get('Session');
 
     $page = tep_output_string($page);
 
@@ -44,18 +48,10 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) $link = substr($link, 0, -1);
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
-      if (isset($SID) && tep_not_null($SID)) {
-        $_sid = $SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-        if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
-          $_sid = tep_session_name() . '=' . tep_session_id();
+    if (($add_session_id == true) && $OSCOM_Session->hasStarted() && ($OSCOM_Session->isForceCookies() === false)) {
+      if ((strlen(SID) > 0) || ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL')))) {
+          $link .= $separator . tep_output_string(session_name() . '=' . session_id());
         }
-      }
-    }
-
-    if (isset($_sid)) {
-      $link .= $separator . tep_output_string($_sid);
     }
 
     while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
@@ -319,7 +315,7 @@
     $string = '';
 
     if (defined('SID') && tep_not_null(SID)) {
-      $string = tep_draw_hidden_field(tep_session_name(), tep_session_id());
+      $string = tep_draw_hidden_field(session_name(), session_id());
     }
 
     return $string;

@@ -21,15 +21,13 @@
     var $size = 0;
 
     function messageStack() {
-      global $messageToStack;
-
       $this->errors = array();
 
-      if (tep_session_is_registered('messageToStack')) {
-        for ($i = 0, $n = sizeof($messageToStack); $i < $n; $i++) {
-          $this->add($messageToStack[$i]['text'], $messageToStack[$i]['type']);
+      if (isset($_SESSION['messageToStack'])) {
+        for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
+          $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
         }
-        tep_session_unregister('messageToStack');
+        unset($_SESSION['messageToStack']);
       }
     }
 
@@ -48,14 +46,11 @@
     }
 
     function add_session($message, $type = 'error') {
-      global $messageToStack;
-
-      if (!tep_session_is_registered('messageToStack')) {
-        tep_session_register('messageToStack');
-        $messageToStack = array();
+      if (!isset($_SESSION['messageToStack'])) {
+        $_SESSION['messageToStack'] = array();
       }
 
-      $messageToStack[] = array('text' => $message, 'type' => $type);
+      $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
     }
 
     function reset() {

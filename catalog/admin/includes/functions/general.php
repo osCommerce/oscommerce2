@@ -124,7 +124,7 @@
     $get_url = '';
 
     foreach ( $_GET as $key => $value ) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+      if (($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
     return $get_url;
@@ -470,7 +470,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 
@@ -1235,13 +1235,8 @@
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!tep_session_is_registered('customer_id')) {
-        $country_id = STORE_COUNTRY;
-        $zone_id = STORE_ZONE;
-      } else {
-        $country_id = $customer_country_id;
-        $zone_id = $customer_zone_id;
-      }
+      $country_id = STORE_COUNTRY;
+      $zone_id = STORE_ZONE;
     }
 
     $tax_query = tep_db_query("select SUM(tax_rate) as tax_rate from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za ON tr.tax_zone_id = za.geo_zone_id left join " . TABLE_GEO_ZONES . " tz ON tz.geo_zone_id = tr.tax_zone_id WHERE (za.zone_country_id IS NULL OR za.zone_country_id = '0' OR za.zone_country_id = '" . (int)$country_id . "') AND (za.zone_id IS NULL OR za.zone_id = '0' OR za.zone_id = '" . (int)$zone_id . "') AND tr.tax_class_id = '" . (int)$class_id . "' GROUP BY tr.tax_priority");

@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
@@ -87,7 +88,7 @@
 <div itemscope itemtype="http://schema.org/Product">
 
 <div class="page-header">
-  <div class="row">  
+  <div class="row">
     <h1 class="col-sm-8"><?php echo $products_name; ?></h1>
     <h2 class="col-sm-4 text-right-not-xs" itemprop="offers" itemscope itemtype="http://schema.org/Offer"><?php echo $products_price; ?></h2>
   </div>
@@ -241,12 +242,12 @@
   </div>
 
 <?php
-    if ((USE_CACHE == 'true') && empty($SID)) {
+    if ((USE_CACHE == 'true') && Registry::get('Session')->hasStarted() && (strlen(SID) < 1)) {
       echo tep_cache_also_purchased(3600);
     } else {
       include('includes/modules/also_purchased_products.php');
     }
-    
+
     if ( $Qproduct->valueInt('manufacturers_id') > 0 ) {
       $Qm = $OSCOM_Db->get('manufacturers', 'manufacturers_name', ['manufacturers_id' => $Qproduct->valueInt('manufacturers_id')]);
 

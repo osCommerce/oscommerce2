@@ -89,6 +89,8 @@ class OSCOM
     {
         global $request_type;
 
+        $OSCOM_Session = Registry::get('Session');
+
         $page = HTML::sanitize($page);
 
         if (!in_array($connection, ['NONSSL', 'SSL', 'AUTO'])) {
@@ -151,18 +153,10 @@ class OSCOM
         }
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-        if (($add_session_id == true) && (session_status() === PHP_SESSION_ACTIVE) && (SESSION_FORCE_COOKIE_USE == 'False')) {
-            if (defined('SID') && !empty(SID)) {
-                $_sid = SID;
-            } elseif ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL'))) {
-                if (HTTP_COOKIE_DOMAIN != HTTPS_COOKIE_DOMAIN) {
-                    $_sid = session_name() . '=' . session_id();
-                }
+        if (($add_session_id == true) && $OSCOM_Session->hasStarted() && ($OSCOM_Session->isForceCookies() === false)) {
+            if ((strlen(SID) > 0) || ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL')))) {
+                $link .= $separator . HTML::sanitize(session_name() . '=' . session_id());
             }
-        }
-
-        if (isset($_sid)) {
-            $link .= $separator . HTML::sanitize($_sid);
         }
 
         while (strpos($link, '&&') !== false) {

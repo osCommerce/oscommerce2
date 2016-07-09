@@ -12,11 +12,12 @@
 
   use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled (or the session has not started)
-  if (session_status() !== PHP_SESSION_ACTIVE) {
+  if (Registry::get('Session')->hasStarted() === false) {
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
@@ -32,9 +33,7 @@
   $page_content = $oscTemplate->getContent('login');
 
   if ( is_int($login_customer_id) && ($login_customer_id > 0) ) {
-    if (SESSION_RECREATE == 'True') {
-      tep_session_recreate();
-    }
+    Registry::get('Session')->recreate();
 
     $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_default_address_id, ab.entry_country_id, ab.entry_zone_id from :table_customers c left join :table_address_book ab on (c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id) where c.customers_id = :customers_id');
     $Qcustomer->bindInt(':customers_id', $login_customer_id);
@@ -49,9 +48,6 @@
     $Qupdate = $OSCOM_Db->prepare('update :table_customers_info set customers_info_date_of_last_logon = now(), customers_info_number_of_logons = customers_info_number_of_logons+1, password_reset_key = null, password_reset_date = null where customers_info_id = :customers_info_id');
     $Qupdate->bindInt(':customers_info_id', $_SESSION['customer_id']);
     $Qupdate->execute();
-
-// reset session token
-    $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
     $_SESSION['cart']->restore_contents();

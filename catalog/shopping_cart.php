@@ -146,7 +146,7 @@
   </div>
 
 <?php
-    $checkout_buttons = Registry::get('Hooks')->call('Cart', 'AdditionalCheckoutButtons', 'display');
+    $checkout_buttons = Registry::get('Hooks')->call('Cart', 'AdditionalCheckoutButtons', null, 'display');
 
     if (!empty($checkout_buttons)) {
       echo '<div class="clearfix"></div>';

@@ -10,22 +10,29 @@ namespace OSC\Sites\Shop;
 
 use OSC\OM\Apps;
 use OSC\OM\Cache;
+use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\Hooks;
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
+use OSC\OM\Session;
 
 class Shop extends \OSC\OM\SitesAbstract
 {
     protected function init()
     {
-        global $request_type, $cookie_domain, $cookie_path, $PHP_SELF, $SID, $currencies, $messageStack, $oscTemplate, $breadcrumb;
+        global $request_type, $PHP_SELF, $currencies, $messageStack, $oscTemplate, $breadcrumb;
+
+        $OSCOM_Cookies = new Cookies();
+        Registry::set('Cookies', $OSCOM_Cookies);
 
         Registry::set('Cache', new Cache());
 
         $OSCOM_Db = Db::initialize();
         Registry::set('Db', $OSCOM_Db);
+
+        Registry::set('Hooks', new Hooks());
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
@@ -39,125 +46,24 @@ class Shop extends \OSC\OM\SitesAbstract
 
 // set the type of request (secure or not)
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $request_type =  'SSL';
+            $request_type = 'SSL';
             define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
-
-            $cookie_domain = HTTPS_COOKIE_DOMAIN;
-            $cookie_path = HTTPS_COOKIE_PATH;
         } else {
-            $request_type =  'NONSSL';
+            $request_type = 'NONSSL';
             define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
-
-            $cookie_domain = HTTP_COOKIE_DOMAIN;
-            $cookie_path = HTTP_COOKIE_PATH;
         }
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], ($request_type == 'NONSSL') ? strlen(DIR_WS_HTTP_CATALOG) : strlen(DIR_WS_HTTPS_CATALOG));
+        $PHP_SELF = substr($req['path'], strlen(DIR_WS_CATALOG));
 
-// set the session name and save path
-        session_name('oscomid');
-        session_save_path(SESSION_WRITE_DIRECTORY);
-
-// set the session cookie parameters
-        session_set_cookie_params(0, $cookie_path, $cookie_domain);
-
-        if (function_exists('ini_set')) {
-            ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-        }
-
-// set the session ID if it exists
-        if (SESSION_FORCE_COOKIE_USE == 'False') {
-            if (isset($_GET[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_GET[session_name()]))) {
-                session_id($_GET[session_name()]);
-            } elseif (isset($_POST[session_name()]) && (!isset($_COOKIE[session_name()]) || ($_COOKIE[session_name()] != $_POST[session_name()]))) {
-                session_id($_POST[session_name()]);
-            }
-        }
+        $OSCOM_Session = Session::load();
+        Registry::set('Session', $OSCOM_Session);
 
 // start the session
-        if (SESSION_FORCE_COOKIE_USE == 'True') {
-            tep_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30);
-
-            if (isset($_COOKIE['cookie_test'])) {
-                tep_session_start();
-            }
-        } elseif (SESSION_BLOCK_SPIDERS == 'True') {
-            $user_agent = '';
-
-            if (isset($_SERVER['HTTP_USER_AGENT'])) {
-                $user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
-            }
-
-            $spider_flag = false;
-
-            if (!empty($user_agent)) {
-                foreach (file(OSCOM::BASE_DIR . 'spiders.txt') as $spider) {
-                    if (!empty($spider)) {
-                        if (strpos($user_agent, $spider) !== false) {
-                            $spider_flag = true;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if ($spider_flag === false) {
-                tep_session_start();
-            }
-        } else {
-            tep_session_start();
-        }
+        $OSCOM_Session->start();
 
         $this->ignored_actions[] = session_name();
-
-// initialize a session token
-        if (!isset($_SESSION['sessiontoken'])) {
-            $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
-        }
-
-// set SID once, even if empty
-        $SID = (defined('SID') ? SID : '');
-
-// verify the ssl_session_id if the feature is enabled
-        if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && (session_status() === PHP_SESSION_ACTIVE)) {
-            if (!isset($_SESSION['SSL_SESSION_ID'])) {
-                $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
-            }
-
-            if ($_SESSION['SESSION_SSL_ID'] != $_SERVER['SSL_SESSION_ID']) {
-                tep_session_destroy();
-
-                OSCOM::redirect('ssl_check.php');
-            }
-        }
-
-// verify the browser user agent if the feature is enabled
-        if (SESSION_CHECK_USER_AGENT == 'True') {
-            if (!isset($_SESSION['SESSION_USER_AGENT'])) {
-                $_SESSION['SESSION_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
-            }
-
-            if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
-                tep_session_destroy();
-
-                OSCOM::redirect('index.php', 'Account&LogIn');
-            }
-        }
-
-// verify the IP address if the feature is enabled
-        if (SESSION_CHECK_IP_ADDRESS == 'True') {
-            if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
-                $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
-            }
-
-            if ($_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address()) {
-                tep_session_destroy();
-
-                OSCOM::redirect('index.php', 'Account&LogIn');
-            }
-        }
 
 // create the shopping cart
         if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart']) || (get_class($_SESSION['cart']) != 'shoppingCart')) {
@@ -217,8 +123,6 @@ class Shop extends \OSC\OM\SitesAbstract
 
         $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
         $breadcrumb->add(HEADER_TITLE_CATALOG, OSCOM::link('index.php'));
-
-        Registry::set('Hooks', new Hooks());
     }
 
     public function setPage()
