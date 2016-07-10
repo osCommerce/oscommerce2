@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
   $languages = tep_get_languages();
 
@@ -431,11 +433,11 @@
         $options = tep_db_query("select products_options_id, products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$languages_id . "' order by products_options_name");
         while ($options_values = tep_db_fetch_array($options)) {
           echo "\n" . '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '"';
-          if ($values_values['products_options_id'] == $options_values['products_options_id']) { 
+          if ($values_values['products_options_id'] == $options_values['products_options_id']) {
             echo ' selected';
           }
           echo '>' . $options_values['products_options_name'] . '</option>';
-        } 
+        }
 ?>
                 </select>&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
@@ -497,8 +499,8 @@
           </tr>
         </table></td>
 <!-- option value eof //-->
-      </tr> 
-<!-- products_attributes //-->  
+      </tr>
+<!-- products_attributes //-->
       <tr>
         <td class="smallText">&nbsp;</td>
       </tr>
@@ -568,7 +570,7 @@
         } else {
           echo "\n" . '<option name="' . $products_values['products_name'] . '" value="' . $products_values['products_id'] . '">' . $products_values['products_name'] . '</option>';
         }
-      } 
+      }
 ?>
             </select>&nbsp;</td>
             <td class="smallText">&nbsp;<select name="options_id">
@@ -580,7 +582,7 @@
         } else {
           echo "\n" . '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '">' . $options_values['products_options_name'] . '</option>';
         }
-      } 
+      }
 ?>
             </select>&nbsp;</td>
             <td class="smallText">&nbsp;<select name="values_id">
@@ -592,16 +594,16 @@
         } else {
           echo "\n" . '<option name="' . $values_values['products_options_values_name'] . '" value="' . $values_values['products_options_values_id'] . '">' . $values_values['products_options_values_name'] . '</option>';
         }
-      } 
-?>        
+      }
+?>
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" value="<?php echo $attributes_values['options_values_price']; ?>" size="6">&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<input type="text" name="price_prefix" value="<?php echo $attributes_values['price_prefix']; ?>" size="2">&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
       if (DOWNLOAD_ENABLED == 'true') {
-        $download_query_raw ="select products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount 
-                              from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " 
+        $download_query_raw ="select products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
+                              from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . "
                               where products_attributes_id='" . $attributes_values['products_attributes_id'] . "'";
         $download_query = tep_db_query($download_query_raw);
         if (tep_db_num_rows($download_query) > 0) {
@@ -618,11 +620,11 @@
                 <tr class="<?php echo (!($rows % 2)? 'attributes-even' : 'attributes-odd');?>">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOAD; ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_FILENAME; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_MAX_DAYS; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_MAX_COUNT; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
                 </tr>
               </table>
             </td>
@@ -672,7 +674,7 @@
     $products = tep_db_query("select p.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.products_id = p.products_id and pd.language_id = '" . $languages_id . "' order by pd.products_name");
     while ($products_values = tep_db_fetch_array($products)) {
       echo '<option name="' . $products_values['products_name'] . '" value="' . $products_values['products_id'] . '">' . $products_values['products_name'] . '</option>';
-    } 
+    }
 ?>
             </select>&nbsp;</td>
             <td class="smallText">&nbsp;<select name="options_id">
@@ -680,7 +682,7 @@
     $options = tep_db_query("select * from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . $languages_id . "' order by products_options_name");
     while ($options_values = tep_db_fetch_array($options)) {
       echo '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '">' . $options_values['products_options_name'] . '</option>';
-    } 
+    }
 ?>
             </select>&nbsp;</td>
             <td class="smallText">&nbsp;<select name="values_id">
@@ -688,7 +690,7 @@
     $values = tep_db_query("select * from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . $languages_id . "' order by products_options_values_name");
     while ($values_values = tep_db_fetch_array($values)) {
       echo '<option name="' . $values_values['products_options_values_name'] . '" value="' . $values_values['products_options_values_id'] . '">' . $values_values['products_options_values_name'] . '</option>';
-    } 
+    }
 ?>
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" size="6">&nbsp;</td>
@@ -707,11 +709,11 @@
                 <tr class="<?php echo (!($rows % 2)? 'attributes-even' : 'attributes-odd');?>">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_DOWNLOAD; ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_FILENAME; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_filename', $products_attributes_filename, 'size="15"'); ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_MAX_DAYS; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_maxdays', $products_attributes_maxdays, 'size="5"'); ?>&nbsp;</td>
                   <td class="smallText"><?php echo TABLE_TEXT_MAX_COUNT; ?></td>
-                  <td class="smallText"><?php echo tep_draw_input_field('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
+                  <td class="smallText"><?php echo HTML::inputField('products_attributes_maxcount', $products_attributes_maxcount, 'size="5"'); ?>&nbsp;</td>
                 </tr>
               </table>
             </td>

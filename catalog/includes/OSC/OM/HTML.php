@@ -168,6 +168,11 @@ class HTML
         return static::inputField($name, $value, $parameters, 'password', false);
     }
 
+    public static function fileField($name, $parameters = null)
+    {
+        return static::inputField($name, null, $parameters, 'file', false);
+    }
+
     protected static function selectionField($name, $type, $value = '', $checked = false, $parameters = '')
     {
         $selection = '<input type="' . static::output($type) . '" name="' . static::output($name) . '"';

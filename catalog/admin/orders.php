@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -332,7 +333,7 @@ $(function() {
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
             <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
               <tr><?php echo tep_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
-                <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . tep_draw_input_field('oID', '', 'size="12"') . tep_draw_hidden_field('action', 'edit'); ?></td>
+                <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('oID', '', 'size="12"') . tep_draw_hidden_field('action', 'edit'); ?></td>
               <?php echo tep_hide_session_id(); ?></form></tr>
               <tr><?php echo tep_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_STATUS . ' ' . tep_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"'); ?></td>

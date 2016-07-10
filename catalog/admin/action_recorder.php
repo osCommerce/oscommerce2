@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
@@ -95,7 +97,7 @@
                 <td class="smallText" align="right">
 <?php
   echo tep_draw_form('search', FILENAME_ACTION_RECORDER, '', 'get');
-  echo TEXT_FILTER_SEARCH . ' ' . tep_draw_input_field('search');
+  echo TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search');
   echo tep_draw_hidden_field('module') . tep_hide_session_id() . '</form>';
 ?>
                 </td>

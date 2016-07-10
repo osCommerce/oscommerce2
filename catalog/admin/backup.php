@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -442,7 +444,7 @@
 
       $contents = array('form' => tep_draw_form('restore', FILENAME_BACKUP, 'action=restorelocalnow', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
-      $contents[] = array('text' => '<br />' . tep_draw_file_field('sql_file'));
+      $contents[] = array('text' => '<br />' . HTML::fileField('sql_file'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP)));
       break;

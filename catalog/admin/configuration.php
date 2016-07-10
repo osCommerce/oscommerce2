@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -105,7 +107,7 @@
       if ($cInfo->set_function) {
         eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value) . '");');
       } else {
-        $value_field = tep_draw_input_field('configuration_value', $cInfo->configuration_value);
+        $value_field = HTML::inputField('configuration_value', $cInfo->configuration_value);
       }
 
       $contents = array('form' => tep_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cInfo->configuration_id . '&action=save'));

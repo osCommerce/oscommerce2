@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
@@ -100,7 +102,7 @@ function update_zone(theForm) {
   while(NumState > 0) {
     NumState--;
     theForm.zone_id.options[NumState] = null;
-  }         
+  }
 
   SelectedCountry = theForm.zone_country_id.options[theForm.zone_country_id.selectedIndex].value;
 
@@ -271,8 +273,8 @@ function update_zone(theForm) {
 
         $contents = array('form' => tep_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=insert_zone'));
         $contents[] = array('text' => TEXT_INFO_NEW_ZONE_INTRO);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_draw_input_field('geo_zone_name'));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . tep_draw_input_field('geo_zone_description'));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . HTML::inputField('geo_zone_name'));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . HTML::inputField('geo_zone_description'));
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'])));
         break;
       case 'edit_zone':
@@ -280,8 +282,8 @@ function update_zone(theForm) {
 
         $contents = array('form' => tep_draw_form('zones', FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=save_zone'));
         $contents[] = array('text' => TEXT_INFO_EDIT_ZONE_INTRO);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_draw_input_field('geo_zone_name', $zInfo->geo_zone_name));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . tep_draw_input_field('geo_zone_description', $zInfo->geo_zone_description));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . HTML::inputField('geo_zone_name', $zInfo->geo_zone_name));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_DESCRIPTION . '<br />' . HTML::inputField('geo_zone_description', $zInfo->geo_zone_description));
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id)));
         break;
       case 'delete_zone':

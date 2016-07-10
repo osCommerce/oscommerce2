@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -312,7 +313,7 @@
         if ($value['set_function']) {
           eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
         } else {
-          $keys .= tep_draw_input_field('configuration[' . $key . ']', $value['value']);
+          $keys .= HTML::inputField('configuration[' . $key . ']', $value['value']);
         }
         $keys .= '<br /><br />';
       }

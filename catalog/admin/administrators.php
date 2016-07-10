@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $htaccess_array = null;
@@ -310,8 +312,8 @@
 
       $contents = array('form' => tep_draw_form('administrator', FILENAME_ADMINISTRATORS, 'action=insert', 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . tep_draw_input_field('username'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_PASSWORD . '<br />' . tep_draw_password_field('password'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_PASSWORD . '<br />' . HTML::passwordField('password'));
 
       if (is_array($htpasswd_array)) {
         $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('htaccess', 'true') . ' ' . TEXT_INFO_PROTECT_WITH_HTPASSWD);
@@ -324,8 +326,8 @@
 
       $contents = array('form' => tep_draw_form('administrator', FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=save', 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . tep_draw_input_field('username', $aInfo->user_name));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_NEW_PASSWORD . '<br />' . tep_draw_password_field('password'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username', $aInfo->user_name));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_NEW_PASSWORD . '<br />' . HTML::passwordField('password'));
 
       if (is_array($htpasswd_array)) {
         $default_flag = false;

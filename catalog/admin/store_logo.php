@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -68,7 +70,7 @@
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
-              <td class="main"><?php echo tep_draw_file_field('store_logo'); ?></td>
+              <td class="main"><?php echo HTML::fileField('store_logo'); ?></td>
               <td class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary'); ?></td>
             </tr>
           </table>

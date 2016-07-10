@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -164,14 +166,14 @@
               </tr>
               <tr>
                 <td class="main"><?php echo TEXT_FROM; ?></td>
-                <td><?php echo tep_draw_input_field('from', EMAIL_FROM); ?></td>
+                <td><?php echo HTML::inputField('from', EMAIL_FROM); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
                 <td class="main"><?php echo TEXT_SUBJECT; ?></td>
-                <td><?php echo tep_draw_input_field('subject'); ?></td>
+                <td><?php echo HTML::inputField('subject'); ?></td>
               </tr>
               <tr>
                 <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

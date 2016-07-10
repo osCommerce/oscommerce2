@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   $login_request = true;
 
   require('includes/application_top.php');
@@ -161,16 +163,16 @@
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
     $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=process'));
-    $contents[] = array('text' => TEXT_USERNAME . '<br />' . tep_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . tep_draw_password_field('password'));
+    $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
     $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_LOGIN, 'key'));
   } else {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
     $contents = array('form' => tep_draw_form('login', FILENAME_LOGIN, 'action=create'));
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
-    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . tep_draw_input_field('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . tep_draw_password_field('password'));
+    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . HTML::inputField('username'));
+    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
     $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
   }
 

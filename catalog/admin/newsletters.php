@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -163,7 +165,7 @@
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_NEWSLETTER_TITLE; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('title', $nInfo->title, '', true); ?></td>
+            <td class="main"><?php echo HTML::inputField('title', $nInfo->title) . TEXT_FIELD_REQUIRED; ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

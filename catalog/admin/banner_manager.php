@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -239,29 +241,29 @@ function popupImageWindow(url) {
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_TITLE; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('banners_title', $bInfo->banners_title, '', true); ?></td>
+            <td class="main"><?php echo HTML::inputField('banners_title', $bInfo->banners_title) . TEXT_FIELD_REQUIRED; ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_URL; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('banners_url', $bInfo->banners_url); ?></td>
+            <td class="main"><?php echo HTML::inputField('banners_url', $bInfo->banners_url); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_BANNERS_GROUP; ?></td>
-            <td class="main"><?php echo tep_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . tep_draw_input_field('new_banners_group', '', '', ((sizeof($groups_array) > 0) ? false : true)); ?></td>
+            <td class="main"><?php echo tep_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . HTML::inputField('new_banners_group') . ((sizeof($groups_array) > 0) ? '' : TEXT_FIELD_REQUIRED); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_BANNERS_IMAGE; ?></td>
-            <td class="main"><?php echo tep_draw_file_field('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . '<br />' . DIR_FS_CATALOG_IMAGES . tep_draw_input_field('banners_image_local', (isset($bInfo->banners_image) ? $bInfo->banners_image : '')); ?></td>
+            <td class="main"><?php echo HTML::fileField('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . '<br />' . DIR_FS_CATALOG_IMAGES . HTML::inputField('banners_image_local', (isset($bInfo->banners_image) ? $bInfo->banners_image : '')); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_IMAGE_TARGET; ?></td>
-            <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . tep_draw_input_field('banners_image_target'); ?></td>
+            <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . HTML::inputField('banners_image_target'); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -275,14 +277,14 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('date_scheduled', $bInfo->date_scheduled, 'id="date_scheduled"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
+            <td class="main"><?php echo HTML::inputField('date_scheduled', $bInfo->date_scheduled, 'id="date_scheduled"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_EXPIRES_ON; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('expires_date', $bInfo->expires_date, 'id="expires_date"') . ' <small>(YYYY-MM-DD)</small>' . TEXT_BANNERS_OR_AT . '<br />' . tep_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
+            <td class="main"><?php echo HTML::inputField('expires_date', $bInfo->expires_date, 'id="expires_date"') . ' <small>(YYYY-MM-DD)</small>' . TEXT_BANNERS_OR_AT . '<br />' . HTML::inputField('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?></td>
           </tr>
         </table>
 

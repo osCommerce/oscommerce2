@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -371,12 +373,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_firstname_error == true) {
-      echo tep_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . ENTRY_FIRST_NAME_ERROR;
+      echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . '&nbsp;' . ENTRY_FIRST_NAME_ERROR;
     } else {
       echo $cInfo->customers_firstname . tep_draw_hidden_field('customers_firstname');
     }
   } else {
-    echo tep_draw_input_field('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"', true);
+    echo HTML::inputField('customers_firstname', $cInfo->customers_firstname, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -386,12 +388,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_lastname_error == true) {
-      echo tep_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . ENTRY_LAST_NAME_ERROR;
+      echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . '&nbsp;' . ENTRY_LAST_NAME_ERROR;
     } else {
       echo $cInfo->customers_lastname . tep_draw_hidden_field('customers_lastname');
     }
   } else {
-    echo tep_draw_input_field('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"', true);
+    echo HTML::inputField('customers_lastname', $cInfo->customers_lastname, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -404,12 +406,12 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_date_of_birth_error == true) {
-        echo tep_draw_input_field('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
+        echo HTML::inputField('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
       } else {
         echo $cInfo->customers_dob . tep_draw_hidden_field('customers_dob');
       }
     } else {
-      echo tep_draw_input_field('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10" id="customers_dob"', true);
+      echo HTML::inputField('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10" id="customers_dob"') . TEXT_FIELD_REQUIRED;
     }
 ?>
               <script type="text/javascript">$('#customers_dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
@@ -424,16 +426,16 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_email_address_error == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR;
     } elseif ($entry_email_address_check_error == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
     } elseif ($entry_email_address_exists == true) {
-      echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+      echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . '&nbsp;' . ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
     } else {
       echo $customers_email_address . tep_draw_hidden_field('customers_email_address');
     }
   } else {
-    echo tep_draw_input_field('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"', true);
+    echo HTML::inputField('customers_email_address', $cInfo->customers_email_address, 'maxlength="96"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -457,7 +459,7 @@ function check_form() {
     if ($error == true) {
       echo $cInfo->entry_company . tep_draw_hidden_field('entry_company');
     } else {
-      echo tep_draw_input_field('entry_company', $cInfo->entry_company, 'maxlength="32"');
+      echo HTML::inputField('entry_company', $cInfo->entry_company, 'maxlength="32"');
     }
 ?></td>
           </tr>
@@ -480,12 +482,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_street_address_error == true) {
-      echo tep_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
+      echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . '&nbsp;' . ENTRY_STREET_ADDRESS_ERROR;
     } else {
       echo $cInfo->entry_street_address . tep_draw_hidden_field('entry_street_address');
     }
   } else {
-    echo tep_draw_input_field('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"', true);
+    echo HTML::inputField('entry_street_address', $cInfo->entry_street_address, 'maxlength="64"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -499,7 +501,7 @@ function check_form() {
     if ($error == true) {
       echo $cInfo->entry_suburb . tep_draw_hidden_field('entry_suburb');
     } else {
-      echo tep_draw_input_field('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
+      echo HTML::inputField('entry_suburb', $cInfo->entry_suburb, 'maxlength="32"');
     }
 ?></td>
           </tr>
@@ -512,12 +514,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_post_code_error == true) {
-      echo tep_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
+      echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . '&nbsp;' . ENTRY_POST_CODE_ERROR;
     } else {
       echo $cInfo->entry_postcode . tep_draw_hidden_field('entry_postcode');
     }
   } else {
-    echo tep_draw_input_field('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"', true);
+    echo HTML::inputField('entry_postcode', $cInfo->entry_postcode, 'maxlength="8"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -527,12 +529,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_city_error == true) {
-      echo tep_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . ENTRY_CITY_ERROR;
+      echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . '&nbsp;' . ENTRY_CITY_ERROR;
     } else {
       echo $cInfo->entry_city . tep_draw_hidden_field('entry_city');
     }
   } else {
-    echo tep_draw_input_field('entry_city', $cInfo->entry_city, 'maxlength="32"', true);
+    echo HTML::inputField('entry_city', $cInfo->entry_city, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -554,13 +556,13 @@ function check_form() {
           }
           echo tep_draw_pull_down_menu('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
         } else {
-          echo tep_draw_input_field('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
         }
       } else {
         echo $entry_state . tep_draw_hidden_field('entry_zone_id') . tep_draw_hidden_field('entry_state');
       }
     } else {
-      echo tep_draw_input_field('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
+      echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
     }
 
 ?></td>
@@ -599,12 +601,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_telephone_error == true) {
-      echo tep_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . ENTRY_TELEPHONE_NUMBER_ERROR;
+      echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . '&nbsp;' . ENTRY_TELEPHONE_NUMBER_ERROR;
     } else {
       echo $cInfo->customers_telephone . tep_draw_hidden_field('customers_telephone');
     }
   } else {
-    echo tep_draw_input_field('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"', true);
+    echo HTML::inputField('customers_telephone', $cInfo->customers_telephone, 'maxlength="32"') . TEXT_FIELD_REQUIRED;
   }
 ?></td>
           </tr>
@@ -615,7 +617,7 @@ function check_form() {
   if ($processed == true) {
     echo $cInfo->customers_fax . tep_draw_hidden_field('customers_fax');
   } else {
-    echo tep_draw_input_field('customers_fax', $cInfo->customers_fax, 'maxlength="32"');
+    echo HTML::inputField('customers_fax', $cInfo->customers_fax, 'maxlength="32"');
   }
 ?></td>
           </tr>
@@ -661,7 +663,7 @@ function check_form() {
           <tr><?php echo tep_draw_form('search', FILENAME_CUSTOMERS, '', 'get'); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . tep_draw_input_field('search'); ?></td>
+            <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search'); ?></td>
           <?php echo tep_hide_session_id(); ?></form></tr>
         </table></td>
       </tr>

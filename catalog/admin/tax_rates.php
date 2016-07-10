@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -126,9 +128,9 @@
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . tep_draw_input_field('tax_rate'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . tep_draw_input_field('tax_description'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . tep_draw_input_field('tax_priority'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . HTML::inputField('tax_rate'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . HTML::inputField('tax_description'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . HTML::inputField('tax_priority'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
@@ -138,9 +140,9 @@
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_tax_classes_pull_down('name="tax_class_id" style="font-size:10px"', $trInfo->tax_class_id));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONE_NAME . '<br />' . tep_geo_zones_pull_down('name="tax_zone_id" style="font-size:10px"', $trInfo->geo_zone_id));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . tep_draw_input_field('tax_rate', $trInfo->tax_rate));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . tep_draw_input_field('tax_description', $trInfo->tax_description));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . tep_draw_input_field('tax_priority', $trInfo->tax_priority));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE . '<br />' . HTML::inputField('tax_rate', $trInfo->tax_rate));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_RATE_DESCRIPTION . '<br />' . HTML::inputField('tax_description', $trInfo->tax_description));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_TAX_RATE_PRIORITY . '<br />' . HTML::inputField('tax_priority', $trInfo->tax_priority));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $trInfo->tax_rates_id)));
       break;
     case 'delete':

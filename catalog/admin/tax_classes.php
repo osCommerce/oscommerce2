@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -112,8 +114,8 @@
 
       $contents = array('form' => tep_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_draw_input_field('tax_class_title'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . tep_draw_input_field('tax_class_description'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . HTML::inputField('tax_class_title'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . HTML::inputField('tax_class_description'));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'plus', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
@@ -121,8 +123,8 @@
 
       $contents = array('form' => tep_draw_form('classes', FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . tep_draw_input_field('tax_class_title', $tcInfo->tax_class_title));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . tep_draw_input_field('tax_class_description', $tcInfo->tax_class_description));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_TITLE . '<br />' . HTML::inputField('tax_class_title', $tcInfo->tax_class_title));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . HTML::inputField('tax_class_description', $tcInfo->tax_class_description));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id)));
       break;
     case 'delete':

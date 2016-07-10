@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -247,14 +249,14 @@ function updateForm() {
       $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . tep_draw_pull_down_menu('cs', $currency_select_array, '', 'onchange="updateForm();"'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . tep_draw_input_field('title'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . tep_draw_input_field('code'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . tep_draw_input_field('symbol_left'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . tep_draw_input_field('symbol_right'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . tep_draw_input_field('decimal_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . tep_draw_input_field('thousands_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . tep_draw_input_field('decimal_places'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . tep_draw_input_field('value'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . HTML::inputField('title'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . HTML::inputField('code'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . HTML::inputField('symbol_left'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . HTML::inputField('symbol_right'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . HTML::inputField('decimal_point'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . HTML::inputField('thousands_point'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . HTML::inputField('decimal_places'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . HTML::inputField('value'));
       $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID'])));
       break;
@@ -263,14 +265,14 @@ function updateForm() {
 
       $contents = array('form' => tep_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . tep_draw_input_field('title', $cInfo->title));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . tep_draw_input_field('code', $cInfo->code));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . tep_draw_input_field('symbol_left', $cInfo->symbol_left));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . tep_draw_input_field('symbol_right', $cInfo->symbol_right));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . tep_draw_input_field('decimal_point', $cInfo->decimal_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . tep_draw_input_field('thousands_point', $cInfo->thousands_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . tep_draw_input_field('decimal_places', $cInfo->decimal_places));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . tep_draw_input_field('value', $cInfo->value));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . HTML::inputField('title', $cInfo->title));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . HTML::inputField('code', $cInfo->code));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . HTML::inputField('symbol_left', $cInfo->symbol_left));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . HTML::inputField('symbol_right', $cInfo->symbol_right));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . HTML::inputField('decimal_point', $cInfo->decimal_point));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . HTML::inputField('thousands_point', $cInfo->thousands_point));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . HTML::inputField('decimal_places', $cInfo->decimal_places));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . HTML::inputField('value', $cInfo->value));
       if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id)));
       break;

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -536,7 +537,7 @@ function updateNet() {
         <table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_PRODUCTS_NAME; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('products_name[' . $languages[$i]['id'] . ']', (empty($pInfo->products_id) ? '' : tep_get_products_name($pInfo->products_id, $languages[$i]['id']))); ?></td>
+            <td class="main"><?php echo HTML::inputField('products_name[' . $languages[$i]['id'] . ']', (empty($pInfo->products_id) ? '' : tep_get_products_name($pInfo->products_id, $languages[$i]['id']))); ?></td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_PRODUCTS_DESCRIPTION; ?></td>
@@ -544,7 +545,7 @@ function updateNet() {
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_PRODUCTS_URL . '<br /><small>' . TEXT_PRODUCTS_URL_WITHOUT_HTTP . '</small>'; ?></td>
-            <td class="main"><?php echo tep_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (isset($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : tep_get_products_url($pInfo->products_id, $languages[$i]['id']))); ?></td>
+            <td class="main"><?php echo HTML::inputField('products_url[' . $languages[$i]['id'] . ']', (isset($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : tep_get_products_url($pInfo->products_id, $languages[$i]['id']))); ?></td>
           </tr>
         </table>
       </div>
@@ -567,7 +568,7 @@ function updateNet() {
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_date_available', $pInfo->products_date_available, 'id="products_date_available"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
+        <td class="main"><?php echo HTML::inputField('products_date_available', $pInfo->products_date_available, 'id="products_date_available"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
       </tr>
       <tr>
         <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -585,11 +586,11 @@ function updateNet() {
       </tr>
       <tr bgcolor="#ebebff">
         <td class="main"><?php echo TEXT_PRODUCTS_PRICE_NET; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_price', $pInfo->products_price, 'onkeyup="updateGross()"'); ?></td>
+        <td class="main"><?php echo HTML::inputField('products_price', $pInfo->products_price, 'onkeyup="updateGross()"'); ?></td>
       </tr>
       <tr bgcolor="#ebebff">
         <td class="main"><?php echo TEXT_PRODUCTS_PRICE_GROSS; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()"'); ?></td>
+        <td class="main"><?php echo HTML::inputField('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()"'); ?></td>
       </tr>
       <tr>
         <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -599,27 +600,27 @@ updateGross();
 //--></script>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_quantity', $pInfo->products_quantity); ?></td>
+        <td class="main"><?php echo HTML::inputField('products_quantity', $pInfo->products_quantity); ?></td>
       </tr>
       <tr>
         <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_model', $pInfo->products_model); ?></td>
+        <td class="main"><?php echo HTML::inputField('products_model', $pInfo->products_model); ?></td>
       </tr>
       <tr>
         <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?></td>
-        <td class="main"><?php echo tep_draw_input_field('products_weight', $pInfo->products_weight); ?></td>
+        <td class="main"><?php echo HTML::inputField('products_weight', $pInfo->products_weight); ?></td>
       </tr>
     </table>
   </div>
 
   <div id="section_images_content" style="padding: 10px;">
-    <div><?php echo '<strong>' . TEXT_PRODUCTS_MAIN_IMAGE . ' <small>(' . SMALL_IMAGE_WIDTH . ' x ' . SMALL_IMAGE_HEIGHT . 'px)</small></strong><br />' . tep_draw_file_field('products_image') . (tep_not_null($pInfo->products_image) ? '<br /><a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $pInfo->products_image . '" target="_blank">' . $pInfo->products_image . '</a>' : ''); ?></div>
+    <div><?php echo '<strong>' . TEXT_PRODUCTS_MAIN_IMAGE . ' <small>(' . SMALL_IMAGE_WIDTH . ' x ' . SMALL_IMAGE_HEIGHT . 'px)</small></strong><br />' . HTML::fileField('products_image') . (tep_not_null($pInfo->products_image) ? '<br /><a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $pInfo->products_image . '" target="_blank">' . $pInfo->products_image . '</a>' : ''); ?></div>
 
     <ul id="piList">
 <?php
@@ -628,7 +629,7 @@ updateGross();
     foreach ($pInfo->products_larger_images as $pi) {
       $pi_counter++;
 
-      echo '      <li id="piId' . $pi_counter . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: right;"></span><a href="#" onclick="showPiDelConfirm(' . $pi_counter . ');return false;" class="ui-icon ui-icon-trash" style="float: right;"></a><strong>' . TEXT_PRODUCTS_LARGE_IMAGE . '</strong><br />' . tep_draw_file_field('products_image_large_' . $pi['id']) . '<br /><a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $pi['image'] . '" target="_blank">' . $pi['image'] . '</a><br /><br />' . TEXT_PRODUCTS_LARGE_IMAGE_HTML_CONTENT . '<br />' . tep_draw_textarea_field('products_image_htmlcontent_' . $pi['id'], 'soft', '70', '3', $pi['htmlcontent']) . '</li>';
+      echo '      <li id="piId' . $pi_counter . '" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s" style="float: right;"></span><a href="#" onclick="showPiDelConfirm(' . $pi_counter . ');return false;" class="ui-icon ui-icon-trash" style="float: right;"></a><strong>' . TEXT_PRODUCTS_LARGE_IMAGE . '</strong><br />' . HTML::fileField('products_image_large_' . $pi['id']) . '<br /><a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $pi['image'] . '" target="_blank">' . $pi['image'] . '</a><br /><br />' . TEXT_PRODUCTS_LARGE_IMAGE_HTML_CONTENT . '<br />' . tep_draw_textarea_field('products_image_htmlcontent_' . $pi['id'], 'soft', '70', '3', $pi['htmlcontent']) . '</li>';
     }
 ?>
     </ul>
@@ -805,7 +806,7 @@ $('#products_date_available').datepicker({
                 <td class="smallText" align="right">
 <?php
     echo tep_draw_form('search', FILENAME_CATEGORIES, '', 'get');
-    echo HEADING_TITLE_SEARCH . ' ' . tep_draw_input_field('search');
+    echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search');
     echo tep_hide_session_id() . '</form>';
 ?>
                 </td>
@@ -946,12 +947,12 @@ $('#products_date_available').datepicker({
         $category_inputs_string = '';
         $languages = tep_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $category_inputs_string .= '<br />' . tep_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . tep_draw_input_field('categories_name[' . $languages[$i]['id'] . ']');
+          $category_inputs_string .= '<br />' . tep_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']');
         }
 
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_NAME . $category_inputs_string);
-        $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_IMAGE . '<br />' . tep_draw_file_field('categories_image'));
-        $contents[] = array('text' => '<br />' . TEXT_SORT_ORDER . '<br />' . tep_draw_input_field('sort_order', '', 'size="2"'));
+        $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
+        $contents[] = array('text' => '<br />' . TEXT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', '', 'size="2"'));
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath)));
         break;
       case 'edit_category':
@@ -963,13 +964,13 @@ $('#products_date_available').datepicker({
         $category_inputs_string = '';
         $languages = tep_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $category_inputs_string .= '<br />' . tep_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . tep_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
+          $category_inputs_string .= '<br />' . tep_image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
         }
 
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_NAME . $category_inputs_string);
         $contents[] = array('text' => '<br />' . tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $cInfo->categories_image, $cInfo->categories_name) . '<br />' . DIR_WS_CATALOG_IMAGES . '<br /><strong>' . $cInfo->categories_image . '</strong>');
-        $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . tep_draw_file_field('categories_image'));
-        $contents[] = array('text' => '<br />' . TEXT_EDIT_SORT_ORDER . '<br />' . tep_draw_input_field('sort_order', $cInfo->sort_order, 'size="2"'));
+        $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
+        $contents[] = array('text' => '<br />' . TEXT_EDIT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $cInfo->sort_order, 'size="2"'));
         $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
         break;
       case 'delete_category':

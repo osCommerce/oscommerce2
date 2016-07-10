@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -119,9 +121,9 @@
 
       $contents = array('form' => tep_draw_form('countries', FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&action=insert'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . tep_draw_input_field('countries_name'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . tep_draw_input_field('countries_iso_code_2'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . tep_draw_input_field('countries_iso_code_3'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::inputField('countries_name'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . HTML::inputField('countries_iso_code_2'));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . HTML::inputField('countries_iso_code_3'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . tep_draw_pull_down_menu('address_format_id', tep_get_address_formats()));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'])));
       break;
@@ -130,9 +132,9 @@
 
       $contents = array('form' => tep_draw_form('countries', FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=save'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . tep_draw_input_field('countries_name', $cInfo->countries_name));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . tep_draw_input_field('countries_iso_code_2', $cInfo->countries_iso_code_2));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . tep_draw_input_field('countries_iso_code_3', $cInfo->countries_iso_code_3));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::inputField('countries_name', $cInfo->countries_name));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . HTML::inputField('countries_iso_code_2', $cInfo->countries_iso_code_2));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . HTML::inputField('countries_iso_code_3', $cInfo->countries_iso_code_3));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . tep_draw_pull_down_menu('address_format_id', tep_get_address_formats(), $cInfo->address_format_id));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id)));
       break;

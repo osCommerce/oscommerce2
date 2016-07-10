@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -116,11 +118,11 @@
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
-            <td class="main"><?php echo tep_draw_input_field('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : '')); ?></td>
+            <td class="main"><?php echo HTML::inputField('specials_price', (isset($sInfo->specials_new_products_price) ? $sInfo->specials_new_products_price : '')); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-            <td class="main"><?php echo tep_draw_input_field('expdate', (tep_not_null($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) . '-' . substr($sInfo->expires_date, 5, 2) . '-' . substr($sInfo->expires_date, 8, 2) : ''), 'id="expdate"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
+            <td class="main"><?php echo HTML::inputField('expdate', (tep_not_null($sInfo->expires_date) ? substr($sInfo->expires_date, 0, 4) . '-' . substr($sInfo->expires_date, 5, 2) . '-' . substr($sInfo->expires_date, 8, 2) : ''), 'id="expdate"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
         </table>
 
