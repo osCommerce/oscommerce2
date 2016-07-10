@@ -246,7 +246,7 @@
   </div>
 
   <div id="section_status_history_content">
-    <?php echo tep_draw_form('status', FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=update_order'); ?>
+    <?php echo HTML::form('status', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=update_order')); ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
@@ -332,12 +332,12 @@ $(function() {
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
             <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr><?php echo tep_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
+              <tr><?php echo HTML::form('orders', tep_href_link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('oID', '', 'size="12"') . tep_draw_hidden_field('action', 'edit'); ?></td>
-              <?php echo tep_hide_session_id(); ?></form></tr>
-              <tr><?php echo tep_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
+              </form></tr>
+              <tr><?php echo HTML::form('status', tep_href_link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_STATUS . ' ' . tep_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"'); ?></td>
-              <?php echo tep_hide_session_id(); ?></form></tr>
+              </form></tr>
             </table></td>
           </tr>
         </table></td>
@@ -402,7 +402,7 @@ $(function() {
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_ORDER . '</strong>');
 
-      $contents = array('form' => tep_draw_form('orders', FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=deleteconfirm'));
+      $contents = array('form' => HTML::form('orders', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
       $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id)));

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   function tep_dt_get_tables() {
@@ -204,7 +206,7 @@
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  echo tep_draw_form('sql', 'database_tables.php');
+  echo HTML::form('sql', tep_href_link('database_tables.php'));
 ?>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">

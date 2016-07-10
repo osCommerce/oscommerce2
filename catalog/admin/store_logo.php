@@ -66,7 +66,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_form('logo', FILENAME_STORE_LOGO, 'action=save', 'post', 'enctype="multipart/form-data"'); ?>
+        <td><?php echo HTML::form('logo', tep_href_link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>

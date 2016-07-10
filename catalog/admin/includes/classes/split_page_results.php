@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   class splitPageResults {
     function splitPageResults(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows) {
       if (empty($current_page_number)) $current_page_number = 1;
@@ -52,7 +54,7 @@
       }
 
       if ($num_pages > 1) {
-        $display_links = tep_draw_form('pages', $PHP_SELF, '', 'get');
+        $display_links = HTML::form('pages', tep_href_link($PHP_SELF), 'get', null, ['session_id' => true]);
 
         if ($current_page_number > 1) {
           $display_links .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number - 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
@@ -77,7 +79,7 @@
           }
         }
 
-        $display_links .= tep_hide_session_id() . '</form>';
+        $display_links .= '</form>';
       } else {
         $display_links = sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages);
       }

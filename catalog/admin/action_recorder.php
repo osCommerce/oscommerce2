@@ -96,18 +96,18 @@
               <tr>
                 <td class="smallText" align="right">
 <?php
-  echo tep_draw_form('search', FILENAME_ACTION_RECORDER, '', 'get');
+  echo HTML::form('search', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search');
-  echo tep_draw_hidden_field('module') . tep_hide_session_id() . '</form>';
+  echo tep_draw_hidden_field('module') . '</form>';
 ?>
                 </td>
               </tr>
               <tr>
                 <td class="smallText" align="right">
 <?php
-  echo tep_draw_form('filter', FILENAME_ACTION_RECORDER, '', 'get');
+  echo HTML::form('filter', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo tep_draw_pull_down_menu('module', $modules_list_array, null, 'onchange="this.form.submit();"');
-  echo tep_draw_hidden_field('search') . tep_hide_session_id() . '</form>';
+  echo tep_draw_hidden_field('search') . '</form>';
 ?>
                 </td>
               </tr>

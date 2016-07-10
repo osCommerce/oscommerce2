@@ -93,7 +93,7 @@
         break;
     }
 ?>
-          <tr><?php echo tep_draw_form('mail', FILENAME_MAIL, 'action=send_email_to_user'); ?>
+          <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
             <td><table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
                 <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -141,7 +141,7 @@
 <?php
   } else {
 ?>
-          <tr><?php echo tep_draw_form('mail', FILENAME_MAIL, 'action=preview'); ?>
+          <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=preview')); ?>
             <td><table border="0" cellpadding="0" cellspacing="2">
               <tr>
                 <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

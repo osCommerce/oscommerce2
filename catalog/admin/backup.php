@@ -418,7 +418,7 @@
     case 'backup':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_BACKUP . '</strong>');
 
-      $contents = array('form' => tep_draw_form('backup', FILENAME_BACKUP, 'action=backupnow'));
+      $contents = array('form' => HTML::form('backup', tep_href_link(FILENAME_BACKUP, 'action=backupnow')));
       $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
 
       $contents[] = array('text' => '<br />' . tep_draw_radio_field('compress', 'no', true) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
@@ -442,7 +442,7 @@
     case 'restorelocal':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</strong>');
 
-      $contents = array('form' => tep_draw_form('restore', FILENAME_BACKUP, 'action=restorelocalnow', 'post', 'enctype="multipart/form-data"'));
+      $contents = array('form' => HTML::form('restore', tep_href_link(FILENAME_BACKUP, 'action=restorelocalnow'), 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
       $contents[] = array('text' => '<br />' . HTML::fileField('sql_file'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
@@ -451,7 +451,7 @@
     case 'delete':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
-      $contents = array('form' => tep_draw_form('delete', FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm'));
+      $contents = array('form' => HTML::form('delete', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $buInfo->file . '</strong>');
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
