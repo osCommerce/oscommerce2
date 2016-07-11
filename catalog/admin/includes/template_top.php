@@ -20,19 +20,19 @@ use OSC\OM\OSCOM;
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?php echo TITLE; ?></title>
 <base href="<?php echo ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_ADMIN : HTTP_SERVER . DIR_WS_ADMIN; ?>" />
-<!--[if IE]><script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/excanvas.min.js', '', 'SSL'); ?>"></script><![endif]-->
-<link rel="stylesheet" type="text/css" href="<?php echo OSCOM::link('Shop/ext/jquery/ui/redmond/jquery-ui-1.11.4.min.css', '', 'SSL'); ?>">
-<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/jquery-2.2.3.min.js', '', 'SSL'); ?>"></script>
-<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/ui/jquery-ui-1.11.4.min.js', '', 'SSL'); ?>"></script>
+<!--[if IE]><script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/excanvas.min.js', '', 'AUTO'); ?>"></script><![endif]-->
+<link rel="stylesheet" type="text/css" href="<?php echo OSCOM::link('Shop/ext/jquery/ui/redmond/jquery-ui-1.11.4.min.css', '', 'AUTO'); ?>">
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/jquery-2.2.3.min.js', '', 'AUTO'); ?>"></script>
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/ui/jquery-ui-1.11.4.min.js', '', 'AUTO'); ?>"></script>
 
-<link href="<?php echo OSCOM::link('Shop/ext/bootstrap/css/bootstrap.min.css', '', 'SSL'); ?>" rel="stylesheet">
+<link href="<?php echo OSCOM::link('Shop/ext/bootstrap/css/bootstrap.min.css', '', 'AUTO'); ?>" rel="stylesheet">
 
-<link href="<?php echo OSCOM::link('Shop/ext/font-awesome/4.6.3/css/font-awesome.min.css', '', 'SSL'); ?>" rel="stylesheet">
+<link href="<?php echo OSCOM::link('Shop/ext/font-awesome/4.6.3/css/font-awesome.min.css', '', 'AUTO'); ?>" rel="stylesheet">
 
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
 ?>
-<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/ui/i18n/datepicker-' . JQUERY_DATEPICKER_I18N_CODE . '.js', '', 'SSL'); ?>"></script>
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/jquery/ui/i18n/datepicker-' . JQUERY_DATEPICKER_I18N_CODE . '.js', '', 'AUTO'); ?>"></script>
 <script type="text/javascript">
 $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18N_CODE; ?>']);
 </script>
@@ -40,8 +40,8 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
   }
 ?>
 
-<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.min.js', '', 'SSL'); ?>"></script>
-<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.time.min.js', '', 'SSL'); ?>"></script>
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.min.js', '', 'AUTO'); ?>"></script>
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.time.min.js', '', 'AUTO'); ?>"></script>
 <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
