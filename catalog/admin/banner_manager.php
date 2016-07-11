@@ -249,7 +249,7 @@ function popupImageWindow(url) {
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_BANNERS_GROUP; ?></td>
-            <td class="main"><?php echo tep_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . HTML::inputField('new_banners_group') . ((sizeof($groups_array) > 0) ? '' : TEXT_FIELD_REQUIRED); ?></td>
+            <td class="main"><?php echo HTML::selectField('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . HTML::inputField('new_banners_group') . ((sizeof($groups_array) > 0) ? '' : TEXT_FIELD_REQUIRED); ?></td>
           </tr>
           <tr>
             <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>

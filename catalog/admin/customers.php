@@ -554,7 +554,7 @@ function check_form() {
           while ($zones_values = tep_db_fetch_array($zones_query)) {
             $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
           }
-          echo tep_draw_pull_down_menu('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
+          echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
         } else {
           echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
         }
@@ -576,12 +576,12 @@ function check_form() {
 <?php
   if ($error == true) {
     if ($entry_country_error == true) {
-      echo tep_draw_pull_down_menu('entry_country_id', tep_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
+      echo HTML::selectField('entry_country_id', tep_get_countries(), $cInfo->entry_country_id) . '&nbsp;' . ENTRY_COUNTRY_ERROR;
     } else {
       echo tep_get_country_name($cInfo->entry_country_id) . HTML::hiddenField('entry_country_id');
     }
   } else {
-    echo tep_draw_pull_down_menu('entry_country_id', tep_get_countries(), $cInfo->entry_country_id);
+    echo HTML::selectField('entry_country_id', tep_get_countries(), $cInfo->entry_country_id);
   }
 ?></td>
           </tr>
@@ -643,7 +643,7 @@ function check_form() {
     }
     echo HTML::hiddenField('customers_newsletter');
   } else {
-    echo tep_draw_pull_down_menu('customers_newsletter', $newsletter_array, (($cInfo->customers_newsletter == '1') ? '1' : '0'));
+    echo HTML::selectField('customers_newsletter', $newsletter_array, (($cInfo->customers_newsletter == '1') ? '1' : '0'));
   }
 ?></td>
           </tr>

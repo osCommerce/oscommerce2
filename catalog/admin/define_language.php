@@ -96,7 +96,7 @@
           <tr><?php echo HTML::form('lng', tep_href_link(FILENAME_DEFINE_LANGUAGE), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_pull_down_menu('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
+            <td class="pageHeading" align="right"><?php echo HTML::selectField('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
           </form></tr>
         </table></td>
       </tr>

@@ -251,7 +251,7 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td><?php echo ENTRY_STATUS; ?></td>
-        <td><?php echo tep_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status']); ?></td>
+        <td><?php echo HTML::selectField('status', $orders_statuses, $order->info['orders_status']); ?></td>
       </tr>
       <tr>
         <td valign="top"><?php echo ENTRY_ADD_COMMENT; ?></td>
@@ -336,7 +336,7 @@ $(function() {
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('oID', '', 'size="12"') . HTML::hiddenField('action', 'edit'); ?></td>
               </form></tr>
               <tr><?php echo HTML::form('status', tep_href_link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
-                <td class="smallText" align="right"><?php echo HEADING_TITLE_STATUS . ' ' . tep_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"'); ?></td>
+                <td class="smallText" align="right"><?php echo HEADING_TITLE_STATUS . ' ' . HTML::selectField('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"'); ?></td>
               </form></tr>
             </table></td>
           </tr>

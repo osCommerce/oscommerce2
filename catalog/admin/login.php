@@ -143,7 +143,7 @@
   if (sizeof($languages_array) > 1) {
 ?>
 
-        <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', tep_href_link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . tep_draw_pull_down_menu('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
+        <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', tep_href_link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
 
 <?php
   }

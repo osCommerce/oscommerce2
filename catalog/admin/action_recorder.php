@@ -106,7 +106,7 @@
                 <td class="smallText" align="right">
 <?php
   echo HTML::form('filter', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
-  echo tep_draw_pull_down_menu('module', $modules_list_array, null, 'onchange="this.form.submit();"');
+  echo HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"');
   echo HTML::hiddenField('search') . '</form>';
 ?>
                 </td>

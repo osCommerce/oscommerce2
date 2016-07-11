@@ -693,11 +693,11 @@
 ////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_pull_down_country_list($country_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_countries(), $country_id);
+    return HTML::selectField('configuration_value', tep_get_countries(), $country_id);
   }
 
   function tep_cfg_pull_down_zone_list($zone_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
+    return HTML::selectField('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
   }
 
   function tep_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
@@ -710,7 +710,7 @@
                                  'text' => $tax_class['tax_class_title']);
     }
 
-    return tep_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
+    return HTML::selectField($name, $tax_class_array, $tax_class_id);
   }
 
 ////
@@ -1289,7 +1289,7 @@
                                   'text' => $zone_class['geo_zone_name']);
     }
 
-    return tep_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
+    return HTML::selectField($name, $zone_class_array, $zone_class_id);
   }
 
   function tep_cfg_pull_down_order_statuses($order_status_id, $key = '') {
@@ -1304,7 +1304,7 @@
                                 'text' => $statuses['orders_status_name']);
     }
 
-    return tep_draw_pull_down_menu($name, $statuses_array, $order_status_id);
+    return HTML::selectField($name, $statuses_array, $order_status_id);
   }
 
   function tep_get_order_status_name($order_status_id, $language_id = '') {

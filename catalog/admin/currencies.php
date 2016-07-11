@@ -248,7 +248,7 @@ function updateForm() {
 
       $contents = array('form' => HTML::form('currencies', tep_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . (isset($cInfo) ? '&cID=' . $cInfo->currencies_id : '') . '&action=insert')));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . tep_draw_pull_down_menu('cs', $currency_select_array, '', 'onchange="updateForm();"'));
+      $contents[] = array('text' => '<br />' . HTML::selectField('cs', $currency_select_array, '', 'onchange="updateForm();"'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . HTML::inputField('title'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . HTML::inputField('code'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . HTML::inputField('symbol_left'));

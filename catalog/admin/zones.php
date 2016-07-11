@@ -122,7 +122,7 @@
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_NAME . '<br />' . HTML::inputField('zone_name'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_CODE . '<br />' . HTML::inputField('zone_code'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . tep_draw_pull_down_menu('zone_country_id', tep_get_countries()));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::selectField('zone_country_id', tep_get_countries()));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
@@ -132,7 +132,7 @@
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_NAME . '<br />' . HTML::inputField('zone_name', $cInfo->zone_name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_CODE . '<br />' . HTML::inputField('zone_code', $cInfo->zone_code));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . tep_draw_pull_down_menu('zone_country_id', tep_get_countries(), $cInfo->countries_id));
+      $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::selectField('zone_country_id', tep_get_countries(), $cInfo->countries_id));
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id)));
       break;
     case 'delete':
