@@ -257,7 +257,7 @@
 ?>
 
   <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
-  
+
   <div class="alert alert-info"><?php echo TEXT_SELECT_OTHER_SHIPPING_DESTINATION; ?></div>
 
   <div class="contentText row">
@@ -269,6 +269,7 @@
 
       while ($Qab->fetch()) {
         $format_id = tep_get_address_format_id($Qab->valueInt('country_id'));
+?>
 
       <div class="col-sm-4">
         <div class="panel panel-<?php echo ($Qab->valueInt('address_book_id') == $_SESSION['sendto']) ? 'primary' : 'default'; ?>">
@@ -306,7 +307,7 @@
   <div class="buttonSet">
     <div class="text-right"><?php echo HTML::hiddenField('action', 'submit') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="contentText">
@@ -327,7 +328,7 @@
       </div>
     </div>
   </div>
-  
+
 
 <?php
   if ($process == true) {
