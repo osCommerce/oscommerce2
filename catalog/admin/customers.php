@@ -354,13 +354,13 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_gender_error == true) {
-        echo tep_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . tep_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . ENTRY_GENDER_ERROR;
+        echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . FEMALE . '&nbsp;' . ENTRY_GENDER_ERROR;
       } else {
         echo ($cInfo->customers_gender == 'm') ? MALE : FEMALE;
         echo HTML::hiddenField('customers_gender');
       }
     } else {
-      echo tep_draw_radio_field('customers_gender', 'm', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . tep_draw_radio_field('customers_gender', 'f', false, $cInfo->customers_gender) . '&nbsp;&nbsp;' . FEMALE;
+      echo HTML::radioField('customers_gender', 'm', $cInfo->customers_gender == 'm') . '&nbsp;&nbsp;' . MALE . '&nbsp;&nbsp;' . HTML::radioField('customers_gender', 'f', $cInfo->customers_gender == 'f') . '&nbsp;&nbsp;' . FEMALE;
     }
 ?></td>
           </tr>
