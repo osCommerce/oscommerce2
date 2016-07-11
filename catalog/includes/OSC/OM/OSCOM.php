@@ -116,19 +116,23 @@ class OSCOM
             $connection = 'NONSSL';
         }
 
-        $site = static::$site;
+        $site = $req_site = static::$site;
 
         if (strncmp($page, 'Admin/', 6) === 0) {
             $page = substr($page, 6);
 
-            $site = 'Admin';
+            $req_site = 'Admin';
         } elseif (strncmp($page, 'Shop/', 5) === 0) {
             $page = substr($page, 5);
 
-            $site = 'Shop';
+            $req_site = 'Shop';
         }
 
-        if ($site == 'Admin') {
+        if (($add_session_id === true) && ($site !== $req_site)) {
+            $add_session_id = false;
+        }
+
+        if ($req_site == 'Admin') {
             if ($connection == 'NONSSL') {
                 $link = HTTP_SERVER . (defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : DIR_WS_HTTP_CATALOG . 'admin/');
             } else {
