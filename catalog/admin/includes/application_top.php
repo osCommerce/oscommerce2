@@ -33,7 +33,6 @@
   require(DIR_WS_INCLUDES . 'database_tables.php');
   require(DIR_WS_FUNCTIONS . 'database.php');
   require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_FUNCTIONS . 'html_output.php');
   require(DIR_WS_CLASSES . 'logger.php');
   require(DIR_WS_CLASSES . 'shopping_cart.php');
   require(DIR_WS_CLASSES . 'language.php');
