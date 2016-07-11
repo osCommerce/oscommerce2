@@ -26,7 +26,7 @@
 
         tep_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . (int)$zone_country_id . "', '" . tep_db_input($zone_code) . "', '" . tep_db_input($zone_name) . "')");
 
-        tep_redirect(OSCOM::link(FILENAME_ZONES));
+        OSCOM::redirect(FILENAME_ZONES);
         break;
       case 'save':
         $zone_id = tep_db_prepare_input($_GET['cID']);
@@ -36,14 +36,14 @@
 
         tep_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . (int)$zone_country_id . "', zone_code = '" . tep_db_input($zone_code) . "', zone_name = '" . tep_db_input($zone_name) . "' where zone_id = '" . (int)$zone_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
+        OSCOM::redirect(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id);
         break;
       case 'deleteconfirm':
         $zone_id = tep_db_prepare_input($_GET['cID']);
 
         tep_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_ZONES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_ZONES, 'page=' . $_GET['page']);
         break;
     }
   }

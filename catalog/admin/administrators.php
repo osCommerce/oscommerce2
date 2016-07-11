@@ -97,7 +97,7 @@
           $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS));
+        OSCOM::redirect(FILENAME_ADMINISTRATORS);
         break;
       case 'save':
         require('includes/functions/password_funcs.php');
@@ -176,7 +176,7 @@
           fclose($fp);
         }
 
-        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
+        OSCOM::redirect(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']);
         break;
       case 'deleteconfirm':
         $id = tep_db_prepare_input($_GET['aID']);
@@ -216,7 +216,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS));
+        OSCOM::redirect(FILENAME_ADMINISTRATORS);
         break;
     }
   }

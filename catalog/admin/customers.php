@@ -187,7 +187,7 @@
 
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
+        OSCOM::redirect(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id);
 
         } else if ($error == true) {
           $cInfo = new objectInfo($_POST);
@@ -216,7 +216,7 @@
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customers_id . "'");
         tep_db_query("delete from " . TABLE_WHOS_ONLINE . " where customer_id = '" . (int)$customers_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action'))));
+        OSCOM::redirect(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')));
         break;
       default:
         if ($action != 'confirm') {

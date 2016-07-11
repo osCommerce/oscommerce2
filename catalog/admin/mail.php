@@ -55,7 +55,7 @@
       $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', $from, $subject);
     }
 
-    tep_redirect(OSCOM::link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
+    OSCOM::redirect(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to));
   }
 
   if ( ($action == 'preview') && !isset($_POST['customers_email_address']) ) {

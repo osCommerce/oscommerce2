@@ -69,7 +69,7 @@
         $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
       }
 
-      tep_redirect(OSCOM::link(FILENAME_SERVER_INFO));
+      OSCOM::redirect(FILENAME_SERVER_INFO);
     break;
 
     case 'save':

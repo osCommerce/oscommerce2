@@ -26,7 +26,7 @@
 
         tep_db_query("update " . TABLE_NEWSLETTERS . " set locked = '" . $status . "' where newsletters_id = '" . (int)$newsletter_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+        OSCOM::redirect(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']);
         break;
       case 'insert':
       case 'update':
@@ -62,7 +62,7 @@
             tep_db_perform(TABLE_NEWSLETTERS, $sql_data_array, 'update', "newsletters_id = '" . (int)$newsletter_id . "'");
           }
 
-          tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'nID=' . $newsletter_id));
+          OSCOM::redirect(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'nID=' . $newsletter_id);
         } else {
           $action = 'new';
         }
@@ -72,7 +72,7 @@
 
         tep_db_query("delete from " . TABLE_NEWSLETTERS . " where newsletters_id = '" . (int)$newsletter_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_NEWSLETTERS, 'page=' . $_GET['page']);
         break;
       case 'delete':
       case 'new': if (!isset($_GET['nID'])) break;
@@ -93,7 +93,7 @@
 
           $messageStack->add_session($error, 'error');
 
-          tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+          OSCOM::redirect(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']);
         }
         break;
     }

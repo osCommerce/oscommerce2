@@ -69,7 +69,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
 
-        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
+        OSCOM::redirect(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id);
         break;
       case 'save':
         $lID = tep_db_prepare_input($_GET['lID']);
@@ -85,7 +85,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
 
-        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
+        OSCOM::redirect(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']);
         break;
       case 'deleteconfirm':
         $lID = tep_db_prepare_input($_GET['lID']);
@@ -104,7 +104,7 @@
         tep_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lID . "'");
         tep_db_query("delete from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_LANGUAGES, 'page=' . $_GET['page']);
         break;
       case 'delete':
         $lID = tep_db_prepare_input($_GET['lID']);

@@ -55,7 +55,7 @@
 
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
         }
-        tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
+        OSCOM::redirect(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']);
         break;
       case 'install':
       case 'remove':
@@ -91,7 +91,7 @@
             }
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
-            tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+            OSCOM::redirect(FILENAME_MODULES, 'set=' . $set . '&module=' . $class);
           } elseif ($action == 'remove') {
             $module->remove();
 
@@ -102,10 +102,10 @@
             }
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
-            tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set));
+            OSCOM::redirect(FILENAME_MODULES, 'set=' . $set);
           }
         }
-        tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        OSCOM::redirect(FILENAME_MODULES, 'set=' . $set . '&module=' . $class);
         break;
     }
   }

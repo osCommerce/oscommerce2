@@ -79,7 +79,7 @@
 
         $messageStack->add_session(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
 
-        tep_redirect(OSCOM::link(FILENAME_ACTION_RECORDER));
+        OSCOM::redirect(FILENAME_ACTION_RECORDER);
 
         break;
     }

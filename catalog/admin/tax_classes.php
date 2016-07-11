@@ -25,7 +25,7 @@
 
         tep_db_query("insert into " . TABLE_TAX_CLASS . " (tax_class_title, tax_class_description, date_added) values ('" . tep_db_input($tax_class_title) . "', '" . tep_db_input($tax_class_description) . "', now())");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_CLASSES));
+        OSCOM::redirect(FILENAME_TAX_CLASSES);
         break;
       case 'save':
         $tax_class_id = tep_db_prepare_input($_GET['tID']);
@@ -34,14 +34,14 @@
 
         tep_db_query("update " . TABLE_TAX_CLASS . " set tax_class_id = '" . (int)$tax_class_id . "', tax_class_title = '" . tep_db_input($tax_class_title) . "', tax_class_description = '" . tep_db_input($tax_class_description) . "', last_modified = now() where tax_class_id = '" . (int)$tax_class_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id));
+        OSCOM::redirect(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id);
         break;
       case 'deleteconfirm':
         $tax_class_id = tep_db_prepare_input($_GET['tID']);
 
         tep_db_query("delete from " . TABLE_TAX_CLASS . " where tax_class_id = '" . (int)$tax_class_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']);
         break;
     }
   }

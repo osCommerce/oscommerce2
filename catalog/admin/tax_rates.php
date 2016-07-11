@@ -28,7 +28,7 @@
 
         tep_db_query("insert into " . TABLE_TAX_RATES . " (tax_zone_id, tax_class_id, tax_rate, tax_description, tax_priority, date_added) values ('" . (int)$tax_zone_id . "', '" . (int)$tax_class_id . "', '" . tep_db_input($tax_rate) . "', '" . tep_db_input($tax_description) . "', '" . tep_db_input($tax_priority) . "', now())");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_RATES));
+        OSCOM::redirect(FILENAME_TAX_RATES);
         break;
       case 'save':
         $tax_rates_id = tep_db_prepare_input($_GET['tID']);
@@ -40,14 +40,14 @@
 
         tep_db_query("update " . TABLE_TAX_RATES . " set tax_rates_id = '" . (int)$tax_rates_id . "', tax_zone_id = '" . (int)$tax_zone_id . "', tax_class_id = '" . (int)$tax_class_id . "', tax_rate = '" . tep_db_input($tax_rate) . "', tax_description = '" . tep_db_input($tax_description) . "', tax_priority = '" . tep_db_input($tax_priority) . "', last_modified = now() where tax_rates_id = '" . (int)$tax_rates_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id));
+        OSCOM::redirect(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $tax_rates_id);
         break;
       case 'deleteconfirm':
         $tax_rates_id = tep_db_prepare_input($_GET['tID']);
 
         tep_db_query("delete from " . TABLE_TAX_RATES . " where tax_rates_id = '" . (int)$tax_rates_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_TAX_RATES, 'page=' . $_GET['page']);
         break;
     }
   }

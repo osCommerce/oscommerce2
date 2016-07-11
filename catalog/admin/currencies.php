@@ -54,7 +54,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
         }
 
-        tep_redirect(OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id));
+        OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id);
         break;
       case 'deleteconfirm':
         $currencies_id = tep_db_prepare_input($_GET['cID']);
@@ -68,7 +68,7 @@
 
         tep_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page']);
         break;
       case 'update':
         $server_used = CURRENCY_SERVER_PRIMARY;
@@ -96,7 +96,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
+        OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']);
         break;
       case 'delete':
         $currencies_id = tep_db_prepare_input($_GET['cID']);

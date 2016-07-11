@@ -35,7 +35,7 @@
 
           tep_db_query("insert into " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, products_options_name, language_id) values ('" . (int)$products_options_id . "', '" . tep_db_input($option_name) . "', '" . (int)$languages[$i]['id'] . "')");
         }
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'add_product_option_values':
         $value_name_array = $_POST['value_name'];
@@ -50,7 +50,7 @@
 
         tep_db_query("insert into " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " (products_options_id, products_options_values_id) values ('" . (int)$option_id . "', '" . (int)$value_id . "')");
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'add_product_attributes':
         $products_id = tep_db_prepare_input($_POST['products_id']);
@@ -73,7 +73,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'update_option_name':
         $option_name_array = $_POST['option_name'];
@@ -85,7 +85,7 @@
           tep_db_query("update " . TABLE_PRODUCTS_OPTIONS . " set products_options_name = '" . tep_db_input($option_name) . "' where products_options_id = '" . (int)$option_id . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
         }
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'update_value':
         $value_name_array = $_POST['value_name'];
@@ -100,7 +100,7 @@
 
         tep_db_query("update " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " set products_options_id = '" . (int)$option_id . "'  where products_options_values_id = '" . (int)$value_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'update_product_attribute':
         $products_id = tep_db_prepare_input($_POST['products_id']);
@@ -122,14 +122,14 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'delete_option':
         $option_id = tep_db_prepare_input($_GET['option_id']);
 
         tep_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id = '" . (int)$option_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'delete_value':
         $value_id = tep_db_prepare_input($_GET['value_id']);
@@ -137,7 +137,7 @@
         tep_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id = '" . (int)$value_id . "'");
         tep_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS . " where products_options_values_id = '" . (int)$value_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
       case 'delete_attribute':
         $attribute_id = tep_db_prepare_input($_GET['attribute_id']);
@@ -147,7 +147,7 @@
 // added for DOWNLOAD_ENABLED. Always try to remove attributes, even if downloads are no longer enabled
         tep_db_query("delete from " . TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD . " where products_attributes_id = '" . (int)$attribute_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info));
+        OSCOM::redirect(FILENAME_PRODUCTS_ATTRIBUTES, $page_info);
         break;
     }
   }

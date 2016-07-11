@@ -66,9 +66,9 @@
 
                 unset($_SESSION['redirect_origin']);
 
-                tep_redirect(OSCOM::link($page, $get_string));
+                OSCOM::redirect($page, $get_string);
               } else {
-                tep_redirect(OSCOM::link(FILENAME_DEFAULT));
+                OSCOM::redirect(FILENAME_DEFAULT);
               }
             }
           }
@@ -93,7 +93,7 @@
           $_SESSION['auth_ignore'] = true;
         }
 
-        tep_redirect(OSCOM::link(FILENAME_DEFAULT));
+        OSCOM::redirect(FILENAME_DEFAULT);
 
         break;
 
@@ -109,7 +109,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_LOGIN));
+        OSCOM::redirect(FILENAME_LOGIN);
 
         break;
     }

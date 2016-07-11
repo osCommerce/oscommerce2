@@ -26,7 +26,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID']));
+        OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID']);
         break;
       case 'update':
         $reviews_id = tep_db_prepare_input($_GET['rID']);
@@ -37,7 +37,7 @@
         tep_db_query("update " . TABLE_REVIEWS . " set reviews_rating = '" . tep_db_input($reviews_rating) . "', reviews_status = '" . tep_db_input($reviews_status) . "', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
         tep_db_query("update " . TABLE_REVIEWS_DESCRIPTION . " set reviews_text = '" . tep_db_input($reviews_text) . "' where reviews_id = '" . (int)$reviews_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews_id));
+        OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews_id);
         break;
       case 'deleteconfirm':
         $reviews_id = tep_db_prepare_input($_GET['rID']);
@@ -45,7 +45,7 @@
         tep_db_query("delete from " . TABLE_REVIEWS . " where reviews_id = '" . (int)$reviews_id . "'");
         tep_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$reviews_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page']);
         break;
     }
   }

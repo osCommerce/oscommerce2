@@ -62,7 +62,7 @@
   if (isset($_GET['filename'])) {
     $file_edit = realpath(DIR_FS_CATALOG_LANGUAGES . $_GET['filename']);
     if (realpath(substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES))) != realpath(DIR_FS_CATALOG_LANGUAGES)) {
-      tep_redirect(OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']));
+      OSCOM::redirect(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']);
     }
   }
 
@@ -81,7 +81,7 @@
             fclose($new_file);
           }
 
-          tep_redirect(OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']));
+          OSCOM::redirect(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']);
         }
         break;
     }

@@ -71,14 +71,14 @@
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit'));
+        OSCOM::redirect(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit');
         break;
       case 'deleteconfirm':
         $oID = tep_db_prepare_input($_GET['oID']);
 
         tep_remove_order($oID, $_POST['restock']);
 
-        tep_redirect(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action'))));
+        OSCOM::redirect(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')));
         break;
     }
   }

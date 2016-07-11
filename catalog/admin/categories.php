@@ -39,7 +39,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID']));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID']);
         break;
       case 'insert_category':
       case 'update_category':
@@ -97,7 +97,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id);
         break;
       case 'delete_category_confirm':
         if (isset($_POST['categories_id'])) {
@@ -146,7 +146,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath);
         break;
       case 'delete_product_confirm':
         if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
@@ -172,7 +172,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionDelete');
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath);
         break;
       case 'move_category_confirm':
         if (isset($_POST['categories_id']) && ($_POST['categories_id'] != $_POST['move_to_category_id'])) {
@@ -184,7 +184,7 @@
           if (in_array($categories_id, $path)) {
             $messageStack->add_session(ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT, 'error');
 
-            tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
+            OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id);
           } else {
             tep_db_query("update " . TABLE_CATEGORIES . " set parent_id = '" . (int)$new_parent_id . "', last_modified = now() where categories_id = '" . (int)$categories_id . "'");
 
@@ -193,7 +193,7 @@
               tep_reset_cache_block('also_purchased');
             }
 
-            tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&cID=' . $categories_id));
+            OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&cID=' . $categories_id);
           }
         }
 
@@ -213,7 +213,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionMove');
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id);
         break;
       case 'insert_product':
       case 'update_product':
@@ -337,7 +337,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionSave');
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id);
         break;
       case 'copy_to_confirm':
         if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
@@ -383,7 +383,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionCopy');
 
-        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id));
+        OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id);
         break;
     }
   }

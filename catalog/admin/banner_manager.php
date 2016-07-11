@@ -30,7 +30,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']));
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']);
         break;
       case 'insert':
       case 'update':
@@ -110,7 +110,7 @@
             tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . tep_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
           }
 
-          tep_redirect(OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id));
+          OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id);
         } else {
           $action = 'new';
         }
@@ -164,7 +164,7 @@
 
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
-        tep_redirect(OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
         break;
     }
   }

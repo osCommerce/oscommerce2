@@ -24,7 +24,7 @@
 
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
-        tep_redirect(OSCOM::link(FILENAME_BACKUP));
+        OSCOM::redirect(FILENAME_BACKUP);
         break;
       case 'backupnow':
         tep_set_time_limit(0);
@@ -160,7 +160,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_SAVED, 'success');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_BACKUP));
+        OSCOM::redirect(FILENAME_BACKUP);
         break;
       case 'restorenow':
       case 'restorelocalnow':
@@ -281,7 +281,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_RESTORED, 'success');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_BACKUP));
+        OSCOM::redirect(FILENAME_BACKUP);
         break;
       case 'download':
         $extension = substr($_GET['file'], -3);
@@ -303,14 +303,14 @@
         }
         break;
       case 'deleteconfirm':
-        if (strstr($_GET['file'], '..')) tep_redirect(OSCOM::link(FILENAME_BACKUP));
+        if (strstr($_GET['file'], '..')) OSCOM::redirect(FILENAME_BACKUP);
 
         tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
 
-          tep_redirect(OSCOM::link(FILENAME_BACKUP));
+          OSCOM::redirect(FILENAME_BACKUP);
         }
         break;
     }

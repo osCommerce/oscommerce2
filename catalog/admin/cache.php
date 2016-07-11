@@ -21,7 +21,7 @@
       tep_reset_cache_block($_GET['block']);
     }
 
-    tep_redirect(OSCOM::link(FILENAME_CACHE));
+    OSCOM::redirect(FILENAME_CACHE);
   }
 
 // check if the cache directory exists

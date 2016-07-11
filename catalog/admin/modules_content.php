@@ -130,7 +130,7 @@
           }
         }
 
-        tep_redirect(OSCOM::link('modules_content.php', 'module=' . $_GET['module']));
+        OSCOM::redirect('modules_content.php', 'module=' . $_GET['module']);
 
         break;
 
@@ -151,11 +151,11 @@
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
-            tep_redirect(OSCOM::link('modules_content.php', 'module=' . $code . '&action=edit'));
+            OSCOM::redirect('modules_content.php', 'module=' . $code . '&action=edit');
           }
         }
 
-        tep_redirect(OSCOM::link('modules_content.php', 'action=list_new&module=' . $code));
+        OSCOM::redirect('modules_content.php', 'action=list_new&module=' . $code);
 
         break;
 
@@ -184,11 +184,11 @@
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
-            tep_redirect(OSCOM::link('modules_content.php'));
+            OSCOM::redirect('modules_content.php');
           }
         }
 
-        tep_redirect(OSCOM::link('modules_content.php', 'module=' . $code));
+        OSCOM::redirect('modules_content.php', 'module=' . $code);
 
         break;
     }

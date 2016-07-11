@@ -110,7 +110,7 @@
       }
 
       if ( $charset_pass === false ) {
-        tep_redirect(OSCOM::link('database_tables.php'));
+        OSCOM::redirect('database_tables.php');
       }
 
       tep_set_time_limit(0);

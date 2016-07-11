@@ -27,7 +27,7 @@
 
         tep_db_query("insert into " . TABLE_COUNTRIES . " (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) values ('" . tep_db_input($countries_name) . "', '" . tep_db_input($countries_iso_code_2) . "', '" . tep_db_input($countries_iso_code_3) . "', '" . (int)$address_format_id . "')");
 
-        tep_redirect(OSCOM::link(FILENAME_COUNTRIES));
+        OSCOM::redirect(FILENAME_COUNTRIES);
         break;
       case 'save':
         $countries_id = tep_db_prepare_input($_GET['cID']);
@@ -38,14 +38,14 @@
 
         tep_db_query("update " . TABLE_COUNTRIES . " set countries_name = '" . tep_db_input($countries_name) . "', countries_iso_code_2 = '" . tep_db_input($countries_iso_code_2) . "', countries_iso_code_3 = '" . tep_db_input($countries_iso_code_3) . "', address_format_id = '" . (int)$address_format_id . "' where countries_id = '" . (int)$countries_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));
+        OSCOM::redirect(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id);
         break;
       case 'deleteconfirm':
         $countries_id = tep_db_prepare_input($_GET['cID']);
 
         tep_db_query("delete from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$countries_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_COUNTRIES, 'page=' . $_GET['page']);
         break;
     }
   }

@@ -38,7 +38,7 @@
         }
 
         if ($error == false) {
-          tep_redirect(OSCOM::link(FILENAME_STORE_LOGO));
+          OSCOM::redirect(FILENAME_STORE_LOGO);
         }
         break;
     }

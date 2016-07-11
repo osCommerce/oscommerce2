@@ -71,7 +71,7 @@
           tep_reset_cache_block('manufacturers');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id));
+        OSCOM::redirect(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id);
         break;
       case 'deleteconfirm':
         $manufacturers_id = tep_db_prepare_input($_GET['mID']);
@@ -101,7 +101,7 @@
           tep_reset_cache_block('manufacturers');
         }
 
-        tep_redirect(OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']);
         break;
     }
   }

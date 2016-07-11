@@ -26,29 +26,6 @@
   }
 
 ////
-// Redirect to another page or site
-  function tep_redirect($url) {
-    global $logger;
-
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(OSCOM::link(FILENAME_DEFAULT, '', 'SSL', false));
-    }
-
-    if ( strpos($url, '&amp;') !== false ) {
-      $url = str_replace('&amp;', '&', $url);
-    }
-
-    header('Location: ' . $url);
-
-    if (STORE_PAGE_PARSE_TIME == 'true') {
-      if (!is_object($logger)) $logger = new logger;
-      $logger->timer_stop();
-    }
-
-    exit;
-  }
-
-////
 // Parse the data used in the html tags to ensure the tags will not break
   function tep_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);

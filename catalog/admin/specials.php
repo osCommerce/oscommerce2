@@ -25,7 +25,7 @@
       case 'setflag':
         tep_set_specials_status($_GET['id'], $_GET['flag']);
 
-        tep_redirect(OSCOM::link(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id']));
+        OSCOM::redirect(FILENAME_SPECIALS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'sID=' . $_GET['id']);
         break;
       case 'insert':
         $products_id = tep_db_prepare_input($_POST['products_id']);
@@ -48,7 +48,7 @@
 
         tep_db_query("insert into " . TABLE_SPECIALS . " (products_id, specials_new_products_price, specials_date_added, expires_date, status) values ('" . (int)$products_id . "', '" . tep_db_input($specials_price) . "', now(), " . (tep_not_null($expires_date) ? "'" . tep_db_input($expires_date) . "'" : 'null') . ", '1')");
 
-        tep_redirect(OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_SPECIALS, 'page=' . $_GET['page']);
         break;
       case 'update':
         $specials_id = tep_db_prepare_input($_POST['specials_id']);
@@ -65,14 +65,14 @@
 
         tep_db_query("update " . TABLE_SPECIALS . " set specials_new_products_price = '" . tep_db_input($specials_price) . "', specials_last_modified = now(), expires_date = " . (tep_not_null($expires_date) ? "'" . tep_db_input($expires_date) . "'" : 'null') . " where specials_id = '" . (int)$specials_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials_id));
+        OSCOM::redirect(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $specials_id);
         break;
       case 'deleteconfirm':
         $specials_id = tep_db_prepare_input($_GET['sID']);
 
         tep_db_query("delete from " . TABLE_SPECIALS . " where specials_id = '" . (int)$specials_id . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page']));
+        OSCOM::redirect(FILENAME_SPECIALS, 'page=' . $_GET['page']);
         break;
     }
   }

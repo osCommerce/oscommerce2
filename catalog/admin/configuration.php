@@ -25,7 +25,7 @@
 
         tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($configuration_value) . "', last_modified = now() where configuration_id = '" . (int)$cID . "'");
 
-        tep_redirect(OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cID));
+        OSCOM::redirect(FILENAME_CONFIGURATION, 'gID=' . $_GET['gID'] . '&cID=' . $cID);
         break;
     }
   }
