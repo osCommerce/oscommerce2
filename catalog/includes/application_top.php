@@ -19,7 +19,6 @@
 
 // set the level of error reporting
   error_reporting(E_ALL & ~E_DEPRECATED);
-  ini_set('display_errors', true); // TODO remove on release
 
 // load server configuration parameters
   if (file_exists('includes/local/configure.php')) { // for developers

@@ -9,6 +9,7 @@
 namespace OSC\OM;
 
 use OSC\OM\DateTime;
+use OSC\OM\ErrorHandler;
 use OSC\OM\HTML;
 use OSC\OM\HTTP;
 use OSC\OM\Registry;
@@ -23,6 +24,8 @@ class OSCOM
     public static function initialize($site = null)
     {
         DateTime::setTimeZone();
+
+        ErrorHandler::initialize();
 
         static::setSite($site);
     }
