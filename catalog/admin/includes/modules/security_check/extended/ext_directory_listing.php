@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheckExtended_ext_directory_listing {
     var $type = 'warning';
     var $has_doc = true;
@@ -23,7 +25,7 @@
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_catalog_href_link('ext/'));
+      $request = $this->getHttpRequest(OSCOM::link('Shop/ext/'));
 
       return $request['http_code'] != 200;
     }

@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -727,7 +728,7 @@ $('#products_date_available').datepicker({
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HTML::image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . $pInfo->products_name; ?></td>
+            <td class="pageHeading"><?php echo HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . $pInfo->products_name; ?></td>
             <td class="pageHeading" align="right"><?php echo $currencies->format($pInfo->products_price); ?></td>
           </tr>
         </table></td>
@@ -946,7 +947,7 @@ $('#products_date_available').datepicker({
         $category_inputs_string = '';
         $languages = tep_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $category_inputs_string .= '<br />' . HTML::image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']');
+          $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']');
         }
 
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_NAME . $category_inputs_string);
@@ -963,7 +964,7 @@ $('#products_date_available').datepicker({
         $category_inputs_string = '';
         $languages = tep_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $category_inputs_string .= '<br />' . HTML::image(tep_catalog_href_link(DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
+          $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
         }
 
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_NAME . $category_inputs_string);

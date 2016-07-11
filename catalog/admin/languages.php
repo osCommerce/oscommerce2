@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -231,7 +232,7 @@
         $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
         $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
-        $contents[] = array('text' => '<br />' . HTML::image(tep_catalog_href_link(DIR_WS_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, '', 'SSL'), $lInfo->name));
+        $contents[] = array('text' => '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, '', 'SSL'), $lInfo->name));
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_CATALOG_LANGUAGES . '<strong>' . $lInfo->directory . '</strong>');
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
       }
