@@ -255,7 +255,7 @@
       </tr>
       <tr>
         <td valign="top"><?php echo ENTRY_ADD_COMMENT; ?></td>
-        <td><?php echo tep_draw_textarea_field('comments', 'soft', '60', '6', null, 'style="width: 100%;"'); ?></td>
+        <td><?php echo HTML::textareaField('comments', '60', '6', null, 'style="width: 100%;"'); ?></td>
       </tr>
       <tr>
         <td><?php echo ENTRY_NOTIFY_CUSTOMER; ?></td>

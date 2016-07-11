@@ -172,7 +172,7 @@
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_NEWSLETTER_CONTENT; ?></td>
-            <td class="main"><?php echo tep_draw_textarea_field('content', 'soft', '100%', '20', $nInfo->content); ?></td>
+            <td class="main"><?php echo HTML::textareaField('content', '100%', '20', $nInfo->content); ?></td>
           </tr>
         </table></td>
       </tr>
