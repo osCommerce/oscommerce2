@@ -199,7 +199,7 @@
 
 <?php
   if ( isset($action) ) {
-    echo '<div style="float: right;">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link('database_tables.php')) . '</div>';
+    echo '<div style="float: right;">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link('database_tables.php')) . '</div>';
   }
 ?>
 
@@ -238,7 +238,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, HTML::checkboxField('dryrun')) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, HTML::checkboxField('dryrun')) . '</span>' . HTML::selectField('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . HTML::selectField('from_charset', $mysql_charsets) . '</span>&nbsp;' . HTML::button(BUTTON_ACTION_GO); ?>
 </div>
 
 <?php

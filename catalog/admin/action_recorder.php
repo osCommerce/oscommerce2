@@ -112,7 +112,7 @@
                 </td>
               </tr>
             </table></td>
-            <td class="smallText" align="right"><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
+            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
           </tr>
         </table></td>
       </tr>

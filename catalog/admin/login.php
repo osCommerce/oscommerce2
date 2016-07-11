@@ -165,7 +165,7 @@
     $contents = array('form' => HTML::form('login', tep_href_link(FILENAME_LOGIN, 'action=process')));
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_LOGIN, 'key'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(BUTTON_LOGIN, 'fa fa-sign-in'));
   } else {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
@@ -173,7 +173,7 @@
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
     $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(BUTTON_CREATE_ADMINISTRATOR, 'key'));
+    $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in'));
   }
 
   $box = new box;

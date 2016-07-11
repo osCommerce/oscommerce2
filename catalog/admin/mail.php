@@ -132,7 +132,7 @@
       }
     }
 
-    echo tep_draw_button(IMAGE_SEND_EMAIL, 'mail-closed', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_MAIL));
+    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_MAIL));
 ?>
                 </td>
               </tr>
@@ -186,7 +186,7 @@
                 <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
               <tr>
-                <td class="smallText" colspan="2" align="right"><?php echo tep_draw_button(IMAGE_PREVIEW, 'document', null, 'primary'); ?></td>
+                <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', null, 'primary'); ?></td>
               </tr>
             </table></td>
           </form></tr>

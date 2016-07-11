@@ -118,7 +118,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::hiddenField('reviews_id', $rInfo->reviews_id) . HTML::hiddenField('products_id', $rInfo->products_id) . HTML::hiddenField('customers_name', $rInfo->customers_name) . HTML::hiddenField('products_name', $rInfo->products_name) . HTML::hiddenField('products_image', $rInfo->products_image) . HTML::hiddenField('date_added', $rInfo->date_added) . tep_draw_button(IMAGE_PREVIEW, 'document') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::hiddenField('reviews_id', $rInfo->reviews_id) . HTML::hiddenField('products_id', $rInfo->products_id) . HTML::hiddenField('customers_name', $rInfo->customers_name) . HTML::hiddenField('products_name', $rInfo->products_name) . HTML::hiddenField('products_image', $rInfo->products_image) . HTML::hiddenField('date_added', $rInfo->date_added) . HTML::button(IMAGE_PREVIEW, 'fa fa-file-o') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
       </form></tr>
 <?php
   } elseif ($action == 'preview') {
@@ -172,7 +172,7 @@
       foreach ( $_POST as $key => $value ) echo HTML::hiddenField($key, htmlspecialchars(stripslashes($value)));
 ?>
       <tr>
-        <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
       </form></tr>
 <?php
     } else {
@@ -185,7 +185,7 @@
       }
 ?>
       <tr>
-        <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link($back_url, $back_url_params)); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link($back_url, $back_url_params)); ?></td>
       </tr>
 <?php
     }
@@ -267,13 +267,13 @@
         $contents = array('form' => HTML::form('reviews', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=deleteconfirm')));
         $contents[] = array('text' => TEXT_INFO_DELETE_REVIEW_INTRO);
         $contents[] = array('text' => '<br /><strong>' . $rInfo->products_name . '</strong>');
-        $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)));
         break;
       default:
       if (isset($rInfo) && is_object($rInfo)) {
         $heading[] = array('text' => '<strong>' . $rInfo->products_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($rInfo->date_added));
         if (tep_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . tep_date_short($rInfo->last_modified));
         $contents[] = array('text' => '<br />' . tep_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));

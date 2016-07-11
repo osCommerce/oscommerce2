@@ -102,7 +102,7 @@
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" colspan="2" align="right"><?php echo tep_draw_button(IMAGE_NEW_ZONE, 'plus', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
+                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_NEW_ZONE, 'fa fa-plus', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -123,7 +123,7 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_NAME . '<br />' . HTML::inputField('zone_name'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_CODE . '<br />' . HTML::inputField('zone_code'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::selectField('zone_country_id', tep_get_countries()));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_ZONE . '</strong>');
@@ -133,7 +133,7 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_NAME . '<br />' . HTML::inputField('zone_name', $cInfo->zone_name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_CODE . '<br />' . HTML::inputField('zone_code', $cInfo->zone_code));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::selectField('zone_country_id', tep_get_countries(), $cInfo->countries_id));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_ZONE . '</strong>');
@@ -141,13 +141,13 @@
       $contents = array('form' => HTML::form('zones', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $cInfo->zone_name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id)));
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->zone_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->zone_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_ZONES_NAME . '<br />' . $cInfo->zone_name . ' (' . $cInfo->zone_code . ')');
         $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . ' ' . $cInfo->countries_name);
       }

@@ -299,7 +299,7 @@
   }
 ?>
               <tr>
-                <td class="smallText" colspan="3" align="right"><?php echo tep_draw_button(IMAGE_INSERT, 'plus', tep_href_link(FILENAME_ADMINISTRATORS, 'action=new')); ?></td>
+                <td class="smallText" colspan="3" align="right"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', tep_href_link(FILENAME_ADMINISTRATORS, 'action=new')); ?></td>
               </tr>
             </table></td>
 <?php
@@ -319,7 +319,7 @@
         $contents[] = array('text' => '<br />' . HTML::checkboxField('htaccess', 'true') . ' ' . TEXT_INFO_PROTECT_WITH_HTPASSWD);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS)));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
@@ -344,7 +344,7 @@
         $contents[] = array('text' => '<br />' . HTML::checkboxField('htaccess', 'true', $default_flag) . ' ' . TEXT_INFO_PROTECT_WITH_HTPASSWD);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
@@ -352,13 +352,13 @@
       $contents = array('form' => HTML::form('administrator', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $aInfo->user_name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     default:
       if (isset($aInfo) && is_object($aInfo)) {
         $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=delete')));
       }
       break;
   }

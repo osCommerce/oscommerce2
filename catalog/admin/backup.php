@@ -398,7 +398,7 @@
 ?>
               <tr>
                 <td class="smallText" colspan="3"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></td>
-                <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir)) ) echo tep_draw_button(IMAGE_BACKUP, 'copy', tep_href_link(FILENAME_BACKUP, 'action=backup')); if ( ($action != 'restorelocal') && isset($dir) ) echo tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'action=restorelocal')); ?></td>
+                <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir)) ) echo HTML::button(IMAGE_BACKUP, 'fa fa-clone', tep_href_link(FILENAME_BACKUP, 'action=backup')); if ( ($action != 'restorelocal') && isset($dir) ) echo HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'action=restorelocal')); ?></td>
               </tr>
 <?php
   if (defined('DB_LAST_RESTORE')) {
@@ -431,13 +431,13 @@
         $contents[] = array('text' => '<br />' . HTML::radioField('download', 'yes', true) . ' ' . TEXT_INFO_DOWNLOAD_ONLY . '*<br /><br />*' . TEXT_INFO_BEST_THROUGH_HTTPS);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_BACKUP, 'copy', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_BACKUP, 'fa fa-copy', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP)));
       break;
     case 'restore':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
       $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     case 'restorelocal':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</strong>');
@@ -446,7 +446,7 @@
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
       $contents[] = array('text' => '<br />' . HTML::fileField('sql_file'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
@@ -454,13 +454,13 @@
       $contents = array('form' => HTML::form('delete', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $buInfo->file . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     default:
       if (isset($buInfo) && is_object($buInfo)) {
         $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_RESTORE, 'arrowrefresh-1-w', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore')) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);
         $contents[] = array('text' => TEXT_INFO_SIZE . ' ' . $buInfo->size);
         $contents[] = array('text' => '<br />' . TEXT_INFO_COMPRESSION . ' ' . $buInfo->compression);

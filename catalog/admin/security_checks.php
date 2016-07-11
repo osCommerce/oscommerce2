@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   function tep_sort_secmodules($a, $b) {
@@ -61,7 +63,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<div style="float: right;"><?php echo tep_draw_button('Reload', 'arrowrefresh-1-e', tep_href_link('security_checks.php')); ?></div>
+<div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', tep_href_link('security_checks.php')); ?></div>
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 

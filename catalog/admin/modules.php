@@ -164,9 +164,9 @@
             <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
 <?php
   if (isset($_GET['list'])) {
-    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
   } else {
-    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'fa fa-plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
   }
 ?>
           </tr>
@@ -323,7 +323,7 @@
 
       $contents = array('form' => HTML::form('modules', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save')));
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
       break;
     default:
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
@@ -351,7 +351,7 @@
         }
         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
 
-        $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . tep_draw_button(IMAGE_MODULE_REMOVE, 'minus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
 
         if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
           $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
@@ -365,7 +365,7 @@
         $contents[] = array('text' => '<br />' . $keys);
       } elseif (isset($_GET['list']) && ($_GET['list'] == 'new')) {
         if (isset($mInfo)) {
-          $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
             $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');

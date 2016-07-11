@@ -206,7 +206,7 @@
                     <td colspan="3" class="main"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   </tr>
                   <tr>
-                    <td align="right" colspan="3" class="smallText"><br /><?php echo tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td align="right" colspan="3" class="smallText"><br /><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     } else {
@@ -215,7 +215,7 @@
                     <td class="main" colspan="3"><br /><?php echo TEXT_OK_TO_DELETE; ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id'] . '&' . $page_info), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option&option_id=' . $_GET['option_id'] . '&' . $page_info), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     }
@@ -269,14 +269,14 @@
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
         echo '</form>' . "\n";
       } else {
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
                 <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
       }
 ?>
@@ -303,7 +303,7 @@
 ?>
                 <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_INSERT, 'plus'); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
 <?php
       echo '</form>';
 ?>
@@ -363,7 +363,7 @@
                     <td class="main" colspan="3"><br /><?php echo TEXT_WARNING_OF_DELETE; ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     } else {
@@ -372,7 +372,7 @@
                     <td class="main" colspan="3"><br /><?php echo TEXT_OK_TO_DELETE; ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="3"><br /><?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . $page_info), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                    <td class="smallText" align="right" colspan="3"><br /><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_value&value_id=' . $_GET['value_id'] . '&' . $page_info), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
                   </tr>
 <?php
     }
@@ -441,7 +441,7 @@
 ?>
                 </select>&nbsp;</td>
                 <td class="smallText"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
         echo '</form>';
       } else {
@@ -449,7 +449,7 @@
                 <td align="center" class="smallText">&nbsp;<?php echo $values_values["products_options_values_id"]; ?>&nbsp;</td>
                 <td align="center" class="smallText">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
                 <td class="smallText">&nbsp;<?php echo $values_name; ?>&nbsp;</td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
       }
       $max_values_id_query = tep_db_query("select max(products_options_values_id) + 1 as next_id from " . TABLE_PRODUCTS_OPTIONS_VALUES);
@@ -483,7 +483,7 @@
 ?>
                 </select>&nbsp;</td>
                 <td class="smallText"><input type="hidden" name="value_id" value="<?php echo $next_id; ?>"><?php echo $inputs; ?></td>
-                <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_INSERT, 'plus'); ?>&nbsp;</td>
+                <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
 <?php
       echo '</form>';
 ?>
@@ -599,7 +599,7 @@
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" value="<?php echo $attributes_values['options_values_price']; ?>" size="6">&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<input type="text" name="price_prefix" value="<?php echo $attributes_values['price_prefix']; ?>" size="2">&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
       if (DOWNLOAD_ENABLED == 'true') {
         $download_query_raw ="select products_attributes_filename, products_attributes_maxdays, products_attributes_maxcount
@@ -642,7 +642,7 @@
             <td class="smallText">&nbsp;<strong><?php echo $values_name; ?></strong>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<strong><?php echo $attributes_values["options_values_price"]; ?></strong>&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<strong><?php echo $attributes_values["price_prefix"]; ?></strong>&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_attribute&attribute_id=' . $_GET['attribute_id'] . '&' . $page_info), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_attribute&attribute_id=' . $_GET['attribute_id'] . '&' . $page_info), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, $page_info)); ?>&nbsp;</td>
 <?php
     } else {
 ?>
@@ -652,7 +652,7 @@
             <td class="smallText">&nbsp;<?php echo $values_name; ?>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<?php echo $attributes_values["options_values_price"]; ?>&nbsp;</td>
             <td align="center" class="smallText">&nbsp;<?php echo $attributes_values["price_prefix"]; ?>&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_EDIT, 'document', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)) . tep_draw_button(IMAGE_DELETE, 'trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_attribute&attribute_id=' . $attributes_values['products_attributes_id'] . '&' . $page_info)); ?>&nbsp;</td>
 <?php
     }
     $max_attributes_id_query = tep_db_query("select max(products_attributes_id) + 1 as next_id from " . TABLE_PRODUCTS_ATTRIBUTES);
@@ -695,7 +695,7 @@
             </select>&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="value_price" size="6">&nbsp;</td>
             <td align="right" class="smallText">&nbsp;<input type="text" name="price_prefix" size="2" value="+">&nbsp;</td>
-            <td align="center" class="smallText">&nbsp;<?php echo tep_draw_button(IMAGE_INSERT, 'plus'); ?>&nbsp;</td>
+            <td align="center" class="smallText">&nbsp;<?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus'); ?>&nbsp;</td>
           </tr>
 <?php
       if (DOWNLOAD_ENABLED == 'true') {
