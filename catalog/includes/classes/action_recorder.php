@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class actionRecorder {
@@ -20,7 +21,7 @@
     function __construct($module, $user_id = null, $user_name = null) {
       global $PHP_SELF;
 
-      $module = tep_sanitize_string(str_replace(' ', '', $module));
+      $module = HTML::sanitize(str_replace(' ', '', $module));
 
       if (defined('MODULE_ACTION_RECORDER_INSTALLED') && tep_not_null(MODULE_ACTION_RECORDER_INSTALLED)) {
         if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {

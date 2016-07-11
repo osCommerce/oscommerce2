@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_gpublisher {
@@ -33,7 +34,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<link rel="publisher" href="' . tep_output_string(MODULE_HEADER_TAGS_GPUBLISHER_ID) . '" />' . PHP_EOL, $this->group);
+      $oscTemplate->addBlock('<link rel="publisher" href="' . HTML::output(MODULE_HEADER_TAGS_GPUBLISHER_ID) . '" />' . PHP_EOL, $this->group);
     }
 
     function isEnabled() {

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_google_adwords_conversion {
@@ -59,10 +60,10 @@
           }
 
           $conversion_id = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID;
-          $conversion_language = tep_output_string_protected($language_code);
+          $conversion_language = HTML::outputProtected($language_code);
           $conversion_format = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT;
-          $conversion_color = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
-          $conversion_label = tep_output_string_protected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
+          $conversion_color = HTML::outputProtected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
+          $conversion_label = HTML::outputProtected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);
           $conversion_value = $this->format_raw($Qsubtotal->value('value'), $Qorder->value('currency'), $Qorder->value('currency_value'));
 
           $output = <<<EOD

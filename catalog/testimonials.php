@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -52,8 +53,8 @@
     $testimonials_query = tep_db_query($testimonials_split->sql_query);
     while ($testimonials = tep_db_fetch_array($testimonials_query)) {
       echo '<blockquote class="col-sm-6">';
-      echo '  <p>' . tep_output_string_protected($testimonials['testimonials_text']) . '</p><div class="clearfix"></div>';
-      echo '  <p><small>' . tep_output_string_protected($testimonials['customers_name']) . '</small></p>';
+      echo '  <p>' . HTML::outputProtected($testimonials['testimonials_text']) . '</p><div class="clearfix"></div>';
+      echo '  <p><small>' . HTML::outputProtected($testimonials['customers_name']) . '</small></p>';
       echo '</blockquote>';
     }
     ?>

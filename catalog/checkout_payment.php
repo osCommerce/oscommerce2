@@ -104,9 +104,9 @@
 ?>
 
   <div class="contentText">
-    <?php echo '<strong>' . tep_output_string_protected($error['title']) . '</strong>'; ?>
+    <?php echo '<strong>' . HTML::outputProtected($error['title']) . '</strong>'; ?>
 
-    <p class="messageStackError"><?php echo tep_output_string_protected($error['error']); ?></p>
+    <p class="messageStackError"><?php echo HTML::outputProtected($error['error']); ?></p>
   </div>
 
 <?php

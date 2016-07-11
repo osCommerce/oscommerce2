@@ -138,7 +138,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= HTML::checkboxField('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . HTML::output($file) . '<br />';
     }
 
     if (!empty($output)) {

@@ -82,9 +82,9 @@
 
         $sql_query = tep_db_query($action . " table " . $table);
         while ( $sql = tep_db_fetch_array($sql_query) ) {
-          $table_data[] = array(($table != $current_table) ? tep_output_string_protected($table) : '',
-                                tep_output_string_protected($sql['Msg_type']),
-                                tep_output_string_protected($sql['Msg_text']),
+          $table_data[] = array(($table != $current_table) ? HTML::outputProtected($table) : '',
+                                HTML::outputProtected($sql['Msg_type']),
+                                HTML::outputProtected($sql['Msg_text']),
                                 ($table != $current_table) ? HTML::checkboxField('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
 
           $current_table = $table;
@@ -166,8 +166,8 @@
         }
 
         if ( !isset($_POST['dryrun']) ) {
-          $table_data[] = array(tep_output_string_protected($table),
-                                tep_output_string_protected($result),
+          $table_data[] = array(HTML::outputProtected($table),
+                                HTML::outputProtected($result),
                                 HTML::checkboxField('id[]', $table, true));
         }
       }
@@ -186,11 +186,11 @@
 
       $sql_query = tep_db_query('show table status');
       while ( $sql = tep_db_fetch_array($sql_query) ) {
-        $table_data[] = array(tep_output_string_protected($sql['Name']),
-                              tep_output_string_protected($sql['Rows']),
+        $table_data[] = array(HTML::outputProtected($sql['Name']),
+                              HTML::outputProtected($sql['Rows']),
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
-                              tep_output_string_protected($sql['Engine']),
-                              tep_output_string_protected($sql['Collation']),
+                              HTML::outputProtected($sql['Engine']),
+                              HTML::outputProtected($sql['Collation']),
                               HTML::checkboxField('id[]', $sql['Name']));
       }
   }

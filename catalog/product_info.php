@@ -74,7 +74,7 @@
       $products_price .= '<link itemprop="availability" href="http://schema.org/InStock" />';
     }
 
-    $products_price .= '<meta itemprop="priceCurrency" content="' . tep_output_string($_SESSION['currency']) . '" />';
+    $products_price .= '<meta itemprop="priceCurrency" content="' . HTML::output($_SESSION['currency']) . '" />';
 
     $products_name = '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id')) . '" itemprop="url"><span itemprop="name">' . $Qproduct->value('products_name') . '</span></a>';
 

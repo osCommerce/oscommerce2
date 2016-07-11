@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   class d_total_revenue {
@@ -51,7 +52,7 @@
         $js_array = substr($js_array, 0, -1);
       }
 
-      $chart_label = tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
+      $chart_label = HTML::output(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
       $chart_label_link = OSCOM::link(FILENAME_ORDERS);
 
       $output = <<<EOD

@@ -48,7 +48,7 @@
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
                    '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . (int)$reviews['reviews_id'] . '&action=edit') . '">' . $reviews['products_name'] . '</a></td>' .
                    '    <td class="dataTableContent">' . tep_date_short($reviews['date_added']) . '</td>' .
-                   '    <td class="dataTableContent">' . tep_output_string_protected($reviews['customers_name']) . '</td>' .
+                   '    <td class="dataTableContent">' . HTML::outputProtected($reviews['customers_name']) . '</td>' .
                    '    <td class="dataTableContent">' . HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif') . '</td>' .
                    '    <td class="dataTableContent">' . $status_icon . '</td>' .
                    '  </tr>';

@@ -267,7 +267,7 @@
   <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></h2>
 
   <blockquote>
-    <?php echo nl2br(tep_output_string_protected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
+    <?php echo nl2br(HTML::outputProtected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
   </blockquote>
 
 <?php

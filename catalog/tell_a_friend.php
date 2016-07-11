@@ -98,7 +98,7 @@
 
       $actionRecorder->record();
 
-      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), tep_output_string_protected($to_name)), 'success');
+      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), HTML::outputProtected($to_name)), 'success');
 
       OSCOM::redirect('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'));
     }

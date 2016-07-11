@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_manufacturer_seo {
@@ -41,10 +42,10 @@
 
           if ($Qmeta->fetch() !== false) {
             if (tep_not_null($Qmeta->value('manufacturers_seo_description'))) {
-              $oscTemplate->addBlock('<meta name="description" content="' . tep_output_string($Qmeta->value('manufacturers_seo_description')) . '" />' . PHP_EOL, $this->group);
+              $oscTemplate->addBlock('<meta name="description" content="' . HTML::output($Qmeta->value('manufacturers_seo_description')) . '" />' . PHP_EOL, $this->group);
             }
             if ( tep_not_null($Qmeta->value('manufacturers_seo_keywords')) && (MODULE_HEADER_TAGS_MANUFACTURERS_SEO_KEYWORDS_STATUS == 'True') ) {
-              $oscTemplate->addBlock('<meta name="keywords" content="' . tep_output_string($Qmeta->value('manufacturers_seo_keywords')) . '" />' . PHP_EOL, $this->group);
+              $oscTemplate->addBlock('<meta name="keywords" content="' . HTML::output($Qmeta->value('manufacturers_seo_keywords')) . '" />' . PHP_EOL, $this->group);
             }
           }
         }

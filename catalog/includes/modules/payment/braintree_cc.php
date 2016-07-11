@@ -149,16 +149,16 @@
       $months_array = array();
 
       for ($i=1; $i<13; $i++) {
-        $months_array[] = array('id' => tep_output_string(sprintf('%02d', $i)),
-                                'text' => tep_output_string_protected(sprintf('%02d', $i)));
+        $months_array[] = array('id' => HTML::output(sprintf('%02d', $i)),
+                                'text' => HTML::outputProtected(sprintf('%02d', $i)));
       }
 
       $today = getdate();
       $years_array = array();
 
       for ($i=$today['year']; $i < $today['year']+10; $i++) {
-        $years_array[] = array('id' => tep_output_string(strftime('%Y',mktime(0,0,0,1,1,$i))),
-                               'text' => tep_output_string_protected(strftime('%Y',mktime(0,0,0,1,1,$i))));
+        $years_array[] = array('id' => HTML::output(strftime('%Y',mktime(0,0,0,1,1,$i))),
+                               'text' => HTML::outputProtected(strftime('%Y',mktime(0,0,0,1,1,$i))));
       }
 
       $content = '';
@@ -176,7 +176,7 @@
           do {
             $content .= '<tr class="moduleRow" id="braintree_card_' . $Qtokens->valueInt('id') . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="braintree_card" value="' . $Qtokens->valueInt('id') . '" /></td>' .
-                        '  <td valign="top">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_LAST_4 . '&nbsp;' . $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)) . '&nbsp;&nbsp;' . $Qtokens->valueProtected('card_type') . '</td>' .
+                        '  <td valign="top">' . MODULE_PAYMENT_BRAINTREE_CC_CREDITCARD_LAST_4 . '&nbsp;' . $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . HTML::outputProtected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)) . '&nbsp;&nbsp;' . $Qtokens->valueProtected('card_type') . '</td>' .
                         '</tr>';
 
             if ( MODULE_PAYMENT_BRAINTREE_CC_VERIFY_WITH_CVV == 'True' ) {

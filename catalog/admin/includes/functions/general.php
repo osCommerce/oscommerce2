@@ -31,28 +31,6 @@
     return strtr(trim($data), $parse);
   }
 
-  function tep_output_string($string, $translate = false, $protected = false) {
-    if ($protected == true) {
-      return htmlspecialchars($string);
-    } else {
-      if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
-      } else {
-        return tep_parse_input_field_data($string, $translate);
-      }
-    }
-  }
-
-  function tep_output_string_protected($string) {
-    return tep_output_string($string, false, true);
-  }
-
-  function tep_sanitize_string($string) {
-    $patterns = array ('/ +/','/[<>]/');
-    $replace = array (' ', '_');
-    return preg_replace($patterns, $replace, trim($string));
-  }
-
   function tep_customers_name($customers_id) {
     $customers = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customers_id . "'");
     $customers_values = tep_db_fetch_array($customers);
@@ -361,21 +339,21 @@
     $address_format_query = tep_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = '" . (int)$address_format_id . "'");
     $address_format = tep_db_fetch_array($address_format_query);
 
-    $company = tep_output_string_protected($address['company']);
+    $company = HTML::outputProtected($address['company']);
     if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
-      $firstname = tep_output_string_protected($address['firstname']);
-      $lastname = tep_output_string_protected($address['lastname']);
+      $firstname = HTML::outputProtected($address['firstname']);
+      $lastname = HTML::outputProtected($address['lastname']);
     } elseif (isset($address['name']) && tep_not_null($address['name'])) {
-      $firstname = tep_output_string_protected($address['name']);
+      $firstname = HTML::outputProtected($address['name']);
       $lastname = '';
     } else {
       $firstname = '';
       $lastname = '';
     }
-    $street = tep_output_string_protected($address['street_address']);
-    $suburb = tep_output_string_protected($address['suburb']);
-    $city = tep_output_string_protected($address['city']);
-    $state = tep_output_string_protected($address['state']);
+    $street = HTML::outputProtected($address['street_address']);
+    $suburb = HTML::outputProtected($address['suburb']);
+    $city = HTML::outputProtected($address['city']);
+    $state = HTML::outputProtected($address['state']);
     if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
       $country = tep_get_country_name($address['country_id']);
 
@@ -383,11 +361,11 @@
         $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
       }
     } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']);
+      $country = HTML::outputProtected($address['country']);
     } else {
       $country = '';
     }
-    $postcode = tep_output_string_protected($address['postcode']);
+    $postcode = HTML::outputProtected($address['postcode']);
     $zip = $postcode;
 
     if ($html) {
@@ -413,7 +391,7 @@
     $statecomma = '';
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = tep_output_string_protected($address['country']);
+    if ($country == '') $country = HTML::outputProtected($address['country']);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format['format'];
