@@ -76,7 +76,7 @@
   }
 ?>
             </td>
-          <?php echo tep_draw_hidden_field('page', $_GET['page']) . tep_draw_hidden_field('bID', $_GET['bID']); ?></form></tr>
+          <?php echo HTML::hiddenField('page', $_GET['page']) . HTML::hiddenField('bID', $_GET['bID']); ?></form></tr>
         </table></td>
       </tr>
       <tr>

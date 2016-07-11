@@ -154,7 +154,7 @@
       <tr>
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
-      <tr><?php echo HTML::form('newsletter', tep_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action)); if ($form_action == 'update') echo tep_draw_hidden_field('newsletter_id', $nID); ?>
+      <tr><?php echo HTML::form('newsletter', tep_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action)); if ($form_action == 'update') echo HTML::hiddenField('newsletter_id', $nID); ?>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_NEWSLETTER_MODULE; ?></td>

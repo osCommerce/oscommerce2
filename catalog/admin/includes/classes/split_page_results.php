@@ -75,7 +75,7 @@
           $pairs = explode('&', $parameters);
           foreach ( $pairs as $pair ) {
             list($key,$value) = explode('=', $pair);
-            $display_links .= tep_draw_hidden_field(rawurldecode($key), rawurldecode($value));
+            $display_links .= HTML::hiddenField(rawurldecode($key), rawurldecode($value));
           }
         }
 

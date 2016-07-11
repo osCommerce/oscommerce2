@@ -118,7 +118,7 @@
         <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo tep_draw_hidden_field('reviews_id', $rInfo->reviews_id) . tep_draw_hidden_field('products_id', $rInfo->products_id) . tep_draw_hidden_field('customers_name', $rInfo->customers_name) . tep_draw_hidden_field('products_name', $rInfo->products_name) . tep_draw_hidden_field('products_image', $rInfo->products_image) . tep_draw_hidden_field('date_added', $rInfo->date_added) . tep_draw_button(IMAGE_PREVIEW, 'document') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::hiddenField('reviews_id', $rInfo->reviews_id) . HTML::hiddenField('products_id', $rInfo->products_id) . HTML::hiddenField('customers_name', $rInfo->customers_name) . HTML::hiddenField('products_name', $rInfo->products_name) . HTML::hiddenField('products_image', $rInfo->products_image) . HTML::hiddenField('date_added', $rInfo->date_added) . tep_draw_button(IMAGE_PREVIEW, 'document') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
       </form></tr>
 <?php
   } elseif ($action == 'preview') {
@@ -169,7 +169,7 @@
     if (tep_not_null($_POST)) {
 /* Re-Post all POST'ed variables */
 
-      foreach ( $_POST as $key => $value ) echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
+      foreach ( $_POST as $key => $value ) echo HTML::hiddenField($key, htmlspecialchars(stripslashes($value)));
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>

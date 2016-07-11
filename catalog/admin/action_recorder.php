@@ -98,7 +98,7 @@
 <?php
   echo HTML::form('search', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search');
-  echo tep_draw_hidden_field('module') . '</form>';
+  echo HTML::hiddenField('module') . '</form>';
 ?>
                 </td>
               </tr>
@@ -107,7 +107,7 @@
 <?php
   echo HTML::form('filter', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo tep_draw_pull_down_menu('module', $modules_list_array, null, 'onchange="this.form.submit();"');
-  echo tep_draw_hidden_field('search') . '</form>';
+  echo HTML::hiddenField('search') . '</form>';
 ?>
                 </td>
               </tr>

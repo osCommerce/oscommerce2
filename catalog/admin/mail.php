@@ -128,7 +128,7 @@
 /* Re-Post all POST'ed variables */
     foreach ( $_POST as $key => $value ) {
       if (!is_array($_POST[$key])) {
-        echo tep_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
+        echo HTML::hiddenField($key, htmlspecialchars(stripslashes($value)));
       }
     }
 

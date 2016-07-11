@@ -143,10 +143,10 @@ function selectAll(FormName, SelectBox) {
                         '    <td class="smallText" align="right">';
       if (sizeof($audience) > 0) {
         if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
-          $confirm_string .= tep_draw_hidden_field('global', 'true');
+          $confirm_string .= HTML::hiddenField('global', 'true');
         } else {
           for ($i = 0, $n = sizeof($chosen); $i < $n; $i++) {
-            $confirm_string .= tep_draw_hidden_field('chosen[]', $chosen[$i]);
+            $confirm_string .= HTML::hiddenField('chosen[]', $chosen[$i]);
           }
         }
         $confirm_string .= tep_draw_button(IMAGE_SEND, 'mail-closed', null, 'primary');
