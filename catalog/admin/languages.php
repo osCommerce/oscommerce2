@@ -69,7 +69,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
 
-        tep_redirect(tep_href_link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
+        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id));
         break;
       case 'save':
         $lID = tep_db_prepare_input($_GET['lID']);
@@ -85,7 +85,7 @@
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
         }
 
-        tep_redirect(tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
+        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']));
         break;
       case 'deleteconfirm':
         $lID = tep_db_prepare_input($_GET['lID']);
@@ -104,7 +104,7 @@
         tep_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lID . "'");
         tep_db_query("delete from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
 
-        tep_redirect(tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
+        tep_redirect(OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page']));
         break;
       case 'delete':
         $lID = tep_db_prepare_input($_GET['lID']);
@@ -152,9 +152,9 @@
     }
 
     if (isset($lInfo) && is_object($lInfo) && ($languages['languages_id'] == $lInfo->languages_id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '\'">' . "\n";
+      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '\'">' . "\n";
     }
 
     if (DEFAULT_LANGUAGE == $languages['code']) {
@@ -164,7 +164,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $languages['code']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($languages['languages_id'] == $lInfo->languages_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($languages['languages_id'] == $lInfo->languages_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -179,7 +179,7 @@
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_LANGUAGE, 'fa fa-plus', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new')); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_LANGUAGE, 'fa fa-plus', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -195,7 +195,7 @@
     case 'new':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_LANGUAGE . '</strong>');
 
-      $contents = array('form' => HTML::form('languages', tep_href_link(FILENAME_LANGUAGES, 'action=insert')));
+      $contents = array('form' => HTML::form('languages', OSCOM::link(FILENAME_LANGUAGES, 'action=insert')));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . HTML::inputField('name'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . HTML::inputField('code'));
@@ -203,12 +203,12 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . HTML::inputField('directory'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . HTML::inputField('sort_order'));
       $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID'])));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</strong>');
 
-      $contents = array('form' => HTML::form('languages', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save')));
+      $contents = array('form' => HTML::form('languages', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=save')));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . '<br />' . HTML::inputField('name', $lInfo->name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CODE . '<br />' . HTML::inputField('code', $lInfo->code));
@@ -216,20 +216,20 @@
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . HTML::inputField('directory', $lInfo->directory));
       $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $lInfo->sort_order));
       if (DEFAULT_LANGUAGE != $lInfo->code) $contents[] = array('text' => '<br />' . HTML::checkboxField('default') . ' ' . TEXT_SET_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_LANGUAGE . '</strong>');
 
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $lInfo->name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm'), 'primary') : '') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_language) ? HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=deleteconfirm'), 'primary') : '') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id)));
       break;
     default:
       if (is_object($lInfo)) {
         $heading[] = array('text' => '<strong>' . $lInfo->name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $lInfo->directory)));
         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
         $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
         $contents[] = array('text' => '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $lInfo->directory . '/images/' . $lInfo->image, '', 'SSL'), $lInfo->name));

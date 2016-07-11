@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -25,7 +26,7 @@
 
         tep_db_query("update " . TABLE_NEWSLETTERS . " set locked = '" . $status . "' where newsletters_id = '" . (int)$newsletter_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+        tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
         break;
       case 'insert':
       case 'update':
@@ -61,7 +62,7 @@
             tep_db_perform(TABLE_NEWSLETTERS, $sql_data_array, 'update', "newsletters_id = '" . (int)$newsletter_id . "'");
           }
 
-          tep_redirect(tep_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'nID=' . $newsletter_id));
+          tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'nID=' . $newsletter_id));
         } else {
           $action = 'new';
         }
@@ -71,7 +72,7 @@
 
         tep_db_query("delete from " . TABLE_NEWSLETTERS . " where newsletters_id = '" . (int)$newsletter_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page']));
+        tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page']));
         break;
       case 'delete':
       case 'new': if (!isset($_GET['nID'])) break;
@@ -92,7 +93,7 @@
 
           $messageStack->add_session($error, 'error');
 
-          tep_redirect(tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+          tep_redirect(OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
         }
         break;
     }
@@ -150,7 +151,7 @@
       $modules_array[] = array('id' => substr($directory_array[$i], 0, strrpos($directory_array[$i], '.')), 'text' => substr($directory_array[$i], 0, strrpos($directory_array[$i], '.')));
     }
 ?>
-      <tr><?php echo HTML::form('newsletter', tep_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action)); if ($form_action == 'update') echo HTML::hiddenField('newsletter_id', $nID); ?>
+      <tr><?php echo HTML::form('newsletter', OSCOM::link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action)); if ($form_action == 'update') echo HTML::hiddenField('newsletter_id', $nID); ?>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_NEWSLETTER_MODULE; ?></td>
@@ -175,7 +176,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['nID']) ? 'nID=' . $_GET['nID'] : ''))); ?></td>
+            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['nID']) ? 'nID=' . $_GET['nID'] : ''))); ?></td>
           </tr>
         </table></td>
       </form></tr>
@@ -189,13 +190,13 @@
     $nInfo = new objectInfo($newsletter);
 ?>
       <tr>
-        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
+        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
       </tr>
       <tr>
         <td><tt><?php echo nl2br($nInfo->content); ?></tt></td>
       </tr>
       <tr>
-        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
+        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
       </tr>
 <?php
   } elseif ($action == 'send') {
@@ -262,7 +263,7 @@
         <td class="main"><font color="#ff0000"><strong><?php echo TEXT_FINISHED_SENDING_EMAILS; ?></strong></font></td>
       </tr>
       <tr>
-        <td class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
+        <td class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])); ?></td>
       </tr>
 <?php
   } else {
@@ -289,17 +290,17 @@
       }
 
       if (isset($nInfo) && is_object($nInfo) && ($newsletters['newsletters_id'] == $nInfo->newsletters_id) ) {
-        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview') . '\'">' . "\n";
+        echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview') . '\'">' . "\n";
       } else {
-        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id']) . '\'">' . "\n";
+        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id'] . '&action=preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $newsletters['title']; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id'] . '&action=preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $newsletters['title']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo number_format($newsletters['content_length']) . ' bytes'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $newsletters['module']; ?></td>
                 <td class="dataTableContent" align="center"><?php if ($newsletters['status'] == '1') { echo HTML::image(DIR_WS_ICONS . 'tick.gif', ICON_TICK); } else { echo HTML::image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS); } ?></td>
                 <td class="dataTableContent" align="center"><?php if ($newsletters['locked'] > 0) { echo HTML::image(DIR_WS_ICONS . 'locked.gif', ICON_LOCKED); } else { echo HTML::image(DIR_WS_ICONS . 'unlocked.gif', ICON_UNLOCKED); } ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($nInfo) && is_object($nInfo) && ($newsletters['newsletters_id'] == $nInfo->newsletters_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($nInfo) && is_object($nInfo) && ($newsletters['newsletters_id'] == $nInfo->newsletters_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $newsletters['newsletters_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -311,7 +312,7 @@
                     <td class="smallText" align="right"><?php echo $newsletters_split->display_links($newsletters_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
                   </tr>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_NEWSLETTER, 'fa fa-plus', tep_href_link(FILENAME_NEWSLETTERS, 'action=new')); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_NEWSLETTER, 'fa fa-plus', OSCOM::link(FILENAME_NEWSLETTERS, 'action=new')); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -324,19 +325,19 @@
     case 'delete':
       $heading[] = array('text' => '<strong>' . $nInfo->title . '</strong>');
 
-      $contents = array('form' => HTML::form('newsletters', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('newsletters', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $nInfo->title . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])));
       break;
     default:
       if (isset($nInfo) && is_object($nInfo)) {
         $heading[] = array('text' => '<strong>' . $nInfo->title . '</strong>');
 
         if ($nInfo->locked > 0) {
-          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=delete')) . HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview')) . HTML::button(IMAGE_SEND, 'fa fa-envelope', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=send')) . HTML::button(IMAGE_UNLOCK, 'fa fa-unlock', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=unlock')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=delete')) . HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview')) . HTML::button(IMAGE_SEND, 'fa fa-envelope', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=send')) . HTML::button(IMAGE_UNLOCK, 'fa fa-unlock', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=unlock')));
         } else {
-          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview')) . HTML::button(IMAGE_LOCK, 'fa fa-lock', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=lock')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=preview')) . HTML::button(IMAGE_LOCK, 'fa fa-lock', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $nInfo->newsletters_id . '&action=lock')));
         }
         $contents[] = array('text' => '<br />' . TEXT_NEWSLETTER_DATE_ADDED . ' ' . tep_date_short($nInfo->date_added));
         if ($nInfo->status == '1') $contents[] = array('text' => TEXT_NEWSLETTER_DATE_SENT . ' ' . tep_date_short($nInfo->date_sent));

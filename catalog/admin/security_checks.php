@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -63,7 +64,7 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', tep_href_link('security_checks.php')); ?></div>
+<div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', OSCOM::link('security_checks.php')); ?></div>
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 

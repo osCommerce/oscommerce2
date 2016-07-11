@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -37,14 +38,14 @@
         }
 
         if ($error == false) {
-          tep_redirect(tep_href_link(FILENAME_STORE_LOGO));
+          tep_redirect(OSCOM::link(FILENAME_STORE_LOGO));
         }
         break;
     }
   }
 
   if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) {
-    $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, tep_href_link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
+    $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -62,7 +63,7 @@
         <td><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO); ?></td>
       </tr>
       <tr>
-        <td><?php echo HTML::form('logo', tep_href_link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>
+        <td><?php echo HTML::form('logo', OSCOM::link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>
           <table border="0" cellspacing="0" cellpadding="2">
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>

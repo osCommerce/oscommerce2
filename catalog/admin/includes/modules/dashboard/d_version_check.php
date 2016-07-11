@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   class d_version_check {
     var $code = 'd_version_check';
@@ -64,7 +65,7 @@
       }
 
       $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                 '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_VERSION_CHECK) . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>' .
+                 '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_VERSION_CHECK) . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>' .
                  '    <td class="dataTableContent" align="right">' . $date_last_checked . '</td>' .
                  '  </tr>' .
                  '</table>';

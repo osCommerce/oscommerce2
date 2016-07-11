@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class d_total_customers {
     var $code = 'd_total_customers';
     var $title;
@@ -50,7 +52,7 @@
       }
 
       $chart_label = tep_output_string(MODULE_ADMIN_DASHBOARD_TOTAL_CUSTOMERS_CHART_LINK);
-      $chart_label_link = tep_href_link(FILENAME_CUSTOMERS);
+      $chart_label_link = OSCOM::link(FILENAME_CUSTOMERS);
 
       $output = <<<EOD
 <div id="d_total_customers" style="width: 100%; height: 150px;"></div>

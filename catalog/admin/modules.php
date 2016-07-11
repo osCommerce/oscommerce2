@@ -12,6 +12,7 @@
 
   use OSC\OM\Apps;
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
@@ -54,7 +55,7 @@
 
           tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
         }
-        tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
+        tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
         break;
       case 'install':
       case 'remove':
@@ -90,7 +91,7 @@
             }
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
-            tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+            tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
           } elseif ($action == 'remove') {
             $module->remove();
 
@@ -101,10 +102,10 @@
             }
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed)], ['configuration_key' => $module_key]);
-            tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set));
+            tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set));
           }
         }
-        tep_redirect(tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        tep_redirect(OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
         break;
     }
   }
@@ -163,9 +164,9 @@
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
 <?php
   if (isset($_GET['list'])) {
-    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_MODULES, 'set=' . $set)) . '</td>';
   } else {
-    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'fa fa-plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_MODULE_INSTALL . ' (' . $new_modules_counter . ')', 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&list=new')) . '</td>';
   }
 ?>
           </tr>
@@ -245,17 +246,17 @@
 
       if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
         if ($module->check() > 0) {
-          echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . addslashes($class) . '&action=edit') . '\'">' . "\n";
+          echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . addslashes($class) . '&action=edit') . '\'">' . "\n";
         } else {
           echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
         }
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . addslashes($class)) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . addslashes($class)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent" align="right"><?php if (in_array($module->code . $file_extension, $modules_installed) && is_numeric($module->sort_order)) echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_MODULES, 'set=' . $set . (isset($_GET['list']) ? '&list=new' : '') . '&module=' . $class) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -320,9 +321,9 @@
 
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
-      $contents = array('form' => HTML::form('modules', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save')));
+      $contents = array('form' => HTML::form('modules', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save')));
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'])));
       break;
     default:
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
@@ -350,7 +351,7 @@
         }
         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove')));
 
         if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
           $contents[] = array('text' => '<br />' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
@@ -364,7 +365,7 @@
         $contents[] = array('text' => '<br />' . $keys);
       } elseif (isset($_GET['list']) && ($_GET['list'] == 'new')) {
         if (isset($mInfo)) {
-          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', tep_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', OSCOM::link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
             $contents[] = array('text' => '<br />' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');

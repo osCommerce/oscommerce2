@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   class d_reviews {
     var $code = 'd_reviews';
@@ -45,7 +46,7 @@
       while ($reviews = tep_db_fetch_array($reviews_query)) {
         $status_icon = ($reviews['reviews_status'] == '1') ? HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) : HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_REVIEWS, 'rID=' . (int)$reviews['reviews_id'] . '&action=edit') . '">' . $reviews['products_name'] . '</a></td>' .
+                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . (int)$reviews['reviews_id'] . '&action=edit') . '">' . $reviews['products_name'] . '</a></td>' .
                    '    <td class="dataTableContent">' . tep_date_short($reviews['date_added']) . '</td>' .
                    '    <td class="dataTableContent">' . tep_output_string_protected($reviews['customers_name']) . '</td>' .
                    '    <td class="dataTableContent">' . HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif') . '</td>' .

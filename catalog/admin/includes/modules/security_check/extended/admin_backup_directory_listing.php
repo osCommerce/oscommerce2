@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheckExtended_admin_backup_directory_listing {
     var $type = 'error';
     var $has_doc = true;
@@ -23,7 +25,7 @@
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_href_link('backups/'));
+      $request = $this->getHttpRequest(OSCOM::link('backups/'));
 
       return $request['http_code'] != 200;
     }

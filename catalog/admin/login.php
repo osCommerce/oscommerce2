@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   $login_request = true;
 
@@ -65,9 +66,9 @@
 
                 unset($_SESSION['redirect_origin']);
 
-                tep_redirect(tep_href_link($page, $get_string));
+                tep_redirect(OSCOM::link($page, $get_string));
               } else {
-                tep_redirect(tep_href_link(FILENAME_DEFAULT));
+                tep_redirect(OSCOM::link(FILENAME_DEFAULT));
               }
             }
           }
@@ -92,7 +93,7 @@
           $_SESSION['auth_ignore'] = true;
         }
 
-        tep_redirect(tep_href_link(FILENAME_DEFAULT));
+        tep_redirect(OSCOM::link(FILENAME_DEFAULT));
 
         break;
 
@@ -108,7 +109,7 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_LOGIN));
+        tep_redirect(OSCOM::link(FILENAME_LOGIN));
 
         break;
     }
@@ -143,7 +144,7 @@
   if (sizeof($languages_array) > 1) {
 ?>
 
-        <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', tep_href_link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
+        <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', OSCOM::link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
 
 <?php
   }
@@ -162,14 +163,14 @@
   if (tep_db_num_rows($admins_check_query) > 0) {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
-    $contents = array('form' => HTML::form('login', tep_href_link(FILENAME_LOGIN, 'action=process')));
+    $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=process')));
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
     $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(BUTTON_LOGIN, 'fa fa-sign-in'));
   } else {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
-    $contents = array('form' => HTML::form('login', tep_href_link(FILENAME_LOGIN, 'action=create')));
+    $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=create')));
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
     $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));

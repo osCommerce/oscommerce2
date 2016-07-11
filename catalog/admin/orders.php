@@ -71,14 +71,14 @@
           $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
 
-        tep_redirect(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit'));
+        tep_redirect(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit'));
         break;
       case 'deleteconfirm':
         $oID = tep_db_prepare_input($_GET['oID']);
 
         tep_remove_order($oID, $_POST['restock']);
 
-        tep_redirect(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action'))));
+        tep_redirect(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action'))));
         break;
     }
   }
@@ -108,13 +108,13 @@
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE . ': #' . (int)$oID . ' (' . $order->info['total'] . ')'; ?></h1>
 
-<div style="text-align: right; padding-bottom: 15px;"><?php echo HTML::button(IMAGE_ORDERS_INVOICE, 'fa-shopping-cart', tep_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', tep_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></div>
+<div style="text-align: right; padding-bottom: 15px;"><?php echo HTML::button(IMAGE_ORDERS_INVOICE, 'fa-shopping-cart', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></div>
 
 <div id="orderTabs" style="overflow: auto;">
   <ul>
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_summary_content">Summary</a>'; ?></li>
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_products_content">Products</a>'; ?></li>
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_status_history_content">Status History</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_summary_content">Summary</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_products_content">Products</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params()), strlen($base_url)) . '#section_status_history_content">Status History</a>'; ?></li>
   </ul>
 
   <div id="section_summary_content" style="padding: 10px;">
@@ -247,7 +247,7 @@
   </div>
 
   <div id="section_status_history_content">
-    <?php echo HTML::form('status', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=update_order')); ?>
+    <?php echo HTML::form('status', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=update_order')); ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
@@ -332,10 +332,10 @@ $(function() {
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr><?php echo HTML::form('orders', tep_href_link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
+              <tr><?php echo HTML::form('orders', OSCOM::link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('oID', '', 'size="12"') . HTML::hiddenField('action', 'edit'); ?></td>
               </form></tr>
-              <tr><?php echo HTML::form('status', tep_href_link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
+              <tr><?php echo HTML::form('status', OSCOM::link(FILENAME_ORDERS), 'get', null, ['session_id' => true]); ?>
                 <td class="smallText" align="right"><?php echo HEADING_TITLE_STATUS . ' ' . HTML::selectField('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)), $orders_statuses), '', 'onchange="this.form.submit();"'); ?></td>
               </form></tr>
             </table></td>
@@ -371,16 +371,16 @@ $(function() {
       }
 
       if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $orders['customers_name']; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $orders['customers_name']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo strip_tags($orders['order_total']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo tep_datetime_short($orders['date_purchased']); ?></td>
                 <td class="dataTableContent" align="right"><?php echo $orders['orders_status_name']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -402,17 +402,17 @@ $(function() {
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_ORDER . '</strong>');
 
-      $contents = array('form' => HTML::form('orders', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('orders', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
       $contents[] = array('text' => '<br />' . HTML::checkboxField('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id)));
       break;
     default:
       if (isset($oInfo) && is_object($oInfo)) {
         $heading[] = array('text' => '<strong>[' . $oInfo->orders_id . ']&nbsp;&nbsp;' . tep_datetime_short($oInfo->date_purchased) . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=delete')));
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-o', tep_href_link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', tep_href_link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id), null, array('newwindow' => true)));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $oInfo->orders_id), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $oInfo->orders_id), null, array('newwindow' => true)));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ORDER_CREATED . ' ' . tep_date_short($oInfo->date_purchased));
         if (tep_not_null($oInfo->last_modified)) $contents[] = array('text' => TEXT_DATE_ORDER_LAST_MODIFIED . ' ' . tep_date_short($oInfo->last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_PAYMENT_METHOD . ' '  . $oInfo->payment_method);

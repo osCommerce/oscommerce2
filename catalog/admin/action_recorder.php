@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -78,7 +79,7 @@
 
         $messageStack->add_session(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
 
-        tep_redirect(tep_href_link(FILENAME_ACTION_RECORDER));
+        tep_redirect(OSCOM::link(FILENAME_ACTION_RECORDER));
 
         break;
     }
@@ -96,7 +97,7 @@
               <tr>
                 <td class="smallText" align="right">
 <?php
-  echo HTML::form('search', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
+  echo HTML::form('search', OSCOM::link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search');
   echo HTML::hiddenField('module') . '</form>';
 ?>
@@ -105,14 +106,14 @@
               <tr>
                 <td class="smallText" align="right">
 <?php
-  echo HTML::form('filter', tep_href_link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
+  echo HTML::form('filter', OSCOM::link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
   echo HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"');
   echo HTML::hiddenField('search') . '</form>';
 ?>
                 </td>
               </tr>
             </table></td>
-            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
+            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -160,14 +161,14 @@
     if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) {
       echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($actions['success'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent"><?php echo $module_title; ?></td>
                 <td class="dataTableContent"><?php echo tep_output_string_protected($actions['user_name']) . ' [' . (int)$actions['user_id'] . ']'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo tep_datetime_short($actions['date_added']); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -190,7 +191,7 @@
       if (isset($aInfo) && is_object($aInfo)) {
         $heading[] = array('text' => '<strong>' . $aInfo->module . '</strong>');
 
-        $contents[] = array('text' => TEXT_INFO_IDENTIFIER . '<br /><br />' . (!empty($aInfo->identifier) ? '<a href="' . tep_href_link(FILENAME_ACTION_RECORDER, 'search=' . $aInfo->identifier) . '"><u>' . tep_output_string_protected($aInfo->identifier) . '</u></a>': '(empty)'));
+        $contents[] = array('text' => TEXT_INFO_IDENTIFIER . '<br /><br />' . (!empty($aInfo->identifier) ? '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'search=' . $aInfo->identifier) . '"><u>' . tep_output_string_protected($aInfo->identifier) . '</u></a>': '(empty)'));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_datetime_short($aInfo->date_added));
       }
       break;

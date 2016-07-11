@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -68,7 +69,7 @@
         $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
       }
 
-      tep_redirect(tep_href_link(FILENAME_SERVER_INFO));
+      tep_redirect(OSCOM::link(FILENAME_SERVER_INFO));
     break;
 
     case 'save':
@@ -111,7 +112,7 @@
         </table></td>
       </tr>
       <tr>
-          <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SEND, 'fa fa-envelope', tep_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . HTML::button(IMAGE_SAVE, 'fa fa-save', tep_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
+          <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SEND, 'fa fa-envelope', OSCOM::link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . HTML::button(IMAGE_SAVE, 'fa fa-save', OSCOM::link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
       </tr>
   <?php
   } else {
@@ -157,7 +158,7 @@
             </table></td>
           </tr>
           <tr>
-            <td class="smallText"><?php echo HTML::button(IMAGE_EXPORT, 'fa fa-upload', tep_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
+            <td class="smallText"><?php echo HTML::button(IMAGE_EXPORT, 'fa fa-upload', OSCOM::link(FILENAME_SERVER_INFO, 'action=export'));?></td>
           </tr>
         </table></td>
       </tr>

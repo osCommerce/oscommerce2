@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -109,7 +110,7 @@
       }
 
       if ( $charset_pass === false ) {
-        tep_redirect(tep_href_link('database_tables.php'));
+        tep_redirect(OSCOM::link('database_tables.php'));
       }
 
       tep_set_time_limit(0);
@@ -199,14 +200,14 @@
 
 <?php
   if ( isset($action) ) {
-    echo '<div style="float: right;">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link('database_tables.php')) . '</div>';
+    echo '<div style="float: right;">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link('database_tables.php')) . '</div>';
   }
 ?>
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE; ?></h1>
 
 <?php
-  echo HTML::form('sql', tep_href_link('database_tables.php'));
+  echo HTML::form('sql', OSCOM::link('database_tables.php'));
 ?>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="2">

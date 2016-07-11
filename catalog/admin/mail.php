@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -54,7 +55,7 @@
       $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', $from, $subject);
     }
 
-    tep_redirect(tep_href_link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
+    tep_redirect(OSCOM::link(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to)));
   }
 
   if ( ($action == 'preview') && !isset($_POST['customers_email_address']) ) {
@@ -92,7 +93,7 @@
         break;
     }
 ?>
-          <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
+          <tr><?php echo HTML::form('mail', OSCOM::link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
             <td><table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
                 <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo $mail_sent_to; ?></td>
@@ -128,7 +129,7 @@
       }
     }
 
-    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_MAIL));
+    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MAIL));
 ?>
                 </td>
               </tr>
@@ -137,7 +138,7 @@
 <?php
   } else {
 ?>
-          <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=preview')); ?>
+          <tr><?php echo HTML::form('mail', OSCOM::link(FILENAME_MAIL, 'action=preview')); ?>
             <td><table border="0" cellpadding="0" cellspacing="2">
 <?php
     $customers = array();

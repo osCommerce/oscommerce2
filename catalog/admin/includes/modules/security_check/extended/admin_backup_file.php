@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheckExtended_admin_backup_file {
     var $type = 'error';
     var $has_doc = true;
@@ -54,7 +56,7 @@
       $result = true;
 
       if ( isset($backup_file) ) {
-        $request = $this->getHttpRequest(tep_href_link('backups/' . $backup_file));
+        $request = $this->getHttpRequest(OSCOM::link('backups/' . $backup_file));
 
         $result = ($request['http_code'] != 200);
       }

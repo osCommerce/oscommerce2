@@ -39,7 +39,7 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID']));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID']));
         break;
       case 'insert_category':
       case 'update_category':
@@ -97,7 +97,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
         break;
       case 'delete_category_confirm':
         if (isset($_POST['categories_id'])) {
@@ -146,7 +146,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
         break;
       case 'delete_product_confirm':
         if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
@@ -172,7 +172,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionDelete');
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
         break;
       case 'move_category_confirm':
         if (isset($_POST['categories_id']) && ($_POST['categories_id'] != $_POST['move_to_category_id'])) {
@@ -184,7 +184,7 @@
           if (in_array($categories_id, $path)) {
             $messageStack->add_session(ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT, 'error');
 
-            tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
+            tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id));
           } else {
             tep_db_query("update " . TABLE_CATEGORIES . " set parent_id = '" . (int)$new_parent_id . "', last_modified = now() where categories_id = '" . (int)$categories_id . "'");
 
@@ -193,7 +193,7 @@
               tep_reset_cache_block('also_purchased');
             }
 
-            tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&cID=' . $categories_id));
+            tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&cID=' . $categories_id));
           }
         }
 
@@ -213,7 +213,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionMove');
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id));
         break;
       case 'insert_product':
       case 'update_product':
@@ -337,7 +337,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionSave');
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id));
         break;
       case 'copy_to_confirm':
         if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
@@ -383,7 +383,7 @@
 
         $OSCOM_Hooks->call('Products', 'ActionCopy');
 
-        tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id));
+        tep_redirect(OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id));
         break;
     }
   }
@@ -507,15 +507,15 @@ function updateNet() {
 }
 //--></script>
 
-<?php echo HTML::form('new_product', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action), 'post', 'enctype="multipart/form-data"'); ?>
+<?php echo HTML::form('new_product', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '') . '&action=' . $form_action), 'post', 'enctype="multipart/form-data"'); ?>
 
 <h1 class="pageHeading"><?php echo sprintf(TEXT_NEW_PRODUCT, tep_output_generated_category_path($current_category_id)); ?></h1>
 
 <div id="productTabs" style="overflow: auto;">
   <ul id="productTabsMain">
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_general_content">' . SECTION_HEADING_GENERAL . '</a>'; ?></li>
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_data_content">' . SECTION_HEADING_DATA . '</a>'; ?></li>
-    <li><?php echo '<a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_images_content">' . SECTION_HEADING_IMAGES . '</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_general_content">' . SECTION_HEADING_GENERAL . '</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_data_content">' . SECTION_HEADING_DATA . '</a>'; ?></li>
+    <li><?php echo '<a href="' . substr(OSCOM::link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_images_content">' . SECTION_HEADING_IMAGES . '</a>'; ?></li>
   </ul>
 
   <div id="section_general_content" style="padding: 10px;">
@@ -524,7 +524,7 @@ function updateNet() {
 
 <?php
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-      echo '<li><a href="' . substr(tep_href_link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_general_content_' . $languages[$i]['directory'] . '">' . $languages[$i]['name'] . '</a></li>';
+      echo '<li><a href="' . substr(OSCOM::link(FILENAME_CATEGORIES, tep_get_all_get_params()), strlen($base_url)) . '#section_general_content_' . $languages[$i]['directory'] . '">' . $languages[$i]['name'] . '</a></li>';
     }
 ?>
 
@@ -699,7 +699,7 @@ $(function() {
 </script>
 
 <div style="padding-top: 15px; text-align: right;">
-  <?php echo HTML::hiddenField('products_date_added', (tep_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d'))) . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : ''))); ?>
+  <?php echo HTML::hiddenField('products_date_added', (tep_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d'))) . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : ''))); ?>
 </div>
 
 <script type="text/javascript">
@@ -790,7 +790,7 @@ $('#products_date_available').datepicker({
     }
 ?>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link($back_url, $back_url_params)); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link($back_url, $back_url_params)); ?></td>
       </tr>
     </table>
 <?php
@@ -805,7 +805,7 @@ $('#products_date_available').datepicker({
               <tr>
                 <td class="smallText" align="right">
 <?php
-    echo HTML::form('search', tep_href_link(FILENAME_CATEGORIES), 'get', null, ['session_id' => true]);
+    echo HTML::form('search', OSCOM::link(FILENAME_CATEGORIES), 'get', null, ['session_id' => true]);
     echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search');
     echo '</form>';
 ?>
@@ -814,7 +814,7 @@ $('#products_date_available').datepicker({
               <tr>
                 <td class="smallText" align="right">
 <?php
-    echo HTML::form('goto', tep_href_link(FILENAME_CATEGORIES), 'get', null, ['session_id' => true]);
+    echo HTML::form('goto', OSCOM::link(FILENAME_CATEGORIES), 'get', null, ['session_id' => true]);
     echo HEADING_TITLE_GOTO . ' ' . HTML::selectField('cPath', tep_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
     echo '</form>';
 ?>
@@ -859,14 +859,14 @@ $('#products_date_available').datepicker({
       }
 
       if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;<strong>' . $categories['categories_name'] . '</strong>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;<strong>' . $categories['categories_name'] . '</strong>'; ?></td>
                 <td class="dataTableContent" align="center">&nbsp;</td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -893,21 +893,21 @@ $('#products_date_available').datepicker({
       }
 
       if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id) ) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $products['products_name']; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $products['products_name']; ?></td>
                 <td class="dataTableContent" align="center">
 <?php
       if ($products['products_status'] == '1') {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . tep_href_link(FILENAME_CATEGORIES, 'action=setflag&flag=0&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=0&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
       } else {
-        echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, 'action=setflag&flag=1&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=1&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -929,7 +929,7 @@ $('#products_date_available').datepicker({
                 <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
                     <td class="smallText"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></td>
-                    <td align="right" class="smallText"><?php if (sizeof($cPath_array) > 0) echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id)); if (!isset($_GET['search'])) echo HTML::button(IMAGE_NEW_CATEGORY, 'fa fa-plus', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category')) . HTML::button(IMAGE_NEW_PRODUCT, 'fa fa-plus', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_product')); ?>&nbsp;</td>
+                    <td align="right" class="smallText"><?php if (sizeof($cPath_array) > 0) echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id)); if (!isset($_GET['search'])) echo HTML::button(IMAGE_NEW_CATEGORY, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category')) . HTML::button(IMAGE_NEW_PRODUCT, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_product')); ?>&nbsp;</td>
                   </tr>
                 </table></td>
               </tr>
@@ -941,7 +941,7 @@ $('#products_date_available').datepicker({
       case 'new_category':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_CATEGORY . '</strong>');
 
-        $contents = array('form' => HTML::form('newcategory', tep_href_link(FILENAME_CATEGORIES, 'action=insert_category&cPath=' . $cPath, 'post', 'enctype="multipart/form-data"')));
+        $contents = array('form' => HTML::form('newcategory', OSCOM::link(FILENAME_CATEGORIES, 'action=insert_category&cPath=' . $cPath, 'post', 'enctype="multipart/form-data"')));
         $contents[] = array('text' => TEXT_NEW_CATEGORY_INTRO);
 
         $category_inputs_string = '';
@@ -953,12 +953,12 @@ $('#products_date_available').datepicker({
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_NAME . $category_inputs_string);
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
         $contents[] = array('text' => '<br />' . TEXT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', '', 'size="2"'));
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath)));
         break;
       case 'edit_category':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_CATEGORY . '</strong>');
 
-        $contents = array('form' => HTML::form('categories', tep_href_link(FILENAME_CATEGORIES, 'action=update_category&cPath=' . $cPath), 'post', 'enctype="multipart/form-data"') . HTML::hiddenField('categories_id', $cInfo->categories_id));
+        $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=update_category&cPath=' . $cPath), 'post', 'enctype="multipart/form-data"') . HTML::hiddenField('categories_id', $cInfo->categories_id));
         $contents[] = array('text' => TEXT_EDIT_INTRO);
 
         $category_inputs_string = '';
@@ -971,30 +971,30 @@ $('#products_date_available').datepicker({
         $contents[] = array('text' => '<br />' . HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $cInfo->categories_image, $cInfo->categories_name) . '<br />' . DIR_WS_CATALOG_IMAGES . '<br /><strong>' . $cInfo->categories_image . '</strong>');
         $contents[] = array('text' => '<br />' . TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
         $contents[] = array('text' => '<br />' . TEXT_EDIT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $cInfo->sort_order, 'size="2"'));
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
         break;
       case 'delete_category':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CATEGORY . '</strong>');
 
-        $contents = array('form' => HTML::form('categories', tep_href_link(FILENAME_CATEGORIES, 'action=delete_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
+        $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=delete_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
         $contents[] = array('text' => TEXT_DELETE_CATEGORY_INTRO);
         $contents[] = array('text' => '<br /><strong>' . $cInfo->categories_name . '</strong>');
         if ($cInfo->childs_count > 0) $contents[] = array('text' => '<br />' . sprintf(TEXT_DELETE_WARNING_CHILDS, $cInfo->childs_count));
         if ($cInfo->products_count > 0) $contents[] = array('text' => '<br />' . sprintf(TEXT_DELETE_WARNING_PRODUCTS, $cInfo->products_count));
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
         break;
       case 'move_category':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_MOVE_CATEGORY . '</strong>');
 
-        $contents = array('form' => HTML::form('categories', tep_href_link(FILENAME_CATEGORIES, 'action=move_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
+        $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=move_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
         $contents[] = array('text' => sprintf(TEXT_MOVE_CATEGORIES_INTRO, $cInfo->categories_name));
         $contents[] = array('text' => '<br />' . sprintf(TEXT_MOVE, $cInfo->categories_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id)));
         break;
       case 'delete_product':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_PRODUCT . '</strong>');
 
-        $contents = array('form' => HTML::form('products', tep_href_link(FILENAME_CATEGORIES, 'action=delete_product_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
+        $contents = array('form' => HTML::form('products', OSCOM::link(FILENAME_CATEGORIES, 'action=delete_product_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
         $contents[] = array('text' => TEXT_DELETE_PRODUCT_INTRO);
         $contents[] = array('text' => '<br /><strong>' . $pInfo->products_name . '</strong>');
 
@@ -1011,26 +1011,26 @@ $('#products_date_available').datepicker({
         $product_categories_string = substr($product_categories_string, 0, -4);
 
         $contents[] = array('text' => '<br />' . $product_categories_string);
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
         break;
       case 'move_product':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_MOVE_PRODUCT . '</strong>');
 
-        $contents = array('form' => HTML::form('products', tep_href_link(FILENAME_CATEGORIES, 'action=move_product_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
+        $contents = array('form' => HTML::form('products', OSCOM::link(FILENAME_CATEGORIES, 'action=move_product_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
         $contents[] = array('text' => sprintf(TEXT_MOVE_PRODUCTS_INTRO, $pInfo->products_name));
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENT_CATEGORIES . '<br /><strong>' . tep_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
         $contents[] = array('text' => '<br />' . sprintf(TEXT_MOVE, $pInfo->products_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
         break;
       case 'copy_to':
         $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_COPY_TO . '</strong>');
 
-        $contents = array('form' => HTML::form('copy_to', tep_href_link(FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
+        $contents = array('form' => HTML::form('copy_to', OSCOM::link(FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath)) . HTML::hiddenField('products_id', $pInfo->products_id));
         $contents[] = array('text' => TEXT_INFO_COPY_TO_INTRO);
         $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENT_CATEGORIES . '<br /><strong>' . tep_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
         $contents[] = array('text' => '<br />' . TEXT_CATEGORIES . '<br />' . HTML::selectField('categories_id', tep_get_category_tree(), $current_category_id));
         $contents[] = array('text' => '<br />' . TEXT_HOW_TO_COPY . '<br />' . HTML::radioField('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . HTML::radioField('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE);
-        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_COPY, 'fa fa-copy', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
+        $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_COPY, 'fa fa-copy', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id)));
         break;
       default:
         if ($rows > 0) {
@@ -1044,7 +1044,7 @@ $('#products_date_available').datepicker({
 
             $heading[] = array('text' => '<strong>' . $cInfo->categories_name . '</strong>');
 
-            $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=edit_category')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=delete_category')) . HTML::button(IMAGE_MOVE, 'fa fa-share', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=move_category')));
+            $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=edit_category')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=delete_category')) . HTML::button(IMAGE_MOVE, 'fa fa-share', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $category_path_string . '&cID=' . $cInfo->categories_id . '&action=move_category')));
             $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . tep_date_short($cInfo->date_added));
             if (tep_not_null($cInfo->last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . tep_date_short($cInfo->last_modified));
             $contents[] = array('text' => '<br />' . tep_info_image($cInfo->categories_image, $cInfo->categories_name, HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT) . '<br />' . $cInfo->categories_image);
@@ -1052,7 +1052,7 @@ $('#products_date_available').datepicker({
           } elseif (isset($pInfo) && is_object($pInfo)) { // product info box contents
             $heading[] = array('text' => '<strong>' . tep_get_products_name($pInfo->products_id, $languages_id) . '</strong>');
 
-            $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=delete_product')) . HTML::button(IMAGE_MOVE, 'fa fa-share', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=move_product')) . HTML::button(IMAGE_COPY_TO, 'fa fa-copy', tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=copy_to')));
+            $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=delete_product')) . HTML::button(IMAGE_MOVE, 'fa fa-share', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=move_product')) . HTML::button(IMAGE_COPY_TO, 'fa fa-copy', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=copy_to')));
             $contents[] = array('text' => '<br />' . TEXT_DATE_ADDED . ' ' . tep_date_short($pInfo->products_date_added));
             if (tep_not_null($pInfo->products_last_modified)) $contents[] = array('text' => TEXT_LAST_MODIFIED . ' ' . tep_date_short($pInfo->products_last_modified));
             if (date('Y-m-d') < $pInfo->products_date_available) $contents[] = array('text' => TEXT_DATE_AVAILABLE . ' ' . tep_date_short($pInfo->products_date_available));

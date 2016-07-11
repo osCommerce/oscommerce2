@@ -14,7 +14,7 @@
   $heading = array();
   $heading[] = array('params' => 'class="menuBoxHeading"',
                      'text'  => BOX_HEADING_TOOLS,
-                     'link'  => tep_href_link(basename($PHP_SELF));
+                     'link'  => OSCOM::link(basename($PHP_SELF));
 
   $contents = array();
   $contents[] = array('text'  => SOME_TEXT);

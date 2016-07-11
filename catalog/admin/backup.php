@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -23,7 +24,7 @@
 
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        tep_redirect(OSCOM::link(FILENAME_BACKUP));
         break;
       case 'backupnow':
         tep_set_time_limit(0);
@@ -159,7 +160,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_SAVED, 'success');
         }
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        tep_redirect(OSCOM::link(FILENAME_BACKUP));
         break;
       case 'restorenow':
       case 'restorelocalnow':
@@ -280,7 +281,7 @@
           $messageStack->add_session(SUCCESS_DATABASE_RESTORED, 'success');
         }
 
-        tep_redirect(tep_href_link(FILENAME_BACKUP));
+        tep_redirect(OSCOM::link(FILENAME_BACKUP));
         break;
       case 'download':
         $extension = substr($_GET['file'], -3);
@@ -302,14 +303,14 @@
         }
         break;
       case 'deleteconfirm':
-        if (strstr($_GET['file'], '..')) tep_redirect(tep_href_link(FILENAME_BACKUP));
+        if (strstr($_GET['file'], '..')) tep_redirect(OSCOM::link(FILENAME_BACKUP));
 
         tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
           $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
 
-          tep_redirect(tep_href_link(FILENAME_BACKUP));
+          tep_redirect(OSCOM::link(FILENAME_BACKUP));
         }
         break;
     }
@@ -385,10 +386,10 @@
         $onclick_link = 'file=' . $entry;
       }
 ?>
-                <td class="dataTableContent" onclick="document.location.href='<?php echo tep_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . tep_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . HTML::image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
-                <td class="dataTableContent" align="center" onclick="document.location.href='<?php echo tep_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
-                <td class="dataTableContent" align="right" onclick="document.location.href='<?php echo tep_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                <td class="dataTableContent" align="right"><?php if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . OSCOM::link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . HTML::image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+                <td class="dataTableContent" align="center" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
+                <td class="dataTableContent" align="right" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
+                <td class="dataTableContent" align="right"><?php if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_BACKUP, 'file=' . $entry) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -397,13 +398,13 @@
 ?>
               <tr>
                 <td class="smallText" colspan="3"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></td>
-                <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir)) ) echo HTML::button(IMAGE_BACKUP, 'fa fa-clone', tep_href_link(FILENAME_BACKUP, 'action=backup')); if ( ($action != 'restorelocal') && isset($dir) ) echo HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'action=restorelocal')); ?></td>
+                <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir)) ) echo HTML::button(IMAGE_BACKUP, 'fa fa-clone', OSCOM::link(FILENAME_BACKUP, 'action=backup')); if ( ($action != 'restorelocal') && isset($dir) ) echo HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'action=restorelocal')); ?></td>
               </tr>
 <?php
   if (defined('DB_LAST_RESTORE')) {
 ?>
               <tr>
-                <td class="smallText" colspan="4"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a href="' . tep_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></td>
+                <td class="smallText" colspan="4"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a href="' . OSCOM::link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></td>
               </tr>
 <?php
   }
@@ -417,7 +418,7 @@
     case 'backup':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_BACKUP . '</strong>');
 
-      $contents = array('form' => HTML::form('backup', tep_href_link(FILENAME_BACKUP, 'action=backupnow')));
+      $contents = array('form' => HTML::form('backup', OSCOM::link(FILENAME_BACKUP, 'action=backupnow')));
       $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
 
       $contents[] = array('text' => '<br />' . HTML::radioField('compress', 'no', true) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
@@ -430,36 +431,36 @@
         $contents[] = array('text' => '<br />' . HTML::radioField('download', 'yes', true) . ' ' . TEXT_INFO_DOWNLOAD_ONLY . '*<br /><br />*' . TEXT_INFO_BEST_THROUGH_HTTPS);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_BACKUP, 'fa fa-copy', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_BACKUP, 'fa fa-copy', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BACKUP)));
       break;
     case 'restore':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
       $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     case 'restorelocal':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</strong>');
 
-      $contents = array('form' => HTML::form('restore', tep_href_link(FILENAME_BACKUP, 'action=restorelocalnow'), 'post', 'enctype="multipart/form-data"'));
+      $contents = array('form' => HTML::form('restore', OSCOM::link(FILENAME_BACKUP, 'action=restorelocalnow'), 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
       $contents[] = array('text' => '<br />' . HTML::fileField('sql_file'));
       $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BACKUP)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
-      $contents = array('form' => HTML::form('delete', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('delete', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $buInfo->file . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file)));
       break;
     default:
       if (isset($buInfo) && is_object($buInfo)) {
         $heading[] = array('text' => '<strong>' . $buInfo->date . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restore')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);
         $contents[] = array('text' => TEXT_INFO_SIZE . ' ' . $buInfo->size);
         $contents[] = array('text' => '<br />' . TEXT_INFO_COMPRESSION . ' ' . $buInfo->compression);

@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   class splitPageResults {
     function splitPageResults(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows) {
@@ -54,10 +55,10 @@
       }
 
       if ($num_pages > 1) {
-        $display_links = HTML::form('pages', tep_href_link($PHP_SELF), 'get', null, ['session_id' => true]);
+        $display_links = HTML::form('pages', OSCOM::link($PHP_SELF), 'get', null, ['session_id' => true]);
 
         if ($current_page_number > 1) {
-          $display_links .= '<a href="' . tep_href_link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number - 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+          $display_links .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number - 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
         } else {
           $display_links .= PREVNEXT_BUTTON_PREV . '&nbsp;&nbsp;';
         }
@@ -65,7 +66,7 @@
         $display_links .= sprintf(TEXT_RESULT_PAGE, HTML::selectField($page_name, $pages_array, $current_page_number, 'onchange="this.form.submit();"'), $num_pages);
 
         if (($current_page_number < $num_pages) && ($num_pages != 1)) {
-          $display_links .= '&nbsp;&nbsp;<a href="' . tep_href_link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number + 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
+          $display_links .= '&nbsp;&nbsp;<a href="' . OSCOM::link($PHP_SELF, $parameters . $page_name . '=' . ($current_page_number + 1)) . '" class="splitPageLink">' . PREVNEXT_BUTTON_NEXT . '</a>';
         } else {
           $display_links .= '&nbsp;&nbsp;' . PREVNEXT_BUTTON_NEXT;
         }

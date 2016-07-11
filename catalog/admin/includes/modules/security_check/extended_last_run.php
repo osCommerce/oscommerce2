@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheck_extended_last_run {
     var $type = 'warning';
 
@@ -36,7 +38,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
+      return '<a href="' . OSCOM::link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
     }
   }
 ?>

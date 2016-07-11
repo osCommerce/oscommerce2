@@ -128,7 +128,7 @@ class Admin extends \OSC\OM\SitesAbstract
             }
 
             if ($redirect == true) {
-                tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
+                tep_redirect(OSCOM::link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
             }
         }
 

@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -61,7 +62,7 @@
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><?php echo HTML::form('year', tep_href_link(FILENAME_BANNER_STATISTICS), 'get', null, ['session_id' => true]); ?>
+          <tr><?php echo HTML::form('year', OSCOM::link(FILENAME_BANNER_STATISTICS), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="main" align="right"><?php echo TITLE_TYPE . ' ' . HTML::selectField('type', $type_array, (tep_not_null($type) ? $type : 'daily'), 'onchange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript><br />
 <?php
@@ -139,7 +140,7 @@
         </td>
       </tr>
       <tr>
-        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])); ?></td>
+        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])); ?></td>
       </tr>
     </table>
 

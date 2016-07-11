@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   class product_notification {
     var $show_choose_audience, $title, $content;
@@ -75,11 +76,11 @@ function selectAll(FormName, SelectBox) {
 }
 //--></script>';
 
-      $global_button = HTML::button(BUTTON_GLOBAL, 'fa fa-globe', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'), 'primary');
+      $global_button = HTML::button(BUTTON_GLOBAL, 'fa fa-globe', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'), 'primary');
 
-      $cancel_button = HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+      $cancel_button = HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
 
-      $choose_audience_string .= '<form name="notifications" action="' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onsubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
+      $choose_audience_string .= '<form name="notifications" action="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onsubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
                                  '  <tr>' . "\n" .
                                  '    <td align="center" class="smallText"><strong>' . TEXT_PRODUCTS . '</strong><br />' . HTML::selectField('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
                                  '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . HTML::button(IMAGE_SEND, 'fa fa-envelope', null, 'primary') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
@@ -139,7 +140,7 @@ function selectAll(FormName, SelectBox) {
                         '  <tr>' . "\n" .
                         '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
-                        '  <tr>' . HTML::form('confirm', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . "\n" .
+                        '  <tr>' . HTML::form('confirm', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . "\n" .
                         '    <td class="smallText" align="right">';
       if (sizeof($audience) > 0) {
         if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
@@ -151,7 +152,7 @@ function selectAll(FormName, SelectBox) {
         }
         $confirm_string .= HTML::button(IMAGE_SEND, 'fa fa-envelope', null, 'primary');
       }
-      $confirm_string .= HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
+      $confirm_string .= HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
                          '  </tr>' . "\n" .
                          '</table>';
 

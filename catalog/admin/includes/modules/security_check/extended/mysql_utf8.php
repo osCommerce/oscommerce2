@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheckExtended_mysql_utf8 {
     var $type = 'warning';
     var $has_doc = true;
@@ -37,7 +39,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
+      return '<a href="' . OSCOM::link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
     }
   }
 ?>

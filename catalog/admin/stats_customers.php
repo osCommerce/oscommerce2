@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -52,9 +54,9 @@
       $rows = '0' . $rows;
     }
 ?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo tep_href_link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']); ?>'">
+              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']); ?>'">
                 <td class="dataTableContent"><?php echo $rows; ?>.</td>
-                <td class="dataTableContent"><?php echo '<a href="' . tep_href_link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']) . '">' . $customers['customers_firstname'] . ' ' . $customers['customers_lastname'] . '</a>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']) . '">' . $customers['customers_firstname'] . ' ' . $customers['customers_lastname'] . '</a>'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $currencies->format($customers['ordersum']); ?>&nbsp;</td>
               </tr>
 <?php

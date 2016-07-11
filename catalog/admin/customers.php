@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -186,7 +187,7 @@
 
         tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
+        tep_redirect(OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id));
 
         } else if ($error == true) {
           $cInfo = new objectInfo($_POST);
@@ -215,7 +216,7 @@
         tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customers_id . "'");
         tep_db_query("delete from " . TABLE_WHOS_ONLINE . " where customer_id = '" . (int)$customers_id . "'");
 
-        tep_redirect(tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action'))));
+        tep_redirect(OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action'))));
         break;
       default:
         if ($action != 'confirm') {
@@ -336,7 +337,7 @@ function check_form() {
           </tr>
         </table></td>
       </tr>
-      <tr><?php echo HTML::form('customers', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('default_address_id', $cInfo->customers_default_address_id); ?>
+      <tr><?php echo HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('default_address_id', $cInfo->customers_default_address_id); ?>
         <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
       </tr>
       <tr>
@@ -634,14 +635,14 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')))); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')))); ?></td>
       </tr></form>
 <?php
   } else {
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><?php echo HTML::form('search', tep_href_link(FILENAME_CUSTOMERS), 'get', null, ['session_id' => true]); ?>
+          <tr><?php echo HTML::form('search', OSCOM::link(FILENAME_CUSTOMERS), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
             <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search'); ?></td>
           </form></tr>
@@ -684,15 +685,15 @@ function check_form() {
       }
 
       if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
-        echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit') . '\'">' . "\n";
+        echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $customers['customers_lastname']; ?></td>
                 <td class="dataTableContent"><?php echo $customers['customers_firstname']; ?></td>
                 <td class="dataTableContent" align="right"><?php echo tep_date_short($info['date_account_created']); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -707,7 +708,7 @@ function check_form() {
     if (isset($_GET['search']) && tep_not_null($_GET['search'])) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_RESET, 'fa fa-refresh', tep_href_link(FILENAME_CUSTOMERS)); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_RESET, 'fa fa-refresh', OSCOM::link(FILENAME_CUSTOMERS)); ?></td>
                   </tr>
 <?php
     }
@@ -723,16 +724,16 @@ function check_form() {
     case 'confirm':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_CUSTOMER . '</strong>');
 
-      $contents = array('form' => HTML::form('customers', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
       if (isset($cInfo->number_of_reviews) && ($cInfo->number_of_reviews) > 0) $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_reviews', 'on', true) . ' ' . sprintf(TEXT_DELETE_REVIEWS, $cInfo->number_of_reviews));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id)));
       break;
     default:
       if (isset($cInfo) && is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(IMAGE_ORDERS, 'fa fa-shopping-cart', tep_href_link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(IMAGE_EMAIL, 'fa fa-envelope', tep_href_link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(IMAGE_ORDERS, 'fa fa-shopping-cart', OSCOM::link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(IMAGE_EMAIL, 'fa fa-envelope', OSCOM::link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_CREATED . ' ' . tep_date_short($cInfo->date_account_created));
         $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . tep_date_short($cInfo->date_account_last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . tep_date_short($cInfo->date_last_logon));

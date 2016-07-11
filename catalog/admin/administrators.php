@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -96,7 +97,7 @@
           $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
+        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS));
         break;
       case 'save':
         require('includes/functions/password_funcs.php');
@@ -175,7 +176,7 @@
           fclose($fp);
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
+        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']));
         break;
       case 'deleteconfirm':
         $id = tep_db_prepare_input($_GET['aID']);
@@ -215,7 +216,7 @@
           }
         }
 
-        tep_redirect(tep_href_link(FILENAME_ADMINISTRATORS));
+        tep_redirect(OSCOM::link(FILENAME_ADMINISTRATORS));
         break;
     }
   }
@@ -285,20 +286,20 @@
     }
 
     if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit') . '\'">' . "\n";
+      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $admins['user_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $htpasswd_secured; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
 ?>
               <tr>
-                <td class="smallText" colspan="3" align="right"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', tep_href_link(FILENAME_ADMINISTRATORS, 'action=new')); ?></td>
+                <td class="smallText" colspan="3" align="right"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_ADMINISTRATORS, 'action=new')); ?></td>
               </tr>
             </table></td>
 <?php
@@ -309,7 +310,7 @@
     case 'new':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_ADMINISTRATOR . '</strong>');
 
-      $contents = array('form' => HTML::form('administrator', tep_href_link(FILENAME_ADMINISTRATORS, 'action=insert'), 'post', 'autocomplete="off"'));
+      $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'action=insert'), 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_PASSWORD . '<br />' . HTML::passwordField('password'));
@@ -318,12 +319,12 @@
         $contents[] = array('text' => '<br />' . HTML::checkboxField('htaccess', 'true') . ' ' . TEXT_INFO_PROTECT_WITH_HTPASSWD);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ADMINISTRATORS)));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
-      $contents = array('form' => HTML::form('administrator', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=save'), 'post', 'autocomplete="off"'));
+      $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=save'), 'post', 'autocomplete="off"'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username', $aInfo->user_name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_NEW_PASSWORD . '<br />' . HTML::passwordField('password'));
@@ -343,21 +344,21 @@
         $contents[] = array('text' => '<br />' . HTML::checkboxField('htaccess', 'true', $default_flag) . ' ' . TEXT_INFO_PROTECT_WITH_HTPASSWD);
       }
 
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
-      $contents = array('form' => HTML::form('administrator', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $aInfo->user_name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id)));
       break;
     default:
       if (isset($aInfo) && is_object($aInfo)) {
         $heading[] = array('text' => '<strong>' . $aInfo->user_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=delete')));
       }
       break;
   }

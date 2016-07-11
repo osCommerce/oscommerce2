@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
 ////
 // Get the installed version number
@@ -30,7 +31,7 @@
     global $logger;
 
     if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
+      tep_redirect(OSCOM::link(FILENAME_DEFAULT, '', 'SSL', false));
     }
 
     if ( strpos($url, '&amp;') !== false ) {
