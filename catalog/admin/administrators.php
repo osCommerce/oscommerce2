@@ -267,7 +267,7 @@
     }
 
 
-    $htpasswd_secured = tep_image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Not Secured', 10, 10);
+    $htpasswd_secured = HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Not Secured', 10, 10);
 
     if ($is_iis) {
       $htpasswd_secured = 'N/A';
@@ -278,7 +278,7 @@
         list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
         if ($ht_username == $admins['user_name']) {
-          $htpasswd_secured = tep_image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Secured', 10, 10);
+          $htpasswd_secured = HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Secured', 10, 10);
           break;
         }
       }
@@ -292,7 +292,7 @@
 ?>
                 <td class="dataTableContent"><?php echo $admins['user_name']; ?></td>
                 <td class="dataTableContent" align="center"><?php echo $htpasswd_secured; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . tep_href_link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }

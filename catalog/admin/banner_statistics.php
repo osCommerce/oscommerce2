@@ -89,16 +89,16 @@
     switch ($type) {
       case 'yearly':
         include(DIR_WS_INCLUDES . 'graphs/banner_yearly.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
+        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
         break;
       case 'monthly':
         include(DIR_WS_INCLUDES . 'graphs/banner_monthly.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
+        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
         break;
       default:
       case 'daily':
         include(DIR_WS_INCLUDES . 'graphs/banner_daily.php');
-        echo tep_image(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banner_id . '.' . $banner_extension);
+        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banner_id . '.' . $banner_extension);
         break;
     }
 ?>

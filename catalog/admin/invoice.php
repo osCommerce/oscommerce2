@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -36,7 +38,7 @@
     <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td class="pageHeading"><?php echo STORE_NAME . '<br>' . nl2br(STORE_ADDRESS) . '<br>' . STORE_PHONE; ?></td>
-        <td class="pageHeading" align="right"><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO, STORE_NAME); ?></td>
+        <td class="pageHeading" align="right"><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO, STORE_NAME); ?></td>
       </tr>
     </table></td>
   </tr>

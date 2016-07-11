@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   require('includes/application_top.php');
 
   function tep_opendir($path) {
@@ -83,8 +85,8 @@
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
                 <td class="dataTableContent"><?php echo substr($file['name'], strlen(DIR_FS_CATALOG)); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
               </tr>
 <?php
     }

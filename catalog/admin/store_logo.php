@@ -59,7 +59,7 @@
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO); ?></td>
+        <td><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO); ?></td>
       </tr>
       <tr>
         <td><?php echo HTML::form('logo', tep_href_link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>

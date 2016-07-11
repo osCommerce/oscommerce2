@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+
   class d_version_check {
     var $code = 'd_version_check';
     var $title;
@@ -57,7 +59,7 @@
 
       if ($new_version == true) {
         $output .= '  <tr>' .
-                   '    <td class="messageStackWarning" colspan="2">' . tep_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>' .
+                   '    <td class="messageStackWarning" colspan="2">' . HTML::image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>' .
                    '  </tr>';
       }
 

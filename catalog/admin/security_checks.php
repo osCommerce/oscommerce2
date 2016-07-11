@@ -93,11 +93,11 @@
     }
 
     echo '  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n" .
-         '    <td class="dataTableContent" align="center" valign="top">' . tep_image(DIR_WS_IMAGES . 'ms_' . $secCheck->type . '.png', '', 16, 16) . '</td>' . "\n" .
+         '    <td class="dataTableContent" align="center" valign="top">' . HTML::image(DIR_WS_IMAGES . 'ms_' . $secCheck->type . '.png', '', 16, 16) . '</td>' . "\n" .
          '    <td class="dataTableContent" valign="top" style="white-space: nowrap;">' . tep_output_string_protected($module['title']) . '</td>' . "\n" .
          '    <td class="dataTableContent" valign="top">' . tep_output_string_protected($module['code']) . '</td>' . "\n" .
          '    <td class="dataTableContent" valign="top">' . $output . '</td>' . "\n" .
-         '    <td class="dataTableContent" align="center" valign="top">' . ((isset($secCheck->has_doc) && $secCheck->has_doc) ? '<a href="http://library.oscommerce.com/Wiki&oscom_2_3&security_checks&' . $module['code'] . '" target="_blank">' . tep_image(DIR_WS_IMAGES . 'icons/preview.gif') . '</a>' : '') . '</td>' . "\n" .
+         '    <td class="dataTableContent" align="center" valign="top">' . ((isset($secCheck->has_doc) && $secCheck->has_doc) ? '<a href="http://library.oscommerce.com/Wiki&oscom_2_3&security_checks&' . $module['code'] . '" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icons/preview.gif') . '</a>' : '') . '</td>' . "\n" .
          '  </tr>' . "\n";
   }
 ?>
