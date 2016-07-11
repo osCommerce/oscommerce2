@@ -196,7 +196,6 @@ function popupImageWindow(url) {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -234,9 +233,6 @@ function popupImageWindow(url) {
       $groups_array[] = array('id' => $groups['banners_group'], 'text' => $groups['banners_group']);
     }
 ?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
       <tr><?php echo HTML::form('new_banner', tep_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action), 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo HTML::hiddenField('banners_id', $bID); ?>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
@@ -252,35 +248,35 @@ function popupImageWindow(url) {
             <td class="main"><?php echo HTML::selectField('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . HTML::inputField('new_banners_group') . ((sizeof($groups_array) > 0) ? '' : TEXT_FIELD_REQUIRED); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td class="main" valign="top"><?php echo TEXT_BANNERS_IMAGE; ?></td>
             <td class="main"><?php echo HTML::fileField('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . '<br />' . DIR_FS_CATALOG_IMAGES . HTML::inputField('banners_image_local', (isset($bInfo->banners_image) ? $bInfo->banners_image : '')); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_IMAGE_TARGET; ?></td>
             <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . HTML::inputField('banners_image_target'); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
             <td class="main"><?php echo HTML::textareaField('banners_html_text', '60', '5', $bInfo->banners_html_text); ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?></td>
             <td class="main"><?php echo HTML::inputField('date_scheduled', $bInfo->date_scheduled, 'id="date_scheduled"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2">&nbsp;</td>
           </tr>
           <tr>
             <td valign="top" class="main"><?php echo TEXT_BANNERS_EXPIRES_ON; ?></td>
@@ -298,9 +294,6 @@ $('#expires_date').datepicker({
 </script>
 
         </td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">

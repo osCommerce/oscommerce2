@@ -73,7 +73,6 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -96,31 +95,28 @@
           <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=send_email_to_user')); ?>
             <td><table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-              </tr>
-              <tr>
                 <td class="smallText"><strong><?php echo TEXT_CUSTOMER; ?></strong><br /><?php echo $mail_sent_to; ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td>&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TEXT_FROM; ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['from'])); ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td>&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TEXT_SUBJECT; ?></strong><br /><?php echo htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td>&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TEXT_MESSAGE; ?></strong><br /><?php echo nl2br(htmlspecialchars(stripslashes($_POST['message']))); ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td>&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText" align="right">
@@ -143,9 +139,6 @@
 ?>
           <tr><?php echo HTML::form('mail', tep_href_link(FILENAME_MAIL, 'action=preview')); ?>
             <td><table border="0" cellpadding="0" cellspacing="2">
-              <tr>
-                <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-              </tr>
 <?php
     $customers = array();
     $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
@@ -162,28 +155,28 @@
                 <td><?php echo HTML::selectField('customers_email_address', $customers, (isset($_GET['customer']) ? $_GET['customer'] : ''));?></td>
               </tr>
               <tr>
-                <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
                 <td class="main"><?php echo TEXT_FROM; ?></td>
                 <td><?php echo HTML::inputField('from', EMAIL_FROM); ?></td>
               </tr>
               <tr>
-                <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
                 <td class="main"><?php echo TEXT_SUBJECT; ?></td>
                 <td><?php echo HTML::inputField('subject'); ?></td>
               </tr>
               <tr>
-                <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
                 <td valign="top" class="main"><?php echo TEXT_MESSAGE; ?></td>
                 <td><?php echo HTML::textareaField('message', '60', '15'); ?></td>
               </tr>
               <tr>
-                <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+                <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', null, 'primary'); ?></td>

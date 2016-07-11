@@ -63,7 +63,6 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr><?php echo HTML::form('year', tep_href_link(FILENAME_BANNER_STATISTICS), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
             <td class="main" align="right"><?php echo TITLE_TYPE . ' ' . HTML::selectField('type', $type_array, (tep_not_null($type) ? $type : 'daily'), 'onchange="this.form.submit();"'); ?><noscript><input type="submit" value="GO"></noscript><br />
 <?php
   switch ($type) {
@@ -80,9 +79,6 @@
             </td>
           <?php echo HTML::hiddenField('page', $_GET['page']) . HTML::hiddenField('bID', $_GET['bID']); ?></form></tr>
         </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td align="center">
@@ -141,9 +137,6 @@
   }
 ?>
         </td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])); ?></td>

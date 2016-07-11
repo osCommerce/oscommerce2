@@ -564,21 +564,21 @@ function updateNet() {
         <td class="main"><?php echo HTML::radioField('products_status', '1', $in_status) . '&nbsp;' . TEXT_PRODUCT_AVAILABLE . '&nbsp;' . HTML::radioField('products_status', '0', $out_status) . '&nbsp;' . TEXT_PRODUCT_NOT_AVAILABLE; ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?></td>
         <td class="main"><?php echo HTML::inputField('products_date_available', $pInfo->products_date_available, 'id="products_date_available"') . ' <small>(YYYY-MM-DD)</small>'; ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_MANUFACTURER; ?></td>
         <td class="main"><?php echo HTML::selectField('manufacturers_id', $manufacturers_array, $pInfo->manufacturers_id); ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
       <tr bgcolor="#ebebff">
         <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
@@ -593,7 +593,7 @@ function updateNet() {
         <td class="main"><?php echo HTML::inputField('products_price_gross', $pInfo->products_price, 'onkeyup="updateNet()"'); ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
 <script type="text/javascript"><!--
 updateGross();
@@ -603,14 +603,14 @@ updateGross();
         <td class="main"><?php echo HTML::inputField('products_quantity', $pInfo->products_quantity); ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_MODEL; ?></td>
         <td class="main"><?php echo HTML::inputField('products_model', $pInfo->products_model); ?></td>
       </tr>
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?></td>
@@ -733,7 +733,7 @@ $('#products_date_available').datepicker({
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td>&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description; ?></td>
@@ -742,7 +742,7 @@ $('#products_date_available').datepicker({
       if ($pInfo->products_url) {
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td>&nbsp;</td>
       </tr>
       <tr>
         <td class="main"><?php echo sprintf(TEXT_PRODUCT_MORE_INFORMATION, $pInfo->products_url); ?></td>
@@ -751,7 +751,7 @@ $('#products_date_available').datepicker({
       }
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td>&nbsp;</td>
       </tr>
 <?php
       if ($pInfo->products_date_available > date('Y-m-d')) {
@@ -769,7 +769,7 @@ $('#products_date_available').datepicker({
       }
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+        <td>&nbsp;</td>
       </tr>
 <?php
     }
@@ -800,7 +800,6 @@ $('#products_date_available').datepicker({
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
             <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
               <tr>
                 <td class="smallText" align="right">

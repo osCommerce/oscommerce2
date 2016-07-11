@@ -94,7 +94,6 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -107,18 +106,9 @@
             <td class="smallText" colspan="2"><?php echo TEXT_EXPORT_INTRO; ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
             <td colspan="2"><?php echo HTML::textareaField('server configuration', '100', '15', tep_format_system_info_array($info)); ?></td>
           </tr>
-          <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
         </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
           <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SEND, 'fa fa-envelope', tep_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . HTML::button(IMAGE_SAVE, 'fa fa-save', tep_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
@@ -154,7 +144,7 @@
                 <td colspan="3" class="smallText"><?php echo $info['system']['uptime']; ?></td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+                <td colspan="4">&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TITLE_HTTP_SERVER; ?></strong></td>
@@ -167,15 +157,9 @@
             </table></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
             <td class="smallText"><?php echo HTML::button(IMAGE_EXPORT, 'fa fa-upload', tep_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
           </tr>
         </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td>

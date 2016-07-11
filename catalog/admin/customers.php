@@ -333,12 +333,8 @@ function check_form() {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr><?php echo HTML::form('customers', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('default_address_id', $cInfo->customers_default_address_id); ?>
         <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
@@ -445,9 +441,6 @@ function check_form() {
     if (ACCOUNT_COMPANY == 'true') {
 ?>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_COMPANY; ?></td>
       </tr>
       <tr>
@@ -468,9 +461,6 @@ function check_form() {
 <?php
     }
 ?>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
       <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_ADDRESS; ?></td>
       </tr>
@@ -588,9 +578,6 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_CONTACT; ?></td>
       </tr>
       <tr>
@@ -624,9 +611,6 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
         <td class="formAreaTitle"><?php echo CATEGORY_OPTIONS; ?></td>
       </tr>
       <tr>
@@ -650,9 +634,6 @@ function check_form() {
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
         <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')))); ?></td>
       </tr></form>
 <?php
@@ -662,7 +643,6 @@ function check_form() {
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr><?php echo HTML::form('search', tep_href_link(FILENAME_CUSTOMERS), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', 1, HEADING_IMAGE_HEIGHT); ?></td>
             <td class="smallText" align="right"><?php echo HEADING_TITLE_SEARCH . ' ' . HTML::inputField('search'); ?></td>
           </form></tr>
         </table></td>

@@ -42,9 +42,6 @@
   <tr>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="2">
       <tr>
-        <td colspan="2"><?php echo tep_draw_separator(); ?></td>
-      </tr>
-      <tr>
         <td valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><strong><?php echo ENTRY_SOLD_TO; ?></strong></td>
@@ -53,7 +50,7 @@
             <td class="main"><?php echo tep_address_format($order->customer['format_id'], $order->billing, 1, '', '<br />'); ?></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+            <td>&nbsp;</td>
           </tr>
           <tr>
             <td class="main"><?php echo $order->customer['telephone']; ?></td>
@@ -74,18 +71,12 @@
     </table></td>
   </tr>
   <tr>
-    <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-  </tr>
-  <tr>
     <td><table border="0" cellspacing="0" cellpadding="2">
       <tr>
         <td class="main"><strong><?php echo ENTRY_PAYMENT_METHOD; ?></strong></td>
         <td class="main"><?php echo $order->info['payment_method']; ?></td>
       </tr>
     </table></td>
-  </tr>
-  <tr>
-    <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
   </tr>
   <tr>
     <td><table border="0" width="100%" cellspacing="0" cellpadding="2">

@@ -60,8 +60,7 @@
 
   if (isset($_GET['filename'])) {
     $file_edit = realpath(DIR_FS_CATALOG_LANGUAGES . $_GET['filename']);
-
-    if (substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES)) != DIR_FS_CATALOG_LANGUAGES) {
+    if (realpath(substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES))) != realpath(DIR_FS_CATALOG_LANGUAGES)) {
       tep_redirect(tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']));
     }
   }
@@ -95,7 +94,6 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr><?php echo HTML::form('lng', tep_href_link(FILENAME_DEFINE_LANGUAGE), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
             <td class="pageHeading" align="right"><?php echo HTML::selectField('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
           </form></tr>
         </table></td>
@@ -128,16 +126,10 @@
                 <td class="main"><?php echo HTML::textareaField('file_contents', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-              </tr>
-              <tr>
                 <td class="smallText" align="right"><?php if ($file_writeable == true) { echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } else { echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } ?></td>
               </tr>
             </table></td>
           </form></tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
           <tr>
             <td class="main"><?php echo TEXT_EDIT_NOTE; ?></td>
           </tr>
@@ -146,9 +138,6 @@
 ?>
           <tr>
             <td class="main"><strong><?php echo TEXT_FILE_DOES_NOT_EXIST; ?></strong></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
           </tr>
           <tr>
             <td><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); ?></td>
