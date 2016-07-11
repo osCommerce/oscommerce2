@@ -23,6 +23,8 @@
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/jquery-2.2.3.min.js', '', 'SSL'); ?>"></script>
 <script type="text/javascript" src="<?php echo tep_catalog_href_link('ext/jquery/ui/jquery-ui-1.11.4.min.js', '', 'SSL'); ?>"></script>
 
+<link href="<?php echo tep_catalog_href_link('ext/font-awesome/4.6.3/css/font-awesome.min.css', '', 'SSL'); ?>" rel="stylesheet">
+
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
 ?>
