@@ -259,10 +259,10 @@
       </tr>
       <tr>
         <td><?php echo ENTRY_NOTIFY_CUSTOMER; ?></td>
-        <td><?php echo tep_draw_checkbox_field('notify', '', true); ?></td>
+        <td><?php echo HTML::checkboxField('notify', '', true); ?></td>
       </tr>
         <td><?php echo ENTRY_NOTIFY_COMMENTS; ?></td>
-        <td><?php echo tep_draw_checkbox_field('notify_comments', '', true); ?></td>
+        <td><?php echo HTML::checkboxField('notify_comments', '', true); ?></td>
       </tr>
       <tr>
         <td colspan="2" align="right"><?php echo tep_draw_button(IMAGE_UPDATE, 'disk', null, 'primary'); ?></td>
@@ -404,7 +404,7 @@ $(function() {
 
       $contents = array('form' => HTML::form('orders', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
-      $contents[] = array('text' => '<br />' . tep_draw_checkbox_field('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
+      $contents[] = array('text' => '<br />' . HTML::checkboxField('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
       $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_DELETE, 'trash', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id)));
       break;
     default:

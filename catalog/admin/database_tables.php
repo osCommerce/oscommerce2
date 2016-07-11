@@ -72,7 +72,7 @@
       $table_headers = array(TABLE_HEADING_TABLE,
                              TABLE_HEADING_MSG_TYPE,
                              TABLE_HEADING_MSG,
-                             tep_draw_checkbox_field('masterblaster'));
+                             HTML::checkboxField('masterblaster'));
 
       $table_data = array();
 
@@ -84,7 +84,7 @@
           $table_data[] = array(($table != $current_table) ? tep_output_string_protected($table) : '',
                                 tep_output_string_protected($sql['Msg_type']),
                                 tep_output_string_protected($sql['Msg_text']),
-                                ($table != $current_table) ? tep_draw_checkbox_field('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
+                                ($table != $current_table) ? HTML::checkboxField('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
 
           $current_table = $table;
         }
@@ -119,7 +119,7 @@
       } else {
         $table_headers = array(TABLE_HEADING_TABLE,
                                TABLE_HEADING_MSG,
-                               tep_draw_checkbox_field('masterblaster'));
+                               HTML::checkboxField('masterblaster'));
       }
 
       $table_data = array();
@@ -167,7 +167,7 @@
         if ( !isset($_POST['dryrun']) ) {
           $table_data[] = array(tep_output_string_protected($table),
                                 tep_output_string_protected($result),
-                                tep_draw_checkbox_field('id[]', $table, true));
+                                HTML::checkboxField('id[]', $table, true));
         }
       }
 
@@ -179,7 +179,7 @@
                              TABLE_HEADING_SIZE,
                              TABLE_HEADING_ENGINE,
                              TABLE_HEADING_COLLATION,
-                             tep_draw_checkbox_field('masterblaster'));
+                             HTML::checkboxField('masterblaster'));
 
       $table_data = array();
 
@@ -190,7 +190,7 @@
                               round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
                               tep_output_string_protected($sql['Engine']),
                               tep_output_string_protected($sql['Collation']),
-                              tep_draw_checkbox_field('id[]', $sql['Name']));
+                              HTML::checkboxField('id[]', $sql['Name']));
       }
   }
 
@@ -238,7 +238,7 @@
 ?>
 
 <div class="main" style="text-align: right;">
-  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, tep_draw_checkbox_field('dryrun')) . '</span>' . tep_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . tep_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
+  <?php echo '<span class="runUtf8" style="display: none;">' . sprintf(ACTION_UTF8_DRY_RUN, HTML::checkboxField('dryrun')) . '</span>' . tep_draw_pull_down_menu('action', $actions, '', 'id="sqlActionsMenu"') . '<span class="runUtf8" style="display: none;">&nbsp;' . tep_draw_pull_down_menu('from_charset', $mysql_charsets) . '</span>&nbsp;' . tep_draw_button(BUTTON_ACTION_GO); ?>
 </div>
 
 <?php
