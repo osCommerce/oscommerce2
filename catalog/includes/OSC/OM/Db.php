@@ -92,8 +92,10 @@ class Db extends \PDO
             $DbStatement = parent::query($statement);
         }
 
-        $DbStatement->setQueryCall('query');
-        $DbStatement->setPDO($this);
+        if ($DbStatement !== false) {
+            $DbStatement->setQueryCall('query');
+            $DbStatement->setPDO($this);
+        }
 
         return $DbStatement;
     }
