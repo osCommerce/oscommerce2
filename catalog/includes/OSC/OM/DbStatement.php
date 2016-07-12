@@ -149,6 +149,15 @@ class DbStatement extends \PDOStatement
         return $this->result;
     }
 
+    public function check()
+    {
+        if (!isset($this->result)) {
+            $this->fetch();
+        }
+
+        return $this->result !== false;
+    }
+
     public function toArray()
     {
         if (!isset($this->result)) {
