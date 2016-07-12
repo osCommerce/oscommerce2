@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
 // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
@@ -50,6 +51,8 @@
   require(DIR_WS_CLASSES . 'cfg_modules.php');
 
   OSCOM::initialize('Admin');
+
+  $OSCOM_Db = Registry::get('Db');
 
 // calculate category path
   if (isset($_GET['cPath'])) {
