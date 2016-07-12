@@ -29,29 +29,39 @@
     switch ($action) {
       case 'process':
         if (isset($_SESSION['redirect_origin']) && isset($_SESSION['redirect_origin']['auth_user']) && !isset($_POST['username'])) {
-          $username = tep_db_prepare_input($_SESSION['redirect_origin']['auth_user']);
-          $password = tep_db_prepare_input($_SESSION['redirect_origin']['auth_pw']);
+          $username = HTML::sanitize($_SESSION['redirect_origin']['auth_user']);
+          $password = HTML::sanitize($_SESSION['redirect_origin']['auth_pw']);
         } else {
-          $username = tep_db_prepare_input($_POST['username']);
-          $password = tep_db_prepare_input($_POST['password']);
+          $username = HTML::sanitize($_POST['username']);
+          $password = HTML::sanitize($_POST['password']);
         }
 
         $actionRecorder = new actionRecorderAdmin('ar_admin_login', null, $username);
 
         if ($actionRecorder->canPerform()) {
-          $check_query = tep_db_query("select id, user_name, user_password from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "'");
+          $Qadmin = $OSCOM_Db->get('administrators', [
+            'id',
+            'user_name',
+            'user_password'
+          ], [
+            'user_name' => $username
+          ]);
 
-          if (tep_db_num_rows($check_query) == 1) {
-            $check = tep_db_fetch_array($check_query);
-
-            if (tep_validate_password($password, $check['user_password'])) {
+          if ($Qadmin->fetch() !== false) {
+            if (tep_validate_password($password, $Qadmin->value('user_password'))) {
 // migrate old hashed password to new phpass password
-              if (tep_password_type($check['user_password']) != 'phpass') {
-                tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_encrypt_password($password) . "' where id = '" . (int)$check['id'] . "'");
+              if (tep_password_type($Qadmin->value('user_password')) != 'phpass') {
+                $OSCOM_Db->save('administrators', [
+                  'user_password' => tep_encrypt_password($password)
+                ], [
+                  'id' => $Qadmin->valueInt('id')
+                ]);
               }
 
-              $_SESSION['admin'] = array('id' => $check['id'],
-                                         'username' => $check['user_name']);
+              $_SESSION['admin'] = [
+                'id' => $Qadmin->valueInt('id'),
+                'username' => $Qadmin->value('user_name')
+              ];
 
               $actionRecorder->_user_id = $_SESSION['admin']['id'];
               $actionRecorder->record();
@@ -98,14 +108,17 @@
         break;
 
       case 'create':
-        $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " limit 1");
+        $Qcheck = $OSCOM_Db->get('administrators', 'id', null, null, 1);
 
-        if (tep_db_num_rows($check_query) == 0) {
-          $username = tep_db_prepare_input($_POST['username']);
-          $password = tep_db_prepare_input($_POST['password']);
+        if (!$Qcheck->check()) {
+          $username = HTML::sanitize($_POST['username']);
+          $password = HTML::sanitize($_POST['password']);
 
           if ( !empty($username) ) {
-            tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+            $OSCOM_Db->save('administrators', [
+              'user_name' => $username,
+              'user_password' => tep_encrypt_password($password)
+            ]);
           }
         }
 
@@ -126,8 +139,9 @@
     }
   }
 
-  $admins_check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " limit 1");
-  if (tep_db_num_rows($admins_check_query) < 1) {
+  $Qcheck = $OSCOM_Db->get('administrators', 'id', null, null, 1);
+
+  if (!$Qcheck->check()) {
     $messageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
   }
 
@@ -160,7 +174,7 @@
   $heading = array();
   $contents = array();
 
-  if (tep_db_num_rows($admins_check_query) > 0) {
+  if ($Qcheck->check()) {
     $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
 
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=process')));
