@@ -145,8 +145,10 @@ class Admin extends \OSC\OM\SitesAbstract
 
         $messageStack = new \messageStack();
 
-        if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
-            $messageStack->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
+        if (isset($_SESSION['admin'])) {
+            if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
+                $messageStack->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
+            }
         }
 
         $cfgModules = new \cfg_modules();
