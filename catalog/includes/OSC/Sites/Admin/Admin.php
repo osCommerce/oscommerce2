@@ -12,6 +12,7 @@ use OSC\OM\Apps;
 use OSC\OM\Cache;
 use OSC\OM\Cookies;
 use OSC\OM\Db;
+use OSC\OM\ErrorHandler;
 use OSC\OM\Hooks;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
@@ -143,6 +144,10 @@ class Admin extends \OSC\OM\SitesAbstract
         }
 
         $messageStack = new \messageStack();
+
+        if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
+            $messageStack->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
+        }
 
         $cfgModules = new \cfg_modules();
     }

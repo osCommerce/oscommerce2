@@ -27,4 +27,9 @@ class ErrorHandler
             ini_set('error_log', OSCOM::BASE_DIR . 'work/logs/errors-' . date('Ymd') . '.txt');
         }
     }
+
+    public static function getDirectory()
+    {
+        return realpath(OSCOM::BASE_DIR . 'work/logs');
+    }
 }
