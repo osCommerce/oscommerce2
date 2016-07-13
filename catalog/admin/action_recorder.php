@@ -40,19 +40,22 @@
 
     $class = substr($file, 0, strrpos($file, '.'));
     if (tep_class_exists($class)) {
-      ${$class} = new $class;
+      $GLOBALS[$class] = new $class;
     }
   }
 
   $modules_array = array();
   $modules_list_array = array(array('id' => '', 'text' => TEXT_ALL_MODULES));
 
-  $modules_query = tep_db_query("select distinct module from " . TABLE_ACTION_RECORDER . " order by module");
-  while ($modules = tep_db_fetch_array($modules_query)) {
-    $modules_array[] = $modules['module'];
+  $Qmodules = $OSCOM_Db->get('action_recorder', 'distinct module', null, 'module');
 
-    $modules_list_array[] = array('id' => $modules['module'],
-                                  'text' => (is_object(${$modules['module']}) ? ${$modules['module']}->title : $modules['module']));
+  while ($Qmodules->fetch()) {
+    $modules_array[] = $Qmodules->value('module');
+
+    $modules_list_array[] = [
+      'id' => $Qmodules->value('module'),
+      'text' => (is_object($GLOBALS[$Qmodules->value('module')]) ? $GLOBALS[$Qmodules->value('module')]->title : $Qmodules->value('module'))
+    ];
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -63,16 +66,17 @@
         $expired_entries = 0;
 
         if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
-          if (is_object(${$_GET['module']})) {
-            $expired_entries += ${$_GET['module']}->expireEntries();
+          if (is_object($GLOBALS[$_GET['module']])) {
+            $expired_entries += $GLOBALS[$_GET['module']]->expireEntries();
           } else {
-            $delete_query = tep_db_query("delete from " . TABLE_ACTION_RECORDER . " where module = '" . tep_db_input($_GET['module']) . "'");
-            $expired_entries += tep_db_affected_rows();
+            $expired_entries = $OSCOM_Db->delete('action_recorder', [
+              'module' => $_GET['module']
+            ]);
           }
         } else {
           foreach ($modules_array as $module) {
-            if (is_object(${$module})) {
-              $expired_entries += ${$module}->expireEntries();
+            if (is_object($GLOBALS[$module])) {
+              $expired_entries += $GLOBALS[$module]->expireEntries();
             }
           }
         }
@@ -132,43 +136,60 @@
   $filter = array();
 
   if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
-    $filter[] = " module = '" . tep_db_input($_GET['module']) . "' ";
+    $filter[] = 'module = :module';
   }
 
   if (isset($_GET['search']) && !empty($_GET['search'])) {
-    $filter[] = " identifier like '%" . tep_db_input($_GET['search']) . "%' ";
+    $filter[] = 'identifier like :identifier';
   }
 
-  $actions_query_raw = "select * from " . TABLE_ACTION_RECORDER . (!empty($filter) ? " where " . implode(" and ", $filter) : "") . " order by date_added desc";
-  $actions_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $actions_query_raw, $actions_query_numrows);
-  $actions_query = tep_db_query($actions_query_raw);
-  while ($actions = tep_db_fetch_array($actions_query)) {
-    $module = $actions['module'];
+  $sql_query = 'select SQL_CALC_FOUND_ROWS * from :table_action_recorder';
 
-    $module_title = $actions['module'];
-    if (is_object(${$module})) {
-      $module_title = ${$module}->title;
+  if (!empty($filter)) {
+    $sql_query .= ' where ' . implode(' and ', $filter);
+  }
+
+  $sql_query .= ' order by date_added desc limit :page_set_offset, :page_set_max_results';
+
+  $Qactions = $OSCOM_Db->prepare($sql_query);
+
+  if (!empty($filter)) {
+    if (isset($_GET['module']) && in_array($_GET['module'], $modules_array)) {
+      $Qactions->bindValue(':module', $_GET['module']);
     }
 
-    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ($_GET['aID'] == $actions['id']))) && !isset($aInfo)) {
-      $actions_extra_query = tep_db_query("select identifier from " . TABLE_ACTION_RECORDER . " where id = '" . (int)$actions['id'] . "'");
-      $actions_extra = tep_db_fetch_array($actions_extra_query);
+    if (isset($_GET['search']) && !empty($_GET['search'])) {
+      $Qactions->bindValue(':identifier', '%' . $_GET['search'] . '%');
+    }
+  }
 
-      $aInfo_array = array_merge($actions, $actions_extra, array('module' => $module_title));
+  $Qactions->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qactions->execute();
+
+  while ($Qactions->fetch()) {
+    $module = $Qactions->value('module');
+
+    $module_title = $Qactions->value('module');
+    if (is_object($GLOBALS[$module])) {
+      $module_title = $GLOBALS[$module]->title;
+    }
+
+    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ((int)$_GET['aID'] === $Qactions->valueInt('id')))) && !isset($aInfo)) {
+      $aInfo_array = array_merge($Qactions->toArray(), array('module_title' => $module_title));
       $aInfo = new objectInfo($aInfo_array);
     }
 
-    if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) {
+    if ( (isset($aInfo) && is_object($aInfo)) && ($Qactions->valueInt('id') === (int)$aInfo->id) ) {
       echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $Qactions->valueInt('id')) . '\'">' . "\n";
     }
 ?>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($actions['success'] == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qactions->value('success') == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
                 <td class="dataTableContent"><?php echo $module_title; ?></td>
-                <td class="dataTableContent"><?php echo HTML::outputProtected($actions['user_name']) . ' [' . (int)$actions['user_id'] . ']'; ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_datetime_short($actions['date_added']); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($actions['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $actions['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qactions->valueProtected('user_name') . ' [' . $Qactions->valueInt('user_id') . ']'; ?></td>
+                <td class="dataTableContent" align="right"><?php echo tep_datetime_short($Qactions->value('date_added')); ?></td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($Qactions->valueInt('id') === (int)$aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $Qactions->valueInt('id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -176,8 +197,8 @@
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $actions_split->display_count($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $actions_split->display_links($actions_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], (isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object(${$_GET['module']}) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qactions->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qactions->getPageSetLinks((isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object($GLOBALS[$_GET['module']]) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -189,7 +210,7 @@
   switch ($action) {
     default:
       if (isset($aInfo) && is_object($aInfo)) {
-        $heading[] = array('text' => '<strong>' . $aInfo->module . '</strong>');
+        $heading[] = array('text' => '<strong>' . $aInfo->module_title . '</strong>');
 
         $contents[] = array('text' => TEXT_INFO_IDENTIFIER . '<br /><br />' . (!empty($aInfo->identifier) ? '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'search=' . $aInfo->identifier) . '"><u>' . HTML::outputProtected($aInfo->identifier) . '</u></a>': '(empty)'));
         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_datetime_short($aInfo->date_added));
