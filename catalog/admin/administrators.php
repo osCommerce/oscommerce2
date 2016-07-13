@@ -54,13 +54,16 @@
       case 'insert':
         require('includes/functions/password_funcs.php');
 
-        $username = tep_db_prepare_input($_POST['username']);
-        $password = tep_db_prepare_input($_POST['password']);
+        $username = HTML::sanitize($_POST['username']);
+        $password = HTML::sanitize($_POST['password']);
 
-        $check_query = tep_db_query("select id from " . TABLE_ADMINISTRATORS . " where user_name = '" . tep_db_input($username) . "' limit 1");
+        $Qcheck = $OSCOM_Db->get('administrators', 'id', ['user_name' => $username], null, 1);
 
-        if (tep_db_num_rows($check_query) < 1) {
-          tep_db_query("insert into " . TABLE_ADMINISTRATORS . " (user_name, user_password) values ('" . tep_db_input($username) . "', '" . tep_db_input(tep_encrypt_password($password)) . "')");
+        if (!$Qcheck->check()) {
+          $OSCOM_Db->save('administrators', [
+            'user_name' => $username,
+            'user_password' => tep_encrypt_password($password)
+          ]);
 
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
@@ -102,14 +105,18 @@
       case 'save':
         require('includes/functions/password_funcs.php');
 
-        $username = tep_db_prepare_input($_POST['username']);
-        $password = tep_db_prepare_input($_POST['password']);
+        $username = HTML::sanitize($_POST['username']);
+        $password = HTML::sanitize($_POST['password']);
 
-        $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$_GET['aID'] . "'");
-        $check = tep_db_fetch_array($check_query);
+        $Qcheck = $OSCOM_Db->get('administrators', [
+          'id',
+          'user_name'
+        ], [
+          'id' => (int)$_GET['aID']
+        ]);
 
 // update username in current session if changed
-        if ( ($check['id'] == $_SESSION['admin']['id']) && ($check['user_name'] != $_SESSION['admin']['username']) ) {
+        if ( ($Qcheck->valueInt('id') === $_SESSION['admin']['id']) && ($username !== $_SESSION['admin']['username']) ) {
           $_SESSION['admin']['username'] = $username;
         }
 
@@ -124,7 +131,11 @@
           }
         }
 
-        tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_name = '" . tep_db_input($username) . "' where id = '" . (int)$_GET['aID'] . "'");
+        $OSCOM_Db->save('administrators', [
+          'user_name' => $username
+        ], [
+          'id' => (int)$_GET['aID']
+        ]);
 
         if (tep_not_null($password)) {
 // update password in htpasswd
@@ -142,7 +153,11 @@
             }
           }
 
-          tep_db_query("update " . TABLE_ADMINISTRATORS . " set user_password = '" . tep_db_input(tep_encrypt_password($password)) . "' where id = '" . (int)$_GET['aID'] . "'");
+          $OSCOM_Db->save('administrators', [
+            'user_password' => tep_encrypt_password($password)
+          ], [
+            'id' => (int)$_GET['aID']
+          ]);
         } elseif (!isset($_POST['htaccess']) || ($_POST['htaccess'] != 'true')) {
           if (is_array($htpasswd_array)) {
             for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
@@ -179,16 +194,15 @@
         OSCOM::redirect(FILENAME_ADMINISTRATORS, 'aID=' . (int)$_GET['aID']);
         break;
       case 'deleteconfirm':
-        $id = tep_db_prepare_input($_GET['aID']);
+        $id = (int)$_GET['aID'];
 
-        $check_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
-        $check = tep_db_fetch_array($check_query);
+        $Qcheck = $OSCOM_Db->get('administrators', ['id', 'user_name'], ['id' => $id]);
 
-        if ($_SESSION['admin']['id'] == $check['id']) {
+        if ($_SESSION['admin']['id'] === $Qcheck->valueInt('id')) {
           unset($_SESSION['admin']);
         }
 
-        tep_db_query("delete from " . TABLE_ADMINISTRATORS . " where id = '" . (int)$id . "'");
+        $OSCOM_Db->delete('administrators', ['id' => $id]);
 
         if (is_array($htpasswd_array)) {
           for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
@@ -261,12 +275,11 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $admins_query = tep_db_query("select id, user_name from " . TABLE_ADMINISTRATORS . " order by user_name");
-  while ($admins = tep_db_fetch_array($admins_query)) {
-    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ($_GET['aID'] == $admins['id']))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
-      $aInfo = new objectInfo($admins);
+  $Qadmins = $OSCOM_Db->get('administrators', ['id', 'user_name'], null, 'user_name');
+  while ($Qadmins->fetch()) {
+    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ((int)$_GET['aID'] === $Qadmins->valueInt('id')))) && !isset($aInfo) && (substr($action, 0, 3) != 'new')) {
+      $aInfo = new objectInfo($Qadmins->toArray());
     }
-
 
     $htpasswd_secured = HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Not Secured', 10, 10);
 
@@ -278,22 +291,22 @@
       for ($i=0, $n=sizeof($htpasswd_array); $i<$n; $i++) {
         list($ht_username, $ht_password) = explode(':', $htpasswd_array[$i], 2);
 
-        if ($ht_username == $admins['user_name']) {
+        if ($ht_username == $Qadmins->value('user_name')) {
           $htpasswd_secured = HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Secured', 10, 10);
           break;
         }
       }
     }
 
-    if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) {
+    if ( (isset($aInfo) && is_object($aInfo)) && ($Qadmins->valueInt('id') === (int)$aInfo->id) ) {
       echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $Qadmins->valueInt('id')) . '\'">' . "\n";
     }
 ?>
-                <td class="dataTableContent"><?php echo $admins['user_name']; ?></td>
+                <td class="dataTableContent"><?php echo $Qadmins->valueProtected('user_name'); ?></td>
                 <td class="dataTableContent" align="center"><?php echo $htpasswd_secured; ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($admins['id'] == $aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $admins['id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($Qadmins->valueInt('id') === (int)$aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $Qadmins->valueInt('id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
