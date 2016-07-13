@@ -20,7 +20,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'forget':
-        tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
+        $OSCOM_Db->delete('configuration', ['configuration_key' => 'DB_LAST_RESTORE']);
 
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
@@ -43,25 +43,28 @@
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
 
-        $tables_query = tep_db_query('show tables');
-        while ($tables = tep_db_fetch_array($tables_query)) {
-          list(,$table) = each($tables);
+        $Qtables = $OSCOM_Db->query('show tables');
+
+        while ($Qtables->fetch(\PDO::FETCH_NUM)) {
+          $table = $Qtables->value(0);
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
 
           $table_list = array();
-          $fields_query = tep_db_query("show fields from " . $table);
-          while ($fields = tep_db_fetch_array($fields_query)) {
-            $table_list[] = $fields['Field'];
 
-            $schema .= '  ' . $fields['Field'] . ' ' . $fields['Type'];
+          $Qfields = $OSCOM_Db->query('show fields from ' . $table);
 
-            if (strlen($fields['Default']) > 0) $schema .= ' default \'' . $fields['Default'] . '\'';
+          while ($Qfields->fetch()) {
+            $table_list[] = $Qfields->value('Field');
 
-            if ($fields['Null'] != 'YES') $schema .= ' not null';
+            $schema .= '  ' . $Qfields->value('Field') . ' ' . $Qfields->value('Type');
 
-            if (isset($fields['Extra'])) $schema .= ' ' . $fields['Extra'];
+            if (strlen($Qfields->value('Default')) > 0) $schema .= ' default \'' . $Qfields->value('Default') . '\'';
+
+            if ($Qfields->value('Null') != 'YES') $schema .= ' not null';
+
+            if ($Qfields->hasValue('Extra')) $schema .= ' ' . $Qfields->value('Extra');
 
             $schema .= ',' . "\n";
           }
@@ -70,17 +73,19 @@
 
 // add the keys
           $index = array();
-          $keys_query = tep_db_query("show keys from " . $table);
-          while ($keys = tep_db_fetch_array($keys_query)) {
-            $kname = $keys['Key_name'];
+
+          $Qkeys = $OSCOM_Db->query('show keys from ' . $table);
+
+          while ($Qkeys->fetch()) {
+            $kname = $Qkeys->value('Key_name');
 
             if (!isset($index[$kname])) {
-              $index[$kname] = array('unique' => !$keys['Non_unique'],
-                                     'fulltext' => ($keys['Index_type'] == 'FULLTEXT' ? '1' : '0'),
+              $index[$kname] = array('unique' => $Qkeys->valueInt('Non_unique') === 0,
+                                     'fulltext' => ($Qkeys->value('Index_type') == 'FULLTEXT' ? '1' : '0'),
                                      'columns' => array());
             }
 
-            $index[$kname]['columns'][] = $keys['Column_name'];
+            $index[$kname]['columns'][] = $Qkeys->value('Column_name');
           }
 
           foreach ( $index as $kname => $info ) {
@@ -104,15 +109,16 @@
 
 // dump the data
           if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) ) {
-            $rows_query = tep_db_query("select " . implode(',', $table_list) . " from " . $table);
-            while ($rows = tep_db_fetch_array($rows_query)) {
+            $Qrows = $OSCOM_Db->get($table, $table_list);
+
+            while ($Qrows->fetch()) {
               $schema = 'insert into ' . $table . ' (' . implode(', ', $table_list) . ') values (';
 
               foreach ( $table_list as $i ) {
-                if (!isset($rows[$i])) {
+                if (!$Qrows->hasValue($i)) {
                   $schema .= 'NULL, ';
-                } elseif (tep_not_null($rows[$i])) {
-                  $row = addslashes($rows[$i]);
+                } elseif (tep_not_null($Qrows->value($i))) {
+                  $row = addslashes($Qrows->value($i));
                   $row = preg_replace("/\n#/", "\n".'\#', $row);
 
                   $schema .= '\'' . $row . '\', ';
@@ -260,19 +266,26 @@
             }
           }
 
-          tep_db_query('drop table if exists ' . implode(', ', $drop_table_names));
+          $OSCOM_Db->exec('drop table if exists ' . implode(', ', $drop_table_names));
 
           for ($i=0, $n=sizeof($sql_array); $i<$n; $i++) {
-            tep_db_query($sql_array[$i]);
+            $OSCOM_Db->exec($sql_array[$i]);
           }
 
           session_write_close();
 
-          tep_db_query("delete from " . TABLE_WHOS_ONLINE);
-          tep_db_query("delete from " . TABLE_SESSIONS);
+          $OSCOM_Db->delete(TABLE_WHOS_ONLINE);
+          $OSCOM_Db->delete(TABLE_SESSIONS);
 
-          tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'DB_LAST_RESTORE'");
-          tep_db_query("insert into " . TABLE_CONFIGURATION . " values (null, 'Last Database Restore', 'DB_LAST_RESTORE', '" . $read_from . "', 'Last database restore file', '6', '0', null, now(), '', '')");
+          $OSCOM_Db->delete(TABLE_CONFIGURATION, ['configuration_key' => 'DB_LAST_RESTORE']);
+          $OSCOM_Db->save(TABLE_CONFIGURATION, [
+            'configuration_title' => 'Last Database Restore',
+            'configuration_key' => 'DB_LAST_RESTORE',
+            'configuration_value' => $read_from,
+            'configuration_description' => 'Last database restore file',
+            'configuration_group_id' => '6',
+            'date_added' => 'now()'
+          ]);
 
           if (isset($remove_raw) && ($remove_raw == true)) {
             unlink($restore_from);
