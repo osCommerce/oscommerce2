@@ -31,8 +31,7 @@
         $backup_file = 'db_' . DB_DATABASE . '-' . date('YmdHis') . '.sql';
         $fp = fopen(DIR_FS_BACKUP . $backup_file, 'w');
 
-        $schema = '# osCommerce, Open Source E-Commerce Solutions' . "\n" .
-                  '# http://www.oscommerce.com' . "\n" .
+        $schema = '# osCommerce, https://www.oscommerce.com' . "\n" .
                   '#' . "\n" .
                   '# Database Backup For ' . STORE_NAME . "\n" .
                   '# Copyright (c) ' . date('Y') . ' ' . STORE_OWNER . "\n" .
@@ -43,10 +42,24 @@
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
 
-        $Qtables = $OSCOM_Db->query('show tables');
+        $Qtables = $OSCOM_Db->get([
+          'INFORMATION_SCHEMA.TABLES t',
+          'INFORMATION_SCHEMA.COLLATION_CHARACTER_SET_APPLICABILITY ccsa'
+        ], [
+          't.TABLE_NAME',
+          't.ENGINE',
+          't.TABLE_COLLATION',
+          'ccsa.CHARACTER_SET_NAME'
+        ],
+        [
+          't.TABLE_SCHEMA' => DB_DATABASE,
+          't.TABLE_COLLATION' => [
+            'rel' => 'ccsa.COLLATION_NAME'
+          ]
+        ], null, null, null, ['prefix_tables' => false]);
 
-        while ($Qtables->fetch(\PDO::FETCH_NUM)) {
-          $table = $Qtables->value(0);
+        while ($Qtables->fetch()) {
+          $table = $Qtables->value('TABLE_NAME');
 
           $schema = 'drop table if exists ' . $table . ';' . "\n" .
                     'create table ' . $table . ' (' . "\n";
@@ -64,7 +77,7 @@
 
             if ($Qfields->value('Null') != 'YES') $schema .= ' not null';
 
-            if ($Qfields->hasValue('Extra')) $schema .= ' ' . $Qfields->value('Extra');
+            if (strlen($Qfields->value('Extra')) > 0) $schema .= ' ' . $Qfields->value('Extra');
 
             $schema .= ',' . "\n";
           }
@@ -104,7 +117,7 @@
             }
           }
 
-          $schema .= "\n" . ');' . "\n\n";
+          $schema .= "\n" . ') ENGINE=' . $Qtables->value('ENGINE') . ' CHARACTER SET ' . $Qtables->value('CHARACTER_SET_NAME') . ' COLLATE ' . $Qtables->value('TABLE_COLLATION') . ';' . "\n\n";
           fputs($fp, $schema);
 
 // dump the data
