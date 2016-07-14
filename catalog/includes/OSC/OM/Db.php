@@ -100,17 +100,19 @@ class Db extends \PDO
         return $DbStatement;
     }
 
-    public function get($table, $fields, array $where = null, $order = null, $limit = null, $cache = null)
+    public function get($table, $fields, array $where = null, $order = null, $limit = null, $cache = null, array $options = null)
     {
         if (!is_array($table)) {
             $table = [ $table ];
         }
 
-        array_walk($table, function(&$v, &$k) {
-            if ((strlen($v) < 7) || (substr($v, 0, 7) != ':table_')) {
-                $v = ':table_' . $v;
-            }
-        });
+        if (!isset($options['prefix_tables']) || ($options['prefix_tables'] === true)) {
+            array_walk($table, function(&$v, &$k) {
+                if ((strlen($v) < 7) || (substr($v, 0, 7) != ':table_')) {
+                    $v = ':table_' . $v;
+                }
+            });
+        }
 
         if (!is_array($fields)) {
             $fields = [ $fields ];
@@ -141,11 +143,27 @@ class Db extends \PDO
         if (isset($where)) {
             $statement .= ' where ';
 
-            foreach (array_keys($where) as $c) {
-                $statement .= $c . ' = :cond_' . $c . ' and ';
-            }
+            $counter = 0;
 
-            $statement = substr($statement, 0, -5);
+            $it_where = new \CachingIterator(new \ArrayIterator($where), \CachingIterator::TOSTRING_USE_CURRENT);
+
+            foreach ($it_where as $key => $value) {
+                if (is_array($value)) {
+                    $statement .= $key . ' ';
+
+                    $statement .= isset($value['op']) ? $value['op'] : '=';
+
+                    $statement .= isset($value['rel']) ? $value['rel'] : ':cond_' . $counter;
+                } else {
+                    $statement .= $key . ' = :cond_' . $counter;
+                }
+
+                if ($it_where->hasNext()) {
+                    $statement .= ' and ';
+                }
+
+                $counter++;
+            }
         }
 
         if (isset($order)) {
@@ -159,8 +177,18 @@ class Db extends \PDO
         $Q = $this->prepare($statement);
 
         if (isset($where)) {
-            foreach ($where as $c => $v) {
-                $Q->bindValue(':cond_' . $c, $v);
+            $counter = 0;
+
+            foreach ($it_where as $value) {
+                if (is_array($value)) {
+                    if (!isset($value['rel'])) {
+                        $Q->bindValue(':cond_' . $counter, $value['val']);
+                    }
+                } else {
+                    $Q->bindValue(':cond_' . $counter, $value);
+                }
+
+                $counter++;
             }
         }
 
