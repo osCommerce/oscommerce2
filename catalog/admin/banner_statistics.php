@@ -33,14 +33,15 @@
     }
   }
 
-  $banner_query = tep_db_query("select banners_title from " . TABLE_BANNERS . " where banners_id = '" . (int)$_GET['bID'] . "'");
-  $banner = tep_db_fetch_array($banner_query);
+  $Qbanner = $OSCOM_Db->get('banners', 'banners_title', ['banners_id' => (int)$_GET['bID']]);
 
   $years_array = array();
-  $years_query = tep_db_query("select distinct year(banners_history_date) as banner_year from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . (int)$_GET['bID'] . "'");
-  while ($years = tep_db_fetch_array($years_query)) {
-    $years_array[] = array('id' => $years['banner_year'],
-                           'text' => $years['banner_year']);
+  $Qyears = $OSCOM_Db->get('banners_history', 'distinct year(banners_history_date) as banner_year', ['banners_id' => (int)$_GET['bID']]);
+  while ($Qyears->fetch()) {
+    $years_array[] = [
+      'id' => $Qyears->valueInt('banner_year'),
+      'text' => $Qyears->valueInt('banner_year')
+    ];
   }
 
   $months_array = array();
@@ -78,7 +79,7 @@
   }
 ?>
             </td>
-          <?php echo HTML::hiddenField('page', $_GET['page']) . HTML::hiddenField('bID', $_GET['bID']); ?></form></tr>
+          <?php echo (isset($_GET['page']) ? HTML::hiddenField('page', $_GET['page']) : '') . HTML::hiddenField('bID', $_GET['bID']); ?></form></tr>
         </table></td>
       </tr>
       <tr>
@@ -140,7 +141,7 @@
         </td>
       </tr>
       <tr>
-        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])); ?></td>
+        <td class="smallText" align="right"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $_GET['bID'])); ?></td>
       </tr>
     </table>
 

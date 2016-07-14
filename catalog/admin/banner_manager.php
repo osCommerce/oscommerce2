@@ -30,22 +30,22 @@
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
-        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']);
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $_GET['bID']);
         break;
       case 'insert':
       case 'update':
-        if (isset($_POST['banners_id'])) $banners_id = tep_db_prepare_input($_POST['banners_id']);
-        $banners_title = tep_db_prepare_input($_POST['banners_title']);
-        $banners_url = tep_db_prepare_input($_POST['banners_url']);
-        $new_banners_group = tep_db_prepare_input($_POST['new_banners_group']);
-        $banners_group = (empty($new_banners_group)) ? tep_db_prepare_input($_POST['banners_group']) : $new_banners_group;
-        $banners_html_text = tep_db_prepare_input($_POST['banners_html_text']);
-        $banners_image_local = tep_db_prepare_input($_POST['banners_image_local']);
-        $banners_image_target = tep_db_prepare_input($_POST['banners_image_target']);
+        if (isset($_POST['banners_id'])) $banners_id = HTML::sanitize($_POST['banners_id']);
+        $banners_title = HTML::sanitize($_POST['banners_title']);
+        $banners_url = HTML::sanitize($_POST['banners_url']);
+        $new_banners_group = HTML::sanitize($_POST['new_banners_group']);
+        $banners_group = (empty($new_banners_group)) ? HTML::sanitize($_POST['banners_group']) : $new_banners_group;
+        $banners_html_text = HTML::sanitize($_POST['banners_html_text']);
+        $banners_image_local = HTML::sanitize($_POST['banners_image_local']);
+        $banners_image_target = HTML::sanitize($_POST['banners_image_target']);
         $db_image_location = '';
-        $expires_date = tep_db_prepare_input($_POST['expires_date']);
-        $expires_impressions = tep_db_prepare_input($_POST['expires_impressions']);
-        $date_scheduled = tep_db_prepare_input($_POST['date_scheduled']);
+        $expires_date = HTML::sanitize($_POST['expires_date']);
+        $expires_impressions = HTML::sanitize($_POST['expires_impressions']);
+        $date_scheduled = HTML::sanitize($_POST['date_scheduled']);
 
         $banner_error = false;
         if (empty($banners_title)) {
@@ -85,13 +85,13 @@
 
             $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-            tep_db_perform(TABLE_BANNERS, $sql_data_array);
+            $OSCOM_Db->save('banners', $sql_data_array);
 
-            $banners_id = tep_db_insert_id();
+            $banners_id = $OSCOM_Db->lastInsertId();
 
             $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
           } elseif ($action == 'update') {
-            tep_db_perform(TABLE_BANNERS, $sql_data_array, 'update', "banners_id = '" . (int)$banners_id . "'");
+            $OSCOM_Db->save('banners', $sql_data_array, ['banners_id' => (int)$banners_id]);
 
             $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
           }
@@ -99,15 +99,31 @@
           if (tep_not_null($expires_date)) {
             $expires_date = substr($expires_date, 0, 4) . substr($expires_date, 5, 2) . substr($expires_date, 8, 2);
 
-            tep_db_query("update " . TABLE_BANNERS . " set expires_date = '" . tep_db_input($expires_date) . "', expires_impressions = null where banners_id = '" . (int)$banners_id . "'");
+            $OSCOM_Db->save('banners', [
+              'expires_date' => $expires_date,
+              'expires_impressions' => 'null'
+            ], [
+              'banners_id' => (int)$banners_id
+            ]);
           } elseif (tep_not_null($expires_impressions)) {
-            tep_db_query("update " . TABLE_BANNERS . " set expires_impressions = '" . tep_db_input($expires_impressions) . "', expires_date = null where banners_id = '" . (int)$banners_id . "'");
+            $OSCOM_Db->save('banners', [
+              'expires_impressions' => $expires_impressions,
+              'expires_date' => 'null'
+            ], [
+              'banners_id' => (int)$banners_id
+            ]);
           }
 
           if (tep_not_null($date_scheduled)) {
             $date_scheduled = substr($date_scheduled, 0, 4) . substr($date_scheduled, 5, 2) . substr($date_scheduled, 8, 2);
 
-            tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_scheduled = '" . tep_db_input($date_scheduled) . "' where banners_id = '" . (int)$banners_id . "'");
+            $OSCOM_Db->save('banners', [
+              'status' => '0',
+              'date_scheduled' => $date_scheduled
+            ],
+            [
+              'banners_id' => (int)$banners_id
+            ]);
           }
 
           OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id);
@@ -116,15 +132,14 @@
         }
         break;
       case 'deleteconfirm':
-        $banners_id = tep_db_prepare_input($_GET['bID']);
+        $banners_id = HTML::sanitize($_GET['bID']);
 
         if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
-          $banner_query = tep_db_query("select banners_image from " . TABLE_BANNERS . " where banners_id = '" . (int)$banners_id . "'");
-          $banner = tep_db_fetch_array($banner_query);
+          $Qbanner = $OSCOM_Db->get('banners', 'banners_image', ['banners_id' => (int)$banners_id]);
 
-          if (is_file(DIR_FS_CATALOG_IMAGES . $banner['banners_image'])) {
-            if (tep_is_writable(DIR_FS_CATALOG_IMAGES . $banner['banners_image'])) {
-              unlink(DIR_FS_CATALOG_IMAGES . $banner['banners_image']);
+          if (tep_not_null($Qbanner->value('banners_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image')) && is_file(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'))) {
+            if (tep_is_writable(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'))) {
+              unlink(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'));
             } else {
               $messageStack->add_session(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
             }
@@ -133,38 +148,61 @@
           }
         }
 
-        tep_db_query("delete from " . TABLE_BANNERS . " where banners_id = '" . (int)$banners_id . "'");
-        tep_db_query("delete from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . (int)$banners_id . "'");
+        $OSCOM_Db->delete('banners', ['banners_id' => (int)$banners_id]);
+        $OSCOM_Db->delete('banners_history', ['banners_id' => (int)$banners_id]);
 
         if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . $banners_id . '.' . $banner_extension);
+          if (is_file(DIR_WS_IMAGES . 'graphs/banner_infobox-' . (int)$banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_infobox-' . (int)$banners_id . '.' . $banner_extension)) {
+              unlink(DIR_WS_IMAGES . 'graphs/banner_infobox-' . (int)$banners_id . '.' . $banner_extension);
             }
           }
 
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banners_id . '.' . $banner_extension);
+          if (is_file(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
+              unlink(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
             }
           }
 
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banners_id . '.' . $banner_extension);
+          if (is_file(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
+              unlink(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
             }
           }
 
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banners_id . '.' . $banner_extension);
+          if (is_file(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
+            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
+              unlink(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
             }
           }
         }
 
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
-        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] : ''));
+        break;
+      case 'preview':
+        $banners_id = HTML::sanitize($_GET['banner']);
+
+        $Qbanner = $OSCOM_Db->get('banners', [
+          'banners_title',
+          'banners_image',
+          'banners_html_text'
+        ], [
+          'banners_id' => (int)$banners_id
+        ]);
+
+        if ($Qbanner->check()) {
+          echo '<h1>' . $Qbanner->valueProtected('banners_title') . '</h1>';
+
+          if (tep_not_null($Qbanner->value('banners_html_text'))) {
+            echo $banner['banners_html_text'];
+          } elseif (tep_not_null($Qbanner->value('banners_image'))) {
+            echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $Qbanner->value('banners_image'), $Qbanner->value('banners_title'));
+          }
+
+          exit;
+        }
         break;
     }
   }
@@ -188,7 +226,7 @@
 
 <script type="text/javascript"><!--
 function popupImageWindow(url) {
-  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
+  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no');
 }
 //--></script>
 
@@ -218,20 +256,35 @@ function popupImageWindow(url) {
     if (isset($_GET['bID'])) {
       $form_action = 'update';
 
-      $bID = tep_db_prepare_input($_GET['bID']);
+      $bID = HTML::sanitize($_GET['bID']);
 
-      $banner_query = tep_db_query("select banners_title, banners_url, banners_image, banners_group, banners_html_text, status, date_format(date_scheduled, '%Y/%m/%d') as date_scheduled, date_format(expires_date, '%Y/%m/%d') as expires_date, expires_impressions, date_status_change from " . TABLE_BANNERS . " where banners_id = '" . (int)$bID . "'");
-      $banner = tep_db_fetch_array($banner_query);
+      $Qbanner = $OSCOM_Db->get('banners', [
+        'banners_title',
+        'banners_url',
+        'banners_image',
+        'banners_group',
+        'banners_html_text',
+        'status',
+        'date_format(date_scheduled, "%Y/%m/%d") as date_scheduled',
+        'date_format(expires_date, "%Y/%m/%d") as expires_date',
+        'expires_impressions',
+        'date_status_change'
+      ], [
+        'banners_id' => (int)$bID
+      ]);
 
-      $bInfo->objectInfo($banner);
+      $bInfo->objectInfo($Qbanner->toArray());
     } elseif (tep_not_null($_POST)) {
       $bInfo->objectInfo($_POST);
     }
 
     $groups_array = array();
-    $groups_query = tep_db_query("select distinct banners_group from " . TABLE_BANNERS . " order by banners_group");
-    while ($groups = tep_db_fetch_array($groups_query)) {
-      $groups_array[] = array('id' => $groups['banners_group'], 'text' => $groups['banners_group']);
+    $Qgroups = $OSCOM_Db->get('banners', 'distinct banners_group', null, 'banners_group');
+    while ($Qgroups->fetch()) {
+      $groups_array[] = [
+        'id' => $Qgroups->value('banners_group'),
+        'text' => $Qgroups->value('banners_group')
+      ];
     }
 ?>
       <tr><?php echo HTML::form('new_banner', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action), 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo HTML::hiddenField('banners_id', $bID); ?>
@@ -319,39 +372,41 @@ $('#expires_date').datepicker({
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $banners_query_raw = "select banners_id, banners_title, banners_image, banners_group, status, expires_date, expires_impressions, date_status_change, date_scheduled, date_added from " . TABLE_BANNERS . " order by banners_title, banners_group";
-    $banners_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $banners_query_raw, $banners_query_numrows);
-    $banners_query = tep_db_query($banners_query_raw);
-    while ($banners = tep_db_fetch_array($banners_query)) {
-      $info_query = tep_db_query("select sum(banners_shown) as banners_shown, sum(banners_clicked) as banners_clicked from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . (int)$banners['banners_id'] . "'");
-      $info = tep_db_fetch_array($info_query);
+    $Qbanners = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS banners_id, banners_title, banners_image, banners_group, status, expires_date, expires_impressions, date_status_change, date_scheduled, date_added from :table_banners order by banners_title, banners_group limit :page_set_offset, :page_set_max_results');
+    $Qbanners->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+    $Qbanners->execute();
 
-      if ((!isset($_GET['bID']) || (isset($_GET['bID']) && ($_GET['bID'] == $banners['banners_id']))) && !isset($bInfo) && (substr($action, 0, 3) != 'new')) {
-        $bInfo_array = array_merge($banners, $info);
+    while ($Qbanners->fetch()) {
+      $Qinfo = $OSCOM_Db->get('banners_history', [
+        'sum(banners_shown) as banners_shown',
+        'sum(banners_clicked) as banners_clicked'
+      ], [
+        'banners_id' => $Qbanners->valueInt('banners_id')
+      ]);
+
+      if ((!isset($_GET['bID']) || (isset($_GET['bID']) && ((int)$_GET['bID'] === $Qbanners->valueInt('banners_id')))) && !isset($bInfo) && (substr($action, 0, 3) != 'new')) {
+        $bInfo_array = array_merge($Qbanners->toArray(), $Qinfo->toArray());
         $bInfo = new objectInfo($bInfo_array);
       }
 
-      $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';
-      $banners_clicked = ($info['banners_clicked'] != '') ? $info['banners_clicked'] : '0';
-
-      if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id)) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '\'">' . "\n";
+      if (isset($bInfo) && is_object($bInfo) && ($Qbanners->valueInt('banners_id') === (int)$bInfo->banners_id)) {
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . FILENAME_POPUP_IMAGE . '?banner=' . $banners['banners_id'] . '\')">' . HTML::image(DIR_WS_IMAGES . 'icon_popup.gif', 'View Banner') . '</a>&nbsp;' . $banners['banners_title']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $banners['banners_group']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . OSCOM::link(FILENAME_BANNER_MANAGER, 'action=preview&banner=' . $Qbanners->valueInt('banners_id')) . '\');">' . HTML::image(DIR_WS_IMAGES . 'icon_popup.gif', 'View Banner') . '</a>&nbsp;' . $Qbanners->value('banners_title'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo $Qbanners->value('banners_group'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo $Qinfo->valueInt('banners_shown') . ' / ' . $Qinfo->valueInt('banners_clicked'); ?></td>
                 <td class="dataTableContent" align="right">
 <?php
-      if ($banners['status'] == '1') {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Active', 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id'] . '&action=setflag&flag=0') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', 'Set Inactive', 10, 10) . '</a>';
+      if ($Qbanners->value('status') == '1') {
+        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Active', 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', 'Set Inactive', 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id'] . '&action=setflag&flag=1') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', 'Set Active', 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Inactive', 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', 'Set Active', 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Inactive', 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . HTML::image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($Qbanners->valueInt('banners_id') === (int)$bInfo->banners_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -359,8 +414,8 @@ $('#expires_date').datepicker({
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $banners_split->display_count($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $banners_split->display_links($banners_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qbanners->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_BANNERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qbanners->getPageSetLinks(); ?></td>
                   </tr>
                   <tr>
                     <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_BANNER, 'fa fa-plus', OSCOM::link(FILENAME_BANNER_MANAGER, 'action=new')); ?></td>
@@ -375,17 +430,17 @@ $('#expires_date').datepicker({
     case 'delete':
       $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
-      $contents = array('form' => HTML::form('banners', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('banners', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $bInfo->banners_title . '</strong>');
       if ($bInfo->banners_image) $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $_GET['bID'])));
       break;
     default:
       if (is_object($bInfo)) {
         $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info-circle', OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id)));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info-circle', OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id)));
         $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . tep_date_short($bInfo->date_added));
 
         if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {

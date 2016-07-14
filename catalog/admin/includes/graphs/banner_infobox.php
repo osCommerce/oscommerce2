@@ -13,9 +13,24 @@
   include(DIR_WS_CLASSES . 'phplot.php');
 
   $stats = array();
-  $banner_stats_query = tep_db_query("select dayofmonth(banners_history_date) as name, banners_shown as value, banners_clicked as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and to_days(now()) - to_days(banners_history_date) < " . $days . " order by banners_history_date");
-  while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-    $stats[] = array($banner_stats['name'], $banner_stats['value'], $banner_stats['dvalue']);
+  $Qstats = $OSCOM_Db->get('banners_history', [
+    'dayofmonth(banners_history_date) as name',
+    'banners_shown as value',
+    'banners_clicked as dvalue'
+  ], [
+    'banners_id' => $banner_id,
+    'to_days(now()) - to_days(banners_history_date)' => [
+      'op' => '<',
+      'val' => $days
+    ]
+  ], 'banners_history_date');
+
+  while ($Qstats->fetch()) {
+    $stats[] = [
+      $Qstats->value('name'),
+      $Qstats->valueInt('value'),
+      $Qstats->valueInt('dvalue')
+    ];
   }
 
   if (sizeof($stats) < 1) $stats = array(array(date('j'), 0, 0));
