@@ -149,11 +149,29 @@ class Db extends \PDO
 
             foreach ($it_where as $key => $value) {
                 if (is_array($value)) {
-                    $statement .= $key . ' ';
+                    if (isset($value['val'])) {
+                        $statement .= $key . ' ' . (isset($value['op']) ? $value['op'] : '=') . ' :cond_' . $counter;
+                    }
 
-                    $statement .= isset($value['op']) ? $value['op'] : '=';
+                    if (isset($value['rel'])) {
+                        if (isset($value['val'])) {
+                            $statement .= ' and ';
+                        }
 
-                    $statement .= isset($value['rel']) ? $value['rel'] : ':cond_' . $counter;
+                        if (is_array($value['rel'])) {
+                            $it_rel = new \CachingIterator(new \ArrayIterator($value['rel']), \CachingIterator::TOSTRING_USE_CURRENT);
+
+                            foreach ($it_rel as $rel) {
+                                $statement .= $key . ' = ' . $rel;
+
+                                if ($it_rel->hasNext()) {
+                                    $statement .= ' and ';
+                                }
+                            }
+                        } else {
+                            $statement .= $key . ' = ' . $value['rel'];
+                        }
+                    }
                 } else {
                     $statement .= $key . ' = :cond_' . $counter;
                 }
@@ -180,10 +198,8 @@ class Db extends \PDO
             $counter = 0;
 
             foreach ($it_where as $value) {
-                if (is_array($value)) {
-                    if (!isset($value['rel'])) {
-                        $Q->bindValue(':cond_' . $counter, $value['val']);
-                    }
+                if (is_array($value) && isset($value['val'])) {
+                    $Q->bindValue(':cond_' . $counter, $value['val']);
                 } else {
                     $Q->bindValue(':cond_' . $counter, $value);
                 }
