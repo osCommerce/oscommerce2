@@ -43,8 +43,8 @@
         break;
       case 'insert_category':
       case 'update_category':
-        if (isset($_POST['categories_id'])) $categories_id = tep_db_prepare_input($_POST['categories_id']);
-        $sort_order = tep_db_prepare_input($_POST['sort_order']);
+        if (isset($_POST['categories_id'])) $categories_id = HTML::sanitize($_POST['categories_id']);
+        $sort_order = HTML::sanitize($_POST['sort_order']);
 
         $sql_data_array = array('sort_order' => (int)$sort_order);
 
@@ -54,15 +54,15 @@
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-          tep_db_perform(TABLE_CATEGORIES, $sql_data_array);
+          $OSCOM_Db->save('categories', $sql_data_array);
 
-          $categories_id = tep_db_insert_id();
+          $categories_id = $OSCOM_Db->lastInsertId();
         } elseif ($action == 'update_category') {
           $update_sql_data = array('last_modified' => 'now()');
 
           $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
-          tep_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "'");
+          $OSCOM_Db->save('categories', $sql_data_array, ['categories_id' => (int)$categories_id]);
         }
 
         $languages = tep_get_languages();
@@ -71,7 +71,7 @@
 
           $language_id = $languages[$i]['id'];
 
-          $sql_data_array = array('categories_name' => tep_db_prepare_input($categories_name_array[$language_id]));
+          $sql_data_array = array('categories_name' => HTML::sanitize($categories_name_array[$language_id]));
 
           if ($action == 'insert_category') {
             $insert_sql_data = array('categories_id' => $categories_id,
@@ -79,9 +79,12 @@
 
             $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-            tep_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array);
+            $OSCOM_Db->save('categories_description', $sql_data_array);
           } elseif ($action == 'update_category') {
-            tep_db_perform(TABLE_CATEGORIES_DESCRIPTION, $sql_data_array, 'update', "categories_id = '" . (int)$categories_id . "' and language_id = '" . (int)$languages[$i]['id'] . "'");
+            $OSCOM_Db->save('categories_description', $sql_data_array, [
+              'categories_id' => (int)$categories_id,
+              'language_id' => (int)$languages[$i]['id']
+            ]);
           }
         }
 
@@ -89,7 +92,11 @@
         $categories_image->set_destination(DIR_FS_CATALOG_IMAGES);
 
         if ($categories_image->parse() && $categories_image->save()) {
-          tep_db_query("update " . TABLE_CATEGORIES . " set categories_image = '" . tep_db_input($categories_image->filename) . "' where categories_id = '" . (int)$categories_id . "'");
+          $OSCOM_Db->save('categories', [
+            'categories_image' => $categories_image->filename
+          ], [
+            'categories_id' => (int)$categories_id
+          ]);
         }
 
         if (USE_CACHE == 'true') {
@@ -101,17 +108,17 @@
         break;
       case 'delete_category_confirm':
         if (isset($_POST['categories_id'])) {
-          $categories_id = tep_db_prepare_input($_POST['categories_id']);
+          $categories_id = HTML::sanitize($_POST['categories_id']);
 
           $categories = tep_get_category_tree($categories_id, '', '0', '', true);
           $products = array();
           $products_delete = array();
 
           for ($i=0, $n=sizeof($categories); $i<$n; $i++) {
-            $product_ids_query = tep_db_query("select products_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$categories[$i]['id'] . "'");
+            $Qproducts = $OSCOM_Db->get('products_to_categories', 'products_id', ['categories_id' => (int)$categories[$i]['id']]);
 
-            while ($product_ids = tep_db_fetch_array($product_ids_query)) {
-              $products[$product_ids['products_id']]['categories'][] = $categories[$i]['id'];
+            while ($Qproducts->fetch()) {
+              $products[$Qproducts->valueInt('products_id')]['categories'][] = $categories[$i]['id'];
             }
           }
 
@@ -123,9 +130,11 @@
             }
             $category_ids = substr($category_ids, 0, -2);
 
-            $check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$key . "' and categories_id not in (" . $category_ids . ")");
-            $check = tep_db_fetch_array($check_query);
-            if ($check['total'] < '1') {
+            $Qcheck = $OSCOM_Db->prepare('select products_id from :table_products_to_categories where products_id = :products_id and categories_id not in (' . $category_ids . ') limit 1');
+            $Qcheck->bindInt(':products_id', $key);
+            $Qcheck->execute();
+
+            if ($Qcheck->check() === false) {
               $products_delete[$key] = $key;
             }
           }
@@ -150,17 +159,19 @@
         break;
       case 'delete_product_confirm':
         if (isset($_POST['products_id']) && isset($_POST['product_categories']) && is_array($_POST['product_categories'])) {
-          $product_id = tep_db_prepare_input($_POST['products_id']);
+          $product_id = HTML::sanitize($_POST['products_id']);
           $product_categories = $_POST['product_categories'];
 
           for ($i=0, $n=sizeof($product_categories); $i<$n; $i++) {
-            tep_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "' and categories_id = '" . (int)$product_categories[$i] . "'");
+            $OSCOM_Db->delete('products_to_categories', [
+              'products_id' => (int)$product_id,
+              'categories_id' => (int)$product_categories[$i]
+            ]);
           }
 
-          $product_categories_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
-          $product_categories = tep_db_fetch_array($product_categories_query);
+          $Qcheck = $OSCOM_Db->get('products_to_categories', 'products_id', ['products_id' => (int)$product_id], null, 1);
 
-          if ($product_categories['total'] == '0') {
+          if ($Qcheck->fetch() === false) {
             tep_remove_product($product_id);
           }
         }
@@ -176,8 +187,8 @@
         break;
       case 'move_category_confirm':
         if (isset($_POST['categories_id']) && ($_POST['categories_id'] != $_POST['move_to_category_id'])) {
-          $categories_id = tep_db_prepare_input($_POST['categories_id']);
-          $new_parent_id = tep_db_prepare_input($_POST['move_to_category_id']);
+          $categories_id = HTML::sanitize($_POST['categories_id']);
+          $new_parent_id = HTML::sanitize($_POST['move_to_category_id']);
 
           $path = explode('_', tep_get_generated_category_path_ids($new_parent_id));
 
@@ -186,7 +197,12 @@
 
             OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id);
           } else {
-            tep_db_query("update " . TABLE_CATEGORIES . " set parent_id = '" . (int)$new_parent_id . "', last_modified = now() where categories_id = '" . (int)$categories_id . "'");
+            $OSCOM_Db->save('categories', [
+              'parent_id' => (int)$new_parent_id,
+              'last_modified' => 'now()'
+            ], [
+              'categories_id' => (int)$categories_id
+            ]);
 
             if (USE_CACHE == 'true') {
               tep_reset_cache_block('categories');
@@ -199,12 +215,22 @@
 
         break;
       case 'move_product_confirm':
-        $products_id = tep_db_prepare_input($_POST['products_id']);
-        $new_parent_id = tep_db_prepare_input($_POST['move_to_category_id']);
+        $products_id = HTML::sanitize($_POST['products_id']);
+        $new_parent_id = HTML::sanitize($_POST['move_to_category_id']);
 
-        $duplicate_check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$products_id . "' and categories_id = '" . (int)$new_parent_id . "'");
-        $duplicate_check = tep_db_fetch_array($duplicate_check_query);
-        if ($duplicate_check['total'] < 1) tep_db_query("update " . TABLE_PRODUCTS_TO_CATEGORIES . " set categories_id = '" . (int)$new_parent_id . "' where products_id = '" . (int)$products_id . "' and categories_id = '" . (int)$current_category_id . "'");
+        $Qcheck = $OSCOM_Db->get('products_to_categories', 'products_id', [
+          'products_id' => (int)$products_id,
+          'categories_id' => (int)$new_parent_id
+        ], null, 1);
+
+        if ($Qcheck->fetch() === false) {
+          $OSCOM_Db->save('products_to_categories', [
+            'categories_id' => (int)$new_parent_id
+          ], [
+            'products_id' => (int)$products_id,
+            'categories_id' => (int)$current_category_id
+          ]);
+        }
 
         if (USE_CACHE == 'true') {
           tep_reset_cache_block('categories');
@@ -217,24 +243,24 @@
         break;
       case 'insert_product':
       case 'update_product':
-        if (isset($_GET['pID'])) $products_id = tep_db_prepare_input($_GET['pID']);
-        $products_date_available = tep_db_prepare_input($_POST['products_date_available']);
+        if (isset($_GET['pID'])) $products_id = HTML::sanitize($_GET['pID']);
+        $products_date_available = HTML::sanitize($_POST['products_date_available']);
 
         $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
 
-        $sql_data_array = array('products_quantity' => (int)tep_db_prepare_input($_POST['products_quantity']),
-                                'products_model' => tep_db_prepare_input($_POST['products_model']),
-                                'products_price' => tep_db_prepare_input($_POST['products_price']),
+        $sql_data_array = array('products_quantity' => (int)HTML::sanitize($_POST['products_quantity']),
+                                'products_model' => HTML::sanitize($_POST['products_model']),
+                                'products_price' => HTML::sanitize($_POST['products_price']),
                                 'products_date_available' => $products_date_available,
-                                'products_weight' => (float)tep_db_prepare_input($_POST['products_weight']),
-                                'products_status' => tep_db_prepare_input($_POST['products_status']),
-                                'products_tax_class_id' => tep_db_prepare_input($_POST['products_tax_class_id']),
-                                'manufacturers_id' => (int)tep_db_prepare_input($_POST['manufacturers_id']));
+                                'products_weight' => (float)HTML::sanitize($_POST['products_weight']),
+                                'products_status' => HTML::sanitize($_POST['products_status']),
+                                'products_tax_class_id' => HTML::sanitize($_POST['products_tax_class_id']),
+                                'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']));
 
         $products_image = new upload('products_image');
         $products_image->set_destination(DIR_FS_CATALOG_IMAGES);
         if ($products_image->parse() && $products_image->save()) {
-          $sql_data_array['products_image'] = tep_db_prepare_input($products_image->filename);
+          $sql_data_array['products_image'] = HTML::sanitize($products_image->filename);
         }
 
         if ($action == 'insert_product') {
@@ -242,25 +268,28 @@
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-          tep_db_perform(TABLE_PRODUCTS, $sql_data_array);
-          $products_id = tep_db_insert_id();
+          $OSCOM_Db->save('products', $sql_data_array);
+          $products_id = $OSCOM_Db->lastInsertId();
 
-          tep_db_query("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) values ('" . (int)$products_id . "', '" . (int)$current_category_id . "')");
+          $OSCOM_Db->save('products_to_categories', [
+            'products_id' => (int)$products_id,
+            'categories_id' => (int)$current_category_id
+          ]);
         } elseif ($action == 'update_product') {
           $update_sql_data = array('products_last_modified' => 'now()');
 
           $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
-          tep_db_perform(TABLE_PRODUCTS, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "'");
+          $OSCOM_Db->save('products', $sql_data_array, ['products_id' => (int)$products_id]);
         }
 
         $languages = tep_get_languages();
         for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
           $language_id = $languages[$i]['id'];
 
-          $sql_data_array = array('products_name' => tep_db_prepare_input($_POST['products_name'][$language_id]),
-                                  'products_description' => tep_db_prepare_input($_POST['products_description'][$language_id]),
-                                  'products_url' => tep_db_prepare_input($_POST['products_url'][$language_id]));
+          $sql_data_array = array('products_name' => HTML::sanitize($_POST['products_name'][$language_id]),
+                                  'products_description' => HTML::sanitize($_POST['products_description'][$language_id]),
+                                  'products_url' => HTML::sanitize($_POST['products_url'][$language_id]));
 
           if ($action == 'insert_product') {
             $insert_sql_data = array('products_id' => $products_id,
@@ -268,9 +297,12 @@
 
             $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-            tep_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array);
+            $OSCOM_Db->save('products_description', $sql_data_array);
           } elseif ($action == 'update_product') {
-            tep_db_perform(TABLE_PRODUCTS_DESCRIPTION, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "' and language_id = '" . (int)$language_id . "'");
+            $OSCOM_Db->save('products_description', $sql_data_array, [
+              'products_id' => (int)$products_id,
+              'language_id' => (int)$language_id
+            ]);
           }
         }
 
@@ -282,52 +314,59 @@
           if (preg_match('/^products_image_large_([0-9]+)$/', $key, $matches)) {
             $pi_sort_order++;
 
-            $sql_data_array = array('htmlcontent' => tep_db_prepare_input($_POST['products_image_htmlcontent_' . $matches[1]]),
+            $sql_data_array = array('htmlcontent' => HTML::sanitize($_POST['products_image_htmlcontent_' . $matches[1]]),
                                     'sort_order' => $pi_sort_order);
 
             $t = new upload($key);
             $t->set_destination(DIR_FS_CATALOG_IMAGES);
             if ($t->parse() && $t->save()) {
-              $sql_data_array['image'] = tep_db_prepare_input($t->filename);
+              $sql_data_array['image'] = HTML::sanitize($t->filename);
             }
 
-            tep_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array, 'update', "products_id = '" . (int)$products_id . "' and id = '" . (int)$matches[1] . "'");
+            $OSCOM_Db->save('products_image', $sql_data_array, [
+              'products_id' => (int)$products_id,
+              'id' => (int)$matches[1]
+            ]);
 
             $piArray[] = (int)$matches[1];
           } elseif (preg_match('/^products_image_large_new_([0-9]+)$/', $key, $matches)) {
 // Insert new large product images
             $sql_data_array = array('products_id' => (int)$products_id,
-                                    'htmlcontent' => tep_db_prepare_input($_POST['products_image_htmlcontent_new_' . $matches[1]]));
+                                    'htmlcontent' => HTML::sanitize($_POST['products_image_htmlcontent_new_' . $matches[1]]));
 
             $t = new upload($key);
             $t->set_destination(DIR_FS_CATALOG_IMAGES);
             if ($t->parse() && $t->save()) {
               $pi_sort_order++;
 
-              $sql_data_array['image'] = tep_db_prepare_input($t->filename);
+              $sql_data_array['image'] = HTML::sanitize($t->filename);
               $sql_data_array['sort_order'] = $pi_sort_order;
 
-              tep_db_perform(TABLE_PRODUCTS_IMAGES, $sql_data_array);
+              $OSCOM_Db->save('products_images', $sql_data_array);
 
-              $piArray[] = tep_db_insert_id();
+              $piArray[] = $OSCOM_Db->lastInsertId();
             }
           }
         }
 
-        $product_images_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "' and id not in (" . implode(',', $piArray) . ")");
-        if (tep_db_num_rows($product_images_query)) {
-          while ($product_images = tep_db_fetch_array($product_images_query)) {
-            $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_IMAGES . " where image = '" . tep_db_input($product_images['image']) . "'");
-            $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+        $Qimages = $OSCOM_Db->prepare('select image from :table_products_images where products_id = :products_id and id not in (' . implode(', ', $piArray) . ')');
+        $Qimages->bindInt(':products_id', $products_id);
+        $Qimages->execute();
 
-            if ($duplicate_image['total'] < 2) {
-              if (file_exists(DIR_FS_CATALOG_IMAGES . $product_images['image'])) {
-                @unlink(DIR_FS_CATALOG_IMAGES . $product_images['image']);
+        if ($Qimages->fetch() !== false) {
+          do {
+            $Qcheck = $OSCOM_Db->get('products_images', 'count(*) as total', ['image' => $Qimages->value('image')]);
+
+            if ($Qcheck->valueInt('total') < 2) {
+              if (file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('image'))) {
+                unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('image'));
               }
             }
-          }
+          } while ($Qimages->fetch());
 
-          tep_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "' and id not in (" . implode(',', $piArray) . ")");
+          $Qdel = $OSCOM_Db->prepare('delete from :table_products_images where products_id = :products_id and id not in (' . implode(', ', $piArray) . ')');
+          $Qdel->bindInt(':products_id', $products_id);
+          $Qdel->execute();
         }
 
         if (USE_CACHE == 'true') {
@@ -341,37 +380,71 @@
         break;
       case 'copy_to_confirm':
         if (isset($_POST['products_id']) && isset($_POST['categories_id'])) {
-          $products_id = tep_db_prepare_input($_POST['products_id']);
-          $categories_id = tep_db_prepare_input($_POST['categories_id']);
+          $products_id = HTML::sanitize($_POST['products_id']);
+          $categories_id = HTML::sanitize($_POST['categories_id']);
 
           if ($_POST['copy_as'] == 'link') {
             if ($categories_id != $current_category_id) {
-              $check_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$products_id . "' and categories_id = '" . (int)$categories_id . "'");
-              $check = tep_db_fetch_array($check_query);
-              if ($check['total'] < '1') {
-                tep_db_query("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) values ('" . (int)$products_id . "', '" . (int)$categories_id . "')");
+              $Qcheck = $OSCOM_Db->get('products_to_categories', 'products_id', [
+                'products_id' => (int)$products_id,
+                'categories_id' => (int)$categories_id
+              ], null, 1);
+
+              if ($Qcheck->fetch() === false) {
+                $OSCOM_Db->save('products_to_categories', [
+                  'products_id' => (int)$products_id,
+                  'categories_id' => (int)$categories_id
+                ]);
               }
             } else {
               $messageStack->add_session(ERROR_CANNOT_LINK_TO_SAME_CATEGORY, 'error');
             }
           } elseif ($_POST['copy_as'] == 'duplicate') {
-            $product_query = tep_db_query("select products_quantity, products_model, products_image, products_price, products_date_available, products_weight, products_tax_class_id, manufacturers_id from " . TABLE_PRODUCTS . " where products_id = '" . (int)$products_id . "'");
-            $product = tep_db_fetch_array($product_query);
+            $Qproduct = $OSCOM_Db->get('products', '*', ['products_id' => (int)$products_id]);
 
-            tep_db_query("insert into " . TABLE_PRODUCTS . " (products_quantity, products_model,products_image, products_price, products_date_added, products_date_available, products_weight, products_status, products_tax_class_id, manufacturers_id) values ('" . tep_db_input($product['products_quantity']) . "', '" . tep_db_input($product['products_model']) . "', '" . tep_db_input($product['products_image']) . "', '" . tep_db_input($product['products_price']) . "',  now(), " . (empty($product['products_date_available']) ? "null" : "'" . tep_db_input($product['products_date_available']) . "'") . ", '" . tep_db_input($product['products_weight']) . "', '0', '" . (int)$product['products_tax_class_id'] . "', '" . (int)$product['manufacturers_id'] . "')");
-            $dup_products_id = tep_db_insert_id();
+            $OSCOM_Db->save('products', [
+              'products_quantity' => $Qproduct->valueInt('products_quantity'),
+              'products_model' => $Qproduct->value('products_model'),
+              'products_image' => $Qproduct->value('products_image'),
+              'products_price' => $Qproduct->value('products_price'),
+              'products_date_added' => 'now()',
+              'products_date_available' => $Qproduct->hasValue('products_date_available') ? $Qproduct->value('products_date_available') : null,
+              'products_weight' => $Qproduct->value('products_weight'),
+              'products_status' => 0,
+              'products_tax_class_id' => $Qproduct->valueInt('products_tax_class_id'),
+              'manufacturers_id' => $Qproduct->valueInt('manufacturers_id')
+            ]);
+            $dup_products_id = $OSCOM_Db->lastInsertId();
 
-            $description_query = tep_db_query("select language_id, products_name, products_description, products_url from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$products_id . "'");
-            while ($description = tep_db_fetch_array($description_query)) {
-              tep_db_query("insert into " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url, products_viewed) values ('" . (int)$dup_products_id . "', '" . (int)$description['language_id'] . "', '" . tep_db_input($description['products_name']) . "', '" . tep_db_input($description['products_description']) . "', '" . tep_db_input($description['products_url']) . "', '0')");
+            $Qdesc = $OSCOM_Db->get('products_description', '*', ['products_id' => (int)$products_id]);
+
+            while ($Qdesc->fetch()) {
+              $OSCOM_Db->save('products_description', [
+                'products_id' => (int)$dup_products_id,
+                'language_id' => $Qdesc->valueInt('language_id'),
+                'products_name' => $Qdesc->value('products_name'),
+                'products_description' => $Qdesc->value('products_description'),
+                'products_url' => $Qdesc->value('products_url'),
+                'products_viewed' => 0
+              ]);
             }
 
-            $product_images_query = tep_db_query("select image, htmlcontent, sort_order from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$products_id . "'");
-            while ($product_images = tep_db_fetch_array($product_images_query)) {
-              tep_db_query("insert into " . TABLE_PRODUCTS_IMAGES . " (products_id, image, htmlcontent, sort_order) values ('" . (int)$dup_products_id . "', '" . tep_db_input($product_images['image']) . "', '" . tep_db_input($product_images['htmlcontent']) . "', '" . tep_db_input($product_images['sort_order']) . "')");
+            $Qimages = $OSCOM_Db->get('products_images', '*', ['products_id' => (int)$products_id]);
+
+            while ($Qimages->fetch()) {
+              $OSCOM_Db->save('products_images', [
+                'products_id' => (int)$dup_products_id,
+                'image' => $Qimages->value('image'),
+                'htmlcontent' => $Qimages->value('htmlcontent'),
+                'sort_order' => $Qimages->valueInt('sort_order')
+              ]);
             }
 
-            tep_db_query("insert into " . TABLE_PRODUCTS_TO_CATEGORIES . " (products_id, categories_id) values ('" . (int)$dup_products_id . "', '" . (int)$categories_id . "')");
+            $OSCOM_Db->save('products_to_categories', [
+              'products_id' => (int)$dup_products_id,
+              'categories_id' => (int)$categories_id
+            ]);
+
             $products_id = $dup_products_id;
           }
 
@@ -420,32 +493,59 @@
     $pInfo = new objectInfo($parameters);
 
     if (isset($_GET['pID']) && empty($_POST)) {
-      $product_query = tep_db_query("select pd.products_name, pd.products_description, pd.products_url, p.products_id, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, date_format(p.products_date_available, '%Y-%m-%d') as products_date_available, p.products_status, p.products_tax_class_id, p.manufacturers_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = '" . (int)$_GET['pID'] . "' and p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
-      $product = tep_db_fetch_array($product_query);
+      $Qproduct = $OSCOM_Db->prepare('select pd.products_name, pd.products_description, pd.products_url, p.products_id, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, date_format(p.products_date_available, "%Y-%m-%d") as products_date_available, p.products_status, p.products_tax_class_id, p.manufacturers_id from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
+      $Qproduct->bindInt(':products_id', $_GET['pID']);
+      $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproduct->execute();
 
-      $pInfo->objectInfo($product);
+      $pInfo->objectInfo($Qproduct->toArray());
 
-      $product_images_query = tep_db_query("select id, image, htmlcontent, sort_order from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product['products_id'] . "' order by sort_order");
-      while ($product_images = tep_db_fetch_array($product_images_query)) {
-        $pInfo->products_larger_images[] = array('id' => $product_images['id'],
-                                                 'image' => $product_images['image'],
-                                                 'htmlcontent' => $product_images['htmlcontent'],
-                                                 'sort_order' => $product_images['sort_order']);
+      $Qimages = $OSCOM_Db->get('products_images', [
+        'id',
+        'image',
+        'htmlcontent',
+        'sort_order'
+      ], [
+        'products_id' => $Qproduct->valueInt('products_id')
+      ],
+      'sort_order');
+
+      while ($Qimages->fetch()) {
+        $pInfo->products_larger_images[] = [
+          'id' => $Qimages->valueInt('id'),
+          'image' => $Qimages->value('image'),
+          'htmlcontent' => $Qimages->value('htmlcontent'),
+          'sort_order' => $Qimages->valueInt('sort_order')
+        ];
       }
     }
 
     $manufacturers_array = array(array('id' => '', 'text' => TEXT_NONE));
-    $manufacturers_query = tep_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
-    while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-      $manufacturers_array[] = array('id' => $manufacturers['manufacturers_id'],
-                                     'text' => $manufacturers['manufacturers_name']);
+
+    $Qmanufacturers = $OSCOM_Db->get('manufacturers', [
+      'manufacturers_id',
+      'manufacturers_name'
+    ], null, 'manufacturers_name');
+
+    while ($Qmanufacturers->fetch()) {
+      $manufacturers_array[] = [
+        'id' => $Qmanufacturers->valueInt('manufacturers_id'),
+        'text' => $Qmanufacturers->value('manufacturers_name')
+      ];
     }
 
     $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
-    $tax_class_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
-    while ($tax_class = tep_db_fetch_array($tax_class_query)) {
-      $tax_class_array[] = array('id' => $tax_class['tax_class_id'],
-                                 'text' => $tax_class['tax_class_title']);
+
+    $Qtax = $OSCOM_Db->get('tax_class', [
+      'tax_class_id',
+      'tax_class_title'
+    ], null, 'tax_class_title');
+
+    while ($Qtax->fetch()) {
+      $tax_class_array[] = [
+        'id' => $Qtax->valueInt('tax_class_id'),
+        'text' => $Qtax->value('tax_class_title')
+      ];
     }
 
     $languages = tep_get_languages();
@@ -712,10 +812,33 @@ $('#products_date_available').datepicker({
 
 <?php
   } elseif ($action == 'new_product_preview') {
-    $product_query = tep_db_query("select p.products_id, pd.language_id, pd.products_name, pd.products_description, pd.products_url, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p.manufacturers_id  from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and p.products_id = '" . (int)$_GET['pID'] . "'");
-    $product = tep_db_fetch_array($product_query);
+    $Qproduct = $OSCOM_Db->get([
+      'products p',
+      'products_description pd'
+    ], [
+      'p.products_id',
+      'pd.language_id',
+      'pd.products_name',
+      'pd.products_description',
+      'pd.products_url',
+      'p.products_quantity',
+      'p.products_model',
+      'p.products_image',
+      'p.products_price',
+      'p.products_weight',
+      'p.products_date_added',
+      'p.products_last_modified',
+      'p.products_date_available',
+      'p.products_status',
+      'p.manufacturers_id'
+    ], [
+      'p.products_id' => [
+        'val' => (int)$_GET['pID'],
+        'rel' => 'pd.products_id'
+      ],
+    ]);
 
-    $pInfo = new objectInfo($product);
+    $pInfo = new objectInfo($Qproduct->toArray());
     $products_image_name = $pInfo->products_image;
 
     $languages = tep_get_languages();
@@ -837,77 +960,170 @@ $('#products_date_available').datepicker({
     $categories_count = 0;
     $rows = 0;
     if (isset($_GET['search'])) {
-      $search = tep_db_prepare_input($_GET['search']);
+      $search = HTML::sanitize($_GET['search']);
 
-      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id, c.sort_order, c.date_added, c.last_modified from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and cd.categories_name like '%" . tep_db_input($search) . "%' order by c.sort_order, cd.categories_name");
+      $Qcategories = $OSCOM_Db->get([
+        'categories c',
+        'categories_description cd'
+      ], [
+        'c.categories_id',
+        'cd.categories_name',
+        'c.categories_image',
+        'c.parent_id',
+        'c.sort_order',
+        'c.date_added',
+        'c.last_modified'
+      ], [
+        'c.categories_id' => 'cd.categories_id',
+        'cd.language_id' => (int)$_SESSION['languages_id'],
+        'cd.categories_name' => [
+          'op' => 'like',
+          'val' => '%' . $search . '%'
+        ]
+      ], [
+        'c.sort_order',
+        'cd.categories_name'
+      ]);
     } else {
-      $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.categories_image, c.parent_id, c.sort_order, c.date_added, c.last_modified from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.parent_id = '" . (int)$current_category_id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' order by c.sort_order, cd.categories_name");
+      $Qcategories = $OSCOM_Db->get([
+        'categories c',
+        'categories_description cd'
+      ], [
+        'c.categories_id',
+        'cd.categories_name',
+        'c.categories_image',
+        'c.parent_id',
+        'c.sort_order',
+        'c.date_added',
+        'c.last_modified'
+      ], [
+        'c.parent_id' => (int)$current_category_id,
+        'c.categories_id' => [
+          'rel' => 'cd.categories_id'
+        ],
+        'cd.language_id' => (int)$_SESSION['languages_id']
+      ], [
+        'c.sort_order',
+        'cd.categories_name'
+      ]);
     }
-    while ($categories = tep_db_fetch_array($categories_query)) {
+
+    while ($Qcategories->fetch()) {
       $categories_count++;
       $rows++;
 
 // Get parent_id for subcategories if search
-      if (isset($_GET['search'])) $cPath= $categories['parent_id'];
+      if (isset($_GET['search'])) $cPath= $Qcategories->valueInt('parent_id');
 
-      if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ($_GET['cID'] == $categories['categories_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-        $category_childs = array('childs_count' => tep_childs_in_category_count($categories['categories_id']));
-        $category_products = array('products_count' => tep_products_in_category_count($categories['categories_id']));
+      if ((!isset($_GET['cID']) && !isset($_GET['pID']) || (isset($_GET['cID']) && ((int)$_GET['cID'] === $Qcategories->valueInt('categories_id')))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+        $category_childs = array('childs_count' => tep_childs_in_category_count($Qcategories->valueInt('categories_id')));
+        $category_products = array('products_count' => tep_products_in_category_count($Qcategories->valueInt('categories_id')));
 
-        $cInfo_array = array_merge($categories, $category_childs, $category_products);
+        $cInfo_array = array_merge($Qcategories->toArray(), $category_childs, $category_products);
         $cInfo = new objectInfo($cInfo_array);
       }
 
-      if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '\'">' . "\n";
+      if (isset($cInfo) && is_object($cInfo) && ($Qcategories->valueInt('categories_id') === (int)$cInfo->categories_id) ) {
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($Qcategories->valueInt('categories_id'))) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $Qcategories->valueInt('categories_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($categories['categories_id'])) . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;<strong>' . $categories['categories_name'] . '</strong>'; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, tep_get_path($Qcategories->valueInt('categories_id'))) . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;<strong>' . $Qcategories->value('categories_name') . '</strong>'; ?></td>
                 <td class="dataTableContent" align="center">&nbsp;</td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($categories['categories_id'] == $cInfo->categories_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories['categories_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcategories->valueInt('categories_id') === (int)$cInfo->categories_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $Qcategories->valueInt('categories_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
 
     $products_count = 0;
     if (isset($_GET['search'])) {
-      $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price, p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status, p2c.categories_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' and p.products_id = p2c.products_id and pd.products_name like '%" . tep_db_input($search) . "%' order by pd.products_name");
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_description pd',
+        'products_to_categories p2c'
+      ], [
+        'p.products_id',
+        'pd.products_name',
+        'p.products_quantity',
+        'p.products_image',
+        'p.products_price',
+        'p.products_date_added',
+        'p.products_last_modified',
+        'p.products_date_available',
+        'p.products_status',
+        'p2c.categories_id'
+      ], [
+        'p.products_id' => [
+          'rel' => [
+            'pd.products_id',
+            'p2c.products_id'
+          ]
+        ],
+        'pd.language_id' => $_SESSION['languages_id'],
+        'pd.products_name' => [
+          'op' => 'like',
+          'val' => '%' . $search . '%'
+        ]
+      ], 'pd.products_name');
     } else {
-      $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_quantity, p.products_image, p.products_price, p.products_date_added, p.products_last_modified, p.products_date_available, p.products_status from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' and p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$current_category_id . "' order by pd.products_name");
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_description pd',
+        'products_to_categories p2c'
+      ], [
+        'p.products_id',
+        'pd.products_name',
+        'p.products_quantity',
+        'p.products_image',
+        'p.products_price',
+        'p.products_date_added',
+        'p.products_last_modified',
+        'p.products_date_available',
+        'p.products_status'
+      ], [
+        'p.products_id' => [
+          'rel' => [
+            'pd.products_id',
+            'p2c.products_id'
+          ]
+        ],
+        'pd.language_id' => $_SESSION['languages_id'],
+        'p2c.categories_id' => (int)$current_category_id
+      ], 'pd.products_name');
     }
-    while ($products = tep_db_fetch_array($products_query)) {
+
+    while ($Qproducts->fetch()) {
       $products_count++;
       $rows++;
 
 // Get categories_id for product if search
-      if (isset($_GET['search'])) $cPath = $products['categories_id'];
+      if (isset($_GET['search'])) $cPath = $Qproducts->valueInt('categories_id');
 
-      if ( (!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ($_GET['pID'] == $products['products_id']))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+      if ( (!isset($_GET['pID']) && !isset($_GET['cID']) || (isset($_GET['pID']) && ((int)$_GET['pID'] === $Qproducts->valueInt('products_id')))) && !isset($pInfo) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
 // find out the rating average from customer reviews
-        $reviews_query = tep_db_query("select (avg(reviews_rating) / 5 * 100) as average_rating from " . TABLE_REVIEWS . " where products_id = '" . (int)$products['products_id'] . "'");
-        $reviews = tep_db_fetch_array($reviews_query);
-        $pInfo_array = array_merge($products, $reviews);
+        $Qreviews = $OSCOM_Db->get('reviews', '(avg(reviews_rating) / 5 * 100) as average_rating', ['products_id' => $Qproducts->valueInt('products_id')]);
+
+        $pInfo_array = array_merge($Qproducts->toArray(), $Qreviews->toArray());
         $pInfo = new objectInfo($pInfo_array);
       }
 
-      if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id) ) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '\'">' . "\n";
+      if (isset($pInfo) && is_object($pInfo) && ($Qproducts->valueInt('products_id') === (int)$pInfo->products_id) ) {
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $Qproducts->valueInt('products_id') . '&action=new_product_preview') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $Qproducts->valueInt('products_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id'] . '&action=new_product_preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $products['products_name']; ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $Qproducts->valueInt('products_id') . '&action=new_product_preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $Qproducts->value('products_name'); ?></td>
                 <td class="dataTableContent" align="center">
 <?php
-      if ($products['products_status'] == '1') {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=0&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+      if ($Qproducts->valueInt('products_status') === 1) {
+        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=0&pID=' . $Qproducts->valueInt('products_id') . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=1&pID=' . $products['products_id'] . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'action=setflag&flag=1&pID=' . $Qproducts->valueInt('products_id') . '&cPath=' . $cPath) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($products['products_id'] == $pInfo->products_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($Qproducts->valueInt('products_id') === (int)$pInfo->products_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $Qproducts->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
