@@ -37,7 +37,6 @@
   require(DIR_WS_CLASSES . 'logger.php');
   require(DIR_WS_CLASSES . 'shopping_cart.php');
   require(DIR_WS_CLASSES . 'language.php');
-  require(DIR_WS_FUNCTIONS . 'localization.php');
   require(DIR_WS_FUNCTIONS . 'validations.php');
   require(DIR_WS_CLASSES . 'table_block.php');
   require(DIR_WS_CLASSES . 'box.php');

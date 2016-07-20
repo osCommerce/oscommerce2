@@ -53,11 +53,6 @@ class Admin extends \OSC\OM\SitesAbstract
         define('LOCAL_EXE_ZIP', 'zip');
         define('LOCAL_EXE_UNZIP', 'unzip');
 
-// Define how do we update currency exchange rates
-// Possible values are 'oanda' 'xe' or ''
-        define('CURRENCY_SERVER_PRIMARY', 'oanda');
-        define('CURRENCY_SERVER_BACKUP', 'xe');
-
 // set the type of request (secure or not)
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
             $request_type = 'SSL';

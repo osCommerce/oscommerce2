@@ -18,21 +18,25 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['cID'])) $currency_id = tep_db_prepare_input($_GET['cID']);
-        $title = tep_db_prepare_input($_POST['title']);
-        $code = tep_db_prepare_input($_POST['code']);
-        $symbol_left = tep_db_prepare_input($_POST['symbol_left']);
-        $symbol_right = tep_db_prepare_input($_POST['symbol_right']);
-        $decimal_point = tep_db_prepare_input($_POST['decimal_point']);
-        $thousands_point = tep_db_prepare_input($_POST['thousands_point']);
-        $decimal_places = tep_db_prepare_input($_POST['decimal_places']);
-        $value = tep_db_prepare_input($_POST['value']);
+        if (isset($_GET['cID'])) $currency_id = HTML::sanitize($_GET['cID']);
+        $title = HTML::sanitize($_POST['title']);
+        $code = HTML::sanitize($_POST['code']);
+        $symbol_left = HTML::sanitize($_POST['symbol_left']);
+        $symbol_right = HTML::sanitize($_POST['symbol_right']);
+        $decimal_point = HTML::sanitize($_POST['decimal_point']);
+        $thousands_point = HTML::sanitize($_POST['thousands_point']);
+        $decimal_places = HTML::sanitize($_POST['decimal_places']);
+        $value = HTML::sanitize($_POST['value']);
 
         $sql_data_array = array('title' => $title,
                                 'code' => $code,
@@ -44,68 +48,42 @@
                                 'value' => $value);
 
         if ($action == 'insert') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array);
-          $currency_id = tep_db_insert_id();
+          $OSCOM_Db->save('currencies', $sql_data_array);
+          $currency_id = $OSCOM_Db->lastInsertId();
         } elseif ($action == 'save') {
-          tep_db_perform(TABLE_CURRENCIES, $sql_data_array, 'update', "currencies_id = '" . (int)$currency_id . "'");
+          $OSCOM_Db->save('currencies', $sql_data_array, ['currencies_id' => (int)$currency_id]);
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_CURRENCY'");
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => $code
+          ], [
+            'configuration_key' => 'DEFAULT_CURRENCY'
+          ]);
         }
 
         OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency_id);
         break;
       case 'deleteconfirm':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = HTML::sanitize($_GET['cID']);
 
-        $currency_query = tep_db_query("select currencies_id from " . TABLE_CURRENCIES . " where code = '" . DEFAULT_CURRENCY . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $Qcurrency = $OSCOM_Db->get('currencies', 'currencies_id', ['code' => DEFAULT_CURRENCY]);
 
-        if ($currency['currencies_id'] == $currencies_id) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
+        if ($Qcurrency->valueInt('currencies_id') === (int)$currencies_id) {
+          $OSCOM_Db->save('configuration', ['configuration_value' => ''], ['configuration_key' => 'DEFAULT_CURRENCY']);
         }
 
-        tep_db_query("delete from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
+        $OSCOM_Db->delete('currencies', ['currencies_id' => (int)$currencies_id]);
 
         OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page']);
         break;
-      case 'update':
-        $server_used = CURRENCY_SERVER_PRIMARY;
-
-        $currency_query = tep_db_query("select currencies_id, code, title from " . TABLE_CURRENCIES);
-        while ($currency = tep_db_fetch_array($currency_query)) {
-          $quote_function = 'quote_' . CURRENCY_SERVER_PRIMARY . '_currency';
-          $rate = $quote_function($currency['code']);
-
-          if (empty($rate) && (tep_not_null(CURRENCY_SERVER_BACKUP))) {
-            $messageStack->add_session(sprintf(WARNING_PRIMARY_SERVER_FAILED, CURRENCY_SERVER_PRIMARY, $currency['title'], $currency['code']), 'warning');
-
-            $quote_function = 'quote_' . CURRENCY_SERVER_BACKUP . '_currency';
-            $rate = $quote_function($currency['code']);
-
-            $server_used = CURRENCY_SERVER_BACKUP;
-          }
-
-          if (tep_not_null($rate)) {
-            tep_db_query("update " . TABLE_CURRENCIES . " set value = '" . $rate . "', last_updated = now() where currencies_id = '" . (int)$currency['currencies_id'] . "'");
-
-            $messageStack->add_session(sprintf(TEXT_INFO_CURRENCY_UPDATED, $currency['title'], $currency['code'], $server_used), 'success');
-          } else {
-            $messageStack->add_session(sprintf(ERROR_CURRENCY_INVALID, $currency['title'], $currency['code'], $server_used), 'error');
-          }
-        }
-
-        OSCOM::redirect(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']);
-        break;
       case 'delete':
-        $currencies_id = tep_db_prepare_input($_GET['cID']);
+        $currencies_id = HTML::sanitize($_GET['cID']);
 
-        $currency_query = tep_db_query("select code from " . TABLE_CURRENCIES . " where currencies_id = '" . (int)$currencies_id . "'");
-        $currency = tep_db_fetch_array($currency_query);
+        $Qcurrency = $OSCOM_Db->get('currencies', 'code', ['currencies_id' => (int)$currencies_id]);
 
         $remove_currency = true;
-        if ($currency['code'] == DEFAULT_CURRENCY) {
+        if ($Qcurrency->value('code') == DEFAULT_CURRENCY) {
           $remove_currency = false;
           $messageStack->add(ERROR_REMOVE_DEFAULT_CURRENCY, 'error');
         }
@@ -192,29 +170,30 @@ function updateForm() {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $currency_query_raw = "select currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from " . TABLE_CURRENCIES . " order by title";
-  $currency_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $currency_query_raw, $currency_query_numrows);
-  $currency_query = tep_db_query($currency_query_raw);
-  while ($currency = tep_db_fetch_array($currency_query)) {
-    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $currency['currencies_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-      $cInfo = new objectInfo($currency);
+  $Qcurrencies = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from :table_currencies order by title limit :page_set_offset, :page_set_max_results');
+  $Qcurrencies->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qcurrencies->execute();
+
+  while ($Qcurrencies->fetch()) {
+    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ((int)$_GET['cID'] === $Qcurrencies->valueInt('currencies_id')))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+      $cInfo = new objectInfo($Qcurrencies->toArray());
     }
 
-    if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) {
+    if (isset($cInfo) && is_object($cInfo) && ($Qcurrencies->valueInt('currencies_id') === (int)$cInfo->currencies_id) ) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $Qcurrencies->valueInt('currencies_id')) . '\'">' . "\n";
     }
 
-    if (DEFAULT_CURRENCY == $currency['code']) {
-      echo '                <td class="dataTableContent"><strong>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
+    if (DEFAULT_CURRENCY == $Qcurrencies->value('code')) {
+      echo '                <td class="dataTableContent"><strong>' . $Qcurrencies->value('title') . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
     } else {
-      echo '                <td class="dataTableContent">' . $currency['title'] . '</td>' . "\n";
+      echo '                <td class="dataTableContent">' . $Qcurrencies->value('title') . '</td>' . "\n";
     }
 ?>
-                <td class="dataTableContent"><?php echo $currency['code']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo number_format($currency['value'], 8); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qcurrencies->value('code'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo number_format($Qcurrencies->value('value'), 8); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcurrencies->valueInt('currencies_id') === $cInfo->currencies_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $Qcurrencies->valueInt('currencies_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -222,15 +201,14 @@ function updateForm() {
               <tr>
                 <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $currency_split->display_count($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $currency_split->display_links($currency_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qcurrencies->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qcurrencies->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText"><?php if (CURRENCY_SERVER_PRIMARY) { echo HTML::button(IMAGE_UPDATE_CURRENCIES, 'fa fa-refresh', OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update')); } ?></td>
-                    <td class="smallText" align="right"><?php echo HTML::button(IMAGE_NEW_CURRENCY, 'fa fa-plus', OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new')); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_CURRENCY, 'fa fa-plus', OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new')); ?></td>
                   </tr>
 <?php
   }
