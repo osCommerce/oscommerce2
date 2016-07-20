@@ -15,6 +15,10 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
@@ -50,7 +54,7 @@
           'countries_id' => (int)$countries_id
         ]);
 
-        OSCOM::redirect(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $countries_id);
+        OSCOM::redirect(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id);
         break;
       case 'deleteconfirm':
         $countries_id = HTML::sanitize($_GET['cID']);
@@ -59,7 +63,7 @@
           'countries_id' => (int)$countries_id
         ]);
 
-        OSCOM::redirect(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] : ''));
+        OSCOM::redirect(FILENAME_COUNTRIES, 'page=' . $_GET['page']);
         break;
     }
   }
@@ -95,15 +99,15 @@
     }
 
     if (isset($cInfo) && is_object($cInfo) && ($Qcountries->valueInt('countries_id') === (int)$cInfo->countries_id)) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id . '&action=edit') . '\'">' . "\n";
+      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $Qcountries->valueInt('countries_id')) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $Qcountries->valueInt('countries_id')) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qcountries->value('countries_name'); ?></td>
                 <td class="dataTableContent" align="center" width="40"><?php echo $Qcountries->value('countries_iso_code_2'); ?></td>
                 <td class="dataTableContent" align="center" width="40"><?php echo $Qcountries->value('countries_iso_code_3'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcountries->valueInt('countries_id') === (int)$cInfo->countries_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $Qcountries->valueInt('countries_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcountries->valueInt('countries_id') === (int)$cInfo->countries_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $Qcountries->valueInt('countries_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -118,7 +122,7 @@
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_NEW_COUNTRY, 'fa fa-plus', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=new')); ?></td>
+                    <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_NEW_COUNTRY, 'fa fa-plus', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&action=new')); ?></td>
                   </tr>
 <?php
   }
@@ -134,38 +138,38 @@
     case 'new':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_NEW_COUNTRY . '</strong>');
 
-      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=insert')));
+      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&action=insert')));
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::inputField('countries_name'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . HTML::inputField('countries_iso_code_2'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . HTML::inputField('countries_iso_code_3'));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . HTML::selectField('address_format_id', tep_get_address_formats()));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] : ''))));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'])));
       break;
     case 'edit':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_EDIT_COUNTRY . '</strong>');
 
-      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id . '&action=save')));
+      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=save')));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . HTML::inputField('countries_name', $cInfo->countries_name));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . '<br />' . HTML::inputField('countries_iso_code_2', $cInfo->countries_iso_code_2));
       $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . '<br />' . HTML::inputField('countries_iso_code_3', $cInfo->countries_iso_code_3));
       $contents[] = array('text' => '<br />' . TEXT_INFO_ADDRESS_FORMAT . '<br />' . HTML::selectField('address_format_id', tep_get_address_formats(), $cInfo->address_format_id));
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id)));
       break;
     case 'delete':
       $heading[] = array('text' => '<strong>' . TEXT_INFO_HEADING_DELETE_COUNTRY . '</strong>');
 
-      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('countries', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $cInfo->countries_name . '</strong>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id)));
       break;
     default:
       if (is_object($cInfo)) {
         $heading[] = array('text' => '<strong>' . $cInfo->countries_name . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_COUNTRIES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'cID=' . $cInfo->countries_id . '&action=delete')));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=delete')));
         $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_NAME . '<br />' . $cInfo->countries_name);
         $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_2 . ' ' . $cInfo->countries_iso_code_2);
         $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY_CODE_3 . ' ' . $cInfo->countries_iso_code_3);

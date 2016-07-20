@@ -15,6 +15,10 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $banner_extension = tep_banner_image_extension();
@@ -30,7 +34,7 @@
           $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
-        OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $_GET['bID']);
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']);
         break;
       case 'insert':
       case 'update':
@@ -126,7 +130,7 @@
             ]);
           }
 
-          OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $banners_id);
+          OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners_id);
         } else {
           $action = 'new';
         }
@@ -179,7 +183,7 @@
 
         $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
 
-        OSCOM::redirect(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] : ''));
+        OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
         break;
       case 'preview':
         $banners_id = HTML::sanitize($_GET['banner']);
@@ -287,7 +291,7 @@ function popupImageWindow(url) {
       ];
     }
 ?>
-      <tr><?php echo HTML::form('new_banner', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action), 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo HTML::hiddenField('banners_id', $bID); ?>
+      <tr><?php echo HTML::form('new_banner', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&action=' . $form_action), 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo HTML::hiddenField('banners_id', $bID); ?>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_TITLE; ?></td>
@@ -353,7 +357,7 @@ $('#expires_date').datepicker({
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
             <td class="main"><?php echo TEXT_BANNERS_BANNER_NOTE . '<br />' . TEXT_BANNERS_INSERT_NOTE . '<br />' . TEXT_BANNERS_EXPIRCY_NOTE . '<br />' . TEXT_BANNERS_SCHEDULE_NOTE; ?></td>
-            <td class="smallText" align="right" valign="top" nowrap><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : ''))); ?></td>
+            <td class="smallText" align="right" valign="top" nowrap><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . (isset($_GET['bID']) ? '&bID=' . $_GET['bID'] : ''))); ?></td>
           </tr>
         </table></td>
       </form></tr>
@@ -390,9 +394,9 @@ $('#expires_date').datepicker({
       }
 
       if (isset($bInfo) && is_object($bInfo) && ($Qbanners->valueInt('banners_id') === (int)$bInfo->banners_id)) {
-        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id) . '\'">' . "\n";
+        echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . OSCOM::link(FILENAME_BANNER_MANAGER, 'action=preview&banner=' . $Qbanners->valueInt('banners_id')) . '\');">' . HTML::image(DIR_WS_IMAGES . 'icon_popup.gif', 'View Banner') . '</a>&nbsp;' . $Qbanners->value('banners_title'); ?></td>
@@ -401,12 +405,12 @@ $('#expires_date').datepicker({
                 <td class="dataTableContent" align="right">
 <?php
       if ($Qbanners->value('status') == '1') {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Active', 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', 'Set Inactive', 10, 10) . '</a>';
+        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', 'Active', 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', 'Set Inactive', 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', 'Set Active', 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Inactive', 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', 'Set Active', 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', 'Inactive', 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($Qbanners->valueInt('banners_id') === (int)$bInfo->banners_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php echo '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($Qbanners->valueInt('banners_id') === (int)$bInfo->banners_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -430,17 +434,17 @@ $('#expires_date').datepicker({
     case 'delete':
       $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
-      $contents = array('form' => HTML::form('banners', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=deleteconfirm')));
+      $contents = array('form' => HTML::form('banners', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=deleteconfirm')));
       $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
       $contents[] = array('text' => '<br /><strong>' . $bInfo->banners_title . '</strong>');
       if ($bInfo->banners_image) $contents[] = array('text' => '<br />' . HTML::checkboxField('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $_GET['bID'])));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID'])));
       break;
     default:
       if (is_object($bInfo)) {
         $heading[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
 
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info-circle', OSCOM::link(FILENAME_BANNER_STATISTICS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'bID=' . $bInfo->banners_id)));
+        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=delete')) . HTML::button(IMAGE_DETAILS, 'fa fa-info-circle', OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id)));
         $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . tep_date_short($bInfo->date_added));
 
         if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {
