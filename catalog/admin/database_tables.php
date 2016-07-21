@@ -12,25 +12,38 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
   function tep_dt_get_tables() {
+    $OSCOM_Db = Registry::get('Db');
+
     $result = array();
 
-    $tables_query = tep_db_query('show table status');
-    while ( $tables = tep_db_fetch_array($tables_query) ) {
-      $result[] = $tables['Name'];
+    $Qtables = $OSCOM_Db->query('show table status');
+
+    while ($Qtables->fetch()) {
+      $result[] = $Qtables->value('Name');
     }
 
     return $result;
   }
 
-  $mysql_charsets = array(array('id' => 'auto', 'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT));
+  $mysql_charsets = [
+    [
+      'id' => 'auto',
+      'text' => ACTION_UTF8_CONVERSION_FROM_AUTODETECT
+    ]
+  ];
 
-  $charsets_query = tep_db_query("show character set");
-  while ( $charsets = tep_db_fetch_array($charsets_query) ) {
-    $mysql_charsets[] = array('id' => $charsets['Charset'], 'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $charsets['Charset']));
+  $Qcharsets = $OSCOM_Db->query('show character set');
+
+  while ($Qcharsets->fetch()) {
+    $mysql_charsets[] = [
+      'id' => $Qcharsets->value('Charset'),
+      'text' => sprintf(ACTION_UTF8_CONVERSION_FROM, $Qcharsets->value('Charset'))
+    ];
   }
 
   $action = null;
@@ -80,12 +93,15 @@
       foreach ( $_POST['id'] as $table ) {
         $current_table = null;
 
-        $sql_query = tep_db_query($action . " table " . $table);
-        while ( $sql = tep_db_fetch_array($sql_query) ) {
-          $table_data[] = array(($table != $current_table) ? HTML::outputProtected($table) : '',
-                                HTML::outputProtected($sql['Msg_type']),
-                                HTML::outputProtected($sql['Msg_text']),
-                                ($table != $current_table) ? HTML::checkboxField('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : '');
+        $Qaction = $OSCOM_Db->query($action . ' table ' . $table);
+
+        while ($Qaction->fetch()) {
+          $table_data[] = [
+            ($table != $current_table) ? HTML::outputProtected($table) : '',
+            $Qaction->valueProtected('Msg_type'),
+            $Qaction->valueProtected('Msg_text'),
+            ($table != $current_table) ? HTML::checkboxField('id[]', $table, isset($_POST['id']) && in_array($table, $_POST['id'])) : ''
+          ];
 
           $current_table = $table;
         }
@@ -130,20 +146,21 @@
 
         $queries = array();
 
-        $cols_query = tep_db_query("show full columns from " . $table);
-        while ( $cols = tep_db_fetch_array($cols_query) ) {
-          if ( !empty($cols['Collation']) ) {
+        $Qcols = $OSCOM_Db->query('show full columns from ' . $table);
+
+        while ($Qcols->fetch()) {
+          if ( $Qcols->hasValue('Collation') && tep_not_null($Qcols->value('Collation')) ) {
             if ( $_POST['from_charset'] == 'auto' ) {
-              $old_charset = substr($cols['Collation'], 0, strpos($cols['Collation'], '_'));
+              $old_charset = substr($Qcols->value('Collation'), 0, strpos($Qcols->value('Collation'), '_'));
             } else {
               $old_charset = $_POST['from_charset'];
             }
 
-            $queries[] = "update " . $table . " set " . $cols['Field'] . " = convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8) where char_length(" . $cols['Field'] . ") = length(convert(binary convert(" . $cols['Field'] . " using " . $old_charset . ") using utf8))";
+            $queries[] = 'update ' . $table . ' set ' . $Qcols->value('Field') . ' = convert(binary convert(' . $Qcols->value('Field') . ' using ' . $old_charset . ') using utf8) where char_length(' . $Qcols->value('Field') . ') = length(convert(binary convert(' . $Qcols->value('Field') . ' using ' . $old_charset . ') using utf8))';
           }
         }
 
-        $query = "alter table " . $table . " convert to character set utf8 collate utf8_unicode_ci";
+        $query = 'alter table ' . $table . ' convert to character set utf8 collate utf8_unicode_ci';
 
         if ( isset($_POST['dryrun']) ) {
           $table_data[] = array($query);
@@ -152,16 +169,15 @@
             $table_data[] = array($q);
           }
         } else {
-// mysqli_query() is directly called as tep_db_query() dies when an error occurs
-          if ( mysqli_query($db_link, $query) ) {
+          if ($OSCOM_Db->exec($query) !== false) {
             foreach ( $queries as $q ) {
-              if ( !mysqli_query($db_link, $q) ) {
-                $result = mysqli_error($db_link);
+              if ($OSCOM_Db->exec($q) === false) {
+                $result = implode(' - ', $OSCOM_Db->errorInfo());
                 break;
               }
             }
           } else {
-            $result = mysqli_error($db_link);
+            $result = implode(' - ', $OSCOM_Db->errorInfo());
           }
         }
 
@@ -175,23 +191,28 @@
       break;
 
     default:
-      $table_headers = array(TABLE_HEADING_TABLE,
-                             TABLE_HEADING_ROWS,
-                             TABLE_HEADING_SIZE,
-                             TABLE_HEADING_ENGINE,
-                             TABLE_HEADING_COLLATION,
-                             HTML::checkboxField('masterblaster'));
+      $table_headers = [
+        TABLE_HEADING_TABLE,
+        TABLE_HEADING_ROWS,
+        TABLE_HEADING_SIZE,
+        TABLE_HEADING_ENGINE,
+        TABLE_HEADING_COLLATION,
+        HTML::checkboxField('masterblaster')
+      ];
 
-      $table_data = array();
+      $table_data = [];
 
-      $sql_query = tep_db_query('show table status');
-      while ( $sql = tep_db_fetch_array($sql_query) ) {
-        $table_data[] = array(HTML::outputProtected($sql['Name']),
-                              HTML::outputProtected($sql['Rows']),
-                              round(($sql['Data_length'] + $sql['Index_length']) / 1024 / 1024, 2) . 'M',
-                              HTML::outputProtected($sql['Engine']),
-                              HTML::outputProtected($sql['Collation']),
-                              HTML::checkboxField('id[]', $sql['Name']));
+      $Qstatus = $OSCOM_Db->query('show table status');
+
+      while ($Qstatus->fetch()) {
+        $table_data[] = [
+          $Qstatus->valueProtected('Name'),
+          $Qstatus->valueProtected('Rows'),
+          round(($Qstatus->value('Data_length') + $Qstatus->value('Index_length')) / 1024 / 1024, 2) . 'M',
+          $Qstatus->valueProtected('Engine'),
+          $Qstatus->valueProtected('Collation'),
+          HTML::checkboxField('id[]', $Qstatus->value('Name'))
+        ];
       }
   }
 
