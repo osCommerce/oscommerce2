@@ -15,6 +15,10 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   $error = false;
@@ -23,27 +27,36 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'update':
-        $customers_id = tep_db_prepare_input($_GET['cID']);
-        $customers_firstname = tep_db_prepare_input($_POST['customers_firstname']);
-        $customers_lastname = tep_db_prepare_input($_POST['customers_lastname']);
-        $customers_email_address = tep_db_prepare_input($_POST['customers_email_address']);
-        $customers_telephone = tep_db_prepare_input($_POST['customers_telephone']);
-        $customers_fax = tep_db_prepare_input($_POST['customers_fax']);
-        $customers_newsletter = tep_db_prepare_input($_POST['customers_newsletter']);
+        $customers_id = HTML::sanitize($_GET['cID']);
+        $customers_firstname = HTML::sanitize($_POST['customers_firstname']);
+        $customers_lastname = HTML::sanitize($_POST['customers_lastname']);
+        $customers_email_address = HTML::sanitize($_POST['customers_email_address']);
+        $customers_telephone = HTML::sanitize($_POST['customers_telephone']);
+        $customers_fax = HTML::sanitize($_POST['customers_fax']);
+        $customers_newsletter = HTML::sanitize($_POST['customers_newsletter']);
 
-        $customers_gender = tep_db_prepare_input($_POST['customers_gender']);
-        $customers_dob = tep_db_prepare_input($_POST['customers_dob']);
+        if (ACCOUNT_GENDER == 'true') $customers_gender = HTML::sanitize($_POST['customers_gender']);
+        if (ACCOUNT_DOB == 'true') $customers_dob = HTML::sanitize($_POST['customers_dob']);
 
-        $default_address_id = tep_db_prepare_input($_POST['default_address_id']);
-        $entry_street_address = tep_db_prepare_input($_POST['entry_street_address']);
-        $entry_suburb = tep_db_prepare_input($_POST['entry_suburb']);
-        $entry_postcode = tep_db_prepare_input($_POST['entry_postcode']);
-        $entry_city = tep_db_prepare_input($_POST['entry_city']);
-        $entry_country_id = tep_db_prepare_input($_POST['entry_country_id']);
+        $customers_default_address_id = HTML::sanitize($_POST['customers_default_address_id']);
+        $entry_street_address = HTML::sanitize($_POST['entry_street_address']);
+        $entry_suburb = HTML::sanitize($_POST['entry_suburb']);
+        $entry_postcode = HTML::sanitize($_POST['entry_postcode']);
+        $entry_city = HTML::sanitize($_POST['entry_city']);
+        $entry_country_id = HTML::sanitize($_POST['entry_country_id']);
 
-        $entry_company = tep_db_prepare_input($_POST['entry_company']);
-        $entry_state = tep_db_prepare_input($_POST['entry_state']);
-        if (isset($_POST['entry_zone_id'])) $entry_zone_id = tep_db_prepare_input($_POST['entry_zone_id']);
+        $entry_company = HTML::sanitize($_POST['entry_company']);
+        $entry_state = HTML::sanitize($_POST['entry_state']);
+        if (isset($_POST['entry_zone_id'])) $entry_zone_id = HTML::sanitize($_POST['entry_zone_id']);
+
+        if (ACCOUNT_GENDER == 'true') {
+          if (($customers_gender != 'm') && ($customers_gender != 'f')) {
+            $error = true;
+            $entry_gender_error = true;
+          } else {
+            $entry_gender_error = false;
+          }
+        }
 
         if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
           $error = true;
@@ -111,14 +124,16 @@
           } else {
             $zone_id = 0;
             $entry_state_error = false;
-            $check_query = tep_db_query("select count(*) as total from " . TABLE_ZONES . " where zone_country_id = '" . (int)$entry_country_id . "'");
-            $check_value = tep_db_fetch_array($check_query);
-            $entry_state_has_zones = ($check_value['total'] > 0);
+            $Qcheck = $OSCOM_Db->get('zones', 'zone_country_id', ['zone_country_id' => (int)$entry_country_id]);
+            $entry_state_has_zones = $Qcheck->fetch() !== false;
             if ($entry_state_has_zones == true) {
-              $zone_query = tep_db_query("select zone_id from " . TABLE_ZONES . " where zone_country_id = '" . (int)$entry_country_id . "' and zone_name = '" . tep_db_input($entry_state) . "'");
-              if (tep_db_num_rows($zone_query) == 1) {
-                $zone_values = tep_db_fetch_array($zone_query);
-                $entry_zone_id = $zone_values['zone_id'];
+              $Qzone = $OSCOM_Db->get('zones', 'zone_id', [
+                'zone_country_id' => (int)$entry_country_id,
+                'zone_name' => $entry_state
+              ]);
+
+              if ($Qzone->fetch() !== false) {
+                $entry_zone_id = $Qzone->valueInt('zone_id');
               } else {
                 $error = true;
                 $entry_state_error = true;
@@ -129,66 +144,74 @@
                 $entry_state_error = true;
               }
             }
-         }
-      }
-
-      if (strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
-        $error = true;
-        $entry_telephone_error = true;
-      } else {
-        $entry_telephone_error = false;
-      }
-
-      $check_email = tep_db_query("select customers_email_address from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($customers_email_address) . "' and customers_id != '" . (int)$customers_id . "'");
-      if (tep_db_num_rows($check_email)) {
-        $error = true;
-        $entry_email_address_exists = true;
-      } else {
-        $entry_email_address_exists = false;
-      }
-
-      if ($error == false) {
-
-        $sql_data_array = array('customers_firstname' => $customers_firstname,
-                                'customers_lastname' => $customers_lastname,
-                                'customers_email_address' => $customers_email_address,
-                                'customers_telephone' => $customers_telephone,
-                                'customers_fax' => $customers_fax,
-                                'customers_newsletter' => $customers_newsletter);
-
-        if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($customers_dob);
-
-        tep_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "'");
-
-        tep_db_query("update " . TABLE_CUSTOMERS_INFO . " set customers_info_date_account_last_modified = now() where customers_info_id = '" . (int)$customers_id . "'");
-
-        if ($entry_zone_id > 0) $entry_state = '';
-
-        $sql_data_array = array('entry_firstname' => $customers_firstname,
-                                'entry_lastname' => $customers_lastname,
-                                'entry_street_address' => $entry_street_address,
-                                'entry_postcode' => $entry_postcode,
-                                'entry_city' => $entry_city,
-                                'entry_country_id' => $entry_country_id);
-
-        if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $entry_company;
-        if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $entry_suburb;
-
-        if (ACCOUNT_STATE == 'true') {
-          if ($entry_zone_id > 0) {
-            $sql_data_array['entry_zone_id'] = $entry_zone_id;
-            $sql_data_array['entry_state'] = '';
-          } else {
-            $sql_data_array['entry_zone_id'] = '0';
-            $sql_data_array['entry_state'] = $entry_state;
           }
         }
 
-        tep_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '" . (int)$customers_id . "' and address_book_id = '" . (int)$default_address_id . "'");
+        if (strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
+          $error = true;
+          $entry_telephone_error = true;
+        } else {
+          $entry_telephone_error = false;
+        }
 
-        OSCOM::redirect(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id);
+        $Qcheck = $OSCOM_Db->get('customers', 'customers_email_address', [
+          'customers_email_address' => $customers_email_address,
+          'customers_id' => [
+            'op' => '!=',
+            'val' => (int)$customers_id
+          ]
+        ]);
 
+        if ($Qcheck->fetch() !== false) {
+          $error = true;
+          $entry_email_address_exists = true;
+        } else {
+          $entry_email_address_exists = false;
+        }
+
+        if ($error == false) {
+          $sql_data_array = array('customers_firstname' => $customers_firstname,
+                                  'customers_lastname' => $customers_lastname,
+                                  'customers_email_address' => $customers_email_address,
+                                  'customers_telephone' => $customers_telephone,
+                                  'customers_fax' => $customers_fax,
+                                  'customers_newsletter' => $customers_newsletter);
+
+          if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
+          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($customers_dob);
+
+          $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$customers_id]);
+
+          $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$customers_id]);
+
+          if ($entry_zone_id > 0) $entry_state = '';
+
+          $sql_data_array = array('entry_firstname' => $customers_firstname,
+                                  'entry_lastname' => $customers_lastname,
+                                  'entry_street_address' => $entry_street_address,
+                                  'entry_postcode' => $entry_postcode,
+                                  'entry_city' => $entry_city,
+                                  'entry_country_id' => $entry_country_id);
+
+          if (ACCOUNT_COMPANY == 'true') $sql_data_array['entry_company'] = $entry_company;
+          if (ACCOUNT_SUBURB == 'true') $sql_data_array['entry_suburb'] = $entry_suburb;
+
+          if (ACCOUNT_STATE == 'true') {
+            if ($entry_zone_id > 0) {
+              $sql_data_array['entry_zone_id'] = $entry_zone_id;
+              $sql_data_array['entry_state'] = '';
+            } else {
+              $sql_data_array['entry_zone_id'] = '0';
+              $sql_data_array['entry_state'] = $entry_state;
+            }
+          }
+
+          $OSCOM_Db->save('address_book', $sql_data_array, [
+            'customers_id' => (int)$customers_id,
+            'address_book_id' => (int)$customers_default_address_id
+          ]);
+
+          OSCOM::redirect(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $customers_id);
         } else if ($error == true) {
           $cInfo = new objectInfo($_POST);
           $processed = true;
@@ -196,33 +219,36 @@
 
         break;
       case 'deleteconfirm':
-        $customers_id = tep_db_prepare_input($_GET['cID']);
+        $customers_id = HTML::sanitize($_GET['cID']);
 
         if (isset($_POST['delete_reviews']) && ($_POST['delete_reviews'] == 'on')) {
-          $reviews_query = tep_db_query("select reviews_id from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customers_id . "'");
-          while ($reviews = tep_db_fetch_array($reviews_query)) {
-            tep_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$reviews['reviews_id'] . "'");
+          $Qreviews = $OSCOM_Db->get('reviews', 'reviews_id', ['customers_id' => (int)$customers_id]);
+
+          while ($Qreviews->fetch()) {
+            $OSCOM_Db->delete('reviews_description', ['reviews_id' => (int)$reviews['reviews_id']]);
           }
 
-          tep_db_query("delete from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customers_id . "'");
+          $OSCOM_Db->delete('reviews', ['customers_id' => (int)$customers_id]);
         } else {
-          tep_db_query("update " . TABLE_REVIEWS . " set customers_id = null where customers_id = '" . (int)$customers_id . "'");
+          $OSCOM_Db->save('reviews', ['customers_id' => 'null'], ['customers_id' => (int)$customers_id]);
         }
 
-        tep_db_query("delete from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$customers_id . "'");
-        tep_db_query("delete from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customers_id . "'");
-        tep_db_query("delete from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = '" . (int)$customers_id . "'");
-        tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . (int)$customers_id . "'");
-        tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . (int)$customers_id . "'");
-        tep_db_query("delete from " . TABLE_WHOS_ONLINE . " where customer_id = '" . (int)$customers_id . "'");
+        $OSCOM_Db->delete('address_book', ['customers_id' => (int)$customers_id]);
+        $OSCOM_Db->delete('customers', ['customers_id' => (int)$customers_id]);
+        $OSCOM_Db->delete('customers_info', ['customers_info_id' => (int)$customers_id]);
+        $OSCOM_Db->delete('customers_basket', ['customers_id' => (int)$customers_id]);
+        $OSCOM_Db->delete('customers_basket_attributes', ['customers_id' => (int)$customers_id]);
+        $OSCOM_Db->delete('whos_online', ['customer_id' => (int)$customers_id]);
 
         OSCOM::redirect(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')));
         break;
       default:
         if ($action != 'confirm') {
-          $customers_query = tep_db_query("select c.customers_id, c.customers_gender, c.customers_firstname, c.customers_lastname, c.customers_dob, c.customers_email_address, a.entry_company, a.entry_street_address, a.entry_suburb, a.entry_postcode, a.entry_city, a.entry_state, a.entry_zone_id, a.entry_country_id, c.customers_telephone, c.customers_fax, c.customers_newsletter, c.customers_default_address_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " a on c.customers_default_address_id = a.address_book_id where a.customers_id = c.customers_id and c.customers_id = '" . (int)$_GET['cID'] . "'");
-          $customers = tep_db_fetch_array($customers_query);
-          $cInfo = new objectInfo($customers);
+          $Qcustomer = $OSCOM_Db->prepare('select c.customers_id, c.customers_gender, c.customers_firstname, c.customers_lastname, c.customers_dob, c.customers_email_address, a.entry_company, a.entry_street_address, a.entry_suburb, a.entry_postcode, a.entry_city, a.entry_state, a.entry_zone_id, a.entry_country_id, c.customers_telephone, c.customers_fax, c.customers_newsletter, c.customers_default_address_id from :table_customers c left join :table_address_book a on c.customers_default_address_id = a.address_book_id where a.customers_id = c.customers_id and c.customers_id = :customers_id');
+          $Qcustomer->bindInt(':customers_id', $_GET['cID']);
+          $Qcustomer->execute();
+
+          $cInfo = new objectInfo($Qcustomer->toArray());
         }
     }
   }
@@ -337,7 +363,7 @@ function check_form() {
           </tr>
         </table></td>
       </tr>
-      <tr><?php echo HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('default_address_id', $cInfo->customers_default_address_id); ?>
+      <tr><?php echo HTML::form('customers', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('action')) . 'action=update'), 'post', 'onsubmit="return check_form();"') . HTML::hiddenField('customers_default_address_id', $cInfo->customers_default_address_id); ?>
         <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
       </tr>
       <tr>
@@ -536,21 +562,23 @@ function check_form() {
             <td class="main"><?php echo ENTRY_STATE; ?></td>
             <td class="main">
 <?php
-    $entry_state = tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state);
     if ($error == true) {
       if ($entry_state_error == true) {
         if ($entry_state_has_zones == true) {
           $zones_array = array();
-          $zones_query = tep_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . tep_db_input($cInfo->entry_country_id) . "' order by zone_name");
-          while ($zones_values = tep_db_fetch_array($zones_query)) {
-            $zones_array[] = array('id' => $zones_values['zone_name'], 'text' => $zones_values['zone_name']);
+          $Qzones = $OSCOM_Db->get('zones', 'zone_name', ['zone_country_id' => $cInfo->entry_country_id], 'zone_name');
+          while ($Qzones->fetch()) {
+            $zones_array[] = [
+              'id' => $Qzones->value('zone_name'),
+              'text' => $Qzones->value('zone_name')
+            ];
           }
           echo HTML::selectField('entry_state', $zones_array) . '&nbsp;' . ENTRY_STATE_ERROR;
         } else {
           echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state)) . '&nbsp;' . ENTRY_STATE_ERROR;
         }
       } else {
-        echo $entry_state . HTML::hiddenField('entry_zone_id') . HTML::hiddenField('entry_state');
+        echo tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state) . HTML::hiddenField('entry_zone_id') . HTML::hiddenField('entry_state');
       }
     } else {
       echo HTML::inputField('entry_state', tep_get_zone_name($cInfo->entry_country_id, $cInfo->entry_zone_id, $cInfo->entry_state));
@@ -659,41 +687,49 @@ function check_form() {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $search = '';
+    $sql_query = 'select SQL_CALC_FOUND_ROWS c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, a.entry_country_id from :table_customers c left join :table_address_book a on (c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id)';
+
     if (isset($_GET['search']) && tep_not_null($_GET['search'])) {
-      $keywords = tep_db_input(tep_db_prepare_input($_GET['search']));
-      $search = "where c.customers_lastname like '%" . $keywords . "%' or c.customers_firstname like '%" . $keywords . "%' or c.customers_email_address like '%" . $keywords . "%'";
+      $sql_query .= ' where c.customers_lastname like :customers_lastname or c.customers_firstname like :customers_firstname or c.customers_email_address like :customers_email_address';
     }
-    $customers_query_raw = "select c.customers_id, c.customers_lastname, c.customers_firstname, c.customers_email_address, a.entry_country_id from " . TABLE_CUSTOMERS . " c left join " . TABLE_ADDRESS_BOOK . " a on c.customers_id = a.customers_id and c.customers_default_address_id = a.address_book_id " . $search . " order by c.customers_lastname, c.customers_firstname";
-    $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_query_raw, $customers_query_numrows);
-    $customers_query = tep_db_query($customers_query_raw);
-    while ($customers = tep_db_fetch_array($customers_query)) {
-      $info_query = tep_db_query("select customers_info_date_account_created as date_account_created, customers_info_date_account_last_modified as date_account_last_modified, customers_info_date_of_last_logon as date_last_logon, customers_info_number_of_logons as number_of_logons from " . TABLE_CUSTOMERS_INFO . " where customers_info_id = '" . $customers['customers_id'] . "'");
-      $info = tep_db_fetch_array($info_query);
 
-      if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $customers['customers_id']))) && !isset($cInfo)) {
-        $country_query = tep_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$customers['entry_country_id'] . "'");
-        $country = tep_db_fetch_array($country_query);
+    $sql_query .= ' order by c.customers_lastname, c.customers_firstname limit :page_set_offset, :page_set_max_results';
 
-        $reviews_query = tep_db_query("select count(*) as number_of_reviews from " . TABLE_REVIEWS . " where customers_id = '" . (int)$customers['customers_id'] . "'");
-        $reviews = tep_db_fetch_array($reviews_query);
+    $Qcustomers = $OSCOM_Db->prepare($sql_query);
+    $Qcustomers->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+    $Qcustomers->execute();
 
-        $customer_info = array_merge($country, $info, $reviews);
+    while ($Qcustomers->fetch()) {
+      $Qinfo = $OSCOM_Db->get('customers_info', [
+        'customers_info_date_account_created as date_account_created',
+        'customers_info_date_account_last_modified as date_account_last_modified',
+        'customers_info_date_of_last_logon as date_last_logon',
+        'customers_info_number_of_logons as number_of_logons'
+      ], [
+        'customers_info_id' => $Qcustomers->valueInt('customers_id')
+      ]);
 
-        $cInfo_array = array_merge($customers, $customer_info);
+      if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ((int)$_GET['cID'] === $Qcustomers->valueInt('customers_id')))) && !isset($cInfo)) {
+        $Qcountry = $OSCOM_Db->get('countries', 'countries_name', ['countries_id' => $Qcustomers->valueInt('entry_country_id')]);
+
+        $Qreviews = $OSCOM_Db->get('reviews', 'count(*) as number_of_reviews', ['customers_id' => $Qcustomers->valueInt('customers_id')]);
+
+        $customer_info = array_merge($Qcountry->toArray(), $Qinfo->toArray(), $Qreviews->toArray());
+
+        $cInfo_array = array_merge($Qcustomers->toArray(), $customer_info);
         $cInfo = new objectInfo($cInfo_array);
       }
 
-      if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) {
+      if (isset($cInfo) && is_object($cInfo) && ($Qcustomers->valueInt('customers_id') === (int)$cInfo->customers_id)) {
         echo '          <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '\'">' . "\n";
+        echo '          <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $Qcustomers->valueInt('customers_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo $customers['customers_lastname']; ?></td>
-                <td class="dataTableContent"><?php echo $customers['customers_firstname']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_date_short($info['date_account_created']); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qcustomers->value('customers_lastname'); ?></td>
+                <td class="dataTableContent"><?php echo $Qcustomers->value('customers_firstname'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo tep_date_short($Qinfo->value('date_account_created')); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcustomers->valueInt('customers_id') === (int)$cInfo->customers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $Qcustomers->valueInt('customers_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -701,8 +737,8 @@ function check_form() {
               <tr>
                 <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], tep_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qcustomers->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qcustomers->getPageSetLinks(); ?></td>
                   </tr>
 <?php
     if (isset($_GET['search']) && tep_not_null($_GET['search'])) {
