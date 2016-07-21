@@ -235,6 +235,10 @@ class Db extends \PDO
             $statement = 'update ' . $table . ' set ';
 
             foreach ($data as $c => $v) {
+                if (is_null($v)) {
+                    $v = 'null';
+                }
+
                 if ($v == 'now()' || $v == 'null') {
                     $statement .= $c . ' = ' . $v . ', ';
                 } else {
@@ -253,7 +257,7 @@ class Db extends \PDO
             $Q = $this->prepare($statement);
 
             foreach ($data as $c => $v) {
-                if ($v != 'now()' && $v != 'null') {
+                if ($v != 'now()' && $v != 'null' && !is_null($v)) {
                     $Q->bindValue(':new_' . $c, $v);
                 }
             }
@@ -271,6 +275,10 @@ class Db extends \PDO
             $statement = 'insert into ' . $table . ' (' . implode(', ', array_keys($data)) . ') values (';
 
             foreach ($data as $c => $v) {
+                if (is_null($v)) {
+                    $v = 'null';
+                }
+
                 if ($v == 'now()' || $v == 'null') {
                     $statement .= $v . ', ';
                 } else {
@@ -288,7 +296,7 @@ class Db extends \PDO
                 $Q = $this->prepare($statement);
 
                 foreach ($data as $c => $v) {
-                    if ($v != 'now()' && $v != 'null') {
+                    if ($v != 'now()' && $v != 'null' && !is_null($v)) {
                         $Q->bindValue(':' . $c, $v);
                     }
                 }
