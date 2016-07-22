@@ -198,8 +198,10 @@ class Db extends \PDO
             $counter = 0;
 
             foreach ($it_where as $value) {
-                if (is_array($value) && isset($value['val'])) {
-                    $Q->bindValue(':cond_' . $counter, $value['val']);
+                if (is_array($value)) {
+                    if (isset($value['val'])) {
+                        $Q->bindValue(':cond_' . $counter, $value['val']);
+                    }
                 } else {
                     $Q->bindValue(':cond_' . $counter, $value);
                 }
