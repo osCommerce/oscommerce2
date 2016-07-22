@@ -15,105 +15,188 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
-        $name = tep_db_prepare_input($_POST['name']);
-        $code = tep_db_prepare_input(substr($_POST['code'], 0, 2));
-        $image = tep_db_prepare_input($_POST['image']);
-        $directory = tep_db_prepare_input($_POST['directory']);
-        $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
+        $name = HTML::sanitize($_POST['name']);
+        $code = HTML::sanitize(substr($_POST['code'], 0, 2));
+        $image = HTML::sanitize($_POST['image']);
+        $directory = HTML::sanitize($_POST['directory']);
+        $sort_order = (int)HTML::sanitize($_POST['sort_order']);
 
-        tep_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, sort_order) values ('" . tep_db_input($name) . "', '" . tep_db_input($code) . "', '" . tep_db_input($image) . "', '" . tep_db_input($directory) . "', '" . tep_db_input($sort_order) . "')");
-        $insert_id = tep_db_insert_id();
+        $OSCOM_Db->save('languages', [
+          'name' => $name,
+          'code' => $code,
+          'image' => $image,
+          'directory' => $directory,
+          'sort_order' => $sort_order
+        ]);
+
+        $insert_id = $OSCOM_Db->lastInsertId();
 
 // create additional categories_description records
-        $categories_query = tep_db_query("select c.categories_id, cd.categories_name from " . TABLE_CATEGORIES . " c left join " . TABLE_CATEGORIES_DESCRIPTION . " cd on c.categories_id = cd.categories_id where cd.language_id = '" . (int)$languages_id . "'");
-        while ($categories = tep_db_fetch_array($categories_query)) {
-          tep_db_query("insert into " . TABLE_CATEGORIES_DESCRIPTION . " (categories_id, language_id, categories_name) values ('" . (int)$categories['categories_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($categories['categories_name']) . "')");
+        $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name from :table_categories c left join :table_categories_description cd on c.categories_id = cd.categories_id where cd.language_id = :language_id');
+        $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcategories->execute();
+
+        while ($Qcategories->fetch()) {
+          $OSCOM_Db->save('categories_description', [
+            'categories_id' => $Qcategories->valueInt('categories_id'),
+            'language_id' => $insert_id,
+            'categories_name' => $Qcategories->value('categories_name')
+          ]);
         }
 
 // create additional products_description records
-        $products_query = tep_db_query("select p.products_id, pd.products_name, pd.products_description, pd.products_url from " . TABLE_PRODUCTS . " p left join " . TABLE_PRODUCTS_DESCRIPTION . " pd on p.products_id = pd.products_id where pd.language_id = '" . (int)$languages_id . "'");
-        while ($products = tep_db_fetch_array($products_query)) {
-          tep_db_query("insert into " . TABLE_PRODUCTS_DESCRIPTION . " (products_id, language_id, products_name, products_description, products_url) values ('" . (int)$products['products_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($products['products_name']) . "', '" . tep_db_input($products['products_description']) . "', '" . tep_db_input($products['products_url']) . "')");
+        $Qproducts = $OSCOM_Db->prepare('select p.products_id, pd.products_name, pd.products_description, pd.products_url from :table_products p left join :table_products_description pd on p.products_id = pd.products_id where pd.language_id = :language_id');
+        $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qproducts->execute();
+
+        while ($Qproducts->fetch()) {
+          $OSCOM_Db->save('products_description', [
+            'products_id' => $Qproducts->valueInt('products_id'),
+            'language_id' => $insert_id,
+            'products_name' => $Qproducts->value('products_name'),
+            'products_description' => $Qproducts->value('products_description'),
+            'products_url' => $Qproducts->value('products_url')
+          ]);
         }
 
 // create additional products_options records
-        $products_options_query = tep_db_query("select products_options_id, products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$languages_id . "'");
-        while ($products_options = tep_db_fetch_array($products_options_query)) {
-          tep_db_query("insert into " . TABLE_PRODUCTS_OPTIONS . " (products_options_id, language_id, products_options_name) values ('" . (int)$products_options['products_options_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($products_options['products_options_name']) . "')");
+        $Qoptions = $OSCOM_Db->get('products_options', [
+          'products_options_id',
+          'products_options_name'
+        ], [
+          'language_id' => $_SESSION['languages_id']
+        ]);
+
+        while ($Qoptions->fetch()) {
+          $OSCOM_Db->save('products_options', [
+            'products_options_id' => $Qoptions->valueInt('products_options_id'),
+            'language_id' => $insert_id,
+            'products_options_name' => $Qoptions->value('products_options_name')
+          ]);
         }
 
 // create additional products_options_values records
-        $products_options_values_query = tep_db_query("select products_options_values_id, products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$languages_id . "'");
-        while ($products_options_values = tep_db_fetch_array($products_options_values_query)) {
-          tep_db_query("insert into " . TABLE_PRODUCTS_OPTIONS_VALUES . " (products_options_values_id, language_id, products_options_values_name) values ('" . (int)$products_options_values['products_options_values_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($products_options_values['products_options_values_name']) . "')");
+        $Qvalues = $OSCOM_Db->get('products_options_values', [
+          'products_options_values_id',
+          'products_options_values_name'
+        ], [
+          'language_id' => $_SESSION['languages_id']
+        ]);
+
+        while ($Qvalues->fetch()) {
+          $OSCOM_Db->save('products_options_values', [
+            'products_options_values_id' => $Qvalues->valueInt('products_options_values_id'),
+            'language_id' => $insert_id,
+            'products_options_values_name' => $Qvalues->value('products_options_values_name')
+          ]);
         }
 
 // create additional manufacturers_info records
-        $manufacturers_query = tep_db_query("select m.manufacturers_id, mi.manufacturers_url from " . TABLE_MANUFACTURERS . " m left join " . TABLE_MANUFACTURERS_INFO . " mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = '" . (int)$languages_id . "'");
-        while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-          tep_db_query("insert into " . TABLE_MANUFACTURERS_INFO . " (manufacturers_id, languages_id, manufacturers_url) values ('" . $manufacturers['manufacturers_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($manufacturers['manufacturers_url']) . "')");
+        $Qmanufacturers = $OSCOM_Db->prepare('select m.manufacturers_id, mi.manufacturers_url from :table_manufacturers m left join :table_manufacturers_info mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = :languages_id');
+        $Qmanufacturers->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qmanufacturers->execute();
+
+        while ($Qmanufacturers->fetch()) {
+          $OSCOM_Db->save('manufacturers_info', [
+            'manufacturers_id' => $Qmanufacturers->valueInt('manufacturers_id'),
+            'languages_id' => $insert_id,
+            'manufacturers_url' => $Qmanufacturers->value('manufacturers_url')
+          ]);
         }
 
 // create additional orders_status records
-        $orders_status_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
-        while ($orders_status = tep_db_fetch_array($orders_status_query)) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . (int)$orders_status['orders_status_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($orders_status['orders_status_name']) . "')");
+        $Qstatus = $OSCOM_Db->get('orders_status', [
+          'orders_status_id',
+          'orders_status_name'
+        ], [
+          'language_id' => $_SESSION['languages_id']
+        ]);
+
+        while ($Qstatus->fetch()) {
+          $OSCOM_Db->save('orders_status', [
+            'orders_status_id' => $Qstatus->valueInt('orders_status_id'),
+            'language_id' => $insert_id,
+            'orders_status_name' => $Qstatus->value('orders_status_name')
+          ]);
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => $code
+          ], [
+            'configuration_key' => 'DEFAULT_LANGUAGE'
+          ]);
         }
 
-        OSCOM::redirect(FILENAME_LANGUAGES, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'lID=' . $insert_id);
+        OSCOM::redirect(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $insert_id);
         break;
       case 'save':
-        $lID = tep_db_prepare_input($_GET['lID']);
-        $name = tep_db_prepare_input($_POST['name']);
-        $code = tep_db_prepare_input(substr($_POST['code'], 0, 2));
-        $image = tep_db_prepare_input($_POST['image']);
-        $directory = tep_db_prepare_input($_POST['directory']);
-        $sort_order = (int)tep_db_prepare_input($_POST['sort_order']);
+        $lID = HTML::sanitize($_GET['lID']);
+        $name = HTML::sanitize($_POST['name']);
+        $code = HTML::sanitize(substr($_POST['code'], 0, 2));
+        $image = HTML::sanitize($_POST['image']);
+        $directory = HTML::sanitize($_POST['directory']);
+        $sort_order = (int)HTML::sanitize($_POST['sort_order']);
 
-        tep_db_query("update " . TABLE_LANGUAGES . " set name = '" . tep_db_input($name) . "', code = '" . tep_db_input($code) . "', image = '" . tep_db_input($image) . "', directory = '" . tep_db_input($directory) . "', sort_order = '" . tep_db_input($sort_order) . "' where languages_id = '" . (int)$lID . "'");
+        $OSCOM_Db->save('languages', [
+          'name' => $name,
+          'code' => $code,
+          'image' => $image,
+          'directory' => $directory,
+          'sort_order' => $sort_order
+        ], [
+          'languages_id' => (int)$lID
+        ]);
 
-        if ($_POST['default'] == 'on') {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
+        if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => $code
+          ], [
+            'configuration_key' => 'DEFAULT_LANGUAGE'
+          ]);
         }
 
         OSCOM::redirect(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']);
         break;
       case 'deleteconfirm':
-        $lID = tep_db_prepare_input($_GET['lID']);
+        $lID = HTML::sanitize($_GET['lID']);
 
-        $lng_query = tep_db_query("select languages_id from " . TABLE_LANGUAGES . " where code = '" . DEFAULT_CURRENCY . "'");
-        $lng = tep_db_fetch_array($lng_query);
-        if ($lng['languages_id'] == $lID) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_CURRENCY'");
+        $Qlanguage = $OSCOM_Db->get('languages', 'languages_id', ['code' => DEFAULT_LANGUAGE]);
+
+        if ($Qlanguage->valueInt('languages_id') === (int)$lID) {
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => ''
+          ], [
+            'configuration_key' => 'DEFAULT_CURRENCY'
+          ]);
         }
 
-        tep_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where language_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_PRODUCTS_OPTIONS . " where language_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where language_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where languages_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lID . "'");
-        tep_db_query("delete from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
+        $OSCOM_Db->delete('categories_description', ['language_id' => $lID]);
+        $OSCOM_Db->delete('products_description', ['language_id' => $lID]);
+        $OSCOM_Db->delete('products_options', ['language_id' => $lID]);
+        $OSCOM_Db->delete('products_options_values', ['language_id' => $lID]);
+        $OSCOM_Db->delete('manufacturers_info', ['languages_id' => $lID]);
+        $OSCOM_Db->delete('orders_status', ['language_id' => $lID]);
+        $OSCOM_Db->delete('languages', ['languages_id' => $lID]);
 
         OSCOM::redirect(FILENAME_LANGUAGES, 'page=' . $_GET['page']);
         break;
       case 'delete':
-        $lID = tep_db_prepare_input($_GET['lID']);
+        $lID = HTML::sanitize($_GET['lID']);
 
-        $lng_query = tep_db_query("select code from " . TABLE_LANGUAGES . " where languages_id = '" . (int)$lID . "'");
-        $lng = tep_db_fetch_array($lng_query);
+        $Qlanguage = $OSCOM_Db->get('languages', 'code', ['languages_id' => $lID]);
 
         $remove_language = true;
-        if ($lng['code'] == DEFAULT_LANGUAGE) {
+        if ($Qlanguage->value('code') == DEFAULT_LANGUAGE) {
           $remove_language = false;
           $messageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
         }
@@ -142,29 +225,29 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $languages_query_raw = "select languages_id, name, code, image, directory, sort_order from " . TABLE_LANGUAGES . " order by sort_order";
-  $languages_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $languages_query_raw, $languages_query_numrows);
-  $languages_query = tep_db_query($languages_query_raw);
+  $Qlanguages = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS languages_id, name, code, image, directory, sort_order from :table_languages order by sort_order limit :page_set_offset, :page_set_max_results');
+  $Qlanguages->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qlanguages->execute();
 
-  while ($languages = tep_db_fetch_array($languages_query)) {
-    if ((!isset($_GET['lID']) || (isset($_GET['lID']) && ($_GET['lID'] == $languages['languages_id']))) && !isset($lInfo) && (substr($action, 0, 3) != 'new')) {
-      $lInfo = new objectInfo($languages);
+  while ($Qlanguages->fetch()) {
+    if ((!isset($_GET['lID']) || (isset($_GET['lID']) && ((int)$_GET['lID'] === $Qlanguages->valueInt('languages_id')))) && !isset($lInfo) && (substr($action, 0, 3) != 'new')) {
+      $lInfo = new objectInfo($Qlanguages->toArray());
     }
 
-    if (isset($lInfo) && is_object($lInfo) && ($languages['languages_id'] == $lInfo->languages_id) ) {
+    if (isset($lInfo) && is_object($lInfo) && ($Qlanguages->valueInt('languages_id') === (int)$lInfo->languages_id) ) {
       echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '\'">' . "\n";
+      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $Qlanguages->valueInt('languages_id')) . '\'">' . "\n";
     }
 
-    if (DEFAULT_LANGUAGE == $languages['code']) {
-      echo '                <td class="dataTableContent"><strong>' . $languages['name'] . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
+    if (DEFAULT_LANGUAGE == $Qlanguages->value('code')) {
+      echo '                <td class="dataTableContent"><strong>' . $Qlanguages->value('name') . ' (' . TEXT_DEFAULT . ')</strong></td>' . "\n";
     } else {
-      echo '                <td class="dataTableContent">' . $languages['name'] . '</td>' . "\n";
+      echo '                <td class="dataTableContent">' . $Qlanguages->value('name') . '</td>' . "\n";
     }
 ?>
-                <td class="dataTableContent"><?php echo $languages['code']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($languages['languages_id'] == $lInfo->languages_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qlanguages->value('code'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($lInfo) && is_object($lInfo) && ($Qlanguages->valueInt('languages_id') == (int)$lInfo->languages_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $Qlanguages->valueInt('languages_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -172,14 +255,14 @@
               <tr>
                 <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></td>
-                    <td class="smallText" align="right"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qlanguages->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qlanguages->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {
 ?>
                   <tr>
-                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_LANGUAGE, 'fa fa-plus', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new')); ?></td>
+                    <td class="smallText" align="right" colspan="2"><?php echo HTML::button(IMAGE_NEW_LANGUAGE, 'fa fa-plus', OSCOM::link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . (isset($lInfo) ? '&lID=' . $lInfo->languages_id : '') . '&action=new')); ?></td>
                   </tr>
 <?php
   }
