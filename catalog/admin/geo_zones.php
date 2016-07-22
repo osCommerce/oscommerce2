@@ -15,38 +15,59 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['spage']) || !is_numeric($_GET['spage'])) {
+    $_GET['spage'] = 1;
+  }
+
   $saction = (isset($_GET['saction']) ? $_GET['saction'] : '');
 
   if (tep_not_null($saction)) {
     switch ($saction) {
       case 'insert_sub':
-        $zID = tep_db_prepare_input($_GET['zID']);
-        $zone_country_id = tep_db_prepare_input($_POST['zone_country_id']);
-        $zone_id = tep_db_prepare_input($_POST['zone_id']);
+        $zID = HTML::sanitize($_GET['zID']);
+        $zone_country_id = HTML::sanitize($_POST['zone_country_id']);
+        $zone_id = HTML::sanitize($_POST['zone_id']);
 
-        tep_db_query("insert into " . TABLE_ZONES_TO_GEO_ZONES . " (zone_country_id, zone_id, geo_zone_id, date_added) values ('" . (int)$zone_country_id . "', '" . (int)$zone_id . "', '" . (int)$zID . "', now())");
-        $new_subzone_id = tep_db_insert_id();
+        $OSCOM_Db->save('zones_to_geo_zones', [
+          'zone_country_id' => (int)$zone_country_id,
+          'zone_id' => (int)$zone_id,
+          'geo_zone_id' => (int)$zID,
+          'date_added' => 'now()'
+        ]);
+
+        $new_subzone_id = $OSCOM_Db->lastInsertId();
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $new_subzone_id);
         break;
       case 'save_sub':
-        $sID = tep_db_prepare_input($_GET['sID']);
-        $zID = tep_db_prepare_input($_GET['zID']);
-        $zone_country_id = tep_db_prepare_input($_POST['zone_country_id']);
-        $zone_id = tep_db_prepare_input($_POST['zone_id']);
+        $sID = HTML::sanitize($_GET['sID']);
+        $zID = HTML::sanitize($_GET['zID']);
+        $zone_country_id = HTML::sanitize($_POST['zone_country_id']);
+        $zone_id = HTML::sanitize($_POST['zone_id']);
 
-        tep_db_query("update " . TABLE_ZONES_TO_GEO_ZONES . " set geo_zone_id = '" . (int)$zID . "', zone_country_id = '" . (int)$zone_country_id . "', zone_id = " . (tep_not_null($zone_id) ? "'" . (int)$zone_id . "'" : 'null') . ", last_modified = now() where association_id = '" . (int)$sID . "'");
+        $OSCOM_Db->save('zones_to_geo_zones', [
+          'geo_zone_id' => (int)$zID,
+          'zone_country_id' => (int)$zone_country_id,
+          'zone_id' => (tep_not_null($zone_id) ? (int)$zone_id : 'null'),
+          'last_modified' => 'now()'
+        ], [
+          'association_id' => (int)$sID
+        ]);
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $_GET['sID']);
         break;
       case 'deleteconfirm_sub':
-        $sID = tep_db_prepare_input($_GET['sID']);
+        $sID = HTML::sanitize($_GET['sID']);
 
-        tep_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where association_id = '" . (int)$sID . "'");
+        $OSCOM_Db->delete('zones_to_geo_zones', ['association_id' => (int)$sID]);
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage']);
         break;
     }
+  }
+
+  if (!isset($_GET['zpage']) || !is_numeric($_GET['zpage'])) {
+    $_GET['zpage'] = 1;
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -54,28 +75,39 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert_zone':
-        $geo_zone_name = tep_db_prepare_input($_POST['geo_zone_name']);
-        $geo_zone_description = tep_db_prepare_input($_POST['geo_zone_description']);
+        $geo_zone_name = HTML::sanitize($_POST['geo_zone_name']);
+        $geo_zone_description = HTML::sanitize($_POST['geo_zone_description']);
 
-        tep_db_query("insert into " . TABLE_GEO_ZONES . " (geo_zone_name, geo_zone_description, date_added) values ('" . tep_db_input($geo_zone_name) . "', '" . tep_db_input($geo_zone_description) . "', now())");
-        $new_zone_id = tep_db_insert_id();
+        $OSCOM_Db->save('geo_zones', [
+          'geo_zone_name' => $geo_zone_name,
+          'geo_zone_description' =>  $geo_zone_description,
+          'date_added' => 'now()'
+        ]);
+
+        $new_zone_id = $OSCOM_Db->lastInsertId();
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $new_zone_id);
         break;
       case 'save_zone':
-        $zID = tep_db_prepare_input($_GET['zID']);
-        $geo_zone_name = tep_db_prepare_input($_POST['geo_zone_name']);
-        $geo_zone_description = tep_db_prepare_input($_POST['geo_zone_description']);
+        $zID = HTML::sanitize($_GET['zID']);
+        $geo_zone_name = HTML::sanitize($_POST['geo_zone_name']);
+        $geo_zone_description = HTML::sanitize($_POST['geo_zone_description']);
 
-        tep_db_query("update " . TABLE_GEO_ZONES . " set geo_zone_name = '" . tep_db_input($geo_zone_name) . "', geo_zone_description = '" . tep_db_input($geo_zone_description) . "', last_modified = now() where geo_zone_id = '" . (int)$zID . "'");
+        $OSCOM_Db->save('geo_zones', [
+          'geo_zone_name' => $geo_zone_name,
+          'geo_zone_description' => $geo_zone_description,
+          'last_modified' => 'now()'
+        ], [
+          'geo_zone_id' => (int)$zID
+        ]);
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID']);
         break;
       case 'deleteconfirm_zone':
-        $zID = tep_db_prepare_input($_GET['zID']);
+        $zID = HTML::sanitize($_GET['zID']);
 
-        tep_db_query("delete from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . (int)$zID . "'");
-        tep_db_query("delete from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . (int)$zID . "'");
+        $OSCOM_Db->delete('geo_zones', ['geo_zone_id' => (int)$zID]);
+        $OSCOM_Db->delete('zones_to_geo_zones', ['geo_zone_id' => (int)$zID]);
 
         OSCOM::redirect(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage']);
         break;
@@ -137,24 +169,33 @@ function update_zone(theForm) {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $rows = 0;
-    $zones_query_raw = "select a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from " . TABLE_ZONES_TO_GEO_ZONES . " a left join " . TABLE_COUNTRIES . " c on a.zone_country_id = c.countries_id left join " . TABLE_ZONES . " z on a.zone_id = z.zone_id where a.geo_zone_id = " . $_GET['zID'] . " order by association_id";
-    $zones_split = new splitPageResults($_GET['spage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
-    $zones_query = tep_db_query($zones_query_raw);
-    while ($zones = tep_db_fetch_array($zones_query)) {
-      $rows++;
-      if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ($_GET['sID'] == $zones['association_id']))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
-        $sInfo = new objectInfo($zones);
+    $Qzones = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS a.association_id, a.zone_country_id, c.countries_name, a.zone_id, a.geo_zone_id, a.last_modified, a.date_added, z.zone_name from :table_zones_to_geo_zones a left join :table_countries c on a.zone_country_id = c.countries_id left join :table_zones z on a.zone_id = z.zone_id where a.geo_zone_id = :geo_zone_id order by association_id limit :page_set_offset, :page_set_max_results');
+    $Qzones->bindInt(':geo_zone_id', $_GET['zID']);
+    $Qzones->setPageSet(MAX_DISPLAY_SEARCH_RESULTS, 'spage');
+    $Qzones->execute();
+
+    while ($Qzones->fetch()) {
+      if ((!isset($_GET['sID']) || (isset($_GET['sID']) && ((int)$_GET['sID'] === $Qzones->valueInt('association_id')))) && !isset($sInfo) && (substr($action, 0, 3) != 'new')) {
+        $sInfo = new objectInfo($Qzones->toArray());
+
+        if (is_null($sInfo->countries_name)) {
+          $sInfo->countries_name = TEXT_ALL_COUNTRIES;
+        }
+
+        if (is_null($sInfo->zone_name)) {
+          $sInfo->zone_name = PLEASE_SELECT;
+        }
       }
-      if (isset($sInfo) && is_object($sInfo) && ($zones['association_id'] == $sInfo->association_id)) {
+
+      if (isset($sInfo) && is_object($sInfo) && ($Qzones->valueInt('association_id') === (int)$sInfo->association_id)) {
         echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $sInfo->association_id . '&saction=edit') . '\'">' . "\n";
       } else {
-        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '\'">' . "\n";
+        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $Qzones->valueInt('association_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo (($zones['countries_name']) ? $zones['countries_name'] : TEXT_ALL_COUNTRIES); ?></td>
-                <td class="dataTableContent"><?php echo (($zones['zone_id']) ? $zones['zone_name'] : PLEASE_SELECT); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($zones['association_id'] == $sInfo->association_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $zones['association_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qzones->hasValue('countries_name') ? $Qzones->value('countries_name') : TEXT_ALL_COUNTRIES; ?></td>
+                <td class="dataTableContent"><?php echo $Qzones->hasValue('zone_name') ? $Qzones->value('zone_name') : PLEASE_SELECT; ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($Qzones->valueInt('association_id') === (int)$sInfo->association_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $Qzones->valueInt('association_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -162,8 +203,8 @@ function update_zone(theForm) {
               <tr>
                 <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['spage'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['spage'], 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list', 'spage'); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qzones->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qzones->getPageSetLinks('zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list'); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -180,30 +221,27 @@ function update_zone(theForm) {
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $zones_query_raw = "select geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added from " . TABLE_GEO_ZONES . " order by geo_zone_name";
-    $zones_split = new splitPageResults($_GET['zpage'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
-    $zones_query = tep_db_query($zones_query_raw);
-    while ($zones = tep_db_fetch_array($zones_query)) {
-      if ((!isset($_GET['zID']) || (isset($_GET['zID']) && ($_GET['zID'] == $zones['geo_zone_id']))) && !isset($zInfo) && (substr($action, 0, 3) != 'new')) {
-        $num_zones_query = tep_db_query("select count(*) as num_zones from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . (int)$zones['geo_zone_id'] . "' group by geo_zone_id");
-        $num_zones = tep_db_fetch_array($num_zones_query);
+    $Qzones = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added from :table_geo_zones order by geo_zone_name limit :page_set_offset, :page_set_max_results');
+    $Qzones->setPageSet(MAX_DISPLAY_SEARCH_RESULTS, 'zpage');
+    $Qzones->execute();
 
-        if ($num_zones['num_zones'] > 0) {
-          $zones['num_zones'] = $num_zones['num_zones'];
-        } else {
-          $zones['num_zones'] = 0;
-        }
+    while ($Qzones->fetch()) {
+      if ((!isset($_GET['zID']) || (isset($_GET['zID']) && ((int)$_GET['zID'] === $Qzones->valueInt('geo_zone_id')))) && !isset($zInfo) && (substr($action, 0, 3) != 'new')) {
+        $Qtotal = $OSCOM_Db->prepare('select count(*) as num_zones from :table_zones_to_geo_zones where geo_zone_id = :geo_zone_id group by geo_zone_id');
+        $Qtotal->bindInt(':geo_zone_id', $Qzones->valueInt('geo_zone_id'));
+        $Qtotal->execute();
 
-        $zInfo = new objectInfo($zones);
+        $zInfo = new objectInfo(array_merge($Qzones->toArray(), $Qtotal->toArray()));
       }
-      if (isset($zInfo) && is_object($zInfo) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id)) {
+
+      if (isset($zInfo) && is_object($zInfo) && ($Qzones->valueInt('geo_zone_id') === (int)$zInfo->geo_zone_id)) {
         echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=list') . '\'">' . "\n";
       } else {
-        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id']) . '\'">' . "\n";
+        echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id'] . '&action=list') . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $zones['geo_zone_name']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($zones['geo_zone_id'] == $zInfo->geo_zone_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zones['geo_zone_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id') . '&action=list') . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $Qzones->value('geo_zone_name'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($Qzones->valueInt('geo_zone_id') === (int)$zInfo->geo_zone_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -211,13 +249,13 @@ function update_zone(theForm) {
               <tr>
                 <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText"><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['zpage'], TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></td>
-                    <td class="smallText" align="right"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['zpage'], '', 'zpage'); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qzones->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_TAX_ZONES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qzones->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
               </tr>
               <tr>
-                <td class="smallText" align="right" colspan="2"><?php if (!$action) echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $zInfo->geo_zone_id . '&action=new_zone')); ?></td>
+                <td class="smallText" align="right" colspan="2"><?php if (!$action) echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . (isset($zInfo) ? '&zID=' . $zInfo->geo_zone_id : '') . '&action=new_zone')); ?></td>
               </tr>
             </table>
 <?php
