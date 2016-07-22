@@ -20,24 +20,43 @@
   if ( ($action == 'send_email_to_user') && isset($_POST['customers_email_address']) && !isset($_POST['back_x']) ) {
     switch ($_POST['customers_email_address']) {
       case '***':
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS);
+        $Qmail = $OSCOM_Db->get('customers', [
+          'customers_firstname',
+          'customers_lastname',
+          'customers_email_address'
+        ]);
+
         $mail_sent_to = TEXT_ALL_CUSTOMERS;
         break;
       case '**D':
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
+        $Qmail = $OSCOM_Db->get('customers', [
+          'customers_firstname',
+          'customers_lastname',
+          'customers_email_address'
+        ], [
+          'customers_newsletter' => '1'
+        ]);
+
         $mail_sent_to = TEXT_NEWSLETTER_CUSTOMERS;
         break;
       default:
-        $customers_email_address = tep_db_prepare_input($_POST['customers_email_address']);
+        $customers_email_address = HTML::sanitize($_POST['customers_email_address']);
 
-        $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_email_address = '" . tep_db_input($customers_email_address) . "'");
-        $mail_sent_to = $_POST['customers_email_address'];
+        $Qmail = $OSCOM_Db->get('customers', [
+          'customers_firstname',
+          'customers_lastname',
+          'customers_email_address'
+        ], [
+          'customers_email_address' => $customers_email_address
+        ]);
+
+        $mail_sent_to = $customers_email_address;
         break;
     }
 
-    $from = tep_db_prepare_input($_POST['from']);
-    $subject = tep_db_prepare_input($_POST['subject']);
-    $message = tep_db_prepare_input($_POST['message']);
+    $from = HTML::sanitize($_POST['from']);
+    $subject = HTML::sanitize($_POST['subject']);
+    $message = HTML::sanitize($_POST['message']);
 
     //Let's build a message object using the email class
     $mimemessage = new email(array('X-Mailer: osCommerce'));
@@ -51,8 +70,9 @@
     }
 
     $mimemessage->build_message();
-    while ($mail = tep_db_fetch_array($mail_query)) {
-      $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', $from, $subject);
+
+    while ($Qmail->fetch()) {
+      $mimemessage->send($Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'), $Qmail->value('customers_email_address'), '', $from, $subject);
     }
 
     OSCOM::redirect(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to));
@@ -141,14 +161,32 @@
           <tr><?php echo HTML::form('mail', OSCOM::link(FILENAME_MAIL, 'action=preview')); ?>
             <td><table border="0" cellpadding="0" cellspacing="2">
 <?php
-    $customers = array();
-    $customers[] = array('id' => '', 'text' => TEXT_SELECT_CUSTOMER);
-    $customers[] = array('id' => '***', 'text' => TEXT_ALL_CUSTOMERS);
-    $customers[] = array('id' => '**D', 'text' => TEXT_NEWSLETTER_CUSTOMERS);
-    $mail_query = tep_db_query("select customers_email_address, customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " order by customers_lastname");
-    while($customers_values = tep_db_fetch_array($mail_query)) {
-      $customers[] = array('id' => $customers_values['customers_email_address'],
-                           'text' => $customers_values['customers_lastname'] . ', ' . $customers_values['customers_firstname'] . ' (' . $customers_values['customers_email_address'] . ')');
+    $customers = [
+      [
+        'id' => '',
+        'text' => TEXT_SELECT_CUSTOMER
+      ],
+      [
+        'id' => '***',
+        'text' => TEXT_ALL_CUSTOMERS
+      ],
+      [
+        'id' => '**D',
+        'text' => TEXT_NEWSLETTER_CUSTOMERS
+      ]
+    ];
+
+    $Qcustomers = $OSCOM_Db->get('customers', [
+      'customers_email_address',
+      'customers_firstname',
+      'customers_lastname'
+    ], null, 'customers_lastname');
+
+    while ($Qcustomers->fetch()) {
+      $customers[] = [
+        'id' => $Qcustomers->value('customers_email_address'),
+        'text' => $Qcustomers->value('customers_lastname') . ', ' . $Qcustomers->value('customers_firstname') . ' (' . $Qcustomers->value('customers_email_address') . ')'
+      ];
     }
 ?>
               <tr>
