@@ -15,14 +15,18 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
       case 'save':
-        if (isset($_GET['mID'])) $manufacturers_id = tep_db_prepare_input($_GET['mID']);
-        $manufacturers_name = tep_db_prepare_input($_POST['manufacturers_name']);
+        if (isset($_GET['mID'])) $manufacturers_id = HTML::sanitize($_GET['mID']);
+        $manufacturers_name = HTML::sanitize($_POST['manufacturers_name']);
 
         $sql_data_array = array('manufacturers_name' => $manufacturers_name);
 
@@ -31,21 +35,27 @@
 
           $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-          tep_db_perform(TABLE_MANUFACTURERS, $sql_data_array);
-          $manufacturers_id = tep_db_insert_id();
+          $OSCOM_Db->save('manufacturers', $sql_data_array);
+          $manufacturers_id = $OSCOM_Db->lastInsertId();
         } elseif ($action == 'save') {
           $update_sql_data = array('last_modified' => 'now()');
 
           $sql_data_array = array_merge($sql_data_array, $update_sql_data);
 
-          tep_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "'");
+          $OSCOM_Db->save('manufacturers', $sql_data_array, [
+            'manufacturers_id' => (int)$manufacturers_id
+          ]);
         }
 
         $manufacturers_image = new upload('manufacturers_image');
         $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES);
 
         if ($manufacturers_image->parse() && $manufacturers_image->save()) {
-          tep_db_query("update " . TABLE_MANUFACTURERS . " set manufacturers_image = '" . tep_db_input($manufacturers_image->filename) . "' where manufacturers_id = '" . (int)$manufacturers_id . "'");
+          $OSCOM_Db->save('manufacturers', [
+            'manufacturers_image' => $manufacturers_image->filename
+          ], [
+            'manufacturers_id' => (int)$manufacturers_id
+          ]);
         }
 
         $languages = tep_get_languages();
@@ -53,7 +63,7 @@
           $manufacturers_url_array = $_POST['manufacturers_url'];
           $language_id = $languages[$i]['id'];
 
-          $sql_data_array = array('manufacturers_url' => tep_db_prepare_input($manufacturers_url_array[$language_id]));
+          $sql_data_array = array('manufacturers_url' => HTML::sanitize($manufacturers_url_array[$language_id]));
 
           if ($action == 'insert') {
             $insert_sql_data = array('manufacturers_id' => $manufacturers_id,
@@ -61,9 +71,12 @@
 
             $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
 
-            tep_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array);
+            $OSCOM_Db->save('manufacturers_info', $sql_data_array);
           } elseif ($action == 'save') {
-            tep_db_perform(TABLE_MANUFACTURERS_INFO, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "' and languages_id = '" . (int)$language_id . "'");
+            $OSCOM_Db->save('manufacturers_info', $sql_data_array, [
+              'manufacturers_id' => (int)$manufacturers_id,
+              'languages_id' => (int)$_SESSION['languages_id']
+            ]);
           }
         }
 
@@ -71,30 +84,35 @@
           tep_reset_cache_block('manufacturers');
         }
 
-        OSCOM::redirect(FILENAME_MANUFACTURERS, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'mID=' . $manufacturers_id);
+        OSCOM::redirect(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers_id);
         break;
       case 'deleteconfirm':
-        $manufacturers_id = tep_db_prepare_input($_GET['mID']);
+        $manufacturers_id = HTML::sanitize($_GET['mID']);
 
         if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
-          $manufacturer_query = tep_db_query("select manufacturers_image from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$manufacturers_id . "'");
-          $manufacturer = tep_db_fetch_array($manufacturer_query);
+          $Qmanufacturer = $OSCOM_Db->get('manufacturers', 'manufacturers_image', ['manufacturers_id' => (int)$manufacturers_id]);
 
-          $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_CATALOG_IMAGES . $manufacturer['manufacturers_image'];
+          if (tep_not_null($Qmanufacturer->value('manufacturers_image'))) {
+            $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_CATALOG_IMAGES . $Qmanufacturer->value('manufacturers_image');
 
-          if (file_exists($image_location)) @unlink($image_location);
+            if (file_exists($image_location)) @unlink($image_location);
+          }
         }
 
-        tep_db_query("delete from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . (int)$manufacturers_id . "'");
-        tep_db_query("delete from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturers_id . "'");
+        $OSCOM_Db->delete('manufacturers', ['manufacturers_id' => (int)$manufacturers_id]);
+        $OSCOM_Db->delete('manufacturers_info', ['manufacturers_id' => (int)$manufacturers_id]);
 
         if (isset($_POST['delete_products']) && ($_POST['delete_products'] == 'on')) {
-          $products_query = tep_db_query("select products_id from " . TABLE_PRODUCTS . " where manufacturers_id = '" . (int)$manufacturers_id . "'");
-          while ($products = tep_db_fetch_array($products_query)) {
-            tep_remove_product($products['products_id']);
+          $Qproducts = $OSCOM_Db->get('products', 'products_id', ['manufacturers_id' => (int)$manufacturers_id]);
+          while ($Qproducts->fetch()) {
+            tep_remove_product($Qproducts->value('products_id'));
           }
         } else {
-          tep_db_query("update " . TABLE_PRODUCTS . " set manufacturers_id = '' where manufacturers_id = '" . (int)$manufacturers_id . "'");
+          $OSCOM_Db->save('products', [
+            'manufacturers_id' => ''
+          ], [
+            'manufacturers_id' => (int)$manufacturers_id
+          ]);
         }
 
         if (USE_CACHE == 'true') {
@@ -126,26 +144,26 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $manufacturers_query_raw = "select manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified from " . TABLE_MANUFACTURERS . " order by manufacturers_name";
-  $manufacturers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $manufacturers_query_raw, $manufacturers_query_numrows);
-  $manufacturers_query = tep_db_query($manufacturers_query_raw);
-  while ($manufacturers = tep_db_fetch_array($manufacturers_query)) {
-    if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ($_GET['mID'] == $manufacturers['manufacturers_id']))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
-      $manufacturer_products_query = tep_db_query("select count(*) as products_count from " . TABLE_PRODUCTS . " where manufacturers_id = '" . (int)$manufacturers['manufacturers_id'] . "'");
-      $manufacturer_products = tep_db_fetch_array($manufacturer_products_query);
+  $Qmanufacturers = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS manufacturers_id, manufacturers_name, manufacturers_image, date_added, last_modified from :table_manufacturers order by manufacturers_name limit :page_set_offset, :page_set_max_results');
+  $Qmanufacturers->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qmanufacturers->execute();
 
-      $mInfo_array = array_merge($manufacturers, $manufacturer_products);
+  while ($Qmanufacturers->fetch()) {
+    if ((!isset($_GET['mID']) || (isset($_GET['mID']) && ((int)$_GET['mID'] === $Qmanufacturers->valueInt('manufacturers_id')))) && !isset($mInfo) && (substr($action, 0, 3) != 'new')) {
+      $Qproducts = $OSCOM_Db->get('products', 'count(*) as products_count', ['manufacturers_id' => $Qmanufacturers->valueInt('manufacturers_id')]);
+
+      $mInfo_array = array_merge($Qmanufacturers->toArray(), $Qproducts->toArray());
       $mInfo = new objectInfo($mInfo_array);
     }
 
-    if (isset($mInfo) && is_object($mInfo) && ($manufacturers['manufacturers_id'] == $mInfo->manufacturers_id)) {
-      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers['manufacturers_id'] . '&action=edit') . '\'">' . "\n";
+    if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) {
+      echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id') . '&action=edit') . '\'">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers['manufacturers_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '\'">' . "\n";
     }
 ?>
-                <td class="dataTableContent"><?php echo $manufacturers['manufacturers_name']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($manufacturers['manufacturers_id'] == $mInfo->manufacturers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers['manufacturers_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qmanufacturers->value('manufacturers_name'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -153,8 +171,8 @@
               <tr>
                 <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $manufacturers_split->display_count($manufacturers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $manufacturers_split->display_links($manufacturers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qmanufacturers->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_MANUFACTURERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qmanufacturers->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
               </tr>
@@ -162,7 +180,7 @@
   if (empty($action)) {
 ?>
               <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=new')); ?></td>
+                <td align="right" colspan="2" class="smallText"><?php echo HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . (isset($mInfo) ? '&mID=' . $mInfo->manufacturers_id : '') . '&action=new')); ?></td>
               </tr>
 <?php
   }
@@ -179,7 +197,7 @@
       $contents = array('form' => HTML::form('manufacturers', OSCOM::link(FILENAME_MANUFACTURERS, 'action=insert', 'post', 'enctype="multipart/form-data"')));
       $contents[] = array('text' => TEXT_NEW_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_NAME . '<br />' . HTML::inputField('manufacturers_name'));
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::inputField('manufacturers_image'));
+      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::fileField('manufacturers_image'));
 
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
@@ -196,7 +214,7 @@
       $contents = array('form' => HTML::form('manufacturers', OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $mInfo->manufacturers_id . '&action=save', 'post', 'enctype="multipart/form-data"')));
       $contents[] = array('text' => TEXT_EDIT_INTRO);
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_NAME . '<br />' . HTML::inputField('manufacturers_name', $mInfo->manufacturers_name));
-      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::inputField('manufacturers_image') . '<br />' . $mInfo->manufacturers_image);
+      $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_IMAGE . '<br />' . HTML::fileField('manufacturers_image') . '<br />' . $mInfo->manufacturers_image);
 
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
