@@ -58,10 +58,12 @@
         }
       }
 
-      if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Live' ) {
-        $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
-      } else {
-        $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
+      if ( $this->enabled === true ) {
+        if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Live' ) {
+          $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
+        } else {
+          $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
+        }
       }
     }
 
