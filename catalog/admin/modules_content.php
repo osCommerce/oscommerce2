@@ -17,9 +17,17 @@
 
   require('includes/application_top.php');
 
-  $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_CONTENT_INSTALLED' limit 1");
-  if (tep_db_num_rows($check_query) < 1) {
-    tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', 'MODULE_CONTENT_INSTALLED', '', 'This is automatically updated. No need to edit.', '6', '0', now())");
+  $Qcheck = $OSCOM_Db->get('configuration', 'configuration_value', ['configuration_key' => 'MODULE_CONTENT_INSTALLED'], null, 1);
+  if ($Qcheck->fetch() === false) {
+    $OSCOM_Db->save('configuration', [
+      'configuration_title' => 'Installed Modules',
+      'configuration_key' => 'MODULE_CONTENT_INSTALLED',
+      'configuration_value' => '',
+      'configuration_description' => 'This is automatically updated. No need to edit.',
+      'configuration_group_id' => '6',
+      'sort_order' => '0',
+      'date_added' => 'now()'
+    ]);
     define('MODULE_CONTENT_INSTALLED', '');
   }
 
@@ -120,10 +128,14 @@
         foreach ( $modules['installed'] as $m ) {
           if ( $m['code'] == $_GET['module'] ) {
             foreach ($_POST['configuration'] as $key => $value) {
-              $key = tep_db_prepare_input($key);
-              $value = tep_db_prepare_input($value);
+              $key = HTML::sanitize($key);
+              $value = HTML::sanitize($value);
 
-              tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
+              $OSCOM_Db->save('configuration', [
+                'configuration_value' => $value
+              ], [
+                'configuration_key' => $key
+              ]);
             }
 
             break;
@@ -291,16 +303,25 @@
                              'keys' => array());
 
         foreach ($module->keys() as $key) {
-          $key = tep_db_prepare_input($key);
+          $key = HTML::sanitize($key);
 
-          $key_value_query = tep_db_query("select configuration_title, configuration_value, configuration_description, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . tep_db_input($key) . "'");
-          $key_value = tep_db_fetch_array($key_value_query);
+          $Qkeys = $OSCOM_Db->get('configuration', [
+            'configuration_title',
+            'configuration_value',
+            'configuration_description',
+            'use_function',
+            'set_function'
+          ], [
+            'configuration_key' => $key
+          ]);
 
-          $module_info['keys'][$key] = array('title' => $key_value['configuration_title'],
-                                             'value' => $key_value['configuration_value'],
-                                             'description' => $key_value['configuration_description'],
-                                             'use_function' => $key_value['use_function'],
-                                             'set_function' => $key_value['set_function']);
+          $module_info['keys'][$key] = [
+            'title' => $Qkeys->value('configuration_title'),
+            'value' => $Qkeys->value('configuration_value'),
+            'description' => $Qkeys->value('configuration_description'),
+            'use_function' => $Qkeys->value('use_function'),
+            'set_function' => $Qkeys->value('set_function')
+          ];
         }
 
         $mInfo = new \ArrayObject($module_info, \ArrayObject::ARRAY_AS_PROPS);
