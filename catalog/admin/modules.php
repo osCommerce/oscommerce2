@@ -50,10 +50,10 @@
     switch ($action) {
       case 'save':
         foreach( $_POST['configuration'] as $key => $value ) {
-          $key = tep_db_prepare_input($key);
-          $value = tep_db_prepare_input($value);
+          $key = HTML::sanitize($key);
+          $value = HTML::sanitize($value);
 
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
+          $OSCOM_Db->save('configuration', ['configuration_value' => $value], ['configuration_key' => $key]);
         }
         OSCOM::redirect(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']);
         break;
@@ -229,14 +229,21 @@
 
         $keys_extra = array();
         for ($j=0, $k=sizeof($module_keys); $j<$k; $j++) {
-          $key_value_query = tep_db_query("select configuration_title, configuration_value, configuration_description, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_keys[$j] . "'");
-          $key_value = tep_db_fetch_array($key_value_query);
+          $Qkeys = $OSCOM_Db->get('configuration', [
+            'configuration_title',
+            'configuration_value',
+            'configuration_description',
+            'use_function',
+            'set_function'
+          ], [
+            'configuration_key' => $module_keys[$j]
+          ]);
 
-          $keys_extra[$module_keys[$j]]['title'] = $key_value['configuration_title'];
-          $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
-          $keys_extra[$module_keys[$j]]['description'] = $key_value['configuration_description'];
-          $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
-          $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
+          $keys_extra[$module_keys[$j]]['title'] = $Qkeys->value('configuration_title');
+          $keys_extra[$module_keys[$j]]['value'] = $Qkeys->value('configuration_value');
+          $keys_extra[$module_keys[$j]]['description'] = $Qkeys->value('configuration_description');
+          $keys_extra[$module_keys[$j]]['use_function'] = $Qkeys->value('use_function');
+          $keys_extra[$module_keys[$j]]['set_function'] = $Qkeys->value('set_function');
         }
 
         $module_info['keys'] = $keys_extra;
@@ -264,28 +271,52 @@
 
   if (!isset($_GET['list'])) {
     ksort($installed_modules);
-    $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_key . "'");
-    if (tep_db_num_rows($check_query)) {
-      $check = tep_db_fetch_array($check_query);
-      if ($check['configuration_value'] != implode(';', $installed_modules)) {
-        Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $installed_modules), 'last_modified' => 'now()'], ['configuration_key' => $module_key]);
+    $Qcheck = $OSCOM_Db->get('configuration', 'configuration_value', ['configuration_key' => $module_key]);
+    if ($Qcheck->fetch() !== false) {
+      if ($Qcheck->value('configuration_value') != implode(';', $installed_modules)) {
+        $OSCOM_Db->save('configuration', [
+          'configuration_value' => implode(';', $installed_modules),
+          'last_modified' => 'now()'
+        ], [
+          'configuration_key' => $module_key
+        ]);
       }
     } else {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', '" . $module_key . "', '" . implode(';', $installed_modules) . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Installed Modules',
+        'configuration_key' => $module_key,
+        'configuration_value' => implode(';', $installed_modules),
+        'configuration_description' => 'This is automatically updated. No need to edit.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     if ($template_integration == true) {
-      $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
-      if (tep_db_num_rows($check_query)) {
-        $check = tep_db_fetch_array($check_query);
-        $tbgroups_array = explode(';', $check['configuration_value']);
+      $Qcheck = $OSCOM_Db->get('configuration', 'configuration_value', ['configuration_key' => 'TEMPLATE_BLOCK_GROUPS']);
+      if ($Qcheck->fetch() !== false) {
+        $tbgroups_array = explode(';', $Qcheck->value('configuration_value'));
         if (!in_array($module_type, $tbgroups_array)) {
           $tbgroups_array[] = $module_type;
           sort($tbgroups_array);
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . implode(';', $tbgroups_array) . "', last_modified = now() where configuration_key = 'TEMPLATE_BLOCK_GROUPS'");
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => implode(';', $tbgroups_array),
+            'last_modified' => 'now()'
+          ], [
+            'configuration_key' => 'TEMPLATE_BLOCK_GROUPS'
+          ]);
         }
       } else {
-        tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Template Block Groups', 'TEMPLATE_BLOCK_GROUPS', '" . $module_type . "', 'This is automatically updated. No need to edit.', '6', '0', now())");
+        $OSCOM_Db->save('configuration', [
+          'configuration_title' => 'Installed Template Block Groups',
+          'configuration_key' => 'TEMPLATE_BLOCK_GROUPS',
+          'configuration_value' => $module_type,
+          'configuration_description' => 'This is automatically updated. No need to edit.',
+          'configuration_group_id' => '6',
+          'sort_order' => '0',
+          'date_added' => 'now()'
+        ]);
       }
     }
   }
