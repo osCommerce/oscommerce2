@@ -23,11 +23,24 @@
 
   $orders_statuses = array();
   $orders_status_array = array();
-  $orders_status_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
-  while ($orders_status = tep_db_fetch_array($orders_status_query)) {
-    $orders_statuses[] = array('id' => $orders_status['orders_status_id'],
-                               'text' => $orders_status['orders_status_name']);
-    $orders_status_array[$orders_status['orders_status_id']] = $orders_status['orders_status_name'];
+  $Qstatus = $OSCOM_Db->get('orders_status', [
+    'orders_status_id',
+    'orders_status_name'
+  ], [
+    'language_id' => (int)$_SESSION['languages_id']
+  ]);
+
+  while ($Qstatus->fetch()) {
+    $orders_statuses[] = [
+      'id' => $Qstatus->valueInt('orders_status_id'),
+      'text' => $Qstatus->value('orders_status_name')
+    ];
+
+    $orders_status_array[$Qstatus->valueInt('orders_status_id')] = $Qstatus->value('orders_status_name');
+  }
+
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
   }
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -35,16 +48,28 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'update_order':
-        $oID = tep_db_prepare_input($_GET['oID']);
-        $status = tep_db_prepare_input($_POST['status']);
-        $comments = tep_db_prepare_input($_POST['comments']);
+        $oID = HTML::sanitize($_GET['oID']);
+        $status = HTML::sanitize($_POST['status']);
+        $comments = HTML::sanitize($_POST['comments']);
 
         $order_updated = false;
-        $check_status_query = tep_db_query("select customers_name, customers_email_address, orders_status, date_purchased from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
-        $check_status = tep_db_fetch_array($check_status_query);
 
-        if ( ($check_status['orders_status'] != $status) || tep_not_null($comments)) {
-          tep_db_query("update " . TABLE_ORDERS . " set orders_status = '" . tep_db_input($status) . "', last_modified = now() where orders_id = '" . (int)$oID . "'");
+        $Qcheck = $OSCOM_Db->get('orders', [
+          'customers_name',
+          'customers_email_address',
+          'orders_status',
+          'date_purchased'
+        ], [
+          'orders_id' => (int)$oID
+        ]);
+
+        if ( ($Qcheck->value('orders_status') != $status) || tep_not_null($comments)) {
+          $OSCOM_Db->save('orders', [
+            'orders_status' => $status,
+            'last_modified' => 'now()'
+          ], [
+            'orders_id' => (int)$oID
+          ]);
 
           $customer_notified = '0';
           if (isset($_POST['notify']) && ($_POST['notify'] == 'on')) {
@@ -53,14 +78,20 @@
               $notify_comments = sprintf(EMAIL_TEXT_COMMENTS_UPDATE, $comments) . "\n\n";
             }
 
-            $email = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . tep_date_long($check_status['date_purchased']) . "\n\n" . $notify_comments . sprintf(EMAIL_TEXT_STATUS_UPDATE, $orders_status_array[$status]);
+            $email = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL') . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . tep_date_long($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(EMAIL_TEXT_STATUS_UPDATE, $orders_status_array[$status]);
 
-            tep_mail($check_status['customers_name'], $check_status['customers_email_address'], EMAIL_TEXT_SUBJECT, $email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            tep_mail($Qcheck->value('customers_name'), $Qcheck->value('customers_email_address'), EMAIL_TEXT_SUBJECT, $email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
             $customer_notified = '1';
           }
 
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS_HISTORY . " (orders_id, orders_status_id, date_added, customer_notified, comments) values ('" . (int)$oID . "', '" . tep_db_input($status) . "', now(), '" . tep_db_input($customer_notified) . "', '" . tep_db_input($comments)  . "')");
+          $OSCOM_Db->save('orders_status_history', [
+            'orders_id' => (int)$oID,
+            'orders_status_id' => $status,
+            'date_added' => 'now()',
+            'customer_notified' => $customer_notified,
+            'comments' => $comments
+          ]);
 
           $order_updated = true;
         }
@@ -74,7 +105,7 @@
         OSCOM::redirect(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit');
         break;
       case 'deleteconfirm':
-        $oID = tep_db_prepare_input($_GET['oID']);
+        $oID = HTML::sanitize($_GET['oID']);
 
         tep_remove_order($oID, $_POST['restock']);
 
@@ -84,11 +115,11 @@
   }
 
   if (($action == 'edit') && isset($_GET['oID'])) {
-    $oID = tep_db_prepare_input($_GET['oID']);
+    $oID = HTML::sanitize($_GET['oID']);
 
-    $orders_query = tep_db_query("select orders_id from " . TABLE_ORDERS . " where orders_id = '" . (int)$oID . "'");
+    $Qorders = $OSCOM_Db->get('orders', 'orders_id', ['orders_id' => (int)$oID]);
     $order_exists = true;
-    if (!tep_db_num_rows($orders_query)) {
+    if ($Qorders->fetch() === false) {
       $order_exists = false;
       $messageStack->add(sprintf(ERROR_ORDER_DOES_NOT_EXIST, $oID), 'error');
     }
@@ -108,7 +139,7 @@
 
 <h1 class="pageHeading"><?php echo HEADING_TITLE . ': #' . (int)$oID . ' (' . $order->info['total'] . ')'; ?></h1>
 
-<div style="text-align: right; padding-bottom: 15px;"><?php echo HTML::button(IMAGE_ORDERS_INVOICE, 'fa-shopping-cart', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></div>
+<div style="text-align: right; padding-bottom: 15px;"><?php echo HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></div>
 
 <div id="orderTabs" style="overflow: auto;">
   <ul>
@@ -283,16 +314,24 @@
       </tr>
 
 <?php
-    $orders_history_query = tep_db_query("select orders_status_id, date_added, customer_notified, comments from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . tep_db_input($oID) . "' order by date_added desc");
-    if (tep_db_num_rows($orders_history_query)) {
-      while ($orders_history = tep_db_fetch_array($orders_history_query)) {
+    $Qhistory = $OSCOM_Db->get('orders_status_history', [
+      'orders_status_id',
+      'date_added',
+      'customer_notified',
+      'comments'
+    ], [
+      'orders_id' => $oID
+    ], 'date_added desc');
+
+    if ($Qhistory->fetch() !== false) {
+      do {
         echo '      <tr class="dataTableRow">' . "\n" .
-             '        <td class="dataTableContent" valign="top">' . tep_datetime_short($orders_history['date_added']) . '</td>' . "\n" .
-             '        <td class="dataTableContent" valign="top">' . $orders_status_array[$orders_history['orders_status_id']] . '</td>' . "\n" .
-             '        <td class="dataTableContent" valign="top">' . nl2br(tep_db_output($orders_history['comments'])) . '&nbsp;</td>' . "\n" .
+             '        <td class="dataTableContent" valign="top">' . tep_datetime_short($Qhistory->value('date_added')) . '</td>' . "\n" .
+             '        <td class="dataTableContent" valign="top">' . $orders_status_array[$Qhistory->valueInt('orders_status_id')] . '</td>' . "\n" .
+             '        <td class="dataTableContent" valign="top">' . nl2br(HTML::output($Qhistory->value('comments'))) . '&nbsp;</td>' . "\n" .
              '        <td class="dataTableContent" valign="top" align="right">';
 
-        if ($orders_history['customer_notified'] == '1') {
+        if ($Qhistory->valueInt('customer_notified') === 1) {
           echo HTML::image(DIR_WS_ICONS . 'tick.gif', ICON_TICK);
         } else {
           echo HTML::image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS);
@@ -300,7 +339,7 @@
 
         echo '        </td>' . "\n" .
              '      </tr>' . "\n";
-      }
+      } while ($Qhistory->fetch());
     } else {
         echo '      <tr class="dataTableRow">' . "\n" .
              '        <td class="dataTableContent" colspan="5">' . TEXT_NO_ORDER_HISTORY . '</td>' . "\n" .
@@ -355,32 +394,36 @@ $(function() {
               </tr>
 <?php
     if (isset($_GET['cID'])) {
-      $cID = tep_db_prepare_input($_GET['cID']);
-      $orders_query_raw = "select o.orders_id, o.customers_name, o.customers_id, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.customers_id = '" . (int)$cID . "' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by orders_id DESC";
+      $cID = HTML::sanitize($_GET['cID']);
+      $Qorders = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS o.orders_id, o.customers_name, o.customers_id, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from :table_orders o left join :table_orders_total ot on (o.orders_id = ot.orders_id), :table_orders_status s where o.customers_id = :customers_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and ot.class = "ot_total" order by orders_id desc limit :page_set_offset, :page_set_max_results');
+      $Qorders->bindInt(':customers_id', $_GET['cID']);
     } elseif (isset($_GET['status']) && is_numeric($_GET['status']) && ($_GET['status'] > 0)) {
-      $status = tep_db_prepare_input($_GET['status']);
-      $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and s.orders_status_id = '" . (int)$status . "' and ot.class = 'ot_total' order by o.orders_id DESC";
+      $status = HTML::sanitize($_GET['status']);
+      $Qorders = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from :table_orders o left join :table_orders_total ot on (o.orders_id = ot.orders_id), :table_orders_status s where o.orders_status = s.orders_status_id and s.language_id = :language_id and s.orders_status_id = :orders_status_id and ot.class = "ot_total" order by o.orders_id desc limit :page_set_offset, :page_set_max_results');
+      $Qorders->bindInt(':orders_status_id', $status);
     } else {
-      $orders_query_raw = "select o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_TOTAL . " ot on (o.orders_id = ot.orders_id), " . TABLE_ORDERS_STATUS . " s where o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' and ot.class = 'ot_total' order by o.orders_id DESC";
+      $Qorders = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from :table_orders o left join :table_orders_total ot on (o.orders_id = ot.orders_id), :table_orders_status s where o.orders_status = s.orders_status_id and s.language_id = :language_id and ot.class = "ot_total" order by o.orders_id desc limit :page_set_offset, :page_set_max_results');
     }
-    $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_query_raw, $orders_query_numrows);
-    $orders_query = tep_db_query($orders_query_raw);
-    while ($orders = tep_db_fetch_array($orders_query)) {
-    if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ($_GET['oID'] == $orders['orders_id']))) && !isset($oInfo)) {
-        $oInfo = new objectInfo($orders);
+    $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qorders->setPageSet(MAX_DISPLAY_SEARCH_RESULTS, tep_get_all_get_params(array('page', 'oID', 'action')));
+    $Qorders->execute();
+
+    while ($Qorders->fetch()) {
+    if ((!isset($_GET['oID']) || (isset($_GET['oID']) && ((int)$_GET['oID'] === $Qorders->valueInt('orders_id')))) && !isset($oInfo)) {
+        $oInfo = new objectInfo($Qorders->toArray());
       }
 
-      if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) {
+      if (isset($oInfo) && is_object($oInfo) && ($Qorders->valueInt('orders_id') === (int)$oInfo->orders_id)) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $oInfo->orders_id . '&action=edit') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $Qorders->valueInt('orders_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $orders['customers_name']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo strip_tags($orders['order_total']); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_datetime_short($orders['date_purchased']); ?></td>
-                <td class="dataTableContent" align="right"><?php echo $orders['orders_status_name']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $Qorders->value('customers_name'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo strip_tags($Qorders->value('order_total')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo tep_datetime_short($Qorders->value('date_purchased')); ?></td>
+                <td class="dataTableContent" align="right"><?php echo $Qorders->value('orders_status_name'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($Qorders->valueInt('orders_id') === (int)$oInfo->orders_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('oID')) . 'oID=' . $Qorders->valueInt('orders_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -388,8 +431,8 @@ $(function() {
               <tr>
                 <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], tep_get_all_get_params(array('page', 'oID', 'action'))); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qorders->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qorders->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
               </tr>
