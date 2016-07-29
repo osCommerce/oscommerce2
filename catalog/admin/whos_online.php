@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   $xx_mins_ago = (time() - 900);
@@ -20,7 +21,13 @@
   $currencies = new currencies();
 
 // remove entries that have expired
-  tep_db_query("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
+  $Qclean = $OSCOM_Db->prepare('delete from :table_whos_online where time_last_click < :last_click');
+  $Qclean->bindValue(':last_click', $xx_mins_ago);
+  $Qclean->execute();
+
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
@@ -44,35 +51,46 @@
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_IP_ADDRESS; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?></td>
+                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $whos_online_query = tep_db_query("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from " . TABLE_WHOS_ONLINE);
-  while ($whos_online = tep_db_fetch_array($whos_online_query)) {
-    $time_online = (time() - $whos_online['time_entry']);
-    if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info)) {
-      $info = new ObjectInfo($whos_online);
+  $Qonline = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from :table_whos_online order by time_last_click desc limit :page_set_offset, :page_set_max_results');
+  $Qonline->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qonline->execute();
+
+  while ($Qonline->fetch()) {
+    $time_online = (time() - $Qonline->value('time_entry'));
+
+    if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $Qonline->value('session_id')))) && !isset($info)) {
+      $info = new ObjectInfo($Qonline->toArray());
     }
 
-    if (isset($info) && ($whos_online['session_id'] == $info->session_id)) {
+    if (isset($info) && ($Qonline->value('session_id') == $info->session_id)) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
     } else {
-      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_WHOS_ONLINE, tep_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id']) . '\'">' . "\n";
+      echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '\'">' . "\n";
     }
 ?>
                 <td class="dataTableContent"><?php echo gmdate('H:i:s', $time_online); ?></td>
-                <td class="dataTableContent" align="center"><?php echo $whos_online['customer_id']; ?></td>
-                <td class="dataTableContent"><?php echo $whos_online['full_name']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $whos_online['ip_address']; ?></td>
-                <td class="dataTableContent"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
-                <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
-                <td class="dataTableContent"><?php if (preg_match('/^(.*)osCsid=[A-Z0-9,-]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { echo $array[1] . $array[2]; } else { echo $whos_online['last_page_url']; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="center"><?php echo $Qonline->valueInt('customer_id'); ?></td>
+                <td class="dataTableContent"><?php echo $Qonline->valueProtected('full_name'); ?></td>
+                <td class="dataTableContent" align="center"><?php echo $Qonline->value('ip_address'); ?></td>
+                <td class="dataTableContent"><?php echo date('H:i:s', $Qonline->value('time_entry')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo date('H:i:s', $Qonline->value('time_last_click')); ?></td>
+                <td class="dataTableContent"><?php if (preg_match('/^(.*)osCsid=[A-Z0-9,-]+[&]*(.*)/i', $Qonline->value('last_page_url'), $array)) { echo $array[1] . $array[2]; } else { echo $Qonline->value('last_page_url'); } ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($info) && is_object($info) && ($Qonline->value('session_id') == $info->session_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
 ?>
               <tr>
-                <td class="smallText" colspan="7"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, tep_db_num_rows($whos_online_query)); ?></td>
+                <td colspan="9"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+                  <tr>
+                    <td class="smallText" valign="top"><?php echo $Qonline->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qonline->getPageSetLinks(); ?></td>
+                  </tr>
+                </table></td>
               </tr>
             </table></td>
 <?php
@@ -83,30 +101,45 @@
     $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
 
     if ( $info->customer_id > 0 ) {
-      $products_query = tep_db_query("select cb.customers_basket_quantity, cb.products_id, pd.products_name from " . TABLE_CUSTOMERS_BASKET . " cb, " . TABLE_PRODUCTS_DESCRIPTION . " pd where cb.customers_id = '" . (int)$info->customer_id . "' and cb.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "'");
+      $Qproducts = $OSCOM_Db->get([
+        'customers_basket cb',
+        'products_description pd'
+      ], [
+        'cb.customers_basket_quantity',
+        'cb.products_id',
+        'pd.products_name'
+      ], [
+        'cb.customers_id' => (int)$info->customer_id,
+        'cb.products_id' => [
+          'rel' => 'pd.products_id'
+        ],
+        'pd.language_id' => $_SESSION['languages_id']
+      ]);
 
-      if ( tep_db_num_rows($products_query) ) {
+      if ($Qproducts->fetch() !== false) {
         $shoppingCart = new shoppingCart();
 
-        while ( $products = tep_db_fetch_array($products_query) ) {
-          $contents[] = array('text' => $products['customers_basket_quantity'] . ' x ' . $products['products_name']);
+        do {
+          $contents[] = [
+            'text' => $Qproducts->valueInt('customers_basket_quantity') . ' x ' . $Qproducts->value('products_name')
+          ];
 
-          $attributes = array();
+          $attributes = [];
 
-          if ( strpos($products['products_id'], '{') !== false ) {
-            $combos = array();
-            preg_match_all('/(\{[0-9]+\}[0-9]+){1}/', $products['products_id'], $combos);
+          if (strpos($Qproducts->value('products_id'), '{') !== false) {
+            $combos = [];
+            preg_match_all('/(\{[0-9]+\}[0-9]+){1}/', $Qproducts->value('products_id'), $combos);
 
-            foreach ( $combos[0] as $combo ) {
-              $att = array();
+            foreach ($combos[0] as $combo) {
+              $att = [];
               preg_match('/\{([0-9]+)\}([0-9]+)/', $combo, $att);
 
               $attributes[$att[1]] = $att[2];
             }
           }
 
-          $shoppingCart->add_cart(tep_get_prid($products['products_id']), $products['customers_basket_quantity'], $attributes);
-        }
+          $shoppingCart->add_cart(tep_get_prid($Qproducts->value('products_id')), $Qproducts->valueInt('customers_basket_quantity'), $attributes);
+        } while ($Qproducts->fetch());
 
         $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $currencies->format($shoppingCart->show_total()));
       } else {

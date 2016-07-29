@@ -78,7 +78,6 @@
       } else {
         if ($qty == '') $qty = '1'; // if no quantity is supplied, then add '1' to the customers basket
 
-        $this->contents[] = array($products_id);
         $this->contents[$products_id] = array('qty' => $qty);
 // insert into database
         if ($customer_id) tep_db_query("insert into " . TABLE_CUSTOMERS_BASKET . " (customers_id, products_id, customers_basket_quantity, customers_basket_date_added) values ('" . (int)$customer_id . "', '" . tep_db_input($products_id) . "', '" . tep_db_input($qty) . "', '" . date('Ymd') . "')");
@@ -146,7 +145,7 @@
     }
 
     function in_cart($products_id) {
-      if ($this->contents[$products_id]) {
+      if (isset($this->contents[$products_id])) {
         return true;
       } else {
         return false;

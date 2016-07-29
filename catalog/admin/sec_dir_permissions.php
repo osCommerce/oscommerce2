@@ -42,11 +42,12 @@
     return $result;
   }
 
-  $whitelist_array = array();
+  $whitelist_array = [];
 
-  $whitelist_query = tep_db_query("select directory from " . TABLE_SEC_DIRECTORY_WHITELIST);
-  while ($whitelist = tep_db_fetch_array($whitelist_query)) {
-    $whitelist_array[] = $whitelist['directory'];
+  $Qwhitelist = $OSCOM_Db->get('sec_directory_whitelist', 'directory');
+
+  while ($Qwhitelist->fetch()) {
+    $whitelist_array[] = $Qwhitelist->value('directory');
   }
 
   $admin_dir = basename(DIR_FS_ADMIN);

@@ -28,8 +28,14 @@
 
         if ($store_logo->parse()) {
           if ($store_logo->save()) {
+            $OSCOM_Db->save('configuration', [
+              'configuration_value' => $store_logo->filename,
+              'last_modified' => 'now()'
+            ], [
+              'configuration_key' => 'STORE_LOGO'
+            ]);
+
             $messageStack->add_session(SUCCESS_LOGO_UPDATED, 'success');
-            tep_db_query("update configuration set configuration_value = '" . tep_db_input($store_logo->filename) . "', last_modified = now() where configuration_value = '" . STORE_LOGO . "'");
           } else {
             $error = true;
           }

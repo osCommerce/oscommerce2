@@ -15,31 +15,45 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
-        $tax_class_title = tep_db_prepare_input($_POST['tax_class_title']);
-        $tax_class_description = tep_db_prepare_input($_POST['tax_class_description']);
+        $tax_class_title = HTML::sanitize($_POST['tax_class_title']);
+        $tax_class_description = HTML::sanitize($_POST['tax_class_description']);
 
-        tep_db_query("insert into " . TABLE_TAX_CLASS . " (tax_class_title, tax_class_description, date_added) values ('" . tep_db_input($tax_class_title) . "', '" . tep_db_input($tax_class_description) . "', now())");
+        $OSCOM_Db->save('tax_class', [
+          'tax_class_title' => $tax_class_title,
+          'tax_class_description' => $tax_class_description,
+          'date_added' => 'now()'
+        ]);
 
         OSCOM::redirect(FILENAME_TAX_CLASSES);
         break;
       case 'save':
-        $tax_class_id = tep_db_prepare_input($_GET['tID']);
-        $tax_class_title = tep_db_prepare_input($_POST['tax_class_title']);
-        $tax_class_description = tep_db_prepare_input($_POST['tax_class_description']);
+        $tax_class_id = HTML::sanitize($_GET['tID']);
+        $tax_class_title = HTML::sanitize($_POST['tax_class_title']);
+        $tax_class_description = HTML::sanitize($_POST['tax_class_description']);
 
-        tep_db_query("update " . TABLE_TAX_CLASS . " set tax_class_id = '" . (int)$tax_class_id . "', tax_class_title = '" . tep_db_input($tax_class_title) . "', tax_class_description = '" . tep_db_input($tax_class_description) . "', last_modified = now() where tax_class_id = '" . (int)$tax_class_id . "'");
+        $OSCOM_Db->save('tax_class', [
+          'tax_class_title' => $tax_class_title,
+          'tax_class_description' => $tax_class_description,
+          'last_modified' => 'now()'
+        ], [
+          'tax_class_id' => (int)$tax_class_id
+        ]);
 
         OSCOM::redirect(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tax_class_id);
         break;
       case 'deleteconfirm':
-        $tax_class_id = tep_db_prepare_input($_GET['tID']);
+        $tax_class_id = HTML::sanitize($_GET['tID']);
 
-        tep_db_query("delete from " . TABLE_TAX_CLASS . " where tax_class_id = '" . (int)$tax_class_id . "'");
+        $OSCOM_Db->delete('tax_class', ['tax_class_id' => (int)$tax_class_id]);
 
         OSCOM::redirect(FILENAME_TAX_CLASSES, 'page=' . $_GET['page']);
         break;
@@ -66,22 +80,23 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  $classes_query_raw = "select tax_class_id, tax_class_title, tax_class_description, last_modified, date_added from " . TABLE_TAX_CLASS . " order by tax_class_title";
-  $classes_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $classes_query_raw, $classes_query_numrows);
-  $classes_query = tep_db_query($classes_query_raw);
-  while ($classes = tep_db_fetch_array($classes_query)) {
-    if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ($_GET['tID'] == $classes['tax_class_id']))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
-      $tcInfo = new objectInfo($classes);
+  $Qclasses = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS tax_class_id, tax_class_title, tax_class_description, last_modified, date_added from :table_tax_class order by tax_class_title limit :page_set_offset, :page_set_max_results');
+  $Qclasses->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qclasses->execute();
+
+  while ($Qclasses->fetch()) {
+    if ((!isset($_GET['tID']) || (isset($_GET['tID']) && ((int)$_GET['tID'] === $Qclasses->valueInt('tax_class_id')))) && !isset($tcInfo) && (substr($action, 0, 3) != 'new')) {
+      $tcInfo = new objectInfo($Qclasses->toArray());
     }
 
-    if (isset($tcInfo) && is_object($tcInfo) && ($classes['tax_class_id'] == $tcInfo->tax_class_id)) {
+    if (isset($tcInfo) && is_object($tcInfo) && ($Qclasses->valueInt('tax_class_id') === (int)$tcInfo->tax_class_id)) {
       echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit') . '\'">' . "\n";
     } else {
-      echo'              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes['tax_class_id']) . '\'">' . "\n";
+      echo'              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $Qclasses->valueInt('tax_class_id')) . '\'">' . "\n";
     }
 ?>
-                <td class="dataTableContent"><?php echo $classes['tax_class_title']; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($tcInfo) && is_object($tcInfo) && ($classes['tax_class_id'] == $tcInfo->tax_class_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $classes['tax_class_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo $Qclasses->value('tax_class_title'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($tcInfo) && is_object($tcInfo) && ($Qclasses->valueInt('tax_class_id') === (int)$tcInfo->tax_class_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $Qclasses->valueInt('tax_class_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -89,8 +104,8 @@
               <tr>
                 <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $classes_split->display_count($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
-                    <td class="smallText" align="right"><?php echo $classes_split->display_links($classes_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qclasses->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_TAX_CLASSES); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qclasses->getPageSetLinks(); ?></td>
                   </tr>
 <?php
   if (empty($action)) {

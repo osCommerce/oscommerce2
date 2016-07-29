@@ -15,6 +15,10 @@
 
   require('includes/application_top.php');
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (tep_not_null($action)) {
@@ -29,21 +33,28 @@
         OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID']);
         break;
       case 'update':
-        $reviews_id = tep_db_prepare_input($_GET['rID']);
-        $reviews_rating = tep_db_prepare_input($_POST['reviews_rating']);
-        $reviews_text = tep_db_prepare_input($_POST['reviews_text']);
-        $reviews_status = tep_db_prepare_input($_POST['reviews_status']);
+        $reviews_id = HTML::sanitize($_GET['rID']);
+        $reviews_rating = HTML::sanitize($_POST['reviews_rating']);
+        $reviews_text = HTML::sanitize($_POST['reviews_text']);
+        $reviews_status = HTML::sanitize($_POST['reviews_status']);
 
-        tep_db_query("update " . TABLE_REVIEWS . " set reviews_rating = '" . tep_db_input($reviews_rating) . "', reviews_status = '" . tep_db_input($reviews_status) . "', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
-        tep_db_query("update " . TABLE_REVIEWS_DESCRIPTION . " set reviews_text = '" . tep_db_input($reviews_text) . "' where reviews_id = '" . (int)$reviews_id . "'");
+        $OSCOM_Db->save('reviews', [
+          'reviews_rating' => $reviews_rating,
+          'reviews_status' => $reviews_status,
+          'last_modified' => 'now()'
+        ], [
+          'reviews_id' => (int)$reviews_id
+        ]);
+
+        $OSCOM_Db->save('reviews_description', ['reviews_text' => $reviews_text], ['reviews_id' => (int)$reviews_id]);
 
         OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews_id);
         break;
       case 'deleteconfirm':
-        $reviews_id = tep_db_prepare_input($_GET['rID']);
+        $reviews_id = HTML::sanitize($_GET['rID']);
 
-        tep_db_query("delete from " . TABLE_REVIEWS . " where reviews_id = '" . (int)$reviews_id . "'");
-        tep_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$reviews_id . "'");
+        $OSCOM_Db->delete('reviews', ['reviews_id' => (int)$reviews_id]);
+        $OSCOM_Db->delete('reviews_description', ['reviews_id' => (int)$reviews_id]);
 
         OSCOM::redirect(FILENAME_REVIEWS, 'page=' . $_GET['page']);
         break;
@@ -62,27 +73,53 @@
         </table></td>
       </tr>
 <?php
-  if ($action == 'edit') {
-    $rID = tep_db_prepare_input($_GET['rID']);
+  if (($action == 'edit') || ($action == 'preview')) {
+    $rID = HTML::sanitize($_GET['rID']);
 
-    $reviews_query = tep_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
-    $reviews = tep_db_fetch_array($reviews_query);
+    $Qreviews = $OSCOM_Db->get([
+      'reviews r',
+      'reviews_description rd'
+    ], [
+      'r.reviews_id',
+      'r.products_id',
+      'r.customers_name',
+      'r.date_added',
+      'r.last_modified',
+      'r.reviews_read',
+      'rd.reviews_text',
+      'r.reviews_rating',
+      'r.reviews_status'
+    ], [
+      'r.reviews_id' => [
+        'val' => (int)$rID,
+        'ref' => 'rd.reviews_id'
+      ]
+    ]);
 
-    $products_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-    $products = tep_db_fetch_array($products_query);
+    $Qproducts = $OSCOM_Db->get([
+      'products p',
+      'products_description pd'
+    ], [
+      'pd.products_name',
+      'p.products_image',
+    ], [
+      'p.products_id' => [
+        'val' => $Qreviews->valueInt('products_id'),
+        'ref' => 'pd.products_id'
+      ],
+      'pd.language_id' => $_SESSION['languages_id']
+    ]);
 
-    $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-    $products_name = tep_db_fetch_array($products_name_query);
-
-    $rInfo_array = array_merge($reviews, $products, $products_name);
+    $rInfo_array = array_merge($Qreviews->toArray(), $Qproducts->toArray());
     $rInfo = new objectInfo($rInfo_array);
 
-    if (!isset($rInfo->reviews_status)) $rInfo->reviews_status = '1';
-    switch ($rInfo->reviews_status) {
-      case '0': $in_status = false; $out_status = true; break;
-      case '1':
-      default: $in_status = true; $out_status = false;
-    }
+    if ($action == 'edit') {
+      if (!isset($rInfo->reviews_status)) $rInfo->reviews_status = '1';
+      switch ($rInfo->reviews_status) {
+        case '0': $in_status = false; $out_status = true; break;
+        case '1':
+        default: $in_status = true; $out_status = false;
+      }
 ?>
       <tr><?php echo HTML::form('review', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=preview')); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -109,29 +146,17 @@
         <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo TEXT_BAD; ?>&nbsp;<?php for ($i=1; $i<=5; $i++) echo HTML::radioField('reviews_rating', $i, $rInfo->reviews_rating == $i) . '&nbsp;'; echo TEXT_GOOD; ?></td>
       </tr>
       <tr>
-        <td align="right" class="smallText"><?php echo HTML::hiddenField('reviews_id', $rInfo->reviews_id) . HTML::hiddenField('products_id', $rInfo->products_id) . HTML::hiddenField('customers_name', $rInfo->customers_name) . HTML::hiddenField('products_name', $rInfo->products_name) . HTML::hiddenField('products_image', $rInfo->products_image) . HTML::hiddenField('date_added', $rInfo->date_added) . HTML::button(IMAGE_PREVIEW, 'fa fa-file-o') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
+        <td align="right" class="smallText"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'])); ?></td>
       </form></tr>
 <?php
-  } elseif ($action == 'preview') {
-    if (tep_not_null($_POST)) {
-      $rInfo = new objectInfo($_POST);
     } else {
-      $rID = tep_db_prepare_input($_GET['rID']);
-
-      $reviews_query = tep_db_query("select r.reviews_id, r.products_id, r.customers_name, r.date_added, r.last_modified, r.reviews_read, rd.reviews_text, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$rID . "' and r.reviews_id = rd.reviews_id");
-      $reviews = tep_db_fetch_array($reviews_query);
-
-      $products_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-      $products = tep_db_fetch_array($products_query);
-
-      $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-      $products_name = tep_db_fetch_array($products_name_query);
-
-      $rInfo_array = array_merge($reviews, $products, $products_name);
-      $rInfo = new objectInfo($rInfo_array);
-    }
+      if (tep_not_null($_POST)) {
+        $rInfo->reviews_rating = HTML::sanitize($_POST['reviews_rating']);
+        $rInfo->reviews_text = HTML::sanitize($_POST['reviews_text']);
+        $rInfo->reviews_status = HTML::sanitize($_POST['reviews_status']);
+      }
 ?>
-      <tr><?php echo HTML::form('update', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=update', 'post', 'enctype="multipart/form-data"')); ?>
+      <tr><?php if (tep_not_null($_POST)) { echo HTML::form('update', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=update')); } ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo tep_date_short($rInfo->date_added); ?></td>
@@ -142,7 +167,7 @@
       <tr>
         <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(tep_db_output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
+            <td valign="top" class="main"><strong><?php echo ENTRY_REVIEW; ?></strong><br /><br /><?php echo nl2br(HTML::output(tep_break_string($rInfo->reviews_text, 15))); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -150,28 +175,29 @@
         <td class="main"><strong><?php echo ENTRY_RATING; ?></strong>&nbsp;<?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<small>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</small></td>
       </tr>
 <?php
-    if (tep_not_null($_POST)) {
-/* Re-Post all POST'ed variables */
-
-      foreach ( $_POST as $key => $value ) echo HTML::hiddenField($key, htmlspecialchars(stripslashes($value)));
+      if (tep_not_null($_POST)) {
+        echo HTML::hiddenField('reviews_rating', $rInfo->reviews_rating);
+        echo HTML::hiddenField('reviews_text', $rInfo->reviews_text);
+        echo HTML::hiddenField('reviews_status', $rInfo->reviews_status);
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id)); ?></td>
       </form></tr>
 <?php
-    } else {
-      if (isset($_GET['origin'])) {
-        $back_url = $_GET['origin'];
-        $back_url_params = '';
       } else {
-        $back_url = FILENAME_REVIEWS;
-        $back_url_params = 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id;
-      }
+        if (isset($_GET['origin'])) {
+          $back_url = $_GET['origin'];
+          $back_url_params = '';
+        } else {
+          $back_url = FILENAME_REVIEWS;
+          $back_url_params = 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id;
+        }
 ?>
       <tr>
         <td align="right" class="smallText"><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link($back_url, $back_url_params)); ?></td>
       </tr>
 <?php
+      }
     }
   } else {
 ?>
@@ -187,55 +213,77 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-    $reviews_query_raw = "select reviews_id, products_id, date_added, last_modified, reviews_rating, reviews_status from " . TABLE_REVIEWS . " order by date_added DESC";
-    $reviews_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $reviews_query_raw, $reviews_query_numrows);
-    $reviews_query = tep_db_query($reviews_query_raw);
-    while ($reviews = tep_db_fetch_array($reviews_query)) {
-      if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ($_GET['rID'] == $reviews['reviews_id']))) && !isset($rInfo)) {
-        $reviews_text_query = tep_db_query("select r.reviews_read, r.customers_name, length(rd.reviews_text) as reviews_text_size from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . (int)$reviews['reviews_id'] . "' and r.reviews_id = rd.reviews_id");
-        $reviews_text = tep_db_fetch_array($reviews_text_query);
+    $Qreviews = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS reviews_id, products_id, date_added, last_modified, reviews_rating, reviews_status from :table_reviews order by date_added desc limit :page_set_offset, :page_set_max_results');
+    $Qreviews->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+    $Qreviews->execute();
 
-        $products_image_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-        $products_image = tep_db_fetch_array($products_image_query);
+    while ($Qreviews->fetch()) {
+      if ((!isset($_GET['rID']) || (isset($_GET['rID']) && ((int)$_GET['rID'] === $Qreviews->valueInt('reviews_id')))) && !isset($rInfo)) {
+        $Qextra = $OSCOM_Db->get([
+          'reviews r',
+          'reviews_description rd'
+        ], [
+          'r.reviews_read',
+          'r.customers_name',
+          'length(rd.reviews_text) as reviews_text_size'
+        ], [
+          'r.reviews_id' => [
+            'val' => $Qreviews->valueInt('reviews_id'),
+            'ref' => 'rd.reviews_id'
+          ]
+        ]);
 
-        $products_name_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$reviews['products_id'] . "' and language_id = '" . (int)$languages_id . "'");
-        $products_name = tep_db_fetch_array($products_name_query);
+        $Qproducts = $OSCOM_Db->get([
+          'products p',
+          'products_description pd'
+        ], [
+          'pd.products_name',
+          'p.products_image',
+        ], [
+          'p.products_id' => [
+            'val' => $Qreviews->valueInt('products_id'),
+            'ref' => 'pd.products_id'
+          ],
+          'pd.language_id' => $_SESSION['languages_id']
+        ]);
 
-        $reviews_average_query = tep_db_query("select (avg(reviews_rating) / 5 * 100) as average_rating from " . TABLE_REVIEWS . " where products_id = '" . (int)$reviews['products_id'] . "'");
-        $reviews_average = tep_db_fetch_array($reviews_average_query);
+        $Qaverage = $OSCOM_Db->get('reviews', [
+          '(avg(reviews_rating) / 5 * 100) as average_rating'
+        ], [
+          'products_id' => $Qreviews->valueInt('products_id')
+        ]);
 
-        $review_info = array_merge($reviews_text, $reviews_average, $products_name);
-        $rInfo_array = array_merge($reviews, $review_info, $products_image);
+        $rInfo_array = array_merge($Qreviews->toArray(), $Qextra->toArray(), $Qproducts->toArray(), $Qaverage->toArray());
         $rInfo = new objectInfo($rInfo_array);
       }
 
-      if (isset($rInfo) && is_object($rInfo) && ($reviews['reviews_id'] == $rInfo->reviews_id) ) {
+      if (isset($rInfo) && is_object($rInfo) && ($Qreviews->valueInt('reviews_id') === (int)$rInfo->reviews_id) ) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=preview') . '\'">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews['reviews_id']) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews['reviews_id'] . '&action=preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . tep_get_products_name($reviews['products_id']); ?></td>
-                <td class="dataTableContent" align="right"><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif'); ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_date_short($reviews['date_added']); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id') . '&action=preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . tep_get_products_name($Qreviews->valueInt('products_id')); ?></td>
+                <td class="dataTableContent" align="right"><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $Qreviews->valueInt('reviews_rating') . '.gif'); ?></td>
+                <td class="dataTableContent" align="right"><?php echo tep_date_short($Qreviews->value('date_added')); ?></td>
                 <td class="dataTableContent" align="center">
 <?php
-      if ($reviews['reviews_status'] == '1') {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=0&rID=' . $reviews['reviews_id'] . '&page=' . $_GET['page']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+      if ($Qreviews->valueInt('reviews_status') === 1) {
+        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=0&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=1&rID=' . $reviews['reviews_id'] . '&page=' . $_GET['page']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'action=setflag&flag=1&rID=' . $Qreviews->valueInt('reviews_id') . '&page=' . $_GET['page']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (is_object($rInfo)) && ($reviews['reviews_id'] == $rInfo->reviews_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews['reviews_id']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if ( (is_object($rInfo)) && ($Qreviews->valueInt('reviews_id') === (int)$rInfo->reviews_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
 ?>
               <tr>
-                <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr>
-                    <td class="smallText" valign="top"><?php echo $reviews_split->display_count($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
-                    <td class="smallText" align="right"><?php echo $reviews_split->display_links($reviews_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                    <td class="smallText" valign="top"><?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></td>
+                    <td class="smallText" align="right"><?php echo $Qreviews->getPageSetLinks(); ?></td>
                   </tr>
                 </table></td>
               </tr>

@@ -17,6 +17,10 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
+  if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
+    $_GET['page'] = 1;
+  }
+
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
@@ -38,26 +42,23 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_TOTAL_PURCHASED; ?>&nbsp;</td>
               </tr>
 <?php
-  if (isset($_GET['page']) && ($_GET['page'] > 1)) $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS - MAX_DISPLAY_SEARCH_RESULTS;
-  $customers_query_raw = "select c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price) as ordersum from " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_firstname, c.customers_lastname order by ordersum DESC";
-  $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_query_raw, $customers_query_numrows);
-// fix counted customers
-  $customers_query_numrows = tep_db_query("select customers_id from " . TABLE_ORDERS . " group by customers_id");
-  $customers_query_numrows = tep_db_num_rows($customers_query_numrows);
-
   $rows = 0;
-  $customers_query = tep_db_query($customers_query_raw);
-  while ($customers = tep_db_fetch_array($customers_query)) {
+
+  $Qcustomers = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS c.customers_firstname, c.customers_lastname, sum(op.products_quantity * op.final_price) as ordersum from :table_customers c, :table_orders_products op, :table_orders o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_firstname, c.customers_lastname order by ordersum desc limit :page_set_offset, :page_set_max_results');
+  $Qcustomers->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qcustomers->execute();
+
+  while ($Qcustomers->fetch()) {
     $rows++;
 
     if (strlen($rows) < 2) {
       $rows = '0' . $rows;
     }
 ?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']); ?>'">
+              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href='<?php echo OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $Qcustomers->value('customers_lastname')); ?>'">
                 <td class="dataTableContent"><?php echo $rows; ?>.</td>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname']) . '">' . $customers['customers_firstname'] . ' ' . $customers['customers_lastname'] . '</a>'; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $currencies->format($customers['ordersum']); ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'search=' . $Qcustomers->value('customers_lastname')) . '">' . $Qcustomers->value('customers_firstname') . ' ' . $Qcustomers->value('customers_lastname') . '</a>'; ?></td>
+                <td class="dataTableContent" align="right"><?php echo $currencies->format($Qcustomers->value('ordersum')); ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -67,8 +68,8 @@
           <tr>
             <td colspan="3"><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
-                <td class="smallText" valign="top"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
-                <td class="smallText" align="right"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?>&nbsp;</td>
+                <td class="smallText" valign="top"><?php echo $Qcustomers->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></td>
+                <td class="smallText" align="right"><?php echo $Qcustomers->getPageSetLinks(); ?></td>
               </tr>
             </table></td>
           </tr>
