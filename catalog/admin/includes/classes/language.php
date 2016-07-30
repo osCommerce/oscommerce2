@@ -16,7 +16,7 @@
   use OSC\OM\Registry;
 
   class language {
-    var $languages, $catalog_languages, $browser_languages, $language;
+    var $languages, $catalog_languages, $browser_languages;
 
     function language($lng = '') {
       $OSCOM_Db = Registry::get('Db');

@@ -198,7 +198,7 @@
     } else {
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
 
-      include($module_language_directory . $language . '/modules/' . $module_type . '/' . $file);
+      include($module_language_directory . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
       include($module_directory . $file);
 
       $class = substr($file, 0, strrpos($file, '.'));

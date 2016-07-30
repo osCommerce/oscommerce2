@@ -1515,7 +1515,7 @@
       'orders_status_id',
       'orders_status_name'
     ], [
-      'language_id' => (int)$languages_id
+      'language_id' => (int)$_SESSION['languages_id']
     ], 'orders_status_name');
 
     while ($Qstatus->fetch()) {

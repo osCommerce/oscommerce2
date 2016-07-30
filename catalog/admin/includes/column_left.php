@@ -32,8 +32,8 @@
       natcasesort($files);
 
       foreach ( $files as $file ) {
-        if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file) ) {
-          include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/boxes/' . $file);
+        if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
+          include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
         }
 
         include($dir->path . '/' . $file);

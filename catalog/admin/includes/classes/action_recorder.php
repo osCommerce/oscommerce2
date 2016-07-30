@@ -16,7 +16,7 @@
 
   class actionRecorderAdmin extends actionRecorder {
     function actionRecorderAdmin($module, $user_id = null, $user_name = null) {
-      global $language, $PHP_SELF;
+      global $PHP_SELF;
 
       $module = HTML::sanitize(str_replace(' ', '', $module));
 
@@ -24,7 +24,7 @@
         if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
           if (!class_exists($module)) {
             if (file_exists(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
-              include(DIR_FS_CATALOG . 'includes/languages/' . $language . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              include(DIR_FS_CATALOG . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
               include(DIR_FS_CATALOG . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
             } else {
               return false;

@@ -17,9 +17,7 @@
     var $type = 'warning';
 
     function securityCheck_extended_last_run() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended_last_run.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended_last_run.php');
     }
 
     function pass() {

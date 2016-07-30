@@ -26,8 +26,6 @@
     }
 
     function query($order_id) {
-      global $languages_id;
-
       $OSCOM_Db = Registry::get('Db');
 
       $Qorder = $OSCOM_Db->get([

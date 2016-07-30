@@ -17,9 +17,7 @@
     var $has_doc = true;
 
     function securityCheckExtended_ext_directory_listing() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended/ext_directory_listing.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/ext_directory_listing.php');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_EXT_DIRECTORY_LISTING_TITLE;
     }

@@ -134,7 +134,7 @@
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
     $languages_array[] = array('id' => $languages[$i]['code'],
                                'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $language) {
+    if ($languages[$i]['directory'] == $_SESSION['language']) {
       $languages_selected = $languages[$i]['code'];
     }
   }

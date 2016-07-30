@@ -32,8 +32,8 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    if (file_exists(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/action_recorder/' . $file)) {
-      include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/action_recorder/' . $file);
+    if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file)) {
+      include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file);
     }
 
     include(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file);

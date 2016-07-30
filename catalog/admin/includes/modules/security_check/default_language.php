@@ -14,9 +14,7 @@
     var $type = 'error';
 
     function securityCheck_default_language() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/default_language.php');
+      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/default_language.php');
     }
 
     function pass() {

@@ -66,11 +66,6 @@ class Admin extends \OSC\OM\SitesAbstract
 
         $OSCOM_Session->start();
 
-// TODO remove when no more global sessions exist
-        foreach ($_SESSION as $k => $v) {
-            $GLOBALS[$k] =& $_SESSION[$k];
-        }
-
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
             $lng = new \language();
