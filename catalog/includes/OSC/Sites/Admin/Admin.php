@@ -32,9 +32,6 @@ class Admin extends \OSC\OM\SitesAbstract
         $OSCOM_Db = Db::initialize();
         Registry::set('Db', $OSCOM_Db);
 
-// TODO legacy
-        tep_db_connect() or die('Unable to connect to database server!');
-
         Registry::set('Hooks', new Hooks());
 
 // set the application parameters

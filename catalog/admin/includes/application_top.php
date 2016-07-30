@@ -32,7 +32,6 @@
 
   require(DIR_WS_INCLUDES . 'filenames.php');
   require(DIR_WS_INCLUDES . 'database_tables.php');
-  require(DIR_WS_FUNCTIONS . 'database.php');
   require(DIR_WS_FUNCTIONS . 'general.php');
   require(DIR_WS_CLASSES . 'logger.php');
   require(DIR_WS_CLASSES . 'shopping_cart.php');
@@ -41,7 +40,6 @@
   require(DIR_WS_CLASSES . 'table_block.php');
   require(DIR_WS_CLASSES . 'box.php');
   require(DIR_WS_CLASSES . 'message_stack.php');
-  require(DIR_WS_CLASSES . 'split_page_results.php');
   require(DIR_WS_CLASSES . 'object_info.php');
   require(DIR_WS_CLASSES . 'mime.php');
   require(DIR_WS_CLASSES . 'email.php');

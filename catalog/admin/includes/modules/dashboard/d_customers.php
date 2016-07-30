@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class d_customers {
     var $code = 'd_customers';
@@ -31,17 +32,32 @@
     }
 
     function getOutput() {
+      $OSCOM_Db = Registry::get('Db');
+
       $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
                 '  <tr class="dataTableHeadingRow">' .
                 '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_TITLE . '</td>' .
                 '    <td class="dataTableHeadingContent" align="right">' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_DATE . '</td>' .
                 '  </tr>';
 
-      $customers_query = tep_db_query("select c.customers_id, c.customers_lastname, c.customers_firstname, ci.customers_info_date_account_created from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_id = ci.customers_info_id order by ci.customers_info_date_account_created desc limit 6");
-      while ($customers = tep_db_fetch_array($customers_query)) {
+      $Qcustomers = $OSCOM_Db->get([
+        'customers c',
+        'customers_info ci'
+      ], [
+        'c.customers_id',
+        'c.customers_lastname',
+        'c.customers_firstname',
+        'ci.customers_info_date_account_created'
+      ], [
+        'c.customers_id' => [
+          'rel' => 'ci.customers_info_id'
+        ]
+      ], 'ci.customers_info_date_account_created desc', 6);
+
+      while ($Qcustomers->fetch()) {
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'cID=' . (int)$customers['customers_id'] . '&action=edit') . '">' . HTML::outputProtected($customers['customers_firstname'] . ' ' . $customers['customers_lastname']) . '</a></td>' .
-                   '    <td class="dataTableContent" align="right">' . tep_date_short($customers['customers_info_date_account_created']) . '</td>' .
+                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'cID=' . $Qcustomers->valueInt('customers_id') . '&action=edit') . '">' . HTML::outputProtected($Qcustomers->value('customers_firstname') . ' ' . $Qcustomers->value('customers_lastname')) . '</a></td>' .
+                   '    <td class="dataTableContent" align="right">' . tep_date_short($Qcustomers->value('customers_info_date_account_created')) . '</td>' .
                    '  </tr>';
       }
 
@@ -59,12 +75,32 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Customers Module', 'MODULE_ADMIN_DASHBOARD_CUSTOMERS_STATUS', 'True', 'Do you want to show the newest customers on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_CUSTOMERS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Customers Module',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_CUSTOMERS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to show the newest customers on the dashboard?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_CUSTOMERS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

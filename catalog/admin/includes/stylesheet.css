@@ -22,9 +22,6 @@ a.menuBoxHeadingLink:hover { }
 a.menuBoxContentLink { color: #616060; font-weight: normal; text-decoration: none; }
 a.menuBoxContentLink:hover { text-decoration: underline; }
 
-a.splitPageLink { color: #0000FF; font-weight: normal; text-decoration: none; }
-a.splitPageLink:hover { text-decoration: underline; background-color: #FFFF33; }
-
 /* menu box */
 .menuBoxHeading { color: #616060; background-color: #ffffff; }
 .menuBoxContent { color: #616060; }

@@ -12,6 +12,8 @@
   HTML_Graphs (v1.5 1998/11/05 06:15:52) by Phil Davis, http://www.pobox.com/~pdavis/
 */
 
+  use OSC\OM\Registry;
+
 ////
 // calls routines to initialize defaults, set up table
 // print data, and close table.
@@ -36,7 +38,7 @@
     $html_graph_string .= end_graph();
 
 // Set the error level back to where it was.
-    error_reporting($er);  
+    error_reporting($er);
 
     return $html_graph_string;
   }
@@ -86,12 +88,12 @@
     if ( ($vals['vlabel']) || ($vals['hlabel']) ) {
       if ( ($vals['type'] == 0) || ($vals['type'] == 2) ) {
 // horizontal chart
-        $rowspan = sizeof($names) + 1; 
-        $colspan = 3; 
+        $rowspan = sizeof($names) + 1;
+        $colspan = 3;
       } elseif ( ($vals['type'] == 1) || ($vals['type'] == 3) ) {
 // vertical chart
         $rowspan = 3;
-        $colspan = sizeof($names) + 1; 
+        $colspan = sizeof($names) + 1;
       }
 
       $start_graph_string .= '  <tr>' . "\n" .
@@ -145,14 +147,14 @@
 // prints out the actual data for the horizontal chart
   function horizontal_graph($names, $values, $bars, $vals) {
     $horizontal_graph_string = '';
-    for($i = 0, $n = sizeof($values); $i < $n; $i++) { 
+    for($i = 0, $n = sizeof($values); $i < $n; $i++) {
       $horizontal_graph_string .= '  <tr>' . "\n" .
                                   '    <td align="right"';
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['namebgcolor'] . '"';
 
       $horizontal_graph_string .= '><font size="-1" color="' . $vals['namefcolor'] . '" style="' . $vals['namefstyle'] . '">' . $names[$i] . '</font></td>' . "\n" .
-                                  '    <td'; 
+                                  '    <td';
 
 // if a background was choosen don't print cell BGCOLOR
       if (!$vals['background']) $horizontal_graph_string .= ' bgcolor="' . $vals['valuebgcolor'] . '"';
@@ -200,14 +202,14 @@
 
       $vertical_graph_string .= '<img src="' . $bars[$i] . '" width="5" height="';
 
-// values of zero are displayed wrong because a image height of zero 
-// gives a strange behavior in Netscape. For this reason the height 
+// values of zero are displayed wrong because a image height of zero
+// gives a strange behavior in Netscape. For this reason the height
 // is set at 1 pixel if the value is zero. - Jan Diepens
       if ($values[$i] != 0) {
         $vertical_graph_string .= $values[$i] * $vals['scale'];
       } else {
         $vertical_graph_string .= '1';
-      } 
+      }
 
       $vertical_graph_string .= '"></td>' . "\n";
     } // endfor
@@ -268,7 +270,7 @@
                                            '</table>';
       } else {
         $double_horizontal_graph_string .= '<img src="' . $bars[$i] . '" height="10" width="' . ($values[$i] * $vals['scale']) . '">';
-      }          
+      }
 
       if (!$vals['noshowvals']) {
         $double_horizontal_graph_string .= '<i><font size="-3" color="' . $vals['valuefcolor'] . '" style="' . $vals['valuefstyle'] . '">(' . $values[$i] . ')</font></i>';
@@ -365,15 +367,28 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_infoBox($banner_id, $days) {
+    $OSCOM_Db = Registry::get('Db');
+
     $names = array();
     $values = array();
     $dvalues = array();
 
-    $banner_stats_query = tep_db_query("select dayofmonth(banners_history_date) as name, banners_shown as value, banners_clicked as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and to_days(now()) - to_days(banners_history_date) < " . $days . " order by banners_history_date");
-    while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-      $names[] = $banner_stats['name'];
-      $values[] = $banner_stats['value'];
-      $dvalues[] = $banner_stats['dvalue'];
+    $Qstats = $OSCOM_Db->get('banners_history', [
+      'dayofmonth(banners_history_date) as name',
+      'banners_shown as value',
+      'banners_clicked as dvalue'
+    ], [
+      'banners_id' => (int)$banner_id,
+      'to_days(now()) - to_days(banners_history_date)' => [
+        'op' => '<',
+        'val' => (int)$days
+      ]
+    ], 'banners_history_date');
+
+    while ($Qstats->fetch()) {
+      $names[] = $Qstats->value('name');
+      $values[] = $Qstats->valueInt('value');
+      $dvalues[] = $Qstats->valueInt('dvalue');
     }
     $largest = @max($values);
 
@@ -412,13 +427,16 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_yearly($banner_id) {
-    global $banner;
+    $OSCOM_Db = Registry::get('Db');
 
-    $banner_stats_query = tep_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year(banners_history_date)");
-    while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-      $names[] = $banner_stats['year'];
-      $values[] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
-      $dvalues[] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
+    $Qstats = $OSCOM_Db->prepare('select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from :table_banners_history where banners_id = :banners_id group by year(banners_history_date)');
+    $Qstats->bindInt(':banners_id', $banner_id);
+    $Qstats->execute();
+
+    while ($Qstats->fetch()) {
+      $names[] = $Qstats->valueInt('year');
+      $values[] = $Qstats->valueInt('value');
+      $dvalues[] = $Qstats->valueInt('dvalue');
     }
 
     $largest = @max($values);
@@ -458,7 +476,7 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_monthly($banner_id) {
-    global $banner;
+    $OSCOM_Db = Registry::get('Db');
 
     $year = (($_GET['year']) ? $_GET['year'] : date('Y'));
 
@@ -468,11 +486,15 @@
       $dvalues[] = '0';
     }
 
-    $banner_stats_query = tep_db_query("select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and year(banners_history_date) = '" . $year . "' group by month(banners_history_date)");
-    while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-      $names[($banner_stats['banner_month']-1)] = strftime('%b', mktime(0,0,0,$banner_stats['banner_month']));
-      $values[($banner_stats['banner_month']-1)] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
-      $dvalues[($banner_stats['banner_month']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
+    $Qstats = $OSCOM_Db->prepare('select month(banners_history_date) as banner_month, sum(banners_shown) as value, sum(banners_clicked) as dvalue from :table_banners_history where banners_id = :banners_id and year(banners_history_date) = :year group by month(banners_history_date)');
+    $Qstats->bindInt(':banners_id', $banner_id);
+    $Qstats->bindInt(':year', $year);
+    $Qstats->execute();
+
+    while ($Qstats->fetch()) {
+      $names[($Qstats->valueInt('banner_month')-1)] = strftime('%b', mktime(0, 0, 0, $Qstats->valueInt('banner_month')));
+      $values[($Qstats->valueInt('banner_month')-1)] = $Qstats->valueInt('value');
+      $dvalues[($Qstats->valueInt('banner_month')-1)] = $Qstats->valueInt('dvalue');
     }
 
     $largest = @max($values);
@@ -512,7 +534,7 @@
 ////
 // draws a double vertical bar graph for the banner views vs clicks statistics
   function tep_banner_graph_daily($banner_id) {
-    global $banner;
+    $OSCOM_Db = Registry::get('Db');
 
     $year = (isset($_GET['year']) ? $_GET['year'] : date('Y'));
     $month = (isset($_GET['month']) ? $_GET['month'] : date('n'));
@@ -525,11 +547,20 @@
       $dvalues[] = '0';
     }
 
-    $banner_stats_query = tep_db_query("select dayofmonth(banners_history_date) as banner_day, banners_shown as value, banners_clicked as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' and month(banners_history_date) = '" . $month . "' and year(banners_history_date) = '" . $year . "'");
-    while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-      $names[($banner_stats['banner_day']-1)] = $banner_stats['banner_day'];
-      $values[($banner_stats['banner_day']-1)] = (($banner_stats['value']) ? $banner_stats['value'] : '0');
-      $dvalues[($banner_stats['banner_day']-1)] = (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0');
+    $Qstats = $OSCOM_Db->get('banners_history', [
+      'dayofmonth(banners_history_date) as banner_day',
+      'banners_shown as value',
+      'banners_clicked as dvalue'
+    ], [
+      'banners_id' => (int)$banner_id,
+      'month(banners_history_date)' => $month,
+      'year(banners_history_date)' => $year
+    ]);
+
+    while ($Qstats->fetch()) {
+      $names[($Qstats->valueInt('banner_day')-1)] = $Qstats->value('banner_day');
+      $values[($Qstats->valueInt('banner_day')-1)] = $Qstats->bindInt('value');
+      $dvalues[($Qstats->valueInt('banner_day')-1)] = $Qstats->bindInt('dvalue');
     }
 
     $largest = @max($values);

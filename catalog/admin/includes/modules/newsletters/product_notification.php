@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class product_notification {
     var $show_choose_audience, $title, $content;
@@ -23,13 +24,29 @@
     }
 
     function choose_audience() {
-      global $languages_id;
+      $OSCOM_Db = Registry::get('Db');
 
-      $products_array = array();
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.language_id = '" . $languages_id . "' and pd.products_id = p.products_id and p.products_status = '1' order by pd.products_name");
-      while ($products = tep_db_fetch_array($products_query)) {
-        $products_array[] = array('id' => $products['products_id'],
-                                  'text' => $products['products_name']);
+      $products_array = [];
+
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_description pd'
+      ], [
+        'pd.products_id',
+        'pd.products_name'
+      ], [
+        'pd.language_id' => (int)$_SESSION['languages_id'],
+        'pd.products_id' => [
+          'rel' => 'p.products_id'
+        ],
+        'p.products_status' => '1'
+      ], 'pd.products_name');
+
+      while ($Qproducts->fetch()) {
+        $products_array[] = [
+          'id' => $Qproducts->valueInt('products_id'),
+          'text' => $Qproducts->value('products_name')
+        ];
       }
 
 $choose_audience_string = '<script type="text/javascript"><!--
@@ -92,32 +109,51 @@ function selectAll(FormName, SelectBox) {
     }
 
     function confirm() {
+      $OSCOM_Db = Registry::get('Db');
 
       $audience = array();
 
       if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
-        $products_query = tep_db_query("select distinct customers_id from " . TABLE_PRODUCTS_NOTIFICATIONS);
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = '1';
+        $Qproducts = $OSCOM_Db->get('products_notifications', 'distinct customers_id');
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = '1';
         }
 
-        $customers_query = tep_db_query("select customers_info_id from " . TABLE_CUSTOMERS_INFO . " where global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_info_id']] = '1';
+        $Qcustomers = $OSCOM_Db->get('customers_info', 'customers_info_id', ['global_product_notifications' => '1']);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_info_id')] = '1';
         }
       } else {
-        $chosen = $_POST['chosen'];
+        $chosen = [];
 
-        $ids = implode(',', $chosen);
-
-        $products_query = tep_db_query("select distinct customers_id from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id in (" . $ids . ")");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = '1';
+        foreach ($_POST['chosen'] as $id) {
+          if (is_numeric($id) && !in_array($id, $chosen)) {
+            $chosen[] = $id;
+          }
         }
 
-        $customers_query = tep_db_query("select customers_info_id from " . TABLE_CUSTOMERS_INFO . " where global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_info_id']] = '1';
+        $ids = array_map(function($k) {
+          return ':products_id_' . $k;
+        }, array_keys($chosen));
+
+        $Qproducts = $OSCOM_Db->prepare('select distinct customers_id from :table_products_notifications where products_id in (' . implode(', ', $ids) . ')');
+
+        foreach ($chosen as $k => $v) {
+          $Qproducts->bindInt(':products_id_' . $k, $v);
+        }
+
+        $Qproducts->execute();
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = '1';
+        }
+
+        $Qcustomers = $OSCOM_Db->get('customers_info', 'customers_info_id', ['global_product_notifications' => '1']);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_info_id')] = '1';
         }
       }
 
@@ -160,40 +196,105 @@ function selectAll(FormName, SelectBox) {
     }
 
     function send($newsletter_id) {
+      $OSCOM_Db = Registry::get('Db');
 
       $audience = array();
 
       if (isset($_POST['global']) && ($_POST['global'] == 'true')) {
-        $products_query = tep_db_query("select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where c.customers_id = pn.customers_id");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = array('firstname' => $products['customers_firstname'],
-                                                       'lastname' => $products['customers_lastname'],
-                                                       'email_address' => $products['customers_email_address']);
+        $Qproducts = $OSCOM_Db->get([
+          'customers c',
+          'products_notifications pn'
+        ], [
+          'distinct pn.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'pn.customers_id'
+          ]
+        ]);
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = [
+            'firstname' => $Qproducts->value('customers_firstname'),
+            'lastname' => $Qproducts->value('customers_lastname'),
+            'email_address' => $Qproducts->value('customers_email_address')
+          ];
         }
 
-        $customers_query = tep_db_query("select c.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_id = ci.customers_info_id and ci.global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_id']] = array('firstname' => $customers['customers_firstname'],
-                                                        'lastname' => $customers['customers_lastname'],
-                                                        'email_address' => $customers['customers_email_address']);
+        $Qcustomers = $OSCOM_Db->get([
+          'customers c',
+          'customers_info ci'
+        ], [
+          'c.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'ci.customers_info_id'
+          ],
+          'ci.global_product_notifications' => '1'
+        ]);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_id')] = [
+            'firstname' => $Qcustomers->value('customers_firstname'),
+            'lastname' => $Qcustomers->value('customers_lastname'),
+            'email_address' => $Qcustomers->value('customers_email_address')
+          ];
         }
       } else {
-        $chosen = $_POST['chosen'];
+        $chosen = [];
 
-        $ids = implode(',', $chosen);
-
-        $products_query = tep_db_query("select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where c.customers_id = pn.customers_id and pn.products_id in (" . $ids . ")");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = array('firstname' => $products['customers_firstname'],
-                                                       'lastname' => $products['customers_lastname'],
-                                                       'email_address' => $products['customers_email_address']);
+        foreach ($_POST['chosen'] as $id) {
+          if (is_numeric($id) && !in_array($id, $chosen)) {
+            $chosen[] = $id;
+          }
         }
 
-        $customers_query = tep_db_query("select c.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_id = ci.customers_info_id and ci.global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_id']] = array('firstname' => $customers['customers_firstname'],
-                                                        'lastname' => $customers['customers_lastname'],
-                                                        'email_address' => $customers['customers_email_address']);
+        $ids = array_map(function($k) {
+          return ':products_id_' . $k;
+        }, array_keys($chosen));
+
+        $Qproducts = $OSCOM_Db->prepare('select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from :table_customers c, :table_products_notifications pn where c.customers_id = pn.customers_id and pn.products_id in (' . implode(', ', $ids) . ')');
+
+        foreach ($chosen as $k => $v) {
+          $Qproducts->bindInt(':products_id_' . $k, $v);
+        }
+
+        $Qproducts->execute();
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = [
+            'firstname' => $Qproducts->value('customers_firstname'),
+            'lastname' => $Qproducts->value('customers_lastname'),
+            'email_address' => $Qproducts->value('customers_email_address')
+          ];
+        }
+
+        $Qcustomers = $OSCOM_Db->get([
+          'customers c',
+          'customers_info ci'
+        ], [
+          'c.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'ci.customers_info_id'
+          ],
+          'ci.global_product_notifications' => '1'
+        ]);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_id')] = [
+            'firstname' => $Qcustomers->value('customers_firstname'),
+            'lastname' => $Qcustomers->value('customers_lastname'),
+            'email_address' => $Qcustomers->value('customers_email_address')
+          ];
         }
       }
 
@@ -213,8 +314,12 @@ function selectAll(FormName, SelectBox) {
         $mimemessage->send($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], '', EMAIL_FROM, $this->title);
       }
 
-      $newsletter_id = tep_db_prepare_input($newsletter_id);
-      tep_db_query("update " . TABLE_NEWSLETTERS . " set date_sent = now(), status = '1' where newsletters_id = '" . tep_db_input($newsletter_id) . "'");
+      $OSCOM_Db->save('newsletters', [
+        'date_sent' => 'now()',
+        'status' => '1'
+      ], [
+        'newsletters_id' => (int)$newsletter_id
+      ]);
     }
   }
 ?>

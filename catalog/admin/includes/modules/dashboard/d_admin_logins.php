@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class d_admin_logins {
     var $code = 'd_admin_logins';
@@ -31,6 +32,8 @@
     }
 
     function getOutput() {
+      $OSCOM_Db = Registry::get('Db');
+
       $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
                 '  <tr class="dataTableHeadingRow">' .
                 '    <td class="dataTableHeadingContent" width="20">&nbsp;</td>' .
@@ -38,12 +41,20 @@
                 '    <td class="dataTableHeadingContent" align="right">' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_DATE . '</td>' .
                 '  </tr>';
 
-      $logins_query = tep_db_query("select id, user_name, success, date_added from " . TABLE_ACTION_RECORDER . " where module = 'ar_admin_login' order by date_added desc limit 6");
-      while ($logins = tep_db_fetch_array($logins_query)) {
+      $Qlogins = $OSCOM_Db->get('action_recorder', [
+        'id',
+        'user_name',
+        'success',
+        'date_added'
+      ], [
+        'module' => 'ar_admin_login'
+      ], 'date_added desc', 6);
+
+      while ($Qlogins->fetch()) {
         $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent" align="center">' . HTML::image(DIR_WS_IMAGES . 'icons/' . (($logins['success'] == '1') ? 'tick.gif' : 'cross.gif')) . '</td>' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . (int)$logins['id']) . '">' . HTML::outputProtected($logins['user_name']) . '</a></td>' .
-                   '    <td class="dataTableContent" align="right">' . tep_date_short($logins['date_added']) . '</td>' .
+                   '    <td class="dataTableContent" align="center">' . HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qlogins->valueInt('success') === 1) ? 'tick.gif' : 'cross.gif')) . '</td>' .
+                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . $Qlogins->valueInt('id')) . '">' . $Qlogins->valueProtected('user_name') . '</a></td>' .
+                   '    <td class="dataTableContent" align="right">' . tep_date_short($Qlogins->value('date_added')) . '</td>' .
                    '  </tr>';
       }
 
@@ -61,12 +72,32 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Administrator Logins Module', 'MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_STATUS', 'True', 'Do you want to show the latest administrator logins on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Administrator Logins Module',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to show the latest administrator logins on the dashboard?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

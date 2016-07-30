@@ -13,10 +13,14 @@
                                    Copyright Stephane Garin <sgarin@sgarin.com> (detect_language.php v0.1 04/02/2002)
 */
 
+  use OSC\OM\Registry;
+
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
     function language($lng = '') {
+      $OSCOM_Db = Registry::get('Db');
+
       $this->languages = array('af' => 'af|afrikaans',
                                'ar' => 'ar([-_][[:alpha:]]{2})?|arabic',
                                'be' => 'be|belarusian',
@@ -76,12 +80,21 @@
                                'zu' => 'zu|zulu');
 
       $this->catalog_languages = array();
-      $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
-      while ($languages = tep_db_fetch_array($languages_query)) {
-        $this->catalog_languages[$languages['code']] = array('id' => $languages['languages_id'],
-                                                             'name' => $languages['name'],
-                                                             'image' => $languages['image'],
-                                                             'directory' => $languages['directory']);
+      $Qlanguages = $OSCOM_Db->get('languages', [
+        'languages_id',
+        'name',
+        'code',
+        'image',
+        'directory'
+      ], null, 'sort_order');
+
+      while ($Qlanguages->fetch()) {
+        $this->catalog_languages[$Qlanguages->value('code')] = [
+          'id' => $Qlanguages->valueInt('languages_id'),
+          'name' => $Qlanguages->value('name'),
+          'image' => $Qlanguages->value('image'),
+          'directory' => $Qlanguages->value('directory')
+        ];
       }
 
       $this->browser_languages = '';
