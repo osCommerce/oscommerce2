@@ -40,36 +40,27 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
-          <tr>
-            <td class="pageHeading"><?php echo STORE_NAME; ?></td>
-
 <?php
-  if (sizeof($languages_array) > 1) {
+  if (count($languages_array) > 1) {
 ?>
 
-            <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', OSCOM::link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
+<div class="pull-right">
+  <?php echo HTML::form('adminlanguage', OSCOM::link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?>
+</div>
 
 <?php
   }
 ?>
 
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
+<h2><i class="fa fa-home"></i> <a href="<?php echo OSCOM::link(FILENAME_DEFAULT); ?>"><?php echo STORE_NAME; ?></a></h2>
+
 <?php
   if ( defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && tep_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED) ) {
     $adm_array = explode(';', MODULE_ADMIN_DASHBOARD_INSTALLED);
 
     $col = 0;
 
-    for ( $i=0, $n=sizeof($adm_array); $i<$n; $i++ ) {
-      $adm = $adm_array[$i];
-
+    foreach ($adm_array as $adm) {
       if (strpos($adm, '\\') !== false) {
         $class = Apps::getModuleClass($adm, 'AdminDashboard');
       } else {
@@ -84,40 +75,27 @@
       $ad = new $class();
 
       if ( $ad->isEnabled() ) {
-        if ($col < 1) {
-          echo '          <tr>' . "\n";
+        $col += 1;
+
+        if ($col === 1) {
+          echo '<div class="row">';
         }
 
-        $col++;
+        echo '<div class="col-md-6">' . $ad->getOutput() . '</div>';
 
-        if ($col <= 2) {
-          echo '            <td width="50%" valign="top">' . "\n";
-        }
-
-        echo $ad->getOutput();
-
-        if ($col <= 2) {
-          echo '            </td>' . "\n";
-        }
-
-        if ( !isset($adm_array[$i+1]) || ($col == 2) ) {
-          if ( !isset($adm_array[$i+1]) && ($col == 1) ) {
-            echo '            <td width="50%" valign="top">&nbsp;</td>' . "\n";
-          }
-
+        if ($col === 2) {
           $col = 0;
 
-          echo '  </tr>' . "\n";
+          echo '</div>';
         }
       }
     }
-  }
-?>
-        </table></td>
-      </tr>
-    </table>
 
-<?php
+    if ($col === 1) {
+      echo '</div>';
+    }
+  }
+
   require(DIR_WS_INCLUDES . 'template_bottom.php');
 
   main_sub3: // Sites and Apps skip to here

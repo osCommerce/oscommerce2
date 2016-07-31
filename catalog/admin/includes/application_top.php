@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -73,4 +74,53 @@
                         array('title' => TEXT_CACHE_MANUFACTURERS, 'code' => 'manufacturers', 'file' => 'manufacturers_box-language.cache', 'multiple' => true),
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
+
+  $cl_box_groups = array();
+  $cl_apps_groups = array();
+
+  if (isset($_SESSION['admin'])) {
+    if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {
+      $files = array();
+
+      while ($file = $dir->read()) {
+        if (!is_dir($dir->path . '/' . $file)) {
+          if (substr($file, strrpos($file, '.')) == '.php') {
+            $files[] = $file;
+          }
+        }
+      }
+
+      $dir->close();
+
+      natcasesort($files);
+
+      foreach ( $files as $file ) {
+        if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
+          include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
+        }
+
+        include($dir->path . '/' . $file);
+      }
+    }
+
+    foreach (Apps::getModules('AdminMenu') as $m) {
+      $appmenu = call_user_func([$m, 'execute']);
+
+      if (is_array($appmenu) && !empty($appmenu)) {
+        $cl_apps_groups[] = $appmenu;
+      }
+    }
+  }
+
+  usort($cl_box_groups, function ($a, $b) {
+    return strcasecmp($a['heading'], $b['heading']);
+  });
+
+  foreach ( $cl_box_groups as &$group ) {
+    usort($group['apps'], function ($a, $b) {
+      return strcasecmp($a['title'], $b['title']);
+    });
+  }
+
+  unset($group); // unset reference variable
 ?>

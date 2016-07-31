@@ -18,12 +18,100 @@
   }
 ?>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td colspan="2"><?php echo '<a href="' . OSCOM::link(FILENAME_DEFAULT) . '">' . HTML::image(DIR_WS_IMAGES . 'oscommerce.png', 'osCommerce Online Merchant v' . tep_get_version()) . '</a>'; ?></td>
-  </tr>
-  <tr class="headerBar">
-    <td class="headerBarContent">&nbsp;&nbsp;<?php echo '<a href="' . OSCOM::link(FILENAME_DEFAULT) . '" class="headerLink">' . HEADER_TITLE_ADMINISTRATION . '</a> &nbsp;|&nbsp; <a href="' . OSCOM::link('Shop/', null, 'SSL') . '" class="headerLink">' . HEADER_TITLE_ONLINE_CATALOG . '</a> &nbsp;|&nbsp; <a href="http://www.oscommerce.com" class="headerLink">' . HEADER_TITLE_SUPPORT_SITE . '</a>'; ?></td>
-    <td class="headerBarContent" align="right"><?php echo (isset($_SESSION['admin']) ? 'Logged in as: ' . $_SESSION['admin']['username']  . ' (<a href="' . OSCOM::link(FILENAME_LOGIN, 'action=logoff') . '" class="headerLink">Logoff</a>)' : ''); ?>&nbsp;&nbsp;</td>
-  </tr>
-</table>
+<div class="navbar navbar-default navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="<?php echo OSCOM::link(FILENAME_DEFAULT); ?>"><i class="fa fa-home"></i></a>
+    </div>
+
+<?php
+  if (isset($_SESSION['admin'])) {
+?>
+
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li><a href="#">Shop <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+<?php
+    foreach ($cl_box_groups as $groups) {
+      echo '<li><a>' . $groups['heading'] . ' <span class="caret"></span></a>
+              <ul class="dropdown-menu">';
+
+      foreach ($groups['apps'] as $app) {
+        echo '<li><a href="' . $app['link'] . '">' . $app['title'] . '</a></li>';
+      }
+
+      echo '  </ul>
+            </li>';
+    }
+?>
+
+          </ul>
+        </li>
+        <li><a href="#">Apps <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a>Manager</a></li>
+
+<?php
+    if (!empty($cl_apps_groups)) {
+      echo '<li class="divider"></li>';
+
+      foreach ($cl_apps_groups as $groups) {
+        echo '<li><a>' . $groups['heading'] . ' <span class="caret"></span></a>
+                <ul class="dropdown-menu">';
+
+        foreach ($groups['apps'] as $app) {
+          echo '<li><a href="' . $app['link'] . '">' . $app['title'] . '</a></li>';
+        }
+
+        echo '  </ul>
+              </li>';
+      }
+    }
+?>
+
+          </ul>
+        </li>
+      </ul>
+
+<?php
+  }
+?>
+
+      <ul class="nav navbar-nav navbar-right">
+
+<?php
+  if (isset($_SESSION['admin'])) {
+?>
+
+        <li><a><?php echo $_SESSION['admin']['username']; ?> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?php echo OSCOM::link(FILENAME_LOGIN, 'action=logoff'); ?>">Logoff</a></li>
+          </ul>
+        </li>
+
+<?php
+  }
+?>
+
+        <li><a><i class="fa fa-question-circle"></i></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?php echo OSCOM::link('Shop/', null, 'SSL'); ?>">Visit Shop</a></li>
+            <li class="divider"></li>
+            <li><a href="https://www.oscommerce.com">osCommerce Website</a></li>
+            <li><a href="https://www.oscommerce.com/Support">Support</a></li>
+            <li><a href="https://library.oscommerce.com">Documentation</a></li>
+            <li><a href="http://forums.oscommerce.com">Community Forum</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

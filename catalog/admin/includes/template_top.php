@@ -16,6 +16,7 @@ use OSC\OM\OSCOM;
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?php echo TITLE; ?></title>
@@ -28,6 +29,10 @@ use OSC\OM\OSCOM;
 <link href="<?php echo OSCOM::link('Shop/ext/bootstrap/css/bootstrap.min.css', '', 'AUTO'); ?>" rel="stylesheet">
 
 <link href="<?php echo OSCOM::link('Shop/ext/font-awesome/4.6.3/css/font-awesome.min.css', '', 'AUTO'); ?>" rel="stylesheet">
+
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/smartmenus/jquery.smartmenus.min.js', '', 'AUTO'); ?>"></script>
+<script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/smartmenus/jquery.smartmenus.bootstrap.min.js', '', 'AUTO'); ?>"></script>
+<link href="<?php echo OSCOM::link('Shop/ext/smartmenus/jquery.smartmenus.bootstrap.css', '', 'AUTO'); ?>" rel="stylesheet">
 
 <?php
   if (tep_not_null(JQUERY_DATEPICKER_I18N_CODE)) {
@@ -49,20 +54,4 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 
-<?php
-  if (isset($_SESSION['admin'])) {
-    include(DIR_WS_INCLUDES . 'column_left.php');
-  } else {
-?>
-
-<style>
-#contentText {
-  margin-left: 0;
-}
-</style>
-
-<?php
-  }
-?>
-
-<div id="contentText">
+<div id="contentText" class="container-fluid">
