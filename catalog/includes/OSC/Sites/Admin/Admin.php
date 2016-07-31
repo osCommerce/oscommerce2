@@ -14,6 +14,7 @@ use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\ErrorHandler;
 use OSC\OM\Hooks;
+use OSC\OM\MessageStack;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 use OSC\OM\Session;
@@ -22,7 +23,7 @@ class Admin extends \OSC\OM\SitesAbstract
 {
     protected function init()
     {
-        global $request_type, $PHP_SELF, $login_request, $messageStack, $cfgModules;
+        global $request_type, $PHP_SELF, $login_request, $cfgModules;
 
         $OSCOM_Cookies = new Cookies();
         Registry::set('Cookies', $OSCOM_Cookies);
@@ -33,6 +34,8 @@ class Admin extends \OSC\OM\SitesAbstract
         Registry::set('Db', $OSCOM_Db);
 
         Registry::set('Hooks', new Hooks());
+
+        Registry::set('MessageStack', new MessageStack());
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
@@ -130,11 +133,9 @@ class Admin extends \OSC\OM\SitesAbstract
             include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
         }
 
-        $messageStack = new \messageStack();
-
         if (isset($_SESSION['admin'])) {
             if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
-                $messageStack->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
+                Registry::get('MessageStack')->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
             }
         }
 

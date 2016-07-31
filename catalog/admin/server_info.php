@@ -64,9 +64,9 @@
       }
 
       if ($response != 'OK') {
-        $messageStack->add_session(ERROR_INFO_SUBMIT, 'error');
+        $OSCOM_MessageStack->add(ERROR_INFO_SUBMIT, 'error');
       } else {
-        $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
+        $OSCOM_MessageStack->add(SUCCESS_INFO_SUBMIT, 'success');
       }
 
       OSCOM::redirect(FILENAME_SERVER_INFO);

@@ -41,12 +41,12 @@
 
         $newsletter_error = false;
         if (empty($title)) {
-          $messageStack->add(ERROR_NEWSLETTER_TITLE, 'error');
+          $OSCOM_MessageStack->add(ERROR_NEWSLETTER_TITLE, 'error');
           $newsletter_error = true;
         }
 
         if (empty($newsletter_module)) {
-          $messageStack->add(ERROR_NEWSLETTER_MODULE, 'error');
+          $OSCOM_MessageStack->add(ERROR_NEWSLETTER_MODULE, 'error');
           $newsletter_error = true;
         }
 
@@ -95,7 +95,7 @@
               case 'confirm_send': $error = ERROR_SEND_UNLOCKED_NEWSLETTER; break;
             }
 
-            $messageStack->add_session($error, 'error');
+            $OSCOM_MessageStack->add($error, 'error');
 
             OSCOM::redirect(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']);
           }

@@ -40,7 +40,6 @@
   require(DIR_WS_FUNCTIONS . 'validations.php');
   require(DIR_WS_CLASSES . 'table_block.php');
   require(DIR_WS_CLASSES . 'box.php');
-  require(DIR_WS_CLASSES . 'message_stack.php');
   require(DIR_WS_CLASSES . 'object_info.php');
   require(DIR_WS_CLASSES . 'mime.php');
   require(DIR_WS_CLASSES . 'email.php');
@@ -51,6 +50,8 @@
   OSCOM::initialize('Admin');
 
   $OSCOM_Db = Registry::get('Db');
+  $OSCOM_MessageStack = Registry::get('MessageStack');
+  $OSCOM_Hooks = Registry::get('Hooks');
 
 // calculate category path
   if (isset($_GET['cPath'])) {

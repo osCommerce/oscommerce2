@@ -93,15 +93,15 @@
         $remove_status = true;
         if ($oID == DEFAULT_ORDERS_STATUS_ID) {
           $remove_status = false;
-          $messageStack->add(ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
+          $OSCOM_MessageStack->add(ERROR_REMOVE_DEFAULT_ORDER_STATUS, 'error');
         } elseif ($Qstatus->fetch() !== false) {
           $remove_status = false;
-          $messageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
+          $OSCOM_MessageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
         } else {
           $Qhistory = $OSCOM_Db->get('orders_status_history', 'orders_status_id', ['orders_status_id' => (int)$oID], null, 1);
           if ($Qhistory->fetch() !== false) {
             $remove_status = false;
-            $messageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
+            $OSCOM_MessageStack->add(ERROR_STATUS_USED_IN_HISTORY, 'error');
           }
         }
         break;

@@ -198,7 +198,7 @@
         $remove_language = true;
         if ($Qlanguage->value('code') == DEFAULT_LANGUAGE) {
           $remove_language = false;
-          $messageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
+          $OSCOM_MessageStack->add(ERROR_REMOVE_DEFAULT_LANGUAGE, 'error');
         }
         break;
     }

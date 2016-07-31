@@ -1285,7 +1285,9 @@
   }
 
   function tep_remove($source) {
-    global $messageStack, $tep_remove_error;
+    global $tep_remove_error;
+
+    $OSCOM_MessageStack = Registry::get('MessageStack');
 
     if (isset($tep_remove_error)) $tep_remove_error = false;
 
@@ -1296,7 +1298,7 @@
           if (tep_is_writable($source . '/' . $file)) {
             tep_remove($source . '/' . $file);
           } else {
-            $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
+            $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
             $tep_remove_error = true;
           }
         }
@@ -1306,14 +1308,14 @@
       if (tep_is_writable($source)) {
         rmdir($source);
       } else {
-        $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
+        $OSCOM_MessageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
         $tep_remove_error = true;
       }
     } else {
       if (tep_is_writable($source)) {
         unlink($source);
       } else {
-        $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
+        $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
         $tep_remove_error = true;
       }
     }

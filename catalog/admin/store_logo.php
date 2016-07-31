@@ -35,7 +35,7 @@
               'configuration_key' => 'STORE_LOGO'
             ]);
 
-            $messageStack->add_session(SUCCESS_LOGO_UPDATED, 'success');
+            $OSCOM_MessageStack->add(SUCCESS_LOGO_UPDATED, 'success');
           } else {
             $error = true;
           }
@@ -51,7 +51,7 @@
   }
 
   if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) {
-    $messageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
+    $OSCOM_MessageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

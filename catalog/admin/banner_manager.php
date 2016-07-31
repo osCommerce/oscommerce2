@@ -29,9 +29,9 @@
         if ( ($_GET['flag'] == '0') || ($_GET['flag'] == '1') ) {
           tep_set_banner_status($_GET['bID'], $_GET['flag']);
 
-          $messageStack->add_session(SUCCESS_BANNER_STATUS_UPDATED, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_BANNER_STATUS_UPDATED, 'success');
         } else {
-          $messageStack->add_session(ERROR_UNKNOWN_STATUS_FLAG, 'error');
+          $OSCOM_MessageStack->add(ERROR_UNKNOWN_STATUS_FLAG, 'error');
         }
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']);
@@ -53,12 +53,12 @@
 
         $banner_error = false;
         if (empty($banners_title)) {
-          $messageStack->add(ERROR_BANNER_TITLE_REQUIRED, 'error');
+          $OSCOM_MessageStack->add(ERROR_BANNER_TITLE_REQUIRED, 'error');
           $banner_error = true;
         }
 
         if (empty($banners_group)) {
-          $messageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
+          $OSCOM_MessageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
           $banner_error = true;
         }
 
@@ -93,11 +93,11 @@
 
             $banners_id = $OSCOM_Db->lastInsertId();
 
-            $messageStack->add_session(SUCCESS_BANNER_INSERTED, 'success');
+            $OSCOM_MessageStack->add(SUCCESS_BANNER_INSERTED, 'success');
           } elseif ($action == 'update') {
             $OSCOM_Db->save('banners', $sql_data_array, ['banners_id' => (int)$banners_id]);
 
-            $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
+            $OSCOM_MessageStack->add(SUCCESS_BANNER_UPDATED, 'success');
           }
 
           if (tep_not_null($expires_date)) {
@@ -145,10 +145,10 @@
             if (tep_is_writable(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'))) {
               unlink(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'));
             } else {
-              $messageStack->add_session(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
+              $OSCOM_MessageStack->add(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
             }
           } else {
-            $messageStack->add_session(ERROR_IMAGE_DOES_NOT_EXIST, 'error');
+            $OSCOM_MessageStack->add(ERROR_IMAGE_DOES_NOT_EXIST, 'error');
           }
         }
 
@@ -181,7 +181,7 @@
           }
         }
 
-        $messageStack->add_session(SUCCESS_BANNER_REMOVED, 'success');
+        $OSCOM_MessageStack->add(SUCCESS_BANNER_REMOVED, 'success');
 
         OSCOM::redirect(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']);
         break;
@@ -218,10 +218,10 @@
       if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
         $dir_ok = true;
       } else {
-        $messageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
+        $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
       }
     } else {
-      $messageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
+      $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
 

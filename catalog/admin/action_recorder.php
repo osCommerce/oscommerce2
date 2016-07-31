@@ -81,7 +81,7 @@
           }
         }
 
-        $messageStack->add_session(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
+        $OSCOM_MessageStack->add(sprintf(SUCCESS_EXPIRED_ENTRIES, $expired_entries), 'success');
 
         OSCOM::redirect(FILENAME_ACTION_RECORDER);
 

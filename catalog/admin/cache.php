@@ -27,9 +27,9 @@
 
 // check if the cache directory exists
   if (is_dir(DIR_FS_CACHE)) {
-    if (!tep_is_writable(DIR_FS_CACHE)) $messageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+    if (!tep_is_writable(DIR_FS_CACHE)) $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
-    $messageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
+    $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -53,7 +53,7 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
 <?php
-  if ($messageStack->size < 1) {
+  if ($OSCOM_MessageStack->size < 1) {
     $languages = tep_get_languages();
 
     for ($i=0, $n=sizeof($languages); $i<$n; $i++) {

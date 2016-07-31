@@ -112,9 +112,8 @@
       $file_writeable = true;
       if (!tep_is_writable($file)) {
         $file_writeable = false;
-        $messageStack->reset();
-        $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
-        echo $messageStack->output();
+        $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error', 'defineLanguage');
+        echo $OSCOM_MessageStack->get('defineLanguage');
       }
 
 ?>

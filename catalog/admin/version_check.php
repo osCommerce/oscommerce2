@@ -17,7 +17,6 @@
 
   $releases = null;
   $new_versions = array();
-  $check_message = array();
 
   if (function_exists('curl_init')) {
     $ch = curl_init();
@@ -68,15 +67,12 @@
     }
 
     if (!empty($new_versions)) {
-      $check_message = array('class' => 'secWarning',
-                             'message' => sprintf(VERSION_UPGRADES_AVAILABLE, $new_versions[0][0]));
+      $OSCOM_MessageStack->add(sprintf(VERSION_UPGRADES_AVAILABLE, $new_versions[0][0]), 'warning', 'versionCheck');
     } else {
-      $check_message = array('class' => 'secSuccess',
-                             'message' => VERSION_RUNNING_LATEST);
+      $OSCOM_MessageStack->add(VERSION_RUNNING_LATEST, 'success', 'versionCheck');
     }
   } else {
-    $check_message = array('class' => 'secError',
-                           'message' => ERROR_COULD_NOT_CONNECT);
+    $OSCOM_MessageStack->add(ERROR_COULD_NOT_CONNECT, 'error', 'versionCheck');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -94,9 +90,7 @@
         <td class="smallText"><?php echo TITLE_INSTALLED_VERSION . ' <strong>osCommerce Online Merchant v' . $current_version . '</strong>'; ?></td>
       </tr>
       <tr>
-        <td><div class="<?php echo $check_message['class']; ?>">
-          <p class="smallText"><?php echo $check_message['message']; ?></p>
-        </div></td>
+        <td><?php echo $OSCOM_MessageStack->get('versionCheck'); ?></td>
       </tr>
 <?php
   if (!empty($new_versions)) {

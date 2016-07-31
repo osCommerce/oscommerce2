@@ -84,10 +84,10 @@
           }
 
           if (isset($_POST['username'])) {
-            $messageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
+            $OSCOM_MessageStack->add(ERROR_INVALID_ADMINISTRATOR, 'error');
           }
         } else {
-          $messageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
+          $OSCOM_MessageStack->add(sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES') ? (int)MODULE_ACTION_RECORDER_ADMIN_LOGIN_MINUTES : 5)));
         }
 
         if (isset($_POST['username'])) {
@@ -142,7 +142,7 @@
   $Qcheck = $OSCOM_Db->get('administrators', 'id', null, null, 1);
 
   if (!$Qcheck->check()) {
-    $messageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
+    $OSCOM_MessageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

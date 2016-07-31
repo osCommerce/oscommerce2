@@ -22,7 +22,7 @@
       case 'forget':
         $OSCOM_Db->delete('configuration', ['configuration_key' => 'DB_LAST_RESTORE']);
 
-        $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
+        $OSCOM_MessageStack->add(SUCCESS_LAST_RESTORE_CLEARED, 'success');
 
         OSCOM::redirect(FILENAME_BACKUP);
         break;
@@ -176,7 +176,7 @@
               unlink(DIR_FS_BACKUP . $backup_file);
           }
 
-          $messageStack->add_session(SUCCESS_DATABASE_SAVED, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_DATABASE_SAVED, 'success');
         }
 
         OSCOM::redirect(FILENAME_BACKUP);
@@ -304,7 +304,7 @@
             unlink($restore_from);
           }
 
-          $messageStack->add_session(SUCCESS_DATABASE_RESTORED, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_DATABASE_RESTORED, 'success');
         }
 
         OSCOM::redirect(FILENAME_BACKUP);
@@ -325,7 +325,7 @@
             exit;
           }
         } else {
-          $messageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
+          $OSCOM_MessageStack->add(ERROR_DOWNLOAD_LINK_NOT_ACCEPTABLE, 'error');
         }
         break;
       case 'deleteconfirm':
@@ -334,7 +334,7 @@
         tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
 
         if (!$tep_remove_error) {
-          $messageStack->add_session(SUCCESS_BACKUP_DELETED, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_BACKUP_DELETED, 'success');
 
           OSCOM::redirect(FILENAME_BACKUP);
         }
@@ -348,10 +348,10 @@
     if (tep_is_writable(DIR_FS_BACKUP)) {
       $dir_ok = true;
     } else {
-      $messageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');
+      $OSCOM_MessageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');
     }
   } else {
-    $messageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
+    $OSCOM_MessageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

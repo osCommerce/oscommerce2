@@ -79,11 +79,11 @@
   }
 
   if ( ($action == 'preview') && !isset($_POST['customers_email_address']) ) {
-    $messageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
+    $OSCOM_MessageStack->add(ERROR_NO_CUSTOMER_SELECTED, 'error');
   }
 
   if (isset($_GET['mail_sent_to'])) {
-    $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
+    $OSCOM_MessageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');

@@ -97,9 +97,9 @@
         }
 
         if ($order_updated == true) {
-         $messageStack->add_session(SUCCESS_ORDER_UPDATED, 'success');
+         $OSCOM_MessageStack->add(SUCCESS_ORDER_UPDATED, 'success');
         } else {
-          $messageStack->add_session(WARNING_ORDER_NOT_UPDATED, 'warning');
+          $OSCOM_MessageStack->add(WARNING_ORDER_NOT_UPDATED, 'warning');
         }
 
         OSCOM::redirect(FILENAME_ORDERS, tep_get_all_get_params(array('action')) . 'action=edit');
@@ -121,7 +121,7 @@
     $order_exists = true;
     if ($Qorders->fetch() === false) {
       $order_exists = false;
-      $messageStack->add(sprintf(ERROR_ORDER_DOES_NOT_EXIST, $oID), 'error');
+      $OSCOM_MessageStack->add(sprintf(ERROR_ORDER_DOES_NOT_EXIST, $oID), 'error');
     }
   }
 

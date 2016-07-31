@@ -97,7 +97,7 @@
             fclose($fp);
           }
         } else {
-          $messageStack->add_session(ERROR_ADMINISTRATOR_EXISTS, 'error');
+          $OSCOM_MessageStack->add(ERROR_ADMINISTRATOR_EXISTS, 'error');
         }
 
         OSCOM::redirect(FILENAME_ADMINISTRATORS);
@@ -235,16 +235,14 @@
     }
   }
 
-  $secMessageStack = new messageStack();
-
   if (is_array($htpasswd_array)) {
     if (empty($htpasswd_array)) {
-      $secMessageStack->add(sprintf(HTPASSWD_INFO, implode('<br />', $authuserfile_array)), 'error');
+      $OSCOM_MessageStack->add(sprintf(HTPASSWD_INFO, implode('<br />', $authuserfile_array)), 'error', 'administrators');
     } else {
-      $secMessageStack->add(HTPASSWD_SECURED, 'success');
+      $OSCOM_MessageStack->add(HTPASSWD_SECURED, 'success', 'administrators');
     }
   } else if (!$is_iis) {
-    $secMessageStack->add(HTPASSWD_PERMISSIONS, 'error');
+    $OSCOM_MessageStack->add(HTPASSWD_PERMISSIONS, 'error', 'administrators');
   }
 
   require(DIR_WS_INCLUDES . 'template_top.php');
@@ -261,7 +259,7 @@
       <tr>
         <td>
 <?php
-  echo $secMessageStack->output();
+  echo $OSCOM_MessageStack->get('administrators');
 ?>
         </td>
       </tr>

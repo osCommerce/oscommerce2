@@ -32,10 +32,9 @@
     function getOutput() {
       global $PHP_SELF;
 
-      $output = '';
+      $OSCOM_MessageStack = Registry::get('MessageStack');
 
       $secCheck_types = array('info', 'warning', 'error');
-      $secCheck_messages = array();
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $secmodules_array = array();
@@ -63,44 +62,16 @@
               $secCheck->type = 'info';
             }
 
-            $secCheck_messages[$secCheck->type][] = $secCheck->getMessage();
+            $OSCOM_MessageStack->add($secCheck->getMessage(), $secCheck->type, 'securityCheckModule');
           }
         }
       }
 
-      if (isset($secCheck_messages['error'])) {
-        $output .= '<div class="secError">';
-
-        foreach ($secCheck_messages['error'] as $error) {
-          $output .= '<p class="smallText">' . $error . '</p>';
-        }
-
-        $output .= '</div>';
+      if (!$OSCOM_MessageStack->exists('securityCheckModule')) {
+        $OSCOM_MessageStack->add(MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SUCCESS, 'success', 'securityCheckModule');
       }
 
-      if (isset($secCheck_messages['warning'])) {
-        $output .= '<div class="secWarning">';
-
-        foreach ($secCheck_messages['warning'] as $warning) {
-          $output .= '<p class="smallText">' . $warning . '</p>';
-        }
-
-        $output .= '</div>';
-      }
-
-      if (isset($secCheck_messages['info'])) {
-        $output .= '<div class="secInfo">';
-
-        foreach ($secCheck_messages['info'] as $info) {
-          $output .= '<p class="smallText">' . $info . '</p>';
-        }
-
-        $output .= '</div>';
-      }
-
-      if (empty($secCheck_messages)) {
-        $output .= '<div class="secSuccess"><p class="smallText">' . MODULE_ADMIN_DASHBOARD_SECURITY_CHECKS_SUCCESS . '</p></div>';
-      }
+      $output = $OSCOM_MessageStack->get('securityCheckModule');
 
       return $output;
     }

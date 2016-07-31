@@ -85,7 +85,7 @@
         $remove_currency = true;
         if ($Qcurrency->value('code') == DEFAULT_CURRENCY) {
           $remove_currency = false;
-          $messageStack->add(ERROR_REMOVE_DEFAULT_CURRENCY, 'error');
+          $OSCOM_MessageStack->add(ERROR_REMOVE_DEFAULT_CURRENCY, 'error');
         }
         break;
     }
