@@ -83,7 +83,13 @@
 
   function tep_get_all_get_params($exclude_array = '') {
 
-    if ($exclude_array == '') $exclude_array = array();
+    if ($exclude_array == '') {
+      $exclude_array = array();
+    } elseif (is_string($exclude_array)) {
+      $exclude_array = [
+        $exclude_array
+      ];
+    }
 
     $get_url = '';
 
@@ -666,7 +672,7 @@
     while ($Qcountries->fetch()) {
       $countries_array[] = [
         'id' => $Qcountries->valueInt('countries_id'),
-        'text' => $Qcountries->valueInt('countries_name')
+        'text' => $Qcountries->value('countries_name')
       ];
     }
 
@@ -776,7 +782,7 @@
   }
 
   function tep_cfg_get_zone_name($zone_id) {
-    $Qzone = Registry::get('zones', 'zone_name', ['zone_id' => (int)$zone_id]);
+    $Qzone = Registry::get('Db')->get('zones', 'zone_name', ['zone_id' => (int)$zone_id]);
 
     if ($Qzone->fetch()) {
       return $Qzone->value('zone_name');
