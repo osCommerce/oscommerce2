@@ -34,12 +34,14 @@
     function getOutput() {
       $OSCOM_Db = Registry::get('Db');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent" width="20">&nbsp;</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent" align="right">' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_DATE . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_TITLE . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_ADMIN_LOGINS_DATE . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
       $Qlogins = $OSCOM_Db->get('action_recorder', [
         'id',
@@ -51,14 +53,14 @@
       ], 'date_added desc', 6);
 
       while ($Qlogins->fetch()) {
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent" align="center">' . HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qlogins->valueInt('success') === 1) ? 'tick.gif' : 'cross.gif')) . '</td>' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . $Qlogins->valueInt('id')) . '">' . $Qlogins->valueProtected('user_name') . '</a></td>' .
-                   '    <td class="dataTableContent" align="right">' . tep_date_short($Qlogins->value('date_added')) . '</td>' .
-                   '  </tr>';
+        $output .= '    <tr>
+                          <td><i class="fa fa-' . (($Qlogins->valueInt('success') === 1) ? 'check text-success' : 'times text-danger') . '"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . $Qlogins->valueInt('id')) . '">' . $Qlogins->valueProtected('user_name') . '</a></td>
+                          <td class="text-right">' . tep_date_short($Qlogins->value('date_added')) . '</td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }

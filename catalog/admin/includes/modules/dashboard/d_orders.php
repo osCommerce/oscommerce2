@@ -34,13 +34,16 @@
     function getOutput() {
       $OSCOM_Db = Registry::get('Db');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_TOTAL . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_DATE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_ORDER_STATUS . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TITLE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TOTAL . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_DATE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_ORDER_STATUS . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
       $Qorders = $OSCOM_Db->get([
         'orders o',
@@ -64,15 +67,16 @@
       ], 'date_last_modified desc', 6);
 
       while ($Qorders->fetch()) {
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_ORDERS, 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . $Qorders->valueProtected('customers_name') . '</a></td>' .
-                   '    <td class="dataTableContent">' . strip_tags($Qorders->value('order_total')) . '</td>' .
-                   '    <td class="dataTableContent">' . tep_date_short($Qorders->value('date_last_modified')) . '</td>' .
-                   '    <td class="dataTableContent">' . $Qorders->value('orders_status_name') . '</td>' .
-                   '  </tr>';
+        $output .= '    <tr>
+                          <td><a href="' . OSCOM::link(FILENAME_ORDERS, 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . $Qorders->valueProtected('customers_name') . '</a></td>
+                          <td>' . strip_tags($Qorders->value('order_total')) . '</td>
+                          <td>' . tep_date_short($Qorders->value('date_last_modified')) . '</td>
+                          <td>' . $Qorders->value('orders_status_name') . '</td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }

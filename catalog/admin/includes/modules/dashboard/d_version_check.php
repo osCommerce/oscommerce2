@@ -53,23 +53,27 @@
         $date_last_checked = MODULE_ADMIN_DASHBOARD_VERSION_CHECK_NEVER;
       }
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent" align="right">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_DATE . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_TITLE . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_DATE . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
       if ($new_version == true) {
-        $output .= '  <tr>' .
-                   '    <td class="messageStackWarning" colspan="2">' . HTML::image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>' .
-                   '  </tr>';
+        $output .= '    <tr class="success">
+                          <td colspan="2">' . HTML::image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>
+                        </tr>';
       }
 
-      $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                 '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_VERSION_CHECK) . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>' .
-                 '    <td class="dataTableContent" align="right">' . $date_last_checked . '</td>' .
-                 '  </tr>' .
-                 '</table>';
+      $output .= '    <tr>
+                        <td><a href="' . OSCOM::link(FILENAME_VERSION_CHECK) . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>
+                        <td class="text-right">' . $date_last_checked . '</td>
+                      </tr>
+                    </tbody>
+                  </table>';
 
       return $output;
     }

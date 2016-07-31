@@ -34,14 +34,17 @@
     function getOutput() {
       $OSCOM_Db = Registry::get('Db');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_DATE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEWER . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_RATING . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEW_STATUS . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_DATE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEWER . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_RATING . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEW_STATUS . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
       $Qreviews = $OSCOM_Db->get([
         'reviews r',
@@ -61,18 +64,17 @@
       ], 'r.date_added desc', 6);
 
       while ($Qreviews->fetch()) {
-        $status_icon = ($Qreviews->valueInt('reviews_status') === 1) ? HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) : HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
-
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . $Qreviews->valueInt('reviews_id') . '&action=edit') . '">' . $Qreviews->value('products_name') . '</a></td>' .
-                   '    <td class="dataTableContent">' . tep_date_short($Qreviews->value('date_added')) . '</td>' .
-                   '    <td class="dataTableContent">' . $Qreviews->valueProtected('customers_name') . '</td>' .
-                   '    <td class="dataTableContent">' . HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $Qreviews->valueInt('reviews_rating') . '.gif') . '</td>' .
-                   '    <td class="dataTableContent">' . $status_icon . '</td>' .
-                   '  </tr>';
+        $output .= '    <tr>
+                          <td><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . $Qreviews->valueInt('reviews_id') . '&action=edit') . '">' . $Qreviews->value('products_name') . '</a></td>
+                          <td>' . tep_date_short($Qreviews->value('date_added')) . '</td>
+                          <td>' . $Qreviews->valueProtected('customers_name') . '</td>
+                          <td class="text-right">' . str_repeat('<i class="fa fa-star text-info"></i>', $Qreviews->valueInt('reviews_rating')) . str_repeat('<i class="fa fa-star-o"></i>', 5 - $Qreviews->valueInt('reviews_rating')) . '</td>
+                          <td class="text-right"><i class="fa fa-circle ' . ($Qreviews->valueInt('reviews_status') === 1 ? 'text-success' : 'text-danger') . '"></i></td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }

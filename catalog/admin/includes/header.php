@@ -12,10 +12,6 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
-
-  if ($messageStack->size > 0) {
-    echo $messageStack->output();
-  }
 ?>
 
 <div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -103,7 +99,7 @@
 
         <li><a><i class="fa fa-question-circle"></i></a>
           <ul class="dropdown-menu">
-            <li><a href="<?php echo OSCOM::link('Shop/', null, 'SSL'); ?>">Visit Shop</a></li>
+            <li><a href="<?php echo OSCOM::link('Shop/', null, 'SSL'); ?>">View Shop</a></li>
             <li class="divider"></li>
             <li><a href="https://www.oscommerce.com">osCommerce Website</a></li>
             <li><a href="https://www.oscommerce.com/Support">Support</a></li>
@@ -115,3 +111,9 @@
     </div>
   </div>
 </div>
+
+<?php
+  if ($messageStack->size > 0) {
+    echo $messageStack->output();
+  }
+?>

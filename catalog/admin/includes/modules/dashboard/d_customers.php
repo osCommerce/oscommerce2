@@ -34,11 +34,14 @@
     function getOutput() {
       $OSCOM_Db = Registry::get('Db');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent" align="right">' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_DATE . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_TITLE . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_CUSTOMERS_DATE . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
       $Qcustomers = $OSCOM_Db->get([
         'customers c',
@@ -55,13 +58,14 @@
       ], 'ci.customers_info_date_account_created desc', 6);
 
       while ($Qcustomers->fetch()) {
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'cID=' . $Qcustomers->valueInt('customers_id') . '&action=edit') . '">' . HTML::outputProtected($Qcustomers->value('customers_firstname') . ' ' . $Qcustomers->value('customers_lastname')) . '</a></td>' .
-                   '    <td class="dataTableContent" align="right">' . tep_date_short($Qcustomers->value('customers_info_date_account_created')) . '</td>' .
-                   '  </tr>';
+        $output .= '    <tr>
+                          <td><a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'cID=' . $Qcustomers->valueInt('customers_id') . '&action=edit') . '">' . HTML::outputProtected($Qcustomers->value('customers_firstname') . ' ' . $Qcustomers->value('customers_lastname')) . '</a></td>
+                          <td class="text-right">' . tep_date_short($Qcustomers->value('customers_info_date_account_created')) . '</td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }
