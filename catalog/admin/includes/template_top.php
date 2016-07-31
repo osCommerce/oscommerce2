@@ -47,8 +47,8 @@ $.datepicker.setDefaults($.datepicker.regional['<?php echo JQUERY_DATEPICKER_I18
 
 <script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.min.js', '', 'AUTO'); ?>"></script>
 <script type="text/javascript" src="<?php echo OSCOM::link('Shop/ext/flot/jquery.flot.time.min.js', '', 'AUTO'); ?>"></script>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<script type="text/javascript" src="includes/general.js"></script>
+<link rel="stylesheet" type="text/css" href="stylesheet.css">
+<script type="text/javascript" src="general.js"></script>
 </head>
 <body>
 
