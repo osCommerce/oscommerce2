@@ -97,11 +97,15 @@
         break;
 
       case 'logoff':
+        $OSCOM_Hooks->call('Account', 'LogoutBefore');
+
         unset($_SESSION['admin']);
 
         if (isset($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_USER']) && isset($_SERVER['PHP_AUTH_PW']) && !empty($_SERVER['PHP_AUTH_PW'])) {
           $_SESSION['auth_ignore'] = true;
         }
+
+        $OSCOM_Hooks->call('Account', 'LogoutAfter');
 
         OSCOM::redirect(FILENAME_DEFAULT);
 
@@ -128,17 +132,6 @@
     }
   }
 
-  $languages = tep_get_languages();
-  $languages_array = array();
-  $languages_selected = DEFAULT_LANGUAGE;
-  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-    $languages_array[] = array('id' => $languages[$i]['code'],
-                               'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $_SESSION['language']) {
-      $languages_selected = $languages[$i]['code'];
-    }
-  }
-
   $Qcheck = $OSCOM_Db->get('administrators', 'id', null, null, 1);
 
   if (!$Qcheck->check()) {
@@ -148,58 +141,31 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td><table border="0" width="100%" cellspacing="0" cellpadding="0" height="40">
-      <tr>
-        <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-
-<?php
-  if (sizeof($languages_array) > 1) {
-?>
-
-        <td class="pageHeading" align="right"><?php echo HTML::form('adminlanguage', OSCOM::link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?></td>
-
-<?php
-  }
-?>
-
-      </tr>
-    </table></td>
-  </tr>
-  <tr>
-    <td>
+<h2><i class="fa fa-home"></i> <a href="<?= OSCOM::link('login.php', null, 'SSL'); ?>"><?= STORE_NAME; ?></a></h3>
 
 <?php
   $heading = array();
   $contents = array();
 
   if ($Qcheck->check()) {
-    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
+    $heading[] = array('text' => HEADING_TITLE);
 
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=process')));
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(BUTTON_LOGIN, 'fa fa-sign-in'));
+    $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
+    $contents[] = array('text' => HTML::button(BUTTON_LOGIN, 'fa fa-sign-in', null, null, null, 'btn-primary'));
   } else {
-    $heading[] = array('text' => '<strong>' . HEADING_TITLE . '</strong>');
+    $heading[] = array('text' => HEADING_TITLE);
 
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=create')));
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
-    $contents[] = array('text' => '<br />' . TEXT_USERNAME . '<br />' . HTML::inputField('username'));
-    $contents[] = array('text' => '<br />' . TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in'));
+    $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
+    $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
+    $contents[] = array('text' => HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in', null, null, null, 'btn-primary'));
   }
 
-  $box = new box;
-  echo $box->infoBox($heading, $contents);
-?>
+  echo HTML::panel($heading, $contents);
 
-    </td>
-  </tr>
-</table>
-
-<?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

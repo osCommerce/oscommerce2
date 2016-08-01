@@ -39,129 +39,114 @@
 
   $Qgroup = $OSCOM_Db->get('configuration_group', 'configuration_group_title', ['configuration_group_id' => (int)$gID]);
 
+  $show_listing = true;
+
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo $Qgroup->value('configuration_group_title'); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_TITLE; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CONFIGURATION_VALUE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-              </tr>
+<h2><i class="fa fa-cog"></i> <a href="<?= OSCOM::link('configuration.php', 'gID=' . $gID); ?>"><?= $Qgroup->valueProtected('configuration_group_title'); ?></a></h2>
+
 <?php
-  $Qcfg = $OSCOM_Db->get('configuration', [
-    'configuration_id',
-    'configuration_title',
-    'configuration_value',
-    'use_function'
-  ], [
-    'configuration_group_id' => (int)$gID
-  ], 'sort_order');
+  if (!empty($action)) {
+    $heading = $contents = [];
 
-  while ($Qcfg->fetch()) {
-    if ($Qcfg->hasValue('use_function') && tep_not_null($Qcfg->value('use_function'))) {
-      $use_function = $Qcfg->value('use_function');
-      if (preg_match('/->/', $use_function)) {
-        $class_method = explode('->', $use_function);
-        if (!is_object(${$class_method[0]})) {
-          include(DIR_WS_CLASSES . $class_method[0] . '.php');
-          ${$class_method[0]} = new $class_method[0]();
-        }
-        $cfgValue = tep_call_function($class_method[1], $Qcfg->value('configuration_value'), ${$class_method[0]});
-      } else {
-        $cfgValue = tep_call_function($use_function, $Qcfg->value('configuration_value'));
-      }
-    } else {
-      $cfgValue = $Qcfg->value('configuration_value');
-    }
-
-    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ((int)$_GET['cID'] === $Qcfg->valueInt('configuration_id')))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-      $Qextra = $OSCOM_Db->get('configuration', [
+    if (isset($_GET['cID'])) {
+      $Qcfg = $OSCOM_Db->get('configuration', [
+        'configuration_id',
+        'configuration_title',
         'configuration_key',
+        'configuration_value',
         'configuration_description',
-        'date_added',
-        'last_modified',
-        'use_function',
         'set_function'
       ], [
-        'configuration_id' => $Qcfg->valueInt('configuration_id')
+        'configuration_id' => (int)$_GET['cID']
       ]);
 
-      $cInfo_array = array_merge($Qcfg->toArray(), $Qextra->toArray());
-      $cInfo = new objectInfo($cInfo_array);
+      if ($Qcfg->fetch() !== false) {
+        $cInfo = new objectInfo($Qcfg->toArray());
+
+        if ($action == 'edit') {
+          $heading[] = array('text' => $cInfo->configuration_title);
+
+          if (!empty($cInfo->set_function)) {
+            eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value) . '");');
+          } else {
+            $value_field = HTML::inputField('configuration_value', $cInfo->configuration_value);
+          }
+
+          $contents = array('form' => HTML::form('configuration', OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id . '&action=save')));
+          $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+          $contents[] = array('text' => $cInfo->configuration_description);
+          $contents[] = array('text' => $value_field);
+          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID), null, null, 'link'));
+        }
+      }
     }
 
-    if ( (isset($cInfo) && is_object($cInfo)) && ($Qcfg->valueInt('configuration_id') === (int)$cInfo->configuration_id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id . '&action=edit') . '\'">' . "\n";
-    } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $Qcfg->valueInt('configuration_id')) . '\'">' . "\n";
+    if (tep_not_null($heading) && tep_not_null($contents)) {
+      $show_listing = false;
+
+      echo HTML::panel($heading, $contents, ['type' => 'info']);
     }
-?>
-                <td class="dataTableContent"><?php echo $Qcfg->value('configuration_title'); ?></td>
-                <td class="dataTableContent"><?php echo htmlspecialchars($cfgValue); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($cInfo) && is_object($cInfo)) && ($Qcfg->valueInt('configuration_id') === (int)$cInfo->configuration_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $Qcfg->valueInt('configuration_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-              </tr>
-<?php
   }
+
+  if ($show_listing === true) {
 ?>
-            </table></td>
+
+<table class="oscom-table table table-hover">
+  <thead>
+    <tr class="info">
+      <th><?= TABLE_HEADING_CONFIGURATION_TITLE; ?></th>
+      <th><?= TABLE_HEADING_CONFIGURATION_VALUE; ?></th>
+      <th class="action"></th>
+    </tr>
+  </thead>
+  <tbody>
+
 <?php
-  $heading = array();
-  $contents = array();
+    $Qcfg = $OSCOM_Db->get('configuration', [
+      'configuration_id',
+      'configuration_title',
+      'configuration_value',
+      'use_function'
+    ], [
+      'configuration_group_id' => (int)$gID
+    ], 'sort_order');
 
-  switch ($action) {
-    case 'edit':
-      $heading[] = array('text' => '<strong>' . $cInfo->configuration_title . '</strong>');
-
-      if ($cInfo->set_function) {
-        eval('$value_field = ' . $cInfo->set_function . '"' . htmlspecialchars($cInfo->configuration_value) . '");');
+    while ($Qcfg->fetch()) {
+      if ($Qcfg->hasValue('use_function') && tep_not_null($Qcfg->value('use_function'))) {
+        $use_function = $Qcfg->value('use_function');
+        if (preg_match('/->/', $use_function)) {
+          $class_method = explode('->', $use_function);
+          if (!is_object(${$class_method[0]})) {
+            include(DIR_WS_CLASSES . $class_method[0] . '.php');
+            ${$class_method[0]} = new $class_method[0]();
+          }
+          $cfgValue = tep_call_function($class_method[1], $Qcfg->value('configuration_value'), ${$class_method[0]});
+        } else {
+          $cfgValue = tep_call_function($use_function, $Qcfg->value('configuration_value'));
+        }
       } else {
-        $value_field = HTML::inputField('configuration_value', $cInfo->configuration_value);
+        $cfgValue = $Qcfg->value('configuration_value');
       }
-
-      $contents = array('form' => HTML::form('configuration', OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id . '&action=save')));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br /><strong>' . $cInfo->configuration_title . '</strong><br />' . $cInfo->configuration_description . '<br />' . $value_field);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id)));
-      break;
-    default:
-      if (isset($cInfo) && is_object($cInfo)) {
-        $heading[] = array('text' => '<strong>' . $cInfo->configuration_title . '</strong>');
-
-        $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID . '&cID=' . $cInfo->configuration_id . '&action=edit')));
-        $contents[] = array('text' => '<br />' . $cInfo->configuration_description);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($cInfo->date_added));
-        if (tep_not_null($cInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . tep_date_short($cInfo->last_modified));
-      }
-      break;
-  }
-
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
-
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
-
-    echo '            </td>' . "\n";
-  }
 ?>
-          </tr>
-        </table></td>
-      </tr>
-    </table>
+
+    <tr>
+      <td><?= $Qcfg->value('configuration_title'); ?></td>
+      <td><?= htmlspecialchars($cfgValue); ?></td>
+      <td class="action"><a href="<?= OSCOM::link('configuration.php', 'gID=' . $gID . '&cID=' . $Qcfg->valueInt('configuration_id') . '&action=edit'); ?>"><i class="fa fa-pencil" title="<?= IMAGE_EDIT; ?>"></i></a></td>
+    </tr>
 
 <?php
+    }
+?>
+
+  </tbody>
+</table>
+
+<?php
+  }
+
   require(DIR_WS_INCLUDES . 'template_bottom.php');
   require(DIR_WS_INCLUDES . 'application_bottom.php');
 ?>

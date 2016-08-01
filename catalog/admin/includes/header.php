@@ -33,7 +33,7 @@
 
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a href="#">Shop <span class="caret"></span></a>
+        <li><a>Shop <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php
@@ -52,7 +52,7 @@
 
           </ul>
         </li>
-        <li><a href="#">Apps <span class="caret"></span></a>
+        <li><a>Apps <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a>Manager</a></li>
 

@@ -26,36 +26,13 @@
     goto main_sub3;
   }
 
-  $languages = tep_get_languages();
-  $languages_array = array();
-  $languages_selected = DEFAULT_LANGUAGE;
-  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-    $languages_array[] = array('id' => $languages[$i]['code'],
-                               'text' => $languages[$i]['name']);
-    if ($languages[$i]['directory'] == $_SESSION['language']) {
-      $languages_selected = $languages[$i]['code'];
-    }
-  }
-
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-<?php
-  if (count($languages_array) > 1) {
-?>
-
-<div class="pull-right">
-  <?php echo HTML::form('adminlanguage', OSCOM::link(FILENAME_DEFAULT), 'get', null, ['session_id' => true]) . HTML::selectField('language', $languages_array, $languages_selected, 'onchange="this.form.submit();"') . '</form>'; ?>
-</div>
+<h2><i class="fa fa-home"></i> <a href="<?= OSCOM::link(FILENAME_DEFAULT); ?>"><?= STORE_NAME; ?></a></h2>
 
 <?php
-  }
-?>
-
-<h2><i class="fa fa-home"></i> <a href="<?php echo OSCOM::link(FILENAME_DEFAULT); ?>"><?php echo STORE_NAME; ?></a></h2>
-
-<?php
-  if ( defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && tep_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED) ) {
+  if (defined('MODULE_ADMIN_DASHBOARD_INSTALLED') && tep_not_null(MODULE_ADMIN_DASHBOARD_INSTALLED)) {
     $adm_array = explode(';', MODULE_ADMIN_DASHBOARD_INSTALLED);
 
     $col = 0;
@@ -74,7 +51,7 @@
 
       $ad = new $class();
 
-      if ( $ad->isEnabled() ) {
+      if ($ad->isEnabled()) {
         $col += 1;
 
         if ($col === 1) {

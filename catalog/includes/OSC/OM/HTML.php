@@ -8,6 +8,7 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML\Panel;
 use OSC\OM\Registry;
 
 class HTML
@@ -386,5 +387,10 @@ class HTML
         }
 
         return $stars;
+    }
+
+    public static function panel($heading = null, $body = null, $params = null)
+    {
+        return Panel::get($heading, $body, $params);
     }
 }

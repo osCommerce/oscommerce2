@@ -305,7 +305,7 @@ class DbStatement extends \PDOStatement
             $parameters .= '&';
         }
 
-        $output = '<ul class="pagination">';
+        $output = '<ul style="margin-top: 0;" class="pagination">';
 
 // previous button - not displayed on first page
         if ($this->page_set > 1) {

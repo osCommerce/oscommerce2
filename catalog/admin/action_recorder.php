@@ -92,46 +92,30 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="2" height="40">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td align="right"><table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td class="smallText" align="right">
+<div class="pull-right">
+  <?= HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link('action_recorder.php', 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary', null, 'btn-danger'); ?>
+</div>
+
+<h2><i class="fa fa-tasks"></i> <a href="<?= OSCOM::link('action_recorder.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+
 <?php
-  echo HTML::form('search', OSCOM::link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
-  echo TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search');
-  echo HTML::hiddenField('module') . '</form>';
+  echo HTML::form('search', OSCOM::link('action_recorder.php'), 'get', 'class="form-inline"', ['session_id' => true]) .
+       TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search') .
+       HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"') .
+       '</form>';
 ?>
-                </td>
-              </tr>
-              <tr>
-                <td class="smallText" align="right">
-<?php
-  echo HTML::form('filter', OSCOM::link(FILENAME_ACTION_RECORDER), 'get', null, ['session_id' => true]);
-  echo HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"');
-  echo HTML::hiddenField('search') . '</form>';
-?>
-                </td>
-              </tr>
-            </table></td>
-            <td class="smallText" align="right"><?php echo HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_ACTION_RECORDER, 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary'); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent" width="20">&nbsp;</td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULE; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE_ADDED; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-              </tr>
+
+<table class="oscom-table table table-hover">
+  <thead>
+    <tr class="info">
+      <th><?= TABLE_HEADING_MODULE; ?></th>
+      <th><?= TABLE_HEADING_CUSTOMER; ?></th>
+      <th><?= TABLE_HEADING_IDENTIFIER; ?></th>
+      <th class="text-right"><?= TABLE_HEADING_DATE_ADDED; ?></th>
+    </tr>
+  </thead>
+  <tbody>
+
 <?php
   $filter = array();
 
@@ -173,64 +157,26 @@
     if (is_object($GLOBALS[$module])) {
       $module_title = $GLOBALS[$module]->title;
     }
-
-    if ((!isset($_GET['aID']) || (isset($_GET['aID']) && ((int)$_GET['aID'] === $Qactions->valueInt('id')))) && !isset($aInfo)) {
-      $aInfo_array = array_merge($Qactions->toArray(), array('module_title' => $module_title));
-      $aInfo = new objectInfo($aInfo_array);
-    }
-
-    if ( (isset($aInfo) && is_object($aInfo)) && ($Qactions->valueInt('id') === (int)$aInfo->id) ) {
-      echo '                  <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
-    } else {
-      echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $Qactions->valueInt('id')) . '\'">' . "\n";
-    }
 ?>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qactions->value('success') == '1') ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent"><?php echo $module_title; ?></td>
-                <td class="dataTableContent"><?php echo $Qactions->valueProtected('user_name') . ' [' . $Qactions->valueInt('user_id') . ']'; ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_datetime_short($Qactions->value('date_added')); ?></td>
-                <td class="dataTableContent" align="right"><?php if ( (isset($aInfo) && is_object($aInfo)) && ($Qactions->valueInt('id') === (int)$aInfo->id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, tep_get_all_get_params(array('aID')) . 'aID=' . $Qactions->valueInt('id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-              </tr>
+
+    <tr>
+      <td><i class="fa <?= (($Qactions->valueInt('success') === 1) ? 'fa-check text-success' : 'fa-times text-danger'); ?>"></i> <?= $module_title; ?></td>
+      <td><?= $Qactions->valueProtected('user_name') . ' [' . $Qactions->valueInt('user_id') . ']'; ?></td>
+      <td><?= (tep_not_null($Qactions->value('identifier')) ? '<a href="' . OSCOM::link('action_recorder.php', 'search=' . $Qactions->value('identifier')) . '"><u>' . $Qactions->valueProtected('identifier') . '</u></a>': '(empty)'); ?></td>
+      <td class="text-right"><?= tep_datetime_short($Qactions->value('date_added')); ?></td>
+    </tr>
+
 <?php
   }
 ?>
-              <tr>
-                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $Qactions->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $Qactions->getPageSetLinks((isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object($GLOBALS[$_GET['module']]) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table></td>
-<?php
-  $heading = array();
-  $contents = array();
 
-  switch ($action) {
-    default:
-      if (isset($aInfo) && is_object($aInfo)) {
-        $heading[] = array('text' => '<strong>' . $aInfo->module_title . '</strong>');
+  </tbody>
+</table>
 
-        $contents[] = array('text' => TEXT_INFO_IDENTIFIER . '<br /><br />' . (!empty($aInfo->identifier) ? '<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'search=' . $aInfo->identifier) . '"><u>' . HTML::outputProtected($aInfo->identifier) . '</u></a>': '(empty)'));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_datetime_short($aInfo->date_added));
-      }
-      break;
-  }
-
-  if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
-
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
-
-    echo '            </td>' . "\n";
-  }
-?>
-          </tr>
-        </table></td>
-      </tr>
-    </table>
+<div>
+  <span class="pull-right"><?= $Qactions->getPageSetLinks((isset($_GET['module']) && in_array($_GET['module'], $modules_array) && is_object($GLOBALS[$_GET['module']]) ? 'module=' . $_GET['module'] : null) . '&' . (isset($_GET['search']) && !empty($_GET['search']) ? 'search=' . $_GET['search'] : null)); ?></span>
+  <span><?= $Qactions->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ENTRIES); ?></span>
+</div>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');

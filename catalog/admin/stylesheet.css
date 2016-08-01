@@ -65,6 +65,16 @@ FORM { display: inline; }
 }
 
 #contentText {
+  padding-top: 10px;
+}
+
+#contentText h2:first-of-type {
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+#contentText .table:first-of-type {
+  margin-top: 15px;
 }
 
 /* Custom jQuery UI */
@@ -81,4 +91,14 @@ FORM { display: inline; }
 
 .oscom-panel .panel-body .row:not(:last-child) {
   margin-bottom: 20px;
+}
+
+.oscom-table thead .action, .oscom-table tbody .action {
+  text-align: right;
+}
+
+.oscom-table tbody .action i {
+  font-size: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
 }
