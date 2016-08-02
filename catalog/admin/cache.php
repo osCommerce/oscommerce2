@@ -35,71 +35,64 @@
   require(DIR_WS_INCLUDES . 'template_top.php');
 ?>
 
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CACHE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE_CREATED; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-              </tr>
+<h2><i class="fa fa-database"></i> <a href="<?= OSCOM::link('cache.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
+
+<table class="oscom-table table table-hover">
+  <thead>
+    <tr class="info">
+      <th><?= TABLE_HEADING_CACHE; ?></th>
+      <th class="text-right"><?= TABLE_HEADING_DATE_CREATED; ?></th>
+      <th class="action"></th>
+    </tr>
+  </thead>
+  <tbody>
+
 <?php
-  if ($OSCOM_MessageStack->size < 1) {
-    $languages = tep_get_languages();
+  $languages = tep_get_languages();
 
-    for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-      if ($languages[$i]['code'] == DEFAULT_LANGUAGE) {
-        $language = $languages[$i]['directory'];
-      }
-    }
-
-    for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
-      $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
-
-      if (file_exists(DIR_FS_CACHE . $cached_file)) {
-        $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cached_file));
-      } else {
-        $cache_mtime = TEXT_FILE_DOES_NOT_EXIST;
-        $dir = dir(DIR_FS_CACHE);
-
-        while ($cache_file = $dir->read()) {
-          $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
-
-          if (preg_match('/^' . $cached_file. '/', $cache_file)) {
-            $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cache_file));
-            break;
-          }
-        }
-
-        $dir->close();
-      }
-?>
-              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><?php echo $cache_blocks[$i]['title']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $cache_mtime; ?></td>
-                <td class="dataTableContent" align="right"><?php echo '<a href="' . OSCOM::link(FILENAME_CACHE, 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?>&nbsp;</td>
-              </tr>
-<?php
+  for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
+    if ($languages[$i]['code'] == DEFAULT_LANGUAGE) {
+      $language = $languages[$i]['directory'];
     }
   }
+
+  for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
+    $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
+
+    if (file_exists(DIR_FS_CACHE . $cached_file)) {
+      $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cached_file));
+    } else {
+      $cache_mtime = TEXT_FILE_DOES_NOT_EXIST;
+      $dir = dir(DIR_FS_CACHE);
+
+      while ($cache_file = $dir->read()) {
+        $cached_file = preg_replace('/-language/', '-' . $language, $cache_blocks[$i]['file']);
+
+        if (preg_match('/^' . $cached_file. '/', $cache_file)) {
+          $cache_mtime = strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CACHE . $cache_file));
+          break;
+        }
+      }
+
+      $dir->close();
+    }
 ?>
-              <tr>
-                <td class="smallText" colspan="3"><?php echo TEXT_CACHE_DIRECTORY . ' ' . DIR_FS_CACHE; ?></td>
-              </tr>
-            </table></td>
-          </tr>
-        </table></td>
-      </tr>
-    </table>
+    <tr>
+      <td><?= $cache_blocks[$i]['title']; ?></td>
+      <td class="text-right"><?= $cache_mtime; ?></td>
+      <td class="action"><?= '<a href="' . OSCOM::link(FILENAME_CACHE, 'action=reset&block=' . $cache_blocks[$i]['code']) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_reset.gif', 'Reset', 13, 13) . '</a>'; ?></td>
+    </tr>
+
+<?php
+  }
+?>
+
+  </tbody>
+</table>
+
+<p>
+  <?= '<strong>' . TEXT_CACHE_DIRECTORY . '</strong> ' . DIR_FS_CACHE; ?>
+</p>
 
 <?php
   require(DIR_WS_INCLUDES . 'template_bottom.php');
