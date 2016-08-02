@@ -25,14 +25,6 @@
 .infoBoxHeading { color: #ffffff; background-color: #B3BAC5; }
 .infoBoxContent { color: #000000; background-color: #DEE4E8; }
 
-/* message box */
-
-.messageBox { }
-
-/* forms */
-CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, "Helvetica Neue", Helvetica, Arial, sans-serif; }
-FORM { display: inline; }
-
 /* account */
 .formArea { background-color: #f1f9fe; border-color: #7b9ebd; border-style: solid; border-width: 1px; }
 .formAreaTitle { font-family: Tahoma, Helveticy, Verdana, Arial, sans-serif; font-weight: bold; }
@@ -45,17 +37,12 @@ FORM { display: inline; }
 .specialPrice { color: #ff0000; }
 .oldPrice { text-decoration: line-through; }
 .fieldRequired { color: #ff0000; }
-.smallText { }
-.main { }
 .errorText { color: #ff0000; }
 
 #adminAppMenu {
   float: left;
   width: 150px;
   padding: 5px;
-}
-
-#adminAppMenu h3 {
 }
 
 #adminAppMenu ul {
@@ -78,16 +65,9 @@ FORM { display: inline; }
 }
 
 /* Custom jQuery UI */
-.ui-widget { }
 .ui-dialog { min-width: 500px; }
 
-/* buttons */
 
-.tdbLink a { }
-
-.tdbLink button { }
-
-.oscom-panel {}
 
 .oscom-panel .panel-body .row:not(:last-child) {
   margin-bottom: 20px;
