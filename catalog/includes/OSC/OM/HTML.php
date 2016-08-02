@@ -44,7 +44,7 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
-    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '')
+    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = false, $bootstrap_css = '')
     {
         if ((empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false')) {
             return false;
