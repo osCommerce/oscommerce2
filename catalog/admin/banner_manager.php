@@ -43,7 +43,7 @@
         $banners_url = HTML::sanitize($_POST['banners_url']);
         $new_banners_group = HTML::sanitize($_POST['new_banners_group']);
         $banners_group = (empty($new_banners_group)) ? HTML::sanitize($_POST['banners_group']) : $new_banners_group;
-        $banners_html_text = HTML::sanitize($_POST['banners_html_text']);
+        $banners_html_text = $_POST['banners_html_text'];
         $banners_image_local = HTML::sanitize($_POST['banners_image_local']);
         $banners_image_target = HTML::sanitize($_POST['banners_image_target']);
         $db_image_location = '';
@@ -194,7 +194,7 @@
           echo '<h1>' . $Qbanner->valueProtected('banners_title') . '</h1>';
 
           if (tep_not_null($Qbanner->value('banners_html_text'))) {
-            echo $banner['banners_html_text'];
+            echo $Qbanner->value('banners_html_text');
           } elseif (tep_not_null($Qbanner->value('banners_image'))) {
             echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $Qbanner->value('banners_image'), $Qbanner->value('banners_title'));
           }

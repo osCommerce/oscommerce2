@@ -22,7 +22,7 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'save':
-        $configuration_value = HTML::sanitize($_POST['configuration_value']);
+        $configuration_value = $_POST['configuration_value'];
         $cID = HTML::sanitize($_GET['cID']);
 
         $OSCOM_Db->save('configuration', [
