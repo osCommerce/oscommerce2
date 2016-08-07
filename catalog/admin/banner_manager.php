@@ -219,11 +219,17 @@
   $show_listing = true;
 
   require(DIR_WS_INCLUDES . 'template_top.php');
+
+  if (empty($action)) {
 ?>
 
 <div class="pull-right">
   <?= HTML::button(IMAGE_NEW_BANNER, 'fa fa-plus', OSCOM::link('banner_manager.php', 'action=new'), null, null, 'btn-info'); ?>
 </div>
+
+<?php
+  }
+?>
 
 <h2><i class="fa fa-picture-o"></i> <a href="<?= OSCOM::link('banner_manager.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
 
@@ -419,9 +425,9 @@
 
 <?php
       if ($Qbanners->valueInt('status') === 1) {
-        echo '<i class="fa fa-circle text-success" title="Active"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '"><i class="fa fa-circle-o text-danger" title="Set Inactive"></i></a>';
+        echo '<i class="fa fa-circle text-success" title="' . IMAGE_ICON_STATUS_GREEN . '"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=0') . '"><i class="fa fa-circle-o text-danger" title="' . IMAGE_ICON_STATUS_RED_LIGHT . '"></i></a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '"><i class="fa fa-circle-o text-success" title="Set Active"></i></a>&nbsp;<i class="fa fa-circle text-danger" title="Inactive"></i>';
+        echo '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=setflag&flag=1') . '"><i class="fa fa-circle-o text-success" title="' . IMAGE_ICON_STATUS_GREEN_LIGHT . '"></i></a>&nbsp;<i class="fa fa-circle text-danger" title="' . IMAGE_ICON_STATUS_RED . '"></i>';
       }
 ?>
 

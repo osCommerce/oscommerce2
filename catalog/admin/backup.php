@@ -357,11 +357,17 @@
   $show_listing = true;
 
   require(DIR_WS_INCLUDES . 'template_top.php');
+
+  if (empty($action)) {
 ?>
 
 <div class="pull-right">
   <?= HTML::button(IMAGE_BACKUP, 'fa fa-clone', OSCOM::link('backup.php', 'action=backup'), null, null, 'btn-info') . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link('backup.php', 'action=restorelocal'), null, null, 'btn-info'); ?>
 </div>
+
+<?php
+  }
+?>
 
 <h2><i class="fa fa-archive"></i> <a href="<?= OSCOM::link('backup.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
 

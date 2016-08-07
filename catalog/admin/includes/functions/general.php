@@ -1099,7 +1099,7 @@
     ], null, 1);
 
     if ($Qduplicate->fetch() === false) {
-      if (file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('categories_image'))) {
+      if (!empty($Qimage->value('categories_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('categories_image'))) {
         unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('categories_image'));
       }
     }
@@ -1128,7 +1128,7 @@
     ], null, 1);
 
     if ($Qduplicate->fetch() === false) {
-      if (file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('products_image'))) {
+      if (!empty($Qimage->value('products_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('products_image'))) {
         unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('products_image'));
       }
     }

@@ -100,7 +100,7 @@
 
 <?php
   echo HTML::form('search', OSCOM::link('action_recorder.php'), 'get', 'class="form-inline"', ['session_id' => true]) .
-       TEXT_FILTER_SEARCH . ' ' . HTML::inputField('search') .
+       HTML::inputField('search', null, 'placeholder="' . TEXT_FILTER_SEARCH . '"') .
        HTML::selectField('module', $modules_list_array, null, 'onchange="this.form.submit();"') .
        '</form>';
 ?>

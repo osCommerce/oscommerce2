@@ -91,11 +91,17 @@
   $show_listing = true;
 
   require(DIR_WS_INCLUDES . 'template_top.php');
+
+  if (empty($action)) {
 ?>
 
 <div class="pull-right">
   <?= HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link('administrators.php', 'action=new'), 'primary', null, 'btn-info'); ?>
 </div>
+
+<?php
+  }
+?>
 
 <h2><i class="fa fa-users"></i> <a href="<?= OSCOM::link('administrators.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
 
