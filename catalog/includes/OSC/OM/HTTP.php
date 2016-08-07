@@ -83,7 +83,7 @@ class HTTP
             }
 
             if (!isset($parameters['cafile'])) {
-                $parameters['cafile'] = OSCOM::BASE_DIR . 'includes/cacert.pem';
+                $parameters['cafile'] = OSCOM::BASE_DIR . 'cacert.pem';
             }
 
             if (file_exists($parameters['cafile'])) {
