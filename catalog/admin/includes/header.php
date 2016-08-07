@@ -33,16 +33,16 @@
 
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li><a>Shop <span class="caret"></span></a>
+        <li><a><?= ADMIN_MENU_SHOP; ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
 
 <?php
-    foreach ($cl_box_groups as $groups) {
-      echo '<li><a>' . HTML::outputProtected($groups['heading']) . ' <span class="caret"></span></a>
+    foreach ($admin_menu['shop'] as $group => $links) {
+      echo '<li><a>' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group))) . ' <span class="caret"></span></a>
               <ul class="dropdown-menu">';
 
-      foreach ($groups['apps'] as $app) {
-        echo '<li><a href="' . $app['link'] . '">' . HTML::outputProtected($app['title']) . '</a></li>';
+      foreach ($links as $code => $page) {
+        echo '<li><a href="' . (is_string($page) ? $page : $page['link']) . '">' . HTML::outputProtected(constant(strtoupper('ADMIN_MENU_SHOP_' . $group . '_' . $code))) . '</a></li>';
       }
 
       echo '  </ul>
@@ -52,9 +52,10 @@
 
           </ul>
         </li>
-        <li><a>Apps <span class="caret"></span></a>
+
+        <li><a><?= ADMIN_MENU_APPS; ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a>Manager</a></li>
+            <li class="disabled"><a>Manager</a></li>
 
 <?php
     if (!empty($cl_apps_groups)) {
@@ -71,6 +72,25 @@
         echo '  </ul>
               </li>';
       }
+    }
+?>
+
+          </ul>
+        </li>
+        <li><a><?= ADMIN_MENU_LEGACY; ?> <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+<?php
+    foreach ($cl_box_groups as $groups) {
+      echo '<li><a>' . HTML::outputProtected($groups['heading']) . ' <span class="caret"></span></a>
+              <ul class="dropdown-menu">';
+
+      foreach ($groups['apps'] as $app) {
+        echo '<li><a href="' . $app['link'] . '">' . HTML::outputProtected($app['title']) . '</a></li>';
+      }
+
+      echo '  </ul>
+            </li>';
     }
 ?>
 

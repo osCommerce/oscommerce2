@@ -10,16 +10,13 @@
   Released under the GNU General Public License
 */
 
-  use OSC\OM\OSCOM;
+use OSC\OM\OSCOM;
+
+$admin_menu['shop']['catalog']['categories'] = OSCOM::link('categories.php');
 
   $cl_box_groups[] = array(
     'heading' => BOX_HEADING_CATALOG,
     'apps' => array(
-      array(
-        'code' => FILENAME_CATEGORIES,
-        'title' => BOX_CATALOG_CATEGORIES_PRODUCTS,
-        'link' => OSCOM::link(FILENAME_CATEGORIES)
-      ),
       array(
         'code' => FILENAME_PRODUCTS_ATTRIBUTES,
         'title' => BOX_CATALOG_CATEGORIES_PRODUCTS_ATTRIBUTES,

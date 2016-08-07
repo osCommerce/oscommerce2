@@ -10,31 +10,16 @@
   Released under the GNU General Public License
 */
 
-  use OSC\OM\OSCOM;
+use OSC\OM\OSCOM;
+
+$admin_menu['shop']['tools']['action_recorder'] = OSCOM::link('action_recorder.php');
+$admin_menu['shop']['tools']['backup'] = OSCOM::link('backup.php');
+$admin_menu['shop']['tools']['banner_manager'] = OSCOM::link('banner_manager.php');
+$admin_menu['shop']['tools']['cache'] = OSCOM::link('cache.php');
 
   $cl_box_groups[] = array(
     'heading' => BOX_HEADING_TOOLS,
     'apps' => array(
-      array(
-        'code' => FILENAME_ACTION_RECORDER,
-        'title' => BOX_TOOLS_ACTION_RECORDER,
-        'link' => OSCOM::link(FILENAME_ACTION_RECORDER)
-      ),
-      array(
-        'code' => FILENAME_BACKUP,
-        'title' => BOX_TOOLS_BACKUP,
-        'link' => OSCOM::link(FILENAME_BACKUP)
-      ),
-      array(
-        'code' => FILENAME_BANNER_MANAGER,
-        'title' => BOX_TOOLS_BANNER_MANAGER,
-        'link' => OSCOM::link(FILENAME_BANNER_MANAGER)
-      ),
-      array(
-        'code' => FILENAME_CACHE,
-        'title' => BOX_TOOLS_CACHE,
-        'link' => OSCOM::link(FILENAME_CACHE)
-      ),
       array(
         'code' => FILENAME_DEFINE_LANGUAGE,
         'title' => BOX_TOOLS_DEFINE_LANGUAGE,

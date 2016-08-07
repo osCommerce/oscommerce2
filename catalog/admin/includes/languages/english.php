@@ -57,25 +57,12 @@ define('FEMALE', 'Female');
 // text for date of birth example
 define('DOB_FORMAT_STRING', 'mm/dd/yyyy');
 
-// configuration box text in includes/boxes/configuration.php
-define('BOX_HEADING_CONFIGURATION', 'Configuration');
-define('BOX_CONFIGURATION_MYSTORE', 'My Store');
-define('BOX_CONFIGURATION_LOGGING', 'Logging');
-define('BOX_CONFIGURATION_CACHE', 'Cache');
-define('BOX_CONFIGURATION_ADMINISTRATORS', 'Administrators');
-define('BOX_CONFIGURATION_STORE_LOGO', 'Store Logo');
+define('ADMIN_MENU_SHOP', 'Shop');
+define('ADMIN_MENU_APPS', 'Apps');
+define('ADMIN_MENU_LEGACY', 'Legacy');
 
 // modules box text in includes/boxes/modules.php
 define('BOX_HEADING_MODULES', 'Modules');
-
-// categories box text in includes/boxes/catalog.php
-define('BOX_HEADING_CATALOG', 'Catalog');
-define('BOX_CATALOG_CATEGORIES_PRODUCTS', 'Categories/Products');
-define('BOX_CATALOG_CATEGORIES_PRODUCTS_ATTRIBUTES', 'Products Attributes');
-define('BOX_CATALOG_MANUFACTURERS', 'Manufacturers');
-define('BOX_CATALOG_REVIEWS', 'Reviews');
-define('BOX_CATALOG_SPECIALS', 'Specials');
-define('BOX_CATALOG_PRODUCTS_EXPECTED', 'Products Expected');
 
 // customers box text in includes/boxes/customers.php
 define('BOX_HEADING_CUSTOMERS', 'Customers');
@@ -98,20 +85,6 @@ define('BOX_HEADING_REPORTS', 'Reports');
 define('BOX_REPORTS_PRODUCTS_VIEWED', 'Products Viewed');
 define('BOX_REPORTS_PRODUCTS_PURCHASED', 'Products Purchased');
 define('BOX_REPORTS_ORDERS_TOTAL', 'Customer Orders-Total');
-
-// tools text in includes/boxes/tools.php
-define('BOX_HEADING_TOOLS', 'Tools');
-define('BOX_TOOLS_ACTION_RECORDER', 'Action Recorder');
-define('BOX_TOOLS_BACKUP', 'Database Backup');
-define('BOX_TOOLS_BANNER_MANAGER', 'Banner Manager');
-define('BOX_TOOLS_CACHE', 'Cache Control');
-define('BOX_TOOLS_DEFINE_LANGUAGE', 'Define Languages');
-define('BOX_TOOLS_MAIL', 'Send Email');
-define('BOX_TOOLS_NEWSLETTER_MANAGER', 'Newsletter Manager');
-define('BOX_TOOLS_SEC_DIR_PERMISSIONS', 'Security Directory Permissions');
-define('BOX_TOOLS_SERVER_INFO', 'Server Info');
-define('BOX_TOOLS_VERSION_CHECK', 'Version Checker');
-define('BOX_TOOLS_WHOS_ONLINE', 'Who\'s Online');
 
 // localizaion box text in includes/boxes/localization.php
 define('BOX_HEADING_LOCALIZATION', 'Localization');

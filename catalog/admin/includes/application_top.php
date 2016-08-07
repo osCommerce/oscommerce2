@@ -76,6 +76,7 @@
                         array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
                        );
 
+  $admin_menu = [];
   $cl_box_groups = array();
   $cl_apps_groups = array();
 
