@@ -90,3 +90,9 @@
 .sortHandle {
   cursor: move;
 }
+
+/* Chartist */
+
+.ct-label {
+  font-size: 0.9em;
+}
