@@ -35,11 +35,11 @@
       $OSCOM_Db = Registry::get('Db');
 
       $days = array();
-      for($i = 0; $i < 30; $i++) {
+      for($i = 0; $i < 7; $i++) {
         $days[date('Y-m-d', strtotime('-'. $i .' days'))] = 0;
       }
 
-      $Qorders = $OSCOM_Db->query('select date_format(o.date_purchased, "%Y-%m-%d") as dateday, sum(ot.value) as total from :table_orders o, :table_orders_total ot where date_sub(curdate(), interval 30 day) <= o.date_purchased and o.orders_id = ot.orders_id and ot.class = "ot_total" group by dateday');
+      $Qorders = $OSCOM_Db->query('select date_format(o.date_purchased, "%Y-%m-%d") as dateday, sum(ot.value) as total from :table_orders o, :table_orders_total ot where date_sub(curdate(), interval 7 day) <= o.date_purchased and o.orders_id = ot.orders_id and ot.class = "ot_total" group by dateday');
 
       while ($Qorders->fetch()) {
         $days[$Qorders->value('dateday')] = $Qorders->value('total');
@@ -47,82 +47,42 @@
 
       $days = array_reverse($days, true);
 
-      $js_array = '';
-      foreach ($days as $date => $total) {
-        $js_array .= '[' . (mktime(0, 0, 0, substr($date, 5, 2), substr($date, 8, 2), substr($date, 0, 4))*1000) . ', ' . $total . '],';
-      }
-
-      if (!empty($js_array)) {
-        $js_array = substr($js_array, 0, -1);
-      }
-
       $chart_label = HTML::output(MODULE_ADMIN_DASHBOARD_TOTAL_REVENUE_CHART_LINK);
       $chart_label_link = OSCOM::link(FILENAME_ORDERS);
 
+      $data_labels = json_encode(array_keys($days));
+      $data = json_encode(array_values($days));
+
       $output = <<<EOD
-<div id="d_total_revenue" style="width: 100%; height: 150px;"></div>
-<script type="text/javascript">
-$(function () {
-  var plot30 = [$js_array];
-  $.plot($('#d_total_revenue'), [ {
-    label: '$chart_label',
-    data: plot30,
-    lines: { show: true, fill: true },
-    points: { show: true },
-    color: '#66CC33'
-  }], {
-    xaxis: {
-      ticks: 4,
-      mode: 'time'
-    },
-    yaxis: {
-      ticks: 3,
-      min: 0
-    },
-    grid: {
-      backgroundColor: { colors: ['#fff', '#eee'] },
-      hoverable: true
-    },
-    legend: {
-      labelFormatter: function(label, series) {
-        return '<a href="$chart_label_link">' + label + '</a>';
-      }
+<h5 class="text-center"><a href="$chart_label_link">$chart_label</a></h5>
+<div id="d_total_revenue"></div>
+<script>
+$(function() {
+  var data = {
+    labels: $data_labels,
+    series: [ $data ]
+  };
+
+  var options = {
+    width: '100%',
+    height: '150px',
+    showPoint: false,
+    showArea: true
+  }
+
+  var chart = new Chartist.Line('#d_total_revenue', data, options);
+
+  chart.on('draw', function(context) {
+    if (context.type === 'line') {
+      context.element.attr({
+        style: 'stroke: green;'
+      });
+    } else if (context.type === 'area') {
+      context.element.attr({
+        style: 'fill: green;'
+      });
     }
   });
-});
-
-function showTooltip(x, y, contents) {
-  $('<div id="tooltip">' + contents + '</div>').css( {
-    position: 'absolute',
-    display: 'none',
-    top: y + 5,
-    left: x + 5,
-    border: '1px solid #fdd',
-    padding: '2px',
-    backgroundColor: '#fee',
-    opacity: 0.80
-  }).appendTo('body').fadeIn(200);
-}
-
-var monthNames = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ];
-
-var previousPoint = null;
-$('#d_total_revenue').bind('plothover', function (event, pos, item) {
-  if (item) {
-    if (previousPoint != item.datapoint) {
-      previousPoint = item.datapoint;
-
-      $('#tooltip').remove();
-      var x = item.datapoint[0],
-          y = item.datapoint[1],
-          xdate = new Date(x);
-
-      showTooltip(item.pageX, item.pageY, y + ' for ' + monthNames[xdate.getMonth()] + '-' + xdate.getDate());
-    }
-  } else {
-    $('#tooltip').remove();
-    previousPoint = null;
-  }
 });
 </script>
 EOD;
