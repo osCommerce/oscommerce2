@@ -82,3 +82,11 @@
   padding-left: 5px;
   padding-right: 5px;
 }
+
+.linkHandle {
+  cursor: pointer;
+}
+
+.sortHandle {
+  cursor: move;
+}

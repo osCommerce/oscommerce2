@@ -11,8 +11,7 @@
 */
 
 define('HEADING_TITLE', 'Categories / Products');
-define('HEADING_TITLE_SEARCH', 'Search:');
-define('HEADING_TITLE_GOTO', 'Go To:');
+define('HEADING_TITLE_SEARCH', 'Search');
 
 define('TABLE_HEADING_ID', 'ID');
 define('TABLE_HEADING_CATEGORIES_PRODUCTS', 'Categories / Products');

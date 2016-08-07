@@ -9,13 +9,17 @@
 
   Released under the GNU General Public License
 */
+
+  use OSC\OM\OSCOM;
 ?>
 
 </div>
 
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
-<br />
+<script src="<?= OSCOM::link('Shop/ext/mustache/mustache.min.js', '', 'AUTO', false); ?>"></script>
+
+<script src="<?= OSCOM::link('Shop/ext/sortable/sortable.min.js', '', 'AUTO', false); ?>"></script>
 
 </body>
 </html>
