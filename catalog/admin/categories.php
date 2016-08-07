@@ -288,7 +288,7 @@
           $language_id = $languages[$i]['id'];
 
           $sql_data_array = array('products_name' => HTML::sanitize($_POST['products_name'][$language_id]),
-                                  'products_description' => HTML::sanitize($_POST['products_description'][$language_id]),
+                                  'products_description' => $_POST['products_description'][$language_id],
                                   'products_url' => HTML::sanitize($_POST['products_url'][$language_id]));
 
           if ($action == 'insert_product') {
@@ -314,7 +314,7 @@
           if (preg_match('/^products_image_large_([0-9]+)$/', $key, $matches)) {
             $pi_sort_order++;
 
-            $sql_data_array = array('htmlcontent' => HTML::sanitize($_POST['products_image_htmlcontent_' . $matches[1]]),
+            $sql_data_array = array('htmlcontent' => $_POST['products_image_htmlcontent_' . $matches[1]],
                                     'sort_order' => $pi_sort_order);
 
             $t = new upload($key);
@@ -332,7 +332,7 @@
           } elseif (preg_match('/^products_image_large_new_([0-9]+)$/', $key, $matches)) {
 // Insert new large product images
             $sql_data_array = array('products_id' => (int)$products_id,
-                                    'htmlcontent' => HTML::sanitize($_POST['products_image_htmlcontent_new_' . $matches[1]]));
+                                    'htmlcontent' => $_POST['products_image_htmlcontent_new_' . $matches[1]]);
 
             $t = new upload($key);
             $t->set_destination(DIR_FS_CATALOG_IMAGES);
