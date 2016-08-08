@@ -15,18 +15,6 @@
   use OSC\OM\Registry;
 
 ////
-// Get the installed version number
-  function tep_get_version() {
-    static $v;
-
-    if (!isset($v)) {
-      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
-    }
-
-    return $v;
-  }
-
-////
 // Return a product's name
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {

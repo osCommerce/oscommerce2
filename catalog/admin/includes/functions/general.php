@@ -15,18 +15,6 @@
   use OSC\OM\Registry;
 
 ////
-// Get the installed version number
-  function tep_get_version() {
-    static $v;
-
-    if (!isset($v)) {
-      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
-    }
-
-    return $v;
-  }
-
-////
 // Parse the data used in the html tags to ensure the tags will not break
   function tep_parse_input_field_data($data, $parse) {
     return strtr(trim($data), $parse);
@@ -941,7 +929,7 @@
 
     $data = array();
 
-    $data['oscommerce']  = array('version' => tep_get_version());
+    $data['oscommerce']  = array('version' => OSCOM::getVersion());
 
     $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,

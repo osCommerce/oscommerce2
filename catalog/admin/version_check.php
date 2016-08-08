@@ -10,9 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
-  $current_version = tep_get_version();
+  $current_version = OSCOM::getVersion();
   $major_version = (int)substr($current_version, 0, 1);
 
   $releases = null;
