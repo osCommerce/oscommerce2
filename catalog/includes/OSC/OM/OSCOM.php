@@ -33,7 +33,7 @@ class OSCOM
     public static function getVersion()
     {
         if (!isset(static::$version)) {
-            $file = static::BASE_DIR . 'version.php';
+            $file = static::BASE_DIR . 'version.txt';
 
             $v = trim(file_get_contents($file));
 

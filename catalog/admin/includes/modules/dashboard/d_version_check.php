@@ -32,14 +32,15 @@
     }
 
     function getOutput() {
-      $cache_file = DIR_FS_CACHE . 'oscommerce_version_check.cache';
+      $OSCOM_Cache = Registry::get('Cache');
+
       $current_version = OSCOM::getVersion();
       $new_version = false;
 
-      if (file_exists($cache_file)) {
-        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', filemtime($cache_file)));
+      if ($OSCOM_Cache->read('oscommerce_version_check')) {
+        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $OSCOM_Cache->getTime('oscommerce_version_check')));
 
-        $releases = unserialize(implode('', file($cache_file)));
+        $releases = $OSCOM_Cache->getCache();
 
         foreach ($releases as $version) {
           $version_array = explode('|', $version);
@@ -69,7 +70,7 @@
       }
 
       $output .= '    <tr>
-                        <td><a href="' . OSCOM::link(FILENAME_VERSION_CHECK) . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>
+                        <td><a href="' . OSCOM::link('online_update.php') . '">' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_CHECK_NOW . '</a></td>
                         <td class="text-right">' . $date_last_checked . '</td>
                       </tr>
                     </tbody>

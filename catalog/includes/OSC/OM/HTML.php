@@ -326,8 +326,6 @@ class HTML
 
     public static function button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null)
     {
-        static $button_counter = 1;
-
         $types = ['submit', 'button', 'reset'];
 
         if (!isset($params['type'])) {
@@ -345,13 +343,13 @@ class HTML
         $button = '';
 
         if (($params['type'] == 'button') && isset($link)) {
-            $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+            $button .= '<a href="' . $link . '"';
 
             if (isset($params['newwindow'])) {
                 $button .= ' target="_blank"';
             }
         } else {
-            $button .= '<button id="tdb' . $button_counter . '" type="' . static::output($params['type']) . '"';
+            $button .= '<button type="' . static::output($params['type']) . '"';
         }
 
         if (isset($params['params'])) {
@@ -361,7 +359,7 @@ class HTML
         $button .= ' class="btn ' . (isset($class) ? $class : 'btn-default') . '">';
 
         if (isset($icon) && !empty($icon)) {
-            $button .= '<span class="' . $icon . '"></span> ';
+            $button .= '<i class="' . $icon . '"></i> ';
         }
 
         $button .= $title;
@@ -371,8 +369,6 @@ class HTML
         } else {
             $button .= '</button>';
         }
-
-        $button_counter++;
 
         return $button;
     }

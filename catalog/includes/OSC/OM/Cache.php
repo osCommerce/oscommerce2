@@ -87,6 +87,56 @@ class Cache
         $this->write($this->data);
     }
 
+    public function getTime($key)
+    {
+        $key = basename($key);
+
+        if (!static::hasSafeName($key)) {
+            trigger_error('OSCOM_Cache::getTime(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+
+            return false;
+        }
+
+        $filename = OSCOM::BASE_DIR . 'work/' . $key . '.cache';
+
+        if (file_exists($filename)) {
+            return filemtime($filename);
+        }
+
+        return false;
+    }
+
+    public static function exists($key, $strict = true)
+    {
+        $key = basename($key);
+
+        if (!static::hasSafeName($key)) {
+            trigger_error('OSCOM_Cache::exists(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+
+            return false;
+        }
+
+        if (file_exists(OSCOM::BASE_DIR . 'work/' . $key . '.cache')) {
+            return true;
+        }
+
+        if ($strict === false) {
+            $key_length = strlen($key);
+
+            $d = dir(OSCOM::BASE_DIR . 'work/');
+
+            while (($entry = $d->read()) !== false) {
+                if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
+                    $d->close();
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static function clear($key)
     {
         $key = basename($key);

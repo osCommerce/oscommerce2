@@ -20,7 +20,13 @@ class Panel
             $params['type'] = 'default';
         }
 
-        $result = '<div class="panel panel-' . $params['type'] . ' oscom-panel">';
+        $result = '<div class="panel panel-' . $params['type'] . ' oscom-panel"';
+
+        if (isset($params['params'])) {
+            $result .= ' ' . $params['params'];
+        }
+
+        $result .= '>';
 
         if (isset($heading) && !empty($heading)) {
             $result .= static::buildHeading($heading);

@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-define('HEADING_TITLE', 'Version Checker');
+define('HEADING_TITLE', 'Online Update');
 
 define('TABLE_HEADING_VERSION', 'Version');
 define('TABLE_HEADING_RELEASED', 'Release Date');

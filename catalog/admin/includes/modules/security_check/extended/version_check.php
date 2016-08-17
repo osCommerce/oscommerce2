@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheckExtended_version_check {
     var $type = 'warning';
@@ -23,13 +24,13 @@
     }
 
     function pass() {
-      $cache_file = DIR_FS_CACHE . 'oscommerce_version_check.cache';
+      $OSCOM_Cache = Registry::get('Cache');
 
-      return file_exists($cache_file) && (filemtime($cache_file) > strtotime('-30 days'));
+      return $OSCOM_Cache->exists('oscommerce_version_check') && ($OSCOM_Cache->getTime('oscommerce_version_check') > strtotime('-30 days'));
     }
 
     function getMessage() {
-      return '<a href="' . OSCOM::link(FILENAME_VERSION_CHECK) . '">' . MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_ERROR . '</a>';
+      return '<a href="' . OSCOM::link('online_update.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_ERROR . '</a>';
     }
   }
 ?>

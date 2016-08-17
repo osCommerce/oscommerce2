@@ -16,6 +16,7 @@ $admin_menu['shop']['tools']['action_recorder'] = OSCOM::link('action_recorder.p
 $admin_menu['shop']['tools']['backup'] = OSCOM::link('backup.php');
 $admin_menu['shop']['tools']['banner_manager'] = OSCOM::link('banner_manager.php');
 $admin_menu['shop']['tools']['cache'] = OSCOM::link('cache.php');
+$admin_menu['shop']['tools']['online_update'] = OSCOM::link('online_update.php');
 
   $cl_box_groups[] = array(
     'heading' => BOX_HEADING_TOOLS,
@@ -44,11 +45,6 @@ $admin_menu['shop']['tools']['cache'] = OSCOM::link('cache.php');
         'code' => FILENAME_SERVER_INFO,
         'title' => BOX_TOOLS_SERVER_INFO,
         'link' => OSCOM::link(FILENAME_SERVER_INFO)
-      ),
-      array(
-        'code' => FILENAME_VERSION_CHECK,
-        'title' => BOX_TOOLS_VERSION_CHECK,
-        'link' => OSCOM::link(FILENAME_VERSION_CHECK)
       ),
       array(
         'code' => FILENAME_WHOS_ONLINE,
