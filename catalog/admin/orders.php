@@ -10,9 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   require('includes/application_top.php');
 
-  $OSCOM_Hooks->register('orders');
+  $OSCOM_Hooks = Registry::get('Hooks');
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
@@ -92,7 +94,7 @@
 
   include(DIR_WS_CLASSES . 'order.php');
 
-  $OSCOM_Hooks->call('orders', 'orderAction');
+  $OSCOM_Hooks->call('Orders', 'Action');
 
   require(DIR_WS_INCLUDES . 'template_top.php');
 
@@ -308,7 +310,7 @@
   </div>
 
 <?php
-    echo $OSCOM_Hooks->call('orders', 'orderTab');
+    echo $OSCOM_Hooks->output('Orders', 'PageTab', 'display');
 ?>
 
 </div>

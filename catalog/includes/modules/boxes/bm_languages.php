@@ -39,7 +39,6 @@
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-          include(DIR_WS_CLASSES . 'language.php');
           $lng = new language;
         }
 
@@ -103,7 +102,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

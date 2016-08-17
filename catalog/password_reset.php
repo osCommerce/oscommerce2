@@ -81,11 +81,11 @@
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      OSCOM::redirect('login.php', '', 'SSL');
+      OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('index.php', 'Account&LogIn', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require('includes/template_top.php');

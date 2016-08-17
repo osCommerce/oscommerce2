@@ -12,10 +12,9 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require("includes/application_top.php");
-
-  $OSCOM_Hooks->register('cart');
 
   if ($_SESSION['cart']->count_contents() > 0) {
     include(DIR_WS_CLASSES . 'payment.php');
@@ -141,7 +140,15 @@
   </div>
 
 <?php
-    echo $OSCOM_Hooks->call('cart', 'displayAlternativeCheckoutButtons');
+    $checkout_buttons = Registry::get('Hooks')->call('Cart', 'AdditionalCheckoutButtons', 'display');
+
+    if (!empty($checkout_buttons)) {
+      echo '<p class="text-right">' . TEXT_ALTERNATIVE_CHECKOUT_METHODS . '</p>';
+
+      foreach ($checkout_buttons as $button) {
+        echo '<p class="text-right">' . $button . '</p>';
+      }
+    }
 ?>
 
 </div>

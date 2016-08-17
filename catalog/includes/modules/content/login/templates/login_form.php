@@ -10,8 +10,8 @@ use OSC\OM\OSCOM;
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_RETURNING_CUSTOMER; ?></p>
     </div>
 
-    <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
-    
+    <?php echo HTML::form('login', OSCOM::link('index.php', 'Account&LogIn&Process', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+
     <div class="form-group">
       <label for="inputEmail" class="control-label col-xs-4"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-xs-8">
@@ -29,10 +29,10 @@ use OSC\OM\OSCOM;
     <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_LOGIN, 'glyphicon glyphicon-log-in', null, 'primary', null, 'btn-success btn-block'); ?></p>
 
     </form>
-    
+
     <hr>
-    
+
     <p><?php echo '<a href="' . OSCOM::link('password_forgotten.php', '', 'SSL') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
-    
+
   </div>
 </div>

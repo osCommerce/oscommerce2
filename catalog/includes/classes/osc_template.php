@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+
   class oscTemplate {
     var $_title;
     var $_blocks = array();
@@ -125,21 +127,31 @@
       }
 
       foreach ( $this->getContentModules($group) as $module ) {
-        if ( !class_exists($module) ) {
-          if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php') ) {
-            if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
-              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
-            }
+        if (strpos($module, '\\') !== false) {
+          $class = Apps::getModuleClass($group . '/' . $module, 'Content');
 
-            include(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php');
-          }
-        }
-
-        if ( class_exists($module) ) {
-          $mb = new $module();
+          $mb = new $class();
 
           if ( $mb->isEnabled() ) {
             $mb->execute();
+          }
+        } else {
+          if ( !class_exists($module) ) {
+            if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php') ) {
+              if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
+                include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
+              }
+
+              include(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php');
+            }
+          }
+
+          if ( class_exists($module) ) {
+            $mb = new $module();
+
+            if ( $mb->isEnabled() ) {
+              $mb->execute();
+            }
           }
         }
       }

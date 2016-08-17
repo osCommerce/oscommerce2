@@ -41,7 +41,7 @@
    <script src="ext/js/excanvas.min.js"></script>
 <![endif]-->
  
-<script src="ext/jquery/jquery-1.11.1.min.js"></script>
+<script src="ext/jquery/jquery-2.1.4.min.js"></script>
 
 <!-- font awesome -->
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">

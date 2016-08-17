@@ -162,11 +162,33 @@
         $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
       }
 
-      $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from :table_customers c, :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries co on (ab.entry_country_id = co.countries_id) where c.customers_id = :customers_id and c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id');
-      $Qcustomer->bindInt(':customers_id', $_SESSION['customer_id']);
-      $Qcustomer->execute();
+      $customer_address = [
+        'customers_firstname' => null,
+        'customers_lastname' => null,
+        'customers_telephone' => null,
+        'customers_email_address' => null,
+        'entry_company' => null,
+        'entry_street_address' => null,
+        'entry_suburb' => null,
+        'entry_postcode' => null,
+        'entry_city' => null,
+        'entry_zone_id' => null,
+        'zone_name' => null,
+        'countries_id' => null,
+        'countries_name' => null,
+        'countries_iso_code_2' => null,
+        'countries_iso_code_3' => null,
+        'address_format_id' => 0,
+        'entry_state' => null
+      ];
 
-      $customer_address = $Qcustomer->toArray();
+      if (isset($_SESSION['customer_id'])) {
+        $Qcustomer = $OSCOM_Db->prepare('select c.customers_firstname, c.customers_lastname, c.customers_telephone, c.customers_email_address, ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_postcode, ab.entry_city, ab.entry_zone_id, z.zone_name, co.countries_id, co.countries_name, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id, ab.entry_state from :table_customers c, :table_address_book ab left join :table_zones z on (ab.entry_zone_id = z.zone_id) left join :table_countries co on (ab.entry_country_id = co.countries_id) where c.customers_id = :customers_id and c.customers_id = ab.customers_id and c.customers_default_address_id = ab.address_book_id');
+        $Qcustomer->bindInt(':customers_id', $_SESSION['customer_id']);
+        $Qcustomer->execute();
+
+        $customer_address = $Qcustomer->toArray();
+      }
 
       $shipping_address = array('entry_firstname' => null,
                                 'entry_lastname' => null,
@@ -281,15 +303,27 @@
                           'tax_groups' => array(),
                           'comments' => (isset($_SESSION['comments']) && !empty($_SESSION['comments']) ? $_SESSION['comments'] : ''));
 
-      if (isset($_SESSION['payment']) && isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
-        if (isset($GLOBALS[$_SESSION['payment']]->public_title)) {
-          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->public_title;
-        } else {
-          $this->info['payment_method'] = $GLOBALS[$_SESSION['payment']]->title;
+      if (isset($_SESSION['payment'])) {
+        if (strpos($_SESSION['payment'], '\\') !== false) {
+          $code = 'Payment_' . str_replace('\\', '_', $_SESSION['payment']);
+
+          if (Registry::exists($code)) {
+            $OSCOM_PM = Registry::get($code);
+          }
+        } elseif (is_object($GLOBALS[$_SESSION['payment']])) {
+          $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
         }
 
-        if ( isset($GLOBALS[$_SESSION['payment']]->order_status) && is_numeric($GLOBALS[$_SESSION['payment']]->order_status) && ($GLOBALS[$_SESSION['payment']]->order_status > 0) ) {
-          $this->info['order_status'] = $GLOBALS[$_SESSION['payment']]->order_status;
+        if (isset($OSCOM_PM)) {
+          if (isset($OSCOM_PM->public_title)) {
+            $this->info['payment_method'] = $OSCOM_PM->public_title;
+          } else {
+            $this->info['payment_method'] = $OSCOM_PM->title;
+          }
+
+          if ( isset($OSCOM_PM->order_status) && is_numeric($OSCOM_PM->order_status) && ($OSCOM_PM->order_status > 0) ) {
+            $this->info['order_status'] = $OSCOM_PM->order_status;
+          }
         }
       }
 

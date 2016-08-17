@@ -24,7 +24,7 @@
 <!-- Bootstrap -->
 <link href="../ext/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-<script src="../ext/jquery/jquery-1.11.1.min.js"></script>
+<script src="../ext/jquery/jquery-2.1.4.min.js"></script>
 
 <script src="../ext/bootstrap/js/bootstrap.min.js"></script>
 

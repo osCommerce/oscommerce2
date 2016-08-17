@@ -12,13 +12,14 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -53,7 +54,17 @@
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
+  if (strpos($payment_modules->selected_module, '\\') !== false) {
+    $code = 'Payment_' . str_replace('\\', '_', $payment_modules->selected_module);
+
+    if (Registry::exists($code)) {
+      $OSCOM_PM = Registry::get($code);
+    }
+  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
+    $OSCOM_PM = $$_SESSION['payment'];
+  }
+
+  if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
     OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
   }
 
@@ -100,8 +111,8 @@
     echo $messageStack->output('checkout_confirmation');
   }
 
-  if (isset($$_SESSION['payment']->form_action_url)) {
-    $form_action_url = $$_SESSION['payment']->form_action_url;
+  if (isset($OSCOM_PM->form_action_url)) {
+    $form_action_url = $OSCOM_PM->form_action_url;
   } else {
     $form_action_url = OSCOM::link('checkout_process.php', '', 'SSL');
   }
@@ -222,11 +233,17 @@
               <div class="panel-heading"><?php echo HEADING_PAYMENT_INFORMATION; ?></div>
               <div class="panel-body">
                 <table class="table table-striped table-condensed">
+          <?php
+          if (isset($confirmation['title'])) {
+          ?>
                   <thead>
                     <tr>
                       <td colspan="4"><?php echo $confirmation['title']; ?></td>
                     </tr>
                   </thead>
+          <?php
+          }
+          ?>
                   <tbody>
                   <?php
                   if (isset($confirmation['fields'])) {

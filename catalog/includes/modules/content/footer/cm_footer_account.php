@@ -36,9 +36,9 @@
 
     function execute() {
       global $oscTemplate;
-      
+
       $content_width = (int)MODULE_CONTENT_FOOTER_ACCOUNT_CONTENT_WIDTH;
-      
+
       if ( isset($_SESSION['customer_id']) ) {
         $account_content = '<li><a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
                            '<li><a href="' . OSCOM::link('address_book.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ADDRESS_BOOK . '</a></li>' .
@@ -47,9 +47,9 @@
       }
       else {
         $account_content = '<li><a href="' . OSCOM::link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_CREATE_ACCOUNT . '</a></li>' .
-                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('login.php', '', 'SSL') . '"><i class="glyphicon glyphicon-log-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
+                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('index.php', 'Account&LogIn', 'SSL') . '"><i class="glyphicon glyphicon-log-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
       }
-      
+
       ob_start();
       include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/account.php');
       $template = ob_get_clean();
@@ -102,7 +102,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

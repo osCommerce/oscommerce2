@@ -11,16 +11,20 @@ namespace OSC\OM;
 use OSC\OM\DateTime;
 use OSC\OM\HTML;
 use OSC\OM\HTTP;
+use OSC\OM\Registry;
 
 class OSCOM
 {
     const BASE_DIR = OSCOM_BASE_DIR;
 
     protected static $version;
+    protected static $site = 'Shop';
 
-    public static function initialize()
+    public static function initialize($site = null)
     {
         DateTime::setTimeZone();
+
+        static::setSite($site);
     }
 
     public static function getVersion()
@@ -38,6 +42,40 @@ class OSCOM
         }
 
         return static::$version;
+    }
+
+    public static function setSite($site)
+    {
+        if (!empty($site)) {
+            static::$site = $site;
+        }
+
+        $class = 'OSC\Sites\\' . static::$site . '\\' . static::$site;
+
+        if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
+            $OSCOM_Site = new $class();
+            Registry::set('Site', $OSCOM_Site);
+
+            $OSCOM_Site->setPage();
+        } else {
+            trigger_error('OSC\OM\OSCOM::setSite() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
+            exit;
+        }
+    }
+
+    public static function getSite()
+    {
+        return static::$site;
+    }
+
+    public static function getSitePageFile()
+    {
+        return Registry::get('Site')->getPage()->getFile();
+    }
+
+    public static function isRPC()
+    {
+        return Registry::get('Site')->getPage()->isRPC();
     }
 
     public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
@@ -66,10 +104,30 @@ class OSCOM
             $connection = 'NONSSL';
         }
 
-        if ($connection == 'NONSSL') {
-            $link = HTTP_SERVER . DIR_WS_HTTP_CATALOG;
+        $site = static::$site;
+
+        if (strncmp($page, 'Admin/', 6) === 0) {
+            $page = substr($page, 6);
+
+            $site = 'Admin';
+        } elseif (strncmp($page, 'Shop/', 5) === 0) {
+            $page = substr($page, 5);
+
+            $site = 'Shop';
+        }
+
+        if ($site == 'Admin') {
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . (defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : DIR_WS_HTTP_CATALOG . 'admin/');
+            } else {
+                $link = HTTPS_SERVER . (defined('DIR_WS_HTTPS_ADMIN') ? DIR_WS_HTTPS_ADMIN : DIR_WS_HTTPS_CATALOG . 'admin/');
+            }
         } else {
-            $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            if ($connection == 'NONSSL') {
+                $link = HTTP_SERVER . (defined('DIR_WS_HTTP_CATALOG') ? DIR_WS_HTTP_CATALOG : DIR_WS_CATALOG);
+            } else {
+                $link = HTTPS_SERVER . DIR_WS_HTTPS_CATALOG;
+            }
         }
 
         $link .= $page;
@@ -130,16 +188,26 @@ class OSCOM
         HTTP::redirect($url);
     }
 
+    public static function hasRoute(array $path)
+    {
+        return array_slice(array_keys($_GET), 0, count($path)) == $path;
+    }
+
     public static function autoload($class)
     {
-        $prefix = 'OSC\\OM\\';
+        $prefix = 'OSC\\';
 
         if (strncmp($prefix, $class, strlen($prefix)) !== 0) {
             return false;
         }
 
-        $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
-        $custom = str_replace('OSCOM/OM/', 'OSCOM/Custom/OM/', $file);
+        if (strncmp($prefix . 'OM\Module\\', $class, strlen($prefix . 'OM\Module\\')) === 0) { // TODO remove and fix namespace
+          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
+        } else {
+          $file = OSCOM_BASE_DIR . str_replace('\\', '/', $class) . '.php';
+          $custom = str_replace('OSC/OM/', 'OSC/Custom/OM/', $file);
+        }
 
         if (file_exists($custom)) {
             require($custom);

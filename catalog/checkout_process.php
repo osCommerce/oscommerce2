@@ -12,13 +12,14 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   include('includes/application_top.php');
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -71,7 +72,17 @@
 
   $payment_modules->update_status();
 
-  if ( ($payment_modules->selected_module != $_SESSION['payment']) || ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($$_SESSION['payment']) ) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false)) ) {
+  if (strpos($payment_modules->selected_module, '\\') !== false) {
+    $code = 'Payment_' . str_replace('\\', '_', $payment_modules->selected_module);
+
+    if (Registry::exists($code)) {
+      $OSCOM_PM = Registry::get($code);
+    }
+  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
+    $OSCOM_PM = $$_SESSION['payment'];
+  }
+
+  if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
     OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
   }
 
@@ -191,7 +202,9 @@
           $stock_left = $Qstock->valueInt('products_quantity');
         }
 
-        $OSCOM_Db->save('products', ['products_quantity' => (int)$stock_left], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
+        if ($stock_left != $Qstock->valueInt('products_quantity')) {
+          $OSCOM_Db->save('products', ['products_quantity' => (int)$stock_left], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
+        }
 
         if ( ($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false') ) {
          $OSCOM_Db->save('products', ['products_status' => '0'], ['products_id' => tep_get_prid($order->products[$i]['id'])]);
@@ -307,13 +320,12 @@
   $email_order .= "\n" . EMAIL_TEXT_BILLING_ADDRESS . "\n" .
                   EMAIL_SEPARATOR . "\n" .
                   tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], 0, '', "\n") . "\n\n";
-  if (is_object($$_SESSION['payment'])) {
+  if (isset($OSCOM_PM)) {
     $email_order .= EMAIL_TEXT_PAYMENT_METHOD . "\n" .
                     EMAIL_SEPARATOR . "\n";
-    $payment_class = $$_SESSION['payment'];
     $email_order .= $order->info['payment_method'] . "\n\n";
-    if (isset($payment_class->email_footer)) {
-      $email_order .= $payment_class->email_footer . "\n\n";
+    if (isset($OSCOM_PM->email_footer)) {
+      $email_order .= $OSCOM_PM->email_footer . "\n\n";
     }
   }
   tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);

@@ -10,16 +10,18 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   require('includes/application_top.php');
 
-  $OSCOM_Hooks->register('products');
+  $OSCOM_Hooks = Registry::get('Hooks');
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
-  $OSCOM_Hooks->call('products', 'productPreAction');
+  $OSCOM_Hooks->call('Products', 'PreAction');
 
   if (tep_not_null($action)) {
     switch ($action) {
@@ -166,7 +168,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        $OSCOM_Hooks->call('products', 'productActionDelete');
+        $OSCOM_Hooks->call('Products', 'ActionDelete');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath));
         break;
@@ -207,7 +209,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        $OSCOM_Hooks->call('products', 'productActionMove');
+        $OSCOM_Hooks->call('Products', 'ActionMove');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&pID=' . $products_id));
         break;
@@ -331,7 +333,7 @@
           tep_reset_cache_block('also_purchased');
         }
 
-        $OSCOM_Hooks->call('products', 'productActionSave');
+        $OSCOM_Hooks->call('Products', 'ActionSave');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $products_id));
         break;
@@ -377,14 +379,12 @@
           }
         }
 
-        $OSCOM_Hooks->call('products', 'productActionCopy');
+        $OSCOM_Hooks->call('Products', 'ActionCopy');
 
         tep_redirect(tep_href_link(FILENAME_CATEGORIES, 'cPath=' . $categories_id . '&pID=' . $products_id));
         break;
     }
   }
-
-  $OSCOM_Hooks->call('products', 'productPostAction');
 
 // check if the catalog image directory exists
   if (is_dir(DIR_FS_CATALOG_IMAGES)) {
@@ -684,7 +684,7 @@ function showPiDelConfirm(piId) {
   </div>
 
 <?php
-    echo $OSCOM_Hooks->call('products', 'productTab');
+    echo $OSCOM_Hooks->output('Products', 'PageTab', 'display');
 ?>
 
 </div>

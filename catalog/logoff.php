@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
@@ -46,6 +47,8 @@
   }
 
   $_SESSION['cart']->reset();
+
+  Registry::get('Hooks')->call('Account', 'Logout');
 
   require('includes/template_top.php');
 ?>

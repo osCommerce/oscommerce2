@@ -18,7 +18,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
   }
 
   if (!isset($_SESSION['sage_pay_direct_acsurl'])) {

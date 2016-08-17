@@ -19,7 +19,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
   }
 
   if (!isset($_GET['products_id'])) {
