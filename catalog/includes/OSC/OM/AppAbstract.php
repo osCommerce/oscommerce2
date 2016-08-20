@@ -100,11 +100,11 @@ abstract class AppAbstract
         $r = new \ReflectionClass($this);
 
         $this->code = $r->getShortName();
-        $this->vendor = array_slice(explode('\\', $r->getNamespaceName()), -1)[0];
+        $this->vendor = array_slice(explode('\\', $r->getNamespaceName()), -2, 1)[0];
 
         $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . $this->vendor . '/' . $this->code . '/oscommerce.json';
 
-        if (!file_exists($metafile) || (($json = @json_decode(file_get_contents($metafile), true)) === null)) {
+        if (!file_exists($metafile) || (($json = json_decode(file_get_contents($metafile), true)) === null)) {
             trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->vendor . '\\' . $this->code . ' - Could not read App information in ' . $metafile . '.');
 
             return false;

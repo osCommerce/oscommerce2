@@ -119,7 +119,7 @@ class Apps
 
             $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . basename($vendor) . '/' . basename($app) . '/oscommerce.json';
 
-            if (file_exists($metafile) && (($json = @json_decode(file_get_contents($metafile), true)) !== null)) {
+            if (file_exists($metafile) && (($json = json_decode(file_get_contents($metafile), true)) !== null)) {
                 return $json;
             }
 
