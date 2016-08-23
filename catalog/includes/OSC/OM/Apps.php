@@ -13,6 +13,31 @@ use OSC\OM\Registry;
 
 class Apps
 {
+    public static function getAll()
+    {
+        $result = [];
+
+        $apps_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+
+        if ($vdir = new \DirectoryIterator($apps_directory)) {
+            foreach ($vdir as $vendor) {
+                if (!$vendor->isDot() && $vendor->isDir()) {
+                    if ($adir = new \DirectoryIterator($vendor->getPath() . '/' . $vendor->getFilename())) {
+                        foreach ($adir as $app) {
+                            if (!$app->isDot() && $app->isDir() && static::exists($vendor->getFilename() . '\\' . $app->getFilename())) {
+                                if (($json = static::getInfo($vendor->getFilename() . '\\' . $app->getFilename())) !== false) {
+                                    $result[] = $json;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public static function getModules($type, $filter_vendor_app = null, $filter = null)
     {
         $result = [];
@@ -83,8 +108,6 @@ class Apps
                 } else {
                     trigger_error('OSC\OM\Apps::exists(): ' . $vendor . '\\' . $app . ' - App is not a subclass of OSC\OM\AppAbstract and cannot be loaded.');
                 }
-            } else {
-                trigger_error('OSC\OM\Apps::exists(): ' . $vendor . '\\' . $app . ' - App class does not exist.');
             }
         } else {
             trigger_error('OSC\OM\Apps::exists(): ' . $app . ' - Invalid format, must be: Vendor\App.');

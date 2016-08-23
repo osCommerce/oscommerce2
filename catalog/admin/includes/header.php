@@ -55,7 +55,7 @@
 
         <li><a><?= ADMIN_MENU_APPS; ?> <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class="disabled"><a>Manager</a></li>
+            <li><a href="<?= OSCOM::link('apps.php'); ?>">Manage</a></li>
 
 <?php
     if (!empty($cl_apps_groups)) {
@@ -151,7 +151,7 @@
             <li><a href="<?= OSCOM::link('Shop/', null, 'SSL'); ?>">View Shop</a></li>
             <li class="divider"></li>
             <li><a href="https://www.oscommerce.com">osCommerce Website</a></li>
-            <li><a href="https://www.oscommerce.com/Support">Support</a></li>
+            <li><a href="https://www.oscommerce.com/Support">Help and Support</a></li>
             <li><a href="https://library.oscommerce.com">Documentation</a></li>
             <li><a href="http://forums.oscommerce.com">Community Forum</a></li>
           </ul>

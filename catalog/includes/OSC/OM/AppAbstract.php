@@ -111,7 +111,7 @@ abstract class AppAbstract
         }
 
         $this->title = $json['title'];
-        $this->version = number_format($json['version'], 3);
+        $this->version = $json['version'];
         $this->modules = $json['modules'];
     }
 }
