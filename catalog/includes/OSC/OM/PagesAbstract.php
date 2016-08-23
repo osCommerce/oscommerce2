@@ -15,6 +15,7 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
 {
     protected $code;
     protected $file = 'main.php';
+    protected $use_site_template = true;
     protected $site;
     protected $actions_run = [];
     protected $ignored_actions = [];
@@ -42,6 +43,11 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
         if (isset($this->file)) {
             return OSCOM::BASE_DIR . (new \ReflectionClass($this))->getNamespaceName() . '/templates/' . $this->file;
         }
+    }
+
+    public function useSiteTemplate()
+    {
+        return $this->use_site_template;
     }
 
     public function setFile($file)

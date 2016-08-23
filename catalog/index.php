@@ -19,7 +19,15 @@
           $page_file = DIR_FS_CATALOG . 'includes/error_documents/404.php';
         }
 
+        if (OSCOM::useSiteTemplateWithPageFile()) {
+          include(DIR_FS_CATALOG . 'includes/template_top.php');
+        }
+
         include($page_file);
+
+        if (OSCOM::useSiteTemplateWithPageFile()) {
+          include(DIR_FS_CATALOG . 'includes/template_bottom.php');
+        }
     }
 
     goto main_sub3;

@@ -81,6 +81,11 @@ class OSCOM
         return Registry::get('Site')->getPage()->getFile();
     }
 
+    public static function useSiteTemplateWithPageFile()
+    {
+        return Registry::get('Site')->getPage()->useSiteTemplate();
+    }
+
     public static function isRPC()
     {
         $OSCOM_Site = Registry::get('Site');
