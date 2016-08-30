@@ -29,6 +29,11 @@
       case 'update':
         if (isset($_POST['newsletter_id'])) $newsletter_id = tep_db_prepare_input($_POST['newsletter_id']);
         $newsletter_module = tep_db_prepare_input($_POST['module']);
+        
+        // Check if the user has inputted something malicious ( Everything else other than the 2 allowed modules )
++        if($newsletter_module != "newsletter" and $newsletter != "product_notification")
++                tep_redirect(tep_href_link('newsletters.php')); // Redirect and exit execution
+
         $title = tep_db_prepare_input($_POST['title']);
         $content = tep_db_prepare_input($_POST['content']);
 
