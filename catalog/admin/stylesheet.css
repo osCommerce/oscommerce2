@@ -69,8 +69,23 @@
 
 
 
+.oscom-truncate {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oscom-m-top-15 {
+  margin-top: 15px;
+}
+
 .oscom-panel .panel-body .row:not(:last-child) {
   margin-bottom: 20px;
+}
+
+.oscom-table.oscom-table-borderless td, .oscom-table.oscom-table-borderless th {
+  border: none;
 }
 
 .oscom-table thead .action, .oscom-table tbody .action {
