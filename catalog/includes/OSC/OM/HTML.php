@@ -147,7 +147,7 @@ class HTML
             }
         }
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $field .= ' value="' . static::output($value) . '"';
         }
 
@@ -178,7 +178,7 @@ class HTML
     {
         $selection = '<input type="' . static::output($type) . '" name="' . static::output($name) . '"';
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $selection .= ' value="' . static::output($value) . '"';
         }
 
@@ -225,7 +225,7 @@ class HTML
             } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
                 $field .= static::outputProtected($_POST[$name]);
             }
-        } elseif (!empty($text)) {
+        } elseif (strlen($text) > 0) {
             $field .= static::outputProtected($text);
         }
 
@@ -305,7 +305,7 @@ class HTML
     {
         $field = '<input type="hidden" name="' . static::output($name) . '"';
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $field .= ' value="' . static::output($value) . '"';
         } elseif ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name]))) {
             if (isset($_GET[$name]) && is_string($_GET[$name])) {
