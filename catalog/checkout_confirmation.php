@@ -227,33 +227,43 @@
 <?php
   if (is_array($payment_modules->modules)) {
     if ($confirmation = $payment_modules->confirmation()) {
+      if (isset($confirmation['content'])) {
+        echo '<div class="checkoutPaymentInput">' . $confirmation['content'] . '</div>';
+      } else {
 ?>
+
   <hr>
 
   <h2><?php echo HEADING_PAYMENT_INFORMATION; ?></h2>
 
   <div class="contentText row">
+
 <?php
-    if (isset($confirmation['title'])) {
-      echo '<div class="col-sm-6">';
-      echo '  <div class="alert alert-danger">';
-      echo $confirmation['title'];
-      echo '  </div>';
-      echo '</div>';
-    }
-?>
-<?php
-      if (isset($confirmation['fields'])) {
-        echo '<div class="col-sm-6">';
-        echo '  <div class="alert alert-info">';
-        for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
-          echo $confirmation['fields'][$i]['title'] . ' ' . $confirmation['fields'][$i]['field'];
+        if (isset($confirmation['title'])) {
+          echo '<div class="col-sm-6">';
+          echo '  <div class="alert alert-danger">';
+          echo $confirmation['title'];
+          echo '  </div>';
+          echo '</div>';
         }
-        echo '  </div>';
-        echo '</div>';
+
+        if (isset($confirmation['fields'])) {
+          echo '<div class="col-sm-6">';
+          echo '  <div class="alert alert-info">';
+          for ($i=0, $n=sizeof($confirmation['fields']); $i<$n; $i++) {
+            echo $confirmation['fields'][$i]['title'] . ' ' . $confirmation['fields'][$i]['field'];
+          }
+          echo '  </div>';
+          echo '</div>';
+        }
+?>
+
+  </div>
+
+<?php
       }
 ?>
-  </div>
+
   <div class="clearfix"></div>
 
 <?php
@@ -308,8 +318,10 @@
 
 </div>
 <script>
+$('form[name="checkout_confirmation"] button[data-button="payNow"]').data('orig-button-text', $('form[name="checkout_confirmation"] button[data-button="payNow"]').html());
+
 $('form[name="checkout_confirmation"]').submit(function() {
-  $('button[data-button="payNow"]').text('<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>').prop('disabled', true);
+  $('form[name="checkout_confirmation"] button[data-button="payNow"]').html('<?php echo addslashes(IMAGE_BUTTON_PAY_TOTAL_PROCESSING); ?>').prop('disabled', true);
 });
 </script>
 
