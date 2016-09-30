@@ -301,8 +301,18 @@ class DbStatement extends \PDOStatement
 
         $number_of_pages = ceil($this->page_set_total_rows / $this->page_set_results_per_page);
 
-        if (!empty($parameters) && (substr($parameters, -1) != '&')) {
-            $parameters .= '&';
+        if (empty($parameters)) {
+            $parameters = '';
+        }
+
+        if (!empty($parameters)) {
+            parse_str($parameters, $p);
+
+            if (isset($p[$this->page_set_keyword])) {
+                unset($p[$this->page_set_keyword]);
+            }
+
+            $parameters = http_build_query($p) . '&';
         }
 
         $output = '<ul style="margin-top: 0;" class="pagination">';
