@@ -58,7 +58,8 @@
         ];
       }
 
-      $this->info = array('total' => null,
+      $this->info = array('id' => $Qorder->valueInt('orders_id'),
+                          'total' => null,
                           'currency' => $Qorder->value('currency'),
                           'currency_value' => $Qorder->value('currency_value'),
                           'payment_method' => $Qorder->value('payment_method'),
