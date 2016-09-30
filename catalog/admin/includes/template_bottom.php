@@ -17,6 +17,18 @@
 
 <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 
+<script>
+$(function() {
+  var url = document.location.toString();
+
+  if (url.match('#')) {
+    if ($('.nav-tabs a[data-target="#' + url.split('#')[1] + '"]').length === 1) {
+      $('.nav-tabs a[data-target="#' + url.split('#')[1] + '"]').tab('show');
+    }
+  }
+});
+</script>
+
 <script src="<?= OSCOM::link('Shop/ext/bootstrap/js/bootstrap.min.js', '', 'AUTO', false); ?>"></script>
 
 <script src="<?= OSCOM::link('Shop/ext/smartmenus/jquery.smartmenus.min.js', '', 'AUTO', false); ?>"></script>
