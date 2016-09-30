@@ -68,10 +68,6 @@ define('BOX_HEADING_MODULES', 'Modules');
 define('BOX_HEADING_CUSTOMERS', 'Customers');
 define('BOX_CUSTOMERS_CUSTOMERS', 'Customers');
 
-// orders box text in includes/boxes/orders.php
-define('BOX_HEADING_ORDERS', 'Orders');
-define('BOX_ORDERS_ORDERS', 'Orders');
-
 // taxes box text in includes/boxes/taxes.php
 define('BOX_HEADING_LOCATION_AND_TAXES', 'Locations / Taxes');
 define('BOX_TAXES_COUNTRIES', 'Countries');
