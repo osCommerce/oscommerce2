@@ -100,7 +100,10 @@
 <div class="contentContainer">
 
 <?php
-  if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
+  if (isset($_GET['payment_error']) && !empty($_GET['payment_error'])) {
+    $pmsel = new payment($_GET['payment_error']);
+
+    if ($error = $pmsel->get_error()) {
 ?>
 
   <div class="contentText">
@@ -110,6 +113,7 @@
   </div>
 
 <?php
+    }
   }
 ?>
 
