@@ -893,11 +893,6 @@ $(function() {
 </script>
 
     </div>
-
-<?php
-      echo $OSCOM_Hooks->output('Products', 'PageTab', 'display');
-?>
-
   </div>
 </div>
 
@@ -908,6 +903,8 @@ $(function() {
     HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '')), null, null, 'btn-link');
   ?>
 </div>
+
+<?= $OSCOM_Hooks->output('Products', 'Page', null, 'display'); ?>
 
 </form>
 
