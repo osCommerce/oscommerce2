@@ -213,6 +213,13 @@ class OSCOM
         HTTP::redirect($url);
     }
 
+    public static function getDef()
+    {
+        $OSCOM_Language = Registry::get('Language');
+
+        return call_user_func_array([$OSCOM_Language, 'getDef'], func_get_args());
+    }
+
     public static function hasRoute(array $path)
     {
         return array_slice(array_keys($_GET), 0, count($path)) == $path;

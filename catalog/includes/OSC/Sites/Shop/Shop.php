@@ -14,12 +14,15 @@ use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\Hooks;
 use OSC\OM\HTML;
+use OSC\OM\Language;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 use OSC\OM\Session;
 
 class Shop extends \OSC\OM\SitesAbstract
 {
+    protected static $base_dir = DIR_FS_CATALOG;
+
     protected function init()
     {
         global $request_type, $PHP_SELF, $currencies, $messageStack, $oscTemplate, $breadcrumb;
@@ -33,6 +36,8 @@ class Shop extends \OSC\OM\SitesAbstract
         Registry::set('Db', $OSCOM_Db);
 
         Registry::set('Hooks', new Hooks());
+
+        Registry::set('Language', new Language());
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
