@@ -27,6 +27,10 @@ class OSCOM
 
         ErrorHandler::initialize();
 
+        if (!isset($site)) {
+            $site = static::$site;
+        }
+
         static::setSite($site);
     }
 
@@ -47,23 +51,36 @@ class OSCOM
         return static::$version;
     }
 
+    public static function siteExists($site, $strict = true) {
+        $class = 'OSC\Sites\\' . $site . '\\' . $site;
+
+        if (class_exists($class)) {
+            if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
+                return true;
+            } else {
+                trigger_error('OSC\OM\OSCOM::siteExists() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
+            }
+        } elseif ($strict === true) {
+            trigger_error('OSC\OM\OSCOM::siteExists() - ' . $site . ': Site does not exist.');
+        }
+
+        return false;
+    }
+
     public static function setSite($site)
     {
-        if (!empty($site)) {
-            static::$site = $site;
+        if (!static::siteExists($site)) {
+            $site = static::$site;
         }
 
-        $class = 'OSC\Sites\\' . static::$site . '\\' . static::$site;
+        static::$site = $site;
 
-        if (is_subclass_of($class, 'OSC\OM\SitesInterface')) {
-            $OSCOM_Site = new $class();
-            Registry::set('Site', $OSCOM_Site);
+        $class = 'OSC\Sites\\' . $site . '\\' . $site;
 
-            $OSCOM_Site->setPage();
-        } else {
-            trigger_error('OSC\OM\OSCOM::setSite() - ' . $site . ': Site does not implement OSC\OM\SitesInterface and cannot be loaded.');
-            exit;
-        }
+        $OSCOM_Site = new $class();
+        Registry::set('Site', $OSCOM_Site);
+
+        $OSCOM_Site->setPage();
     }
 
     public static function getSite()
@@ -123,14 +140,9 @@ class OSCOM
 
         $site = $req_site = static::$site;
 
-        if (strncmp($page, 'Admin/', 6) === 0) {
-            $page = substr($page, 6);
-
-            $req_site = 'Admin';
-        } elseif (strncmp($page, 'Shop/', 5) === 0) {
-            $page = substr($page, 5);
-
-            $req_site = 'Shop';
+        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1])) {
+            $req_site = $matches[1];
+            $page = $matches[2];
         }
 
         if (($add_session_id === true) && ($site !== $req_site)) {
