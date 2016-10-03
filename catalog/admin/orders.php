@@ -148,7 +148,7 @@
 
 <h3><?= '#' . $order->info['id'] . ' (' . strip_tags($order->info['total']) . ')'; ?></h3>
 
-<div style="text-align: right; padding-bottom: 15px;"><?php echo HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-file', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true)) . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action')))); ?></div>
+<div style="text-align: right; padding-bottom: 15px;"><?= HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action'))), null, null, 'btn-info') . HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-text-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true), 'btn-primary') . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-clipboard', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true), 'btn-primary'); ?></div>
 
 <div id="orderTabs">
   <ul class="nav nav-tabs">
