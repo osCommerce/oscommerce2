@@ -15,7 +15,7 @@
 
 </div>
 
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+<?php require('includes/footer.php'); ?>
 
 <script>
 $(function() {

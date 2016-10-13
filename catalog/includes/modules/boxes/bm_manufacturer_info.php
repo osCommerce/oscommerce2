@@ -49,7 +49,7 @@
           $manufacturer_info_string = null;
 
           if (!empty($Qmanufacturer->value('manufacturers_image'))) {
-            $manufacturer_info_string .= '<div>' . HTML::image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
+            $manufacturer_info_string .= '<div>' . HTML::image(OSCOM::linkImage($Qmanufacturer->value('manufacturers_image')), $Qmanufacturer->value('manufacturers_name')) . '</div>';
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {

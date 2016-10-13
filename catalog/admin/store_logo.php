@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -24,7 +25,7 @@
 
         $store_logo = new upload('store_logo');
         $store_logo->set_extensions(array('png', 'gif', 'jpg'));
-        $store_logo->set_destination(DIR_FS_CATALOG_IMAGES);
+        $store_logo->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
 
         if ($store_logo->parse()) {
           if ($store_logo->save()) {
@@ -50,11 +51,11 @@
     }
   }
 
-  if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) {
+  if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
     $OSCOM_MessageStack->add(sprintf(ERROR_IMAGES_DIRECTORY_NOT_WRITEABLE, OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)), 'error');
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -66,7 +67,7 @@
         </table></td>
       </tr>
       <tr>
-        <td><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . STORE_LOGO); ?></td>
+        <td><?php echo HTML::image(OSCOM::linkImage('Shop/' . STORE_LOGO)); ?></td>
       </tr>
       <tr>
         <td><?php echo HTML::form('logo', OSCOM::link(FILENAME_STORE_LOGO, 'action=save'), 'post', 'enctype="multipart/form-data"'); ?>
@@ -83,11 +84,11 @@
         <td class="main"><?php echo TEXT_FORMAT_AND_LOCATION; ?></td>
       </tr>
       <tr>
-        <td class="main"><?php echo DIR_FS_CATALOG_IMAGES . STORE_LOGO; ?></td>
+        <td class="main"><?php echo OSCOM::getConfig('dir_root', 'Shop') . 'images/' . STORE_LOGO; ?></td>
       </tr>
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

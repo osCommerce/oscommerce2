@@ -43,17 +43,17 @@
     }
   }
 
-  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_process.php');
+  include('includes/languages/' . $_SESSION['language'] . '/checkout_process.php');
 
 // load selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping($_SESSION['shipping']);
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // Stock Check
@@ -86,7 +86,7 @@
     OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
   }
 
-  require(DIR_WS_CLASSES . 'order_total.php');
+  require('includes/classes/order_total.php');
   $order_total_modules = new order_total;
 
   $order_totals = $order_total_modules->process();

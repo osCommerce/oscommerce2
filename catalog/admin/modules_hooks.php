@@ -11,14 +11,15 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
   $hooks = [];
 
-  $directory = DIR_FS_CATALOG . 'includes/Module/Hooks/';
+  $directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/Module/Hooks/';
 
-  if (file_exists($directory)) {
+  if (is_dir($directory)) {
     if ($dir = new \DirectoryIterator($directory)) {
       foreach ($dir as $file) {
         if (!$file->isDot() && $file->isDir()) {
@@ -69,7 +70,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <style>
@@ -129,6 +130,6 @@
 </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

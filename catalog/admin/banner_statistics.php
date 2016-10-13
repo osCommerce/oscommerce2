@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -26,8 +27,8 @@
 // check if the graphs directory exists
   $dir_ok = false;
   if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-      if (tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
+    if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
+      if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
         $dir_ok = true;
       } else {
         $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
@@ -66,7 +67,7 @@
                           'text' => STATISTICS_TYPE_YEARLY);
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="pull-right">
@@ -112,17 +113,17 @@
 <?php
     switch ($type) {
       case 'yearly':
-        include(DIR_WS_INCLUDES . 'graphs/banner_yearly.php');
-        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_yearly.php');
+        echo HTML::image(OSCOM::linkImage('graphs/banner_yearly-' . $banner_id . '.' . $banner_extension));
         break;
       case 'monthly':
-        include(DIR_WS_INCLUDES . 'graphs/banner_monthly.php');
-        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_monthly-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_monthly.php');
+        echo HTML::image(OSCOM::linkImage('graphs/banner_monthly-' . $banner_id . '.' . $banner_extension));
         break;
       case 'daily':
       default:
-        include(DIR_WS_INCLUDES . 'graphs/banner_daily.php');
-        echo HTML::image(DIR_WS_IMAGES . 'graphs/banner_daily-' . $banner_id . '.' . $banner_extension);
+        include('includes/graphs/banner_daily.php');
+        echo HTML::image(OSCOM::linkImage('graphs/banner_daily-' . $banner_id . '.' . $banner_extension));
         break;
     }
 ?>
@@ -159,6 +160,6 @@
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

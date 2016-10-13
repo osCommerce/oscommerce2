@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/advanced_search.php');
+  require('includes/languages/' . $_SESSION['language'] . '/advanced_search.php');
 
   $error = false;
 

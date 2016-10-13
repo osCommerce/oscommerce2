@@ -21,8 +21,6 @@ use OSC\OM\Session;
 
 class Shop extends \OSC\OM\SitesAbstract
 {
-    protected static $base_dir = DIR_FS_CATALOG;
-
     protected function init()
     {
         global $request_type, $PHP_SELF, $currencies, $messageStack, $oscTemplate, $breadcrumb;
@@ -52,15 +50,13 @@ class Shop extends \OSC\OM\SitesAbstract
 // set the type of request (secure or not)
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
             $request_type = 'SSL';
-            define('DIR_WS_CATALOG', DIR_WS_HTTPS_CATALOG);
         } else {
             $request_type = 'NONSSL';
-            define('DIR_WS_CATALOG', DIR_WS_HTTP_CATALOG);
         }
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], strlen(DIR_WS_CATALOG));
+        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(OSCOM::getConfig('https_path', 'Shop')) : strlen(OSCOM::getConfig('http_path', 'Shop')));
 
         $OSCOM_Session = Session::load();
         Registry::set('Session', $OSCOM_Session);
@@ -94,7 +90,7 @@ class Shop extends \OSC\OM\SitesAbstract
 
 // include the language translations
         $system_locale_numeric = setlocale(LC_NUMERIC, 0);
-        include(OSCOM::BASE_DIR . 'languages/' . $_SESSION['language'] . '.php');
+        include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '.php');
         setlocale(LC_NUMERIC, $system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
 // currency
@@ -126,7 +122,7 @@ class Shop extends \OSC\OM\SitesAbstract
 
         $breadcrumb = new \breadcrumb();
 
-        $breadcrumb->add(HEADER_TITLE_TOP, HTTP_SERVER);
+        $breadcrumb->add(HEADER_TITLE_TOP, OSCOM::getConfig('http_server', 'Shop'));
         $breadcrumb->add(HEADER_TITLE_CATALOG, OSCOM::link('index.php'));
     }
 

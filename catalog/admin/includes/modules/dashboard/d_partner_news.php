@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\Registry;
 
   class d_partner_news {
@@ -70,7 +71,7 @@
 
       $filename = DIR_FS_CACHE . 'oscommerce_partners_news.cache';
 
-      if ( file_exists($filename) ) {
+      if ( is_file($filename) ) {
         $difference = floor((time() - filemtime($filename)) / 60);
 
         if ( $difference < 60 ) {
@@ -115,7 +116,7 @@
         if ( !empty($result) ) {
           $result = json_decode($result, true);
 
-          if ( is_writable(DIR_FS_CACHE) ) {
+          if ( FileSystem::isWritable(DIR_FS_CACHE) ) {
             file_put_contents($filename, serialize($result), LOCK_EX);
           }
         }

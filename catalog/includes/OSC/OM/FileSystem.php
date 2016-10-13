@@ -25,14 +25,16 @@ class FileSystem
         return $result;
     }
 
-    public static function isWritable($location)
+    public static function isWritable($location, $recursive_check = false)
     {
-        if (!file_exists($location)) {
-            while (true) {
-                $location = dirname($location);
+        if ($recursive_check === true) {
+            if (!file_exists($location)) {
+                while (true) {
+                    $location = dirname($location);
 
-                if (file_exists($location)) {
-                    break;
+                    if (file_exists($location)) {
+                        break;
+                    }
                 }
             }
         }
@@ -44,7 +46,7 @@ class FileSystem
     {
         $result = [];
 
-        if (file_exists($dir) && is_dir($dir)) {
+        if (is_dir($dir)) {
             foreach (scandir($dir) as $file) {
                 if (!in_array($file, ['.', '..'])) {
                     if (is_dir($dir . '/' . $file)) {

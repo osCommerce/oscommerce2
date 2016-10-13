@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\Registry;
 
   class upload {
@@ -141,7 +142,7 @@
     function check_destination() {
       $OSCOM_MessageStack = Registry::get('MessageStack');
 
-      if (!tep_is_writable($this->destination)) {
+      if (!FileSystem::isWritable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
             $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');

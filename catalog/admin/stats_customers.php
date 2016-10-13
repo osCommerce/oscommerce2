@@ -14,14 +14,14 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
   if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
     $_GET['page'] = 1;
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -78,6 +78,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

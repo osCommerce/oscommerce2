@@ -62,7 +62,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -102,7 +102,7 @@
                 <td class="dataTableContent"><?php echo $Qzones->value('countries_name'); ?></td>
                 <td class="dataTableContent"><?php echo $Qzones->value('zone_name'); ?></td>
                 <td class="dataTableContent" align="center"><?php echo $Qzones->value('zone_code'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qzones->valueInt('zone_id') === (int)$cInfo->zone_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $Qzones->valueInt('zone_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qzones->valueInt('zone_id') === (int)$cInfo->zone_id) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $Qzones->valueInt('zone_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -184,6 +184,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

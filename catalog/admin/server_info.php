@@ -87,7 +87,7 @@
       break;
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -116,7 +116,7 @@
       </tr>
   <?php
   } else {
-    $server = parse_url(HTTP_SERVER);
+    $server = parse_url(OSCOM::getConfig('http_server'));
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -126,7 +126,7 @@
                 <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
                 <td class="smallText"><?php echo $server['host'] . ' (' . gethostbyname($server['host']) . ')'; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_HOST; ?></strong></td>
-                <td class="smallText"><?php echo DB_SERVER . ' (' . gethostbyname(DB_SERVER) . ')'; ?></td>
+                <td class="smallText"><?php echo OSCOM::getConfig('db_server') . ' (' . gethostbyname(OSCOM::getConfig('db_server')) . ')'; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TITLE_SERVER_OS; ?></strong></td>
@@ -201,6 +201,6 @@ hr {display: none;}
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

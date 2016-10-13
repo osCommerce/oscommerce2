@@ -138,7 +138,7 @@
     $OSCOM_MessageStack->add(TEXT_CREATE_FIRST_ADMINISTRATOR, 'warning');
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-home"></i> <a href="<?= OSCOM::link('login.php', null, 'SSL'); ?>"><?= STORE_NAME; ?></a></h3>
@@ -166,6 +166,6 @@
 
   echo HTML::panel($heading, $contents);
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -124,7 +124,7 @@
       $OSCOM_Db->save('configuration', [
         'configuration_title' => '16x16 Icon',
         'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ICON',
-        'configuration_value' => HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'favicon.ico',
+        'configuration_value' => OSCOM::linkImage('Shop/favicon.ico', null, 'SSL'),
         'configuration_description' => 'A 16x16 sized icon (must be in .ico format, eg http://server/favicon.ico). (optional)',
         'configuration_group_id' => '6',
         'sort_order' => '0',

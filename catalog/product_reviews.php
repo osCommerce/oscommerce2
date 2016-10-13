@@ -40,7 +40,7 @@
     $products_name .= '<br /><small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_reviews.php');
+  require('includes/languages/' . $_SESSION['language'] . '/product_reviews.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
@@ -83,7 +83,7 @@
 ?>
 
   <div class="col-sm-4 text-center">
-    <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+    <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qcheck->value('products_image')), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
     <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
   </div>

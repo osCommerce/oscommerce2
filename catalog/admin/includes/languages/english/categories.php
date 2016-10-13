@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+use OSC\OM\OSCOM;
+
 define('HEADING_TITLE', 'Categories / Products');
 define('HEADING_TITLE_SEARCH', 'Search');
 
@@ -100,7 +102,7 @@ define('TEXT_COPY_AS_LINK', 'Link product');
 define('TEXT_COPY_AS_DUPLICATE', 'Duplicate product');
 
 define('ERROR_CANNOT_LINK_TO_SAME_CATEGORY', 'Error: Can not link products in the same category.');
-define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . DIR_FS_CATALOG_IMAGES);
-define('ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Catalog images directory does not exist: ' . DIR_FS_CATALOG_IMAGES);
+define('ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Error: Catalog images directory is not writeable: ' . OSCOM::getConfig('dir_root', 'Shop') . 'images/');
+define('ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Error: Catalog images directory does not exist: ' . OSCOM::getConfig('dir_root', 'Shop') . 'images/');
 define('ERROR_CANNOT_MOVE_CATEGORY_TO_PARENT', 'Error: Category cannot be moved into child category.');
 ?>

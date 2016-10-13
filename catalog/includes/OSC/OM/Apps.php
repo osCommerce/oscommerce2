@@ -17,7 +17,7 @@ class Apps
     {
         $result = [];
 
-        $apps_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+        $apps_directory = OSCOM::BASE_DIR . 'Apps';
 
         if ($vdir = new \DirectoryIterator($apps_directory)) {
             foreach ($vdir as $vendor) {
@@ -66,9 +66,9 @@ class Apps
             }
         }
 
-        $vendor_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+        $vendor_directory = OSCOM::BASE_DIR . 'Apps';
 
-        if (file_exists($vendor_directory)) {
+        if (is_dir($vendor_directory)) {
             if ($vdir = new \DirectoryIterator($vendor_directory)) {
                 foreach ($vdir as $vendor) {
                     if (!$vendor->isDot() && $vendor->isDir() && (!isset($filter_vendor) || ($vendor->getFilename() == $filter_vendor))) {
@@ -140,9 +140,9 @@ class Apps
         if (strpos($app, '\\') !== false) {
             list($vendor, $app) = explode('\\', $app, 2);
 
-            $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . basename($vendor) . '/' . basename($app) . '/oscommerce.json';
+            $metafile = OSCOM::BASE_DIR . 'Apps/' . basename($vendor) . '/' . basename($app) . '/oscommerce.json';
 
-            if (file_exists($metafile) && (($json = json_decode(file_get_contents($metafile), true)) !== null)) {
+            if (is_file($metafile) && (($json = json_decode(file_get_contents($metafile), true)) !== null)) {
                 return $json;
             }
 
@@ -176,9 +176,9 @@ class Apps
             }
         }
 
-        $vendor_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+        $vendor_directory = OSCOM::BASE_DIR . 'Apps';
 
-        if (file_exists($vendor_directory)) {
+        if (is_dir($vendor_directory)) {
             if ($vdir = new \DirectoryIterator($vendor_directory)) {
                 foreach ($vdir as $vendor) {
                     if (!$vendor->isDot() && $vendor->isDir() && (!isset($filter_vendor) || ($vendor->getFilename() == $filter_vendor))) {

@@ -67,7 +67,7 @@
     }
   }
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
@@ -78,10 +78,10 @@
   $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled payment modules
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment;
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_payment.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_payment.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment.php', '', 'SSL'));

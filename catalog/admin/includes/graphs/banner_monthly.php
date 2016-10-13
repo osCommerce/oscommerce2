@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  include(DIR_WS_CLASSES . 'phplot.php');
+  include('includes/classes/phplot.php');
 
   $year = (isset($_GET['year']) ? $_GET['year'] : date('Y'));
 

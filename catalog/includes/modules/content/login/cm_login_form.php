@@ -71,7 +71,7 @@
       }
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_form.php');
+      include('includes/modules/content/' . $this->group . '/templates/login_form.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

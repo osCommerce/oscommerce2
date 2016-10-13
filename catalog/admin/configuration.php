@@ -41,7 +41,7 @@
 
   $show_listing = true;
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-cog"></i> <a href="<?= OSCOM::link('configuration.php', 'gID=' . $gID); ?>"><?= $Qgroup->valueProtected('configuration_group_title'); ?></a></h2>
@@ -119,7 +119,7 @@
         if (preg_match('/->/', $use_function)) {
           $class_method = explode('->', $use_function);
           if (!is_object(${$class_method[0]})) {
-            include(DIR_WS_CLASSES . $class_method[0] . '.php');
+            include('includes/classes/' . $class_method[0] . '.php');
             ${$class_method[0]} = new $class_method[0]();
           }
           $cfgValue = tep_call_function($class_method[1], $Qcfg->value('configuration_value'), ${$class_method[0]});
@@ -147,6 +147,6 @@
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

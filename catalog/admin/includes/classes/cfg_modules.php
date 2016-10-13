@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class cfg_modules {
     var $_modules = array();
 
@@ -17,7 +19,7 @@
       global $PHP_SELF;
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-      $directory = DIR_WS_MODULES . 'cfg_modules';
+      $directory = OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules';
 
       if ($dir = @dir($directory)) {
         while ($file = $dir->read()) {
@@ -25,8 +27,8 @@
             if (substr($file, strrpos($file, '.')) == $file_extension) {
               $class = substr($file, 0, strrpos($file, '.'));
 
-              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/cfg_modules/' . $file);
-              include(DIR_WS_MODULES . 'cfg_modules/' . $class . '.php');
+              include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/cfg_modules/' . $file);
+              include(OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules/' . $class . '.php');
 
               $m = new $class();
 

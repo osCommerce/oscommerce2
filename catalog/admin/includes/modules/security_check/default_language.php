@@ -10,11 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheck_default_language {
     var $type = 'error';
 
     function securityCheck_default_language() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/default_language.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/default_language.php');
     }
 
     function pass() {

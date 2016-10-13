@@ -10,22 +10,25 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
+  use OSC\OM\OSCOM;
+
   class securityCheck_session_storage {
     var $type = 'warning';
 
     function securityCheck_session_storage() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/session_storage.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/session_storage.php');
     }
 
     function pass() {
-      return ((STORE_SESSIONS != '') || (is_dir(session_save_path()) && tep_is_writable(session_save_path())));
+      return ((OSCOM::getConfig('store_sessions') != '') || FileSystem::isWritable(session_save_path()));
     }
 
     function getMessage() {
-      if (STORE_SESSIONS == '') {
+      if (OSCOM::getConfig('store_sessions') == '') {
         if (!is_dir(session_save_path())) {
           return WARNING_SESSION_DIRECTORY_NON_EXISTENT;
-        } elseif (!tep_is_writable(session_save_path())) {
+        } elseif (!FileSystem::isWritable(session_save_path())) {
           return WARNING_SESSION_DIRECTORY_NOT_WRITEABLE;
         }
       }

@@ -105,9 +105,9 @@
     $prod_list_contents .= '<div class="item list-group-item col-sm-4" itemprop="itemListElement" itemscope="" itemtype="http://schema.org/Product">';
 	  $prod_list_contents .= '  <div class="productHolder equal-height">';
     if (isset($_GET['manufacturers_id'])  && tep_not_null($_GET['manufacturers_id'])) {
-      $prod_list_contents .= '    <a href="' . OSCOM::link('product_info.php', 'manufacturers_id=' . $_GET['manufacturers_id'] . '&products_id=' . $Qlisting->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qlisting->value('products_image'), $Qlisting->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"', NULL, 'img-responsive thumbnail group list-group-image') . '</a>';
+      $prod_list_contents .= '    <a href="' . OSCOM::link('product_info.php', 'manufacturers_id=' . $_GET['manufacturers_id'] . '&products_id=' . $Qlisting->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qlisting->value('products_image')), $Qlisting->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"', NULL, 'img-responsive thumbnail group list-group-image') . '</a>';
     } else {
-      $prod_list_contents .= '    <a href="' . OSCOM::link('product_info.php', ($cPath ? 'cPath=' . $cPath . '&' : '') . 'products_id=' . $Qlisting->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qlisting->value('products_image'), $Qlisting->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"', NULL, 'img-responsive thumbnail group list-group-image') . '</a>';
+      $prod_list_contents .= '    <a href="' . OSCOM::link('product_info.php', ($cPath ? 'cPath=' . $cPath . '&' : '') . 'products_id=' . $Qlisting->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qlisting->value('products_image')), $Qlisting->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"', NULL, 'img-responsive thumbnail group list-group-image') . '</a>';
     }
     $prod_list_contents .= '    <div class="caption">';
     $prod_list_contents .= '      <h2 class="group inner list-group-item-heading">';

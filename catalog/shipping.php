@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/shipping.php');
+  require('includes/languages/' . $_SESSION['language'] . '/shipping.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('shipping.php'));
 

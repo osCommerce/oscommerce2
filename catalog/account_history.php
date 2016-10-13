@@ -20,7 +20,7 @@
     OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_history.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account_history.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php', '', 'SSL'));

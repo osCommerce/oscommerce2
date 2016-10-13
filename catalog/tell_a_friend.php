@@ -36,7 +36,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/tell_a_friend.php');
+  require('includes/languages/' . $_SESSION['language'] . '/tell_a_friend.php');
 
   $from_name = null;
   $from_email_address = null;
@@ -92,7 +92,7 @@
       }
 
       $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false)) . "\n\n" .
-                     sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . HTTP_SERVER . DIR_WS_CATALOG . "\n");
+                     sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . OSCOM::link('index.php', null, 'NONSSL', false) . "\n");
 
       tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
 

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class d_security_checks {
@@ -38,9 +39,9 @@
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $secmodules_array = array();
-      if ($secdir = @dir(DIR_FS_ADMIN . 'includes/modules/security_check/')) {
+      if ($secdir = @dir(OSCOM::getConfig('dir_root') . 'includes/modules/security_check/')) {
         while ($file = $secdir->read()) {
-          if (!is_dir(DIR_FS_ADMIN . 'includes/modules/security_check/' . $file)) {
+          if (!is_dir(OSCOM::getConfig('dir_root') . 'includes/modules/security_check/' . $file)) {
             if (substr($file, strrpos($file, '.')) == $file_extension) {
               $secmodules_array[] = $file;
             }
@@ -51,7 +52,7 @@
       }
 
       foreach ($secmodules_array as $secmodule) {
-        include(DIR_FS_ADMIN . 'includes/modules/security_check/' . $secmodule);
+        include(OSCOM::getConfig('dir_root') . 'includes/modules/security_check/' . $secmodule);
 
         $secclass = 'securityCheck_' . substr($secmodule, 0, strrpos($secmodule, '.'));
         if (tep_class_exists($secclass)) {

@@ -44,7 +44,7 @@
           $class = basename($sbm, '.php');
 
           if ( !class_exists($class) ) {
-            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
+            include('includes/languages/' . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
             include('includes/modules/social_bookmarks/' . $class . '.php');
           }
 

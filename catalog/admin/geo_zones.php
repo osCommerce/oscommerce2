@@ -114,7 +114,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 
   if (isset($_GET['zID']) && (($saction == 'edit') || ($saction == 'new'))) {
 ?>
@@ -195,7 +195,7 @@ function update_zone(theForm) {
 ?>
                 <td class="dataTableContent"><?php echo $Qzones->hasValue('countries_name') ? $Qzones->value('countries_name') : TEXT_ALL_COUNTRIES; ?></td>
                 <td class="dataTableContent"><?php echo $Qzones->hasValue('zone_name') ? $Qzones->value('zone_name') : PLEASE_SELECT; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($Qzones->valueInt('association_id') === (int)$sInfo->association_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $Qzones->valueInt('association_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($Qzones->valueInt('association_id') === (int)$sInfo->association_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $_GET['zID'] . '&action=list&spage=' . $_GET['spage'] . '&sID=' . $Qzones->valueInt('association_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -240,8 +240,8 @@ function update_zone(theForm) {
         echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id') . '&action=list') . '">' . HTML::image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER) . '</a>&nbsp;' . $Qzones->value('geo_zone_name'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($Qzones->valueInt('geo_zone_id') === (int)$zInfo->geo_zone_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id') . '&action=list') . '">' . HTML::image(OSCOM::linkImage('icons/folder.gif'), ICON_FOLDER) . '</a>&nbsp;' . $Qzones->value('geo_zone_name'); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($zInfo) && is_object($zInfo) && ($Qzones->valueInt('geo_zone_id') === (int)$zInfo->geo_zone_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_GEO_ZONES, 'zpage=' . $_GET['zpage'] . '&zID=' . $Qzones->valueInt('geo_zone_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -361,6 +361,6 @@ function update_zone(theForm) {
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

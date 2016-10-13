@@ -13,5 +13,5 @@
 use OSC\OM\OSCOM;
 
 define('MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_TITLE', 'admin/backups/ Directory Listing');
-define('MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_HTTP_200', 'The <a href="' . OSCOM::link('backups/') . '" target="_blank">' . DIR_WS_ADMIN . 'backups/</a> directory is publicly accessible and/or browsable - please disable directory listing for this directory in your web server configuration.');
+define('MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_HTTP_200', 'The <a href="' . OSCOM::link('backups/') . '" target="_blank">' . OSCOM::getConfig('http_path', 'Admin') . 'backups/</a> directory is publicly accessible and/or browsable - please disable directory listing for this directory in your web server configuration.');
 ?>

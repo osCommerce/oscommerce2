@@ -4,7 +4,7 @@ use OSC\OM\OSCOM;
 ?>
 <div class="col-sm-6 col-md-4" itemprop="itemListElement" itemscope="" itemtype="http://schema.org/Product">
   <div class="thumbnail equal-height">
-    <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><?php echo HTML::image(DIR_WS_IMAGES . $Qnew->value('products_image'), $Qnew->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
+    <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><?php echo HTML::image(OSCOM::linkImage($Qnew->value('products_image')), $Qnew->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
     <div class="caption">
       <p class="text-center"><a itemprop="url" href="<?php echo OSCOM::link('product_info.php', 'products_id=' . $Qnew->valueInt('products_id')); ?>"><span itemprop="name"><?php echo $Qnew->value('products_name'); ?></span></a></p>
       <hr>

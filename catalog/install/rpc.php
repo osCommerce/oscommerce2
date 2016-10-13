@@ -19,35 +19,34 @@
 
   $dir_fs_www_root = dirname(__FILE__);
 
-  $result = false;
+  $result = [
+    'status' => '-100',
+    'message' => 'noActionError'
+  ];
 
   if (isset($_GET['action']) && !empty($_GET['action'])) {
     switch ($_GET['action']) {
       case 'dbCheck':
         try {
-          $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], $_GET['name']);
+          $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], $_POST['name']);
+
+          $result['status'] = '1';
+          $result['message'] = 'success';
         } catch (\Exception $e) {
-          $result = $e->getCode() . '|' . $e->getMessage();
-        }
+          $result['status'] = $e->getCode();
+          $result['message'] = $e->getMessage();
 
-        if ($result === false) {
-          $result = true;
-        } else {
-          $error = explode('|', $result, 2);
-
-          if (($error[0] == '1049') && isset($_GET['createDb']) && ($_GET['createDb'] == 'true')) {
-            $result = false;
-
+          if (($e->getCode() == '1049') && isset($_GET['createDb']) && ($_GET['createDb'] == 'true')) {
             try {
-              $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], '');
+              $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], '');
 
-              $OSCOM_Db->exec('create database ' . Db::prepareIdentifier($_GET['name']) . ' character set utf8 collate utf8_unicode_ci');
-            } catch (\Exception $e) {
-              $result = $e->getCode() . '|' . $e->getMessage();
-            }
+              $OSCOM_Db->exec('create database ' . Db::prepareIdentifier($_POST['name']) . ' character set utf8 collate utf8_unicode_ci');
 
-            if ($result === false) {
-              $result = true;
+              $result['status'] = '1';
+              $result['message'] = 'success';
+            } catch (\Exception $e2) {
+              $result['status'] = $e2->getCode();
+              $result['message'] = $e2->getMessage();
             }
           }
         }
@@ -56,38 +55,19 @@
 
       case 'dbImport':
         try {
-          $OSCOM_Db = Db::initialize($_GET['server'], $_GET['username'], $_GET['password'], $_GET['name']);
+          $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], $_POST['name']);
           $OSCOM_Db->importSQL($dir_fs_www_root . '/oscommerce.sql');
-        } catch (\Exception $e) {
-          $result = $e->getCode() . '|' . $e->getMessage();
-        }
 
-        if ($result === false) {
-          $result = true;
+          $result['status'] = '1';
+          $result['message'] = 'success';
+        } catch (\Exception $e) {
+          $result['status'] = $e->getCode();
+          $result['message'] = $e->getMessage();
         }
 
         break;
     }
   }
 
-  if ($result === true) {
-    echo '[[1|success]]';
-  } else {
-    $error_no = '-100';
-    $error_msg = 'noActionError';
-
-    if ($result !== false) {
-      $error = explode('|', $result, 2);
-
-      if (count($error) === 2) {
-        $error_no = $error[0];
-        $error_msg = $error[1];
-      } else {
-        $error_code = 0;
-        $error_msg = $error[0];
-      }
-    }
-
-    echo '[[' . $error_no . '|' . $error_msg . ']]';
-  }
+  echo json_encode($result);
 ?>

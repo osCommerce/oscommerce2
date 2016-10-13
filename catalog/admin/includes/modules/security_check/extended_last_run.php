@@ -17,7 +17,7 @@
     var $type = 'warning';
 
     function securityCheck_extended_last_run() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended_last_run.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended_last_run.php');
     }
 
     function pass() {

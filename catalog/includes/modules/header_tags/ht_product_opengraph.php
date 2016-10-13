@@ -75,7 +75,7 @@
             $products_image = $Qimage->value('image');
           }
 
-          $data['og:image'] = OSCOM::link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
+          $data['og:image'] = OSCOM::linkImage($products_image);
 
           if ($new_price = tep_get_products_special_price($Qproduct->valueInt('products_id'))) {
             $products_price = $this->format_raw($new_price);

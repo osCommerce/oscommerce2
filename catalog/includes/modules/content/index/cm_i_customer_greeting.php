@@ -48,7 +48,7 @@
       }
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/customer_greeting.php');
+      include('includes/modules/content/' . $this->group . '/templates/customer_greeting.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

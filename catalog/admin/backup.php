@@ -10,10 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
+
+  $backup_directory = OSCOM::getConfig('dir_root') . 'includes/backups/';
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -28,16 +31,16 @@
         break;
       case 'backupnow':
         tep_set_time_limit(0);
-        $backup_file = 'db_' . DB_DATABASE . '-' . date('YmdHis') . '.sql';
-        $fp = fopen(DIR_FS_BACKUP . $backup_file, 'w');
+        $backup_file = 'db_' . OSCOM::getConfig('db_database') . '-' . date('YmdHis') . '.sql';
+        $fp = fopen($backup_directory . $backup_file, 'w');
 
         $schema = '# osCommerce, https://www.oscommerce.com' . "\n" .
                   '#' . "\n" .
                   '# Database Backup For ' . STORE_NAME . "\n" .
                   '# Copyright (c) ' . date('Y') . ' ' . STORE_OWNER . "\n" .
                   '#' . "\n" .
-                  '# Database: ' . DB_DATABASE . "\n" .
-                  '# Database Server: ' . DB_SERVER . "\n" .
+                  '# Database: ' . OSCOM::getConfig('db_database') . "\n" .
+                  '# Database Server: ' . OSCOM::getConfig('db_server') . "\n" .
                   '#' . "\n" .
                   '# Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
         fputs($fp, $schema);
@@ -52,7 +55,7 @@
           'ccsa.CHARACTER_SET_NAME'
         ],
         [
-          't.TABLE_SCHEMA' => DB_DATABASE,
+          't.TABLE_SCHEMA' => OSCOM::getConfig('db_database'),
           't.TABLE_COLLATION' => [
             'rel' => 'ccsa.COLLATION_NAME'
           ]
@@ -151,29 +154,29 @@
         if (isset($_POST['download']) && ($_POST['download'] == 'yes')) {
           switch ($_POST['compress']) {
             case 'gzip':
-              exec(LOCAL_EXE_GZIP . ' ' . DIR_FS_BACKUP . $backup_file);
+              exec(LOCAL_EXE_GZIP . ' ' . $backup_directory . $backup_file);
               $backup_file .= '.gz';
               break;
             case 'zip':
-              exec(LOCAL_EXE_ZIP . ' -j ' . DIR_FS_BACKUP . $backup_file . '.zip ' . DIR_FS_BACKUP . $backup_file);
-              unlink(DIR_FS_BACKUP . $backup_file);
+              exec(LOCAL_EXE_ZIP . ' -j ' . $backup_directory . $backup_file . '.zip ' . $backup_directory . $backup_file);
+              unlink($backup_directory . $backup_file);
               $backup_file .= '.zip';
           }
           header('Content-type: application/x-octet-stream');
           header('Content-disposition: attachment; filename=' . $backup_file);
 
-          readfile(DIR_FS_BACKUP . $backup_file);
-          unlink(DIR_FS_BACKUP . $backup_file);
+          readfile($backup_directory . $backup_file);
+          unlink($backup_directory . $backup_file);
 
           exit;
         } else {
           switch ($_POST['compress']) {
             case 'gzip':
-              exec(LOCAL_EXE_GZIP . ' ' . DIR_FS_BACKUP . $backup_file);
+              exec(LOCAL_EXE_GZIP . ' ' . $backup_directory . $backup_file);
               break;
             case 'zip':
-              exec(LOCAL_EXE_ZIP . ' -j ' . DIR_FS_BACKUP . $backup_file . '.zip ' . DIR_FS_BACKUP . $backup_file);
-              unlink(DIR_FS_BACKUP . $backup_file);
+              exec(LOCAL_EXE_ZIP . ' -j ' . $backup_directory . $backup_file . '.zip ' . $backup_directory . $backup_file);
+              unlink($backup_directory . $backup_file);
           }
 
           $OSCOM_MessageStack->add(SUCCESS_DATABASE_SAVED, 'success');
@@ -188,8 +191,8 @@
         if ($action == 'restorenow') {
           $read_from = $_GET['file'];
 
-          if (file_exists(DIR_FS_BACKUP . $_GET['file'])) {
-            $restore_file = DIR_FS_BACKUP . $_GET['file'];
+          if (is_file($backup_directory . $_GET['file'])) {
+            $restore_file = $backup_directory . $_GET['file'];
             $extension = substr($_GET['file'], -3);
 
             if ( ($extension == 'sql') || ($extension == '.gz') || ($extension == 'zip') ) {
@@ -205,11 +208,11 @@
                   break;
                 case 'zip':
                   $restore_from = substr($restore_file, 0, -4);
-                  exec(LOCAL_EXE_UNZIP . ' ' . $restore_file . ' -d ' . DIR_FS_BACKUP);
+                  exec(LOCAL_EXE_UNZIP . ' ' . $restore_file . ' -d ' . $backup_directory);
                   $remove_raw = true;
               }
 
-              if (isset($restore_from) && file_exists($restore_from) && (filesize($restore_from) > 15000)) {
+              if (isset($restore_from) && is_file($restore_from) && (filesize($restore_from) > 15000)) {
                 $fd = fopen($restore_from, 'rb');
                 $restore_query = fread($fd, filesize($restore_from));
                 fclose($fd);
@@ -313,8 +316,8 @@
         $extension = substr($_GET['file'], -3);
 
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
-          if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
-            $buffer = fread($fp, filesize(DIR_FS_BACKUP . $_GET['file']));
+          if ($fp = fopen($backup_directory . $_GET['file'], 'rb')) {
+            $buffer = fread($fp, filesize($backup_directory . $_GET['file']));
             fclose($fp);
 
             header('Content-type: application/x-octet-stream');
@@ -331,9 +334,7 @@
       case 'deleteconfirm':
         if (strstr($_GET['file'], '..')) OSCOM::redirect(FILENAME_BACKUP);
 
-        tep_remove(DIR_FS_BACKUP . '/' . $_GET['file']);
-
-        if (!$tep_remove_error) {
+        if (unlink($backup_directory . '/' . $_GET['file'])) {
           $OSCOM_MessageStack->add(SUCCESS_BACKUP_DELETED, 'success');
 
           OSCOM::redirect(FILENAME_BACKUP);
@@ -344,8 +345,8 @@
 
 // check if the backup directory exists
   $dir_ok = false;
-  if (is_dir(DIR_FS_BACKUP)) {
-    if (tep_is_writable(DIR_FS_BACKUP)) {
+  if (is_dir($backup_directory)) {
+    if (FileSystem::isWritable($backup_directory)) {
       $dir_ok = true;
     } else {
       $OSCOM_MessageStack->add(ERROR_BACKUP_DIRECTORY_NOT_WRITEABLE, 'error');
@@ -356,7 +357,7 @@
 
   $show_listing = true;
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 
   if (empty($action)) {
 ?>
@@ -378,11 +379,11 @@
     if (isset($_GET['file'])) {
       $file = basename($_GET['file']);
 
-      if (file_exists(DIR_FS_BACKUP . $file)) {
+      if (is_file($backup_directory . $file)) {
         $info = [
           'file' => $file,
-          'date' => date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $file)),
-          'size' => number_format(filesize(DIR_FS_BACKUP . $file)) . ' bytes'
+          'date' => date(PHP_DATE_TIME_FORMAT, filemtime($backup_directory . $file)),
+          'size' => number_format(filesize($backup_directory . $file)) . ' bytes'
         ];
 
         switch (substr($file, -3)) {
@@ -397,7 +398,7 @@
           case 'restore':
             $heading[] = array('text' => $buInfo->date);
 
-            $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
+            $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, $backup_directory . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
             $contents[] = array('text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, null, 'btn-link'));
             break;
 
@@ -420,8 +421,8 @@
           $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
 
           $contents[] = array('text' => HTML::radioField('compress', 'no', true) . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
-          if (file_exists(LOCAL_EXE_GZIP)) $contents[] = array('text' => HTML::radioField('compress', 'gzip') . ' ' . TEXT_INFO_USE_GZIP);
-          if (file_exists(LOCAL_EXE_ZIP)) $contents[] = array('text' => HTML::radioField('compress', 'zip') . ' ' . TEXT_INFO_USE_ZIP);
+          if (is_file(LOCAL_EXE_GZIP)) $contents[] = array('text' => HTML::radioField('compress', 'gzip') . ' ' . TEXT_INFO_USE_GZIP);
+          if (is_file(LOCAL_EXE_ZIP)) $contents[] = array('text' => HTML::radioField('compress', 'zip') . ' ' . TEXT_INFO_USE_ZIP);
 
           if ($dir_ok == true) {
             $contents[] = array('text' => HTML::checkboxField('download', 'yes') . ' ' . TEXT_INFO_DOWNLOAD_ONLY . '*<br /><br />*' . TEXT_INFO_BEST_THROUGH_HTTPS);
@@ -467,10 +468,10 @@
 
 <?php
     if ($dir_ok == true) {
-      $dir = dir(DIR_FS_BACKUP);
+      $dir = dir($backup_directory);
       $contents = array();
       while ($file = $dir->read()) {
-        if (!is_dir(DIR_FS_BACKUP . $file) && in_array(substr($file, -3), array('zip', 'sql', '.gz'))) {
+        if (!is_dir($backup_directory . $file) && in_array(substr($file, -3), array('zip', 'sql', '.gz'))) {
           $contents[] = $file;
         }
       }
@@ -482,8 +483,8 @@
 
     <tr>
       <td><?= $entry; ?></td>
-      <td class="text-right"><?= date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
-      <td class="text-right"><?= number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
+      <td class="text-right"><?= date(PHP_DATE_TIME_FORMAT, filemtime($backup_directory . $entry)); ?></td>
+      <td class="text-right"><?= number_format(filesize($backup_directory . $entry)); ?> bytes</td>
       <td class="action"><a href="<?= OSCOM::link('backup.php', 'file=' . $entry . '&action=download'); ?>"><i class="fa fa-download text-success" title="<?= ICON_FILE_DOWNLOAD; ?>"></i></a><a href="<?= OSCOM::link('backup.php', 'file=' . $entry . '&action=restore'); ?>"><i class="fa fa-repeat" title="<?= IMAGE_RESTORE; ?>"></i></a><a href="<?= OSCOM::link('backup.php', 'file=' . $entry . '&action=delete'); ?>"><i class="fa fa-trash" title="<?= IMAGE_DELETE; ?>"></i></a></td>
     </tr>
 
@@ -497,7 +498,7 @@
 </table>
 
 <p>
-  <?= '<strong>' . TEXT_BACKUP_DIRECTORY . '</strong> ' . DIR_FS_BACKUP; ?>
+  <?= '<strong>' . TEXT_BACKUP_DIRECTORY . '</strong> ' . $backup_directory; ?>
 </p>
 
 <?php
@@ -512,6 +513,6 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

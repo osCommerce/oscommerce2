@@ -89,9 +89,9 @@ class Hooks
 
         $this->hooks[$this->site][$group][$hook][$action] = [];
 
-        $directory = OSCOM::BASE_DIR . 'Module/Hooks/' . $this->site . '/' . $group;
+        $directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/Module/Hooks/' . $this->site . '/' . $group;
 
-        if (file_exists($directory)) {
+        if (is_dir($directory)) {
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
                     if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php') && ($file->getBasename('.php') == $hook)) {

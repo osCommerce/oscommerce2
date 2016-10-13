@@ -62,7 +62,7 @@
           } while ($Qimage->fetch());
         }
 
-        $params['media'] = OSCOM::link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
+        $params['media'] = OSCOM::linkImage($image_file);
       }
 
 // url

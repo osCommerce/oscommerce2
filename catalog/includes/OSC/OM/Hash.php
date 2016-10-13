@@ -15,7 +15,7 @@ class Hash
     public static function encrypt($plain)
     {
         if (!class_exists('PasswordHash', false)) {
-            include(OSCOM::BASE_DIR . 'classes/passwordhash.php');
+            include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/classes/passwordhash.php');
         }
 
         $hasher = new \PasswordHash(10, true);

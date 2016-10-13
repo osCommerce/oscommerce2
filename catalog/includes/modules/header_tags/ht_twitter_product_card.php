@@ -69,7 +69,7 @@
             $products_image = $Qimage->value('image');
           }
 
-          $data['image'] = OSCOM::link(DIR_WS_IMAGES . $products_image, '', 'NONSSL', false, false);
+          $data['image'] = OSCOM::linkImage($products_image);
 
           $result = '';
 

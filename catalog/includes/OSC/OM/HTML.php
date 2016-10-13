@@ -9,6 +9,7 @@
 namespace OSC\OM;
 
 use OSC\OM\HTML\Panel;
+use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
 class HTML
@@ -46,7 +47,7 @@ class HTML
 
     public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = false, $bootstrap_css = '')
     {
-        if ((empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false')) {
+        if ((empty($src) || ($src == OSCOM::linkImage(''))) && (IMAGE_REQUIRED == 'false')) {
             return false;
         }
 

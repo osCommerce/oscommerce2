@@ -39,7 +39,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_success.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_success.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);

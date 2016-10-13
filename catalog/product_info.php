@@ -20,7 +20,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_info.php');
+  require('includes/languages/' . $_SESSION['language'] . '/product_info.php');
 
   $product_exists = true;
 
@@ -106,7 +106,7 @@
 <?php
     if ( !empty($Qproduct->value('products_image')) ) {
 
-      echo HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), null, null, null, 'itemprop="image" style="display:none;"');
+      echo HTML::image(OSCOM::linkImage($Qproduct->value('products_image')), null, null, null, 'itemprop="image" style="display:none;"');
 
       $photoset_layout = (int)MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT;
 
@@ -131,7 +131,7 @@
             $pi_html[] = '<div id="piGalDiv_' . $pi_counter . '">' . $image['htmlcontent'] . '</div>';
           }
 
-          echo HTML::image(DIR_WS_IMAGES . $image['image'], '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
+          echo HTML::image(OSCOM::linkImage($image['image']), '', '', '', 'id="piGalImg_' . $pi_counter . '"') . "\n";
         }
 ?>
 
@@ -145,7 +145,7 @@
 ?>
 
     <div class="piGal pull-right">
-      <?php echo HTML::image(DIR_WS_IMAGES . $Qproduct->value('products_image'), $Qproduct->value('products_name')); ?>
+      <?php echo HTML::image(OSCOM::linkImage($Qproduct->value('products_image')), $Qproduct->value('products_name')); ?>
     </div>
 
 <?php

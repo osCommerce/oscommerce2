@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
   if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
@@ -124,7 +124,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <script type="text/javascript">
@@ -193,7 +193,7 @@ function updateForm() {
 ?>
                 <td class="dataTableContent"><?php echo $Qcurrencies->value('code'); ?></td>
                 <td class="dataTableContent" align="right"><?php echo number_format($Qcurrencies->value('value'), 8); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcurrencies->valueInt('currencies_id') === $cInfo->currencies_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $Qcurrencies->valueInt('currencies_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcurrencies->valueInt('currencies_id') === $cInfo->currencies_id) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $Qcurrencies->valueInt('currencies_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -295,6 +295,6 @@ function updateForm() {
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -19,7 +19,7 @@
     OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php', '', 'SSL'));
 
@@ -42,7 +42,7 @@
     <?php
     echo $oscTemplate->getContent('account');
     ?>
-  
+
   </div>
 </div>
 

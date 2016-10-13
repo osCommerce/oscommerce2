@@ -16,25 +16,25 @@
     if (OSCOM::isRPC() === false) {
         $page_file = OSCOM::getSitePageFile();
 
-        if (empty($page_file) || !file_exists($page_file)) {
-          $page_file = DIR_FS_CATALOG . 'includes/error_documents/404.php';
+        if (empty($page_file) || !is_file($page_file)) {
+          $page_file = OSCOM::getConfig('dir_root', 'Shop') . 'includes/error_documents/404.php';
         }
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(DIR_FS_ADMIN . 'includes/template_top.php');
+          include(OSCOM::getConfig('dir_root') . 'includes/template_top.php');
         }
 
         include($page_file);
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(DIR_FS_ADMIN . 'includes/template_bottom.php');
+          include(OSCOM::getConfig('dir_root') . 'includes/template_bottom.php');
         }
     }
 
     goto main_sub3;
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-home"></i> <a href="<?= OSCOM::link(FILENAME_DEFAULT); ?>"><?= STORE_NAME; ?></a></h2>
@@ -52,8 +52,8 @@
         $class = substr($adm, 0, strrpos($adm, '.'));
 
         if ( !class_exists($class) ) {
-          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/dashboard/' . $adm);
-          include(DIR_WS_MODULES . 'dashboard/' . $class . '.php');
+          include('includes/languages/' . $_SESSION['language'] . '/modules/dashboard/' . $adm);
+          include('includes/modules/dashboard/' . $class . '.php');
         }
       }
 
@@ -81,9 +81,9 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
+  require('includes/template_bottom.php');
 
   main_sub3: // Sites and Apps skip to here
 
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -24,7 +24,7 @@ use OSC\OM\OSCOM;
       ?>
     <div class="col-sm-<?php echo $product_width; ?>" itemprop="itemListElement" itemscope="" itemtype="http://schema.org/Product">
       <div class="thumbnail equal-height">
-        <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><?php echo HTML::image(DIR_WS_IMAGES . $new_product['products_image'], $new_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
+        <a href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><?php echo HTML::image(OSCOM::linkImage($new_product['products_image']), $new_product['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'itemprop="image"'); ?></a>
         <div class="caption">
           <p class="text-center"><a itemprop="url" href="<?php echo OSCOM::link('product_info.php', 'products_id=' . (int)$new_product['products_id']); ?>"><span itemprop="name"><?php echo $new_product['products_name']; ?></span></a></p>
           <hr>

@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/reviews.php');
+  require('includes/languages/' . $_SESSION['language'] . '/reviews.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('reviews.php'));
 
@@ -55,7 +55,7 @@
 <?php
     while ($Qreviews->fetch()) {
       echo '<blockquote class="col-sm-6">';
-      echo '  <p><span class="pull-left">' . HTML::image(DIR_WS_IMAGES . $Qreviews->value('products_image'), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</span>' . $Qreviews->valueProtected('reviews_text') . ' ... </p><div class="clearfix"></div>';
+      echo '  <p><span class="pull-left">' . HTML::image(OSCOM::linkImage($Qreviews->value('products_image')), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</span>' . $Qreviews->valueProtected('reviews_text') . ' ... </p><div class="clearfix"></div>';
       $review_name = $Qreviews->valueProtected('customers_name');
       echo '  <footer>' . sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a></footer>';
       echo '</blockquote>';

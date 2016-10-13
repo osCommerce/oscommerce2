@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -65,7 +66,7 @@
         if (empty($banners_html_text)) {
           if (empty($banners_image_local)) {
             $banners_image = new upload('banners_image');
-            $banners_image->set_destination(DIR_FS_CATALOG_IMAGES . $banners_image_target);
+            $banners_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $banners_image_target);
             if ( ($banners_image->parse() == false) || ($banners_image->save() == false) ) {
               $banner_error = true;
             }
@@ -141,9 +142,9 @@
         if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
           $Qbanner = $OSCOM_Db->get('banners', 'banners_image', ['banners_id' => (int)$banners_id]);
 
-          if (tep_not_null($Qbanner->value('banners_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image')) && is_file(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'))) {
-            if (tep_is_writable(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'))) {
-              unlink(DIR_FS_CATALOG_IMAGES . $Qbanner->value('banners_image'));
+          if (tep_not_null($Qbanner->value('banners_image')) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qbanner->value('banners_image'))) {
+            if (FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qbanner->value('banners_image'))) {
+              unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qbanner->value('banners_image'));
             } else {
               $OSCOM_MessageStack->add(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
             }
@@ -156,22 +157,16 @@
         $OSCOM_Db->delete('banners_history', ['banners_id' => (int)$banners_id]);
 
         if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
-            }
+          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension)) {
+            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_yearly-' . (int)$banners_id . '.' . $banner_extension);
           }
 
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
-            }
+          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension)) {
+            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_monthly-' . (int)$banners_id . '.' . $banner_extension);
           }
 
-          if (is_file(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
-            if (tep_is_writable(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
-              unlink(DIR_WS_IMAGES . 'graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
-            }
+          if (FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension)) {
+            unlink(OSCOM::getConfig('dir_root') . 'images/graphs/banner_daily-' . (int)$banners_id . '.' . $banner_extension);
           }
         }
 
@@ -196,7 +191,7 @@
           if (tep_not_null($Qbanner->value('banners_html_text'))) {
             echo $Qbanner->value('banners_html_text');
           } elseif (tep_not_null($Qbanner->value('banners_image'))) {
-            echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $Qbanner->value('banners_image'), $Qbanner->value('banners_title'));
+            echo HTML::image(OSCOM::linkImage('Shop/' . $Qbanner->value('banners_image')), $Qbanner->value('banners_title'));
           }
 
           exit;
@@ -207,8 +202,8 @@
 
 // check if the graphs directory exists
   if (function_exists('imagecreate') && tep_not_null($banner_extension)) {
-    if (is_dir(DIR_WS_IMAGES . 'graphs')) {
-      if (!tep_is_writable(DIR_WS_IMAGES . 'graphs')) {
+    if (is_dir(OSCOM::getConfig('dir_root') . 'images/graphs')) {
+      if (!FileSystem::isWritable(OSCOM::getConfig('dir_root') . 'images/graphs')) {
         $OSCOM_MessageStack->add(ERROR_GRAPHS_DIRECTORY_NOT_WRITEABLE, 'error');
       }
     } else {
@@ -218,7 +213,7 @@
 
   $show_listing = true;
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 
   if (empty($action)) {
 ?>
@@ -316,7 +311,7 @@
 
       <label for="banners_image_local"><?= TEXT_BANNERS_IMAGE_LOCAL; ?></label>
       <div class="input-group">
-        <div class="input-group-addon"><?= DIR_FS_CATALOG_IMAGES; ?></div>
+        <div class="input-group-addon"><?= OSCOM::getConfig('dir_root', 'Shop') . 'images/'; ?></div>
         <?= HTML::inputField('banners_image_local', (isset($bInfo->banners_image) ? $bInfo->banners_image : '')); ?>
       </div>
     </div>
@@ -324,7 +319,7 @@
     <div class="form-group">
       <label for="banners_image_target"><?= TEXT_BANNERS_IMAGE_TARGET; ?></label>
       <div class="input-group">
-        <div class="input-group-addon"><?= DIR_FS_CATALOG_IMAGES; ?></div>
+        <div class="input-group-addon"><?= OSCOM::getConfig('dir_root', 'Shop') . 'images/'; ?></div>
         <?= HTML::inputField('banners_image_target'); ?>
       </div>
     </div>
@@ -460,6 +455,6 @@ function popupImageWindow(url) {
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

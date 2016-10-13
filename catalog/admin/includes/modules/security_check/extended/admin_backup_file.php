@@ -17,19 +17,21 @@
     var $has_doc = true;
 
     function securityCheckExtended_admin_backup_file() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/admin_backup_file.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/admin_backup_file.php');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_FILE_TITLE;
     }
 
     function pass() {
+      $backup_directory = OSCOM::getConfig('dir_root') . 'includes/backups/';
+
       $backup_file = null;
 
-      if ( is_dir(DIR_FS_BACKUP) ) {
-        $dir = dir(DIR_FS_BACKUP);
+      if ( is_dir($backup_directory) ) {
+        $dir = dir($backup_directory);
         $contents = array();
         while ($file = $dir->read()) {
-          if ( !is_dir(DIR_FS_BACKUP . $file) ) {
+          if ( !is_dir($backup_directory . $file) ) {
             $ext = substr($file, strrpos($file, '.') + 1);
 
             if ( in_array($ext, array('zip', 'sql', 'gz')) && !isset($contents[$ext]) ) {

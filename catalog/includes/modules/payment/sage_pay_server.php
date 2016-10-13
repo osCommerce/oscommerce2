@@ -501,10 +501,10 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
+        if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt');
+        } elseif ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem');
         }
       } else {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -540,7 +540,7 @@ EOD;
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
+      if (is_file(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 

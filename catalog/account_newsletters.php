@@ -21,7 +21,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_newsletters.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account_newsletters.php');
 
   $Qnewsletter = $OSCOM_Db->prepare('select customers_newsletter from :table_customers where customers_id = :customers_id');
   $Qnewsletter->bindInt(':customers_id', $_SESSION['customer_id']);

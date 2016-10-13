@@ -15,18 +15,18 @@
     if (OSCOM::isRPC() === false) {
         $page_file = OSCOM::getSitePageFile();
 
-        if (empty($page_file) || !file_exists($page_file)) {
-          $page_file = DIR_FS_CATALOG . 'includes/error_documents/404.php';
+        if (empty($page_file) || !is_file($page_file)) {
+          $page_file = OSCOM::getConfig('dir_root') . 'includes/error_documents/404.php';
         }
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(DIR_FS_CATALOG . 'includes/template_top.php');
+          include(OSCOM::getConfig('dir_root') . 'includes/template_top.php');
         }
 
         include($page_file);
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(DIR_FS_CATALOG . 'includes/template_bottom.php');
+          include(OSCOM::getConfig('dir_root') . 'includes/template_bottom.php');
         }
     }
 
@@ -55,7 +55,7 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/index.php');
+  require('includes/languages/' . $_SESSION['language'] . '/index.php');
 
   require('includes/template_top.php');
 

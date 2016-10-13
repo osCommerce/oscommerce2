@@ -10,15 +10,18 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
+  use OSC\OM\OSCOM;
+
   class securityCheck_config_file_catalog {
     var $type = 'warning';
 
     function securityCheck_config_file_catalog() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/config_file_catalog.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/config_file_catalog.php');
     }
 
     function pass() {
-      return (file_exists(DIR_FS_CATALOG . 'includes/configure.php') && !tep_is_writable(DIR_FS_CATALOG . 'includes/configure.php'));
+      return !FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'includes/configure.php');
     }
 
     function getMessage() {

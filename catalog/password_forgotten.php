@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/password_forgotten.php');
+  require('includes/languages/' . $_SESSION['language'] . '/password_forgotten.php');
 
   $password_reset_initiated = false;
 

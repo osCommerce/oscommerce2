@@ -18,11 +18,11 @@ class Cookies
     public function __construct()
     {
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $this->domain = defined('HTTPS_COOKIE_DOMAIN') ? HTTPS_COOKIE_DOMAIN : '';
-            $this->path = defined('HTTPS_COOKIE_PATH') ? HTTPS_COOKIE_PATH : '';
+            $this->domain = OSCOM::getConfig('https_cookie_domain');
+            $this->path = OSCOM::getConfig('https_cookie_path');
         } else {
-            $this->domain = defined('HTTP_COOKIE_DOMAIN') ? HTTP_COOKIE_DOMAIN : '';
-            $this->path = defined('HTTP_COOKIE_PATH') ? HTTP_COOKIE_PATH : '';
+            $this->domain = OSCOM::getConfig('http_cookie_domain');
+            $this->path = OSCOM::getConfig('http_cookie_path');
         }
     }
 

@@ -40,7 +40,7 @@
       $content_width = (int)MODULE_CONTENT_HEADER_BUTTONS_CONTENT_WIDTH;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/buttons.php');
+      include('includes/modules/content/' . $this->group . '/templates/buttons.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

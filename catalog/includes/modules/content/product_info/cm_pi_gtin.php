@@ -43,7 +43,7 @@
         $gtin = substr($product_info['products_gtin'], 0-MODULE_CONTENT_PRODUCT_INFO_GTIN_LENGTH);
 
         ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/gtin.php');
+        include('includes/modules/content/' . $this->group . '/templates/gtin.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);

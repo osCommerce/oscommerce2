@@ -82,7 +82,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-th-large"></i> <a href="<?= OSCOM::link('apps.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
@@ -228,6 +228,6 @@ $(function() {
 </script>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

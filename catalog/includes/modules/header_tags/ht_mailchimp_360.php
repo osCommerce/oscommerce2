@@ -33,8 +33,8 @@
     function execute() {
       global $PHP_SELF;
 
-      include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/MCAPI.class.php');
-      include(DIR_WS_MODULES . 'header_tags/ht_mailchimp_360/mc360.php');
+      include('includes/modules/header_tags/ht_mailchimp_360/MCAPI.class.php');
+      include('includes/modules/header_tags/ht_mailchimp_360/mc360.php');
 
       $mc360 = new mc360();
       $mc360->set_cookies();

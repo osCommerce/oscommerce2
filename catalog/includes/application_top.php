@@ -15,27 +15,22 @@
 
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
-  define('OSCOM_BASE_DIR', __DIR__ . '/');
+  define('OSCOM_BASE_DIR', __DIR__ . '/OSC/');
 
 // set the level of error reporting
   error_reporting(E_ALL & ~E_DEPRECATED);
 
-// load server configuration parameters
-  if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
-  } else {
-    include('includes/configure.php');
-  }
+  require(OSCOM_BASE_DIR . 'OM/OSCOM.php');
+  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  if (DB_SERVER == '') {
+  OSCOM::initialize();
+
+  if (!OSCOM::configExists('db_server')) {
     if (is_dir('install')) {
       header('Location: install/index.php');
       exit;
     }
   }
-
-  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
-  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
   require('includes/functions/general.php');
   require('includes/functions/cache.php');
@@ -57,7 +52,8 @@
   require('includes/classes/category_tree.php');
   require('includes/classes/breadcrumb.php');
 
-  OSCOM::initialize();
+  OSCOM::loadSite('Shop');
+
   $OSCOM_Db = Registry::get('Db');
 
   Registry::get('Hooks')->watch('Session', 'Recreated', 'execute', function($parameters) {

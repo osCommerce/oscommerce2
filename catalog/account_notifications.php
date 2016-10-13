@@ -21,7 +21,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_notifications.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account_notifications.php');
 
   $Qglobal = $OSCOM_Db->prepare('select global_product_notifications from :table_customers_info where customers_info_id = :customers_info_id');
   $Qglobal->bindInt(':customers_info_id', $_SESSION['customer_id']);

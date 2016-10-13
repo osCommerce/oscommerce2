@@ -83,10 +83,10 @@ class HTTP
             }
 
             if (!isset($parameters['cafile'])) {
-                $parameters['cafile'] = OSCOM::BASE_DIR . 'cacert.pem';
+                $parameters['cafile'] = OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem';
             }
 
-            if (file_exists($parameters['cafile'])) {
+            if (is_file($parameters['cafile'])) {
                 $curl_options[CURLOPT_CAINFO] = $parameters['cafile'];
             }
 

@@ -109,9 +109,9 @@ abstract class AppAbstract
         $this->code = $r->getShortName();
         $this->vendor = array_slice(explode('\\', $r->getNamespaceName()), -2, 1)[0];
 
-        $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . $this->vendor . '/' . $this->code . '/oscommerce.json';
+        $metafile = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/oscommerce.json';
 
-        if (!file_exists($metafile) || (($json = json_decode(file_get_contents($metafile), true)) === null)) {
+        if (!is_file($metafile) || (($json = json_decode(file_get_contents($metafile), true)) === null)) {
             trigger_error('OSC\OM\AppAbstract::setInfo(): ' . $this->vendor . '\\' . $this->code . ' - Could not read App information in ' . $metafile . '.');
 
             return false;
@@ -145,9 +145,9 @@ abstract class AppAbstract
     {
         $language = isset($language) ? basename($language) : basename($_SESSION['language']);
 
-        $pathname = OSCOM::BASE_DIR . 'OSC/Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
+        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
 
-        if (file_exists($pathname)) {
+        if (is_file($pathname)) {
             return true;
         }
 
@@ -166,9 +166,9 @@ abstract class AppAbstract
             $this->loadDefinitionFile($filename, 'english');
         }
 
-        $pathname = OSCOM::BASE_DIR . 'OSC/Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
+        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
 
-        if (file_exists($pathname)) {
+        if (is_file($pathname)) {
             $this->lang->loadDefinitionsFromFile($pathname, $this->vendor . '-' . $this->code);
         } else {
             trigger_error('OSC\OM\AppAbstract::loadDefinitionFile() - Filename does not exist: ' . $pathname);

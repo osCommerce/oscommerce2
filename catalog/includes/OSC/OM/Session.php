@@ -8,11 +8,13 @@
 
 namespace OSC\OM;
 
+use OSC\OM\OSCOM;
+
 class Session
 {
     public static function load($name = null)
     {
-        $class_name = 'OSC\\OM\\Session\\' . STORE_SESSIONS;
+        $class_name = 'OSC\\OM\\Session\\' . OSCOM::getConfig('store_sessions');
 
         if (!class_exists($class_name)) {
             trigger_error('Session Handler \'' . $class_name . '\' does not exist, using default \'OSC\\OM\\Session\\File\'', E_USER_NOTICE);
@@ -34,7 +36,7 @@ class Session
 
         $force_cookies = false;
 
-        if ((HTTP_COOKIE_DOMAIN == HTTPS_COOKIE_DOMAIN) && (HTTP_COOKIE_PATH == HTTPS_COOKIE_PATH)) {
+        if ((OSCOM::getConfig('http_cookie_domain') == OSCOM::getConfig('https_cookie_domain')) && (OSCOM::getConfig('http_cookie_path') == OSCOM::getConfig('https_cookie_path'))) {
             $force_cookies = true;
         }
 

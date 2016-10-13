@@ -34,7 +34,7 @@
     }
 
     function getOutput() {
-      return '<a href="' . OSCOM::link('tell_a_friend.php', 'products_id=' . $_GET['products_id']) . '"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . HTML::outputProtected($this->public_title) . '" alt="' . HTML::outputProtected($this->public_title) . '" /></a>';
+      return '<a href="' . OSCOM::link('tell_a_friend.php', 'products_id=' . $_GET['products_id']) . '"><img src="' . OSCOM::linkImage('social_bookmarks/' . $this->icon) . '" border="0" title="' . HTML::outputProtected($this->public_title) . '" alt="' . HTML::outputProtected($this->public_title) . '" /></a>';
     }
 
     function isEnabled() {

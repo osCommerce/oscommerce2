@@ -72,7 +72,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -114,7 +114,7 @@
                 <td class="dataTableContent"><?php echo $Qrates->value('tax_class_title'); ?></td>
                 <td class="dataTableContent"><?php echo $Qrates->value('geo_zone_name'); ?></td>
                 <td class="dataTableContent"><?php echo tep_display_tax_value($Qrates->value('tax_rate')); ?>%</td>
-                <td class="dataTableContent" align="right"><?php if (isset($trInfo) && is_object($trInfo) && ($Qrates->valueInt('tax_rates_id') === (int)$trInfo->tax_rates_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $Qrates->valueInt('tax_rates_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($trInfo) && is_object($trInfo) && ($Qrates->valueInt('tax_rates_id') === (int)$trInfo->tax_rates_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_TAX_RATES, 'page=' . $_GET['page'] . '&tID=' . $Qrates->valueInt('tax_rates_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -200,6 +200,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

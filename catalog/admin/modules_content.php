@@ -36,21 +36,21 @@
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
 
-  if ($maindir = @dir(DIR_FS_CATALOG_MODULES . 'content/')) {
+  if ($maindir = @dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/')) {
     while ($group = $maindir->read()) {
-      if ( ($group != '.') && ($group != '..') && is_dir(DIR_FS_CATALOG_MODULES . 'content/' . $group)) {
-        if ($dir = @dir(DIR_FS_CATALOG_MODULES . 'content/' . $group)) {
+      if ( ($group != '.') && ($group != '..') && is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group)) {
+        if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group)) {
           while ($file = $dir->read()) {
-            if (!is_dir(DIR_FS_CATALOG_MODULES . 'content/' . $group . '/' . $file)) {
+            if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group . '/' . $file)) {
               if (substr($file, strrpos($file, '.')) == $file_extension) {
                 $class = substr($file, 0, strrpos($file, '.'));
 
                 if (!tep_class_exists($class)) {
-                  if ( file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file) ) {
-                    include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file);
+                  if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file) ) {
+                    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file);
                   }
 
-                  include(DIR_FS_CATALOG_MODULES . 'content/' . $group . '/' . $file);
+                  include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group . '/' . $file);
                 }
 
                 if (tep_class_exists($class)) {
@@ -206,7 +206,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -266,7 +266,7 @@
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -336,7 +336,7 @@
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
                 <td class="dataTableContent"><?php echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'module=' . $module->code) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'module=' . $module->code) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -345,7 +345,7 @@
 <?php
   }
 ?>
-            <p class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . DIR_FS_CATALOG_MODULES . 'content/'; ?></p>
+            <p class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/'; ?></p>
             </td>
 <?php
   $heading = array();
@@ -385,11 +385,11 @@
           $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-            $contents[] = array('text' => '<br />' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
           }
 
           if (isset($mInfo->api_version)) {
-            $contents[] = array('text' => HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
           }
 
           $contents[] = array('text' => '<br />' . $mInfo->description);
@@ -406,7 +406,7 @@
                 $class_method = explode('->', $use_function);
 
                 if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
-                  include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                  include('includes/classes/' . $class_method[0] . '.php');
                   ${$class_method[0]} = new $class_method[0]();
                 }
 
@@ -426,11 +426,11 @@
           $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=remove')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-            $contents[] = array('text' => '<br />' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
           }
 
           if (isset($mInfo->api_version)) {
-            $contents[] = array('text' => HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
           }
 
           $contents[] = array('text' => '<br />' . $mInfo->description);
@@ -456,6 +456,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

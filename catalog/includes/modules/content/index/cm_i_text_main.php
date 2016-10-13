@@ -41,7 +41,7 @@
 
       if (tep_not_null(MODULE_CONTENT_TEXT_MAIN_TEXT)) {
         ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/text_main.php');
+        include('includes/modules/content/' . $this->group . '/templates/text_main.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);

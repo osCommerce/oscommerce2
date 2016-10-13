@@ -20,7 +20,7 @@ use OSC\OM\OSCOM;
 <meta name="robots" content="noindex,nofollow">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title><?= TITLE; ?></title>
-<base href="<?= ($request_type == 'SSL') ? HTTPS_SERVER . DIR_WS_HTTPS_ADMIN : HTTP_SERVER . DIR_WS_ADMIN; ?>" />
+<base href="<?= ($request_type == 'SSL') ? OSCOM::getConfig('https_server', 'Admin') . OSCOM::getConfig('https_path', 'Admin') : OSCOM::getConfig('http_server', 'Admin') . OSCOM::getConfig('http_path', 'Admin'); ?>" />
 <link rel="stylesheet" type="text/css" href="<?= OSCOM::link('Shop/ext/jquery/ui/redmond/jquery-ui-1.11.4.min.css', '', 'AUTO', false); ?>">
 <script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/jquery-2.2.3.min.js', '', 'AUTO', false); ?>"></script>
 <script type="text/javascript" src="<?= OSCOM::link('Shop/ext/jquery/ui/jquery-ui-1.11.4.min.js', '', 'AUTO', false); ?>"></script>
@@ -46,6 +46,6 @@ $.datepicker.setDefaults($.datepicker.regional['<?= JQUERY_DATEPICKER_I18N_CODE;
 </head>
 <body>
 
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<?php require('includes/header.php'); ?>
 
 <div id="contentText" class="container-fluid">

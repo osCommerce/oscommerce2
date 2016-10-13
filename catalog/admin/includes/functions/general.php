@@ -251,8 +251,8 @@
   }
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
-    if (tep_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+    if (tep_not_null($image) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $image)) {
+      $image = HTML::image(OSCOM::linkImage('Shop/' . $image), $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -1092,8 +1092,8 @@
     ], null, 1);
 
     if ($Qduplicate->fetch() === false) {
-      if (!empty($Qimage->value('categories_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('categories_image'))) {
-        unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('categories_image'));
+      if (!empty($Qimage->value('categories_image')) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('categories_image'))) {
+        unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('categories_image'));
       }
     }
 
@@ -1121,8 +1121,8 @@
     ], null, 1);
 
     if ($Qduplicate->fetch() === false) {
-      if (!empty($Qimage->value('products_image')) && file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('products_image'))) {
-        unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('products_image'));
+      if (!empty($Qimage->value('products_image')) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('products_image'))) {
+        unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('products_image'));
       }
     }
 
@@ -1139,8 +1139,8 @@
         ], null, 1);
 
         if ($Qduplicate->fetch() === false) {
-          if (file_exists(DIR_FS_CATALOG_IMAGES . $Qimages->value('image'))) {
-            unlink(DIR_FS_CATALOG_IMAGES . $Qimages->value('image'));
+          if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'))) {
+            unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'));
           }
         }
       } while ($Qimages->fetch());
@@ -1275,43 +1275,6 @@
            $owner['read'] . $owner['write'] . $owner['execute'] .
            $group['read'] . $group['write'] . $group['execute'] .
            $world['read'] . $world['write'] . $world['execute'];
-  }
-
-  function tep_remove($source) {
-    global $tep_remove_error;
-
-    $OSCOM_MessageStack = Registry::get('MessageStack');
-
-    if (isset($tep_remove_error)) $tep_remove_error = false;
-
-    if (is_dir($source)) {
-      $dir = dir($source);
-      while ($file = $dir->read()) {
-        if ( ($file != '.') && ($file != '..') ) {
-          if (tep_is_writable($source . '/' . $file)) {
-            tep_remove($source . '/' . $file);
-          } else {
-            $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
-            $tep_remove_error = true;
-          }
-        }
-      }
-      $dir->close();
-
-      if (tep_is_writable($source)) {
-        rmdir($source);
-      } else {
-        $OSCOM_MessageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
-      }
-    } else {
-      if (tep_is_writable($source)) {
-        unlink($source);
-      } else {
-        $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
-      }
-    }
   }
 
 ////
@@ -1639,37 +1602,6 @@
     }
 
     return $ip_address;
-  }
-
-////
-// Wrapper function for is_writable() for Windows compatibility
-  function tep_is_writable($file) {
-    if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
-      if (file_exists($file)) {
-        $file = realpath($file);
-        if (is_dir($file)) {
-          $result = @tempnam($file, 'osc');
-          if (is_string($result) && file_exists($result)) {
-            unlink($result);
-            return (strpos($result, $file) === 0) ? true : false;
-          }
-        } else {
-          $handle = @fopen($file, 'r+');
-          if (is_resource($handle)) {
-            fclose($handle);
-            return true;
-          }
-        }
-      } else{
-        $dir = dirname($file);
-        if (file_exists($dir) && is_dir($dir) && tep_is_writable($dir)) {
-          return true;
-        }
-      }
-      return false;
-    } else {
-      return is_writable($file);
-    }
   }
 
 ////

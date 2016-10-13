@@ -43,7 +43,7 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
     public function getFile()
     {
         if (isset($this->file)) {
-            return OSCOM::BASE_DIR . str_replace('\\', '/', (new \ReflectionClass($this))->getNamespaceName()) . '/templates/' . $this->file;
+            return dirname(OSCOM::BASE_DIR) . '/' . str_replace('\\', '/', (new \ReflectionClass($this))->getNamespaceName()) . '/templates/' . $this->file;
         }
     }
 

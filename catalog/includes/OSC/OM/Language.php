@@ -37,16 +37,14 @@ class Language
             $this->loadDefinitionFile($filename, 'english', $scope);
         }
 
-        $site = OSCOM::getSite();
-
         if ((strpos($filename, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $filename, $matches) === 1) && OSCOM::siteExists($matches[1])) {
             $site = $matches[1];
             $filename = $matches[2];
         }
 
-        $pathname = call_user_func(['OSC\Sites\\' . $site . '\\' . $site, 'getBaseDir']) . 'includes/languages/' . $language . '/' . $filename;
+        $pathname = OSCOM::getConfig('dir_root') . 'includes/languages/' . $language . '/' . $filename;
 
-        if (file_exists($pathname)) {
+        if (is_file($pathname)) {
             $this->loadDefinitionsFromFile($pathname, $scope);
         } else {
             trigger_error('OSC\OM\Language::loadDefinitionFile() - Filename does not exist: ' . $pathname);

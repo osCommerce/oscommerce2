@@ -10,7 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
@@ -26,7 +28,7 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => tep_is_writable($path . $filename));
+                        'writable' => FileSystem::isWritable($path . $filename));
 
           $result[] = $file;
 
@@ -50,7 +52,7 @@
     $whitelist_array[] = $Qwhitelist->value('directory');
   }
 
-  $admin_dir = basename(DIR_FS_ADMIN);
+  $admin_dir = basename(OSCOM::getConfig('dir_root'));
 
   if ($admin_dir != 'admin') {
     for ($i=0, $n=sizeof($whitelist_array); $i<$n; $i++) {
@@ -60,7 +62,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -81,20 +83,20 @@
                 <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RECOMMENDED; ?></td>
               </tr>
 <?php
-  foreach (tep_opendir(DIR_FS_CATALOG) as $file) {
+  foreach (tep_opendir(OSCOM::getConfig('dir_root', 'Shop')) as $file) {
     if ($file['is_dir']) {
 ?>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><?php echo substr($file['name'], strlen(DIR_FS_CATALOG)); ?></td>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (in_array(substr($file['name'], strlen(DIR_FS_CATALOG)), $whitelist_array) ? 'tick.gif' : 'cross.gif')); ?></td>
+                <td class="dataTableContent"><?php echo substr($file['name'], strlen(OSCOM::getConfig('dir_root', 'Shop'))); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif'))); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (in_array(substr($file['name'], strlen(OSCOM::getConfig('dir_root', 'Shop'))), $whitelist_array) ? 'tick.gif' : 'cross.gif'))); ?></td>
               </tr>
 <?php
     }
   }
 ?>
               <tr>
-                <td colspan="3" class="smallText"><?php echo TEXT_DIRECTORY . ' ' . DIR_FS_CATALOG; ?></td>
+                <td colspan="3" class="smallText"><?php echo TEXT_DIRECTORY . ' ' . OSCOM::getConfig('dir_root', 'Shop'); ?></td>
               </tr>
             </table></td>
           </tr>
@@ -103,6 +105,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
   if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
@@ -93,7 +93,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -226,12 +226,12 @@ $('#expdate').datepicker({
                 <td  class="dataTableContent" align="right">
 <?php
       if ($Qspecials->valueInt('status') === 1) {
-        echo HTML::image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_SPECIALS, 'action=setflag&flag=0&id=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+        echo HTML::image(OSCOM::linkImage('icon_status_green.gif'), IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . OSCOM::link(FILENAME_SPECIALS, 'action=setflag&flag=0&id=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(OSCOM::linkImage('icon_status_red_light.gif'), IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
       } else {
-        echo '<a href="' . OSCOM::link(FILENAME_SPECIALS, 'action=setflag&flag=1&id=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+        echo '<a href="' . OSCOM::link(FILENAME_SPECIALS, 'action=setflag&flag=1&id=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(OSCOM::linkImage('icon_status_green_light.gif'), IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . HTML::image(OSCOM::linkImage('icon_status_red.gif'), IMAGE_ICON_STATUS_RED, 10, 10);
       }
 ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($Qspecials->valueInt('specials_id') === (int)$sInfo->specials_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($sInfo) && is_object($sInfo) && ($Qspecials->valueInt('specials_id') === (int)$sInfo->specials_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_SPECIALS, 'page=' . $_GET['page'] . '&sID=' . $Qspecials->valueInt('specials_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
       </tr>
 <?php
     }
@@ -300,6 +300,6 @@ $('#expdate').datepicker({
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

@@ -108,7 +108,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -152,9 +152,9 @@
       echo '                <td class="dataTableContent">' . $Qstatus->value('orders_status_name') . '</td>' . "\n";
     }
 ?>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qstatus->valueInt('public_flag') === 1) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="center"><?php echo HTML::image(DIR_WS_IMAGES . 'icons/' . (($Qstatus->valueInt('downloads_flag') === 1) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($Qstatus->valueInt('orders_status_id') === (int)$oInfo->orders_status_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $Qstatus->valueInt('orders_status_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (($Qstatus->valueInt('public_flag') === 1) ? 'tick.gif' : 'cross.gif'))); ?></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (($Qstatus->valueInt('downloads_flag') === 1) ? 'tick.gif' : 'cross.gif'))); ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($Qstatus->valueInt('orders_status_id') === (int)$oInfo->orders_status_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $Qstatus->valueInt('orders_status_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -191,7 +191,7 @@
       $orders_status_inputs_string = '';
       $languages = tep_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']');
+        $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']');
       }
 
       $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
@@ -209,7 +209,7 @@
       $orders_status_inputs_string = '';
       $languages = tep_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']', tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
+        $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('orders_status_name[' . $languages[$i]['id'] . ']', tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']));
       }
 
       $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
@@ -235,7 +235,7 @@
         $orders_status_inputs_string = '';
         $languages = tep_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-          $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']);
+          $orders_status_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . tep_get_orders_status_name($oInfo->orders_status_id, $languages[$i]['id']);
         }
 
         $contents[] = array('text' => $orders_status_inputs_string);
@@ -258,6 +258,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

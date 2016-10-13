@@ -22,8 +22,6 @@ use OSC\OM\Session;
 
 class Admin extends \OSC\OM\SitesAbstract
 {
-    protected static $base_dir = DIR_FS_ADMIN;
-
     protected function init()
     {
         global $request_type, $PHP_SELF, $login_request, $cfgModules;
@@ -67,7 +65,7 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(DIR_WS_HTTPS_ADMIN) : strlen(DIR_WS_ADMIN));
+        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(OSCOM::getConfig('https_path')) : strlen(OSCOM::getConfig('http_path')));
 
         $OSCOM_Session = Session::load();
         Registry::set('Session', $OSCOM_Session);
@@ -130,12 +128,12 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // include the language translations
         $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
-        require(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '.php');
+        require(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '.php');
         setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
         $current_page = basename($PHP_SELF);
-        if (file_exists(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page)) {
-            include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
+        if (is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page)) {
+            include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
         }
 
         if (isset($_SESSION['admin'])) {

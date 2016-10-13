@@ -27,9 +27,9 @@
   }
 
   // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping_address.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_shipping_address.php');
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // if the order contains only virtual products, forward the customer to the billing page as

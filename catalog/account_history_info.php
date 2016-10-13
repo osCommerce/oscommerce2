@@ -33,13 +33,13 @@
     OSCOM::redirect('account_history.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_history_info.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account_history_info.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php', '', 'SSL'));
   $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id'], 'SSL'));
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order($_GET['order_id']);
 
   require('includes/template_top.php');
@@ -172,7 +172,7 @@
   <h2><?php echo HEADING_ORDER_HISTORY; ?></h2>
 
   <div class="clearfix"></div>
-  
+
   <div class="contentText">
     <ul class="timeline">
       <?php
@@ -199,7 +199,7 @@
   </div>
 
 <?php
-  if (DOWNLOAD_ENABLED == 'true') include(DIR_WS_MODULES . 'downloads.php');
+  if (DOWNLOAD_ENABLED == 'true') include('includes/modules/downloads.php');
 ?>
 
   <div class="clearfix"></div>

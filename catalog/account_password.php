@@ -21,7 +21,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_password.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account_password.php');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $password_current = HTML::sanitize($_POST['password_current']);

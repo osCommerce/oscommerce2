@@ -44,10 +44,10 @@
   }
 
 // load the selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment($_SESSION['payment']);
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
   $payment_modules->update_status();
@@ -61,10 +61,10 @@
   }
 
 // load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping($_SESSION['shipping']);
 
-  require(DIR_WS_CLASSES . 'order_total.php');
+  require('includes/classes/order_total.php');
   $order_total_modules = new order_total;
   $order_total_modules->process();
 
@@ -82,7 +82,7 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_confirmation.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
@@ -93,7 +93,7 @@
     $iframe_url = $_SESSION['sage_pay_server_nexturl'];
   }
 
-  if ( !file_exists(DIR_FS_CATALOG . 'includes/template_top.php') ) {
+  if ( !is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/template_top.php') ) {
     HTTP::redirect($iframe_url);
   }
 

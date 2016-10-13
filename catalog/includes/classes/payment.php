@@ -56,8 +56,8 @@
           if (strpos($include_modules[$i]['class'], '\\') !== false) {
             Registry::set('Payment_' . str_replace('\\', '_', $include_modules[$i]['class']), new $include_modules[$i]['file']);
           } else {
-            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
-            include(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
+            include('includes/languages/' . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
+            include('includes/modules/payment/' . $include_modules[$i]['file']);
 
             $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
           }

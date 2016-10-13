@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_table_click_jquery {
@@ -119,9 +120,9 @@
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $files_array = array();
-	  if ($dir = @dir(DIR_FS_CATALOG)) {
+	  if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop'))) {
 	    while ($file = $dir->read()) {
-	      if (!is_dir(DIR_FS_CATALOG . $file)) {
+	      if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . $file)) {
 	        if (substr($file, strrpos($file, '.')) == $file_extension) {
             $files_array[] = $file;
           }

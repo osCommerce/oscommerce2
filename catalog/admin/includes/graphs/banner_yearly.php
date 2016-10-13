@@ -10,7 +10,7 @@
   Released under the GNU General Public License
 */
 
-  include(DIR_WS_CLASSES . 'phplot.php');
+  include('includes/classes/phplot.php');
 
   $stats = array(array('0', '0', '0'));
   $Qstats = $OSCOM_Db->prepare('select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from :table_banners_history where banners_id = :banners_id group by year');

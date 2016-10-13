@@ -21,7 +21,7 @@ class StartBefore
             }
 
             if (!empty($user_agent)) {
-                foreach (file(OSCOM::BASE_DIR . 'spiders.txt') as $spider) {
+                foreach (file(OSCOM::getConfig('dir_root') . 'includes/spiders.txt') as $spider) {
                     if (!empty($spider)) {
                         if (strpos($user_agent, $spider) !== false) {
                             $parameters['can_start'] = false;

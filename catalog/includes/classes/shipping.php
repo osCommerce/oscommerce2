@@ -32,8 +32,8 @@
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
-          include(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
+          include('includes/languages/' . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
+          include('includes/modules/shipping/' . $include_modules[$i]['file']);
 
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
         }

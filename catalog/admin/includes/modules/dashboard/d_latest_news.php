@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class d_latest_news {
@@ -32,7 +33,7 @@
 
     function getOutput() {
       if (!class_exists('lastRSS')) {
-        include(DIR_WS_CLASSES . 'rss.php');
+        include('includes/classes/rss.php');
       }
 
       $rss = new lastRSS;
@@ -64,7 +65,7 @@
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_oscommerce.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_newsletter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_google_plus.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_facebook.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_twitter.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_rss.png', MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2"><a href="http://www.oscommerce.com/Us&News" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWS) . '</a>&nbsp;<a href="http://www.oscommerce.com/newsletter/subscribe" target="_blank">' . HTML::image(OSCOM::linkImage('icon_newsletter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_NEWSLETTER) . '</a>&nbsp;<a href="http://plus.google.com/+osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_google_plus.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_GOOGLE_PLUS) . '</a>&nbsp;<a href="http://www.facebook.com/pages/osCommerce/33387373079" target="_blank">' . HTML::image(OSCOM::linkImage('icon_facebook.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_FACEBOOK) . '</a>&nbsp;<a href="http://twitter.com/osCommerce" target="_blank">' . HTML::image(OSCOM::linkImage('icon_twitter.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_TWITTER) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerceNewsAndBlogs" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_NEWS_ICON_RSS) . '</a></td>
                       </tr>
                     </tbody>
                   </table>';

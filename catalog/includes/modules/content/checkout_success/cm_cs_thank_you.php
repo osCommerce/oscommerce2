@@ -37,7 +37,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/thank_you.php');
+      include('includes/modules/content/' . $this->group . '/templates/thank_you.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

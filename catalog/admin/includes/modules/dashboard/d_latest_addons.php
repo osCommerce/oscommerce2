@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class d_latest_addons {
@@ -32,7 +33,7 @@
 
     function getOutput() {
       if (!class_exists('lastRSS')) {
-        include(DIR_WS_CLASSES . 'rss.php');
+        include('includes/classes/rss.php');
       }
 
       $rss = new lastRSS;
@@ -64,7 +65,7 @@
       }
 
       $output .= '    <tr>
-                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_oscommerce.png', MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(DIR_WS_IMAGES . 'icon_rss.png', MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_RSS) . '</a></td>
+                        <td class="text-right" colspan="2"><a href="http://addons.oscommerce.com" target="_blank">' . HTML::image(OSCOM::linkImage('icon_oscommerce.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_SITE) . '</a>&nbsp;<a href="http://feeds.feedburner.com/osCommerce_Contributions" target="_blank">' . HTML::image(OSCOM::linkImage('icon_rss.png'), MODULE_ADMIN_DASHBOARD_LATEST_ADDONS_ICON_RSS) . '</a></td>
                       </tr>
                     </tbody>
                   </table>';

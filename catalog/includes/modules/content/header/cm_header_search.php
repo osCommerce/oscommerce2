@@ -50,7 +50,7 @@
       $search_box .= '</div>';
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/search.php');
+      include('includes/modules/content/' . $this->group . '/templates/search.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

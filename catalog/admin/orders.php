@@ -18,7 +18,7 @@
 
   $OSCOM_Hooks = Registry::get('Hooks');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
   $orders_statuses = [];
@@ -40,7 +40,7 @@
     $orders_status_array[$Qstatus->valueInt('orders_status_id')] = $Qstatus->value('orders_status_name');
   }
 
-  include(DIR_WS_CLASSES . 'order.php');
+  include('includes/classes/order.php');
 
   if (isset($_GET['oID']) && is_numeric($_GET['oID']) && ($_GET['oID'] > 0)) {
     $oID = HTML::sanitize($_GET['oID']);
@@ -135,7 +135,7 @@
 
   $show_listing = true;
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-shopping-cart"></i> <a href="<?= OSCOM::link('orders.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
@@ -391,9 +391,9 @@
                '            <td class="text-right" valign="top">';
 
           if ($Qhistory->valueInt('customer_notified') === 1) {
-            echo HTML::image(DIR_WS_ICONS . 'tick.gif', ICON_TICK);
+            echo HTML::image(OSCOM::linkImage('icons/tick.gif'), ICON_TICK);
           } else {
-            echo HTML::image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS);
+            echo HTML::image(OSCOM::linkImage('icons/cross.gif'), ICON_CROSS);
           }
 
           echo '</td>' . "\n" .
@@ -512,6 +512,6 @@
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

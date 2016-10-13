@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -18,7 +19,7 @@
 
   $OSCOM_Hooks = Registry::get('Hooks');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -89,7 +90,7 @@
         }
 
         $categories_image = new upload('categories_image');
-        $categories_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $categories_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
 
         if ($categories_image->parse() && $categories_image->save()) {
           $OSCOM_Db->save('categories', [
@@ -258,7 +259,7 @@
                                 'manufacturers_id' => (int)HTML::sanitize($_POST['manufacturers_id']));
 
         $products_image = new upload('products_image');
-        $products_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $products_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
         if ($products_image->parse() && $products_image->save()) {
           $sql_data_array['products_image'] = HTML::sanitize($products_image->filename);
         }
@@ -318,7 +319,7 @@
                                     'sort_order' => $pi_sort_order);
 
             $t = new upload($key);
-            $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            $t->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
             if ($t->parse() && $t->save()) {
               $sql_data_array['image'] = HTML::sanitize($t->filename);
             }
@@ -335,7 +336,7 @@
                                     'htmlcontent' => $_POST['products_image_htmlcontent_new_' . $matches[1]]);
 
             $t = new upload($key);
-            $t->set_destination(DIR_FS_CATALOG_IMAGES);
+            $t->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
             if ($t->parse() && $t->save()) {
               $pi_sort_order++;
 
@@ -358,8 +359,8 @@
             $Qcheck = $OSCOM_Db->get('products_images', 'count(*) as total', ['image' => $Qimages->value('image')]);
 
             if ($Qcheck->valueInt('total') < 2) {
-              if (file_exists(DIR_FS_CATALOG_IMAGES . $Qimage->value('image'))) {
-                unlink(DIR_FS_CATALOG_IMAGES . $Qimage->value('image'));
+              if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('image'))) {
+                unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('image'));
               }
             }
           } while ($Qimages->fetch());
@@ -462,8 +463,8 @@
   }
 
 // check if the catalog image directory exists
-  if (is_dir(DIR_FS_CATALOG_IMAGES)) {
-    if (!tep_is_writable(DIR_FS_CATALOG_IMAGES)) $OSCOM_MessageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
+  if (is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) {
+    if (!FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'images/')) $OSCOM_MessageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
     $OSCOM_MessageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
@@ -483,7 +484,7 @@
 
   $show_listing = true;
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 
   if (empty($action)) {
 ?>
@@ -769,7 +770,7 @@ updateGross();
               <?=
                 TEXT_PRODUCTS_MAIN_IMAGE . ' <small>(' . SMALL_IMAGE_WIDTH . ' x ' . SMALL_IMAGE_HEIGHT . 'px)</small><br />' .
                 HTML::fileField('products_image') .
-                (tep_not_null($pInfo->products_image) ? '<br /><a href="' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $pInfo->products_image . '" target="_blank">' . $pInfo->products_image . '</a>' : '');
+                (tep_not_null($pInfo->products_image) ? '<br /><a href="' . OSCOM::linkImage('Shop/' . $pInfo->products_image) . '" target="_blank">' . $pInfo->products_image . '</a>' : '');
               ?>
             </div>
 
@@ -791,7 +792,7 @@ updateGross();
   </div>
   <strong><?= TEXT_PRODUCTS_LARGE_IMAGE; ?></strong><br />
   <?= HTML::fileField('{{input_file_name}}'); ?><br />
-  {{#image}}<a href="<?= HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES; ?>{{image}}" target="_blank">{{image}}</a><br /><br />{{/image}}
+  {{#image}}<a href="<?= OSCOM::linkImage('Shop/'); ?>{{image}}" target="_blank">{{image}}</a><br /><br />{{/image}}
   <?= TEXT_PRODUCTS_LARGE_IMAGE_HTML_CONTENT; ?><br />
   <?= HTML::textareaField('{{input_html_content_name}}', '70', '3', '{{html_content}}', null, false); ?>
 </li>
@@ -951,7 +952,7 @@ $(function() {
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="pageHeading"><?php echo HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . $pInfo->products_name; ?></td>
+            <td class="pageHeading"><?php echo HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . $pInfo->products_name; ?></td>
             <td class="pageHeading" align="right"><?php echo $currencies->format($pInfo->products_price); ?></td>
           </tr>
         </table></td>
@@ -960,7 +961,7 @@ $(function() {
         <td>&nbsp;</td>
       </tr>
       <tr>
-        <td class="main"><?php echo HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $products_image_name, $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description; ?></td>
+        <td class="main"><?php echo HTML::image(OSCOM::linkImage('Shop/' . $products_image_name), $pInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'align="right" hspace="5" vspace="5"') . $pInfo->products_description; ?></td>
       </tr>
 <?php
         if ($pInfo->products_url) {
@@ -1090,7 +1091,7 @@ $(function() {
           $category_inputs_string = '';
           $languages = tep_get_languages();
           for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-            $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']');
+            $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']');
           }
 
           $contents[] = array('text' => TEXT_CATEGORIES_NAME . $category_inputs_string);
@@ -1109,11 +1110,11 @@ $(function() {
             $category_inputs_string = '';
             $languages = tep_get_languages();
             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-              $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
+              $category_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('categories_name[' . $languages[$i]['id'] . ']', tep_get_category_name($cInfo->categories_id, $languages[$i]['id']));
             }
 
             $contents[] = array('text' => TEXT_EDIT_CATEGORIES_NAME . $category_inputs_string);
-            $contents[] = array('text' => HTML::image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $cInfo->categories_image, $cInfo->categories_name) . '<br />' . DIR_WS_CATALOG_IMAGES . '<br /><strong>' . $cInfo->categories_image . '</strong>');
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('Shop/' . $cInfo->categories_image), $cInfo->categories_name) . '<br />' . OSCOM::getConfig('http_path', 'Shop') . OSCOM::getConfig('http_images_path', 'Shop') . '<br /><strong>' . $cInfo->categories_image . '</strong>');
             $contents[] = array('text' => TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
             $contents[] = array('text' => TEXT_EDIT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $cInfo->sort_order, 'size="2"'));
             $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, null, 'btn-link'));
@@ -1385,6 +1386,6 @@ $(function() {
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

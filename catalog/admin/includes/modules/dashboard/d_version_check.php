@@ -65,7 +65,7 @@
 
       if ($new_version == true) {
         $output .= '    <tr class="success">
-                          <td colspan="2">' . HTML::image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>
+                          <td colspan="2">' . HTML::image(OSCOM::linkImage('icons/warning.gif'), ICON_WARNING) . '&nbsp;<strong>' . MODULE_ADMIN_DASHBOARD_VERSION_CHECK_UPDATE_AVAILABLE . '</strong></td>
                         </tr>';
       }
 

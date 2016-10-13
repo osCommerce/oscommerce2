@@ -48,7 +48,7 @@
         }
 
         $manufacturers_image = new upload('manufacturers_image');
-        $manufacturers_image->set_destination(DIR_FS_CATALOG_IMAGES);
+        $manufacturers_image->set_destination(OSCOM::getConfig('dir_root', 'Shop') . 'images/');
 
         if ($manufacturers_image->parse() && $manufacturers_image->save()) {
           $OSCOM_Db->save('manufacturers', [
@@ -93,9 +93,9 @@
           $Qmanufacturer = $OSCOM_Db->get('manufacturers', 'manufacturers_image', ['manufacturers_id' => (int)$manufacturers_id]);
 
           if (tep_not_null($Qmanufacturer->value('manufacturers_image'))) {
-            $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_CATALOG_IMAGES . $Qmanufacturer->value('manufacturers_image');
+            $image_location = OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qmanufacturer->value('manufacturers_image');
 
-            if (file_exists($image_location)) @unlink($image_location);
+            if (is_file($image_location)) unlink($image_location);
           }
         }
 
@@ -124,7 +124,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -163,7 +163,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qmanufacturers->value('manufacturers_name'); ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($Qmanufacturers->valueInt('manufacturers_id') === (int)$mInfo->manufacturers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $Qmanufacturers->valueInt('manufacturers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -202,7 +202,7 @@
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']');
+        $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']');
       }
 
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_URL . $manufacturer_inputs_string);
@@ -219,7 +219,7 @@
       $manufacturer_inputs_string = '';
       $languages = tep_get_languages();
       for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-        $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/' . DIR_WS_LANGUAGES . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']', tep_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']));
+        $manufacturer_inputs_string .= '<br />' . HTML::image(OSCOM::link('Shop/includes/languages/' . $languages[$i]['directory'] . '/images/' . $languages[$i]['image'], '', 'SSL'), $languages[$i]['name']) . '&nbsp;' . HTML::inputField('manufacturers_url[' . $languages[$i]['id'] . ']', tep_get_manufacturer_url($mInfo->manufacturers_id, $languages[$i]['id']));
       }
 
       $contents[] = array('text' => '<br />' . TEXT_MANUFACTURERS_URL . $manufacturer_inputs_string);
@@ -268,6 +268,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

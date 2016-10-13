@@ -104,7 +104,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -145,9 +145,9 @@
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $directory_array = array();
-    if ($dir = dir(DIR_WS_MODULES . 'newsletters/')) {
+    if ($dir = dir('includes/modules/newsletters/')) {
       while ($file = $dir->read()) {
-        if (!is_dir(DIR_WS_MODULES . 'newsletters/' . $file)) {
+        if (!is_dir('includes/modules/newsletters/' . $file)) {
           if (substr($file, strrpos($file, '.')) == $file_extension) {
             $directory_array[] = $file;
           }
@@ -227,8 +227,8 @@
 
     $nInfo = new objectInfo($Qnewsletter->toArray());
 
-    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
-    include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/languages/' . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
     $module = new $module_name($nInfo->title, $nInfo->content);
 ?>
@@ -249,8 +249,8 @@
 
     $nInfo = new objectInfo($Qnewsletter->toArray());
 
-    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
-    include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/languages/' . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
     $module = new $module_name($nInfo->title, $nInfo->content);
 ?>
@@ -272,15 +272,15 @@
 
     $nInfo = new objectInfo($Qnewsletter->toArray());
 
-    include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
-    include(DIR_WS_MODULES . 'newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/languages/' . $_SESSION['language'] . '/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
+    include('includes/modules/newsletters/' . $nInfo->module . substr($PHP_SELF, strrpos($PHP_SELF, '.')));
     $module_name = $nInfo->module;
     $module = new $module_name($nInfo->title, $nInfo->content);
 ?>
       <tr>
         <td><table border="0" cellspacing="0" cellpadding="2">
           <tr>
-            <td class="main" valign="middle"><?php echo HTML::image(DIR_WS_IMAGES . 'ani_send_email.gif', IMAGE_ANI_SEND_EMAIL); ?></td>
+            <td class="main" valign="middle"><?php echo HTML::image(OSCOM::linkImage('ani_send_email.gif'), IMAGE_ANI_SEND_EMAIL); ?></td>
             <td class="main" valign="middle"><strong><?php echo TEXT_PLEASE_WAIT; ?></strong></td>
           </tr>
         </table></td>
@@ -327,12 +327,12 @@
         echo '                  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $Qnewsletters->valueInt('newsletters_id')) . '\'">' . "\n";
       }
 ?>
-                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $Qnewsletters->valueInt('newsletters_id') . '&action=preview') . '">' . HTML::image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . $Qnewsletters->value('title'); ?></td>
+                <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $Qnewsletters->valueInt('newsletters_id') . '&action=preview') . '">' . HTML::image(OSCOM::linkImage('icons/preview.gif'), ICON_PREVIEW) . '</a>&nbsp;' . $Qnewsletters->value('title'); ?></td>
                 <td class="dataTableContent" align="right"><?php echo number_format($Qnewsletters->valueInt('content_length')) . ' bytes'; ?></td>
                 <td class="dataTableContent" align="right"><?php echo $Qnewsletters->value('module'); ?></td>
-                <td class="dataTableContent" align="center"><?php if ($Qnewsletters->valueInt('status') === 1) { echo HTML::image(DIR_WS_ICONS . 'tick.gif', ICON_TICK); } else { echo HTML::image(DIR_WS_ICONS . 'cross.gif', ICON_CROSS); } ?></td>
-                <td class="dataTableContent" align="center"><?php if ($Qnewsletters->valueInt('locked') > 0) { echo HTML::image(DIR_WS_ICONS . 'locked.gif', ICON_LOCKED); } else { echo HTML::image(DIR_WS_ICONS . 'unlocked.gif', ICON_UNLOCKED); } ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($nInfo) && is_object($nInfo) && ($Qnewsletters->valueInt('newsletters_id') === (int)$nInfo->newsletters_id) ) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $Qnewsletters->valueInt('newsletters_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="center"><?php if ($Qnewsletters->valueInt('status') === 1) { echo HTML::image(OSCOM::linkImage('icons/tick.gif'), ICON_TICK); } else { echo HTML::image(OSCOM::linkImage('icons/cross.gif'), ICON_CROSS); } ?></td>
+                <td class="dataTableContent" align="center"><?php if ($Qnewsletters->valueInt('locked') > 0) { echo HTML::image(OSCOM::linkImage('icons/locked.gif'), ICON_LOCKED); } else { echo HTML::image(OSCOM::linkImage('icons/unlocked.gif'), ICON_UNLOCKED); } ?></td>
+                <td class="dataTableContent" align="right"><?php if (isset($nInfo) && is_object($nInfo) && ($Qnewsletters->valueInt('newsletters_id') === (int)$nInfo->newsletters_id) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $Qnewsletters->valueInt('newsletters_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -395,6 +395,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

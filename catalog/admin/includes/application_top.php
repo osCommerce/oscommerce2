@@ -16,38 +16,33 @@
 
 // Start the clock for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
-  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
+  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/OSC/') . '/');
 
 // Set the level of error reporting
   error_reporting(E_ALL & ~E_DEPRECATED);
 
-// load server configuration parameters
-  if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
-  } else {
-    include('includes/configure.php');
-  }
-
-  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  require(OSCOM_BASE_DIR . 'OM/OSCOM.php');
   spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  require(DIR_WS_INCLUDES . 'filenames.php');
-  require(DIR_WS_INCLUDES . 'database_tables.php');
-  require(DIR_WS_FUNCTIONS . 'general.php');
-  require(DIR_WS_CLASSES . 'logger.php');
-  require(DIR_WS_CLASSES . 'shopping_cart.php');
-  require(DIR_WS_CLASSES . 'language.php');
-  require(DIR_WS_FUNCTIONS . 'validations.php');
-  require(DIR_WS_CLASSES . 'table_block.php');
-  require(DIR_WS_CLASSES . 'box.php');
-  require(DIR_WS_CLASSES . 'object_info.php');
-  require(DIR_WS_CLASSES . 'mime.php');
-  require(DIR_WS_CLASSES . 'email.php');
-  require(DIR_WS_CLASSES . 'upload.php');
-  require(DIR_WS_CLASSES . 'action_recorder.php');
-  require(DIR_WS_CLASSES . 'cfg_modules.php');
+  OSCOM::initialize();
 
-  OSCOM::initialize('Admin');
+  require('includes/filenames.php');
+  require('includes/database_tables.php');
+  require('includes/functions/general.php');
+  require('includes/classes/logger.php');
+  require('includes/classes/shopping_cart.php');
+  require('includes/classes/language.php');
+  require('includes/functions/validations.php');
+  require('includes/classes/table_block.php');
+  require('includes/classes/box.php');
+  require('includes/classes/object_info.php');
+  require('includes/classes/mime.php');
+  require('includes/classes/email.php');
+  require('includes/classes/upload.php');
+  require('includes/classes/action_recorder.php');
+  require('includes/classes/cfg_modules.php');
+
+  OSCOM::loadSite('Admin');
 
   $OSCOM_Db = Registry::get('Db');
   $OSCOM_MessageStack = Registry::get('MessageStack');
@@ -81,7 +76,7 @@
   $cl_apps_groups = array();
 
   if (isset($_SESSION['admin'])) {
-    if ($dir = @dir(DIR_FS_ADMIN . 'includes/boxes')) {
+    if ($dir = @dir(OSCOM::getConfig('dir_root') . 'includes/boxes')) {
       $files = array();
 
       while ($file = $dir->read()) {
@@ -97,8 +92,8 @@
       natcasesort($files);
 
       foreach ( $files as $file ) {
-        if ( file_exists(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
-          include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
+        if ( is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
+          include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
         }
 
         include($dir->path . '/' . $file);

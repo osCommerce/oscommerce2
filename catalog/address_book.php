@@ -20,7 +20,7 @@
     OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book.php');
+  require('includes/languages/' . $_SESSION['language'] . '/address_book.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php', '', 'SSL'));
@@ -59,7 +59,7 @@
   <div class="clearfix"></div>
 
   <h2><?php echo ADDRESS_BOOK_TITLE; ?></h2>
-  
+
   <div class="alert alert-warning"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
 
   <div class="contentText row">
@@ -84,7 +84,7 @@
   }
 ?>
   </div>
-  
+
   <div class="clearfix"></div>
 
   <div class="buttonSet row">

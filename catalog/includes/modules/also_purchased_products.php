@@ -28,7 +28,7 @@
       foreach ($orders as $o) {
         $also_pur_prods_content .= '<div class="col-sm-6 col-md-4">';
         $also_pur_prods_content .= '  <div class="thumbnail">';
-        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . HTML::image(DIR_WS_IMAGES . $o['products_image'], $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
+        $also_pur_prods_content .= '    <a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '">' . HTML::image(OSCOM::linkImage($o['products_image']), $o['products_name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a>';
         $also_pur_prods_content .= '    <div class="caption">';
         $also_pur_prods_content .= '      <h5 class="text-center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $o['products_id']) . '"><span itemprop="itemListElement">' . $o['products_name'] . '</span></a></h5>';
         $also_pur_prods_content .= '    </div>';

@@ -15,17 +15,17 @@ class OnlineUpdate
 {
     public static function log($message, $version)
     {
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt')) {
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt')) {
             $message = '[' . date('d-M-Y H:i:s') . '] ' . trim($message) . "\n";
 
-            file_put_contents(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt', $message, FILE_APPEND);
+            file_put_contents(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt', $message, FILE_APPEND);
         }
     }
 
     public static function resetLog($version)
     {
-        if (static::logExists($version) && FileSystem::isWritable(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt')) {
-            unlink(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt');
+        if (static::logExists($version) && FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt')) {
+            unlink(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt');
         }
     }
 
@@ -34,7 +34,7 @@ class OnlineUpdate
         $result = '';
 
         if (static::logExists($version)) {
-            $result = file_get_contents(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt');
+            $result = file_get_contents(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt');
         }
 
         return trim($result);
@@ -42,7 +42,7 @@ class OnlineUpdate
 
     public static function logExists($version)
     {
-        return file_exists(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt');
+        return is_file(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt');
     }
 
     public static function getLogPath($version)
@@ -50,7 +50,7 @@ class OnlineUpdate
         $result = '';
 
         if (static::logExists($version)) {
-            $result = FileSystem::displayPath(OSCOM::BASE_DIR . 'work/online_updates/' . $version . '-log.txt');
+            $result = FileSystem::displayPath(OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $version . '-log.txt');
         }
 
         return $result;

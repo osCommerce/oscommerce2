@@ -17,7 +17,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
+  require('includes/classes/currencies.php');
   $currencies = new currencies();
 
 // remove entries that have expired
@@ -29,7 +29,7 @@
     $_GET['page'] = 1;
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -79,7 +79,7 @@
                 <td class="dataTableContent"><?php echo date('H:i:s', $Qonline->value('time_entry')); ?></td>
                 <td class="dataTableContent" align="center"><?php echo date('H:i:s', $Qonline->value('time_last_click')); ?></td>
                 <td class="dataTableContent"><?php if (preg_match('/^(.*)osCsid=[A-Z0-9,-]+[&]*(.*)/i', $Qonline->value('last_page_url'), $array)) { echo $array[1] . $array[2]; } else { echo $Qonline->value('last_page_url'); } ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($info) && is_object($info) && ($Qonline->value('session_id') == $info->session_id)) { echo HTML::image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '">' . HTML::image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($info) && is_object($info) && ($Qonline->value('session_id') == $info->session_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_WHOS_ONLINE, 'page=' . $_GET['page'] . '&info=' . $Qonline->value('session_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
   }
@@ -165,6 +165,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

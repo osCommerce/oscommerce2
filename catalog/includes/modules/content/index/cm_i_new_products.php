@@ -98,7 +98,7 @@
 
       if ($num_new_products > 0) {
         ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/new_products.php');
+        include('includes/modules/content/' . $this->group . '/templates/new_products.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);

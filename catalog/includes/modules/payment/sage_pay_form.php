@@ -544,7 +544,7 @@
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
+      if (is_file(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 

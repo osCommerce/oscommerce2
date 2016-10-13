@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/ssl_check.php');
+  require('includes/languages/' . $_SESSION['language'] . '/ssl_check.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('ssl_check.php'));
 

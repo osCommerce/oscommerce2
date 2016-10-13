@@ -119,7 +119,7 @@
       preg_match_all('/"([^"]+\.(' . implode('|', $extensions).'))"/Ui', $this->html, $images);
 
       for ($i=0; $i<count($images[1]); $i++) {
-        if (file_exists($images_dir . $images[1][$i])) {
+        if (is_file($images_dir . $images[1][$i])) {
           $html_images[] = $images[1][$i];
           $this->html = str_replace($images[1][$i], basename($images[1][$i]), $this->html);
         }

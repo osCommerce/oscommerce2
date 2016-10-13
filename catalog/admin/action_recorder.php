@@ -17,9 +17,9 @@
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
   $directory_array = array();
-  if ($dir = @dir(DIR_FS_CATALOG_MODULES . 'action_recorder/')) {
+  if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/')) {
     while ($file = $dir->read()) {
-      if (!is_dir(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file)) {
+      if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/' . $file)) {
         if (substr($file, strrpos($file, '.')) == $file_extension) {
           $directory_array[] = $file;
         }
@@ -32,11 +32,11 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    if (file_exists(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file)) {
-      include(DIR_FS_CATALOG_LANGUAGES . $_SESSION['language'] . '/modules/action_recorder/' . $file);
+    if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $file)) {
+      include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $file);
     }
 
-    include(DIR_FS_CATALOG_MODULES . 'action_recorder/' . $file);
+    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/' . $file);
 
     $class = substr($file, 0, strrpos($file, '.'));
     if (tep_class_exists($class)) {
@@ -89,7 +89,7 @@
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <div class="pull-right">
@@ -179,6 +179,6 @@
 </div>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

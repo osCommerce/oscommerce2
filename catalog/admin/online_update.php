@@ -169,14 +169,14 @@
           'result' => -1
         ];
 
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'work/online_updates')) {
-          if (!file_exists(OSCOM::BASE_DIR . 'work/online_updates')) {
-            mkdir(OSCOM::BASE_DIR . 'work/online_updates', 0777, true);
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/OnlineUpdates', true)) {
+          if (!is_dir(OSCOM::BASE_DIR . 'Work/OnlineUpdates')) {
+            mkdir(OSCOM::BASE_DIR . 'Work/OnlineUdates', 0777, true);
           }
 
-          $filepath = OSCOM::BASE_DIR . 'work/online_updates/' . $_POST['version'] . '-update.zip';
+          $filepath = OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $_POST['version'] . '-update.zip';
 
-          if (file_exists($filepath) && is_writable($filepath)) {
+          if (FileSystem::isWritable($filepath)) {
             unlink($filepath);
           }
 
@@ -195,7 +195,7 @@
           }
         } else {
           $result['result'] = -2;
-          $result['path'] = FileSystem::displayPath(OSCOM::BASE_DIR . 'work/online_updates');
+          $result['path'] = FileSystem::displayPath(OSCOM::BASE_DIR . 'Work/OnlineUpdates');
         }
 
         echo json_encode($result);
@@ -233,23 +233,23 @@
         OnlineUpdate::log('Starting update', $_POST['version']);
 
         try {
-          if (!file_exists(OSCOM::BASE_DIR . 'OSC/Work/Keys/oscommerce.pubkey')) {
-            throw new \Exception('### ERROR ###' . "\n" . 'The following required public key cannot be found:' . "\n\n" . FileSystem::displayPath(OSCOM::BASE_DIR . 'OSC/Work/Keys/oscommerce.pubkey'));
+          if (!is_file(OSCOM::BASE_DIR . 'Work/Keys/oscommerce.pubkey')) {
+            throw new \Exception('### ERROR ###' . "\n" . 'The following required public key cannot be found:' . "\n\n" . FileSystem::displayPath(OSCOM::BASE_DIR . 'Work/Keys/oscommerce.pubkey'));
           }
 
           if (!FileSystem::isWritable(OSCOM::BASE_DIR . 'version.txt')) {
             throw new \Exception('### ERROR ###' . "\n" . 'The following file cannot be written to - please check the file permissions: ' . "\n\n" . FileSystem::displayPath(OSCOM::BASE_DIR . 'version.txt'));
           }
 
-          $update_zip = OSCOM::BASE_DIR . 'work/online_updates/' . $_POST['version'] . '-update.zip';
+          $update_zip = OSCOM::BASE_DIR . 'Work/OnlineUpdates/' . $_POST['version'] . '-update.zip';
 
-          if (!file_exists($update_zip)) {
+          if (!is_file($update_zip)) {
             throw new \Exception('### ERROR ###' . "\n" . 'The following downloaded update package could not be found:' . "\n\n" . FileSystem::displayPath($update_zip));
           }
 
-          $work_dir = OSCOM::BASE_DIR . 'work/online_updates/update_contents';
+          $work_dir = OSCOM::BASE_DIR . 'Work/OnlineUpdates/update_contents';
 
-          if (file_exists($work_dir)) {
+          if (is_dir($work_dir)) {
             OnlineUpdate::log('Cleaning work directory', $_POST['version']);
 
             $errors = [];
@@ -292,11 +292,11 @@
 
           $update_pkg = $work_dir . '/' . $_POST['version'] . '.zip';
 
-          if (!file_exists($update_pkg) || !file_exists($update_pkg . '.sig')) {
+          if (!is_file($update_pkg) || !is_file($update_pkg . '.sig')) {
             throw new \Exception('### ERROR ###' . "\n" . 'The following downloaded update package does not seem to be a valid update package:' . "\n\n" . FileSystem::displayPath($update_zip));
           }
 
-          $public = openssl_get_publickey(file_get_contents(OSCOM::BASE_DIR . 'OSC/Work/Keys/oscommerce.pubkey'));
+          $public = openssl_get_publickey(file_get_contents(OSCOM::BASE_DIR . 'Work/Keys/oscommerce.pubkey'));
 
           if (openssl_verify(sha1_file($update_pkg), file_get_contents($update_pkg . '.sig'), $public) !== 1) {
             throw new \Exception('### ERROR ###' . "\n" . 'Could not verify the following downloaded update package:' . "\n\n" . FileSystem::displayPath($update_zip));
@@ -328,7 +328,7 @@
 
           $meta = [];
 
-          if (!file_exists($work_dir . '/' . $_POST['version'] . '/oscommerce.json')) {
+          if (!is_file($work_dir . '/' . $_POST['version'] . '/oscommerce.json')) {
             throw new \Exception('### ERROR ###' . "\n" . 'The oscommerce.json meta file could not be found in the following update package:' . "\n\n" . FileSystem::displayPath($update_pkg));
           }
 
@@ -358,14 +358,14 @@
             $file_source = null;
 
             if (substr($pathname, 0, 8) == 'catalog/') {
-              $file_source = DIR_FS_CATALOG . substr($pathname, 8);
+              $file_source = OSCOM::getConfig('dir_root', 'Shop') . substr($pathname, 8);
             } elseif (substr($pathname, 0, 6) == 'admin/') {
-              $file_source = DIR_FS_ADMIN . substr($pathname, 6);
+              $file_source = OSCOM::getConfig('dir_root') . substr($pathname, 6);
             }
 
             if (isset($file_source)) {
-              // FileSystem::isWritable() automatically travels up a directory if the destination does not exist
-              if (!FileSystem::isWritable($file_source) || !FileSystem::isWritable(dirname($file_source))) {
+              // check if target and target directory are writable
+              if (!FileSystem::isWritable($file_source, true) || !FileSystem::isWritable(dirname($file_source), true)) {
                 $errors[] = FileSystem::displayPath($file_source);
               }
             }
@@ -373,29 +373,29 @@
 
           $to_del = [];
 
-          if (file_exists($work_dir . '/' . $_POST['version'] . '/delete.txt')) {
+          if (is_file($work_dir . '/' . $_POST['version'] . '/delete.txt')) {
             $to_del = explode("\n", trim(file_get_contents($work_dir . '/' . $_POST['version'] . '/delete.txt')));
 
             foreach ($to_del as $d) {
               $file_source = null;
 
               if (substr($d, 0, 8) == 'catalog/') {
-                $file_source = DIR_FS_CATALOG . substr($d, 8);
+                $file_source = OSCOM::getConfig('dir_root', 'Shop') . substr($d, 8);
               } elseif (substr($d, 0, 6) == 'admin/') {
-                $file_source = DIR_FS_ADMIN . substr($d, 6);
+                $file_source = OSCOM::getConfig('dir_root') . substr($d, 6);
               }
 
               if (isset($file_source)) {
                 if (file_exists($file_source)) {
                   if (is_dir($file_source)) {
                     foreach (FileSystem::getDirectoryContents($file_source) as $dr) {
-                      if (!FileSystem::isWritable($dr) || !FileSystem::isWritable(dirname($dr))) {
+                      if (!FileSystem::isWritable($dr, true) || !FileSystem::isWritable(dirname($dr), true)) {
                         $errors[] = FileSystem::displayPath($dr);
                       }
                     }
                   }
 
-                  if (!FileSystem::isWritable($file_source) || !FileSystem::isWritable(dirname($file_source))) {
+                  if (!FileSystem::isWritable($file_source, true) || !FileSystem::isWritable(dirname($file_source), true)) {
                     $errors[] = FileSystem::displayPath($file_source);
                   }
                 }
@@ -411,7 +411,7 @@
 
           $OU = null;
 
-          if (file_exists($work_dir . '/' . $_POST['version'] . '/Update.php')) {
+          if (is_file($work_dir . '/' . $_POST['version'] . '/Update.php')) {
             include($work_dir . '/' . $_POST['version'] . '/Update.php');
 
             $OU = new OSC\OM\OnlineUpdate\Update;
@@ -433,21 +433,21 @@
             $file_source = null;
 
             if (substr($pathname, 0, 8) == 'catalog/') {
-              $file_source = DIR_FS_CATALOG . substr($pathname, 8);
+              $file_source = OSCOM::getConfig('dir_root', 'Shop') . substr($pathname, 8);
             } elseif (substr($pathname, 0, 6) == 'admin/') {
-              $file_source = DIR_FS_ADMIN . substr($pathname, 6);
+              $file_source = OSCOM::getConfig('dir_root') . substr($pathname, 6);
             }
 
             if (isset($file_source)) {
               $target = dirname($file_source);
 
-              if (!file_exists($target)) {
+              if (!is_dir($target)) {
                 mkdir($target, 0777, true);
 
                 OnlineUpdate::log('+ CREATED: ' . FileSystem::displayPath($target), $_POST['version']);
               }
 
-              $action = file_exists($file_source) ? 'UPDATED' : 'ADDED';
+              $action = is_file($file_source) ? 'UPDATED' : 'ADDED';
 
               if (copy($file, $file_source)) {
                 OnlineUpdate::log('+ ' . $action . ': ' . FileSystem::displayPath($file_source), $_POST['version']);
@@ -462,9 +462,9 @@
               $file_source = null;
 
               if (substr($d, 0, 8) == 'catalog/') {
-                $file_source = DIR_FS_CATALOG . substr($d, 8);
+                $file_source = OSCOM::getConfig('dir_root', 'Shop') . substr($d, 8);
               } elseif (substr($d, 0, 6) == 'admin/') {
-                $file_source = DIR_FS_ADMIN . substr($d, 6);
+                $file_source = OSCOM::getConfig('dir_root') . substr($d, 6);
               }
 
               if (isset($file_source)) {
@@ -533,7 +533,7 @@
     $OSCOM_MessageStack->add(ERROR_COULD_NOT_CONNECT, 'error', 'versionCheck');
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require('includes/template_top.php');
 ?>
 
 <h2><i class="fa fa-cloud-download"></i> <a href="<?= OSCOM::link('online_update.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
@@ -744,6 +744,6 @@ $(function() {
 <?php
   }
 
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require('includes/template_bottom.php');
+  require('includes/application_bottom.php');
 ?>

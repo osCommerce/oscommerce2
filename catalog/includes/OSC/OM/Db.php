@@ -9,6 +9,7 @@
 namespace OSC\OM;
 
 use OSC\OM\HTML;
+use OSC\OM\OSCOM;
 
 class Db extends \PDO
 {
@@ -29,19 +30,19 @@ class Db extends \PDO
         array $driver_options = []
     ) {
         if (!isset($server)) {
-            $server = DB_SERVER;
+            $server = OSCOM::getConfig('db_server');
         }
 
         if (!isset($username)) {
-            $username = DB_SERVER_USERNAME;
+            $username = OSCOM::getConfig('db_server_username');
         }
 
         if (!isset($password)) {
-            $password = DB_SERVER_PASSWORD;
+            $password = OSCOM::getConfig('db_server_password');
         }
 
         if (!isset($database)) {
-            $database = DB_DATABASE;
+            $database = OSCOM::getConfig('db_database');
         }
 
         if (!isset($driver_options[\PDO::ATTR_ERRMODE])) {
@@ -347,7 +348,7 @@ class Db extends \PDO
 
     public function importSQL($sql_file, $table_prefix = null)
     {
-        if (file_exists($sql_file)) {
+        if (is_file($sql_file)) {
             $import_queries = file_get_contents($sql_file);
         } else {
             trigger_error(sprintf(ERROR_SQL_FILE_NONEXISTENT, $sql_file));

@@ -18,7 +18,7 @@
     var $has_doc = true;
 
     function securityCheckExtended_version_check() {
-      include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/version_check.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/version_check.php');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_VERSION_CHECK_TITLE;
     }

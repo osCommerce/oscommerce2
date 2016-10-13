@@ -44,7 +44,7 @@
     $filename = DIR_FS_CACHE . $filename;
     $success = false;
 
-    if (($auto_expire == true) && file_exists($filename)) {
+    if (($auto_expire == true) && is_file($filename)) {
       $now = time();
       $filetime = filemtime($filename);
       $difference = $now - $filetime;
@@ -78,7 +78,7 @@
 
     if (($refresh == true) || !read_cache($cache_output, 'categories_box-' . $_SESSION['language'] . '.cache' . $cPath, $auto_expire)) {
       if (!class_exists('bm_categories')) {
-        include(DIR_WS_MODULES . 'boxes/bm_categories.php');
+        include('includes/modules/boxes/bm_categories.php');
       }
 
       $bm_categories = new bm_categories();
@@ -103,7 +103,7 @@
 
     if (($refresh == true) || !read_cache($cache_output, 'manufacturers_box-' . $_SESSION['language'] . '.cache' . $manufacturers_id, $auto_expire)) {
       if (!class_exists('bm_manufacturers')) {
-        include(DIR_WS_MODULES . 'boxes/bm_manufacturers.php');
+        include('includes/modules/boxes/bm_manufacturers.php');
       }
 
       $bm_manufacturers = new bm_manufacturers();

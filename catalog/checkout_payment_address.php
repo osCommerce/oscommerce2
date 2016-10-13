@@ -27,7 +27,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_payment_address.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_payment_address.php');
 
   $error = false;
   $process = false;
@@ -241,14 +241,14 @@
   </div>
 
   <div class="clearfix"></div>
-  
+
 
 <?php
     if ($addresses_count > 1) {
 ?>
 
   <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
-  
+
   <div class="alert alert-info"><?php echo TEXT_SELECT_OTHER_PAYMENT_DESTINATION; ?></div>
 
   <div class="contentText row">
@@ -287,7 +287,7 @@
 ?>
 
   <h2><?php echo TABLE_HEADING_NEW_PAYMENT_ADDRESS; ?></h2>
-  
+
   <div class="alert alert-info"><?php echo TEXT_CREATE_NEW_PAYMENT_ADDRESS; ?></div>
 
   <?php require('includes/modules/checkout_new_address.php'); ?>

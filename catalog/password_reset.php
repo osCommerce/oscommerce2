@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/password_reset.php');
+  require('includes/languages/' . $_SESSION['language'] . '/password_reset.php');
 
   $error = false;
 
@@ -106,7 +106,7 @@
 <div class="contentContainer">
   <div class="contentText">
     <div class="alert alert-info"><?php echo TEXT_MAIN; ?></div>
-    
+
     <div class="form-group has-feedback">
       <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-sm-9">

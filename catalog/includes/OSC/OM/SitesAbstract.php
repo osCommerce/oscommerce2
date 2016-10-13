@@ -10,7 +10,6 @@ namespace OSC\OM;
 
 abstract class SitesAbstract implements \OSC\OM\SitesInterface
 {
-    protected static $base_dir;
     protected $code;
     protected $page;
     protected $app;
@@ -25,11 +24,6 @@ abstract class SitesAbstract implements \OSC\OM\SitesInterface
         $this->code = (new \ReflectionClass($this))->getShortName();
 
         return $this->init();
-    }
-
-    public static function getBaseDir()
-    {
-        return static::$base_dir;
     }
 
     public function getCode()

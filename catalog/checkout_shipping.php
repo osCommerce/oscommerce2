@@ -45,7 +45,7 @@
     }
   }
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // register a random ID in the session to check throughout the checkout procedure
@@ -68,7 +68,7 @@
   $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled shipping modules
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping;
 
   if ( defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') ) {
@@ -95,7 +95,7 @@
     if ( ($pass == true) && ($order->info['total'] >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
       $free_shipping = true;
 
-      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
+      include('includes/languages/' . $_SESSION['language'] . '/modules/order_total/ot_shipping.php');
     }
   } else {
     $free_shipping = false;
@@ -154,7 +154,7 @@
 // method if more than one module is now enabled
   if ( !isset($_SESSION['shipping']) || ( isset($_SESSION['shipping']) && ($_SESSION['shipping'] === false) && (tep_count_shipping_modules() > 1) ) ) $_SESSION['shipping'] = $shipping_modules->get_first();
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_shipping.php');
 
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && (!isset($_SESSION['shipping']) || ($_SESSION['shipping'] === false)) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);

@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/product_reviews_write.php');
+  require('includes/languages/' . $_SESSION['language'] . '/product_reviews_write.php');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
@@ -109,7 +109,7 @@ function checkForm() {
 }
 //--></script>
 
-<div class="page-header">  
+<div class="page-header">
   <div class="row">
     <h1 class="col-sm-4"><?php echo $products_name; ?></h1>
     <h2 class="col-sm-8 text-right-not-xs"><?php echo $products_price; ?></h2>
@@ -131,7 +131,7 @@ function checkForm() {
 ?>
 
     <div class="pull-right text-center">
-      <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qcheck->value('products_image'), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
+      <?php echo '<a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qcheck->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qcheck->value('products_image')), $Qcheck->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"') . '</a>'; ?>
 
       <p><?php echo HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=buy_now')); ?></p>
     </div>

@@ -1,151 +1,119 @@
 <?php
-/*
-  $Id$
+use OSC\OM\FileSystem;
+use OSC\OM\OSCOM;
 
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
+$configfile_array = [
+    OSCOM::BASE_DIR . 'Conf/global.php',
+    OSCOM::BASE_DIR . 'Sites/Shop/site_conf.php',
+    OSCOM::BASE_DIR . 'Sites/Admin/site_conf.php'
+];
 
-  Copyright (c) 2015 osCommerce
+foreach ($configfile_array as $key => $f) {
+    if (!is_file($f)) {
+        continue;
+    } elseif (!FileSystem::isWritable($f)) {
+// try to chmod and try again
+        @chmod($f, 0777);
 
-  Released under the GNU General Public License
-*/
+        if (!FileSystem::isWritable($f)) {
+            continue;
+        }
+    }
 
-  use OSC\OM\OSCOM;
+// file exists and is writable
+    unset($configfile_array[$key]);
+}
 
-  $compat_register_globals = true;
+$warning_array = [];
 
+if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
+    $warning_array[] = 'The PDO MySQL driver extension is not installed. Please enable it in the PHP configuration to continue installation.';
+}
+
+if (PHP_VERSION < 5.5) {
+    $warning_array[] = 'The minimum required PHP version is v5.5 - please ask your host or server administrator to upgrade the PHP version to continue installation.';
+}
 ?>
 
 <div class="alert alert-info">
-  <h1>Welcome to osCommerce Online Merchant v<?php echo OSCOM::getVersion(); ?>!</h1>
+  <h2>Welcome to osCommerce Online Merchant <small>v<?php echo OSCOM::getVersion(); ?></small></h2>
 
-  <p>osCommerce Online Merchant helps you sell products worldwide with your own online store. Its Administration Tool manages products, customers, orders, newsletters, specials, and more to successfully build the success of your online business.</p>
+  <p>osCommerce Online Merchant helps you sell products worldwide with your own online store. Its Administration Dashboard manages products, customers, orders, newsletters, specials, and more to successfully build the success of your online business.</p>
   <p>osCommerce has attracted a large community of store owners and developers who support each other and have provided over 7,000 free add-ons that can extend the features and potential of your online store.</p>
+</div>
+
+<div class="alert alert-warning">
+  <h2>Beta Release</h2>
+
+  <p>This release is currently a beta release recommended only for development and testing purposes. Please visit the <a href="https://www.oscommerce.com" target="_blank" class="alert-link">osCommerce</a> website to stay up to date on production-ready releases.</p>
 </div>
 
 <div class="row">
   <div class="col-xs-12 col-sm-push-3 col-sm-9">
-    <div class="page-header">
-      <h2>New Installation</h2>
+    <h1>New Installation</h1>
+
+<?php
+if (!empty($warning_array)) {
+?>
+
+    <div class="alert alert-danger">
+      <p>Please correct the following errors and try the installation procedure again with the changes in place.</p>
+
+      <ul style="margin-top: 20px; margin-bottom: 20px;">
+
+<?php
+    foreach ($warning_array as $key => $value) {
+        echo '<li>' . $value . '</li>';
+    }
+?>
+
+      </ul>
+
+      <p><i>Changing webserver configuration parameters may require the webserver service to be restarted before the changes take affect.</i></p>
     </div>
 
 <?php
-    $configfile_array = [
-      OSCOM::BASE_DIR . '/configure.php',
-      realpath(OSCOM::BASE_DIR . '/../admin/includes') . '/configure.php'
-    ];
+}
 
-    foreach ($configfile_array as $key => $f) {
-      if (!file_exists($f)) {
-        continue;
-      } elseif (!is_writable($f)) {
-// try to chmod and try again
-        @chmod($f, 0777);
+if (!empty($configfile_array)) {
+?>
 
-        if (!is_writable($f)) {
-          continue;
-        }
-      }
+    <div class="alert alert-danger">
+      <p>The webserver is not able to save to the following installation configuration files. Please update the file permissions of the following files to world-writable (chmod 777) and try the installation procedure again:</p>
 
-// file exists and is writable
-      unset($configfile_array[$key]);
+      <ul style="margin-top: 20px;">
+
+<?php
+    foreach ($configfile_array as $file) {
+        echo '<li>' . FileSystem::displayPath($file) . '</li>';
     }
-
-    $warning_array = array();
-
-    if (function_exists('ini_get')) {
-      if ($compat_register_globals == false) {
-        $warning_array['register_globals'] = 'Compatibility with register_globals is supported from PHP 4.3+. This setting <u>must be enabled</u> due to an older PHP version being used.';
-      }
-    }
-
-    if (!extension_loaded('mysql') && !extension_loaded('mysqli')) {
-      $warning_array['mysql'] = 'The MySQL[i] extension is required but is not installed. Please enable it to continue installation.';
-    }
-    
-    if (PHP_VERSION < 5.3) $warning_array['PHP'] = 'Minimum Required PHP Version is 5.3 - please ask your host to upgrade the server.';
-
-    if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
 ?>
 
-      <div class="noticeBox">
+      </ul>
+    </div>
 
 <?php
-      if (sizeof($warning_array) > 0) {
+}
+
+if (!empty($configfile_array) || !empty($warning_array)) {
 ?>
 
-        <table class="table table-condensed table-striped">
+    <p><a href="index.php" class="btn btn-danger" role="button">Retry Installation</a></p>
 
 <?php
-        foreach ( $warning_array as $key => $value ) {
-          echo '        <tr>' . "\n" .
-               '          <th valign="top">' . $key . '</th>' . "\n" .
-               '          <td valign="top">' . $value . '</td>' . "\n" .
-               '        </tr>' . "\n";
-        }
+} else {
 ?>
 
-        </table>
-<?php
-      }
+    <p>The webserver environment has been verified to proceed with a successful installation and configuration of your online store.</p>
 
-      if (sizeof($configfile_array) > 0) {
-?>
+    <div id="jsOn" style="display: none;">
+      <p><a href="install.php" class="btn btn-success" role="button">Start the Installation Procedure</a></p>
+    </div>
 
-        <div class="alert alert-danger">
-          <p>The webserver is not able to save the installation parameters to its configuration files.</p>
-          <p>The following files need to have their file permissions set to world-writeable (chmod 777):</p>
-          <p>
-
-<?php
-          for ($i=0, $n=sizeof($configfile_array); $i<$n; $i++) {
-            echo str_replace('\\', '/', $configfile_array[$i]); // take care of windows path backslashes
-
-            if (isset($configfile_array[$i+1])) {
-              echo '<br />';
-            }
-          }
-?>
-
-          </p>
-        </div>
-
-<?php
-      }
-?>
-
-      </div>
-
-<?php
-    }
-
-    if ((sizeof($configfile_array) > 0) || (sizeof($warning_array) > 0)) {
-?>
-
-      <div class="alert alert-danger">Please correct the above errors and retry the installation procedure with the changes in place.</div>
-
-<?php
-      if (sizeof($warning_array) > 0) {
-        echo '    <div class="alert alert-info"><i>Changing webserver configuration parameters may require the webserver service to be restarted before the changes take affect.</i></div>' . "\n";
-      }
-?>
-
-      <p><a href="index.php" class="btn btn-danger btn-block" role="button">Retry</a></p>
-
-<?php
-    } else {
-?>
-
-      <div class="alert alert-success">The webserver environment has been verified to proceed with a successful installation and configuration of your online store.</div>
-
-      <div id="jsOn" style="display: none;">
-        <p><a href="install.php" class="btn btn-success btn-block" role="button">Start the installation procedure</a></p>
-      </div>
-
-      <div id="jsOff">
-        <p class="text-danger">Please enable Javascript in your browser to be able to start the installation procedure.</p>
-        <p><a href="index.php" class="btn btn-danger btn-block" role="button">Retry</a></p>
-      </div>
+    <div id="jsOff">
+      <p class="text-danger">Please enable Javascript in your browser to be able to start the installation procedure.</p>
+      <p><a href="index.php" class="btn btn-danger" role="button">Retry Installation</a></p>
+    </div>
 
 <script>
 $(function() {
@@ -155,96 +123,71 @@ $(function() {
 </script>
 
 <?php
-  }
+}
 ?>
+
   </div>
+
   <div class="col-xs-12 col-sm-pull-9 col-sm-3">
     <div class="panel panel-success">
       <div class="panel-heading">
         Server Capabilities
       </div>
-        <table class="table table-condensed table-striped">
+
+      <p style="margin: 5px;"><strong>PHP Version</strong></p>
+
+      <table class="table">
+        <tbody>
           <tr>
-            <th colspan="2">PHP Version</th>
+            <td><?php echo PHP_VERSION; ?></td>
+            <td class="text-right" width="25"><?php echo ((PHP_VERSION >= 5.5) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-danger"></i>'); ?></td>
           </tr>
-          <tr>
-            <th><?php echo PHP_VERSION; ?></th>
-            <td align="right" width="25"><?php echo ((PHP_VERSION >= 5.3) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-        </table>
+        </tbody>
+      </table>
 
 <?php
-  if (function_exists('ini_get')) {
+if (function_exists('ini_get')) {
 ?>
 
-        <br />
+      <p style="margin: 5px;"><strong>PHP Settings</strong></p>
 
-        <table class="table table-condensed table-striped">
+      <table class="table">
+        <tbody>
           <tr>
-            <th colspan="3">PHP Settings</th>
+            <td>file_uploads</td>
+            <td class="text-right"><?php echo (((int)ini_get('file_uploads') === 0) ? 'Off' : 'On'); ?></td>
+            <td class="text-right"><?php echo (((int)ini_get('file_uploads') === 1) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-danger"></i>'); ?></td>
           </tr>
-          <tr>
-            <th>register_globals</th>
-            <td align="right"><?php echo (((int)ini_get('register_globals') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><?php echo (($compat_register_globals == true) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-          <tr>
-            <th>magic_quotes</th>
-            <td align="right"><?php echo (((int)ini_get('magic_quotes') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><?php echo (((int)ini_get('magic_quotes') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-          <tr>
-            <th>file_uploads</th>
-            <td align="right"><?php echo (((int)ini_get('file_uploads') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><?php echo (((int)ini_get('file_uploads') == 1) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-          <tr>
-            <th>session.auto_start</th>
-            <td align="right"><?php echo (((int)ini_get('session.auto_start') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><?php echo (((int)ini_get('session.auto_start') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-          <tr>
-            <th>session.use_trans_sid</th>
-            <td align="right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? 'Off' : 'On'); ?></td>
-            <td align="right"><?php echo (((int)ini_get('session.use_trans_sid') == 0) ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-        </table>
+        </tbody>
+      </table>
 
-        <br />
+      <p style="margin: 5px;"><strong>PHP Extensions</strong></p>
 
-        <table class="table table-condensed table-striped">
+      <table class="table">
+        <tbody>
           <tr>
-            <th colspan="2">Required PHP Extensions</th>
+            <td>PDO MySQL</td>
+            <td class="text-right"><?php echo extension_loaded('pdo') && extension_loaded('pdo_mysql') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-danger"></i>'; ?></td>
           </tr>
           <tr>
-            <th>MySQL</th>
-            <td align="right"><?php echo (extension_loaded('mysql') || extension_loaded('mysqli') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-        </table>
-
-        <br />
-
-        <table class="table table-condensed table-striped">
-          <tr>
-            <th colspan="2">Recommended PHP Extensions</th>
+            <td>GD</td>
+            <td class="text-right"><?php echo extension_loaded('gd') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
           </tr>
           <tr>
-            <th>GD</th>
-            <td align="right"><?php echo (extension_loaded('gd') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
+            <td>cURL</td>
+            <td class="text-right"><?php echo extension_loaded('curl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
           </tr>
           <tr>
-            <th>cURL</th>
-            <td align="right"><?php echo (extension_loaded('curl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
+            <td>OpenSSL</td>
+            <td class="text-right"><?php echo extension_loaded('openssl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-exclamation-circle text-warning"></i>'; ?></td>
           </tr>
-          <tr>
-            <th>OpenSSL</th>
-            <td align="right"><?php echo (extension_loaded('openssl') ? '<i class="fa fa-thumbs-up text-success"></i>' : '<i class="fa fa-thumbs-down text-danger"></i>'); ?></td>
-          </tr>
-        </table>
+        </tbody>
+      </table>
 
 <?php
-  }
+}
 ?>
+
     </div>
   </div>
 </div>

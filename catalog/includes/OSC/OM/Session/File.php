@@ -23,7 +23,7 @@ class File extends \OSC\OM\SessionAbstract implements \SessionHandlerInterface
     {
         $id = basename($session_id);
 
-        return file_exists($this->path . '/sess_' . $id);
+        return is_file($this->path . '/sess_' . $id);
     }
 
     public function open($save_path, $name)
