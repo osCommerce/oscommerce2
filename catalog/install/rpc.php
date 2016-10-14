@@ -28,7 +28,7 @@
     switch ($_GET['action']) {
       case 'dbCheck':
         try {
-          $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], $_POST['name']);
+          $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '');
 
           $result['status'] = '1';
           $result['message'] = 'success';
@@ -55,7 +55,7 @@
 
       case 'dbImport':
         try {
-          $OSCOM_Db = Db::initialize($_POST['server'], $_POST['username'], $_POST['password'], $_POST['name']);
+          $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '');
           $OSCOM_Db->importSQL($dir_fs_www_root . '/oscommerce.sql');
 
           $result['status'] = '1';
