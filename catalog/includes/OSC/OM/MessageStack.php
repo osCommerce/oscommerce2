@@ -94,7 +94,7 @@ class MessageStack
                 $result .= '<div class="alert ' . HTML::outputProtected($type) . '" role="alert">';
 
                 foreach ($messages as $message) {
-                    $result .= '<p>' . HTML::output($message) . '</p>';
+                    $result .= '<p>' . $message . '</p>';
                 }
 
                 $result .= '</div>';
