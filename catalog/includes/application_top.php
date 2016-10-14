@@ -25,7 +25,7 @@
 
   OSCOM::initialize();
 
-  if (!OSCOM::configExists('db_server')) {
+  if (!OSCOM::configExists('db_server') || (strlen(OSCOM::getConfig('db_server') < 1))) {
     if (is_dir('install')) {
       header('Location: install/index.php');
       exit;
