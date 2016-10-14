@@ -42,6 +42,8 @@
   require('includes/classes/action_recorder.php');
   require('includes/classes/cfg_modules.php');
 
+  require(OSCOM::getConfig('dir_root', 'Shop') . 'includes/classes/osc_template.php');
+
   OSCOM::loadSite('Admin');
 
   $OSCOM_Db = Registry::get('Db');

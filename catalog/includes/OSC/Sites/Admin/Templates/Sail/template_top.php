@@ -41,11 +41,11 @@ $.datepicker.setDefaults($.datepicker.regional['<?= JQUERY_DATEPICKER_I18N_CODE;
   }
 ?>
 
-<link rel="stylesheet" type="text/css" href="<?= OSCOM::link('stylesheet.css', null, 'AUTO', false); ?>">
-<script type="text/javascript" src="<?= OSCOM::link('general.js', null, 'AUTO', false); ?>"></script>
+<link rel="stylesheet" type="text/css" href="<?= $oscTemplate->getPublicFile('css/stylesheet.css'); ?>">
+<script src="<?= OSCOM::linkPublic('js/general.js'); ?>"></script>
 </head>
 <body>
 
-<?php require('includes/header.php'); ?>
+<?php require($oscTemplate->getFile('header.php')); ?>
 
 <div id="contentText" class="container-fluid">

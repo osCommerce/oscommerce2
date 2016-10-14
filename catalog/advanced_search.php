@@ -19,10 +19,10 @@
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
-<script src="includes/general.js"></script>
+<script src="<?= OSCOM::linkPublic('js/general.js'); ?>"></script>
 <script><!--
 function check_form() {
   var error_message = "<?php echo JS_ERROR; ?>";
@@ -218,6 +218,6 @@ function check_form() {
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

@@ -533,7 +533,7 @@
     $OSCOM_MessageStack->add(ERROR_COULD_NOT_CONNECT, 'error', 'versionCheck');
   }
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <h2><i class="fa fa-cloud-download"></i> <a href="<?= OSCOM::link('online_update.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
@@ -744,6 +744,6 @@ $(function() {
 <?php
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

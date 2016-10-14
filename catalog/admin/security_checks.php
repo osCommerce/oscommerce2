@@ -61,7 +61,7 @@
 
   usort($modules, 'tep_sort_secmodules');
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div style="float: right;"><?php echo HTML::button('Reload', 'fa fa-refresh', OSCOM::link('security_checks.php')); ?></div>
@@ -106,6 +106,6 @@
 </table>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

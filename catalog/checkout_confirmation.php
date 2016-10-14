@@ -99,7 +99,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -328,6 +328,6 @@ $('form[name="checkout_confirmation"]').submit(function() {
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

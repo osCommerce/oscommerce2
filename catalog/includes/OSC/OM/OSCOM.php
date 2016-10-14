@@ -127,7 +127,7 @@ class OSCOM
 
         $site = $req_site = static::$site;
 
-        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1])) {
+        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1], false)) {
             $req_site = $matches[1];
             $page = $matches[2];
         }
@@ -216,12 +216,47 @@ class OSCOM
         $page = $args[0];
         $req_site = static::$site;
 
-        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1])) {
+        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1], false)) {
             $req_site = $matches[1];
             $page = $matches[2];
         }
 
         $args[0] = $req_site . '/' . ((($args[2] == 'SSL') || ($request_type == 'SSL')) ? static::getConfig('https_images_path', $req_site) : static::getConfig('http_images_path', $req_site)) . $page;
+
+        $url = forward_static_call_array('static::link', $args);
+
+        return $url;
+    }
+
+    public static function linkPublic()
+    {
+        global $request_type;
+
+        $args = func_get_args();
+
+        if (!isset($args[0])) {
+            $args[0] = null;
+        }
+
+        if (!isset($args[1])) {
+            $args[1] = null;
+        }
+
+        if (!isset($args[2])) {
+            $args[2] = 'AUTO';
+        }
+
+        $args[3] = false;
+
+        $page = $args[0];
+        $req_site = static::$site;
+
+        if ((strpos($page, '/') !== false) && (preg_match('/^([A-Z][A-Za-z0-9-_]*)\/(.*)$/', $page, $matches) === 1) && OSCOM::siteExists($matches[1], false)) {
+            $req_site = $matches[1];
+            $page = $matches[2];
+        }
+
+        $args[0] = 'Shop/public/Sites/' . $req_site . '/' . $page;
 
         $url = forward_static_call_array('static::link', $args);
 
@@ -350,8 +385,8 @@ class OSCOM
         }
 
         if (strncmp($prefix . 'OM\Module\\', $class, strlen($prefix . 'OM\Module\\')) === 0) { // TODO remove and fix namespace
-          $file = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
-          $custom = OSCOM_BASE_DIR . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
+          $file = dirname(OSCOM_BASE_DIR) . '/' . str_replace(['OSC\OM\\', '\\'], ['', '/'], $class) . '.php';
+          $custom = dirname(OSCOM_BASE_DIR) . '/' . str_replace(['OSC\OM\\', '\\'], ['OSC\Custom\OM\\', '/'], $class) . '.php';
         } else {
           $file = dirname(OSCOM_BASE_DIR) . '/' . str_replace('\\', '/', $class) . '.php';
           $custom = str_replace('OSC/OM/', 'OSC/Custom/OM/', $file);

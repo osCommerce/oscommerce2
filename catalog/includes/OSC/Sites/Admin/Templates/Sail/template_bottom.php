@@ -15,7 +15,7 @@
 
 </div>
 
-<?php require('includes/footer.php'); ?>
+<?php require($oscTemplate->getFile('footer.php')); ?>
 
 <script>
 $(function() {

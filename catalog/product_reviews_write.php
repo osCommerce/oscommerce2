@@ -79,7 +79,7 @@
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <script><!--
@@ -189,6 +189,6 @@ function checkForm() {
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

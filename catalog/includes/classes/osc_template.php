@@ -11,9 +11,11 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
 
   class oscTemplate {
     var $_title;
+    var $_code = 'Sail';
     var $_blocks = array();
     var $_content = array();
     var $_grid_container_width = 12;
@@ -55,6 +57,14 @@
 
     function getTitle() {
       return $this->_title;
+    }
+
+    function setCode($code) {
+      $this->_code = $code;
+    }
+
+    function getCode() {
+      return $this->_code;
     }
 
     function addBlock($block, $group) {
@@ -177,6 +187,22 @@
       }
 
       return $result;
+    }
+
+    function getFile($file, $template = null) {
+      if (!isset($template)) {
+        $template = $this->getCode();
+      }
+
+      return OSCOM::BASE_DIR . 'Sites/' . OSCOM::getSite() . '/Templates/' . $template . '/' . $file;
+    }
+
+    function getPublicFile($file, $template = null) {
+      if (!isset($template)) {
+        $template = $this->getCode();
+      }
+
+      return OSCOM::linkPublic('Templates/' . $template . '/' . $file);
     }
   }
 ?>

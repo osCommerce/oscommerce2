@@ -93,11 +93,11 @@
     $iframe_url = $_SESSION['sage_pay_server_nexturl'];
   }
 
-  if ( !is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/template_top.php') ) {
+  if ( !is_file($oscTemplate->getFile('template_top.php')) ) {
     HTTP::redirect($iframe_url);
   }
 
-  include('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
     <iframe src="<?php echo $iframe_url; ?>" width="100%" height="600" frameborder="0">
@@ -105,6 +105,6 @@
     </iframe>
 
 <?php
-  include('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

@@ -36,8 +36,8 @@
 <!-- font awesome -->
 <link href="ext/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
-<link href="custom.css" rel="stylesheet">
-<link href="user.css" rel="stylesheet">
+<link href="<?= $oscTemplate->getPublicFile('css/custom.css'); ?>" rel="stylesheet">
+<link href="<?= $oscTemplate->getPublicFile('css/user.css'); ?>" rel="stylesheet">
 
 <!--[if lt IE 9]>
    <script src="ext/js/html5shiv.js"></script>
@@ -56,6 +56,6 @@
   <div id="bodyWrapper" class="<?php echo BOOTSTRAP_CONTAINER; ?>">
     <div class="row">
 
-      <?php require('includes/header.php'); ?>
+      <?php require($oscTemplate->getFile('header.php')); ?>
 
       <div id="bodyContent" class="col-md-<?php echo $oscTemplate->getGridContentWidth(); ?> <?php echo ($oscTemplate->hasBlocks('boxes_column_left') ? 'col-md-push-' . $oscTemplate->getGridColumnWidth() : ''); ?>">

@@ -39,7 +39,7 @@
 
   </div> <!-- bodyWrapper //-->
 
-  <?php require('includes/footer.php'); ?>
+  <?php require($oscTemplate->getFile('footer.php')); ?>
 
 <script src="ext/bootstrap/js/bootstrap.min.js"></script>
 <?php echo $oscTemplate->getBlocks('footer_scripts'); ?>

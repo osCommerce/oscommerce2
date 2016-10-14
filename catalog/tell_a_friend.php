@@ -111,7 +111,7 @@
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -199,6 +199,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

@@ -24,7 +24,7 @@ class Admin extends \OSC\OM\SitesAbstract
 {
     protected function init()
     {
-        global $request_type, $PHP_SELF, $login_request, $cfgModules;
+        global $request_type, $PHP_SELF, $login_request, $cfgModules, $oscTemplate;
 
         $OSCOM_Cookies = new Cookies();
         Registry::set('Cookies', $OSCOM_Cookies);
@@ -141,6 +141,8 @@ class Admin extends \OSC\OM\SitesAbstract
                 Registry::get('MessageStack')->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
             }
         }
+
+        $oscTemplate = new \oscTemplate();
 
         $cfgModules = new \cfg_modules();
     }

@@ -28,7 +28,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+<link rel="stylesheet" type="text/css" href="<?= OSCOM::linkPublic('Templates/Sail/css/stylesheet.css'); ?>">
 </head>
 <body>
 

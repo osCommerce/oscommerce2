@@ -110,7 +110,7 @@
     }
   }
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 
   $modules_installed = (defined($module_key) ? explode(';', constant($module_key)) : array());
   $new_modules_counter = 0;
@@ -427,6 +427,6 @@
     </table>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

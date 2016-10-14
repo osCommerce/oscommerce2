@@ -132,7 +132,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), 'NONSSL', true, false));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -393,6 +393,6 @@
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

@@ -88,7 +88,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -131,6 +131,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

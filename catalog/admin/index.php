@@ -21,20 +21,20 @@
         }
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(OSCOM::getConfig('dir_root') . 'includes/template_top.php');
+          include($oscTemplate->getFile('template_top.php'));
         }
 
         include($page_file);
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(OSCOM::getConfig('dir_root') . 'includes/template_bottom.php');
+          include($oscTemplate->getFile('template_bottom.php'));
         }
     }
 
     goto main_sub3;
   }
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <h2><i class="fa fa-home"></i> <a href="<?= OSCOM::link(FILENAME_DEFAULT); ?>"><?= STORE_NAME; ?></a></h2>
@@ -81,7 +81,7 @@
     }
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
 
   main_sub3: // Sites and Apps skip to here
 

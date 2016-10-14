@@ -114,7 +114,7 @@
     }
   }
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 
   if (isset($_GET['zID']) && (($saction == 'edit') || ($saction == 'new'))) {
 ?>
@@ -361,6 +361,6 @@ function update_zone(theForm) {
     </table>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

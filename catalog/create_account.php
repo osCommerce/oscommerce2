@@ -257,7 +257,7 @@
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php', '', 'SSL'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -522,6 +522,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

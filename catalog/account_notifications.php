@@ -91,7 +91,7 @@
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php', '', 'SSL'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -190,6 +190,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

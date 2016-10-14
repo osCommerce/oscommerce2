@@ -20,13 +20,13 @@
         }
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(OSCOM::getConfig('dir_root') . 'includes/template_top.php');
+          include($oscTemplate->getFile('template_top.php'));
         }
 
         include($page_file);
 
         if (OSCOM::useSiteTemplateWithPageFile()) {
-          include(OSCOM::getConfig('dir_root') . 'includes/template_bottom.php');
+          include($oscTemplate->getFile('template_bottom.php'));
         }
     }
 
@@ -57,7 +57,7 @@
 
   require('includes/languages/' . $_SESSION['language'] . '/index.php');
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 
   if ($category_depth == 'nested') {
     $Qcategory = $OSCOM_Db->prepare('select cd.categories_name, c.categories_image, cd.categories_description from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
@@ -297,7 +297,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
 <?php
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
 
   main_sub3: // Sites and Apps skip to here
 

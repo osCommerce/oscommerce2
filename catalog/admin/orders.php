@@ -135,7 +135,7 @@
 
   $show_listing = true;
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <h2><i class="fa fa-shopping-cart"></i> <a href="<?= OSCOM::link('orders.php'); ?>"><?= HEADING_TITLE; ?></a></h2>
@@ -512,6 +512,6 @@
 <?php
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

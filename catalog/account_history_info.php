@@ -42,7 +42,7 @@
   require('includes/classes/order.php');
   $order = new order($_GET['order_id']);
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -209,6 +209,6 @@
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

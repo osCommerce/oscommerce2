@@ -38,7 +38,7 @@
     $breadcrumb->add($Qproduct->value('products_model'), OSCOM::link('product_info.php', 'cPath=' . $cPath . '&products_id=' . $Qproduct->valueInt('products_id')));
   }
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 
   if ($product_exists === false) {
 ?>
@@ -261,6 +261,7 @@
 
 <?php
   }
-  require('includes/template_bottom.php');
+
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>
