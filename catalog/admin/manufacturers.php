@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -80,9 +81,7 @@
           }
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('manufacturers');
-        }
+        Cache::clear('manufacturers');
 
         OSCOM::redirect(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers_id);
         break;
@@ -115,9 +114,7 @@
           ]);
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('manufacturers');
-        }
+        Cache::clear('manufacturers');
 
         OSCOM::redirect(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']);
         break;

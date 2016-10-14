@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
   use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -34,10 +35,8 @@
             tep_set_product_status($_GET['pID'], $_GET['flag']);
           }
 
-          if (USE_CACHE == 'true') {
-            tep_reset_cache_block('categories');
-            tep_reset_cache_block('also_purchased');
-          }
+          Cache::clear('categories');
+          Cache::clear('products-also_purchased');
         }
 
         OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['pID']);
@@ -100,10 +99,8 @@
           ]);
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('categories');
-          tep_reset_cache_block('also_purchased');
-        }
+        Cache::clear('categories');
+        Cache::clear('products-also_purchased');
 
         OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $categories_id);
         break;
@@ -151,10 +148,8 @@
           }
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('categories');
-          tep_reset_cache_block('also_purchased');
-        }
+        Cache::clear('categories');
+        Cache::clear('products-also_purchased');
 
         OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $cPath);
         break;
@@ -177,10 +172,8 @@
           }
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('categories');
-          tep_reset_cache_block('also_purchased');
-        }
+        Cache::clear('categories');
+        Cache::clear('products-also_purchased');
 
         $OSCOM_Hooks->call('Products', 'ActionDelete');
 
@@ -205,10 +198,8 @@
               'categories_id' => (int)$categories_id
             ]);
 
-            if (USE_CACHE == 'true') {
-              tep_reset_cache_block('categories');
-              tep_reset_cache_block('also_purchased');
-            }
+            Cache::clear('categories');
+            Cache::clear('products-also_purchased');
 
             OSCOM::redirect(FILENAME_CATEGORIES, 'cPath=' . $new_parent_id . '&cID=' . $categories_id);
           }
@@ -233,10 +224,8 @@
           ]);
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('categories');
-          tep_reset_cache_block('also_purchased');
-        }
+        Cache::clear('categories');
+        Cache::clear('products-also_purchased');
 
         $OSCOM_Hooks->call('Products', 'ActionMove');
 
@@ -370,10 +359,8 @@
           $Qdel->execute();
         }
 
-        if (USE_CACHE == 'true') {
-          tep_reset_cache_block('categories');
-          tep_reset_cache_block('also_purchased');
-        }
+        Cache::clear('categories');
+        Cache::clear('products-also_purchased');
 
         $OSCOM_Hooks->call('Products', 'ActionSave');
 
@@ -449,10 +436,8 @@
             $products_id = $dup_products_id;
           }
 
-          if (USE_CACHE == 'true') {
-            tep_reset_cache_block('categories');
-            tep_reset_cache_block('also_purchased');
-          }
+          Cache::clear('categories');
+          Cache::clear('products-also_purchased');
         }
 
         $OSCOM_Hooks->call('Products', 'ActionCopy');

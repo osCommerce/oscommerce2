@@ -26,7 +26,7 @@
     function pass() {
       $OSCOM_Cache = Registry::get('Cache');
 
-      return $OSCOM_Cache->exists('oscommerce_version_check') && ($OSCOM_Cache->getTime('oscommerce_version_check') > strtotime('-30 days'));
+      return $OSCOM_Cache->exists('core_version_check') && ($OSCOM_Cache->getTime('core_version_check') > strtotime('-30 days'));
     }
 
     function getMessage() {

@@ -149,17 +149,18 @@ class Cache
         }
 
         if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
-            $key_length = strlen($key);
-
-            $d = dir(OSCOM::BASE_DIR . 'Work/Cache');
-
-            while (($entry = $d->read()) !== false) {
-                if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
-                    @unlink(OSCOM::BASE_DIR . 'Work/Cache/' . $entry);
-                }
+            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '*.cache') as $c) {
+                unlink($c);
             }
+        }
+    }
 
-            $d->close();
+    public static function clearAll()
+    {
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
+            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
+                unlink($c);
+            }
         }
     }
 }

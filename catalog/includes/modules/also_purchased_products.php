@@ -18,6 +18,7 @@
     $Qorders->bindInt(':products_id', $_GET['products_id']);
     $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
     $Qorders->bindInt(':limit', MAX_DISPLAY_ALSO_PURCHASED);
+    $Qorders->setCache('products-also_purchased-p' . (int)$_GET['products_id'] . '-lang' . (int)$_SESSION['languages_id'], 3600);
     $Qorders->execute();
 
     $orders = $Qorders->fetchAll();

@@ -14,7 +14,7 @@ class File extends \OSC\OM\SessionAbstract implements \SessionHandlerInterface
 
     public function __construct()
     {
-        $this->setSavePath(SESSION_WRITE_DIRECTORY);
+        $this->setSavePath(OSCOM::BASE_DIR . 'Work/Session');
 
         session_set_save_handler($this, true);
     }

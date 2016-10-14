@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\FileSystem;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class d_partner_news {
@@ -69,7 +70,7 @@
     function _getContent() {
       $result = null;
 
-      $filename = DIR_FS_CACHE . 'oscommerce_partners_news.cache';
+      $filename = OSCOM::BASE_DIR . 'Work/Cache/oscommerce_website-partner_news.cache';
 
       if ( is_file($filename) ) {
         $difference = floor((time() - filemtime($filename)) / 60);
@@ -116,7 +117,7 @@
         if ( !empty($result) ) {
           $result = json_decode($result, true);
 
-          if ( FileSystem::isWritable(DIR_FS_CACHE) ) {
+          if ( FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache') ) {
             file_put_contents($filename, serialize($result), LOCK_EX);
           }
         }

@@ -1,7 +1,7 @@
 <?php
 /**
  * osCommerce Online Merchant
- * 
+ *
  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
  * @license GNU General Public License; http://www.oscommerce.com/gpllicense.txt
  */
@@ -42,6 +42,7 @@
       } else {
         $Qcategories = $OSCOM_Db->prepare('select c.categories_id, c.parent_id, c.categories_image, cd.categories_name from :table_categories c, :table_categories_description cd where c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.parent_id, c.sort_order, cd.categories_name');
         $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcategories->setCache('categories-lang' . (int)$_SESSION['languages_id']);
         $Qcategories->execute();
 
         while ($Qcategories->fetch()) {
@@ -103,8 +104,8 @@
               $result .= $this->_buildBranch($category_id, $level+1);
             }
           }
-          
-          $result .= $this->child_end_string;          
+
+          $result .= $this->child_end_string;
         }
       }
 

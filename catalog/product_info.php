@@ -242,11 +242,7 @@
   </div>
 
 <?php
-    if ((USE_CACHE == 'true') && Registry::get('Session')->hasStarted() && (strlen(SID) < 1)) {
-      echo tep_cache_also_purchased(3600);
-    } else {
-      include('includes/modules/also_purchased_products.php');
-    }
+    include('includes/modules/also_purchased_products.php');
 
     if ( $Qproduct->valueInt('manufacturers_id') > 0 ) {
       $Qm = $OSCOM_Db->get('manufacturers', 'manufacturers_name', ['manufacturers_id' => $Qproduct->valueInt('manufacturers_id')]);

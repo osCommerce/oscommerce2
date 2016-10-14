@@ -33,7 +33,6 @@
   }
 
   require('includes/functions/general.php');
-  require('includes/functions/cache.php');
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
   require('includes/classes/currencies.php');

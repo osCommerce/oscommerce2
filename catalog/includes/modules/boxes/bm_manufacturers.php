@@ -41,7 +41,9 @@
 
       $data = '';
 
-      $Qmanufacturers = $OSCOM_Db->query('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+      $Qmanufacturers = $OSCOM_Db->prepare('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+      $Qmanufacturers->setCache('manufacturers');
+      $Qmanufacturers->execute();
 
       $manufacturers = $Qmanufacturers->fetchAll();
 
@@ -91,11 +93,7 @@
     function execute() {
       global $oscTemplate;
 
-      if ((USE_CACHE == 'true') && Registry::get('Session')->hasStarted() && (strlen(SID) < 1)) {
-        $output = tep_cache_manufacturers_box();
-      } else {
-        $output = $this->getData();
-      }
+      $output = $this->getData();
 
       ob_start();
       include('includes/modules/boxes/templates/manufacturers.php');

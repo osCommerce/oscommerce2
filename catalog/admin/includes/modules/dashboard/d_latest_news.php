@@ -38,9 +38,9 @@
 
       $rss = new lastRSS;
       $rss->items_limit = 5;
-      $rss->cache_dir = DIR_FS_CACHE;
+      $rss->cache_dir = OSCOM::BASE_DIR . 'Work/Cache/';
       $rss->cache_time = 86400;
-      $feed = $rss->get('http://feeds.feedburner.com/osCommerceNewsAndBlogs');
+      $feed = $rss->get('http://feeds.feedburner.com/osCommerceNewsAndBlogs', 'oscommerce_website-rss-news');
 
       $output = '<table class="table table-hover">
                    <thead>

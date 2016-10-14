@@ -25,7 +25,7 @@
   $minor_version = (int)$version[2];
   $inc_version = (int)$version[3];
 
-  if ($OSCOM_Cache->read('oscommerce_version_check', 360)) {
+  if ($OSCOM_Cache->read('core_version_check', 360)) {
     $releases = $OSCOM_Cache->getCache();
   } else {
     $releases = HTTP::getResponse([

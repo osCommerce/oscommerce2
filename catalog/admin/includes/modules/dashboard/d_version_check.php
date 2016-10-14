@@ -37,8 +37,8 @@
       $current_version = OSCOM::getVersion();
       $new_version = false;
 
-      if ($OSCOM_Cache->read('oscommerce_version_check')) {
-        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $OSCOM_Cache->getTime('oscommerce_version_check')));
+      if ($OSCOM_Cache->read('core_version_check')) {
+        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $OSCOM_Cache->getTime('core_version_check')));
 
         $releases = $OSCOM_Cache->getCache();
 

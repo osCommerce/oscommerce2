@@ -39,9 +39,6 @@ if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work')) {
     }
 }
 
-$OSCOM_Db->save('configuration', ['configuration_value' => OSCOM::BASE_DIR . 'Work/Cache/'], ['configuration_key' => 'DIR_FS_CACHE']);
-$OSCOM_Db->save('configuration', ['configuration_value' => OSCOM::BASE_DIR . 'Work/Session/'], ['configuration_key' => 'SESSION_WRITE_DIRECTORY']);
-
 foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
     unlink($c);
 }
