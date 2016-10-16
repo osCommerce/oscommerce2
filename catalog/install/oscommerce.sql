@@ -184,7 +184,7 @@ CREATE TABLE customers (
    customers_gender char(1),
    customers_firstname varchar(255) NOT NULL,
    customers_lastname varchar(255) NOT NULL,
-   customers_dob datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+   customers_dob datetime,
    customers_email_address varchar(255) NOT NULL,
    customers_default_address_id int,
    customers_telephone varchar(255) NOT NULL,
