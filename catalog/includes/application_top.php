@@ -81,7 +81,7 @@
     } else {
       $goto = $PHP_SELF;
 
-      if ( $_GET['action'] == 'buy_now') {
+      if ( ($_GET['action'] == 'buy_now') || ($_GET['action'] == 'remove_product') ) {
         $parameters = array('action', 'pid', 'products_id');
       } else {
         $parameters = array('action', 'pid');
