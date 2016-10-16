@@ -1,0 +1,9 @@
+products_options_values_to_products_options_id int not_null auto_increment
+products_options_id int not_null
+products_options_values_id int not_null
+--
+primary products_options_values_to_products_options_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

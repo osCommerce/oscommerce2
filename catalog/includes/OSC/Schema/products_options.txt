@@ -1,0 +1,9 @@
+products_options_id int default(0) not_null
+language_id int default(1) not_null
+products_options_name varchar(32) default('') not_null
+--
+primary products_options_id language_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

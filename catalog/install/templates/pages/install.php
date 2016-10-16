@@ -63,6 +63,12 @@ use OSC\OM\HTML;
         <span class="help-block">The name of the database to hold the data in.</span>
       </div>
 
+      <div class="form-group">
+        <label for="dbTablePrefix">Table Prefix</label>
+        <?php echo HTML::inputField('DB_TABLE_PREFIX', 'osc_', 'id="dbTablePrefix"'); ?>
+        <span class="help-block">Prefix all table names in the database with this value.</span>
+      </div>
+
       <p><?php echo HTML::button('Continue to Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success'); ?></p>
     </form>
   </div>
@@ -119,7 +125,8 @@ $(function() {
       server: $('#dbServer').val(),
       username: $('#username').val(),
       password: $('#password').val(),
-      name: $('#dbName').val()
+      name: $('#dbName').val(),
+      prefix: $('#dbTablePrefix').val()
     };
 
     var dbCheckUrl = 'rpc.php?action=dbCheck';
@@ -146,7 +153,7 @@ $(function() {
               } else {
                 $('#installModal').modal('hide');
 
-                $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. The following error had occured:<br><br><strong>%s</strong><br><br>Please verify the connection parameters and try again.</div>'.replace('%s', response.message));
+                $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. The following error had occured:<br><br><strong>%s</strong><br><br>Please verify the connection parameters and try again.</div>'.replace('%s', response2.message));
 
                 formSubmited = false;
               }

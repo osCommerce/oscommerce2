@@ -1,0 +1,12 @@
+customers_basket_attributes_id int not_null auto_increment
+customers_id int not_null
+products_id tinytext not_null
+products_options_id int not_null
+products_options_value_id int not_null
+--
+primary customers_basket_attributes_id
+idx_customers_basket_att_customers_id customers_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

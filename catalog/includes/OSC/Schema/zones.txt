@@ -1,0 +1,11 @@
+zone_id int not_null auto_increment
+zone_country_id int not_null
+zone_code varchar(32) not_null
+zone_name varchar(255) not_null
+--
+primary zone_id
+idx_zones_country_id zone_country_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

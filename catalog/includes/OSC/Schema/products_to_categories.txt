@@ -1,0 +1,8 @@
+products_id int not_null
+categories_id int not_null
+--
+primary products_id categories_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

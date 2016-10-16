@@ -1,0 +1,17 @@
+reviews_id int not_null auto_increment
+products_id int not_null
+customers_id int
+customers_name varchar(255) not_null
+reviews_rating int(1)
+date_added datetime
+last_modified datetime
+reviews_status tinyint(1) default(0) not_null
+reviews_read int(5) default(0) not_null
+--
+primary reviews_id
+idx_reviews_products_id products_id
+idx_reviews_customers_id customers_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

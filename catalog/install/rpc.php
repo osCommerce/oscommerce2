@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Db;
+  use OSC\OM\OSCOM;
 
   header('Cache-Control: no-cache, must-revalidate');
   header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
@@ -56,7 +57,23 @@
       case 'dbImport':
         try {
           $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '');
-          $OSCOM_Db->importSQL($dir_fs_www_root . '/oscommerce.sql');
+          $OSCOM_Db->setTablePrefix('');
+
+          $OSCOM_Db->exec('SET FOREIGN_KEY_CHECKS = 0');
+
+          foreach (glob(OSCOM::BASE_DIR . 'Schema/*.txt') as $f) {
+              $schema = $OSCOM_Db->getSchemaFromFile($f);
+
+              $sql = $OSCOM_Db->getSqlFromSchema($schema, $_POST['prefix']);
+
+              $OSCOM_Db->exec('DROP TABLE IF EXISTS ' . $_POST['prefix'] . basename($f, '.txt'));
+
+              $OSCOM_Db->exec($sql);
+          }
+
+          $OSCOM_Db->importSQL($dir_fs_www_root . '/oscommerce.sql', $_POST['prefix']);
+
+          $OSCOM_Db->exec('SET FOREIGN_KEY_CHECKS = 1');
 
           $result['status'] = '1';
           $result['message'] = 'success';

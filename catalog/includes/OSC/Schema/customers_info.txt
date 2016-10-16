@@ -1,0 +1,14 @@
+customers_info_id int not_null
+customers_info_date_of_last_logon datetime
+customers_info_number_of_logons int(5)
+customers_info_date_account_created datetime
+customers_info_date_account_last_modified datetime
+global_product_notifications int(1) default(0)
+password_reset_key char(40)
+password_reset_date datetime
+--
+primary customers_info_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

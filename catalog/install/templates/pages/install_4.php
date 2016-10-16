@@ -6,6 +6,7 @@ use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 
 $OSCOM_Db = Db::initialize($_POST['DB_SERVER'], $_POST['DB_SERVER_USERNAME'], $_POST['DB_SERVER_PASSWORD'], $_POST['DB_DATABASE']);
+$OSCOM_Db->setTablePrefix($_POST['DB_TABLE_PREFIX']);
 
 $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_NAME']], ['configuration_key' => 'STORE_NAME']);
 $OSCOM_Db->save('configuration', ['configuration_value' => $_POST['CFG_STORE_OWNER_NAME']], ['configuration_key' => 'STORE_OWNER']);
@@ -83,6 +84,7 @@ $dbServer = trim($_POST['DB_SERVER']);
 $dbUsername = trim($_POST['DB_SERVER_USERNAME']);
 $dbPassword = trim($_POST['DB_SERVER_PASSWORD']);
 $dbDatabase = trim($_POST['DB_DATABASE']);
+$dbTablePrefix = trim($_POST['DB_TABLE_PREFIX']);
 $timezone = trim($_POST['TIME_ZONE']);
 
 $file_contents = <<<ENDCFG
@@ -92,6 +94,7 @@ db_server = "{$dbServer}"
 db_server_username = "{$dbUsername}"
 db_server_password = "{$dbPassword}"
 db_database = "{$dbDatabase}"
+db_table_prefix = "{$dbTablePrefix}"
 store_sessions = "MySQL"
 time_zone = "{$timezone}"
 EOD;
