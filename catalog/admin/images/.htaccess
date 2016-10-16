@@ -1,3 +1,5 @@
+Options -Indexes
+
 <FilesMatch "\.(php([0-9]|s)?|s?p?html|cgi|pl|exe)$">
   <IfModule mod_authz_core.c>
     Require all denied
