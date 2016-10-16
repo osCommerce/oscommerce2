@@ -46,7 +46,7 @@ class Db extends \PDO
         }
 
         if (!isset($driver_options[\PDO::ATTR_ERRMODE])) {
-            $driver_options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_WARNING;
+            $driver_options[\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
         }
 
         if (!isset($driver_options[\PDO::ATTR_DEFAULT_FETCH_MODE])) {
