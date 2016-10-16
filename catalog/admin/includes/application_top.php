@@ -27,7 +27,6 @@
   OSCOM::initialize();
 
   require('includes/filenames.php');
-  require('includes/database_tables.php');
   require('includes/functions/general.php');
   require('includes/classes/logger.php');
   require('includes/classes/shopping_cart.php');

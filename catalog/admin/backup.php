@@ -124,7 +124,7 @@
           fputs($fp, $schema);
 
 // dump the data
-          if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) ) {
+          if ( ($table != OSCOM::getConfig('db_table_prefix') . 'sessions' ) && ($table != OSCOM::getConfig('db_table_prefix') . 'whos_online') ) {
             $Qrows = $OSCOM_Db->get($table, $table_list);
 
             while ($Qrows->fetch()) {
@@ -290,11 +290,11 @@
 
           session_write_close();
 
-          $OSCOM_Db->delete(TABLE_WHOS_ONLINE);
-          $OSCOM_Db->delete(TABLE_SESSIONS);
+          $OSCOM_Db->delete('whos_online');
+          $OSCOM_Db->delete('sessions');
 
-          $OSCOM_Db->delete(TABLE_CONFIGURATION, ['configuration_key' => 'DB_LAST_RESTORE']);
-          $OSCOM_Db->save(TABLE_CONFIGURATION, [
+          $OSCOM_Db->delete('configuration', ['configuration_key' => 'DB_LAST_RESTORE']);
+          $OSCOM_Db->save('configuration', [
             'configuration_title' => 'Last Database Restore',
             'configuration_key' => 'DB_LAST_RESTORE',
             'configuration_value' => $read_from,
