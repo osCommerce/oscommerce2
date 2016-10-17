@@ -4,3 +4,4 @@ catalog/includes/work/*
 catalog/admin/images/graphs/*.png
 catalog/includes/OSC/Apps/*
 catalog/public/Apps/*
+.idea/*
