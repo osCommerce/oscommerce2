@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
+  use OSC\OM\Registry;
+
   class upload {
     var $file, $filename, $destination, $permissions, $extensions, $tmp_filename, $message_location;
 
@@ -33,7 +36,7 @@
     }
 
     function parse() {
-      global $messageStack;
+      $OSCOM_MessageStack = Registry::get('MessageStack');
 
       $file = array();
 
@@ -49,13 +52,13 @@
                       'tmp_name' => $_FILES[$this->file]['tmp_name']);
       }
 
-      if ( tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
+      if ( isset($file['tmp_name']) && tep_not_null($file['tmp_name']) && ($file['tmp_name'] != 'none') && is_uploaded_file($file['tmp_name']) ) {
         if (sizeof($this->extensions) > 0) {
           if (!in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), $this->extensions)) {
             if ($this->message_location == 'direct') {
-              $messageStack->add(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+              $OSCOM_MessageStack->add(ERROR_FILETYPE_NOT_ALLOWED, 'error');
             } else {
-              $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
+              $OSCOM_MessageStack->add(ERROR_FILETYPE_NOT_ALLOWED, 'error');
             }
 
             return false;
@@ -69,9 +72,9 @@
         return $this->check_destination();
       } else {
         if ($this->message_location == 'direct') {
-          $messageStack->add(WARNING_NO_FILE_UPLOADED, 'warning');
+          $OSCOM_MessageStack->add(WARNING_NO_FILE_UPLOADED, 'warning');
         } else {
-          $messageStack->add_session(WARNING_NO_FILE_UPLOADED, 'warning');
+          $OSCOM_MessageStack->add(WARNING_NO_FILE_UPLOADED, 'warning');
         }
 
         return false;
@@ -79,7 +82,7 @@
     }
 
     function save() {
-      global $messageStack;
+      $OSCOM_MessageStack = Registry::get('MessageStack');
 
       if (substr($this->destination, -1) != '/') $this->destination .= '/';
 
@@ -87,17 +90,17 @@
         chmod($this->destination . $this->filename, $this->permissions);
 
         if ($this->message_location == 'direct') {
-          $messageStack->add(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
         } else {
-          $messageStack->add_session(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
+          $OSCOM_MessageStack->add(SUCCESS_FILE_SAVED_SUCCESSFULLY, 'success');
         }
 
         return true;
       } else {
         if ($this->message_location == 'direct') {
-          $messageStack->add(ERROR_FILE_NOT_SAVED, 'error');
+          $OSCOM_MessageStack->add(ERROR_FILE_NOT_SAVED, 'error');
         } else {
-          $messageStack->add_session(ERROR_FILE_NOT_SAVED, 'error');
+          $OSCOM_MessageStack->add(ERROR_FILE_NOT_SAVED, 'error');
         }
 
         return false;
@@ -137,20 +140,20 @@
     }
 
     function check_destination() {
-      global $messageStack;
+      $OSCOM_MessageStack = Registry::get('MessageStack');
 
-      if (!tep_is_writable($this->destination)) {
+      if (!FileSystem::isWritable($this->destination)) {
         if (is_dir($this->destination)) {
           if ($this->message_location == 'direct') {
-            $messageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
           } else {
-            $messageStack->add_session(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_NOT_WRITEABLE, $this->destination), 'error');
           }
         } else {
           if ($this->message_location == 'direct') {
-            $messageStack->add(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
           } else {
-            $messageStack->add_session(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
+            $OSCOM_MessageStack->add(sprintf(ERROR_DESTINATION_DOES_NOT_EXIST, $this->destination), 'error');
           }
         }
 

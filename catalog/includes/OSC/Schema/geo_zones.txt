@@ -1,0 +1,11 @@
+geo_zone_id int not_null auto_increment
+geo_zone_name varchar(32) not_null
+geo_zone_description varchar(255) not_null
+last_modified datetime
+date_added datetime not_null
+--
+primary geo_zone_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

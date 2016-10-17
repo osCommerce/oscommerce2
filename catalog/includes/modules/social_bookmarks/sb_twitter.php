@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,7 @@
     var $icon = 'twitter.png';
     var $enabled = false;
 
-    function sb_twitter() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_TWITTER_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_TWITTER_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_TWITTER_DESCRIPTION;
@@ -33,7 +34,7 @@
     }
 
     function getOutput() {
-      return '<a href="http://twitter.com/home?status=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '" target="_blank"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '" /></a>';
+      return '<a href="http://twitter.com/home?status=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '" target="_blank"><img src="' . OSCOM::linkImage('social_bookmarks/' . $this->icon) . '" border="0" title="' . HTML::outputProtected($this->public_title) . '" alt="' . HTML::outputProtected($this->public_title) . '" /></a>';
     }
 
     function isEnabled() {

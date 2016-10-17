@@ -19,7 +19,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
   if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
@@ -35,15 +35,14 @@
     }
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_confirmation.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo TITLE; ?></title>
-<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>">
-<link rel="stylesheet" type="text/css" href="stylesheet.css">
+<base href="<?= ($request_type == 'SSL') ? OSCOM::getConfig('https_server', 'Shop') . OSCOM::getConfig('https_path', 'Shop') : OSCOM::getConfig('http_server', 'Shop') . OSCOM::getConfig('http_path', 'Shop'); ?>">
 </head>
 <body>
 <form name="redirect" action="<?php echo $redirect_url; ?>" method="post" target="_top"><?php echo $hidden_params; ?>

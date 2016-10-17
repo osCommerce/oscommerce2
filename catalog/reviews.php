@@ -15,11 +15,11 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/reviews.php');
+  require('includes/languages/' . $_SESSION['language'] . '/reviews.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('reviews.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -43,66 +43,49 @@
       <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
     </div>
     <div class="col-sm-6">
-      <div class="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></div>
+      <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
       <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
     </div>
   </div>
-
-  <div class="clearfix"></div>
-
 <?php
     }
     ?>
-<div class="row">
+    <div class="contentText">
+      <div class="reviews">
 <?php
     while ($Qreviews->fetch()) {
-?>
-
-  <div class="col-sm-6 review">
-    <h4><?php echo '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id') . '&reviews_id=' . $Qreviews->valueInt('reviews_id')) . '">' . $Qreviews->value('products_name') . '</a>'; ?></h4>
-    <blockquote>
-      <p><span class="pull-left"><?php echo HTML::image(DIR_WS_IMAGES . $Qreviews->value('products_image'), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT); ?></span><?php echo $Qreviews->valueProtected('reviews_text') . ' ... '; ?></p>
-      <div class="clearfix"></div>
-      <footer>
-        <?php
-        $review_name = $Qreviews->valueProtected('customers_name');
-        echo sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a>'; ?>
-      </footer>
-    </blockquote>
-  </div>
-
-<?php
+      echo '<blockquote class="col-sm-6">';
+      echo '  <p><span class="pull-left">' . HTML::image(OSCOM::linkImage($Qreviews->value('products_image')), $Qreviews->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</span>' . $Qreviews->valueProtected('reviews_text') . ' ... </p><div class="clearfix"></div>';
+      $review_name = $Qreviews->valueProtected('customers_name');
+      echo '  <footer>' . sprintf(REVIEWS_TEXT_RATED, HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name) . '<a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreviews->valueInt('products_id')) . '"><span class="pull-right label label-info">' . REVIEWS_TEXT_READ_MORE . '</span></a></footer>';
+      echo '</blockquote>';
     }
     ?>
-</div>
-
-<?php
-    if ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3')) {
-?>
-
-  <div class="clearfix"></div>
-
-  <div class="row">
-    <div class="col-sm-6 pagenumber hidden-xs">
-      <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+      </div>
+      <div class="clearfix"></div>
     </div>
-    <div class="col-sm-6">
-      <div class="pull-right pagenav"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></div>
-      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
-    </div>
-  </div>
-
 <?php
-    }
   } else {
 ?>
 
-  <div class="contentText">
-    <div class="alert alert-info">
-      <?php echo TEXT_NO_REVIEWS; ?>
-    </div>
+  <div class="alert alert-info">
+    <?php echo TEXT_NO_REVIEWS; ?>
   </div>
 
+<?php
+  }
+
+  if (($Qreviews->getPageSetTotalRows() > 0) && ((PREV_NEXT_BAR_LOCATION == '2') || (PREV_NEXT_BAR_LOCATION == '3'))) {
+?>
+<div class="row">
+  <div class="col-sm-6 pagenumber hidden-xs">
+    <?php echo $Qreviews->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?>
+  </div>
+  <div class="col-sm-6">
+    <span class="pull-right pagenav"><ul class="pagination"><?php echo $Qreviews->getPageSetLinks(tep_get_all_get_params(array('page', 'info'))); ?></ul></span>
+    <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
+  </div>
+</div>
 <?php
   }
 ?>
@@ -110,6 +93,6 @@
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

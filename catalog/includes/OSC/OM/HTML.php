@@ -8,6 +8,10 @@
 
 namespace OSC\OM;
 
+use OSC\OM\HTML\Panel;
+use OSC\OM\OSCOM;
+use OSC\OM\Registry;
+
 class HTML
 {
     public static function output($string, $translate = null)
@@ -41,9 +45,9 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
-    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = true, $bootstrap_css = '')
+    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = false, $bootstrap_css = '')
     {
-        if ((empty($src) || ($src == DIR_WS_IMAGES)) && (IMAGE_REQUIRED == 'false')) {
+        if ((empty($src) || ($src == OSCOM::linkImage(''))) && (IMAGE_REQUIRED == 'false')) {
             return false;
         }
 
@@ -121,7 +125,7 @@ class HTML
             $form .= static::hiddenField('action', $flags['action']);
         }
 
-        if (($flags['session_id'] === true) && (session_status() === PHP_SESSION_ACTIVE) && defined('SID') && !empty(SID)) {
+        if (($flags['session_id'] === true) && Registry::get('Session')->hasStarted() && (strlen(SID) > 0) && !Registry::get('Session')->isForceCookies()) {
             $form .= static::hiddenField(session_name(), session_id());
         }
 
@@ -144,7 +148,7 @@ class HTML
             }
         }
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $field .= ' value="' . static::output($value) . '"';
         }
 
@@ -166,11 +170,16 @@ class HTML
         return static::inputField($name, $value, $parameters, 'password', false);
     }
 
+    public static function fileField($name, $parameters = null)
+    {
+        return static::inputField($name, null, $parameters, 'file', false);
+    }
+
     protected static function selectionField($name, $type, $value = '', $checked = false, $parameters = '')
     {
         $selection = '<input type="' . static::output($type) . '" name="' . static::output($name) . '"';
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $selection .= ' value="' . static::output($value) . '"';
         }
 
@@ -217,7 +226,7 @@ class HTML
             } elseif (isset($_POST[$name]) && is_string($_POST[$name])) {
                 $field .= static::outputProtected($_POST[$name]);
             }
-        } elseif (!empty($text)) {
+        } elseif (strlen($text) > 0) {
             $field .= static::outputProtected($text);
         }
 
@@ -297,7 +306,7 @@ class HTML
     {
         $field = '<input type="hidden" name="' . static::output($name) . '"';
 
-        if (!empty($value)) {
+        if (strlen($value) > 0) {
             $field .= ' value="' . static::output($value) . '"';
         } elseif ((isset($_GET[$name]) && is_string($_GET[$name])) || (isset($_POST[$name]) && is_string($_POST[$name]))) {
             if (isset($_GET[$name]) && is_string($_GET[$name])) {
@@ -318,8 +327,6 @@ class HTML
 
     public static function button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null)
     {
-        static $button_counter = 1;
-
         $types = ['submit', 'button', 'reset'];
 
         if (!isset($params['type'])) {
@@ -337,13 +344,13 @@ class HTML
         $button = '';
 
         if (($params['type'] == 'button') && isset($link)) {
-            $button .= '<a id="tdb' . $button_counter . '" href="' . $link . '"';
+            $button .= '<a href="' . $link . '"';
 
             if (isset($params['newwindow'])) {
                 $button .= ' target="_blank"';
             }
         } else {
-            $button .= '<button id="tdb' . $button_counter . '" type="' . static::output($params['type']) . '"';
+            $button .= '<button type="' . static::output($params['type']) . '"';
         }
 
         if (isset($params['params'])) {
@@ -353,7 +360,7 @@ class HTML
         $button .= ' class="btn ' . (isset($class) ? $class : 'btn-default') . '">';
 
         if (isset($icon) && !empty($icon)) {
-            $button .= '<span class="' . $icon . '"></span> ';
+            $button .= '<i class="' . $icon . '"></i> ';
         }
 
         $button .= $title;
@@ -363,8 +370,6 @@ class HTML
         } else {
             $button .= '</button>';
         }
-
-        $button_counter++;
 
         return $button;
     }
@@ -379,5 +384,10 @@ class HTML
         }
 
         return $stars;
+    }
+
+    public static function panel($heading = null, $body = null, $params = null)
+    {
+        return Panel::get($heading, $body, $params);
     }
 }

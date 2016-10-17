@@ -1,0 +1,13 @@
+customer_id int
+full_name varchar(255) not_null
+session_id varchar(128) not_null
+ip_address varchar(15) not_null
+time_entry varchar(14) not_null
+time_last_click varchar(14) not_null
+last_page_url text not_null
+--
+idx_whos_online_session_id session_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

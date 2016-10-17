@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_information() {
+    function __construct() {
       $this->title = MODULE_BOXES_INFORMATION_TITLE;
       $this->description = MODULE_BOXES_INFORMATION_DESCRIPTION;
 

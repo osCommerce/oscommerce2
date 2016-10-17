@@ -10,14 +10,6 @@
   Released under the GNU General Public License
 */
 
-  $cl_box_groups[] = array(
-    'heading' => BOX_HEADING_ORDERS,
-    'apps' => array(
-      array(
-        'code' => FILENAME_ORDERS,
-        'title' => BOX_ORDERS_ORDERS,
-        'link' => tep_href_link(FILENAME_ORDERS)
-      )
-    )
-  );
-?>
+use OSC\OM\OSCOM;
+
+$admin_menu['shop']['orders']['orders'] = OSCOM::link('orders.php');

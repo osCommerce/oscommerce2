@@ -20,13 +20,13 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_header_breadcrumb() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
       $this->title = MODULE_CONTENT_HEADER_BREADCRUMB_TITLE;
       $this->description = MODULE_CONTENT_HEADER_BREADCRUMB_DESCRIPTION;
-      if (defined('MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION')) $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
 
       if ( defined('MODULE_CONTENT_HEADER_BREADCRUMB_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_HEADER_BREADCRUMB_SORT_ORDER;
@@ -36,11 +36,11 @@
 
     function execute() {
       global $oscTemplate, $breadcrumb;
-      
+
       $content_width = (int)MODULE_CONTENT_HEADER_BREADCRUMB_CONTENT_WIDTH;
-      
+
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/breadcrumb.php');
+      include('includes/modules/content/' . $this->group . '/templates/breadcrumb.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

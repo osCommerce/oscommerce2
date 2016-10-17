@@ -149,6 +149,15 @@ class DbStatement extends \PDOStatement
         return $this->result;
     }
 
+    public function check()
+    {
+        if (!isset($this->result)) {
+            $this->fetch();
+        }
+
+        return $this->result !== false;
+    }
+
     public function toArray()
     {
         if (!isset($this->result)) {
@@ -292,11 +301,21 @@ class DbStatement extends \PDOStatement
 
         $number_of_pages = ceil($this->page_set_total_rows / $this->page_set_results_per_page);
 
-        if (!empty($parameters) && (substr($parameters, -1) != '&')) {
-            $parameters .= '&';
+        if (empty($parameters)) {
+            $parameters = '';
         }
 
-        $output = '<ul class="pagination">';
+        if (!empty($parameters)) {
+            parse_str($parameters, $p);
+
+            if (isset($p[$this->page_set_keyword])) {
+                unset($p[$this->page_set_keyword]);
+            }
+
+            $parameters = http_build_query($p) . '&';
+        }
+
+        $output = '<ul style="margin-top: 0;" class="pagination">';
 
 // previous button - not displayed on first page
         if ($this->page_set > 1) {

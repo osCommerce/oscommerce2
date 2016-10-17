@@ -10,34 +10,37 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class securityCheckExtended_mysql_utf8 {
     var $type = 'warning';
     var $has_doc = true;
 
     function securityCheckExtended_mysql_utf8() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended/mysql_utf8.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/mysql_utf8.php');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_TITLE;
     }
 
     function pass() {
-      $check_query = tep_db_query('show table status');
+      $OSCOM_Db = Registry::get('Db');
 
-      if ( tep_db_num_rows($check_query) > 0 ) {
-        while ( $check = tep_db_fetch_array($check_query) ) {
-          if ( isset($check['Collation']) && ($check['Collation'] != 'utf8_unicode_ci') ) {
+      $Qcheck = $OSCOM_Db->query('show table status');
+
+      if ($Qcheck->fetch() !== false) {
+        do {
+          if ($Qcheck->hasValue('Collation') && ($Qcheck->value('Collation') != 'utf8_unicode_ci')) {
             return false;
           }
-        }
+        } while ($Qcheck->fetch());
       }
 
       return true;
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
+      return '<a href="' . OSCOM::link('database_tables.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_MYSQL_UTF8_ERROR . '</a>';
     }
   }
 ?>

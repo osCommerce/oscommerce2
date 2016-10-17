@@ -1,0 +1,17 @@
+currencies_id int not_null auto_increment
+title varchar(32) not_null
+code char(3) not_null
+symbol_left varchar(12)
+symbol_right varchar(12)
+decimal_point char(1)
+thousands_point char(1)
+decimal_places char(1)
+value float(13,8)
+last_updated datetime
+--
+primary currencies_id
+idx_currencies_code code
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_cs_product_notifications() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -69,21 +69,14 @@
 
           while ($Qproducts->fetch()) {
             if ( !isset($products_displayed[$Qproducts->valueInt('products_id')]) ) {
-              $products_displayed[$Qproducts->valueInt('products_id')]  = '<div class="form-group">' .
-                                                                          '  <label class="control-label col-xs-3">' . $Qproducts->value('products_name') . '</label>' .
-                                                                          '  <div class="col-xs-9">' .
-                                                                          '    <div class="checkbox">' .
-                                                                          '      <label>' . HTML::checkboxField('notify[]', $Qproducts->valueInt('products_id')) . '&nbsp;</label>' .
-                                                                          '    </div>' .
-                                                                          '  </div>' .
-                                                                          '</div>';
+              $products_displayed[$Qproducts->valueInt('products_id')]  = '<div class="checkbox"><label>' . HTML::checkboxField('notify[]', $Qproducts->valueInt('products_id')) . ' ' . $Qproducts->value('products_name') . '</label></div>';
             }
           }
 
-          $products_notifications = implode('<br />', $products_displayed);
+          $products_notifications = implode('', $products_displayed);
 
           ob_start();
-          include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/product_notifications.php');
+          include('includes/modules/content/' . $this->group . '/templates/product_notifications.php');
           $template = ob_get_clean();
 
           $oscTemplate->addContent($template, $this->group);

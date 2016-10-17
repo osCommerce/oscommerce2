@@ -13,7 +13,7 @@
   class navigationHistory {
     var $path, $snapshot;
 
-    function navigationHistory() {
+    function __construct() {
       $this->reset();
     }
 
@@ -78,10 +78,10 @@
       global $PHP_SELF, $request_type;
 
       if (is_array($page)) {
-        $this->snapshot = array('page' => $page['page'],
-                                'mode' => $page['mode'],
-                                'get' => $this->filter_parameters($page['get']),
-                                'post' => $this->filter_parameters($page['post']));
+        $this->snapshot = array('page' => isset($page['page']) ? $page['page'] : $PHP_SELF,
+                                'mode' => isset($page['mode']) ? $page['mode'] : $request_type,
+                                'get' => isset($page['get']) ? $this->filter_parameters($page['get']) : array(),
+                                'post' => isset($page['post']) ? $this->filter_parameters($page['post']) : array());
       } else {
         $this->snapshot = array('page' => $PHP_SELF,
                                 'mode' => $request_type,

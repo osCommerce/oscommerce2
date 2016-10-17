@@ -22,5 +22,5 @@ define('ADDRESS_BOOK_TITLE', 'Address Book Entries');
 
 define('PRIMARY_ADDRESS', '(primary address)');
 
-define('TEXT_MAXIMUM_ENTRIES', '<font color="#ff0000"><strong>NOTE:</strong></font> A maximum of %s address book entries allowed.');
+define('TEXT_MAXIMUM_ENTRIES', '<span class="text-danger">NOTE:</span> A maximum of %s address book entries allowed.');
 ?>

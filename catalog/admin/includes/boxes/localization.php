@@ -10,23 +10,25 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   $cl_box_groups[] = array(
     'heading' => BOX_HEADING_LOCALIZATION,
     'apps' => array(
       array(
         'code' => FILENAME_CURRENCIES,
         'title' => BOX_LOCALIZATION_CURRENCIES,
-        'link' => tep_href_link(FILENAME_CURRENCIES)
+        'link' => OSCOM::link(FILENAME_CURRENCIES)
       ),
       array(
         'code' => FILENAME_LANGUAGES,
         'title' => BOX_LOCALIZATION_LANGUAGES,
-        'link' => tep_href_link(FILENAME_LANGUAGES)
+        'link' => OSCOM::link(FILENAME_LANGUAGES)
       ),
       array(
         'code' => FILENAME_ORDERS_STATUS,
         'title' => BOX_LOCALIZATION_ORDERS_STATUS,
-        'link' => tep_href_link(FILENAME_ORDERS_STATUS)
+        'link' => OSCOM::link(FILENAME_ORDERS_STATUS)
       )
     )
   );

@@ -17,15 +17,15 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book.php');
+  require('includes/languages/' . $_SESSION['language'] . '/address_book.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php', '', 'SSL'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -39,9 +39,7 @@
 ?>
 
 <div class="contentContainer">
-  <div class="page-header">
-    <h4><?php echo PRIMARY_ADDRESS_TITLE; ?></h4>
-  </div>
+  <h2><?php echo PRIMARY_ADDRESS_TITLE; ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
@@ -60,9 +58,7 @@
 
   <div class="clearfix"></div>
 
-  <div class="page-header">
-    <h4><?php echo ADDRESS_BOOK_TITLE; ?></h4>
-  </div>
+  <h2><?php echo ADDRESS_BOOK_TITLE; ?></h2>
 
   <div class="alert alert-warning"><?php echo sprintf(TEXT_MAXIMUM_ENTRIES, MAX_ADDRESS_BOOK_ENTRIES); ?></div>
 
@@ -81,7 +77,7 @@
           <div class="panel-body">
             <?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?>
           </div>
-          <div class="panel-footer text-center"><?php echo HTML::button(SMALL_IMAGE_BUTTON_EDIT, 'glyphicon glyphicon-file', OSCOM::link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-info btn-xs') . ' ' . HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'), 'SSL'), '', '', 'btn btn-danger btn-xs'); ?></div>
+          <div class="panel-footer text-center"><?php echo HTML::button(SMALL_IMAGE_BUTTON_EDIT, 'fa fa-file', OSCOM::link('address_book_process.php', 'edit=' . $Qab->valueInt('address_book_id'), 'SSL')) . ' ' . HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $Qab->valueInt('address_book_id'), 'SSL')); ?></div>
         </div>
       </div>
 <?php
@@ -91,22 +87,19 @@
 
   <div class="clearfix"></div>
 
-  <div class="row">
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
 <?php
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
-
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('address_book_process.php', '', 'SSL'), 'primary', null, 'btn-success'); ?></div>
-
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'fa fa-home', OSCOM::link('address_book_process.php', '', 'SSL'), 'primary'); ?></div>
 <?php
   }
 ?>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
   </div>
-
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

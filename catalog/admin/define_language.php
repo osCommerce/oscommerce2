@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   function tep_opendir($path) {
@@ -24,7 +28,7 @@
         if (!in_array($filename, $exclude_array)) {
           $file = array('name' => $path . $filename,
                         'is_dir' => is_dir($path . $filename),
-                        'writable' => tep_is_writable($path . $filename),
+                        'writable' => FileSystem::isWritable($path . $filename),
                         'size' => filesize($path . $filename),
                         'last_modified' => strftime(DATE_TIME_FORMAT, filemtime($path . $filename)));
 
@@ -42,7 +46,7 @@
     return $result;
   }
 
-  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $language;
+  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $_SESSION['language'];
 
   $languages_array = array();
   $languages = tep_get_languages();
@@ -54,13 +58,12 @@
                                'text' => $languages[$i]['name']);
   }
 
-  if (!$lng_exists) $_GET['lngdir'] = $language;
+  if (!$lng_exists) $_GET['lngdir'] = $_SESSION['language'];
 
   if (isset($_GET['filename'])) {
-    $file_edit = realpath(DIR_FS_CATALOG_LANGUAGES . $_GET['filename']);
-
-    if (substr($file_edit, 0, strlen(DIR_FS_CATALOG_LANGUAGES)) != DIR_FS_CATALOG_LANGUAGES) {
-      tep_redirect(tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']));
+    $file_edit = realpath(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['filename']);
+    if (realpath(substr($file_edit, 0, strlen(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/'))) != realpath(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/')) {
+      OSCOM::redirect(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']);
     }
   }
 
@@ -70,72 +73,64 @@
     switch ($action) {
       case 'save':
         if (isset($_GET['lngdir']) && isset($_GET['filename'])) {
-          $file = DIR_FS_CATALOG_LANGUAGES . $_GET['filename'];
+          $file = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['filename'];
 
-          if (file_exists($file) && tep_is_writable($file)) {
+          if (is_file($file) && FileSystem::isWritable($file)) {
             $new_file = fopen($file, 'w');
             $file_contents = stripslashes($_POST['file_contents']);
             fwrite($new_file, $file_contents, strlen($file_contents));
             fclose($new_file);
           }
 
-          tep_redirect(tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']));
+          OSCOM::redirect(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir']);
         }
         break;
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr><?php echo tep_draw_form('lng', FILENAME_DEFINE_LANGUAGE, '', 'get'); ?>
+          <tr><?php echo HTML::form('lng', OSCOM::link(FILENAME_DEFINE_LANGUAGE), 'get', null, ['session_id' => true]); ?>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', '1', HEADING_IMAGE_HEIGHT); ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_pull_down_menu('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
-          <?php echo tep_hide_session_id(); ?></form></tr>
+            <td class="pageHeading" align="right"><?php echo HTML::selectField('lngdir', $languages_array, $_GET['lngdir'], 'onchange="this.form.submit();"'); ?></td>
+          </form></tr>
         </table></td>
       </tr>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
 <?php
   if (isset($_GET['lngdir']) && isset($_GET['filename'])) {
-    $file = DIR_FS_CATALOG_LANGUAGES . $_GET['filename'];
+    $file = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['filename'];
 
-    if (file_exists($file)) {
+    if (is_file($file)) {
       $file_array = file($file);
       $contents = implode('', $file_array);
 
       $file_writeable = true;
-      if (!tep_is_writable($file)) {
+      if (!FileSystem::isWritable($file)) {
         $file_writeable = false;
-        $messageStack->reset();
-        $messageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error');
-        echo $messageStack->output();
+        $OSCOM_MessageStack->add(sprintf(ERROR_FILE_NOT_WRITEABLE, $file), 'error', 'defineLanguage');
+        echo $OSCOM_MessageStack->get('defineLanguage');
       }
 
 ?>
-          <tr><?php echo tep_draw_form('language', FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $_GET['filename'] . '&action=save'); ?>
+          <tr><?php echo HTML::form('language', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $_GET['filename'] . '&action=save')); ?>
             <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
               <tr>
                 <td class="main"><strong><?php echo $_GET['filename']; ?></strong></td>
               </tr>
               <tr>
-                <td class="main"><?php echo tep_draw_textarea_field('file_contents', 'soft', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
+                <td class="main"><?php echo HTML::textareaField('file_contents', '80', '25', $contents, (($file_writeable) ? '' : 'readonly') . ' style="width: 100%;"'); ?></td>
               </tr>
               <tr>
-                <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-              </tr>
-              <tr>
-                <td class="smallText" align="right"><?php if ($file_writeable == true) { echo tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } else { echo tep_draw_button(IMAGE_BACK, 'arrow-1-w', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } ?></td>
+                <td class="smallText" align="right"><?php if ($file_writeable == true) { echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } else { echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); } ?></td>
               </tr>
             </table></td>
           </form></tr>
-          <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
           <tr>
             <td class="main"><?php echo TEXT_EDIT_NOTE; ?></td>
           </tr>
@@ -146,10 +141,7 @@
             <td class="main"><strong><?php echo TEXT_FILE_DOES_NOT_EXIST; ?></strong></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td><?php echo tep_draw_button(IMAGE_BACK, 'arrow-1-w', tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); ?></td>
+            <td><?php echo HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'])); ?></td>
           </tr>
 <?php
     }
@@ -165,18 +157,18 @@
                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_LAST_MODIFIED; ?></td>
               </tr>
               <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-                <td class="dataTableContent"><a href="<?php echo tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
-                <td class="dataTableContent" align="center"><?php echo tep_image(DIR_WS_IMAGES . 'icons/' . ((tep_is_writable(DIR_FS_CATALOG_LANGUAGES . $filename) == true) ? 'tick.gif' : 'cross.gif')); ?></td>
-                <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(DIR_FS_CATALOG_LANGUAGES . $filename)); ?></td>
+                <td class="dataTableContent"><a href="<?php echo OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename); ?>"><strong><?php echo $filename; ?></strong></a></td>
+                <td class="dataTableContent" align="center"><?php echo HTML::image(OSCOM::linkImage('icons/' . (FileSystem::isWritable(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $filename) ? 'tick.gif' : 'cross.gif'))); ?></td>
+                <td class="dataTableContent" align="right"><?php echo strftime(DATE_TIME_FORMAT, filemtime(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $filename)); ?></td>
               </tr>
 <?php
-    foreach (tep_opendir(DIR_FS_CATALOG_LANGUAGES . $_GET['lngdir']) as $file) {
+    foreach (tep_opendir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['lngdir']) as $file) {
       if (substr($file['name'], strrpos($file['name'], '.')) == $file_extension) {
-        $filename = substr($file['name'], strlen(DIR_FS_CATALOG_LANGUAGES));
+        $filename = substr($file['name'], strlen(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/'));
 
         echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' .
-             '                <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename) . '">' . substr($filename, strlen($_GET['lngdir'] . '/')) . '</a></td>' .
-             '                <td class="dataTableContent" align="center">' . tep_image(DIR_WS_IMAGES . 'icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif')) . '</td>' .
+             '                <td class="dataTableContent"><a href="' . OSCOM::link(FILENAME_DEFINE_LANGUAGE, 'lngdir=' . $_GET['lngdir'] . '&filename=' . $filename) . '">' . substr($filename, strlen($_GET['lngdir'] . '/')) . '</a></td>' .
+             '                <td class="dataTableContent" align="center">' . HTML::image(OSCOM::linkImage('icons/' . (($file['writable'] == true) ? 'tick.gif' : 'cross.gif'))) . '</td>' .
              '                <td class="dataTableContent" align="right">' . $file['last_modified'] . '</td>' .
              '              </tr>';
       }
@@ -193,6 +185,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
+  require('includes/application_bottom.php');
 ?>

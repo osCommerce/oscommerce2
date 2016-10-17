@@ -11,13 +11,23 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
-  $check_query = tep_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_CONTENT_INSTALLED' limit 1");
-  if (tep_db_num_rows($check_query) < 1) {
-    tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Installed Modules', 'MODULE_CONTENT_INSTALLED', '', 'This is automatically updated. No need to edit.', '6', '0', now())");
+  $Qcheck = $OSCOM_Db->get('configuration', 'configuration_value', ['configuration_key' => 'MODULE_CONTENT_INSTALLED'], null, 1);
+  if ($Qcheck->fetch() === false) {
+    $OSCOM_Db->save('configuration', [
+      'configuration_title' => 'Installed Modules',
+      'configuration_key' => 'MODULE_CONTENT_INSTALLED',
+      'configuration_value' => '',
+      'configuration_description' => 'This is automatically updated. No need to edit.',
+      'configuration_group_id' => '6',
+      'sort_order' => '0',
+      'date_added' => 'now()'
+    ]);
     define('MODULE_CONTENT_INSTALLED', '');
   }
 
@@ -26,21 +36,21 @@
 
   $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
 
-  if ($maindir = @dir(DIR_FS_CATALOG_MODULES . 'content/')) {
+  if ($maindir = @dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/')) {
     while ($group = $maindir->read()) {
-      if ( ($group != '.') && ($group != '..') && is_dir(DIR_FS_CATALOG_MODULES . 'content/' . $group)) {
-        if ($dir = @dir(DIR_FS_CATALOG_MODULES . 'content/' . $group)) {
+      if ( ($group != '.') && ($group != '..') && is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group)) {
+        if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group)) {
           while ($file = $dir->read()) {
-            if (!is_dir(DIR_FS_CATALOG_MODULES . 'content/' . $group . '/' . $file)) {
+            if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group . '/' . $file)) {
               if (substr($file, strrpos($file, '.')) == $file_extension) {
                 $class = substr($file, 0, strrpos($file, '.'));
 
                 if (!tep_class_exists($class)) {
-                  if ( file_exists(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/content/' . $group . '/' . $file) ) {
-                    include(DIR_FS_CATALOG_LANGUAGES . $language . '/modules/content/' . $group . '/' . $file);
+                  if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file) ) {
+                    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file);
                   }
 
-                  include(DIR_FS_CATALOG_MODULES . 'content/' . $group . '/' . $file);
+                  include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group . '/' . $file);
                 }
 
                 if (tep_class_exists($class)) {
@@ -118,17 +128,21 @@
         foreach ( $modules['installed'] as $m ) {
           if ( $m['code'] == $_GET['module'] ) {
             foreach ($_POST['configuration'] as $key => $value) {
-              $key = tep_db_prepare_input($key);
-              $value = tep_db_prepare_input($value);
+              $key = HTML::sanitize($key);
+              $value = HTML::sanitize($value);
 
-              tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . tep_db_input($value) . "' where configuration_key = '" . tep_db_input($key) . "'");
+              $OSCOM_Db->save('configuration', [
+                'configuration_value' => $value
+              ], [
+                'configuration_key' => $key
+              ]);
             }
 
             break;
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $_GET['module']));
+        OSCOM::redirect('modules_content.php', 'module=' . $_GET['module']);
 
         break;
 
@@ -149,11 +163,11 @@
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
-            tep_redirect(tep_href_link('modules_content.php', 'module=' . $code . '&action=edit'));
+            OSCOM::redirect('modules_content.php', 'module=' . $code . '&action=edit');
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'action=list_new&module=' . $code));
+        OSCOM::redirect('modules_content.php', 'action=list_new&module=' . $code);
 
         break;
 
@@ -182,17 +196,17 @@
 
             Registry::get('Db')->save('configuration', ['configuration_value' => implode(';', $modules_installed), 'last_modified' => 'now()'], ['configuration_key' => 'MODULE_CONTENT_INSTALLED']);
 
-            tep_redirect(tep_href_link('modules_content.php'));
+            OSCOM::redirect('modules_content.php');
           }
         }
 
-        tep_redirect(tep_href_link('modules_content.php', 'module=' . $code));
+        OSCOM::redirect('modules_content.php', 'module=' . $code);
 
         break;
     }
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -200,12 +214,11 @@
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
 <?php
   if ($action == 'list_new') {
-    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_BACK, 'triangle-1-w', tep_href_link('modules_content.php')) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link('modules_content.php')) . '</td>';
   } else {
-    echo '            <td class="smallText" align="right">' . tep_draw_button(IMAGE_MODULE_INSTALL . ' (' . count($modules['new']) . ')', 'plus', tep_href_link('modules_content.php', 'action=list_new')) . '</td>';
+    echo '            <td class="smallText" align="right">' . HTML::button(IMAGE_MODULE_INSTALL . ' (' . count($modules['new']) . ')', 'fa fa-plus', OSCOM::link('modules_content.php', 'action=list_new')) . '</td>';
   }
 ?>
           </tr>
@@ -248,12 +261,12 @@
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'action=list_new&module=' . addslashes($module->code)) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link('modules_content.php', 'action=list_new&module=' . addslashes($module->code)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'action=list_new&module=' . $module->code) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -290,16 +303,25 @@
                              'keys' => array());
 
         foreach ($module->keys() as $key) {
-          $key = tep_db_prepare_input($key);
+          $key = HTML::sanitize($key);
 
-          $key_value_query = tep_db_query("select configuration_title, configuration_value, configuration_description, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . tep_db_input($key) . "'");
-          $key_value = tep_db_fetch_array($key_value_query);
+          $Qkeys = $OSCOM_Db->get('configuration', [
+            'configuration_title',
+            'configuration_value',
+            'configuration_description',
+            'use_function',
+            'set_function'
+          ], [
+            'configuration_key' => $key
+          ]);
 
-          $module_info['keys'][$key] = array('title' => $key_value['configuration_title'],
-                                             'value' => $key_value['configuration_value'],
-                                             'description' => $key_value['configuration_description'],
-                                             'use_function' => $key_value['use_function'],
-                                             'set_function' => $key_value['set_function']);
+          $module_info['keys'][$key] = [
+            'title' => $Qkeys->value('configuration_title'),
+            'value' => $Qkeys->value('configuration_value'),
+            'description' => $Qkeys->value('configuration_description'),
+            'use_function' => $Qkeys->value('use_function'),
+            'set_function' => $Qkeys->value('set_function')
+          ];
         }
 
         $mInfo = new \ArrayObject($module_info, \ArrayObject::ARRAY_AS_PROPS);
@@ -308,13 +330,13 @@
       if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) {
         echo '              <tr id="defaultSelected" class="dataTableRowSelected" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">' . "\n";
       } else {
-        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . tep_href_link('modules_content.php', 'module=' . addslashes($module->code)) . '\'">' . "\n";
+        echo '              <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" onclick="document.location.href=\'' . OSCOM::link('modules_content.php', 'module=' . addslashes($module->code)) . '\'">' . "\n";
       }
 ?>
                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                 <td class="dataTableContent"><?php echo $module->group; ?></td>
                 <td class="dataTableContent"><?php echo $module->sort_order; ?></td>
-                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo tep_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . tep_href_link('modules_content.php', 'module=' . $module->code) . '">' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($module->code == $mInfo->code) ) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link('modules_content.php', 'module=' . $module->code) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
     }
@@ -323,7 +345,7 @@
 <?php
   }
 ?>
-            <p class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . DIR_FS_CATALOG_MODULES . 'content/'; ?></p>
+            <p class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' ' . OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/'; ?></p>
             </td>
 <?php
   $heading = array();
@@ -339,7 +361,7 @@
         if ($value['set_function']) {
           eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
         } else {
-          $keys .= tep_draw_input_field('configuration[' . $key . ']', $value['value']);
+          $keys .= HTML::inputField('configuration[' . $key . ']', $value['value']);
         }
 
         $keys .= '<br /><br />';
@@ -349,9 +371,9 @@
 
       $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
-      $contents = array('form' => tep_draw_form('modules', 'modules_content.php', 'module=' . $mInfo->code . '&action=save'));
+      $contents = array('form' => HTML::form('modules', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=save')));
       $contents[] = array('text' => $keys);
-      $contents[] = array('align' => 'center', 'text' => '<br />' . tep_draw_button(IMAGE_SAVE, 'disk', null, 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link('modules_content.php', 'module=' . $mInfo->code)));
+      $contents[] = array('align' => 'center', 'text' => '<br />' . HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link('modules_content.php', 'module=' . $mInfo->code)));
 
       break;
 
@@ -360,14 +382,14 @@
         $heading[] = array('text' => '<strong>' . $mInfo->title . '</strong>');
 
         if ($action == 'list_new') {
-          $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_MODULE_INSTALL, 'plus', tep_href_link('modules_content.php', 'module=' . $mInfo->code . '&action=install')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_MODULE_INSTALL, 'fa fa-plus', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=install')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-            $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
           }
 
           if (isset($mInfo->api_version)) {
-            $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
           }
 
           $contents[] = array('text' => '<br />' . $mInfo->description);
@@ -384,7 +406,7 @@
                 $class_method = explode('->', $use_function);
 
                 if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) {
-                  include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                  include('includes/classes/' . $class_method[0] . '.php');
                   ${$class_method[0]} = new $class_method[0]();
                 }
 
@@ -401,14 +423,14 @@
 
           $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
 
-          $contents[] = array('align' => 'center', 'text' => tep_draw_button(IMAGE_EDIT, 'document', tep_href_link('modules_content.php', 'module=' . $mInfo->code . '&action=edit')) . tep_draw_button(IMAGE_MODULE_REMOVE, 'minus', tep_href_link('modules_content.php', 'module=' . $mInfo->code . '&action=remove')));
+          $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=edit')) . HTML::button(IMAGE_MODULE_REMOVE, 'fa fa-minus', OSCOM::link('modules_content.php', 'module=' . $mInfo->code . '&action=remove')));
 
           if (isset($mInfo->signature) && (list($scode, $smodule, $sversion, $soscversion) = explode('|', $mInfo->signature))) {
-            $contents[] = array('text' => '<br />' . tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
+            $contents[] = array('text' => '<br />' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_VERSION . '</strong> ' . $sversion . ' (<a href="http://sig.oscommerce.com/' . $mInfo->signature . '" target="_blank">' . TEXT_INFO_ONLINE_STATUS . '</a>)');
           }
 
           if (isset($mInfo->api_version)) {
-            $contents[] = array('text' => tep_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
+            $contents[] = array('text' => HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '&nbsp;<strong>' . TEXT_INFO_API_VERSION . '</strong> ' . $mInfo->api_version);
           }
 
           $contents[] = array('text' => '<br />' . $mInfo->description);
@@ -434,6 +456,6 @@
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
+  require('includes/application_bottom.php');
 ?>

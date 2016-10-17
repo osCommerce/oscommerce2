@@ -20,7 +20,7 @@
       }
 
       if (!class_exists('PasswordHash')) {
-        include(DIR_WS_CLASSES . 'passwordhash.php');
+        include('includes/classes/passwordhash.php');
       }
 
       $hasher = new PasswordHash(10, true);
@@ -54,7 +54,7 @@
 // password.
   function tep_encrypt_password($plain) {
     if (!class_exists('PasswordHash')) {
-      include(DIR_WS_CLASSES . 'passwordhash.php');
+      include('includes/classes/passwordhash.php');
     }
 
     $hasher = new PasswordHash(10, true);

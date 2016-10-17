@@ -15,34 +15,26 @@
 
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
-  define('OSCOM_BASE_DIR', __DIR__ . '/');
+  define('OSCOM_BASE_DIR', __DIR__ . '/OSC/');
 
 // set the level of error reporting
-  error_reporting(E_ALL | E_STRICT);
-  ini_set('display_errors', true); // TODO remove on release
+  error_reporting(E_ALL & ~E_DEPRECATED);
 
-// load server configuration parameters
-  if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
-  } else {
-    include('includes/configure.php');
-  }
+  require(OSCOM_BASE_DIR . 'OM/OSCOM.php');
+  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  if (DB_SERVER == '') {
+  OSCOM::initialize();
+
+  if (!OSCOM::configExists('db_server') || (strlen(OSCOM::getConfig('db_server')) < 1)) {
     if (is_dir('install')) {
       header('Location: install/index.php');
       exit;
     }
   }
 
-  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
-  spl_autoload_register('OSC\OM\OSCOM::autoload');
-
   require('includes/functions/general.php');
-  require('includes/functions/cache.php');
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
-  require('includes/functions/sessions.php');
   require('includes/classes/currencies.php');
   require('includes/classes/mime.php');
   require('includes/classes/email.php');
@@ -59,8 +51,13 @@
   require('includes/classes/category_tree.php');
   require('includes/classes/breadcrumb.php');
 
-  OSCOM::initialize();
+  OSCOM::loadSite('Shop');
+
   $OSCOM_Db = Registry::get('Db');
+
+  Registry::get('Hooks')->watch('Session', 'Recreated', 'execute', function($parameters) {
+    tep_whos_online_update_session_id($parameters['old_id'], session_id());
+  });
 
 // if gzip_compression is enabled, start to buffer the output
   if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
@@ -74,7 +71,7 @@
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( session_status() !== PHP_SESSION_ACTIVE ) {
+    if ( Registry::get('Session')->hasStarted() === false ) {
       OSCOM::redirect('cookie_usage.php');
     }
 
@@ -84,7 +81,7 @@
     } else {
       $goto = $PHP_SELF;
 
-      if ( $_GET['action'] == 'buy_now') {
+      if ( ($_GET['action'] == 'buy_now') || ($_GET['action'] == 'remove_product') ) {
         $parameters = array('action', 'pid', 'products_id');
       } else {
         $parameters = array('action', 'pid');
@@ -148,7 +145,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
@@ -161,7 +158,7 @@
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php', '', 'SSL');
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {

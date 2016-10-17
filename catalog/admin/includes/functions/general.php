@@ -10,40 +10,10 @@
   Released under the GNU General Public License
 */
 
-////
-// Get the installed version number
-  function tep_get_version() {
-    static $v;
-
-    if (!isset($v)) {
-      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
-    }
-
-    return $v;
-  }
-
-////
-// Redirect to another page or site
-  function tep_redirect($url) {
-    global $logger;
-
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
-      tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'SSL', false));
-    }
-
-    if ( strpos($url, '&amp;') !== false ) {
-      $url = str_replace('&amp;', '&', $url);
-    }
-
-    header('Location: ' . $url);
-
-    if (STORE_PAGE_PARSE_TIME == 'true') {
-      if (!is_object($logger)) $logger = new logger;
-      $logger->timer_stop();
-    }
-
-    exit;
-  }
+  use OSC\OM\Cache;
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
 ////
 // Parse the data used in the html tags to ensure the tags will not break
@@ -51,37 +21,21 @@
     return strtr(trim($data), $parse);
   }
 
-  function tep_output_string($string, $translate = false, $protected = false) {
-    if ($protected == true) {
-      return htmlspecialchars($string);
-    } else {
-      if ($translate == false) {
-        return tep_parse_input_field_data($string, array('"' => '&quot;'));
-      } else {
-        return tep_parse_input_field_data($string, $translate);
-      }
-    }
-  }
-
-  function tep_output_string_protected($string) {
-    return tep_output_string($string, false, true);
-  }
-
-  function tep_sanitize_string($string) {
-    $patterns = array ('/ +/','/[<>]/');
-    $replace = array (' ', '_');
-    return preg_replace($patterns, $replace, trim($string));
-  }
-
   function tep_customers_name($customers_id) {
-    $customers = tep_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . (int)$customers_id . "'");
-    $customers_values = tep_db_fetch_array($customers);
+    $Qcustomer = Registry::get('Db')->get('customers', [
+      'customers_firstname',
+      'customers_lastname'
+    ], [
+      'customers_id' => (int)$customers_id
+    ]);
 
-    return $customers_values['customers_firstname'] . ' ' . $customers_values['customers_lastname'];
+    return $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname');
   }
 
   function tep_get_path($current_category_id = '') {
     global $cPath_array;
+
+    $OSCOM_Db = Registry::get('Db');
 
     if ($current_category_id == '') {
       $cPath_new = implode('_', $cPath_array);
@@ -90,13 +44,12 @@
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
-        $last_category_query = tep_db_query("select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$cPath_array[(sizeof($cPath_array)-1)] . "'");
-        $last_category = tep_db_fetch_array($last_category_query);
 
-        $current_category_query = tep_db_query("select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$current_category_id . "'");
-        $current_category = tep_db_fetch_array($current_category_query);
+        $Qlast = $OSCOM_Db->get('categories', 'parent_id', ['categories_id' => (int)$cPath_array[(sizeof($cPath_array)-1)]]);
 
-        if ($last_category['parent_id'] == $current_category['parent_id']) {
+        $Qcurrent = $OSCOM_Db->get('categories', 'parent_id', ['categories_id' => (int)$current_category_id]);
+
+        if ($Qlast->valueInt('parent_id') === $Qcurrent->valueInt('parent_id')) {
           for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i++) {
             $cPath_new .= '_' . $cPath_array[$i];
           }
@@ -119,12 +72,18 @@
 
   function tep_get_all_get_params($exclude_array = '') {
 
-    if ($exclude_array == '') $exclude_array = array();
+    if ($exclude_array == '') {
+      $exclude_array = array();
+    } elseif (is_string($exclude_array)) {
+      $exclude_array = [
+        $exclude_array
+      ];
+    }
 
     $get_url = '';
 
     foreach ( $_GET as $key => $value ) {
-      if (($key != tep_session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
+      if (($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array))) $get_url .= $key . '=' . $value . '&';
     }
 
     return $get_url;
@@ -179,28 +138,50 @@
   }
 
   function tep_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
-    global $languages_id;
+    $OSCOM_Db = Registry::get('Db');
 
     if (!is_array($category_tree_array)) $category_tree_array = array();
     if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => TEXT_TOP);
 
     if ($include_itself) {
-      $category_query = tep_db_query("select cd.categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " cd where cd.language_id = '" . (int)$languages_id . "' and cd.categories_id = '" . (int)$parent_id . "'");
-      $category = tep_db_fetch_array($category_query);
-      $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
+      $Qcategory = $OSCOM_Db->get('categories_description', 'cd.categories_name', ['cd.language_id' => (int)$_SESSION['languages_id'], 'cd.categories_id' => (int)$parent_id]);
+
+      $category_tree_array[] = [
+        'id' => $parent_id,
+        'text' => $Qcategory->value('categories_name')
+      ];
     }
 
-    $categories_query = tep_db_query("select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "' and c.parent_id = '" . (int)$parent_id . "' order by c.sort_order, cd.categories_name");
-    while ($categories = tep_db_fetch_array($categories_query)) {
-      if ($exclude != $categories['categories_id']) $category_tree_array[] = array('id' => $categories['categories_id'], 'text' => $spacing . $categories['categories_name']);
-      $category_tree_array = tep_get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
+    $Qcategories = $OSCOM_Db->get([
+      'categories c',
+      'categories_description cd'
+    ], [
+      'c.categories_id',
+      'cd.categories_name',
+      'c.parent_id'
+    ], [
+      'c.categories_id' => [
+        'rel' => 'cd.categories_id'
+      ],
+      'cd.language_id' => (int)$_SESSION['languages_id'],
+      'c.parent_id' => (int)$parent_id
+    ], [
+      'c.sort_order',
+      'cd.categories_name'
+    ]);
+
+    while ($Qcategories->fetch()) {
+      if ($exclude != $Qcategories->valueInt('categories_id')) $category_tree_array[] = array('id' => $Qcategories->valueInt('categories_id'), 'text' => $spacing . $Qcategories->value('categories_name'));
+      $category_tree_array = tep_get_category_tree($Qcategories->valueInt('categories_id'), $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array);
     }
 
     return $category_tree_array;
   }
 
   function tep_draw_products_pull_down($name, $parameters = '', $exclude = '') {
-    global $currencies, $languages_id;
+    global $currencies;
+
+    $OSCOM_Db = Registry::get('Db');
 
     if ($exclude == '') {
       $exclude = array();
@@ -214,10 +195,23 @@
 
     $select_string .= '>';
 
-    $products_query = tep_db_query("select p.products_id, pd.products_name, p.products_price from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where p.products_id = pd.products_id and pd.language_id = '" . (int)$languages_id . "' order by products_name");
-    while ($products = tep_db_fetch_array($products_query)) {
-      if (!in_array($products['products_id'], $exclude)) {
-        $select_string .= '<option value="' . $products['products_id'] . '">' . $products['products_name'] . ' (' . $currencies->format($products['products_price']) . ')</option>';
+    $Qproducts = $OSCOM_Db->get([
+      'products p',
+      'products_description pd'
+    ], [
+      'p.products_id',
+      'pd.products_name',
+      'p.products_price'
+    ], [
+      'p.products_id' => [
+        'rel' => 'pd.products_id'
+      ],
+      'pd.language_id' => (int)$_SESSION['languages_id']
+    ], 'products_name');
+
+    while ($Qproducts->fetch()) {
+      if (!in_array($Qproducts->valueInt('products_id'), $exclude)) {
+        $select_string .= '<option value="' . $Qproducts->valueInt('products_id') . '">' . $Qproducts->value('products_name') . ' (' . $currencies->format($Qproducts->value('products_price')) . ')</option>';
       }
     }
 
@@ -245,29 +239,21 @@
 
   }
 
-
-
   function tep_options_name($options_id) {
-    global $languages_id;
+    $Qoptions = Registry::get('Db')->get('products_options', 'products_options_name', ['products_options_id' => (int)$options_id, 'language_id' => (int)$_SESSION['languages_id']]);
 
-    $options = tep_db_query("select products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id = '" . (int)$options_id . "' and language_id = '" . (int)$languages_id . "'");
-    $options_values = tep_db_fetch_array($options);
-
-    return $options_values['products_options_name'];
+    return $Qoptions->value('products_options_name');
   }
 
   function tep_values_name($values_id) {
-    global $languages_id;
+    $Qvalues = Registry::get('Db')->get('products_options_values', 'products_options_values_name', ['products_options_values_id' => (int)$values_id, 'language_id' => (int)$_SESSION['languages_id']]);
 
-    $values = tep_db_query("select products_options_values_name from " . TABLE_PRODUCTS_OPTIONS_VALUES . " where products_options_values_id = '" . (int)$values_id . "' and language_id = '" . (int)$languages_id . "'");
-    $values_values = tep_db_fetch_array($values);
-
-    return $values_values['products_options_values_name'];
+    return $Qvalues->value('products_options_values_name');
   }
 
   function tep_info_image($image, $alt, $width = '', $height = '') {
-    if (tep_not_null($image) && (file_exists(DIR_FS_CATALOG_IMAGES . $image)) ) {
-      $image = tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . $image, $alt, $width, $height);
+    if (tep_not_null($image) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $image)) {
+      $image = HTML::image(OSCOM::linkImage('Shop/' . $image), $alt, $width, $height);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -296,24 +282,23 @@
   }
 
   function tep_get_country_name($country_id) {
-    $country_query = tep_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . (int)$country_id . "'");
+    $Qcountry = Registry::get('Db')->get('countries', 'countries_name', ['countries_id' => (int)$country_id]);
 
-    if (!tep_db_num_rows($country_query)) {
-      return $country_id;
-    } else {
-      $country = tep_db_fetch_array($country_query);
-      return $country['countries_name'];
+    if ($Qcountry->fetch() !== false) {
+      return $Qcountry->value('countries_name');
     }
+
+    return $country_id;
   }
 
   function tep_get_zone_name($country_id, $zone_id, $default_zone) {
-    $zone_query = tep_db_query("select zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' and zone_id = '" . (int)$zone_id . "'");
-    if (tep_db_num_rows($zone_query)) {
-      $zone = tep_db_fetch_array($zone_query);
-      return $zone['zone_name'];
-    } else {
-      return $default_zone;
+    $Qzone = Registry::get('Db')->get('zones', 'zone_name', ['zone_country_id' => (int)$country_id, 'zone_id' => (int)$zone_id]);
+
+    if ($Qzone->fetch() !== false) {
+      return $Qzone->value('zone_name');
     }
+
+    return $default_zone;
   }
 
   function tep_not_null($value) {
@@ -340,12 +325,22 @@
 
   function tep_tax_classes_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
-    $classes_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
-    while ($classes = tep_db_fetch_array($classes_query)) {
-      $select_string .= '<option value="' . $classes['tax_class_id'] . '"';
-      if ($selected == $classes['tax_class_id']) $select_string .= ' SELECTED';
-      $select_string .= '>' . $classes['tax_class_title'] . '</option>';
+
+    $Qclasses = Registry::get('Db')->get('tax_class', [
+      'tax_class_id',
+      'tax_class_title'
+    ], null, 'tax_class_title');
+
+    while ($Qclasses->fetch()) {
+      $select_string .= '<option value="' . $Qclasses->valueInt('tax_class_id') . '"';
+
+      if ($selected == $Qclasses->valueInt('tax_class_id')) {
+        $select_string .= ' SELECTED';
+      }
+
+      $select_string .= '>' . $Qclasses->value('tax_class_title') . '</option>';
     }
+
     $select_string .= '</select>';
 
     return $select_string;
@@ -353,62 +348,70 @@
 
   function tep_geo_zones_pull_down($parameters, $selected = '') {
     $select_string = '<select ' . $parameters . '>';
-    $zones_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
-    while ($zones = tep_db_fetch_array($zones_query)) {
-      $select_string .= '<option value="' . $zones['geo_zone_id'] . '"';
-      if ($selected == $zones['geo_zone_id']) $select_string .= ' SELECTED';
-      $select_string .= '>' . $zones['geo_zone_name'] . '</option>';
+
+    $Qzones = Registry::get('Db')->get('geo_zones', [
+      'geo_zone_id',
+      'geo_zone_name'
+    ], null, 'geo_zone_name');
+
+    while ($Qzones->fetch()) {
+      $select_string .= '<option value="' . $Qzones->valueInt('geo_zone_id') . '"';
+
+      if ($selected == $Qzones->valueInt('geo_zone_id')) {
+        $select_string .= ' SELECTED';
+      }
+
+      $select_string .= '>' . $Qzones->value('geo_zone_name') . '</option>';
     }
+
     $select_string .= '</select>';
 
     return $select_string;
   }
 
   function tep_get_geo_zone_name($geo_zone_id) {
-    $zones_query = tep_db_query("select geo_zone_name from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . (int)$geo_zone_id . "'");
+    $Qzones = Registry::get('Db')->get('geo_zones', 'geo_zone_name', ['geo_zone_id' => (int)$geo_zone_id]);
 
-    if (!tep_db_num_rows($zones_query)) {
-      $geo_zone_name = $geo_zone_id;
-    } else {
-      $zones = tep_db_fetch_array($zones_query);
-      $geo_zone_name = $zones['geo_zone_name'];
+    if ($Qzones->fetch() !== false) {
+      return $Qzones->value('geo_zone_name');
     }
 
-    return $geo_zone_name;
+    return $geo_zone_id;
   }
 
   function tep_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = tep_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = '" . (int)$address_format_id . "'");
-    $address_format = tep_db_fetch_array($address_format_query);
+    $Qaddress = Registry::get('Db')->get('address_format', 'address_format', ['address_format_id' => (int)$address_format_id]);
 
-    $company = tep_output_string_protected($address['company']);
+    $replace = [
+      '$company' => HTML::outputProtected($address['company']),
+      '$firstname' => '',
+      '$lastname' => '',
+      '$street' => HTML::outputProtected($address['street_address']),
+      '$suburb' => HTML::outputProtected($address['suburb']),
+      '$city' => HTML::outputProtected($address['city']),
+      '$state' => HTML::outputProtected($address['state']),
+      '$postcode' => HTML::outputProtected($address['postcode']),
+      '$country' => ''
+    ];
+
     if (isset($address['firstname']) && tep_not_null($address['firstname'])) {
-      $firstname = tep_output_string_protected($address['firstname']);
-      $lastname = tep_output_string_protected($address['lastname']);
+      $replace['$firstname'] = HTML::outputProtected($address['firstname']);
+      $replace['$lastname'] = HTML::outputProtected($address['lastname']);
     } elseif (isset($address['name']) && tep_not_null($address['name'])) {
-      $firstname = tep_output_string_protected($address['name']);
-      $lastname = '';
-    } else {
-      $firstname = '';
-      $lastname = '';
+      $replace['$firstname'] = HTML::outputProtected($address['name']);
     }
-    $street = tep_output_string_protected($address['street_address']);
-    $suburb = tep_output_string_protected($address['suburb']);
-    $city = tep_output_string_protected($address['city']);
-    $state = tep_output_string_protected($address['state']);
+
     if (isset($address['country_id']) && tep_not_null($address['country_id'])) {
-      $country = tep_get_country_name($address['country_id']);
+      $replace['$country'] = tep_get_country_name($address['country_id']);
 
       if (isset($address['zone_id']) && tep_not_null($address['zone_id'])) {
-        $state = tep_get_zone_code($address['country_id'], $address['zone_id'], $state);
+        $replace['$state'] = tep_get_zone_code($address['country_id'], $address['zone_id'], $replace['$state']);
       }
     } elseif (isset($address['country']) && tep_not_null($address['country'])) {
-      $country = tep_output_string_protected($address['country']);
-    } else {
-      $country = '';
+      $replace['$country'] = HTML::outputProtected($address['country']);
     }
-    $postcode = tep_output_string_protected($address['postcode']);
-    $zip = $postcode;
+
+    $replace['$zip'] = $replace['$postcode'];
 
     if ($html) {
 // HTML Mode
@@ -430,17 +433,20 @@
       $hr = '----------------------------------------';
     }
 
-    $statecomma = '';
-    $streets = $street;
-    if ($suburb != '') $streets = $street . $cr . $suburb;
-    if ($country == '') $country = tep_output_string_protected($address['country']);
-    if ($state != '') $statecomma = $state . ', ';
+    $replace['$CR'] = $CR;
+    $replace['$cr'] = $cr;
+    $replace['$HR'] = $HR;
+    $replace['$hr'] = $hr;
 
-    $fmt = $address_format['format'];
-    eval("\$address = \"$fmt\";");
+    $replace['$statecomma'] = '';
+    $replace['$streets'] = $replace['$street'];
+    if ($replace['$suburb'] != '') $replace['$streets'] = $replace['$street'] . $replace['$cr'] . $replace['$suburb'];
+    if ($replace['$state'] != '') $replace['$statecomma'] = $replace['$state'] . ', ';
 
-    if ( (ACCOUNT_COMPANY == 'true') && (tep_not_null($company)) ) {
-      $address = $company . $cr . $address;
+    $address = strtr($Qaddress->value('address_format'), $replace);
+
+    if ( (ACCOUNT_COMPANY == 'true') && tep_not_null($replace['$company']) ) {
+      $address = $replace['$company'] . $replace['$cr'] . $address;
     }
 
     return $address;
@@ -460,18 +466,13 @@
   //
   ////////////////////////////////////////////////////////////////////////////////////////////////
   function tep_get_zone_code($country, $zone, $def_state) {
+    $Qstate = Registry::get('Db')->get('zones', 'zone_code', ['zone_country_id' => (int)$country, 'zone_id' => (int)$zone]);
 
-    $state_prov_query = tep_db_query("select zone_code from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country . "' and zone_id = '" . (int)$zone . "'");
+    if ($Qstate->fetch() !== false) {
+      return $Qstate->value('zone_code');
+    }
 
-    if (!tep_db_num_rows($state_prov_query)) {
-      $state_prov_code = $def_state;
-    }
-    else {
-      $state_prov_values = tep_db_fetch_array($state_prov_query);
-      $state_prov_code = $state_prov_values['zone_code'];
-    }
-    
-    return $state_prov_code;
+    return $def_state;
   }
 
   function tep_get_uprid($prid, $params) {
@@ -492,80 +493,90 @@
   }
 
   function tep_get_languages() {
-    $languages_query = tep_db_query("select languages_id, name, code, image, directory from " . TABLE_LANGUAGES . " order by sort_order");
-    while ($languages = tep_db_fetch_array($languages_query)) {
-      $languages_array[] = array('id' => $languages['languages_id'],
-                                 'name' => $languages['name'],
-                                 'code' => $languages['code'],
-                                 'image' => $languages['image'],
-                                 'directory' => $languages['directory']);
+    $languages_array = [];
+
+    $Qlanguages = Registry::get('Db')->get('languages', [
+      'languages_id',
+      'name',
+      'code',
+      'image',
+      'directory'
+    ], null, 'sort_order');
+
+    while ($Qlanguages->fetch()) {
+      $languages_array[] = [
+        'id' => $Qlanguages->valueInt('languages_id'),
+        'name' => $Qlanguages->value('name'),
+        'code' => $Qlanguages->value('code'),
+        'image' => $Qlanguages->value('image'),
+        'directory' => $Qlanguages->value('directory')
+      ];
     }
 
     return $languages_array;
   }
 
   function tep_get_category_name($category_id, $language_id) {
-    $category_query = tep_db_query("select categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "' and language_id = '" . (int)$language_id . "'");
-    $category = tep_db_fetch_array($category_query);
+    $Qcategory = Registry::get('Db')->get('categories_description', 'categories_name', ['categories_id' => (int)$category_id, 'language_id' => (int)$language_id]);
 
-    return $category['categories_name'];
+    return $Qcategory->value('categories_name');
   }
 
   function tep_get_orders_status_name($orders_status_id, $language_id = '') {
-    global $languages_id;
+    if (!$language_id) $language_id = $_SESSION['languages_id'];
 
-    if (!$language_id) $language_id = $languages_id;
-    $orders_status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . (int)$orders_status_id . "' and language_id = '" . (int)$language_id . "'");
-    $orders_status = tep_db_fetch_array($orders_status_query);
+    $Qstatus = Registry::get('Db')->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$orders_status_id, 'language_id' => (int)$language_id]);
 
-    return $orders_status['orders_status_name'];
+    return $Qstatus->value('orders_status_name');
   }
 
   function tep_get_orders_status() {
-    global $languages_id;
+    $orders_status_array = [];
 
-    $orders_status_array = array();
-    $orders_status_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_id");
-    while ($orders_status = tep_db_fetch_array($orders_status_query)) {
-      $orders_status_array[] = array('id' => $orders_status['orders_status_id'],
-                                     'text' => $orders_status['orders_status_name']);
+    $Qstatus = Registry::get('Db')->get('orders_status', [
+      'orders_status_id',
+      'orders_status_name'
+    ], [
+      'language_id' => (int)$_SESSION['languages_id']
+    ], 'orders_status_id');
+
+    while ($Qstatus->fetch()) {
+      $orders_status_array[] = [
+        'id' => $Qstatus->valueInt('orders_status_id'),
+        'text' => $Qstatus->value('orders_status_name')
+      ];
     }
 
     return $orders_status_array;
   }
 
   function tep_get_products_name($product_id, $language_id = 0) {
-    global $languages_id;
+    if ($language_id == 0) $language_id = $_SESSION['languages_id'];
 
-    if ($language_id == 0) $language_id = $languages_id;
-    $product_query = tep_db_query("select products_name from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
-    $product = tep_db_fetch_array($product_query);
+    $Qproduct = Registry::get('Db')->get('products_description', 'products_name', ['products_id' => (int)$product_id, 'language_id' => (int)$language_id]);
 
-    return $product['products_name'];
+    return $Qproduct->value('products_name');
   }
 
   function tep_get_products_description($product_id, $language_id) {
-    $product_query = tep_db_query("select products_description from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
-    $product = tep_db_fetch_array($product_query);
+    $Qproduct = Registry::get('Db')->get('products_description', 'products_description', ['products_id' => (int)$product_id, 'language_id' => (int)$language_id]);
 
-    return $product['products_description'];
+    return $Qproduct->value('products_description');
   }
 
   function tep_get_products_url($product_id, $language_id) {
-    $product_query = tep_db_query("select products_url from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "' and language_id = '" . (int)$language_id . "'");
-    $product = tep_db_fetch_array($product_query);
+    $Qproduct = Registry::get('Db')->get('products_description', 'products_url', ['products_id' => (int)$product_id, 'language_id' => (int)$language_id]);
 
-    return $product['products_url'];
+    return $Qproduct->value('products_url');
   }
 
 ////
 // Return the manufacturers URL in the needed language
 // TABLES: manufacturers_info
   function tep_get_manufacturer_url($manufacturer_id, $language_id) {
-    $manufacturer_query = tep_db_query("select manufacturers_url from " . TABLE_MANUFACTURERS_INFO . " where manufacturers_id = '" . (int)$manufacturer_id . "' and languages_id = '" . (int)$language_id . "'");
-    $manufacturer = tep_db_fetch_array($manufacturer_query);
+    $Qmanufacturer = Registry::get('Db')->get('manufacturers_info', 'manufacturers_url', ['manufacturers_id' => (int)$manufacturer_id, 'languages_id' => (int)$language_id]);
 
-    return $manufacturer['manufacturers_url'];
+    return $Qmanufacturer->value('manufacturers_url');
   }
 
 ////
@@ -583,23 +594,41 @@
 // Count how many products exist in a category
 // TABLES: products, products_to_categories, categories
   function tep_products_in_category_count($categories_id, $include_deactivated = false) {
-    $products_count = 0;
+    $OSCOM_Db = Registry::get('Db');
 
     if ($include_deactivated) {
-      $products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p2c.categories_id = '" . (int)$categories_id . "'");
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_to_categories p2c'
+      ], [
+        'count(*) as total'
+      ], [
+        'p.products_id' => [
+          'rel' => 'p2c.products_id'
+        ],
+        'p2c.categories_id' => (int)$categories_id
+      ]);
     } else {
-      $products_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '" . (int)$categories_id . "'");
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_to_categories p2c'
+      ], [
+        'count(*) as total'
+      ], [
+        'p.products_id' => [
+          'rel' => 'p2c.products_id'
+        ],
+        'p.products_status' => '1',
+        'p2c.categories_id' => (int)$categories_id
+      ]);
     }
 
-    $products = tep_db_fetch_array($products_query);
+    $products_count = $Qproducts->valueInt('total');
 
-    $products_count += $products['total'];
+    $Qchildren = $OSCOM_Db->get('categories', 'categories_id', ['parent_id' => (int)$categories_id]);
 
-    $childs_query = tep_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$categories_id . "'");
-    if (tep_db_num_rows($childs_query)) {
-      while ($childs = tep_db_fetch_array($childs_query)) {
-        $products_count += tep_products_in_category_count($childs['categories_id'], $include_deactivated);
-      }
+    while ($Qchildren->fetch()) {
+      $products_count += call_user_func(__FUNCTION__, $Qchildren->valueInt('categories_id'), $include_deactivated);
     }
 
     return $products_count;
@@ -611,10 +640,12 @@
   function tep_childs_in_category_count($categories_id) {
     $categories_count = 0;
 
-    $categories_query = tep_db_query("select categories_id from " . TABLE_CATEGORIES . " where parent_id = '" . (int)$categories_id . "'");
-    while ($categories = tep_db_fetch_array($categories_query)) {
+    $Qcategories = Registry::get('Db')->get('categories', 'categories_id', ['parent_id' => (int)$categories_id]);
+
+    while ($Qcategories->fetch()) {
       $categories_count++;
-      $categories_count += tep_childs_in_category_count($categories['categories_id']);
+
+      $categories_count += call_user_func(__FUNCTION__, $Qcategories->valueInt('categories_id'));
     }
 
     return $categories_count;
@@ -629,10 +660,14 @@
       $countries_array[] = array('id' => '',
                                  'text' => $default);
     }
-    $countries_query = tep_db_query("select countries_id, countries_name from " . TABLE_COUNTRIES . " order by countries_name");
-    while ($countries = tep_db_fetch_array($countries_query)) {
-      $countries_array[] = array('id' => $countries['countries_id'],
-                                 'text' => $countries['countries_name']);
+
+    $Qcountries = Registry::get('Db')->get('countries', ['countries_id', 'countries_name'], null, 'countries_name');
+
+    while ($Qcountries->fetch()) {
+      $countries_array[] = [
+        'id' => $Qcountries->valueInt('countries_id'),
+        'text' => $Qcountries->value('countries_name')
+      ];
     }
 
     return $countries_array;
@@ -642,10 +677,19 @@
 // return an array with country zones
   function tep_get_country_zones($country_id) {
     $zones_array = array();
-    $zones_query = tep_db_query("select zone_id, zone_name from " . TABLE_ZONES . " where zone_country_id = '" . (int)$country_id . "' order by zone_name");
-    while ($zones = tep_db_fetch_array($zones_query)) {
-      $zones_array[] = array('id' => $zones['zone_id'],
-                             'text' => $zones['zone_name']);
+
+    $Qzones = Registry::get('Db')->get('zones', [
+      'zone_id',
+      'zone_name'
+    ], [
+      'zone_country_id' => (int)$country_id
+    ], 'zone_name');
+
+    while ($Qzones->fetch()) {
+      $zones_array[] = [
+        'id' => $Qzones->valueInt('zone_id'),
+        'text' => $Qzones->value('zone_name')
+      ];
     }
 
     return $zones_array;
@@ -679,62 +723,89 @@
 ////
 // Get list of address_format_id's
   function tep_get_address_formats() {
-    $address_format_query = tep_db_query("select address_format_id from " . TABLE_ADDRESS_FORMAT . " order by address_format_id");
-    $address_format_array = array();
-    while ($address_format_values = tep_db_fetch_array($address_format_query)) {
-      $address_format_array[] = array('id' => $address_format_values['address_format_id'],
-                                      'text' => $address_format_values['address_format_id']);
+    $address_format_array = [];
+
+    $Qaddress = Registry::get('Db')->get('address_format', 'address_format_id', null, 'address_format_id');
+
+    while ($Qaddress->fetch()) {
+      $address_format_array[] = [
+        'id' => $Qaddress->valueInt('address_format_id'),
+        'text' => $Qaddress->valueInt('address_format_id')
+      ];
     }
+
     return $address_format_array;
   }
 
 ////
 // Alias function for Store configuration values in the Administration Tool
   function tep_cfg_pull_down_country_list($country_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_countries(), $country_id);
+    return HTML::selectField('configuration_value', tep_get_countries(), $country_id);
   }
 
   function tep_cfg_pull_down_zone_list($zone_id) {
-    return tep_draw_pull_down_menu('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
+    return HTML::selectField('configuration_value', tep_get_country_zones(STORE_COUNTRY), $zone_id);
   }
 
   function tep_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $name = tep_not_null($key) ? 'configuration[' . $key . ']' : 'configuration_value';
 
-    $tax_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
-    $tax_class_query = tep_db_query("select tax_class_id, tax_class_title from " . TABLE_TAX_CLASS . " order by tax_class_title");
-    while ($tax_class = tep_db_fetch_array($tax_class_query)) {
-      $tax_class_array[] = array('id' => $tax_class['tax_class_id'],
-                                 'text' => $tax_class['tax_class_title']);
+    $tax_class_array = [
+      [
+        'id' => '0',
+        'text' => TEXT_NONE
+      ]
+    ];
+
+    $Qclass = Registry::get('Db')->get('tax_class', ['tax_class_id', 'tax_class_title'], null, 'tax_class_title');
+
+    while ($Qclass->fetch()) {
+      $tax_class_array[] = [
+        'id' => $Qclass->valueInt('tax_class_id'),
+        'text' => $Qclass->value('tax_class_title')
+      ];
     }
 
-    return tep_draw_pull_down_menu($name, $tax_class_array, $tax_class_id);
+    return HTML::selectField($name, $tax_class_array, $tax_class_id);
   }
 
 ////
 // Function to read in text area in admin
  function tep_cfg_textarea($text) {
-    return tep_draw_textarea_field('configuration_value', false, 35, 5, $text);
+    return HTML::textareaField('configuration_value', 35, 5, $text);
   }
 
   function tep_cfg_get_zone_name($zone_id) {
-    $zone_query = tep_db_query("select zone_name from " . TABLE_ZONES . " where zone_id = '" . (int)$zone_id . "'");
+    $Qzone = Registry::get('Db')->get('zones', 'zone_name', ['zone_id' => (int)$zone_id]);
 
-    if (!tep_db_num_rows($zone_query)) {
-      return $zone_id;
-    } else {
-      $zone = tep_db_fetch_array($zone_query);
-      return $zone['zone_name'];
+    if ($Qzone->fetch()) {
+      return $Qzone->value('zone_name');
     }
+
+    return $zone_id;
   }
 
 ////
 // Sets the status of a banner
   function tep_set_banner_status($banners_id, $status) {
+    $OSCOM_Db = Registry::get('Db');
+
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '" . $banners_id . "'");
+      return $OSCOM_Db->save('banners', [
+        'status' => '1',
+        'expires_impressions' => 'null',
+        'expires_date' => 'null',
+        'date_status_change' => 'null'
+      ], [
+        'banners_id' => (int)$banners_id
+      ]);
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_BANNERS . " set status = '0', date_status_change = now() where banners_id = '" . $banners_id . "'");
+      return $OSCOM_Db->save('banners', [
+        'status' => '0',
+        'date_status_change' => 'now()'
+      ], [
+        'banners_id' => (int)$banners_id
+      ]);
     } else {
       return -1;
     }
@@ -743,10 +814,22 @@
 ////
 // Sets the status of a product
   function tep_set_product_status($products_id, $status) {
+    $OSCOM_Db = Registry::get('Db');
+
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_PRODUCTS . " set products_status = '1', products_last_modified = now() where products_id = '" . (int)$products_id . "'");
+      return $OSCOM_Db->save('products', [
+        'products_status' => '1',
+        'products_last_modified' => 'now()'
+      ], [
+        'products_id' => (int)$products_id
+      ]);
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_PRODUCTS . " set products_status = '0', products_last_modified = now() where products_id = '" . (int)$products_id . "'");
+      return $OSCOM_Db->save('products', [
+        'products_status' => '0',
+        'products_last_modified' => 'now()'
+      ], [
+        'products_id' => (int)$products_id
+      ]);
     } else {
       return -1;
     }
@@ -755,10 +838,22 @@
 ////
 // Sets the status of a review
   function tep_set_review_status($reviews_id, $status) {
+    $OSCOM_Db = Registry::get('Db');
+
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_REVIEWS . " set reviews_status = '1', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
+      return $OSCOM_Db->save('reviews', [
+        'reviews_status' => '1',
+        'last_modified' => 'now()'
+      ], [
+        'reviews_id' => (int)$reviews_id
+      ]);
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_REVIEWS . " set reviews_status = '0', last_modified = now() where reviews_id = '" . (int)$reviews_id . "'");
+      return $OSCOM_Db->save('reviews', [
+        'reviews_status' => '0',
+        'last_modified' => 'now()'
+      ], [
+        'reviews_id' => (int)$reviews_id
+      ]);
     } else {
       return -1;
     }
@@ -767,10 +862,23 @@
 ////
 // Sets the status of a product on special
   function tep_set_specials_status($specials_id, $status) {
+    $OSCOM_Db = Registry::get('Db');
+
     if ($status == '1') {
-      return tep_db_query("update " . TABLE_SPECIALS . " set status = '1', expires_date = NULL, date_status_change = NULL where specials_id = '" . (int)$specials_id . "'");
+      return $OSCOM_Db->save('specials', [
+        'status' => '1',
+        'expires_date' => 'null',
+        'date_status_change' => 'null'
+      ], [
+        'specials_id' => (int)$specials_id
+      ]);
     } elseif ($status == '0') {
-      return tep_db_query("update " . TABLE_SPECIALS . " set status = '0', date_status_change = now() where specials_id = '" . (int)$specials_id . "'");
+      return $OSCOM_Db->save('specials', [
+        'status' => '0',
+        'date_status_change' => 'now()'
+      ], [
+        'specials_id' => (int)$specials_id
+      ]);
     } else {
       return -1;
     }
@@ -819,15 +927,15 @@
 ////
 // Retreive server information
   function tep_get_system_information() {
+    $OSCOM_Db = Registry::get('Db');
 
-    $db_query = tep_db_query("select now() as datetime");
-    $db = tep_db_fetch_array($db_query);
+    $Qdate = $OSCOM_Db->query('select now() as datetime');
 
     @list($system, $host, $kernel) = preg_split('/[\s,]+/', @exec('uname -a'), 5);
 
     $data = array();
 
-    $data['oscommerce']  = array('version' => tep_get_version());
+    $data['oscommerce']  = array('version' => OSCOM::getVersion());
 
     $data['system'] = array('date' => date('Y-m-d H:i:s O T'),
                             'os' => PHP_OS,
@@ -835,8 +943,8 @@
                             'uptime' => @exec('uptime'),
                             'http_server' => $_SERVER['SERVER_SOFTWARE']);
 
-    $data['mysql']  = array('version' => tep_db_get_server_info(),
-                            'date' => $db['datetime']);
+    $data['mysql']  = array('version' => $OSCOM_Db->getAttribute(\PDO::ATTR_SERVER_VERSION),
+                            'date' => $Qdate->value('datetime'));
 
     $data['php']    = array('version' => PHP_VERSION,
                             'zend' => zend_version(),
@@ -867,29 +975,73 @@
   }
 
   function tep_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
-    global $languages_id;
+    $OSCOM_Db = Registry::get('Db');
 
-    if (!is_array($categories_array)) $categories_array = array();
+    if (!is_array($categories_array)) {
+      $categories_array = [];
+    }
 
     if ($from == 'product') {
-      $categories_query = tep_db_query("select categories_id from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$id . "'");
-      while ($categories = tep_db_fetch_array($categories_query)) {
-        if ($categories['categories_id'] == '0') {
-          $categories_array[$index][] = array('id' => '0', 'text' => TEXT_TOP);
+      $Qcategories = $OSCOM_Db->get('products_to_categories', 'categories_id', ['products_id' => (int)$id]);
+
+      while ($Qcategories->fetch()) {
+        if ($Qcategories->valueInt('categories_id') === 0) {
+          $categories_array[$index][] = [
+            'id' => '0',
+            'text' => TEXT_TOP
+          ];
         } else {
-          $category_query = tep_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$categories['categories_id'] . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
-          $category = tep_db_fetch_array($category_query);
-          $categories_array[$index][] = array('id' => $categories['categories_id'], 'text' => $category['categories_name']);
-          if ( (tep_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+          $Qcategory = $OSCOM_Db->get([
+            'categories c',
+            'categories_description cd'
+          ], [
+            'cd.categories_name',
+            'c.parent_id'
+          ], [
+            'c.categories_id' => [
+              'val' => $Qcategories->valueInt('categories_id'),
+              'rel' => 'cd.categories_id'
+            ],
+            'cd.language_id' => (int)$_SESSION['languages_id']
+          ]);
+
+          $categories_array[$index][] = [
+            'id' => $Qcategories->valueInt('categories_id'),
+            'text' => $Qcategory->value('categories_name')
+          ];
+
+          if ($Qcategory->valueInt('parent_id') > 0) {
+            $categories_array = call_user_func(__FUNCTION__, $Qcategory->valueInt('parent_id'), 'category', $categories_array, $index);
+          }
+
           $categories_array[$index] = array_reverse($categories_array[$index]);
         }
+
         $index++;
       }
     } elseif ($from == 'category') {
-      $category_query = tep_db_query("select cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = '" . (int)$id . "' and c.categories_id = cd.categories_id and cd.language_id = '" . (int)$languages_id . "'");
-      $category = tep_db_fetch_array($category_query);
-      $categories_array[$index][] = array('id' => $id, 'text' => $category['categories_name']);
-      if ( (tep_not_null($category['parent_id'])) && ($category['parent_id'] != '0') ) $categories_array = tep_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
+      $Qcategory = $OSCOM_Db->get([
+        'categories c',
+        'categories_description cd'
+      ], [
+        'cd.categories_name',
+        'c.parent_id'
+      ], [
+        'c.categories_id' => [
+          'val' => (int)$id,
+          'rel' => 'cd.categories_id'
+        ],
+        'cd.language_id' => (int)$_SESSION['languages_id']
+      ]);
+
+      $categories_array[$index][] = [
+        'id' => (int)$id,
+        'text' => $Qcategory->value('categories_name')
+      ];
+
+      if ($Qcategory->valueInt('parent_id') > 0) {
+        $categories_array = call_user_func(__FUNCTION__, $Qcategory->valueInt('parent_id'), 'category', $categories_array, $index);
+      }
     }
 
     return $categories_array;
@@ -928,122 +1080,124 @@
   }
 
   function tep_remove_category($category_id) {
-    $category_image_query = tep_db_query("select categories_image from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$category_id . "'");
-    $category_image = tep_db_fetch_array($category_image_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_CATEGORIES . " where categories_image = '" . tep_db_input($category_image['categories_image']) . "'");
-    $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+    $Qimage = $OSCOM_Db->get('categories', 'categories_image', ['categories_id' => (int)$category_id]);
 
-    if ($duplicate_image['total'] < 2) {
-      if (file_exists(DIR_FS_CATALOG_IMAGES . $category_image['categories_image'])) {
-        @unlink(DIR_FS_CATALOG_IMAGES . $category_image['categories_image']);
+    $Qduplicate = $OSCOM_Db->get('categories', 'categories_id', [
+      'categories_image' => $Qimage->value('categories_image'),
+      'categories_id' => [
+        'op' => '!=',
+        'val' => (int)$category_id
+      ]
+    ], null, 1);
+
+    if ($Qduplicate->fetch() === false) {
+      if (!empty($Qimage->value('categories_image')) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('categories_image'))) {
+        unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('categories_image'));
       }
     }
 
-    tep_db_query("delete from " . TABLE_CATEGORIES . " where categories_id = '" . (int)$category_id . "'");
-    tep_db_query("delete from " . TABLE_CATEGORIES_DESCRIPTION . " where categories_id = '" . (int)$category_id . "'");
-    tep_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where categories_id = '" . (int)$category_id . "'");
+    $OSCOM_Db->delete('categories', ['categories_id' => (int)$category_id]);
+    $OSCOM_Db->delete('categories_description', ['categories_id' => (int)$category_id]);
+    $OSCOM_Db->delete('products_to_categories', ['categories_id' => (int)$category_id]);
 
-    if (USE_CACHE == 'true') {
-      tep_reset_cache_block('categories');
-      tep_reset_cache_block('also_purchased');
-    }
+    Cache::clear('categories');
+    Cache::clear('products-also_purchased');
   }
 
   function tep_remove_product($product_id) {
-    $product_image_query = tep_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    $product_image = tep_db_fetch_array($product_image_query);
+    $OSCOM_Db = Registry::get('Db');
 
-    $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS . " where products_image = '" . tep_db_input($product_image['products_image']) . "'");
-    $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+    $Qimage = $OSCOM_Db->get('products', 'products_image', ['products_id' => (int)$product_id]);
 
-    if ($duplicate_image['total'] < 2) {
-      if (file_exists(DIR_FS_CATALOG_IMAGES . $product_image['products_image'])) {
-        @unlink(DIR_FS_CATALOG_IMAGES . $product_image['products_image']);
+    $Qduplicate = $OSCOM_Db->get('products', 'products_id', [
+      'products_image' => $Qimage->value('products_image'),
+      'products_id' => [
+        'op' => '!=',
+        'val' => (int)$product_id
+      ]
+    ], null, 1);
+
+    if ($Qduplicate->fetch() === false) {
+      if (!empty($Qimage->value('products_image')) && is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('products_image'))) {
+        unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimage->value('products_image'));
       }
     }
 
-    $product_images_query = tep_db_query("select image from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
-    if (tep_db_num_rows($product_images_query)) {
-      while ($product_images = tep_db_fetch_array($product_images_query)) {
-        $duplicate_image_query = tep_db_query("select count(*) as total from " . TABLE_PRODUCTS_IMAGES . " where image = '" . tep_db_input($product_images['image']) . "'");
-        $duplicate_image = tep_db_fetch_array($duplicate_image_query);
+    $Qimages = $OSCOM_Db->get('products_images', 'image', ['products_id' => (int)$product_id]);
 
-        if ($duplicate_image['total'] < 2) {
-          if (file_exists(DIR_FS_CATALOG_IMAGES . $product_images['image'])) {
-            @unlink(DIR_FS_CATALOG_IMAGES . $product_images['image']);
+    if ($Qimages->fetch() !== false) {
+      do {
+        $Qduplicate = $OSCOM_Db->get('products_images', 'id', [
+          'image' => $Qimages->value('image'),
+          'products_id' => [
+            'op' => '!=',
+            'val' => (int)$product_id
+          ]
+        ], null, 1);
+
+        if ($Qduplicate->fetch() === false) {
+          if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'))) {
+            unlink(OSCOM::getConfig('dir_root', 'Shop') . 'images/' . $Qimages->value('image'));
           }
         }
-      }
+      } while ($Qimages->fetch());
 
-      tep_db_query("delete from " . TABLE_PRODUCTS_IMAGES . " where products_id = '" . (int)$product_id . "'");
+      $OSCOM_Db->delete('products_images', ['products_id' => (int)$product_id]);
     }
 
-    tep_db_query("delete from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "'");
-    tep_db_query("delete from " . TABLE_PRODUCTS . " where products_id = '" . (int)$product_id . "'");
-    tep_db_query("delete from " . TABLE_PRODUCTS_TO_CATEGORIES . " where products_id = '" . (int)$product_id . "'");
-    tep_db_query("delete from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . (int)$product_id . "'");
-    tep_db_query("delete from " . TABLE_PRODUCTS_ATTRIBUTES . " where products_id = '" . (int)$product_id . "'");
-    tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where products_id = '" . (int)$product_id . "' or products_id like '" . (int)$product_id . "{%'");
-    tep_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where products_id = '" . (int)$product_id . "' or products_id like '" . (int)$product_id . "{%'");
+    $OSCOM_Db->delete('specials', ['products_id' => (int)$product_id]);
+    $OSCOM_Db->delete('products', ['products_id' => (int)$product_id]);
+    $OSCOM_Db->delete('products_to_categories', ['products_id' => (int)$product_id]);
+    $OSCOM_Db->delete('products_description', ['products_id' => (int)$product_id]);
+    $OSCOM_Db->delete('products_attributes', ['products_id' => (int)$product_id]);
 
-    $product_reviews_query = tep_db_query("select reviews_id from " . TABLE_REVIEWS . " where products_id = '" . (int)$product_id . "'");
-    while ($product_reviews = tep_db_fetch_array($product_reviews_query)) {
-      tep_db_query("delete from " . TABLE_REVIEWS_DESCRIPTION . " where reviews_id = '" . (int)$product_reviews['reviews_id'] . "'");
-    }
-    tep_db_query("delete from " . TABLE_REVIEWS . " where products_id = '" . (int)$product_id . "'");
+    $Qdel = $OSCOM_Db->prepare('delete from :table_customers_basket where products_id = :products_id or products_id like :products_id_att');
+    $Qdel->bindInt(':products_id', (int)$product_id);
+    $Qdel->bindInt(':products_id_att', (int)$product_id . '{%');
+    $Qdel->execute();
 
-    if (USE_CACHE == 'true') {
-      tep_reset_cache_block('categories');
-      tep_reset_cache_block('also_purchased');
+    $Qdel = $OSCOM_Db->prepare('delete from :table_customers_basket_attributes where products_id = :products_id or products_id like :products_id_att');
+    $Qdel->bindInt(':products_id', (int)$product_id);
+    $Qdel->bindInt(':products_id_att', (int)$product_id . '{%');
+    $Qdel->execute();
+
+    $Qreviews = $OSCOM_Db->get('reviews', 'reviews_id', ['products_id' => (int)$product_id]);
+
+    while ($Qreviews->fetch()) {
+      $OSCOM_Db->delete('reviews_description', ['reviews_id' => $Qreviews->valueInt('reviews_id')]);
     }
+
+    $OSCOM_Db->delete('reviews', ['products_id' => (int)$product_id]);
+
+    Cache::clear('categories');
+    Cache::clear('products-also_purchased');
   }
 
   function tep_remove_order($order_id, $restock = false) {
+    $OSCOM_Db = Registry::get('Db');
+
     if ($restock == 'on') {
-      $order_query = tep_db_query("select products_id, products_quantity from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$order_id . "'");
-      while ($order = tep_db_fetch_array($order_query)) {
-        tep_db_query("update " . TABLE_PRODUCTS . " set products_quantity = products_quantity + " . $order['products_quantity'] . ", products_ordered = products_ordered - " . $order['products_quantity'] . " where products_id = '" . (int)$order['products_id'] . "'");
+      $Qproducts = $OSCOM_Db->get('orders_products', [
+        'products_id',
+        'products_quantity'
+      ], [
+        'orders_id' => (int)$order_id
+      ]);
+
+      while ($Qproducts->fetch()) {
+        $Qupdate = $OSCOM_Db->prepare('update :table_products set products_quantity = products_quantity + ' . $Qproducts->valueInt('products_quantity') . ', products_ordered = products_ordered - ' . $Qproducts->valueInt('products_quantity') . ' where products_id = :products_id');
+        $Qupdate->bindInt(':products_id', $Qproducts->valueInt('products_id'));
+        $Qupdate->execute();
       }
     }
 
-    tep_db_query("delete from " . TABLE_ORDERS . " where orders_id = '" . (int)$order_id . "'");
-    tep_db_query("delete from " . TABLE_ORDERS_PRODUCTS . " where orders_id = '" . (int)$order_id . "'");
-    tep_db_query("delete from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " where orders_id = '" . (int)$order_id . "'");
-    tep_db_query("delete from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_id = '" . (int)$order_id . "'");
-    tep_db_query("delete from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . (int)$order_id . "'");
-  }
-
-  function tep_reset_cache_block($cache_block) {
-    global $cache_blocks;
-
-    for ($i=0, $n=sizeof($cache_blocks); $i<$n; $i++) {
-      if ($cache_blocks[$i]['code'] == $cache_block) {
-        if ($cache_blocks[$i]['multiple']) {
-          if ($dir = @opendir(DIR_FS_CACHE)) {
-            while ($cache_file = readdir($dir)) {
-              $cached_file = $cache_blocks[$i]['file'];
-              $languages = tep_get_languages();
-              for ($j=0, $k=sizeof($languages); $j<$k; $j++) {
-                $cached_file_unlink = preg_replace('/-language/', '-' . $languages[$j]['directory'], $cached_file);
-                if (preg_match('/^' . $cached_file_unlink . '/', $cache_file)) {
-                  @unlink(DIR_FS_CACHE . $cache_file);
-                }
-              }
-            }
-            closedir($dir);
-          }
-        } else {
-          $cached_file = $cache_blocks[$i]['file'];
-          $languages = tep_get_languages();
-          for ($i=0, $n=sizeof($languages); $i<$n; $i++) {
-            $cached_file = preg_replace('/-language/', '-' . $languages[$i]['directory'], $cached_file);
-            @unlink(DIR_FS_CACHE . $cached_file);
-          }
-        }
-        break;
-      }
-    }
+    $OSCOM_Db->delete('orders', ['orders_id' => (int)$order_id]);
+    $OSCOM_Db->delete('orders_products', ['orders_id' => (int)$order_id]);
+    $OSCOM_Db->delete('orders_products_attributes', ['orders_id' => (int)$order_id]);
+    $OSCOM_Db->delete('orders_status_history', ['orders_id' => (int)$order_id]);
+    $OSCOM_Db->delete('orders_total', ['orders_id' => (int)$order_id]);
   }
 
   function tep_get_file_permissions($mode) {
@@ -1086,41 +1240,6 @@
            $owner['read'] . $owner['write'] . $owner['execute'] .
            $group['read'] . $group['write'] . $group['execute'] .
            $world['read'] . $world['write'] . $world['execute'];
-  }
-
-  function tep_remove($source) {
-    global $messageStack, $tep_remove_error;
-
-    if (isset($tep_remove_error)) $tep_remove_error = false;
-
-    if (is_dir($source)) {
-      $dir = dir($source);
-      while ($file = $dir->read()) {
-        if ( ($file != '.') && ($file != '..') ) {
-          if (tep_is_writable($source . '/' . $file)) {
-            tep_remove($source . '/' . $file);
-          } else {
-            $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source . '/' . $file), 'error');
-            $tep_remove_error = true;
-          }
-        }
-      }
-      $dir->close();
-
-      if (tep_is_writable($source)) {
-        rmdir($source);
-      } else {
-        $messageStack->add(sprintf(ERROR_DIRECTORY_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
-      }
-    } else {
-      if (tep_is_writable($source)) {
-        unlink($source);
-      } else {
-        $messageStack->add(sprintf(ERROR_FILE_NOT_REMOVEABLE, $source), 'error');
-        $tep_remove_error = true;
-      }
-    }
   }
 
 ////
@@ -1180,10 +1299,9 @@
     if ($tax_class_id == '0') {
       return TEXT_NONE;
     } else {
-      $classes_query = tep_db_query("select tax_class_title from " . TABLE_TAX_CLASS . " where tax_class_id = '" . (int)$tax_class_id . "'");
-      $classes = tep_db_fetch_array($classes_query);
+      $Qclass = Registry::get('Db')->get('tax_class', 'tax_class_title', ['tax_class_id' => (int)$tax_class_id]);
 
-      return $classes['tax_class_title'];
+      return $Qclass->value('tax_class_title');
     }
   }
 
@@ -1235,21 +1353,23 @@
     global $customer_zone_id, $customer_country_id;
 
     if ( ($country_id == -1) && ($zone_id == -1) ) {
-      if (!tep_session_is_registered('customer_id')) {
-        $country_id = STORE_COUNTRY;
-        $zone_id = STORE_ZONE;
-      } else {
-        $country_id = $customer_country_id;
-        $zone_id = $customer_zone_id;
-      }
+      $country_id = STORE_COUNTRY;
+      $zone_id = STORE_ZONE;
     }
 
-    $tax_query = tep_db_query("select SUM(tax_rate) as tax_rate from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za ON tr.tax_zone_id = za.geo_zone_id left join " . TABLE_GEO_ZONES . " tz ON tz.geo_zone_id = tr.tax_zone_id WHERE (za.zone_country_id IS NULL OR za.zone_country_id = '0' OR za.zone_country_id = '" . (int)$country_id . "') AND (za.zone_id IS NULL OR za.zone_id = '0' OR za.zone_id = '" . (int)$zone_id . "') AND tr.tax_class_id = '" . (int)$class_id . "' GROUP BY tr.tax_priority");
-    if (tep_db_num_rows($tax_query)) {
+    $Qtax = Registry::get('Db')->prepare('select sum(tax_rate) as tax_rate from :table_tax_rates tr left join :table_zones_to_geo_zones za on tr.tax_zone_id = za.geo_zone_id left join :table_geo_zones tz on tz.geo_zone_id = tr.tax_zone_id where (za.zone_country_id IS NULL OR za.zone_country_id = "0" OR za.zone_country_id = :zone_country_id) AND (za.zone_id IS NULL OR za.zone_id = "0" OR za.zone_id = :zone_id) AND tr.tax_class_id = :tax_class_id group by tr.tax_priority');
+    $Qtax->bindInt(':zone_country_id', (int)$country_id);
+    $Qtax->bindInt(':zone_id', (int)$zone_id);
+    $Qtax->bindInt(':tax_class_id', (int)$class_id);
+    $Qtax->execute();
+
+    if ($Qtax->fetch() !== false) {
       $tax_multiplier = 0;
-      while ($tax = tep_db_fetch_array($tax_query)) {
-        $tax_multiplier += $tax['tax_rate'];
-      }
+
+      do {
+        $tax_multiplier += $Qtax->value('tax_rate');
+      } while ($Qtax->fetch());
+
       return $tax_multiplier;
     } else {
       return 0;
@@ -1275,52 +1395,76 @@
     if ($zone_class_id == '0') {
       return TEXT_NONE;
     } else {
-      $classes_query = tep_db_query("select geo_zone_name from " . TABLE_GEO_ZONES . " where geo_zone_id = '" . (int)$zone_class_id . "'");
-      $classes = tep_db_fetch_array($classes_query);
+      $Qclass = Registry::get('Db')->get('geo_zones', [
+        'geo_zone_name'
+      ], [
+        'geo_zone_id' => (int)$zone_class_id
+      ]);
 
-      return $classes['geo_zone_name'];
+      return $Qclass->value('geo_zone_name');
     }
   }
 
   function tep_cfg_pull_down_zone_classes($zone_class_id, $key = '') {
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $name = !empty($key) ? 'configuration[' . $key . ']' : 'configuration_value';
 
-    $zone_class_array = array(array('id' => '0', 'text' => TEXT_NONE));
-    $zone_class_query = tep_db_query("select geo_zone_id, geo_zone_name from " . TABLE_GEO_ZONES . " order by geo_zone_name");
-    while ($zone_class = tep_db_fetch_array($zone_class_query)) {
-      $zone_class_array[] = array('id' => $zone_class['geo_zone_id'],
-                                  'text' => $zone_class['geo_zone_name']);
+    $zone_class_array = [
+      [
+        'id' => '0',
+        'text' => TEXT_NONE
+      ]
+    ];
+
+    $Qclass = Registry::get('Db')->get('geo_zones', [
+      'geo_zone_id',
+      'geo_zone_name'
+    ], null, 'geo_zone_name');
+
+    while ($Qclass->fetch()) {
+      $zone_class_array[] = [
+        'id' => $Qclass->valueInt('geo_zone_id'),
+        'text' => $Qclass->value('geo_zone_name')
+      ];
     }
 
-    return tep_draw_pull_down_menu($name, $zone_class_array, $zone_class_id);
+    return HTML::selectField($name, $zone_class_array, $zone_class_id);
   }
 
   function tep_cfg_pull_down_order_statuses($order_status_id, $key = '') {
-    global $languages_id;
+    $name = !empty($key) ? 'configuration[' . $key . ']' : 'configuration_value';
 
-    $name = (($key) ? 'configuration[' . $key . ']' : 'configuration_value');
+    $statuses_array = [
+      [
+        'id' => '0',
+        'text' => TEXT_DEFAULT
+      ]
+    ];
 
-    $statuses_array = array(array('id' => '0', 'text' => TEXT_DEFAULT));
-    $statuses_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "' order by orders_status_name");
-    while ($statuses = tep_db_fetch_array($statuses_query)) {
-      $statuses_array[] = array('id' => $statuses['orders_status_id'],
-                                'text' => $statuses['orders_status_name']);
+    $Qstatus = Registry::get('Db')->get('orders_status', [
+      'orders_status_id',
+      'orders_status_name'
+    ], [
+      'language_id' => (int)$_SESSION['languages_id']
+    ], 'orders_status_name');
+
+    while ($Qstatus->fetch()) {
+      $statuses_array[] = [
+        'id' => $Qstatus->valueInt('orders_status_id'),
+        'text' => $Qstatus->value('orders_status_name')
+      ];
     }
 
-    return tep_draw_pull_down_menu($name, $statuses_array, $order_status_id);
+    return HTML::selectField($name, $statuses_array, $order_status_id);
   }
 
   function tep_get_order_status_name($order_status_id, $language_id = '') {
-    global $languages_id;
-
     if ($order_status_id < 1) return TEXT_DEFAULT;
 
-    if (!is_numeric($language_id)) $language_id = $languages_id;
+    if (!is_numeric($language_id)) $language_id = $_SESSION['languages_id'];
 
-    $status_query = tep_db_query("select orders_status_name from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . (int)$order_status_id . "' and language_id = '" . (int)$language_id . "'");
-    $status = tep_db_fetch_array($status_query);
+    $Qstatus = Registry::get('Db')->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$order_status_id, 'language_id' => (int)$language_id]);
 
-    return $status['orders_status_name'];
+    return $Qstatus->value('orders_status_name');
   }
 
 ////
@@ -1426,33 +1570,43 @@
   }
 
 ////
-// Wrapper function for is_writable() for Windows compatibility
-  function tep_is_writable($file) {
-    if (strtolower(substr(PHP_OS, 0, 3)) === 'win') {
-      if (file_exists($file)) {
-        $file = realpath($file);
-        if (is_dir($file)) {
-          $result = @tempnam($file, 'osc');
-          if (is_string($result) && file_exists($result)) {
-            unlink($result);
-            return (strpos($result, $file) === 0) ? true : false;
-          }
-        } else {
-          $handle = @fopen($file, 'r+');
-          if (is_resource($handle)) {
-            fclose($handle);
-            return true;
-          }
-        }
-      } else{
-        $dir = dirname($file);
-        if (file_exists($dir) && is_dir($dir) && tep_is_writable($dir)) {
-          return true;
-        }
+// javascript to dynamically update the states/provinces list when the country is changed
+// TABLES: zones
+  function tep_js_zone_list($country, $form, $field) {
+    $OSCOM_Db = Registry::get('Db');
+
+    $num_country = 1;
+    $output_string = '';
+
+    $Qcountries = $OSCOM_Db->get('zones', 'distinct zone_country_id', null, 'zone_country_id');
+
+    while ($Qcountries->fetch()) {
+      if ($num_country == 1) {
+        $output_string .= '  if (' . $country . ' == "' . $Qcountries->valueInt('zone_country_id') . '") {' . "\n";
+      } else {
+        $output_string .= '  } else if (' . $country . ' == "' . $Qcountries->valueInt('zone_country_id') . '") {' . "\n";
       }
-      return false;
-    } else {
-      return is_writable($file);
+
+      $num_state = 1;
+
+      $Qstates = $OSCOM_Db->get('zones', [
+        'zone_name',
+        'zone_id'
+      ], [
+        'zone_country_id' => $Qcountries->valueInt('zone_country_id')
+      ], 'zone_name');
+
+      while ($Qstates->fetch()) {
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+        $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $Qstates->value('zone_name') . '", "' . $Qstates->valueInt('zone_id') . '");' . "\n";
+        $num_state++;
+      }
+      $num_country++;
     }
+    $output_string .= '  } else {' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+                      '  }' . "\n";
+
+    return $output_string;
   }
 ?>

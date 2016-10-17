@@ -15,49 +15,6 @@
   use OSC\OM\Registry;
 
 ////
-// Get the installed version number
-  function tep_get_version() {
-    static $v;
-
-    if (!isset($v)) {
-      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
-    }
-
-    return $v;
-  }
-
-////
-// Stop from parsing any further PHP code
-// v2.3.3.1 now closes the session through a registered shutdown function
-  function tep_exit() {
-   exit;
-  }
-
-////
-// Parse the data used in the html tags to ensure the tags will not break
-    function tep_output_string($string, $translate = false, $protected = false) {
-    if ($protected == true) {
-      return htmlspecialchars($string);
-    } else {
-      if ($translate == false) {
-        return strtr(trim($string), array('"' => '&quot;'));
-      } else {
-        return strtr(trim($string), $translate);
-      }
-    }
-  }
-
-  function tep_output_string_protected($string) {
-    return tep_output_string($string, false, true);
-  }
-
-  function tep_sanitize_string($string) {
-    $patterns = array ('/ +/','/[<>]/');
-    $replace = array (' ', '_');
-    return preg_replace($patterns, $replace, trim($string));
-  }
-
-////
 // Return a product's name
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {
@@ -113,7 +70,7 @@
     $out_of_stock = '';
 
     if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      $out_of_stock = '<span class="text-danger"><b>' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</b></span>';
     }
 
     return $out_of_stock;
@@ -944,7 +901,7 @@
     $sort_suffix = '';
 
     if ($sortby) {
-      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . tep_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
+      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . HTML::output(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
       $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? '+' : '-') : '') . '</a>';
     }
 
@@ -1069,18 +1026,6 @@
   }
 
 ////
-// Return a customer greeting
-  function tep_customer_greeting() {
-    if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
-    } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('index.php', 'Account&LogIn', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
-    }
-
-    return $greeting_string;
-  }
-
-////
 //! Send email (text/html) using MIME
 // This is the central mail function. The SMTP Server should be configured
 // correct in php.ini
@@ -1172,7 +1117,7 @@
     $value = '';
 
     if (!class_exists('PasswordHash')) {
-      include(DIR_WS_CLASSES . 'passwordhash.php');
+      include('includes/classes/passwordhash.php');
     }
 
     $hasher = new PasswordHash(10, true);
@@ -1319,12 +1264,6 @@
     } else {
       return mt_rand();
     }
-  }
-
-  function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
-    global $cookie_path, $cookie_domain;
-
-    setcookie($name, $value, $expire, (isset($path)) ? $path : $cookie_path, (isset($domain)) ? $domain : $cookie_domain, $secure);
   }
 
   function tep_validate_ip_address($ip_address) {

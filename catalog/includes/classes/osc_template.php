@@ -11,9 +11,11 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
 
   class oscTemplate {
     var $_title;
+    var $_code = 'Sail';
     var $_blocks = array();
     var $_content = array();
     var $_grid_container_width = 12;
@@ -21,7 +23,7 @@
     var $_grid_column_width = 0; // deprecated
     var $_data = array();
 
-    function oscTemplate() {
+    function __construct() {
       $this->_title = TITLE;
     }
 
@@ -57,6 +59,14 @@
       return $this->_title;
     }
 
+    function setCode($code) {
+      $this->_code = $code;
+    }
+
+    function getCode() {
+      return $this->_code;
+    }
+
     function addBlock($block, $group) {
       $this->_blocks[$group][] = $block;
     }
@@ -85,12 +95,12 @@
               $class = basename($module, '.php');
 
               if ( !class_exists($class) ) {
-                if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module) ) {
-                  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
+                if ( is_file('includes/languages/' . $_SESSION['language'] . '/modules/' . $group . '/' . $module) ) {
+                  include('includes/languages/' . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
                 }
 
-                if ( file_exists(DIR_WS_MODULES . $group . '/' . $class . '.php') ) {
-                  include(DIR_WS_MODULES . $group . '/' . $class . '.php');
+                if ( is_file('includes/modules/' . $group . '/' . $class . '.php') ) {
+                  include('includes/modules/' . $group . '/' . $class . '.php');
                 }
               }
 
@@ -116,8 +126,8 @@
     }
 
     function getContent($group) {
-      if ( !class_exists('tp_' . $group) && file_exists(DIR_WS_MODULES . 'pages/tp_' . $group . '.php') ) {
-        include(DIR_WS_MODULES . 'pages/tp_' . $group . '.php');
+      if ( !class_exists('tp_' . $group) && is_file('includes/modules/pages/tp_' . $group . '.php') ) {
+        include('includes/modules/pages/tp_' . $group . '.php');
       }
 
       if ( class_exists('tp_' . $group) ) {
@@ -137,12 +147,12 @@
           }
         } else {
           if ( !class_exists($module) ) {
-            if ( file_exists(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php') ) {
-              if ( file_exists(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
-                include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
+            if ( is_file('includes/modules/content/' . $group . '/' . $module . '.php') ) {
+              if ( is_file('includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
+                include('includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
               }
 
-              include(DIR_WS_MODULES . 'content/' . $group . '/' . $module . '.php');
+              include('includes/modules/content/' . $group . '/' . $module . '.php');
             }
           }
 
@@ -177,6 +187,22 @@
       }
 
       return $result;
+    }
+
+    function getFile($file, $template = null) {
+      if (!isset($template)) {
+        $template = $this->getCode();
+      }
+
+      return OSCOM::BASE_DIR . 'Sites/' . OSCOM::getSite() . '/Templates/' . $template . '/' . $file;
+    }
+
+    function getPublicFile($file, $template = null) {
+      if (!isset($template)) {
+        $template = $this->getCode();
+      }
+
+      return OSCOM::linkPublic('Templates/' . $template . '/' . $file);
     }
   }
 ?>

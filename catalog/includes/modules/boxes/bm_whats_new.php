@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_whats_new() {
+    function __construct() {
       $this->title = MODULE_BOXES_WHATS_NEW_TITLE;
       $this->description = MODULE_BOXES_WHATS_NEW_DESCRIPTION;
 
@@ -53,7 +53,7 @@
         } else {
           $whats_new_price = $currencies->display_price($random_product['products_price'], tep_get_tax_rate($random_product['products_tax_class_id']));
         }
-                
+
         ob_start();
         include('includes/modules/boxes/templates/whats_new.php');
         $data = ob_get_clean();
@@ -90,7 +90,7 @@
         'configuration_value' => 'Left Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

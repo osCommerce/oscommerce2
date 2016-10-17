@@ -10,6 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -61,12 +64,12 @@
       }
 
       if ($response != 'OK') {
-        $messageStack->add_session(ERROR_INFO_SUBMIT, 'error');
+        $OSCOM_MessageStack->add(ERROR_INFO_SUBMIT, 'error');
       } else {
-        $messageStack->add_session(SUCCESS_INFO_SUBMIT, 'success');
+        $OSCOM_MessageStack->add(SUCCESS_INFO_SUBMIT, 'success');
       }
 
-      tep_redirect(tep_href_link(FILENAME_SERVER_INFO));
+      OSCOM::redirect(FILENAME_SERVER_INFO);
     break;
 
     case 'save':
@@ -84,7 +87,7 @@
       break;
   }
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
     <table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -92,7 +95,6 @@
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
           </tr>
         </table></td>
       </tr>
@@ -105,25 +107,16 @@
             <td class="smallText" colspan="2"><?php echo TEXT_EXPORT_INTRO; ?></td>
           </tr>
           <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><?php echo tep_draw_textarea_field('server configuration', 'soft', '100', '15', tep_format_system_info_array($info)); ?></td>
-          </tr>
-          <tr>
-            <td colspan="2"><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+            <td colspan="2"><?php echo HTML::textareaField('server configuration', '100', '15', tep_format_system_info_array($info)); ?></td>
           </tr>
         </table></td>
       </tr>
       <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-      <tr>
-          <td align="right" class="smallText"><?php echo tep_draw_button(IMAGE_SEND, 'arrowreturnthick-1-n', tep_href_link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . tep_draw_button(IMAGE_SAVE, 'disk', tep_href_link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
+          <td align="right" class="smallText"><?php echo HTML::button(IMAGE_SEND, 'fa fa-envelope', OSCOM::link(FILENAME_SERVER_INFO, 'action=submit'), 'primary') . HTML::button(IMAGE_SAVE, 'fa fa-save', OSCOM::link(FILENAME_SERVER_INFO, 'action=save'), 'primary');?>
       </tr>
   <?php
   } else {
-    $server = parse_url(HTTP_SERVER);
+    $server = parse_url(OSCOM::getConfig('http_server'));
 ?>
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="2">
@@ -133,7 +126,7 @@
                 <td class="smallText"><strong><?php echo TITLE_SERVER_HOST; ?></strong></td>
                 <td class="smallText"><?php echo $server['host'] . ' (' . gethostbyname($server['host']) . ')'; ?></td>
                 <td class="smallText">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<strong><?php echo TITLE_DATABASE_HOST; ?></strong></td>
-                <td class="smallText"><?php echo DB_SERVER . ' (' . gethostbyname(DB_SERVER) . ')'; ?></td>
+                <td class="smallText"><?php echo OSCOM::getConfig('db_server') . ' (' . gethostbyname(OSCOM::getConfig('db_server')) . ')'; ?></td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TITLE_SERVER_OS; ?></strong></td>
@@ -152,7 +145,7 @@
                 <td colspan="3" class="smallText"><?php echo $info['system']['uptime']; ?></td>
               </tr>
               <tr>
-                <td colspan="4"><?php echo tep_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
+                <td colspan="4">&nbsp;</td>
               </tr>
               <tr>
                 <td class="smallText"><strong><?php echo TITLE_HTTP_SERVER; ?></strong></td>
@@ -165,15 +158,9 @@
             </table></td>
           </tr>
           <tr>
-            <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-          </tr>
-          <tr>
-            <td class="smallText"><?php echo tep_draw_button(IMAGE_EXPORT, 'triangle-1-nw', tep_href_link(FILENAME_SERVER_INFO, 'action=export'));?></td>
+            <td class="smallText"><?php echo HTML::button(IMAGE_EXPORT, 'fa fa-upload', OSCOM::link(FILENAME_SERVER_INFO, 'action=export'));?></td>
           </tr>
         </table></td>
-      </tr>
-      <tr>
-        <td><?php echo tep_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
       </tr>
       <tr>
         <td>
@@ -198,7 +185,7 @@ hr {display: none;}
     $phpinfo = str_replace('border: 1px', '', $phpinfo);
     preg_match('/<body>(.*)<\/body>/is', $phpinfo, $regs);
     echo '<table border="1" cellpadding="3" width="600" style="border: 0px; border-color: #000000;">' .
-         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . tep_get_version() . '" /></a><h1 class="p">osCommerce Online Merchant v' . tep_get_version() . '</h1></td>' .
+         '  <tr><td><a href="http://www.oscommerce.com"><img border="0" src="images/oscommerce.png" title="osCommerce Online Merchant v' . OSCOM::getVersion() . '" /></a><h1 class="p">osCommerce Online Merchant v' . OSCOM::getVersion() . '</h1></td>' .
          '  </tr>' .
          '</table>';
     echo $regs[1];
@@ -214,6 +201,6 @@ hr {display: none;}
     </table>
 
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
+  require('includes/application_bottom.php');
 ?>

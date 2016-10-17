@@ -10,12 +10,19 @@
   Released under the GNU General Public License
 */
 
-  include(DIR_WS_CLASSES . 'phplot.php');
+  include('includes/classes/phplot.php');
 
   $stats = array(array('0', '0', '0'));
-  $banner_stats_query = tep_db_query("select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from " . TABLE_BANNERS_HISTORY . " where banners_id = '" . $banner_id . "' group by year");
-  while ($banner_stats = tep_db_fetch_array($banner_stats_query)) {
-    $stats[] = array($banner_stats['year'], (($banner_stats['value']) ? $banner_stats['value'] : '0'), (($banner_stats['dvalue']) ? $banner_stats['dvalue'] : '0'));
+  $Qstats = $OSCOM_Db->prepare('select year(banners_history_date) as year, sum(banners_shown) as value, sum(banners_clicked) as dvalue from :table_banners_history where banners_id = :banners_id group by year');
+  $Qstats->bindInt(':banners_id', $banner_id);
+  $Qstats->execute();
+
+  while ($Qstats->fetch()) {
+    $stats[] = [
+      $Qstats->value('year'),
+      $Qstats->valueInt('value'),
+      $Qstats->valueInt('dvalue')
+    ];
   }
 
   $graph = new PHPlot(600, 350, 'images/graphs/banner_yearly-' . $banner_id . '.' . $banner_extension);
@@ -31,7 +38,7 @@
 
   $graph->SetPlotBorderType('left');
   $graph->SetTitleFontSize('4');
-  $graph->SetTitle(sprintf(TEXT_BANNERS_YEARLY_STATISTICS, $banner['banners_title']));
+  $graph->SetTitle(sprintf(TEXT_BANNERS_YEARLY_STATISTICS, $Qbanner->value('banners_title')));
 
   $graph->SetBackgroundColor('white');
 

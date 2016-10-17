@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_categories() {
+    function __construct() {
       $this->title = MODULE_BOXES_CATEGORIES_TITLE;
       $this->description = MODULE_BOXES_CATEGORIES_DESCRIPTION;
 
@@ -36,6 +36,12 @@
       global $oscTemplate, $cPath;
 
       $OSCOM_CategoryTree = new category_tree();
+      $OSCOM_CategoryTree->setCategoryPath($cPath, '<strong>', '</strong>');
+      $OSCOM_CategoryTree->setSpacerString('&nbsp;&nbsp;', 1);
+
+      $OSCOM_CategoryTree->setParentGroupString('<ul class="nav nav-pills nav-stacked">', '</ul>', true);
+
+      $category_tree = $OSCOM_CategoryTree->getTree();
 
       ob_start();
       include('includes/modules/boxes/templates/categories.php');

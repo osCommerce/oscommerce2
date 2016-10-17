@@ -19,7 +19,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -43,17 +43,17 @@
     }
   }
 
-  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_process.php');
+  include('includes/languages/' . $_SESSION['language'] . '/checkout_process.php');
 
 // load selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping($_SESSION['shipping']);
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // Stock Check
@@ -78,15 +78,15 @@
     if (Registry::exists($code)) {
       $OSCOM_PM = Registry::get($code);
     }
-  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
-    $OSCOM_PM = $$_SESSION['payment'];
+  } elseif (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+    $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
     OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
   }
 
-  require(DIR_WS_CLASSES . 'order_total.php');
+  require('includes/classes/order_total.php');
   $order_total_modules = new order_total;
 
   $order_totals = $order_total_modules->process();
@@ -225,8 +225,7 @@
                             'products_price' => $order->products[$i]['price'],
                             'final_price' => $order->products[$i]['final_price'],
                             'products_tax' => $order->products[$i]['tax'],
-                            'products_quantity' => $order->products[$i]['qty'],
-                            'products_full_id' => $order->products[$i]['id']);
+                            'products_quantity' => $order->products[$i]['qty']);
 
     $OSCOM_Db->save('orders_products', $sql_data_array);
     $order_products_id = $OSCOM_Db->lastInsertId();

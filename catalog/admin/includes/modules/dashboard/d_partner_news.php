@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\FileSystem;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class d_partner_news {
     var $code = 'd_partner_news';
     var $title;
@@ -39,21 +43,25 @@
       $output = null;
 
       if (is_array($result) && !empty($result)) {
-        $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                  '  <tr class="dataTableHeadingRow">' .
-                  '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_TITLE . '</td>' .
-                  '  </tr>';
+        $output = '<table class="table table-hover">
+                    <thead>
+                      <tr class="info">
+                        <th>' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_TITLE . '</th>
+                      </tr>
+                    </thead>
+                    <tbody>';
 
         foreach ($result as $p) {
-          $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                     '    <td class="dataTableContent"><a href="' . $p['url'] . '" target="_blank"><strong>' . $p['title'] . '</strong></a> (' . $p['category_title'] . ')<br />' . $p['status_update'] . '</td>' .
-                     '  </tr>';
+          $output .= '    <tr>
+                            <td><a href="' . $p['url'] . '" target="_blank"><strong>' . $p['title'] . '</strong></a> <span class="label label-info">' . $p['category_title'] . '</span><br />' . $p['status_update'] . '</td>
+                          </tr>';
         }
 
-        $output .= '  <tr class="dataTableRow">' .
-                   '    <td class="dataTableContent" align="right" colspan="2"><a href="http://www.oscommerce.com/Services" target="_blank">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_MORE_TITLE . '</a></td>' .
-                   '  </tr>' .
-                   '</table>';
+        $output .= '    <tr>
+                          <td class="text-right"><a href="https://www.oscommerce.com/Services" target="_blank">' . MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_MORE_TITLE . '</a></td>
+                        </tr>
+                      </tbody>
+                    </table>';
       }
 
       return $output;
@@ -62,9 +70,9 @@
     function _getContent() {
       $result = null;
 
-      $filename = DIR_FS_CACHE . 'oscommerce_partners_news.cache';
+      $filename = OSCOM::BASE_DIR . 'Work/Cache/oscommerce_website-partner_news.cache';
 
-      if ( file_exists($filename) ) {
+      if ( is_file($filename) ) {
         $difference = floor((time() - filemtime($filename)) / 60);
 
         if ( $difference < 60 ) {
@@ -109,7 +117,7 @@
         if ( !empty($result) ) {
           $result = json_decode($result, true);
 
-          if ( is_writable(DIR_FS_CACHE) ) {
+          if ( FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache') ) {
             file_put_contents($filename, serialize($result), LOCK_EX);
           }
         }
@@ -127,12 +135,32 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Partner News Module', 'MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_STATUS', 'True', 'Do you want to show the latest osCommerce Partner News on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Partner News Module',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to show the latest osCommerce Partner News on the dashboard?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_PARTNER_NEWS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

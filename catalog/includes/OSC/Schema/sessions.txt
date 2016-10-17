@@ -1,0 +1,9 @@
+sesskey varchar(128) not_null
+expiry int(11) unsigned not_null
+value text not_null
+--
+primary sesskey
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

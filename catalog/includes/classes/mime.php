@@ -24,7 +24,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Sets up the object.
  *
  * @param $body   - The body of the mime part if any.
@@ -38,7 +38,7 @@
  * @access public
  */
 
-    function mime($body, $params = '') {
+    function __construct($body, $params = '') {
       if ($params == '') $params = array();
 
 // Make sure we use the correct linfeed sequence
@@ -96,7 +96,7 @@
 
 /**
  * encode()
- * 
+ *
  * Encodes and returns the email. Also stores
  * it in the encoded member variable
  *
@@ -138,7 +138,7 @@
 
 /**
  * &addSubPart()
- * 
+ *
  * Adds a subpart to current mime part and returns
  * a reference to it
  *
@@ -159,7 +159,7 @@
 
 /**
  * _getEncodedData()
- * 
+ *
  * Returns encoded data based upon encoding passed to it
  *
  * @param $data     The data to encode.
@@ -184,11 +184,11 @@
 
 /**
  * quoteadPrintableEncode()
- * 
+ *
  * Encodes data to quoted-printable standard.
  *
  * @param $input    The data to encode
- * @param $line_max Optional max line length. Should 
+ * @param $line_max Optional max line length. Should
  *                  not be more than 76 chars
  *
  * @access private

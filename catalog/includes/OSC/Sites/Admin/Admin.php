@@ -2,34 +2,43 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\Sites\Admin;
 
 use OSC\OM\Apps;
 use OSC\OM\Cache;
+use OSC\OM\Cookies;
 use OSC\OM\Db;
+use OSC\OM\ErrorHandler;
 use OSC\OM\Hooks;
+use OSC\OM\Language;
+use OSC\OM\MessageStack;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
+use OSC\OM\Session;
 
 class Admin extends \OSC\OM\SitesAbstract
 {
-    public $default_page = 'Dashboard';
-
     protected function init()
     {
-        global $request_type, $cookie_domain, $cookie_path, $PHP_SELF, $login_request, $messageStack, $cfgModules;
+        global $request_type, $PHP_SELF, $login_request, $cfgModules, $oscTemplate;
+
+        $OSCOM_Cookies = new Cookies();
+        Registry::set('Cookies', $OSCOM_Cookies);
 
         Registry::set('Cache', new Cache());
 
         $OSCOM_Db = Db::initialize();
         Registry::set('Db', $OSCOM_Db);
 
-// TODO legacy
-        tep_db_connect() or die('Unable to connect to database server!');
+        Registry::set('Hooks', new Hooks());
+
+        Registry::set('Language', new Language());
+
+        Registry::set('MessageStack', new MessageStack());
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
@@ -47,47 +56,21 @@ class Admin extends \OSC\OM\SitesAbstract
         define('LOCAL_EXE_ZIP', 'zip');
         define('LOCAL_EXE_UNZIP', 'unzip');
 
-// Define how do we update currency exchange rates
-// Possible values are 'oanda' 'xe' or ''
-        define('CURRENCY_SERVER_PRIMARY', 'oanda');
-        define('CURRENCY_SERVER_BACKUP', 'xe');
-
 // set the type of request (secure or not)
         if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $request_type =  'SSL';
-
-            $cookie_domain = HTTPS_COOKIE_DOMAIN;
-            $cookie_path = HTTPS_COOKIE_PATH;
+            $request_type = 'SSL';
         } else {
-            $request_type =  'NONSSL';
-
-            $cookie_domain = HTTP_COOKIE_DOMAIN;
-            $cookie_path = HTTP_COOKIE_PATH;
+            $request_type = 'NONSSL';
         }
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(DIR_WS_HTTPS_ADMIN) : strlen(DIR_WS_ADMIN));
+        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(OSCOM::getConfig('https_path')) : strlen(OSCOM::getConfig('http_path')));
 
-// set the session name and save path
-        tep_session_name('oscomadminid');
-        tep_session_save_path(SESSION_WRITE_DIRECTORY);
+        $OSCOM_Session = Session::load();
+        Registry::set('Session', $OSCOM_Session);
 
-// set the session cookie parameters
-// set the session cookie parameters
-        session_set_cookie_params(0, $cookie_path, $cookie_domain);
-
-        if (function_exists('ini_set')) {
-            ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-        }
-
-// lets start our session
-        tep_session_start();
-
-// TODO remove when no more global sessions exist
-        foreach ($_SESSION as $k => $v) {
-            $GLOBALS[$k] =& $_SESSION[$k];
-        }
+        $OSCOM_Session->start();
 
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
@@ -139,33 +122,33 @@ class Admin extends \OSC\OM\SitesAbstract
             }
 
             if ($redirect == true) {
-                tep_redirect(tep_href_link(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : '')));
+                OSCOM::redirect(FILENAME_LOGIN, (isset($_SESSION['redirect_origin']['auth_user']) ? 'action=process' : ''));
             }
         }
 
 // include the language translations
         $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
-        require(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '.php');
+        require(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '.php');
         setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
         $current_page = basename($PHP_SELF);
-        if (file_exists(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page)) {
-            include(DIR_FS_ADMIN . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
+        if (is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page)) {
+            include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
         }
 
-        $messageStack = new \messageStack();
+        if (isset($_SESSION['admin'])) {
+            if (count(glob(ErrorHandler::getDirectory() . '/errors-*.txt')) > 0) {
+                Registry::get('MessageStack')->add('Errors have been logged. Please check: ' . ErrorHandler::getDirectory(), 'error');
+            }
+        }
+
+        $oscTemplate = new \oscTemplate();
 
         $cfgModules = new \cfg_modules();
-
-        Registry::set('Hooks', new Hooks());
     }
 
     public function setPage()
     {
-        $page_code = $this->default_page;
-
-        $class = 'OSC\Sites\\' . $this->code . '\Pages\\' . $page_code . '\\' . $page_code;
-
         if (!empty($_GET)) {
             $req = basename(array_keys($_GET)[0]);
 
@@ -198,12 +181,14 @@ class Admin extends \OSC\OM\SitesAbstract
             }
         }
 
-        if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
-            $this->page = new $class($this);
+        if (isset($class)) {
+            if (is_subclass_of($class, 'OSC\OM\PagesInterface')) {
+                $this->page = new $class($this);
 
-            $this->page->runActions();
-        } else {
-            trigger_error('OSC\Sites\Admin\Admin::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+                $this->page->runActions();
+            } else {
+                trigger_error('OSC\Sites\Admin\Admin::setPage() - ' . $page_code . ': Page does not implement OSC\OM\PagesInterface and cannot be loaded.');
+            }
         }
     }
 

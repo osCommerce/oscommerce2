@@ -49,7 +49,7 @@
 // - The file is present in the DOWNLOAD directory, AND EITHER
 // - No expiry date is enforced (maxdays == 0), OR
 // - The expiry date is not reached
-      if ( ($Qdownloads->valueInt('download_count') > 0) && (file_exists(DIR_FS_DOWNLOAD . $Qdownloads->value('orders_products_filename'))) && ( ($Qdownloads->valueInt('download_maxdays') == 0) || ($download_timestamp > time())) ) {
+      if ( ($Qdownloads->valueInt('download_count') > 0) && (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'download/' . $Qdownloads->value('orders_products_filename'))) && ( ($Qdownloads->valueInt('download_maxdays') == 0) || ($download_timestamp > time())) ) {
         echo '        <td><a href="' . OSCOM::link('download.php', 'order=' . $last_order . '&id=' . $Qdownloads->valueInt('orders_products_download_id')) . '">' . $Qdownloads->value('products_name') . '</a></td>' . "\n";
       } else {
         echo '        <td>' . $Qdownloads->value('products_name') . '</td>' . "\n";

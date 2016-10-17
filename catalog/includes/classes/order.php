@@ -15,7 +15,7 @@
   class order {
     var $info, $totals, $products, $customer, $delivery, $content_type;
 
-    function order($order_id = '') {
+    function __construct($order_id = '') {
       $this->info = array();
       $this->totals = array();
       $this->products = array();
@@ -310,7 +310,7 @@
           if (Registry::exists($code)) {
             $OSCOM_PM = Registry::get($code);
           }
-        } elseif (is_object($GLOBALS[$_SESSION['payment']])) {
+        } elseif (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
           $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
         }
 

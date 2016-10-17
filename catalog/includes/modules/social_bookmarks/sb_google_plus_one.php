@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,7 @@
     var $icon;
     var $enabled = false;
 
-    function sb_google_plus_one() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_DESCRIPTION;
@@ -60,7 +61,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+    window.___gcfg.lang = "' . HTML::outputProtected($language_code) . '";
   }
 
   (function() {

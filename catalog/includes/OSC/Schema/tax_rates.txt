@@ -1,0 +1,14 @@
+tax_rates_id int not_null auto_increment
+tax_zone_id int not_null
+tax_class_id int not_null
+tax_priority int(5) default(1)
+tax_rate decimal(7,4) not_null
+tax_description varchar(255) not_null
+last_modified datetime
+date_added datetime not_null
+--
+primary tax_rates_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

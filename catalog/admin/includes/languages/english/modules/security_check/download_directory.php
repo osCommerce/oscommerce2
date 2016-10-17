@@ -10,5 +10,7 @@
   Released under the GNU General Public License
 */
 
-define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'The downloadable products directory does not exist: ' . DIR_FS_DOWNLOAD . '. Downloadable products will not work until this directory is valid.');
+use OSC\OM\OSCOM;
+
+define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'The downloadable products directory does not exist: ' . OSCOM::getConfig('dir_root', 'Shop') . 'download/. Downloadable products will not work until this directory is valid.');
 ?>

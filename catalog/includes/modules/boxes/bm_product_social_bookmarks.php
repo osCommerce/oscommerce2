@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_product_social_bookmarks() {
+    function __construct() {
       $this->title = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_TITLE;
       $this->description = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_DESCRIPTION;
 
@@ -44,7 +44,7 @@
           $class = basename($sbm, '.php');
 
           if ( !class_exists($class) ) {
-            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
+            include('includes/languages/' . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
             include('includes/modules/social_bookmarks/' . $class . '.php');
           }
 
@@ -56,6 +56,7 @@
         }
 
         if ( !empty($social_bookmarks) ) {
+
           ob_start();
           include('includes/modules/boxes/templates/product_social_bookmarks.php');
           $data = ob_get_clean();
@@ -93,7 +94,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

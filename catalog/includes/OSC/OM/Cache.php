@@ -8,6 +8,7 @@
 
 namespace OSC\OM;
 
+use OSC\OM\FileSystem;
 use OSC\OM\OSCOM;
 
 class Cache
@@ -29,8 +30,8 @@ class Cache
             return false;
         }
 
-        if (is_writable(OSCOM::BASE_DIR . 'work/')) {
-            return file_put_contents(OSCOM::BASE_DIR . 'work/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
+            return file_put_contents(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
         }
 
         return false;
@@ -48,9 +49,9 @@ class Cache
 
         $this->key = $key;
 
-        $filename = OSCOM::BASE_DIR . 'work/' . $key . '.cache';
+        $filename = OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache';
 
-        if (file_exists($filename)) {
+        if (is_file($filename)) {
             $difference = floor((time() - filemtime($filename)) / 60);
 
             if (empty($expire) || (is_numeric($expire) && ($difference < $expire))) {
@@ -87,6 +88,56 @@ class Cache
         $this->write($this->data);
     }
 
+    public function getTime($key)
+    {
+        $key = basename($key);
+
+        if (!static::hasSafeName($key)) {
+            trigger_error('OSCOM_Cache::getTime(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+
+            return false;
+        }
+
+        $filename = OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache';
+
+        if (is_file($filename)) {
+            return filemtime($filename);
+        }
+
+        return false;
+    }
+
+    public static function exists($key, $strict = true)
+    {
+        $key = basename($key);
+
+        if (!static::hasSafeName($key)) {
+            trigger_error('OSCOM_Cache::exists(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+
+            return false;
+        }
+
+        if (is_file(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache')) {
+            return true;
+        }
+
+        if ($strict === false) {
+            $key_length = strlen($key);
+
+            $d = dir(OSCOM::BASE_DIR . 'Work/Cache/');
+
+            while (($entry = $d->read()) !== false) {
+                if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
+                    $d->close();
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static function clear($key)
     {
         $key = basename($key);
@@ -97,18 +148,19 @@ class Cache
             return false;
         }
 
-        if (is_writable(OSCOM::BASE_DIR . 'work/')) {
-            $key_length = strlen($key);
-
-            $d = dir(OSCOM::BASE_DIR . 'work/');
-
-            while (($entry = $d->read()) !== false) {
-                if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
-                    @unlink(OSCOM::BASE_DIR . 'work/' . $entry);
-                }
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
+            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '*.cache') as $c) {
+                unlink($c);
             }
+        }
+    }
 
-            $d->close();
+    public static function clearAll()
+    {
+        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
+            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
+                unlink($c);
+            }
         }
     }
 }

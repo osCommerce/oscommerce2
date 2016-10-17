@@ -16,14 +16,14 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php', '', 'SSL');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account.php');
+  require('includes/languages/' . $_SESSION['language'] . '/account.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php', '', 'SSL'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -37,14 +37,17 @@
 ?>
 
 <div class="contentContainer">
+  <div class="row">
 
-<?php
-  echo $oscTemplate->getContent('account');
-?>
+    <?php
+    echo $oscTemplate->getContent('account');
+    ?>
 
+  </div>
 </div>
 
+
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

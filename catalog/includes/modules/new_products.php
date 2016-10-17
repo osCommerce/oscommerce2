@@ -26,7 +26,8 @@
   if ($Qnew->fetch() !== false) {
     echo '<h3>' . sprintf(TABLE_HEADING_NEW_PRODUCTS, strftime('%B')) . '</h3>';
 
-    echo '<div class="row">';
+    echo '<div class="row" itemtype="http://schema.org/ItemList">';
+    echo '  <meta itemprop="numberOfItems" content="' . count($Qnew->fetchAll()) . '" />';
     do {
       include('includes/modules/templates/new_products.php');
     } while ($Qnew->fetch());

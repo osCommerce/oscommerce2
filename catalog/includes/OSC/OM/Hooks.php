@@ -2,20 +2,20 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
 
 use OSC\OM\Apps;
 use OSC\OM\OSCOM;
-use OSC\OM\Registry;
 
 class Hooks
 {
     protected $site;
     protected $hooks = [];
+    protected $watches = [];
 
     public function __construct($site = null)
     {
@@ -26,39 +26,61 @@ class Hooks
         $this->site = basename($site);
     }
 
-    public function call($group, $hook, $action = 'execute', $flatten = false)
+    public function call($group, $hook, $parameters = null, $action = null)
     {
+        if (!isset($action)) {
+            $action = 'execute';
+        }
+
         if (!isset($this->hooks[$this->site][$group][$hook][$action])) {
             $this->register($group, $hook, $action);
         }
 
+        $calls = [];
+
+        if (isset($this->hooks[$this->site][$group][$hook][$action])) {
+            $calls = $this->hooks[$this->site][$group][$hook][$action];
+        }
+
+        if (isset($this->watches[$this->site][$group][$hook][$action])) {
+            $calls = array_merge($calls, $this->watches[$this->site][$group][$hook][$action]);
+        }
+
         $result = [];
 
-        foreach ($this->hooks[$this->site][$group][$hook][$action] as $code) {
-            $class = Apps::getModuleClass($code, 'Hooks');
-            $regclass = 'Hook_' . str_replace(['/', '\\'], '_', $code);
+        foreach ($calls as $code) {
+            $bait = null;
 
-            if (!Registry::exists($regclass)) {
-                Registry::set($regclass, new $class());
+            if (is_string($code)) {
+                $class = Apps::getModuleClass($code, 'Hooks');
+
+                $obj = new $class();
+
+                $bait = $obj->$action($parameters);
+            } else {
+                $ref = new \ReflectionFunction($code);
+
+                if ($ref->isClosure()) {
+                    $bait = $code($parameters);
+                }
             }
-
-            $bait = Registry::get($regclass)->$action();
 
             if (!empty($bait)) {
                 $result[] = $bait;
             }
         }
 
-        if ($flatten === true) {
-            $result = implode('', $result);
-        }
-
         return $result;
     }
 
-    public function output($group, $hook, $action = 'execute')
+    public function output()
     {
-        return $this->call($group, $hook, $action, true);
+        return implode('', call_user_func_array([$this, 'call'], func_get_args()));
+    }
+
+    public function watch($group, $hook, $action, $code)
+    {
+        $this->watches[$this->site][$group][$hook][$action][] = $code;
     }
 
     protected function register($group, $hook, $action)
@@ -67,9 +89,9 @@ class Hooks
 
         $this->hooks[$this->site][$group][$hook][$action] = [];
 
-        $directory = OSCOM::BASE_DIR . 'Module/Hooks/' . $this->site . '/' . $group;
+        $directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/Module/Hooks/' . $this->site . '/' . $group;
 
-        if (file_exists($directory)) {
+        if (is_dir($directory)) {
             if ($dir = new \DirectoryIterator($directory)) {
                 foreach ($dir as $file) {
                     if (!$file->isDot() && !$file->isDir() && ($file->getExtension() == 'php') && ($file->getBasename('.php') == $hook)) {

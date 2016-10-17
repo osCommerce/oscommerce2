@@ -10,13 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheck_download_directory {
     var $type = 'warning';
 
     function securityCheck_download_directory() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/download_directory.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/download_directory.php');
     }
 
     function pass() {
@@ -24,12 +24,7 @@
         return true;
       }
 
-//backwards compatibility <2.2RC3; DIR_FS_DOWNLOAD not in configure.php
-      if (!defined('DIR_FS_DOWNLOAD')) {
-        return true;
-      }
-
-      return is_dir(DIR_FS_DOWNLOAD);
+      return is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'download/');
     }
 
     function getMessage() {

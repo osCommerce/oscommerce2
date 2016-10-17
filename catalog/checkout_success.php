@@ -39,12 +39,12 @@
     OSCOM::redirect('index.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_success.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_success.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -57,11 +57,15 @@
   <?php echo $page_content; ?>
 </div>
 
-<div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+<div class="contentContainer">
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary', null, 'btn-success'); ?></div>
+  </div>
+</div>
 
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>
