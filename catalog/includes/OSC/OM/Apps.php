@@ -124,7 +124,7 @@ class Apps
             if (!class_exists($class)) {
                 trigger_error('OSC\OM\Apps::getModuleClass(): ' . $type . ' module class not found in OSC\OM\Modules\\');
 
-                return $result;
+                return false;
             }
 
             Registry::set('ModuleType' . $type, new $class());
