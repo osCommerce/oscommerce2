@@ -57,9 +57,9 @@
         }
 
 // create additional orders_status records
-        $orders_status_query = tep_db_query("select orders_status_id, orders_status_name, public_flag, downloads_flag from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
+        $orders_status_query = tep_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$languages_id . "'");
         while ($orders_status = tep_db_fetch_array($orders_status_query)) {
-          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name, public_flag, downloads_flag) values ('" . (int)$orders_status['orders_status_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($orders_status['orders_status_name']) . "', '" . (int)$orders_status['public_flag'] . "', '" . (int)$orders_status['downloads_flag'] . "')");
+          tep_db_query("insert into " . TABLE_ORDERS_STATUS . " (orders_status_id, language_id, orders_status_name) values ('" . (int)$orders_status['orders_status_id'] . "', '" . (int)$insert_id . "', '" . tep_db_input($orders_status['orders_status_name']) . "')");
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
