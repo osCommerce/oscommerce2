@@ -41,92 +41,93 @@
         $insert_id = $OSCOM_Db->lastInsertId();
 
 // create additional categories_description records
-        $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name from :table_categories c left join :table_categories_description cd on c.categories_id = cd.categories_id where cd.language_id = :language_id');
+        $Qcategories = $OSCOM_Db->prepare('select c.categories_id as orig_category_id, cd.* from :table_categories c left join :table_categories_description cd on c.categories_id = cd.categories_id where cd.language_id = :language_id');
         $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
         $Qcategories->execute();
 
         while ($Qcategories->fetch()) {
-          $OSCOM_Db->save('categories_description', [
-            'categories_id' => $Qcategories->valueInt('categories_id'),
-            'language_id' => $insert_id,
-            'categories_name' => $Qcategories->value('categories_name')
-          ]);
+          $cols = $Qcategories->toArray();
+
+          $cols['categories_id'] = $cols['orig_category_id'];
+          $cols['language_id'] = $insert_id;
+
+          unset($cols['orig_category_id']);
+
+          $OSCOM_Db->save('categories_description', $cols);
         }
 
 // create additional products_description records
-        $Qproducts = $OSCOM_Db->prepare('select p.products_id, pd.products_name, pd.products_description, pd.products_url from :table_products p left join :table_products_description pd on p.products_id = pd.products_id where pd.language_id = :language_id');
+        $Qproducts = $OSCOM_Db->prepare('select p.products_id as orig_product_id, pd.* from :table_products p left join :table_products_description pd on p.products_id = pd.products_id where pd.language_id = :language_id');
         $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
         $Qproducts->execute();
 
         while ($Qproducts->fetch()) {
-          $OSCOM_Db->save('products_description', [
-            'products_id' => $Qproducts->valueInt('products_id'),
-            'language_id' => $insert_id,
-            'products_name' => $Qproducts->value('products_name'),
-            'products_description' => $Qproducts->value('products_description'),
-            'products_url' => $Qproducts->value('products_url')
-          ]);
+          $cols = $Qproducts->toArray();
+
+          $cols['products_id'] = $cols['orig_product_id'];
+          $cols['language_id'] = $insert_id;
+          $cols['products_viewed'] = 0;
+
+          unset($cols['orig_product_id']);
+
+          $OSCOM_Db->save('products_description', $cols);
         }
 
 // create additional products_options records
-        $Qoptions = $OSCOM_Db->get('products_options', [
-          'products_options_id',
-          'products_options_name'
-        ], [
+        $Qoptions = $OSCOM_Db->get('products_options', '*', [
           'language_id' => $_SESSION['languages_id']
         ]);
 
         while ($Qoptions->fetch()) {
-          $OSCOM_Db->save('products_options', [
-            'products_options_id' => $Qoptions->valueInt('products_options_id'),
-            'language_id' => $insert_id,
-            'products_options_name' => $Qoptions->value('products_options_name')
-          ]);
+          $cols = $Qoptions->toArray();
+
+          $cols['language_id'] = $insert_id;
+
+          $OSCOM_Db->save('products_options', $cols);
         }
 
 // create additional products_options_values records
-        $Qvalues = $OSCOM_Db->get('products_options_values', [
-          'products_options_values_id',
-          'products_options_values_name'
-        ], [
+        $Qvalues = $OSCOM_Db->get('products_options_values', '*', [
           'language_id' => $_SESSION['languages_id']
         ]);
 
         while ($Qvalues->fetch()) {
-          $OSCOM_Db->save('products_options_values', [
-            'products_options_values_id' => $Qvalues->valueInt('products_options_values_id'),
-            'language_id' => $insert_id,
-            'products_options_values_name' => $Qvalues->value('products_options_values_name')
-          ]);
+          $cols = $Qvalues->toArray();
+
+          $cols['language_id'] = $insert_id;
+
+          $OSCOM_Db->save('products_options_values', $cols);
         }
 
 // create additional manufacturers_info records
-        $Qmanufacturers = $OSCOM_Db->prepare('select m.manufacturers_id, mi.manufacturers_url from :table_manufacturers m left join :table_manufacturers_info mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = :languages_id');
+        $Qmanufacturers = $OSCOM_Db->prepare('select m.manufacturers_id as orig_manufacturer_id, mi.* from :table_manufacturers m left join :table_manufacturers_info mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = :languages_id');
         $Qmanufacturers->bindInt(':languages_id', $_SESSION['languages_id']);
         $Qmanufacturers->execute();
 
         while ($Qmanufacturers->fetch()) {
-          $OSCOM_Db->save('manufacturers_info', [
-            'manufacturers_id' => $Qmanufacturers->valueInt('manufacturers_id'),
-            'languages_id' => $insert_id,
-            'manufacturers_url' => $Qmanufacturers->value('manufacturers_url')
-          ]);
+          $cols = $Qmanufacturers->toArray();
+
+          $cols['manufacturers_id'] = $cols['orig_manufacturer_id'];
+          $cols['languages_id'] = $insert_id;
+
+          unset($cols['orig_manufacturer_id']);
+          unset($cols['url_clicks']);
+          unset($cols['date_last_click']);
+
+          $OSCOM_Db->save('manufacturers_info', $cols);
         }
 
 // create additional orders_status records
-        $Qstatus = $OSCOM_Db->get('orders_status', [
-          'orders_status_id',
-          'orders_status_name'
-        ], [
+        $Qstatus = $OSCOM_Db->get('orders_status', '*', [
           'language_id' => $_SESSION['languages_id']
         ]);
 
         while ($Qstatus->fetch()) {
-          $OSCOM_Db->save('orders_status', [
-            'orders_status_id' => $Qstatus->valueInt('orders_status_id'),
-            'language_id' => $insert_id,
-            'orders_status_name' => $Qstatus->value('orders_status_name')
-          ]);
+          $cols = $Qstatus->toArray();
+
+          $cols['language_id'] = $insert_id;
+
+          $OSCOM_Db->save('orders_status', $cols);
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
