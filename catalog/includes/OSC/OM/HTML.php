@@ -125,7 +125,7 @@ class HTML
             $form .= static::hiddenField('action', $flags['action']);
         }
 
-        if (($flags['session_id'] === true) && Registry::get('Session')->hasStarted() && (strlen(SID) > 0)) {
+        if (($flags['session_id'] === true) && Registry::get('Session')->hasStarted() && (strlen(SID) > 0) && !Registry::get('Session')->isForceCookies()) {
             $form .= static::hiddenField(session_name(), session_id());
         }
 
