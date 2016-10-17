@@ -365,24 +365,24 @@ class Db extends \PDO
 
         for ($i = $pos; $i < $sql_length; $i++) {
 // remove comments
-            if (($import_queries[0] == '#') || (substr($import_queries, 0, 2) == '--')) {
+            if ((substr($import_queries, 0, 1) == '#') || (substr($import_queries, 0, 2) == '--')) {
                 $import_queries = ltrim(substr($import_queries, strpos($import_queries, "\n")));
                 $sql_length = strlen($import_queries);
                 $i = strpos($import_queries, ';') - 1;
                 continue;
             }
 
-            if ($import_queries[($i+1)] == "\n") {
+            if (substr($import_queries, $i + 1, 1) == "\n") {
                 $next = '';
 
                 for ($j = ($i+2); $j < $sql_length; $j++) {
-                    if (!empty($import_queries[$j])) {
+                    if (!empty(substr($import_queries, $j, 1))) {
                         $next = substr($import_queries, $j, 6);
 
-                        if (($next[0] == '#') || (substr($next, 0, 2) == '--')) {
+                        if ((substr($next, 0, 1) == '#') || (substr($next, 0, 2) == '--')) {
 // find out where the break position is so we can remove this line (#comment line)
                             for ($k = $j; $k < $sql_length; $k++) {
-                                if ($import_queries[$k] == "\n") {
+                                if (substr($import_queries, $k, 1) == "\n") {
                                     break;
                                 }
                             }
