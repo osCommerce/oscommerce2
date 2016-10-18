@@ -148,7 +148,7 @@
 
 <h3><?= '#' . $order->info['id'] . ' (' . strip_tags($order->info['total']) . ')'; ?></h3>
 
-<div style="text-align: right; padding-bottom: 15px;"><?= HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action'))), null, null, 'btn-info') . HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-text-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), null, array('newwindow' => true), 'btn-primary') . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-clipboard', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), null, array('newwindow' => true), 'btn-primary'); ?></div>
+<div style="text-align: right; padding-bottom: 15px;"><?= HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_ORDERS, tep_get_all_get_params(array('action'))), null, 'btn-info') . HTML::button(IMAGE_ORDERS_INVOICE, 'fa fa-file-text-o', OSCOM::link(FILENAME_ORDERS_INVOICE, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary') . HTML::button(IMAGE_ORDERS_PACKINGSLIP, 'fa fa-clipboard', OSCOM::link(FILENAME_ORDERS_PACKINGSLIP, 'oID=' . $_GET['oID']), array('newwindow' => true), 'btn-primary'); ?></div>
 
 <div id="orderTabs">
   <ul class="nav nav-tabs">
@@ -357,7 +357,7 @@
         </div>
 
         <div class="form-group">
-          <?= HTML::button(IMAGE_UPDATE, 'fa fa-save', null, null, null, 'btn-success'); ?>
+          <?= HTML::button(IMAGE_UPDATE, 'fa fa-save', null, null, 'btn-success'); ?>
         </div>
       </form>
 
@@ -426,7 +426,7 @@
             $contents = array('form' => HTML::form('orders', OSCOM::link('orders.php', tep_get_all_get_params(array('action')) . '&action=deleteconfirm')));
             $contents[] = array('text' => TEXT_INFO_DELETE_INTRO . '<br /><br /><strong>#' . $order->info['id'] . '</strong> ' . HTML::outputProtected($order->customer['name']) . ' (' . strip_tags($order->info['total']) . ')');
             $contents[] = array('text' => HTML::checkboxField('restock') . ' ' . TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link('orders.php', tep_get_all_get_params(array('action'))), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link('orders.php', tep_get_all_get_params(array('action'))), null, 'btn-link'));
           }
           break;
       }

@@ -93,7 +93,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link('action_recorder.php', 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), 'primary', null, 'btn-danger'); ?>
+  <?= HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link('action_recorder.php', 'action=expire' . (isset($_GET['module']) && in_array($_GET['module'], $modules_array) ? '&module=' . $_GET['module'] : '')), null, 'btn-danger'); ?>
 </div>
 
 <h2><i class="fa fa-tasks"></i> <a href="<?= OSCOM::link('action_recorder.php'); ?>"><?= HEADING_TITLE; ?></a></h2>

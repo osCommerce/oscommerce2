@@ -134,7 +134,7 @@ function check_form() {
 
     <div class="buttonSet row">
       <div class="col-xs-6"><a data-toggle="modal" href="#helpSearch" class="btn btn-primary"><?php echo TEXT_SEARCH_HELP_LINK; ?></a></div>
-      <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_SEARCH, 'fa fa-search', null, 'primary', null, 'btn-success'); ?></div>
+      <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_SEARCH, 'fa fa-search', null, null, 'btn-success'); ?></div>
     </div>
 
     <div class="modal fade" id="helpSearch" tabindex="-1" role="dialog" aria-labelledby="helpSearchLabel" aria-hidden="true">

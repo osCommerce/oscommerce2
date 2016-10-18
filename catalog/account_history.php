@@ -66,7 +66,7 @@
           <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_PRODUCTS . '</strong> ' . $Qproducts->valueInt('count') . '<br /><strong>' . TEXT_ORDER_COST . '</strong> ' . strip_tags($order['order_total']); ?></div>
         </div>
       </div>
-      <div class="panel-footer"><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'fa fa-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $order['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs'); ?></div>
+      <div class="panel-footer"><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'fa fa-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $order['orders_id'], 'SSL'), null, 'btn-primary btn-xs'); ?></div>
     </div>
   </div>
 

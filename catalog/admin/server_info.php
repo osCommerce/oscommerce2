@@ -64,8 +64,8 @@ if (!isset($_GET['action'])) {
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_EXPORT, 'fa fa-upload', OSCOM::link('server_info.php', 'action=export'), null, null, 'btn-info'); ?>
-  <?= HTML::button(OSCOM::getDef('button_php_info'), 'fa fa-info-circle', OSCOM::link('server_info.php', 'action=getPhpInfo'), null, ['newwindow' => true], 'btn-info'); ?>
+  <?= HTML::button(IMAGE_EXPORT, 'fa fa-upload', OSCOM::link('server_info.php', 'action=export'), null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('button_php_info'), 'fa fa-info-circle', OSCOM::link('server_info.php', 'action=getPhpInfo'), ['newwindow' => true], 'btn-info'); ?>
 </div>
 
 <?php
@@ -92,7 +92,7 @@ if ($action == 'export') {
 </p>
 
 <p>
-  <?= HTML::button(OSCOM::getDef('button_submit_to_oscommerce'), 'fa fa-upload', OSCOM::link('server_info.php', 'action=submit'), null, null, 'btn-info') . '&nbsp;' . HTML::button(IMAGE_SAVE, 'fa fa-save', OSCOM::link('server_info.php', 'action=save'), null, null, 'btn-info'); ?>
+  <?= HTML::button(OSCOM::getDef('button_submit_to_oscommerce'), 'fa fa-upload', OSCOM::link('server_info.php', 'action=submit'), null, 'btn-info') . '&nbsp;' . HTML::button(IMAGE_SAVE, 'fa fa-save', OSCOM::link('server_info.php', 'action=save'), null, 'btn-info'); ?>
 </p>
 
 <?php

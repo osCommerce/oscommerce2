@@ -96,7 +96,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link('administrators.php', 'action=new'), 'primary', null, 'btn-info'); ?>
+  <?= HTML::button(IMAGE_INSERT, 'fa fa-plus', OSCOM::link('administrators.php', 'action=new'), null, 'btn-info'); ?>
 </div>
 
 <?php
@@ -124,7 +124,7 @@
               $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
               $contents[] = array('text' => TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username', $aInfo->user_name));
               $contents[] = array('text' => TEXT_INFO_NEW_PASSWORD . '<br />' . HTML::passwordField('password'));
-              $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, null, 'btn-link'));
+              $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
               break;
 
             case 'delete':
@@ -133,7 +133,7 @@
               $contents = array('form' => HTML::form('administrator', OSCOM::link(FILENAME_ADMINISTRATORS, 'aID=' . $aInfo->id . '&action=deleteconfirm')));
               $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
               $contents[] = array('text' => '<strong>' . HTML::outputProtected($aInfo->user_name) . '</strong>');
-              $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, null, 'btn-link'));
+              $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
               break;
           }
         }
@@ -145,7 +145,7 @@
       $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
       $contents[] = array('text' => TEXT_INFO_USERNAME . '<br />' . HTML::inputField('username'));
       $contents[] = array('text' => TEXT_INFO_PASSWORD . '<br />' . HTML::passwordField('password'));
-      $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, null, 'btn-link'));
+      $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_ADMINISTRATORS), null, 'btn-link'));
     }
 
     if (tep_not_null($heading) && tep_not_null($contents)) {

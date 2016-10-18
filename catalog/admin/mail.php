@@ -149,7 +149,7 @@
       }
     }
 
-    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope', null, 'primary') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MAIL));
+    echo HTML::button(IMAGE_SEND_EMAIL, 'fa fa-envelope') . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_MAIL));
 ?>
                 </td>
               </tr>
@@ -218,7 +218,7 @@
                 <td colspan="2">&nbsp;</td>
               </tr>
               <tr>
-                <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o', null, 'primary'); ?></td>
+                <td class="smallText" colspan="2" align="right"><?php echo HTML::button(IMAGE_PREVIEW, 'fa fa-file-o'); ?></td>
               </tr>
             </table></td>
           </form></tr>

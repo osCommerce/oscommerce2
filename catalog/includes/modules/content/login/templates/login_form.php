@@ -19,7 +19,7 @@ use OSC\OM\OSCOM;
         <?php echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_TEXT . '"', 'password'); ?>
       </div>
 
-      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_LOGIN, 'fa fa-sign-in', null, 'primary', null, 'btn-success btn-block'); ?></p>
+      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_LOGIN, 'fa fa-sign-in', null, null, 'btn-success btn-block'); ?></p>
 
       </form>
     </div>

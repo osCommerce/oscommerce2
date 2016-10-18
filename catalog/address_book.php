@@ -92,7 +92,7 @@
 <?php
   if (tep_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'fa fa-home', OSCOM::link('address_book_process.php', '', 'SSL'), 'primary'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_ADD_ADDRESS, 'fa fa-home', OSCOM::link('address_book_process.php', '', 'SSL')); ?></div>
 <?php
   }
 ?>

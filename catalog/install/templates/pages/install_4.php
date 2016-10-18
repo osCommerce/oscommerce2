@@ -197,8 +197,8 @@ file_put_contents(OSCOM::BASE_DIR . 'Sites/Admin/site_conf.php', $file_contents)
     <br />
 
     <div class="row">
-      <div class="col-sm-6"><?php echo HTML::button('Online Store (Frontend)', 'fa fa-shopping-cart', $http_server . $http_catalog . 'index.php', 'primary', array('newwindow' => 1), 'btn-success btn-block'); ?></div>
-      <div class="col-sm-6"><?php echo HTML::button('Administration Dashboard (Backend)', 'fa fa-lock', $http_server . $http_catalog . $admin_folder . '/index.php', 'primary', array('newwindow' => 1), 'btn-info btn-block'); ?></div>
+      <div class="col-sm-6"><?php echo HTML::button('Online Store (Frontend)', 'fa fa-shopping-cart', $http_server . $http_catalog . 'index.php', array('newwindow' => 1), 'btn-success btn-block'); ?></div>
+      <div class="col-sm-6"><?php echo HTML::button('Administration Dashboard (Backend)', 'fa fa-lock', $http_server . $http_catalog . $admin_folder . '/index.php', array('newwindow' => 1), 'btn-info btn-block'); ?></div>
     </div>
   </div>
 

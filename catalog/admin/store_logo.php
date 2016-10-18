@@ -75,7 +75,7 @@
             <tr>
               <td class="main" valign="top"><?php echo TEXT_LOGO_IMAGE; ?></td>
               <td class="main"><?php echo HTML::fileField('store_logo'); ?></td>
-              <td class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary'); ?></td>
+              <td class="smallText"><?php echo HTML::button(IMAGE_SAVE, 'fa fa-save'); ?></td>
             </tr>
           </table>
         </form></td>

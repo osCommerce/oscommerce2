@@ -117,7 +117,7 @@
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-send', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-send', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 

@@ -178,7 +178,7 @@
       }
       ?>&nbsp;
     </div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_WRITE_REVIEW, 'fa fa-commenting', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), 'primary', null, 'btn-success'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_WRITE_REVIEW, 'fa fa-commenting', OSCOM::link('product_reviews_write.php', tep_get_all_get_params()), null, 'btn-success'); ?></div>
   </div>
 </div>
 
