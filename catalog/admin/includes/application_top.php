@@ -46,8 +46,9 @@
   OSCOM::loadSite('Admin');
 
   $OSCOM_Db = Registry::get('Db');
-  $OSCOM_MessageStack = Registry::get('MessageStack');
   $OSCOM_Hooks = Registry::get('Hooks');
+  $OSCOM_Language = Registry::get('Language');
+  $OSCOM_MessageStack = Registry::get('MessageStack');
 
 // calculate category path
   if (isset($_GET['cPath'])) {

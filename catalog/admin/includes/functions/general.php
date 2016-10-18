@@ -235,7 +235,7 @@
 
     $output .= "\n";
     }
-    return $output;
+    return trim($output);
 
   }
 
@@ -963,12 +963,13 @@
                             'disable_functions' => @ini_get('disable_functions'),
                             'disable_classes' => @ini_get('disable_classes'),
                             'enable_dl'	=> (int) @ini_get('enable_dl'),
-                            'magic_quotes_gpc' => (int) @ini_get('magic_quotes_gpc'),
-                            'register_globals' => (int) @ini_get('register_globals'),
                             'filter.default'   => @ini_get('filter.default'),
-                            'zend.ze1_compatibility_mode' => (int) @ini_get('zend.ze1_compatibility_mode'),
+                            'default_charset' => @ini_get('default_charset'),
+                            'mbstring.func_overload' => @ini_get('mbstring.func_overload'),
+                            'mbstring.internal_encoding' => @ini_get('mbstring.internal_encoding'),
                             'unicode.semantics' => (int) @ini_get('unicode.semantics'),
                             'zend_thread_safty'	=> (int) function_exists('zend_thread_id'),
+                            'opcache.enable' => @ini_get('opcache.enable'),
                             'extensions' => get_loaded_extensions());
 
     return $data;

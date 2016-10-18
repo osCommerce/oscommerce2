@@ -17,6 +17,7 @@ $admin_menu['shop']['tools']['backup'] = OSCOM::link('backup.php');
 $admin_menu['shop']['tools']['banner_manager'] = OSCOM::link('banner_manager.php');
 $admin_menu['shop']['tools']['cache'] = OSCOM::link('cache.php');
 $admin_menu['shop']['tools']['online_update'] = OSCOM::link('online_update.php');
+$admin_menu['shop']['tools']['server_info'] = OSCOM::link('server_info.php');
 
   $cl_box_groups[] = array(
     'heading' => BOX_HEADING_TOOLS,
@@ -40,11 +41,6 @@ $admin_menu['shop']['tools']['online_update'] = OSCOM::link('online_update.php')
         'code' => FILENAME_SEC_DIR_PERMISSIONS,
         'title' => BOX_TOOLS_SEC_DIR_PERMISSIONS,
         'link' => OSCOM::link(FILENAME_SEC_DIR_PERMISSIONS)
-      ),
-      array(
-        'code' => FILENAME_SERVER_INFO,
-        'title' => BOX_TOOLS_SERVER_INFO,
-        'link' => OSCOM::link(FILENAME_SERVER_INFO)
       ),
       array(
         'code' => FILENAME_WHOS_ONLINE,
