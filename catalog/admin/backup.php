@@ -363,7 +363,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_BACKUP, 'fa fa-clone', OSCOM::link('backup.php', 'action=backup'), null, null, 'btn-info') . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link('backup.php', 'action=restorelocal'), null, null, 'btn-info'); ?>
+  <?= HTML::button(IMAGE_BACKUP, 'fa fa-clone', OSCOM::link('backup.php', 'action=backup'), null, 'btn-info') . HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link('backup.php', 'action=restorelocal'), null, 'btn-info'); ?>
 </div>
 
 <?php
@@ -399,7 +399,7 @@
             $heading[] = array('text' => $buInfo->date);
 
             $contents[] = array('text' => tep_break_string(sprintf(TEXT_INFO_RESTORE, $backup_directory . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
-            $contents[] = array('text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=restorenow'), null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, 'btn-link'));
             break;
 
           case 'delete':
@@ -408,7 +408,7 @@
             $contents = array('form' => HTML::form('delete', OSCOM::link(FILENAME_BACKUP, 'file=' . $buInfo->file . '&action=deleteconfirm')));
             $contents[] = array('text' => TEXT_DELETE_INTRO);
             $contents[] = array('text' => '<strong>' . $buInfo->file . '</strong>');
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, 'btn-link'));
             break;
         }
       }
@@ -430,7 +430,7 @@
             $contents[] = array('text' => HTML::radioField('download', 'yes', true) . ' ' . TEXT_INFO_DOWNLOAD_ONLY . '*<br /><br />*' . TEXT_INFO_BEST_THROUGH_HTTPS);
           }
 
-          $contents[] = array('text' => HTML::button(IMAGE_BACKUP, 'fa fa-copy', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, null, 'btn-link'));
+          $contents[] = array('text' => HTML::button(IMAGE_BACKUP, 'fa fa-copy', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, 'btn-link'));
           break;
 
         case 'restorelocal':
@@ -440,7 +440,7 @@
           $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL . '<br /><br />' . TEXT_INFO_BEST_THROUGH_HTTPS);
           $contents[] = array('text' => HTML::fileField('sql_file'));
           $contents[] = array('text' => TEXT_INFO_RESTORE_LOCAL_RAW_FILE);
-          $contents[] = array('text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, null, 'btn-link'));
+          $contents[] = array('text' => HTML::button(IMAGE_RESTORE, 'fa fa-repeat', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BACKUP), null, 'btn-link'));
           break;
       }
     }

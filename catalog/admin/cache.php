@@ -56,7 +56,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_DELETE, 'fa fa-recycle', OSCOM::link('cache.php', 'action=resetAll'), 'primary', null, 'btn-danger'); ?>
+  <?= HTML::button(IMAGE_DELETE, 'fa fa-recycle', OSCOM::link('cache.php', 'action=resetAll'), null, 'btn-danger'); ?>
 </div>
 
 <h2><i class="fa fa-database"></i> <a href="<?= OSCOM::link('cache.php'); ?>"><?= HEADING_TITLE; ?></a></h2>

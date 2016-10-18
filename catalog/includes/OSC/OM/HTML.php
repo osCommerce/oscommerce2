@@ -325,7 +325,7 @@ class HTML
         return $field;
     }
 
-    public static function button($title = null, $icon = null, $link = null, $priority = null, $params = null, $class = null)
+    public static function button($title = null, $icon = null, $link = null, $params = null, $class = null)
     {
         $types = ['submit', 'button', 'reset'];
 

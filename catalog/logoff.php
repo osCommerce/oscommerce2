@@ -65,7 +65,7 @@
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, null, 'btn-danger'); ?></div>
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></div>
   </div>
 </div>
 

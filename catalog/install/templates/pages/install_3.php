@@ -99,7 +99,7 @@ if (FileSystem::isWritable($dir_fs_document_root) && FileSystem::isWritable($dir
         <span class="help-block">The time zone to base the date and time on.</span>
       </div>
 
-      <p><?php echo HTML::button('Continue to Step 4', 'triangle-1-e', null, 'primary', null, 'btn-success'); ?></p>
+      <p><?php echo HTML::button('Continue to Step 4', 'triangle-1-e', null, null, 'btn-success'); ?></p>
 
 <?php
 foreach ($_POST as $key => $value) {

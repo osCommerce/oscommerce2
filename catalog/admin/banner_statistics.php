@@ -71,7 +71,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_BACK, 'fa fa-caret-left', OSCOM::link('banner_manager.php', 'page=' . $_GET['page']), null, null, 'btn-info'); ?>
+  <?= HTML::button(IMAGE_BACK, 'fa fa-caret-left', OSCOM::link('banner_manager.php', 'page=' . $_GET['page']), null, 'btn-info'); ?>
 </div>
 
 <h2><i class="fa fa-line-chart"></i> <a href="<?= OSCOM::link('banner_statistics.php', 'page=' . $_GET['page'] . '&bID=' . (int)$_GET['bID']); ?>"><?= HEADING_TITLE; ?></a></h2>

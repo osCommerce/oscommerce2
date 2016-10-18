@@ -547,7 +547,7 @@
   if (!empty($new_version)) {
 ?>
 
-  <?= HTML::button('Start Update Procedure', 'fa fa-cloud-download', null, 'primary', ['params' => 'id="updateStartButton"'], 'btn-success'); ?>
+  <?= HTML::button('Start Update Procedure', 'fa fa-cloud-download', null, ['params' => 'id="updateStartButton"'], 'btn-success'); ?>
 
   <div id="updateProgressBar" class="progress hide">
     <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;"></div>

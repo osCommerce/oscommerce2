@@ -153,7 +153,7 @@
     $contents = array('form' => HTML::form('login', OSCOM::link(FILENAME_LOGIN, 'action=process')));
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('text' => HTML::button(BUTTON_LOGIN, 'fa fa-sign-in', null, null, null, 'btn-primary'));
+    $contents[] = array('text' => HTML::button(BUTTON_LOGIN, 'fa fa-sign-in', null, null, 'btn-primary'));
   } else {
     $heading[] = array('text' => HEADING_TITLE);
 
@@ -161,7 +161,7 @@
     $contents[] = array('text' => TEXT_CREATE_FIRST_ADMINISTRATOR);
     $contents[] = array('text' => TEXT_USERNAME . '<br />' . HTML::inputField('username'));
     $contents[] = array('text' => TEXT_PASSWORD . '<br />' . HTML::passwordField('password'));
-    $contents[] = array('text' => HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in', null, null, null, 'btn-primary'));
+    $contents[] = array('text' => HTML::button(BUTTON_CREATE_ADMINISTRATOR, 'fa fa-sign-in', null, null, 'btn-primary'));
   }
 
   echo HTML::panel($heading, $contents);

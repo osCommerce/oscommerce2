@@ -303,7 +303,7 @@
   </div>
 
   <div class="buttonSet">
-    <span class="buttonAction"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></span>
+    <span class="buttonAction"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), null, 'btn-danger'); ?></span>
 
     <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?>
   </div>
@@ -326,7 +326,7 @@
 
   <div class="buttonSet row">
     <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh', null, 'primary'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh'); ?></div>
   </div>
 
 <?php
@@ -340,7 +340,7 @@
 
   <div class="buttonSet row">
     <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', $back_link); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, 'primary'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right'); ?></div>
   </div>
 
 <?php

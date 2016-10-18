@@ -106,7 +106,7 @@
         }
       }
 
-      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(NULL, 'fa fa-refresh', NULL, NULL, NULL, 'btn-info btn-xs') . ' ' . HTML::button(NULL, 'fa fa-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-xs');
+      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(null, 'fa fa-refresh', null, null, 'btn-info btn-xs') . ' ' . HTML::button(null, 'fa fa-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), null, 'btn-danger btn-xs');
 
       $products_name .= '</td>';
 
@@ -142,7 +142,7 @@
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), null, 'btn-success'); ?></div>
   </div>
 
 <?php
@@ -170,7 +170,7 @@
   <?php echo TEXT_CART_EMPTY; ?>
 </div>
 
-<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
+<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></p>
 
 <?php
   }

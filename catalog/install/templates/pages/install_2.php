@@ -63,7 +63,7 @@ $dir_fs_www_root = dirname(dirname(OSCOM::BASE_DIR)) . '/';
         <span class="help-block">The directory where the online store is installed on the server.</span>
       </div>
 
-      <p><?php echo HTML::button('Continue to Step 3', 'triangle-1-e', null, 'primary', null, 'btn-success'); ?></p>
+      <p><?php echo HTML::button('Continue to Step 3', 'triangle-1-e', null, null, 'btn-success'); ?></p>
 
 <?php
 foreach ($_POST as $key => $value) {

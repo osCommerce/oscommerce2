@@ -219,7 +219,7 @@
 ?>
 
 <div class="pull-right">
-  <?= HTML::button(IMAGE_NEW_BANNER, 'fa fa-plus', OSCOM::link('banner_manager.php', 'action=new'), null, null, 'btn-info'); ?>
+  <?= HTML::button(IMAGE_NEW_BANNER, 'fa fa-plus', OSCOM::link('banner_manager.php', 'action=new'), null, 'btn-info'); ?>
 </div>
 
 <?php
@@ -343,7 +343,7 @@
       <p class="help-block"><?= TEXT_BANNERS_IMPRESSIONS; ?></p>
     </div>
 
-    <?= HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']), null, null, 'btn-link'); ?>
+    <?= HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page']), null, 'btn-link'); ?>
   </div>
 </div>
 
@@ -370,7 +370,7 @@
             $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
             $contents[] = array('text' => '<strong>' . $bInfo->banners_title . '</strong>');
             if ($bInfo->banners_image) $contents[] = array('text' => HTML::checkboxField('delete_image', 'on', true) . ' ' . TEXT_INFO_DELETE_IMAGE);
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $_GET['bID']), null, 'btn-link'));
           }
         }
       }

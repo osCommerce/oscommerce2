@@ -475,9 +475,9 @@
 ?>
 
 <div class="pull-right">
-  <?= ((sizeof($cPath_array) > 0) ? HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id), null, null, 'btn-link') : '') .
-      HTML::button(IMAGE_NEW_CATEGORY, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category'), null, null, 'btn-info') .
-      HTML::button(IMAGE_NEW_PRODUCT, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_product'), null, null, 'btn-info'); ?>
+  <?= ((sizeof($cPath_array) > 0) ? HTML::button(IMAGE_BACK, 'fa fa-chevron-left', OSCOM::link(FILENAME_CATEGORIES, $cPath_back . 'cID=' . $current_category_id), null, 'btn-link') : '') .
+      HTML::button(IMAGE_NEW_CATEGORY, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_category'), null, 'btn-info') .
+      HTML::button(IMAGE_NEW_PRODUCT, 'fa fa-plus', OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&action=new_product'), null, 'btn-info'); ?>
 </div>
 
 <?php
@@ -885,8 +885,8 @@ $(function() {
 <div style="padding-top: 15px;">
   <?=
     HTML::hiddenField('products_date_added', (tep_not_null($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d'))) .
-    HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') .
-    HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '')), null, null, 'btn-link');
+    HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') .
+    HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . (isset($_GET['pID']) ? '&pID=' . $_GET['pID'] : '')), null, 'btn-link');
   ?>
 </div>
 
@@ -1082,7 +1082,7 @@ $(function() {
           $contents[] = array('text' => TEXT_CATEGORIES_NAME . $category_inputs_string);
           $contents[] = array('text' => TEXT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
           $contents[] = array('text' => TEXT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', '', 'size="2"'));
-          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath), null, null, 'btn-link'));
+          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath), null, 'btn-link'));
           break;
 
         case 'edit_category':
@@ -1102,7 +1102,7 @@ $(function() {
             $contents[] = array('text' => HTML::image(OSCOM::linkImage('Shop/' . $cInfo->categories_image), $cInfo->categories_name) . '<br />' . OSCOM::getConfig('http_path', 'Shop') . OSCOM::getConfig('http_images_path', 'Shop') . '<br /><strong>' . $cInfo->categories_image . '</strong>');
             $contents[] = array('text' => TEXT_EDIT_CATEGORIES_IMAGE . '<br />' . HTML::fileField('categories_image'));
             $contents[] = array('text' => TEXT_EDIT_SORT_ORDER . '<br />' . HTML::inputField('sort_order', $cInfo->sort_order, 'size="2"'));
-            $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, 'btn-link'));
           }
           break;
 
@@ -1115,7 +1115,7 @@ $(function() {
             $contents[] = array('text' => '<strong>' . $cInfo->categories_name . '</strong>');
             if ($cInfo->childs_count > 0) $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_CHILDS, $cInfo->childs_count));
             if ($cInfo->products_count > 0) $contents[] = array('text' => sprintf(TEXT_DELETE_WARNING_PRODUCTS, $cInfo->products_count));
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, 'btn-link'));
           }
           break;
 
@@ -1126,7 +1126,7 @@ $(function() {
             $contents = array('form' => HTML::form('categories', OSCOM::link(FILENAME_CATEGORIES, 'action=move_category_confirm&cPath=' . $cPath)) . HTML::hiddenField('categories_id', $cInfo->categories_id));
             $contents[] = array('text' => sprintf(TEXT_MOVE_CATEGORIES_INTRO, $cInfo->categories_name));
             $contents[] = array('text' => sprintf(TEXT_MOVE, $cInfo->categories_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
-            $contents[] = array('text' => HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_MOVE, 'fa fa-share', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id), null, 'btn-link'));
           }
           break;
 
@@ -1151,7 +1151,7 @@ $(function() {
             $product_categories_string = substr($product_categories_string, 0, -4);
 
             $contents[] = array('text' => $product_categories_string);
-            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, 'primary', null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, null, 'btn-link'));
+            $contents[] = array('text' => HTML::button(IMAGE_DELETE, 'fa fa-trash', null, null, 'btn-danger') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, 'btn-link'));
           }
           break;
 
@@ -1162,7 +1162,7 @@ $(function() {
           $contents[] = array('text' => sprintf(TEXT_MOVE_PRODUCTS_INTRO, $pInfo->products_name));
           $contents[] = array('text' => TEXT_INFO_CURRENT_CATEGORIES . '<br /><strong>' . tep_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
           $contents[] = array('text' => sprintf(TEXT_MOVE, $pInfo->products_name) . '<br />' . HTML::selectField('move_to_category_id', tep_get_category_tree(), $current_category_id));
-          $contents[] = array('text' => HTML::button(IMAGE_MOVE, 'fa fa-share', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, null, 'btn-link'));
+          $contents[] = array('text' => HTML::button(IMAGE_MOVE, 'fa fa-share', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, 'btn-link'));
           break;
 
         case 'copy_to':
@@ -1173,7 +1173,7 @@ $(function() {
           $contents[] = array('text' => TEXT_INFO_CURRENT_CATEGORIES . '<br /><strong>' . tep_output_generated_category_path($pInfo->products_id, 'product') . '</strong>');
           $contents[] = array('text' => TEXT_CATEGORIES . '<br />' . HTML::selectField('categories_id', tep_get_category_tree(), $current_category_id));
           $contents[] = array('text' => TEXT_HOW_TO_COPY . '<br />' . HTML::radioField('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . HTML::radioField('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE);
-          $contents[] = array('text' => HTML::button(IMAGE_COPY, 'fa fa-copy', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, null, 'btn-link'));
+          $contents[] = array('text' => HTML::button(IMAGE_COPY, 'fa fa-copy', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&pID=' . $pInfo->products_id), null, 'btn-link'));
           break;
       }
 

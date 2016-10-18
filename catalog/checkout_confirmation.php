@@ -124,7 +124,7 @@
   <div class="contentText">
 
     <div class="panel panel-default">
-      <div class="panel-heading"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('shopping_cart.php'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+      <div class="panel-heading"><?php echo '<strong>' . HEADING_PRODUCTS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('shopping_cart.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
       <div class="panel-body">
     <table width="100%" class="table-hover order_confirmation">
      <tbody>
@@ -182,7 +182,7 @@
       ?>
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
@@ -193,7 +193,7 @@
     ?>
     <div class="col-sm-4">
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
         </div>
@@ -204,7 +204,7 @@
       if ($order->info['shipping_method']) {
         ?>
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo $order->info['shipping_method']; ?>
           </div>
@@ -213,7 +213,7 @@
       }
       ?>
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo $order->info['payment_method']; ?>
         </div>
@@ -274,7 +274,7 @@
 ?>
   <hr>
 
-  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), NULL, NULL, 'pull-right btn-info btn-xs' ); ?></h2>
+  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></h2>
 
   <blockquote>
     <?php echo nl2br(HTML::outputProtected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
@@ -290,7 +290,7 @@
       if (is_array($payment_modules->modules)) {
         echo $payment_modules->process_button();
       }
-      echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, 'primary', array('params' => 'data-button="payNow"'), 'btn-success');
+      echo HTML::button(sprintf(IMAGE_BUTTON_PAY_TOTAL_NOW, $currencies->format($order->info['total'], true, $order->info['currency'], $order->info['currency_value'])), 'fa fa-ok', null, array('params' => 'data-button="payNow"'), 'btn-success');
       ?>
     </div>
   </div>

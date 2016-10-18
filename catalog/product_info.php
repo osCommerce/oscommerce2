@@ -234,7 +234,7 @@
 
   <div class="buttonSet row">
     <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_REVIEWS . (($has_rating === true) ? ' (' . $Qr->value('count') . ')' : ''), 'fa fa-commenting', OSCOM::link('product_reviews.php', tep_get_all_get_params())); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', null, 'primary', null, 'btn-success'); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('products_id', $Qproduct->valueInt('products_id')) . HTML::button(IMAGE_BUTTON_IN_CART, 'fa fa-shopping-cart', null, null, 'btn-success'); ?></div>
   </div>
 
   <div class="row">

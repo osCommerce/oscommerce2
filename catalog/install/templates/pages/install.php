@@ -69,7 +69,7 @@ use OSC\OM\HTML;
         <span class="help-block">Prefix all table names in the database with this value.</span>
       </div>
 
-      <p><?php echo HTML::button('Continue to Step 2', 'triangle-1-e', null, 'primary', null, 'btn-success'); ?></p>
+      <p><?php echo HTML::button('Continue to Step 2', 'triangle-1-e', null, null, 'btn-success'); ?></p>
     </form>
   </div>
 

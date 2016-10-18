@@ -78,7 +78,7 @@
           $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
           $contents[] = array('text' => $cInfo->configuration_description);
           $contents[] = array('text' => $value_field);
-          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, 'primary', null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID), null, null, 'link'));
+          $contents[] = array('text' => HTML::button(IMAGE_SAVE, 'fa fa-save', null, null, 'btn-success') . HTML::button(IMAGE_CANCEL, null, OSCOM::link(FILENAME_CONFIGURATION, 'gID=' . $gID), null, 'link'));
         }
       }
     }
