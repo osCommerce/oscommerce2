@@ -38,7 +38,7 @@
 
       if (isset($_GET['products_id'])) {
         if (isset($_SESSION['customer_id'])) {
-          $Qcheck = Registry::get('Db')->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+          $Qcheck = Registry::get('Db')->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
 
           $notification_exists = ($Qcheck->fetch() !== false);
         } else {

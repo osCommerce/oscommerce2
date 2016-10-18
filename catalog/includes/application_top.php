@@ -135,10 +135,10 @@
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
                                 for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-                                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $notify[$i]]);
+                                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$notify[$i]]);
 
                                   if ($Qcheck->fetch() === false) {
-                                    $OSCOM_Db->save('products_notifications', ['products_id' => $notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
+                                    $OSCOM_Db->save('products_notifications', ['products_id' => (int)$notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
                                     $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
@@ -149,10 +149,10 @@
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
-                                $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+                                $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
 
                                 if ($Qcheck->fetch() !== false) {
-                                  $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+                                  $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
