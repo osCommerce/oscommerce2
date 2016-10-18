@@ -49,11 +49,11 @@
 
               foreach ( $notify as $n ) {
                 if ( is_numeric($n) && ($n > 0) ) {
-                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['products_id' => $n, 'customers_id' => $_SESSION['customer_id']], null, 1);
+                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['products_id' => (int)$n, 'customers_id' => $_SESSION['customer_id']], null, 1);
 
                   if ( $Qcheck->fetch() === false ) {
                     $OSCOM_Db->save('products_notifications', [
-                      'products_id' => $n,
+                      'products_id' => (int)$n,
                       'customers_id' => $_SESSION['customer_id'],
                       'date_added' => 'now()'
                     ]);

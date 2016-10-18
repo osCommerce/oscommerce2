@@ -376,7 +376,7 @@ class DbStatement extends \PDOStatement
     public function __destruct()
     {
         if (($this->cache_read === false) && isset($this->cache_key) && is_array($this->cache_data)) {
-            if ($this->cache_empty_results || ($this->cache_data[0] !== false)) {
+            if ($this->cache_empty_results || (isset($this->cache_data[0]) && ($this->cache_data[0] !== false))) {
                 $cache_data = $this->cache_data;
 
                 if (isset($this->page_set_total_rows)) {
