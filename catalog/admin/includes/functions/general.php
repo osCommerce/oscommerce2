@@ -771,8 +771,10 @@
 
 ////
 // Function to read in text area in admin
- function tep_cfg_textarea($text) {
-    return HTML::textareaField('configuration_value', 35, 5, $text);
+ function tep_cfg_textarea($text, $key = '') {
+    $name = tep_not_null($key) ? 'configuration[' . $key . ']' : 'configuration_value';
+
+    return HTML::textareaField($name, 35, 5, $text);
   }
 
   function tep_cfg_get_zone_name($zone_id) {
