@@ -23,7 +23,7 @@
     }
 
     function pass() {
-      $request = $this->getHttpRequest(OSCOM::link('backups/'));
+      $request = $this->getHttpRequest(OSCOM::link('includes/backups/'));
 
       return $request['http_code'] != 200;
     }
