@@ -69,7 +69,12 @@ use OSC\OM\HTML;
         <span class="help-block">Prefix all table names in the database with this value.</span>
       </div>
 
-      <p><?php echo HTML::button('Continue to Step 2', 'triangle-1-e', null, null, 'btn-success'); ?></p>
+      <p>
+        <?=
+          HTML::button('Continue to Step 2', 'triangle-1-e', null, null, 'btn-success') . '&nbsp;' .
+          HTML::button('or continue and skip database import', null, null, ['params' => 'id="buttonSkipImport"'], 'btn-link');
+        ?>
+      </p>
     </form>
   </div>
 
@@ -107,7 +112,9 @@ $(function() {
   var formSuccess = false;
   var dbNameToCreate;
 
-  function prepareDB() {
+  function prepareDB(doImport) {
+    doImport = typeof doImport !== 'undefined' ? doImport : true;
+
     if (formSubmited == true) {
       return false;
     }
@@ -138,39 +145,49 @@ $(function() {
     $.post(dbCheckUrl, dbParams, function (response) {
       if (('status' in response) && ('message' in response)) {
         if ((response.status == '1') && (response.message == 'success')) {
-          $('#installModal .modal-body').html('<p><i class="fa fa-spinner fa-spin"></i> The database structure is now being imported. Please be patient during this procedure.</p>');
+          if (doImport === true) {
+            $('#installModal .modal-body').html('<p><i class="fa fa-spinner fa-spin"></i> The database structure is now being imported. Please be patient during this procedure.</p>');
 
-          $.post('rpc.php?action=dbImport', dbParams, function (response2) {
-            if (('status' in response2) && ('message' in response2)) {
-              if ((response2.status == '1') && (response2.message == 'success')) {
-                $('#installModal .modal-body').html('<div class="alert alert-success"><i class="fa fa-thumbs-up"></i> Database imported successfully. Proceeding to next step..</div>');
+            $.post('rpc.php?action=dbImport', dbParams, function (response2) {
+              if (('status' in response2) && ('message' in response2)) {
+                if ((response2.status == '1') && (response2.message == 'success')) {
+                  $('#installModal .modal-body').html('<div class="alert alert-success"><i class="fa fa-thumbs-up"></i> Database imported successfully. Proceeding to next step..</div>');
 
-                formSuccess = true;
+                  formSuccess = true;
 
-                setTimeout(function() {
-                  $('#installForm').submit();
-                }, 2000);
+                  setTimeout(function() {
+                    $('#installForm').submit();
+                  }, 2000);
+                } else {
+                  $('#installModal').modal('hide');
+
+                  $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. The following error had occured:<br><br><strong>%s</strong><br><br>Please verify the connection parameters and try again.</div>'.replace('%s', response2.message));
+
+                  formSubmited = false;
+                }
               } else {
                 $('#installModal').modal('hide');
 
-                $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. The following error had occured:<br><br><strong>%s</strong><br><br>Please verify the connection parameters and try again.</div>'.replace('%s', response2.message));
+                $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. Please verify the connection parameters and try again.</div>');
 
                 formSubmited = false;
               }
-            } else {
+            }, 'json').fail(function() {
               $('#installModal').modal('hide');
 
               $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. Please verify the connection parameters and try again.</div>');
 
               formSubmited = false;
-            }
-          }, 'json').fail(function() {
-            $('#installModal').modal('hide');
+            });
+          } else {
+            $('#installModal .modal-body').html('<div class="alert alert-success"><i class="fa fa-thumbs-up"></i> Database connection made successfully. Proceeding to next step..</div>');
 
-            $('#mBox').html('<div class="alert alert-danger"><i class="fa fa-exclamation-circle text-danger"></i> There was a problem importing the database. Please verify the connection parameters and try again.</div>');
+            formSuccess = true;
 
-            formSubmited = false;
-          });
+            setTimeout(function() {
+              $('#installForm').submit();
+            }, 2000);
+          }
         } else {
           $('#installModal').modal('hide');
 
@@ -207,6 +224,14 @@ $(function() {
       e.preventDefault();
 
       prepareDB();
+    }
+  });
+
+  $('#buttonSkipImport').click(function(e) {
+    if (formSuccess == false) {
+      e.preventDefault();
+
+      prepareDB(false);
     }
   });
 });
