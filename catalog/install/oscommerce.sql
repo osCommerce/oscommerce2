@@ -677,7 +677,7 @@ INSERT INTO reviews VALUES (1,19,0,'John Doe',5,now(),null,1,0);
 
 INSERT INTO reviews_description VALUES (1,1, 'This has to be one of the funniest movies released for 1999!');
 
-INSERT INTO sec_directory_whitelist values (null, 'admin/backups');
+INSERT INTO sec_directory_whitelist values (null, 'admin/includes/backups');
 INSERT INTO sec_directory_whitelist values (null, 'admin/images/graphs');
 INSERT INTO sec_directory_whitelist values (null, 'images');
 INSERT INTO sec_directory_whitelist values (null, 'images/banners');

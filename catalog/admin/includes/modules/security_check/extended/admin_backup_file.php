@@ -56,7 +56,7 @@
       $result = true;
 
       if ( isset($backup_file) ) {
-        $request = $this->getHttpRequest(OSCOM::link('backups/' . $backup_file));
+        $request = $this->getHttpRequest(OSCOM::link('includes/backups/' . $backup_file));
 
         $result = ($request['http_code'] != 200);
       }
