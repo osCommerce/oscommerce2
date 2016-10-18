@@ -3,7 +3,13 @@ use OSC\OM\FileSystem;
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 
-$www_location = 'http://' . $_SERVER['HTTP_HOST'];
+if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
+    $conn = 'https';
+} else {
+    $conn = 'http';
+}
+
+$www_location = $conn . '://' . $_SERVER['HTTP_HOST'];
 
 if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
     $www_location .= $_SERVER['REQUEST_URI'];
