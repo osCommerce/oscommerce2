@@ -318,7 +318,7 @@
       $parameters = array('action', 'cPath', 'products_id', 'pid');
     } else {
       $goto = $PHP_SELF;
-      if ($HTTP_GET_VARS['action'] == 'buy_now') {
+      if (($HTTP_GET_VARS['action'] == 'buy_now') || ($HTTP_GET_VARS['action'] == 'remove_product')) {
         $parameters = array('action', 'pid', 'products_id');
       } else {
         $parameters = array('action', 'pid');

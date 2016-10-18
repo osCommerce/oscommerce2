@@ -283,9 +283,13 @@
   function tep_hide_session_id() {
     global $session_started, $SID;
 
-    if (($session_started == true) && tep_not_null($SID)) {
-      return tep_draw_hidden_field(tep_session_name(), tep_session_id());
+    $field = '';
+
+    if (($session_started == true) && tep_not_null($SID) && (SESSION_FORCE_COOKIE_USE == 'False')) {
+      $field = tep_draw_hidden_field(tep_session_name(), tep_session_id());
     }
+
+    return $field;
   }
 
 ////
