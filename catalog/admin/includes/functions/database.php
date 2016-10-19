@@ -21,7 +21,9 @@
 
     if ( !mysqli_connect_errno() ) {
       mysqli_set_charset($$link, 'utf8');
-    } 
+    }
+
+    @mysqli_query($$link, 'set session sql_mode=""');
 
     return $$link;
   }
