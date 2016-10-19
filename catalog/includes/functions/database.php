@@ -21,7 +21,9 @@
 
     if ( !mysqli_connect_errno() ) {
       mysqli_set_charset($$link, 'utf8');
-    } 
+    }
+
+    @mysqli_query($$link, 'set session sql_mode=""');
 
     return $$link;
   }
@@ -32,7 +34,7 @@
     return mysqli_close($$link);
   }
 
-  function tep_db_error($query, $errno, $error) { 
+  function tep_db_error($query, $errno, $error) {
     if (defined('STORE_DB_TRANSACTIONS') && (STORE_DB_TRANSACTIONS == 'true')) {
       error_log('ERROR: [' . $errno . '] ' . $error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
     }
