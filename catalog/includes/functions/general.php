@@ -200,12 +200,6 @@
   }
 
 ////
-// Returns the clients browser
-  function tep_browser_detect($component) {
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
-  }
-
-////
 // Alias function to tep_get_countries()
   function tep_get_country_name($country_id) {
     $country_array = tep_get_countries($country_id);
