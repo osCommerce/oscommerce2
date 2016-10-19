@@ -335,9 +335,7 @@
   }
 
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr(getenv('HTTP_USER_AGENT'), $component);
   }
 
   function tep_tax_classes_pull_down($parameters, $selected = '') {
@@ -472,7 +470,7 @@
       $state_prov_values = tep_db_fetch_array($state_prov_query);
       $state_prov_code = $state_prov_values['zone_code'];
     }
-    
+
     return $state_prov_code;
   }
 

@@ -32,7 +32,7 @@
 ////
 // Redirect to another page or site
   function tep_redirect($url) {
-    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) { 
+    if ( (strstr($url, "\n") != false) || (strstr($url, "\r") != false) ) {
       tep_redirect(tep_href_link(FILENAME_DEFAULT, '', 'NONSSL', false));
     }
 
@@ -261,9 +261,7 @@
 ////
 // Returns the clients browser
   function tep_browser_detect($component) {
-    global $HTTP_USER_AGENT;
-
-    return stristr($HTTP_USER_AGENT, $component);
+    return stristr(getenv('HTTP_USER_AGENT'), $component);
   }
 
 ////
