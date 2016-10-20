@@ -10,14 +10,14 @@ namespace OSC\OM;
 
 class HTTP
 {
-    public static function redirect($url)
+    public static function redirect($url, $http_response_code = null)
     {
         if ((strstr($url, "\n") === false) && (strstr($url, "\r") === false)) {
             if ( strpos($url, '&amp;') !== false ) {
                 $url = str_replace('&amp;', '&', $url);
             }
 
-            header('Location: ' . $url);
+            header('Location: ' . $url, true, $http_response_code);
         }
 
         exit;
