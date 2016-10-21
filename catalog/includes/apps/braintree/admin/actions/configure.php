@@ -15,6 +15,10 @@
   $modules = $OSCOM_Braintree->getModules();
   $modules[] = 'G';
 
+  if ( !$OSCOM_Braintree->isInstalled('CC') ) {
+    $OSCOM_Braintree->install('CC');
+  }
+
   $default_module = 'G';
 
   foreach ( $modules as $m ) {
