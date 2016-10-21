@@ -129,6 +129,8 @@
         $formHash = $appBraintreeCcFormHash = $this->_app->createRandomValue(16);
         tep_session_register('appBraintreeCcFormHash');
 
+        $intent = (OSCOM_APP_PAYPAL_BRAINTREE_CC_TRANSACTION_METHOD == '1') ? 'sale' : 'authorize';
+
         $enableShippingAddress = in_array($cart->get_content_type(), array('physical', 'mixed')) ? 'true' : 'false';
 
         $content = <<<EOD
@@ -176,6 +178,7 @@ $(function() {
           currency: '{$currency}',
           enableShippingAddress: {$enableShippingAddress},
           enableBillingAddress: true,
+          intent: '{$intent}'
         }, function (tokenizeErr, payload) {
           if (tokenizeErr) {
             return;
