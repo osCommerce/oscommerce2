@@ -114,52 +114,140 @@
     function checkout_initialization_method() {
       global $cart;
 
-      if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && (OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE == '1') ) {
-        if (OSCOM_APP_PAYPAL_EC_STATUS == '1') {
-          $image_button = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image';
-        } else {
-          $image_button = 'https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image';
-        }
+      $string = '';
 
-        $params = array('locale=' . $this->_app->getDef('module_ec_button_locale'));
+      if (OSCOM_APP_PAYPAL_GATEWAY == '1') {
+        if (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '0') {
+          if (OSCOM_APP_PAYPAL_EC_CHECKOUT_IMAGE == '1') {
+            if (OSCOM_APP_PAYPAL_EC_STATUS == '1') {
+              $image_button = 'https://fpdbs.paypal.com/dynamicimageweb?cmd=_dynamic-image';
+            } else {
+              $image_button = 'https://fpdbs.sandbox.paypal.com/dynamicimageweb?cmd=_dynamic-image';
+            }
 
-        if ( $this->_app->hasCredentials('EC') ) {
-          $response_array = $this->_app->getApiResult('EC', 'GetPalDetails');
+            $params = array('locale=' . $this->_app->getDef('module_ec_button_locale'));
 
-          if ( isset($response_array['PAL']) ) {
-            $params[] = 'pal=' . $response_array['PAL'];
-            $params[] = 'ordertotal=' . $this->_app->formatCurrencyRaw($cart->show_total());
+            if ( $this->_app->hasCredentials('EC') ) {
+              $response_array = $this->_app->getApiResult('EC', 'GetPalDetails');
+
+              if ( isset($response_array['PAL']) ) {
+                $params[] = 'pal=' . $response_array['PAL'];
+                $params[] = 'ordertotal=' . $this->_app->formatCurrencyRaw($cart->show_total());
+              }
+            }
+
+            if ( !empty($params) ) {
+              $image_button .= '&' . implode('&', $params);
+            }
+          } else {
+            $image_button = $this->_app->getDef('module_ec_button_url');
           }
-        }
 
-        if ( !empty($params) ) {
-          $image_button .= '&' . implode('&', $params);
+          $button_title = tep_output_string_protected($this->_app->getDef('module_ec_button_title'));
+
+          if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
+            $button_title .= ' (' . $this->code . '; Sandbox)';
+          }
+
+          $string .= '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
+        } else {
+          $string .= '<script src="https://www.paypalobjects.com/api/checkout.js" async></script>';
+
+          $merchant_id = (OSCOM_APP_PAYPAL_EC_STATUS === '1') ? OSCOM_APP_PAYPAL_LIVE_MERCHANT_ID : OSCOM_APP_PAYPAL_SANDBOX_MERCHANT_ID;
+          if (empty($merchant_id)) $merchant_id = ' ';
+
+          $ppecset_url = tep_href_link('ext/modules/payment/paypal/express.php', 'format=json', 'SSL');
+
+          switch (OSCOM_APP_PAYPAL_EC_INCONTEXT_BUTTON_COLOR) {
+            case '3':
+              $button_color = 'silver';
+              break;
+
+            case '2':
+              $button_color = 'blue';
+              break;
+
+            case '1':
+            default:
+              $button_color = 'gold';
+              break;
+          }
+
+          switch (OSCOM_APP_PAYPAL_EC_INCONTEXT_BUTTON_SIZE) {
+            case '3':
+              $button_size = 'medium';
+              break;
+
+            case '1':
+              $button_size = 'tiny';
+              break;
+
+            case '2':
+            default:
+              $button_size = 'small';
+              break;
+          }
+
+          switch (OSCOM_APP_PAYPAL_EC_INCONTEXT_BUTTON_SHAPE) {
+            case '2':
+              $button_shape = 'rect';
+              break;
+
+            case '1':
+            default:
+              $button_shape = 'pill';
+              break;
+          }
+
+          $string .= <<<EOD
+<span id="ppECButton"></span>
+<script>
+if ( typeof jQuery == 'undefined' ) {
+  document.write('<scr' + 'ipt src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></scr' + 'ipt>');
+}
+</script>
+<script>
+window.paypalCheckoutReady = function () {
+  paypal.checkout.setup('${merchant_id}', {
+    environment: 'sandbox',
+    buttons: [
+      {
+        container: 'ppECButton',
+        color: '${button_color}',
+        size: '${button_size}',
+        shape: '${button_shape}',
+        click: function (event) {
+          event.preventDefault();
+
+          paypal.checkout.initXO();
+
+          var action = $.getJSON('${ppecset_url}');
+
+          action.done(function (data) {
+            paypal.checkout.startFlow(data.token);
+          });
+
+          action.fail(function () {
+            paypal.checkout.closeFlow();
+          });
+        }
+      }
+    ]
+  });
+};
+</script>
+EOD;
         }
       } else {
         $image_button = $this->_app->getDef('module_ec_button_url');
-      }
 
-      $button_title = tep_output_string_protected($this->_app->getDef('module_ec_button_title'));
+        $button_title = tep_output_string_protected($this->_app->getDef('module_ec_button_title'));
 
-      if ( OSCOM_APP_PAYPAL_EC_STATUS == '0' ) {
-        $button_title .= ' (' . $this->code . '; Sandbox)';
-      }
+        if (OSCOM_APP_PAYPAL_EC_STATUS == '0') {
+          $button_title .= ' (' . $this->code . '; Sandbox)';
+        }
 
-      $string = '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '" data-paypal-button="true"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
-
-      if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && (OSCOM_APP_PAYPAL_EC_CHECKOUT_FLOW == '1') ) {
-        $string .= <<<EOD
-<script>
-(function(d, s, id){
-  var js, ref = d.getElementsByTagName(s)[0];
-  if (!d.getElementById(id)){
-    js = d.createElement(s); js.id = id; js.async = true;
-    js.src = "//www.paypalobjects.com/js/external/paypal.v1.js";
-    ref.parentNode.insertBefore(js, ref);
-  }
-}(document, "script", "paypal-js"));
-</script>
-EOD;
+        $string .= '<a href="' . tep_href_link('ext/modules/payment/paypal/express.php', '', 'SSL') . '"><img src="' . $image_button . '" border="0" alt="" title="' . $button_title . '" /></a>';
       }
 
       return $string;

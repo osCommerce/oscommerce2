@@ -28,7 +28,7 @@
     }
 
     function execute() {
-      global $HTTP_GET_VARS, $oID;
+      global $HTTP_GET_VARS, $oID, $base_url;
 
       $output = '';
 

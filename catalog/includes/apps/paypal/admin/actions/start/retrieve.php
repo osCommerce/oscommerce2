@@ -13,7 +13,7 @@
   $params = array('merchant_id' => OSCOM_APP_PAYPAL_START_MERCHANT_ID,
                   'secret' => OSCOM_APP_PAYPAL_START_SECRET);
 
-  $result_string = $OSCOM_PayPal->makeApiCall('https://ssl.oscommerce.com/index.php?RPC&Website&Index&PayPalStart&action=retrieve', $params);
+  $result_string = $OSCOM_PayPal->makeApiCall('https://www.oscommerce.com/index.php?RPC&Website&Index&PayPalStart&action=retrieve', $params);
   $result = array();
 
   if ( !empty($result_string) && (substr($result_string, 0, 9) == 'rpcStatus') ) {
@@ -36,6 +36,7 @@
 
       $OSCOM_PayPal->saveParameter($param_prefix . 'SELLER_EMAIL', str_replace('_api1.', '@', $result['api_username']));
       $OSCOM_PayPal->saveParameter($param_prefix . 'SELLER_EMAIL_PRIMARY', str_replace('_api1.', '@', $result['api_username']));
+      $OSCOM_PayPal->saveParameter($param_prefix . 'MERCHANT_ID', $result['account_id']);
       $OSCOM_PayPal->saveParameter($param_prefix . 'API_USERNAME', $result['api_username']);
       $OSCOM_PayPal->saveParameter($param_prefix . 'API_PASSWORD', $result['api_password']);
       $OSCOM_PayPal->saveParameter($param_prefix . 'API_SIGNATURE', $result['api_signature']);

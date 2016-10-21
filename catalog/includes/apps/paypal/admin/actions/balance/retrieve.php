@@ -25,7 +25,13 @@
 
       while ( true ) {
         if ( isset($ppBalanceResponse['L_AMT' . $counter]) && isset($ppBalanceResponse['L_CURRENCYCODE' . $counter]) ) {
-          $ppBalanceResult['balance'][$ppBalanceResponse['L_CURRENCYCODE' . $counter]] = $currencies->format($ppBalanceResponse['L_AMT' . $counter], false, $ppBalanceResponse['L_CURRENCYCODE' . $counter]);
+          $balance = $ppBalanceResponse['L_AMT' . $counter];
+
+          if (isset($currencies->currencies[$ppBalanceResponse['L_CURRENCYCODE' . $counter]])) {
+            $balance = $currencies->format($balance, false, $ppBalanceResponse['L_CURRENCYCODE' . $counter]);
+          }
+
+          $ppBalanceResult['balance'][$ppBalanceResponse['L_CURRENCYCODE' . $counter]] = $balance;
 
           $counter++;
         } else {

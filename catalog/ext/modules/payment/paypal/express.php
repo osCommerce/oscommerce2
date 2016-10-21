@@ -816,7 +816,7 @@ EOD;
                                             'name' => $quote['module'],
                                             'label' => $rate['title'],
                                             'cost' => $rate['cost'],
-                                            'tax' => $quote['tax']);
+                                            'tax' => (isset($quote['tax']) ? $quote['tax'] : null));
                   }
                 }
               }
@@ -912,7 +912,7 @@ EOD;
           if (DISPLAY_PRICE_WITH_TAX == 'true') $order->info['shipping_cost'] = $order->info['shipping_cost'] / (1.0 + ($quotes_array[$default_shipping]['tax'] / 100));
           $module = substr($shipping['id'], 0, strpos($shipping['id'], '_'));
           $order->info['tax'] -= tep_calculate_tax($order->info['shipping_cost'], $quotes_array[$default_shipping]['tax']);
-          $order->info['tax_groups'][tep_get_tax_description($module->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'])] -= tep_calculate_tax($order->info['shipping_cost'], $quotes_array[$default_shipping]['tax']);
+          $order->info['tax_groups'][tep_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id'])] -= tep_calculate_tax($order->info['shipping_cost'], $quotes_array[$default_shipping]['tax']);
           $order->info['total'] -= tep_calculate_tax($order->info['shipping_cost'], $quotes_array[$default_shipping]['tax']);
         }
 
@@ -981,6 +981,15 @@ EOD;
         $response_array = $paypal_express->_app->getApiResult('EC', 'SetExpressCheckout', $params);
 
         if ( in_array($response_array['ACK'], array('Success', 'SuccessWithWarning')) ) {
+          if ( isset($HTTP_GET_VARS['format']) && ($HTTP_GET_VARS['format'] == 'json') ) {
+            $result = array(
+              'token' => $response_array['TOKEN']
+            );
+
+            echo json_encode($result);
+            exit;
+          }
+
           tep_redirect($paypal_url . 'token=' . $response_array['TOKEN']);
         } else {
           tep_redirect(tep_href_link(FILENAME_SHOPPING_CART, 'error_message=' . stripslashes($response_array['L_LONGMESSAGE0']), 'SSL'));

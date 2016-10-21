@@ -14,7 +14,7 @@
     var $_code = 'paypal';
     var $_title = 'PayPal App';
     var $_version;
-    var $_api_version = '112';
+    var $_api_version = '204';
     var $_definitions = array();
 
     function isReqApiCountrySupported($country_id) {
@@ -197,6 +197,10 @@
     }
 
     function hasCredentials($module, $type = null) {
+      if ( !defined('OSCOM_APP_PAYPAL_' . $module . '_STATUS') ) {
+        return false;
+      }
+
       $server = constant('OSCOM_APP_PAYPAL_' . $module . '_STATUS');
 
       if ( !in_array($server, array('1', '0')) ) {
@@ -277,11 +281,11 @@
     }
 
     function getApiCredentials($server, $type) {
-      if ( $server == 'live' ) {
+      if ( ($server == 'live') && defined('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type)) ) {
         return constant('OSCOM_APP_PAYPAL_LIVE_API_' . strtoupper($type));
+      } elseif ( defined('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type)) ) {
+        return constant('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type));
       }
-
-      return constant('OSCOM_APP_PAYPAL_SANDBOX_API_' . strtoupper($type));
     }
 
     function getParameters($module) {
@@ -343,7 +347,7 @@
         $cfg = new $cfg_class();
 
         if ( !defined($key) ) {
-          $this->saveParameter($key, $cfg->default);
+          $this->saveParameter($key, $cfg->default, isset($cfg->title) ? $cfg->title : null, isset($cfg->description) ? $cfg->description : null, isset($cfg->set_func) ? $cfg->set_func : null);
         }
 
         if ( !isset($cfg->app_configured) || ($cfg->app_configured !== false) ) {

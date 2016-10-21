@@ -32,10 +32,12 @@
         $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ec_error_curl');
       }
 
-      if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && !$OSCOM_PayPal->hasCredentials('EC') ) { // PayPal
-        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ec_error_credentials');
-      } elseif ( (OSCOM_APP_PAYPAL_GATEWAY == '0') && !$OSCOM_PayPal->hasCredentials('EC', 'payflow') ) { // Payflow
-        $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ec_error_credentials_payflow');
+      if ( defined('OSCOM_APP_PAYPAL_GATEWAY') ) {
+        if ( (OSCOM_APP_PAYPAL_GATEWAY == '1') && !$OSCOM_PayPal->hasCredentials('EC') ) { // PayPal
+          $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ec_error_credentials');
+        } elseif ( (OSCOM_APP_PAYPAL_GATEWAY == '0') && !$OSCOM_PayPal->hasCredentials('EC', 'payflow') ) { // Payflow
+          $this->_req_notes[] = $OSCOM_PayPal->getDef('module_ec_error_credentials_payflow');
+        }
       }
     }
 

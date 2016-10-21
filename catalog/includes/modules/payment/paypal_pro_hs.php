@@ -39,6 +39,12 @@
           $this->title .= ' [Sandbox]';
           $this->public_title .= ' (' . $this->code . '; Sandbox)';
         }
+
+        if ( OSCOM_APP_PAYPAL_HS_STATUS == '1' ) {
+          $this->api_url = 'https://api-3t.paypal.com/nvp';
+        } else {
+          $this->api_url = 'https://api-3t.sandbox.paypal.com/nvp';
+        }
       }
 
       if ( !function_exists('curl_init') ) {
@@ -242,7 +248,8 @@
                                     'products_price' => $order->products[$i]['price'],
                                     'final_price' => $order->products[$i]['final_price'],
                                     'products_tax' => $order->products[$i]['tax'],
-                                    'products_quantity' => $order->products[$i]['qty']);
+                                    'products_quantity' => $order->products[$i]['qty'],
+                                    'products_full_id' => $order->products[$i]['id']);
 
             tep_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
@@ -391,14 +398,6 @@ EOD;
         $result = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_GET_VARS['tx']), (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
       } elseif ( isset($HTTP_POST_VARS['txn_id']) && !empty($HTTP_POST_VARS['txn_id']) ) { // paypal payment
         $result = $this->_app->getApiResult('APP', 'GetTransactionDetails', array('TRANSACTIONID' => $HTTP_POST_VARS['txn_id']), (OSCOM_APP_PAYPAL_HS_STATUS == '1') ? 'live' : 'sandbox');
-      }
-
-      if ( OSCOM_APP_PAYPAL_GATEWAY == '0' ) { // Payflow
-        echo '<pre>';
-        var_dump($HTTP_GET_VARS);
-        var_dump($HTTP_POST_VARS);
-        var_dump($result);
-        exit;
       }
 
       if ( !in_array($result['ACK'], array('Success', 'SuccessWithWarning')) ) {
