@@ -427,7 +427,8 @@ EOD;
       if (tep_session_is_registered('appBraintreeCcNonce')) {
         $data = array(
           'amount' => $this->_app->formatCurrencyRaw($order->info['total'], $currency),
-          'paymentMethodNonce' => $appBraintreeCcNonce
+          'paymentMethodNonce' => $appBraintreeCcNonce,
+          'merchantAccountId' => $this->getMerchantAccountId($currency)
         );
       } else {
         $data = array(
