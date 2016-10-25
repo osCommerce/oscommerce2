@@ -50,7 +50,7 @@
  * Note: when host and port are defined, the connection is immediate
  * @seeAlso connect
  **/
-    function httpClient($host = '', $port = '') {
+    function __construct($host = '', $port = '') {
       if (tep_not_null($host)) {
         $this->connect($host, $port);
       }
@@ -192,7 +192,7 @@
  * @param uri string URI of the document
  * @param query_params array parameters to send in the form "parameter name" => value
  * @return string response status code (200 if ok)
- * @example 
+ * @example
  * $params = array( "login" => "tiger", "password" => "secret" );
  * $http->post( "/login.php", $params );
  **/
@@ -281,17 +281,17 @@
  *  - 20x : request processed OK
  *  - 30x : document moved
  *  - 40x : client error ( bad url, document not found, etc...)
- *  - 50x : server error 
+ *  - 50x : server error
  * @see RFC2616 "Hypertext Transfer Protocol -- HTTP/1.1"
  **/
     function getStatus() {
       return $this->reply;
     }
 
-/** 
+/**
  * getStatusMessage return the full response status, of the form "CODE Message"
  * eg. "404 Document not found"
- * @return string the message 
+ * @return string the message
  **/
     function getStatusMessage() {
       return $this->replyString;
@@ -301,7 +301,7 @@
  * @scope only protected or private methods below
  **/
 
-/** 
+/**
  * send a request
  * data sent are in order
  * a) the command
@@ -384,7 +384,7 @@
         $finished = ($str == $lastLine);
         if (!$finished) {
           list($hdr, $value) = explode(': ', $str, 2);
-// nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME 
+// nasty workaround broken multiple same headers (eg. Set-Cookie headers) @FIXME
           if (isset($headers[$hdr])) {
             $headers[$hdr] .= '; ' . trim($value);
           } else {
@@ -399,7 +399,7 @@
 /**
  * processBody() reads the body from the socket
  * the body is the "real" content of the reply
- * @return string body content 
+ * @return string body content
  * @scope private
  **/
     function processBody() {

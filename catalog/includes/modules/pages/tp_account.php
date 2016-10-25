@@ -19,58 +19,62 @@
       global $oscTemplate;
 
       $oscTemplate->_data[$this->group] = array('account' => array('title' => MY_ACCOUNT_TITLE,
+                                                                   'sort_order' => 10,
                                                                    'links' => array('edit' => array('title' => MY_ACCOUNT_INFORMATION,
                                                                                                     'link' => OSCOM::link('account_edit.php', '', 'SSL'),
-                                                                                                    'style' => 'btn btn-info',
-                                                                                                    'icon' => 'fa fa-user fa-4x'),
+                                                                                                    'icon' => 'fa fa-fw fa-user'),
                                                                                     'address_book' => array('title' => MY_ACCOUNT_ADDRESS_BOOK,
                                                                                                             'link' => OSCOM::link('address_book.php', '', 'SSL'),
-                                                                                                            'style' => 'btn btn-info',
-                                                                                                            'icon' => 'fa fa-home fa-4x'),
+                                                                                                            'icon' => 'fa fa-fw fa-home'),
                                                                                     'password' => array('title' => MY_ACCOUNT_PASSWORD,
                                                                                                         'link' => OSCOM::link('account_password.php', '', 'SSL'),
-                                                                                                        'style' => 'btn btn-info',
-                                                                                                        'icon' => 'fa fa-cog fa-4x'))),
+                                                                                                        'icon' => 'fa fa-fw fa-cog'))),
                                                 'orders' => array('title' => MY_ORDERS_TITLE,
+                                                                  'sort_order' => 20,
                                                                   'links' => array('history' => array('title' => MY_ORDERS_VIEW,
                                                                                                       'link' => OSCOM::link('account_history.php', '', 'SSL'),
-                                                                                                      'style' => 'btn btn-info',
-                                                                                                      'icon' => 'fa fa-shopping-cart fa-4x'))),
+                                                                                                      'icon' => 'fa fa-fw fa-shopping-cart'))),
                                                 'notifications' => array('title' => EMAIL_NOTIFICATIONS_TITLE,
+                                                                         'sort_order' => 30,
                                                                          'links' => array('newsletters' => array('title' => EMAIL_NOTIFICATIONS_NEWSLETTERS,
                                                                                                                  'link' => OSCOM::link('account_newsletters.php', '', 'SSL'),
-                                                                                                                 'style' => 'btn btn-info',
-                                                                                                                 'icon' => 'fa fa-envelope fa-4x'),
+                                                                                                                 'icon' => 'fa fa-fw fa-envelope'),
                                                                                           'products' => array('title' => EMAIL_NOTIFICATIONS_PRODUCTS,
                                                                                                               'link' => OSCOM::link('account_notifications.php', '', 'SSL'),
-                                                                                                              'style' => 'btn btn-info',
-                                                                                                              'icon' => 'fa fa-send fa-4x'))),
-                                                'logoff' => array('title' => MY_ACCOUNT_LOGOFF,
-                                                                  'links' => array('history' => array('title' => MY_ACCOUNT_LOGOFF,
-                                                                                                      'link' => OSCOM::link('logoff.php', '', 'SSL'),
-                                                                                                      'style' => 'btn btn-danger',
-                                                                                                      'icon' => 'fa fa-sign-out fa-4x'))));
+                                                                                                              'icon' => 'fa fa-fw fa-send'))));
     }
 
     function build() {
       global $oscTemplate;
-      
-      $output = '<div class="row">';
+
+      foreach ( $oscTemplate->_data[$this->group] as $key => $row ) {
+        $arr[$key] = $row['sort_order'];
+      }
+      array_multisort($arr, SORT_ASC, $oscTemplate->_data[$this->group]);
+
+      $output = '<div class="col-sm-12">';
 
       foreach ( $oscTemplate->_data[$this->group] as $group ) {
+        $output .= '<h2>' . $group['title'] . '</h2>' .
+                   '<div class="contentText">' .
+                   '  <ul class="list-unstyled">';
 
         foreach ( $group['links'] as $entry ) {
-          $output .= '<div class="col-sm-6"><a class="' . $entry['style'] . ' btn-block" role="button" href="' . $entry['link'] . '"><i class="';
+          $output .= '    <li>';
 
           if ( isset($entry['icon']) ) {
-            $output .= $entry['icon'];
+            $output .= '<i class="' . $entry['icon'] . '"></i> ';
           }
 
-          $output .= '"></i><br>' . $entry['title'] . '</a><br></div>';
+          $output .= (tep_not_null($entry['link'])) ? '<a href="' . $entry['link'] . '">' . $entry['title'] . '</a>' : $entry['title'];
+
+          $output .= '    </li>';
         }
-        
+
+        $output .= '  </ul>' .
+                   '</div>';
       }
-      
+
       $output .= '</div>';
 
       $oscTemplate->addContent($output, $this->group);

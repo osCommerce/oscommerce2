@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_account_set_password() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -61,7 +61,7 @@
           if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD == 'True' ) {
             $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_LINK_TITLE,
                                                                         'link' => OSCOM::link('ext/modules/content/account/set_password.php', '', 'SSL'),
-                                                                        'icon' => 'key'));
+                                                                        'icon' => 'fa fa-lock'));
           }
 
           $oscTemplate->_data['account']['account']['links'] += $after_eight;
@@ -114,7 +114,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

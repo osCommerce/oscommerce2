@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_languages() {
+    function __construct() {
       $this->title = MODULE_BOXES_LANGUAGES_TITLE;
       $this->description = MODULE_BOXES_LANGUAGES_DESCRIPTION;
 
@@ -39,14 +39,13 @@
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-          include(DIR_WS_CLASSES . 'language.php');
           $lng = new language;
         }
 
         if (count($lng->catalog_languages) > 1) {
           $languages_string = '';
           foreach($lng->catalog_languages as $key => $value) {
-            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . HTML::image(DIR_WS_LANGUAGES . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
+            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
           }
 
           ob_start();
@@ -103,7 +102,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

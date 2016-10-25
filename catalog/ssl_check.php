@@ -15,11 +15,11 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/ssl_check.php');
+  require('includes/languages/' . $_SESSION['language'] . '/ssl_check.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('ssl_check.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -36,16 +36,19 @@
       </div>
     </div>
 
-    <?php echo TEXT_INFORMATION; ?>
-
+    <div class="panel panel-danger">
+      <div class="panel-body">
+        <?php echo TEXT_INFORMATION; ?>
+      </div>
+    </div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('login.php'), null, null, 'btn-success'); ?>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('login.php')); ?></div>
   </div>
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

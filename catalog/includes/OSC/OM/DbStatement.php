@@ -101,7 +101,7 @@ class DbStatement extends \PDOStatement
             if (strpos($this->queryString, ' SQL_CALC_FOUND_ROWS ') !== false) {
                 $this->page_set_total_rows = $this->pdo->query('select found_rows()')->fetchColumn();
             } elseif (isset($this->page_set)) {
-                trigger_error('OSC\\OM\\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
+                trigger_error('OSC\OM\DbStatement::execute(): Page Set query does not contain SQL_CALC_FOUND_ROWS. Please add it to the query: ' . $this->queryString);
             }
         }
     }
@@ -147,6 +147,15 @@ class DbStatement extends \PDOStatement
         }
 
         return $this->result;
+    }
+
+    public function check()
+    {
+        if (!isset($this->result)) {
+            $this->fetch();
+        }
+
+        return $this->result !== false;
     }
 
     public function toArray()
@@ -292,11 +301,21 @@ class DbStatement extends \PDOStatement
 
         $number_of_pages = ceil($this->page_set_total_rows / $this->page_set_results_per_page);
 
-        if (!empty($parameters) && (substr($parameters, -1) != '&')) {
-            $parameters .= '&';
+        if (empty($parameters)) {
+            $parameters = '';
         }
 
-        $output = '<ul class="pagination">';
+        if (!empty($parameters)) {
+            parse_str($parameters, $p);
+
+            if (isset($p[$this->page_set_keyword])) {
+                unset($p[$this->page_set_keyword]);
+            }
+
+            $parameters = http_build_query($p) . '&';
+        }
+
+        $output = '<ul style="margin-top: 0;" class="pagination">';
 
 // previous button - not displayed on first page
         if ($this->page_set > 1) {
@@ -306,14 +325,21 @@ class DbStatement extends \PDOStatement
         }
 
 // check if number_of_pages > $max_page_links
-        $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
-        if ($this->page_set % $this->page_set_total_rows) {
-            $cur_window_num++;
-        }
+        $cur_window_num = 0;
+        $max_window_num = 0;
 
-        $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
-        if ($number_of_pages % $this->page_set_total_rows) {
-            $max_window_num++;
+        if ($this->page_set_total_rows > 0) {
+            $cur_window_num = (int)($this->page_set / $this->page_set_total_rows);
+
+            if ($this->page_set % $this->page_set_total_rows) {
+                $cur_window_num++;
+            }
+
+            $max_window_num = (int)($number_of_pages / $this->page_set_total_rows);
+
+            if ($number_of_pages % $this->page_set_total_rows) {
+                $max_window_num++;
+            }
         }
 
 // previous window of pages
@@ -350,7 +376,7 @@ class DbStatement extends \PDOStatement
     public function __destruct()
     {
         if (($this->cache_read === false) && isset($this->cache_key) && is_array($this->cache_data)) {
-            if ($this->cache_empty_results || ($this->cache_data[0] !== false)) {
+            if ($this->cache_empty_results || (isset($this->cache_data[0]) && ($this->cache_data[0] !== false))) {
                 $cache_data = $this->cache_data;
 
                 if (isset($this->page_set_total_rows)) {

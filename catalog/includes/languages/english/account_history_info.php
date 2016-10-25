@@ -17,8 +17,8 @@ define('NAVBAR_TITLE_3', 'Order #%s');
 define('HEADING_TITLE', 'Order Information');
 
 define('HEADING_ORDER_NUMBER', 'Order #%s');
-define('HEADING_ORDER_DATE', 'Order Date');
-define('HEADING_ORDER_TOTAL', 'Order Total');
+define('HEADING_ORDER_DATE', 'Order Date:');
+define('HEADING_ORDER_TOTAL', 'Order Total:');
 
 define('HEADING_DELIVERY_ADDRESS', 'Delivery Address');
 define('HEADING_SHIPPING_METHOD', 'Shipping Method');
@@ -38,6 +38,4 @@ define('TEXT_NO_COMMENTS_AVAILABLE', 'No comments available.');
 define('TABLE_HEADING_DOWNLOAD_DATE', 'Link expires: ');
 define('TABLE_HEADING_DOWNLOAD_COUNT', ' downloads remaining');
 define('HEADING_DOWNLOAD', 'Download links');
-
-define('TEXT_NO_COMMENTS', 'There are no comments for this status.');
 ?>

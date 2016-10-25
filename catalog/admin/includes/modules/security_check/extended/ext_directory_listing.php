@@ -10,20 +10,20 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class securityCheckExtended_ext_directory_listing {
     var $type = 'warning';
     var $has_doc = true;
 
     function securityCheckExtended_ext_directory_listing() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended/ext_directory_listing.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/ext_directory_listing.php');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_EXT_DIRECTORY_LISTING_TITLE;
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_catalog_href_link('ext/'));
+      $request = $this->getHttpRequest(OSCOM::link('Shop/ext/'));
 
       return $request['http_code'] != 200;
     }

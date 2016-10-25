@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_opensearch() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_OPENSEARCH_TITLE;
       $this->description = MODULE_HEADER_TAGS_OPENSEARCH_DESCRIPTION;
 
@@ -34,7 +35,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . OSCOM::link('opensearch.php', '', 'NONSSL', false) . '" title="' . tep_output_string(STORE_NAME) . '" />', $this->group);
+      $oscTemplate->addBlock('<link rel="search" type="application/opensearchdescription+xml" href="' . OSCOM::link('opensearch.php', '', 'NONSSL', false) . '" title="' . HTML::output(STORE_NAME) . '" />', $this->group);
     }
 
     function isEnabled() {
@@ -123,7 +124,7 @@
       $OSCOM_Db->save('configuration', [
         'configuration_title' => '16x16 Icon',
         'configuration_key' => 'MODULE_HEADER_TAGS_OPENSEARCH_SITE_ICON',
-        'configuration_value' => HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'favicon.ico',
+        'configuration_value' => OSCOM::linkImage('Shop/favicon.ico', null, 'SSL'),
         'configuration_description' => 'A 16x16 sized icon (must be in .ico format, eg http://server/favicon.ico). (optional)',
         'configuration_group_id' => '6',
         'sort_order' => '0',
@@ -152,7 +153,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

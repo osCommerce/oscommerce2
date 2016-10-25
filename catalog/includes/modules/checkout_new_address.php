@@ -32,12 +32,12 @@
       <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
-          <?php echo HTML::radioField('gender', 'm', $male) . ' ' . MALE; ?>
+          <?php echo HTML::radioField('gender', 'm', $male, 'aria-describedby="atGender"') . ' ' . MALE; ?>
         </label>
         <label class="radio-inline">
           <?php echo HTML::radioField('gender', 'f', $female) . ' ' . FEMALE; ?>
         </label>
-        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
+        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span id="atGender" class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
       </div>
     </div>
 
@@ -106,14 +106,6 @@
 ?>
 
     <div class="form-group">
-      <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
-      <div class="col-sm-9">
-        <?php
-        echo HTML::inputField('postcode', NULL, 'id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
-        ?>
-      </div>
-    </div>
-    <div class="form-group">
       <label for="inputCity" class="control-label col-sm-3"><?php echo ENTRY_CITY; ?></label>
       <div class="col-sm-9">
         <?php
@@ -121,8 +113,14 @@
         ?>
       </div>
     </div>
-
-    
+    <div class="form-group">
+      <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
+      <div class="col-sm-9">
+        <?php
+        echo HTML::inputField('postcode', NULL, 'id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
+        ?>
+      </div>
+    </div>
 
 <?php
   if (ACCOUNT_STATE == 'true') {
@@ -139,7 +137,8 @@
             while ($Qzones->fetch()) {
               $zones_array[] = array('id' => $Qzones->value('zone_name'), 'text' => $Qzones->value('zone_name'));
             }
-            echo HTML::selectField('state', $zones_array, 0, 'id="inputState"');
+            echo HTML::selectField('state', $zones_array, 0, 'id="inputState" aria-describedby="atState"');
+            if (tep_not_null(ENTRY_STATE_TEXT)) echo '<span id="atState" class="help-block">' . ENTRY_STATE_TEXT . '</span>';
           } else {
             echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
           }
@@ -158,8 +157,8 @@
       <label for="inputCountry" class="control-label col-sm-3"><?php echo ENTRY_COUNTRY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_get_country_list('country', STORE_COUNTRY, 0, 'id="inputCountry"');
-        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
+        echo tep_get_country_list('country', STORE_COUNTRY, 'aria-describedby="atCountry" id="inputCountry"');
+        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span id="atCountry" class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
         ?>
       </div>
     </div>

@@ -1,0 +1,13 @@
+categories_id int not_null auto_increment
+categories_image varchar(64)
+parent_id int default(0) not_null
+sort_order int(3)
+date_added datetime
+last_modified datetime
+--
+primary categories_id
+idx_categories_parent_id parent_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

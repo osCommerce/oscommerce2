@@ -1,0 +1,21 @@
+products_id int not_null auto_increment
+products_quantity int(4) not_null
+products_model varchar(64)
+products_image varchar(64)
+products_price decimal(15,4) not_null
+products_date_added datetime not_null
+products_last_modified datetime
+products_date_available datetime
+products_weight decimal(5,2) not_null
+products_status tinyint(1) not_null
+products_tax_class_id int not_null
+manufacturers_id int
+products_ordered int default(0) not_null
+--
+primary products_id
+idx_products_model products_model
+idx_products_date_added products_date_added
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

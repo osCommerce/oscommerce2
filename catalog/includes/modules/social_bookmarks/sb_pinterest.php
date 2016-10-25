@@ -21,7 +21,7 @@
     var $icon;
     var $enabled = false;
 
-    function sb_pinterest() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_PINTEREST_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_PINTEREST_DESCRIPTION;
@@ -62,7 +62,7 @@
           } while ($Qimage->fetch());
         }
 
-        $params['media'] = OSCOM::link(DIR_WS_IMAGES . $image_file, '', 'NONSSL', false);
+        $params['media'] = OSCOM::linkImage($image_file);
       }
 
 // url
@@ -130,7 +130,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

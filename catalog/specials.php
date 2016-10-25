@@ -14,11 +14,11 @@
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/specials.php');
+  require('includes/languages/' . $_SESSION['language'] . '/specials.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('specials.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -110,6 +110,6 @@
 
   include('includes/modules/product_listing.php');
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class cfgm_dashboard {
     var $code = 'dashboard';
     var $directory;
@@ -19,8 +21,9 @@
     var $template_integration = false;
 
     function cfgm_dashboard() {
-      $this->directory = DIR_FS_ADMIN . 'includes/modules/dashboard/';
-      $this->language_directory = DIR_FS_ADMIN . 'includes/languages/';
+      $this->directory = OSCOM::getConfig('dir_root') . 'includes/modules/dashboard/';
+      $this->language_directory = OSCOM::getConfig('dir_root') . 'includes/languages/';
+
       $this->title = MODULE_CFG_MODULE_DASHBOARD_TITLE;
     }
   }

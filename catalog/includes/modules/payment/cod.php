@@ -15,7 +15,7 @@
   class cod {
     var $code, $title, $description, $enabled;
 
-    function cod() {
+    function __construct() {
       global $order;
 
       $this->code = 'cod';
@@ -150,7 +150,7 @@
    }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

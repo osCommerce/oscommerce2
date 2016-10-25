@@ -21,7 +21,7 @@
   }
 
 // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/address_book_process.php');
+  require('includes/languages/' . $_SESSION['language'] . '/address_book_process.php');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset($_GET['delete']) && is_numeric($_GET['delete']) && isset($_GET['formid']) && ($_GET['formid'] == md5($_SESSION['sessiontoken']))) {
     if ((int)$_GET['delete'] == $_SESSION['customer_default_address_id']) {
@@ -268,8 +268,7 @@
     $breadcrumb->add(NAVBAR_TITLE_ADD_ENTRY, OSCOM::link('address_book_process.php', '', 'SSL'));
   }
 
-  require('includes/template_top.php');
-
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -290,11 +289,11 @@
 
   <div class="contentText row">
     <div class="col-sm-8">
-      <div class="alert alert-danger"><?php echo DELETE_ADDRESS_DESCRIPTION; ?></div>
+      <div class="alert alert-warning"><?php echo DELETE_ADDRESS_DESCRIPTION; ?></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-danger">
-        <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
+        <div class="panel-heading"><?php echo DELETE_ADDRESS_TITLE; ?></div>
 
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_GET['delete'], true, ' ', '<br />'); ?>
@@ -303,9 +302,10 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), 'primary', null, 'btn-danger'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+  <div class="buttonSet">
+    <span class="buttonAction"><?php echo HTML::button(IMAGE_BUTTON_DELETE, 'fa fa-trash', OSCOM::link('address_book_process.php', 'delete=' . $_GET['delete'] . '&action=deleteconfirm&formid=' . md5($_SESSION['sessiontoken']), 'SSL'), null, 'btn-danger'); ?></span>
+
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?>
   </div>
 
 </div>
@@ -314,40 +314,19 @@
   } else {
 ?>
 
-<?php echo HTML::form('addressbook', OSCOM::link('address_book_process.php', (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('addressbook', OSCOM::link('address_book_process.php', (isset($_GET['edit']) ? 'edit=' . $_GET['edit'] : ''), 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
-<?php
-    if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
-?>
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="alert alert-warning"><?php echo EDIT_ADDRESS_DESCRIPTION; ?></div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo SELECTED_ADDRESS; ?></div>
-
-        <div class="panel-body">
-          <?php echo tep_address_label($_SESSION['customer_id'], (int)$_GET['edit'], true, ' ', '<br />'); ?>
-        </div>
-      </div>
-    </div>
-  </div>
-<?php
-}
-?>
-
-<?php include(DIR_WS_MODULES . 'address_book_details.php'); ?>
+<?php include('includes/modules/address_book_details.php'); ?>
 
 <?php
     if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
 ?>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'glyphicon glyphicon-refresh', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('address_book.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'update') . HTML::hiddenField('edit', $_GET['edit']) . HTML::button(IMAGE_BUTTON_UPDATE, 'fa fa-refresh'); ?></div>
   </div>
 
 <?php
@@ -359,9 +338,9 @@
       }
 ?>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, null, null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', $back_link); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', $back_link); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::hiddenField('action', 'process') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right'); ?></div>
   </div>
 
 <?php
@@ -377,6 +356,6 @@
 ?>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

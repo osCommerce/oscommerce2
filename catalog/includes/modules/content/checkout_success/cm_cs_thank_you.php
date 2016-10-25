@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_cs_thank_you() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -37,7 +37,7 @@
       global $oscTemplate;
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/thank_you.php');
+      include('includes/modules/content/' . $this->group . '/templates/thank_you.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);
@@ -77,7 +77,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

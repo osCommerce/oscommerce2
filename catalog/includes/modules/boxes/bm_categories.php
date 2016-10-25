@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_categories() {
+    function __construct() {
       $this->title = MODULE_BOXES_CATEGORIES_TITLE;
       $this->description = MODULE_BOXES_CATEGORIES_DESCRIPTION;
 
@@ -36,6 +36,12 @@
       global $oscTemplate, $cPath;
 
       $OSCOM_CategoryTree = new category_tree();
+      $OSCOM_CategoryTree->setCategoryPath($cPath, '<strong>', '</strong>');
+      $OSCOM_CategoryTree->setSpacerString('&nbsp;&nbsp;', 1);
+
+      $OSCOM_CategoryTree->setParentGroupString('<ul class="nav nav-pills nav-stacked">', '</ul>', true);
+
+      $category_tree = $OSCOM_CategoryTree->getTree();
 
       ob_start();
       include('includes/modules/boxes/templates/categories.php');
@@ -89,7 +95,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

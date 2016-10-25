@@ -1,0 +1,10 @@
+products_attributes_id int not_null
+products_attributes_filename varchar(255) default('') not_null
+products_attributes_maxdays int(2) default(0)
+products_attributes_maxcount int(2) default(0)
+--
+primary products_attributes_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

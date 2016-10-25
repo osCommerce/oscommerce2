@@ -1,4 +1,7 @@
-catalog/includes/local/configure.php
-catalog/admin/includes/local/configure.php
-catalog/includes/work/*
 catalog/admin/images/graphs/*.png
+catalog/includes/OSC/Apps/*
+catalog/public/Apps/*
+catalog/includes/OSC/Work/Cache/*.cache
+catalog/includes/OSC/Work/Session/*
+catalog/includes/OSC/Work/Logs/*.txt
+catalog/includes/OSC/Custom/*

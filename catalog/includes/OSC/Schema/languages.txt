@@ -1,0 +1,13 @@
+languages_id int not_null auto_increment
+name varchar(32) not_null
+code char(2) not_null
+image varchar(64)
+directory varchar(32)
+sort_order int(3)
+--
+primary languages_id
+idx_languages_name name
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

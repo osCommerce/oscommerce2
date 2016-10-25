@@ -21,7 +21,7 @@
     var $icon = 'facebook.png';
     var $enabled = false;
 
-    function sb_facebook_like() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_DESCRIPTION;
@@ -138,7 +138,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

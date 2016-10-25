@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_cs_downloads() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -39,7 +39,7 @@
       if ( DOWNLOAD_ENABLED == 'true' ) {
         ob_start();
         extract($GLOBALS, EXTR_SKIP);
-        include(DIR_WS_MODULES . 'downloads.php');
+        include('includes/modules/downloads.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);
@@ -80,7 +80,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

@@ -1,0 +1,12 @@
+id int not_null auto_increment
+products_id int not_null
+image varchar(64)
+htmlcontent text
+sort_order int not_null
+--
+primary id
+products_images_prodid products_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

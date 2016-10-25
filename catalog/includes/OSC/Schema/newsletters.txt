@@ -1,0 +1,14 @@
+newsletters_id int not_null auto_increment
+title varchar(255) not_null
+content text not_null
+module varchar(255) not_null
+date_added datetime not_null
+date_sent datetime
+status int(1)
+locked int(1) default(0)
+--
+primary newsletters_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

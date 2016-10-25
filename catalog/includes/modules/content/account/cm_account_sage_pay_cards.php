@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_account_sage_pay_cards() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -39,8 +39,8 @@
 
       if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
         if ( !class_exists('sage_pay_direct') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
-          include(DIR_FS_CATALOG . 'includes/modules/payment/sage_pay_direct.php');
+          include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
+          include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/payment/sage_pay_direct.php');
         }
 
         $sage_pay_direct = new sage_pay_direct();
@@ -104,7 +104,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

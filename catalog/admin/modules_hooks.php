@@ -10,59 +10,38 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Apps;
+  use OSC\OM\OSCOM;
+
   require('includes/application_top.php');
 
-  $directory = DIR_FS_CATALOG . 'includes/hooks/';
+  $hooks = [];
 
-  require(DIR_WS_INCLUDES . 'template_top.php');
-?>
+  $directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/Module/Hooks/';
 
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
-  <tr>
-    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-    <td class="pageHeading" align="right"><?php echo tep_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-  </tr>
-</table>
+  if (is_dir($directory)) {
+    if ($dir = new \DirectoryIterator($directory)) {
+      foreach ($dir as $file) {
+        if (!$file->isDot() && $file->isDir()) {
+          $site = $file->getBasename();
 
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+          if ($sitedir = new \DirectoryIterator($directory . $site)) {
+            foreach ($sitedir as $groupfile) {
+              if (!$groupfile->isDot() && $groupfile->isDir()) {
+                $group = $groupfile->getBasename();
 
-<?php
-  if ( $dir = @dir($directory) ) {
-    while ( $file = $dir->read() ) {
-      if ( is_dir($directory . '/' . $file) && !in_array($file, array('.', '..')) ) {
-?>
+                if ($groupdir = new \DirectoryIterator($directory . $site . '/' . $group)) {
+                  foreach ($groupdir as $hookfile) {
+                    if (!$hookfile->isDot() && !$hookfile->isDir() && ($hookfile->getExtension() == 'php')) {
+                      $hook = $hookfile->getBasename('.php');
 
-  <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" colspan="2"><?php echo $file; ?></td>
-  </tr>
+                      $class = 'OSC\OM\Module\Hooks\\' . $site . '\\' . $group . '\\' . $hook;
 
-<?php
-        if ( $dir2 = @dir($directory . '/' . $file) ) {
-          while ( $file2 = $dir2->read() ) {
-            if ( is_dir($directory . '/' . $file . '/' . $file2) && !in_array($file2, array('.', '..')) ) {
-              if ( $dir3 = @dir($directory . '/' . $file . '/' . $file2) ) {
-                while ( $file3 = $dir3->read() ) {
-                  if ( !is_dir($directory . '/' . $file . '/' . $file2 . '/' . $file3) ) {
-                    if ( substr($file3, strrpos($file3, '.')) == '.php' ) {
-                      $code = substr($file3, 0, strrpos($file3, '.'));
-                      $class = 'hook_' . $file . '_' . $file2 . '_' . $code;
+                      $h = new \ReflectionClass($class);
 
-                      if ( !class_exists($class) ) {
-                        include($directory . '/' . $file . '/' . $file2 . '/' . $file3);
-                      }
-
-                      $obj = new $class();
-
-                      foreach ( get_class_methods($obj) as $method ) {
-                        if ( substr($method, 0, 7) == 'listen_' ) {
-?>
-
-  <tr class="dataTableRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)">
-    <td class="dataTableContent"><?php echo $file2 . '/' . $file3; ?></td>
-    <td class="dataTableContent"><?php echo substr($method, 7); ?></td>
-  </tr>
-
-<?php
+                      foreach ($h->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC) as $method) {
+                        if ($method->name != '__construct') {
+                          $hooks[$site . '/' . $group . '\\' . $hook][] = ['method' => $method->name];
                         }
                       }
                     }
@@ -75,13 +54,82 @@
       }
     }
   }
+
+  foreach (Apps::getModules('Hooks') as $k => $v) {
+    list($vendor, $app, $code) = explode('\\', $k, 3);
+
+    $h = new \ReflectionClass($v);
+
+    foreach ($h->getMethods(\ReflectionMethod::IS_STATIC | \ReflectionMethod::IS_PUBLIC) as $method) {
+      if ($method->name != '__construct') {
+        $hooks[$code][] = [
+          'app' => $vendor . '\\' . $app,
+          'method' => $method->name
+        ];
+      }
+    }
+  }
+
+  require($oscTemplate->getFile('template_top.php'));
+?>
+
+<style>
+.sitePill {
+  color: #fff;
+  background-color: #009933;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+
+.appPill {
+  color: #fff;
+  background-color: #0066CC;
+  border-radius: 20px;
+  padding: 5px 10px;
+}
+</style>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="2">
+  <tr>
+    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
+  </tr>
+</table>
+
+<table border="0" width="100%" cellspacing="0" cellpadding="2">
+
+<?php
+  foreach ($hooks as $code => $data) {
+    $counter = 0;
+
+    foreach ($data as $v) {
+      $counter++;
+
+      list($site, $group) = explode('/', $code, 2);
+?>
+
+  <tr class="dataTableRow">
+
+<?php
+      if ($counter === 1) {
+?>
+
+    <td class="dataTableContent" style="padding: 10px;" <?php if (count($data) > 1) echo 'rowspan="' . count($data) . '"';?>><?php echo '<span class="sitePill">' . $site . '</span> ' . $group; ?></td>
+
+<?php
+      }
+?>
+
+    <td class="dataTableContent" style="padding: 10px;"><?php echo (isset($v['app']) ? '<span class="appPill">' . $v['app'] . '</span> ' : '') . $v['method']; ?></td>
+  </tr>
+
+<?php
+    }
+  }
 ?>
 
 </table>
 
-<p class="smallText"><?php echo TEXT_HOOKS_DIRECTORY . ' ' . DIR_FS_CATALOG . 'includes/hooks/'; ?></p>
-
 <?php
-  require(DIR_WS_INCLUDES . 'template_bottom.php');
-  require(DIR_WS_INCLUDES . 'application_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
+  require('includes/application_bottom.php');
 ?>

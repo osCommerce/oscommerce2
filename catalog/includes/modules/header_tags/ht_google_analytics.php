@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\Registry;
 
   class ht_google_analytics {
@@ -20,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_google_analytics() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_TITLE;
       $this->description = MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_DESCRIPTION;
 
@@ -42,7 +43,7 @@
 
         $header = '<script>
   var _gaq = _gaq || [];
-  _gaq.push([\'_setAccount\', \'' . tep_output_string(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
+  _gaq.push([\'_setAccount\', \'' . HTML::output(MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_ID) . '\']);
   _gaq.push([\'_trackPageview\']);' . "\n";
 
         if ( (MODULE_HEADER_TAGS_GOOGLE_ANALYTICS_EC_TRACKING == 'True') && (basename($PHP_SELF) == 'checkout_success.php') && isset($_SESSION['customer_id']) ) {
@@ -59,7 +60,7 @@
 
             $header .= '  _gaq.push([\'_addTrans\',
     \'' . $Qorder->valueInt('orders_id') . '\', // order ID - required
-    \'' . tep_output_string(STORE_NAME) . '\', // store name
+    \'' . HTML::output(STORE_NAME) . '\', // store name
     \'' . (isset($totals['ot_total']) ? $this->format_raw($totals['ot_total'], DEFAULT_CURRENCY) : 0) . '\', // total - required
     \'' . (isset($totals['ot_tax']) ? $this->format_raw($totals['ot_tax'], DEFAULT_CURRENCY) : 0) . '\', // tax
     \'' . (isset($totals['ot_shipping']) ? $this->format_raw($totals['ot_shipping'], DEFAULT_CURRENCY) : 0) . '\', // shipping
@@ -184,7 +185,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

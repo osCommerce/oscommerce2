@@ -19,6 +19,15 @@ class MySQL extends \OSC\OM\Db
         $this->port = $port;
         $this->driver_options = $driver_options;
 
+        if (!isset($this->driver_options[\PDO::MYSQL_ATTR_INIT_COMMAND])) {
+            // STRICT_ALL_TABLES 5.0.2
+            // NO_ZERO_DATE 5.0.2
+            // NO_ZERO_IN_DATE 5.0.2
+            // ERROR_FOR_DIVISION_BY_ZERO 5.0.2
+            // NO_ENGINE_SUBSTITUTION 5.0.8
+            $this->driver_options[\PDO::MYSQL_ATTR_INIT_COMMAND] = 'set session sql_mode="STRICT_ALL_TABLES,NO_ZERO_DATE,NO_ZERO_IN_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"';
+        }
+
         return $this->connect();
     }
 

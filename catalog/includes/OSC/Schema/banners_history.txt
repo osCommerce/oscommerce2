@@ -1,0 +1,12 @@
+banners_history_id int not_null auto_increment
+banners_id int not_null
+banners_shown int(5) default(0) not_null
+banners_clicked int(5) default(0) not_null
+banners_history_date datetime not_null
+--
+primary banners_history_id
+idx_banners_history_banners_id banners_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

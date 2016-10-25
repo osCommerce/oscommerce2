@@ -20,7 +20,7 @@
     var $minutes = 15;
     var $identifier;
 
-    function ar_contact_us() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_CONTACT_US_TITLE;
       $this->description = MODULE_ACTION_RECORDER_CONTACT_US_DESCRIPTION;
 
@@ -92,7 +92,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

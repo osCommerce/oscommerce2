@@ -10,23 +10,37 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class securityCheck_extended_last_run {
     var $type = 'warning';
 
     function securityCheck_extended_last_run() {
-      global $language;
-
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended_last_run.php');
+      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended_last_run.php');
     }
 
     function pass() {
       global $PHP_SELF;
 
+      $OSCOM_Db = Registry::get('Db');
+
       if ( $PHP_SELF == 'security_checks.php' ) {
         if ( defined('MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_DATETIME') ) {
-          tep_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . time() . "' where configuration_key = 'MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_DATETIME'");
+          $OSCOM_Db->save('configuration', [
+            'configuration_value' => time(),
+          ], [
+            'configuration_key' => 'MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_DATETIME'
+          ]);
         } else {
-          tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, date_added) values ('Security Check Extended Last Run', 'MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_DATETIME', '" . time() . "', 'The date and time the last extended security check was performed.', '6', now())");
+          $OSCOM_Db->save('configuration', [
+            'configuration_title' => 'Security Check Extended Last Run',
+            'configuration_key' => 'MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_DATETIME',
+            'configuration_value' => time(),
+            'configuration_description' => 'The date and time the last extended security check was performed.',
+            'configuration_group_id' => '6',
+            'date_added' => 'now()'
+          ]);
         }
 
         return true;
@@ -36,7 +50,7 @@
     }
 
     function getMessage() {
-      return '<a href="' . tep_href_link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
+      return '<a href="' . OSCOM::link('security_checks.php') . '">' . MODULE_SECURITY_CHECK_EXTENDED_LAST_RUN_OLD . '</a>';
     }
   }
 ?>

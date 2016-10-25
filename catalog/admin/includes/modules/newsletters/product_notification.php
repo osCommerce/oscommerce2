@@ -10,6 +10,10 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class product_notification {
     var $show_choose_audience, $title, $content;
 
@@ -20,13 +24,29 @@
     }
 
     function choose_audience() {
-      global $languages_id;
+      $OSCOM_Db = Registry::get('Db');
 
-      $products_array = array();
-      $products_query = tep_db_query("select pd.products_id, pd.products_name from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.language_id = '" . $languages_id . "' and pd.products_id = p.products_id and p.products_status = '1' order by pd.products_name");
-      while ($products = tep_db_fetch_array($products_query)) {
-        $products_array[] = array('id' => $products['products_id'],
-                                  'text' => $products['products_name']);
+      $products_array = [];
+
+      $Qproducts = $OSCOM_Db->get([
+        'products p',
+        'products_description pd'
+      ], [
+        'pd.products_id',
+        'pd.products_name'
+      ], [
+        'pd.language_id' => (int)$_SESSION['languages_id'],
+        'pd.products_id' => [
+          'rel' => 'p.products_id'
+        ],
+        'p.products_status' => '1'
+      ], 'pd.products_name');
+
+      while ($Qproducts->fetch()) {
+        $products_array[] = [
+          'id' => $Qproducts->valueInt('products_id'),
+          'text' => $Qproducts->value('products_name')
+        ];
       }
 
 $choose_audience_string = '<script type="text/javascript"><!--
@@ -73,15 +93,15 @@ function selectAll(FormName, SelectBox) {
 }
 //--></script>';
 
-      $global_button = tep_draw_button(BUTTON_GLOBAL, 'circle-triangle-n', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'), 'primary');
+      $global_button = HTML::button(BUTTON_GLOBAL, 'fa fa-globe', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm&global=true'));
 
-      $cancel_button = tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
+      $cancel_button = HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID']));
 
-      $choose_audience_string .= '<form name="notifications" action="' . tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onsubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
+      $choose_audience_string .= '<form name="notifications" action="' . OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm') . '" method="post" onsubmit="return selectAll(\'notifications\', \'chosen[]\')"><table border="0" width="100%" cellspacing="0" cellpadding="2">' . "\n" .
                                  '  <tr>' . "\n" .
-                                 '    <td align="center" class="smallText"><strong>' . TEXT_PRODUCTS . '</strong><br />' . tep_draw_pull_down_menu('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . tep_draw_button(IMAGE_SEND, 'mail-closed', null, 'primary') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
-                                 '    <td align="center" class="smallText"><strong>' . TEXT_SELECTED_PRODUCTS . '</strong><br />' . tep_draw_pull_down_menu('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><strong>' . TEXT_PRODUCTS . '</strong><br />' . HTML::selectField('products', $products_array, '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText">&nbsp;<br />' . $global_button . '<br /><br /><br /><input type="button" value="' . BUTTON_SELECT . '" style="width: 8em;" onClick="mover(\'remove\');"><br /><br /><input type="button" value="' . BUTTON_UNSELECT . '" style="width: 8em;" onClick="mover(\'add\');"><br /><br /><br />' . HTML::button(IMAGE_SEND, 'fa fa-envelope') . '<br /><br />' . $cancel_button . '</td>' . "\n" .
+                                 '    <td align="center" class="smallText"><strong>' . TEXT_SELECTED_PRODUCTS . '</strong><br />' . HTML::selectField('chosen[]', array(), '', 'size="20" style="width: 20em;" multiple') . '</td>' . "\n" .
                                  '  </tr>' . "\n" .
                                  '</table></form>';
 
@@ -89,32 +109,51 @@ function selectAll(FormName, SelectBox) {
     }
 
     function confirm() {
+      $OSCOM_Db = Registry::get('Db');
 
       $audience = array();
 
       if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
-        $products_query = tep_db_query("select distinct customers_id from " . TABLE_PRODUCTS_NOTIFICATIONS);
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = '1';
+        $Qproducts = $OSCOM_Db->get('products_notifications', 'distinct customers_id');
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = '1';
         }
 
-        $customers_query = tep_db_query("select customers_info_id from " . TABLE_CUSTOMERS_INFO . " where global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_info_id']] = '1';
+        $Qcustomers = $OSCOM_Db->get('customers_info', 'customers_info_id', ['global_product_notifications' => '1']);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_info_id')] = '1';
         }
       } else {
-        $chosen = $_POST['chosen'];
+        $chosen = [];
 
-        $ids = implode(',', $chosen);
-
-        $products_query = tep_db_query("select distinct customers_id from " . TABLE_PRODUCTS_NOTIFICATIONS . " where products_id in (" . $ids . ")");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = '1';
+        foreach ($_POST['chosen'] as $id) {
+          if (is_numeric($id) && !in_array($id, $chosen)) {
+            $chosen[] = $id;
+          }
         }
 
-        $customers_query = tep_db_query("select customers_info_id from " . TABLE_CUSTOMERS_INFO . " where global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_info_id']] = '1';
+        $ids = array_map(function($k) {
+          return ':products_id_' . $k;
+        }, array_keys($chosen));
+
+        $Qproducts = $OSCOM_Db->prepare('select distinct customers_id from :table_products_notifications where products_id in (' . implode(', ', $ids) . ')');
+
+        foreach ($chosen as $k => $v) {
+          $Qproducts->bindInt(':products_id_' . $k, $v);
+        }
+
+        $Qproducts->execute();
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = '1';
+        }
+
+        $Qcustomers = $OSCOM_Db->get('customers_info', 'customers_info_id', ['global_product_notifications' => '1']);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_info_id')] = '1';
         }
       }
 
@@ -123,33 +162,33 @@ function selectAll(FormName, SelectBox) {
                         '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, sizeof($audience)) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td class="main"><strong>' . $this->title . '</strong></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td class="main"><tt>' . nl2br($this->content) . '</tt></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
-                        '  <tr>' . tep_draw_form('confirm', FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send') . "\n" .
+                        '  <tr>' . HTML::form('confirm', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . "\n" .
                         '    <td class="smallText" align="right">';
       if (sizeof($audience) > 0) {
         if (isset($_GET['global']) && ($_GET['global'] == 'true')) {
-          $confirm_string .= tep_draw_hidden_field('global', 'true');
+          $confirm_string .= HTML::hiddenField('global', 'true');
         } else {
           for ($i = 0, $n = sizeof($chosen); $i < $n; $i++) {
-            $confirm_string .= tep_draw_hidden_field('chosen[]', $chosen[$i]);
+            $confirm_string .= HTML::hiddenField('chosen[]', $chosen[$i]);
           }
         }
-        $confirm_string .= tep_draw_button(IMAGE_SEND, 'mail-closed', null, 'primary');
+        $confirm_string .= HTML::button(IMAGE_SEND, 'fa fa-envelope');
       }
-      $confirm_string .= tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
+      $confirm_string .= HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=send')) . '</td>' . "\n" .
                          '  </tr>' . "\n" .
                          '</table>';
 
@@ -157,40 +196,105 @@ function selectAll(FormName, SelectBox) {
     }
 
     function send($newsletter_id) {
+      $OSCOM_Db = Registry::get('Db');
 
       $audience = array();
 
       if (isset($_POST['global']) && ($_POST['global'] == 'true')) {
-        $products_query = tep_db_query("select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where c.customers_id = pn.customers_id");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = array('firstname' => $products['customers_firstname'],
-                                                       'lastname' => $products['customers_lastname'],
-                                                       'email_address' => $products['customers_email_address']);
+        $Qproducts = $OSCOM_Db->get([
+          'customers c',
+          'products_notifications pn'
+        ], [
+          'distinct pn.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'pn.customers_id'
+          ]
+        ]);
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = [
+            'firstname' => $Qproducts->value('customers_firstname'),
+            'lastname' => $Qproducts->value('customers_lastname'),
+            'email_address' => $Qproducts->value('customers_email_address')
+          ];
         }
 
-        $customers_query = tep_db_query("select c.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_id = ci.customers_info_id and ci.global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_id']] = array('firstname' => $customers['customers_firstname'],
-                                                        'lastname' => $customers['customers_lastname'],
-                                                        'email_address' => $customers['customers_email_address']);
+        $Qcustomers = $OSCOM_Db->get([
+          'customers c',
+          'customers_info ci'
+        ], [
+          'c.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'ci.customers_info_id'
+          ],
+          'ci.global_product_notifications' => '1'
+        ]);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_id')] = [
+            'firstname' => $Qcustomers->value('customers_firstname'),
+            'lastname' => $Qcustomers->value('customers_lastname'),
+            'email_address' => $Qcustomers->value('customers_email_address')
+          ];
         }
       } else {
-        $chosen = $_POST['chosen'];
+        $chosen = [];
 
-        $ids = implode(',', $chosen);
-
-        $products_query = tep_db_query("select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_PRODUCTS_NOTIFICATIONS . " pn where c.customers_id = pn.customers_id and pn.products_id in (" . $ids . ")");
-        while ($products = tep_db_fetch_array($products_query)) {
-          $audience[$products['customers_id']] = array('firstname' => $products['customers_firstname'],
-                                                       'lastname' => $products['customers_lastname'],
-                                                       'email_address' => $products['customers_email_address']);
+        foreach ($_POST['chosen'] as $id) {
+          if (is_numeric($id) && !in_array($id, $chosen)) {
+            $chosen[] = $id;
+          }
         }
 
-        $customers_query = tep_db_query("select c.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from " . TABLE_CUSTOMERS . " c, " . TABLE_CUSTOMERS_INFO . " ci where c.customers_id = ci.customers_info_id and ci.global_product_notifications = '1'");
-        while ($customers = tep_db_fetch_array($customers_query)) {
-          $audience[$customers['customers_id']] = array('firstname' => $customers['customers_firstname'],
-                                                        'lastname' => $customers['customers_lastname'],
-                                                        'email_address' => $customers['customers_email_address']);
+        $ids = array_map(function($k) {
+          return ':products_id_' . $k;
+        }, array_keys($chosen));
+
+        $Qproducts = $OSCOM_Db->prepare('select distinct pn.customers_id, c.customers_firstname, c.customers_lastname, c.customers_email_address from :table_customers c, :table_products_notifications pn where c.customers_id = pn.customers_id and pn.products_id in (' . implode(', ', $ids) . ')');
+
+        foreach ($chosen as $k => $v) {
+          $Qproducts->bindInt(':products_id_' . $k, $v);
+        }
+
+        $Qproducts->execute();
+
+        while ($Qproducts->fetch()) {
+          $audience[$Qproducts->valueInt('customers_id')] = [
+            'firstname' => $Qproducts->value('customers_firstname'),
+            'lastname' => $Qproducts->value('customers_lastname'),
+            'email_address' => $Qproducts->value('customers_email_address')
+          ];
+        }
+
+        $Qcustomers = $OSCOM_Db->get([
+          'customers c',
+          'customers_info ci'
+        ], [
+          'c.customers_id',
+          'c.customers_firstname',
+          'c.customers_lastname',
+          'c.customers_email_address'
+        ], [
+          'c.customers_id' => [
+            'rel' => 'ci.customers_info_id'
+          ],
+          'ci.global_product_notifications' => '1'
+        ]);
+
+        while ($Qcustomers->fetch()) {
+          $audience[$Qcustomers->valueInt('customers_id')] = [
+            'firstname' => $Qcustomers->value('customers_firstname'),
+            'lastname' => $Qcustomers->value('customers_lastname'),
+            'email_address' => $Qcustomers->value('customers_email_address')
+          ];
         }
       }
 
@@ -210,8 +314,12 @@ function selectAll(FormName, SelectBox) {
         $mimemessage->send($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], '', EMAIL_FROM, $this->title);
       }
 
-      $newsletter_id = tep_db_prepare_input($newsletter_id);
-      tep_db_query("update " . TABLE_NEWSLETTERS . " set date_sent = now(), status = '1' where newsletters_id = '" . tep_db_input($newsletter_id) . "'");
+      $OSCOM_Db->save('newsletters', [
+        'date_sent' => 'now()',
+        'status' => '1'
+      ], [
+        'newsletters_id' => (int)$newsletter_id
+      ]);
     }
   }
 ?>

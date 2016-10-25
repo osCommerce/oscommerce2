@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_grid_list_view {
@@ -21,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_grid_list_view() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_GRID_LIST_VIEW_TITLE;
       $this->description = MODULE_HEADER_TAGS_GRID_LIST_VIEW_DESCRIPTION;
 
@@ -46,8 +47,8 @@
         }
 
         if (in_array(basename($PHP_SELF), $pages_array)) {
-          $oscTemplate->addBlock('<script src="ext/js/cookie.js"></script>' . "\n", $this->group);
-          $oscTemplate->addBlock('<script>$(function() {var cc = $.cookie(\'list_grid\');if (cc == \'list\') {$(\'#products .item\').removeClass(\'grid-group-item\').addClass(\'list-group-item\');}else {$(\'#products .item\').removeClass(\'list-group-item\').addClass(\'grid-group-item\');}$(document).ready(function() {$(\'#list\').click(function(event){event.preventDefault();$(\'#products .item\').addClass(\'list-group-item\').removeClass(\'grid-group-item\');$.cookie(\'list_grid\', \'list\');});$(\'#grid\').click(function(event){event.preventDefault();$(\'#products .item\').removeClass(\'list-group-item\').addClass(\'grid-group-item\');$.cookie(\'list_grid\', \'grid\');});});});</script>' . "\n", $this->group);
+          $oscTemplate->addBlock('<script src="ext/js/js.cookie-2.1.2.min.js"></script>' . "\n", $this->group);
+          $oscTemplate->addBlock('<script>$(function() {var cc = Cookies.get(\'list_grid\');if (cc == \'list\') {$(\'#products .item\').removeClass(\'grid-group-item\').addClass(\'list-group-item\');}else {$(\'#products .item\').removeClass(\'list-group-item\').addClass(\'grid-group-item\');}$(document).ready(function() {$(\'#list\').click(function(event){event.preventDefault();$(\'#products .item\').addClass(\'list-group-item\').removeClass(\'grid-group-item\');Cookies.set(\'list_grid\', \'list\');});$(\'#grid\').click(function(event){event.preventDefault();$(\'#products .item\').removeClass(\'list-group-item\').addClass(\'grid-group-item\');Cookies.set(\'list_grid\', \'grid\');});});});</script>' . "\n", $this->group);
         }
       }
     }
@@ -98,7 +99,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {
@@ -122,9 +123,9 @@
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $files_array = array();
-	  if ($dir = @dir(DIR_FS_CATALOG)) {
+	  if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop'))) {
 	    while ($file = $dir->read()) {
-	      if (!is_dir(DIR_FS_CATALOG . $file)) {
+	      if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . $file)) {
 	        if (substr($file, strrpos($file, '.')) == $file_extension) {
             $files_array[] = $file;
           }
@@ -138,7 +139,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= HTML::checkboxField('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_grid_list_view_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . HTML::output($file) . '<br />';
     }
 
     if (!empty($output)) {
@@ -177,4 +178,4 @@
 
     return $output;
   }
-  
+

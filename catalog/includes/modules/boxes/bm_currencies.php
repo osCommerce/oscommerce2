@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_currencies() {
+    function __construct() {
       $this->title = MODULE_BOXES_CURRENCIES_TITLE;
       $this->description = MODULE_BOXES_CURRENCIES_DESCRIPTION;
 
@@ -57,7 +57,6 @@
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');
           $data = ob_get_clean();
-
 
           $oscTemplate->addBlock($data, $this->group);
         }
@@ -109,7 +108,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

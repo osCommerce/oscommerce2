@@ -8,5 +8,4 @@ use OSC\OM\OSCOM;
       <?php echo $cart_contents_string; ?>
     </ul>
   </div>
-  <?php echo $cart_footer_string; ?>
 </div>

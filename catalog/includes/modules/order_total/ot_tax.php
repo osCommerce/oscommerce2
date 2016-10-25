@@ -15,12 +15,12 @@
   class ot_tax {
     var $title, $output;
 
-    function ot_tax() {
+    function __construct() {
       $this->code = 'ot_tax';
       $this->title = MODULE_ORDER_TOTAL_TAX_TITLE;
       $this->description = MODULE_ORDER_TOTAL_TAX_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_TAX_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_TAX_SORT_ORDER;
+      $this->enabled = defined('MODULE_ORDER_TOTAL_TAX_STATUS') && (MODULE_ORDER_TOTAL_TAX_STATUS == 'true') ? true : false;
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_TAX_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_TAX_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_TAX_SORT_ORDER : 0;
 
       $this->output = array();
     }
@@ -71,7 +71,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
   }
 ?>

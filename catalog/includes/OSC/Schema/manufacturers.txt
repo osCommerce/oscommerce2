@@ -1,0 +1,12 @@
+manufacturers_id int not_null auto_increment
+manufacturers_name varchar(32) not_null
+manufacturers_image varchar(64)
+date_added datetime
+last_modified datetime
+--
+primary manufacturers_id
+idx_manufacturers_name manufacturers_name
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

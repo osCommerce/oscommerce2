@@ -12,21 +12,20 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require("includes/application_top.php");
 
-  $OSCOM_Hooks->register('cart');
-
   if ($_SESSION['cart']->count_contents() > 0) {
-    include(DIR_WS_CLASSES . 'payment.php');
+    include('includes/classes/payment.php');
     $payment_modules = new payment;
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/shopping_cart.php');
+  require('includes/languages/' . $_SESSION['language'] . '/shopping_cart.php');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('shopping_cart.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -34,10 +33,16 @@
 </div>
 
 <?php
+  if ($messageStack->size('product_action') > 0) {
+    echo $messageStack->output('product_action');
+  }
+?>
+
+<?php
   if ($_SESSION['cart']->count_contents() > 0) {
 ?>
 
-<?php echo HTML::form('cart_quantity', OSCOM::link('shopping_cart.php', 'action=update_product'), 'post', 'role="form"'); ?>
+<?php echo HTML::form('cart_quantity', OSCOM::link('shopping_cart.php', 'action=update_product')); ?>
 
 <div class="contentContainer">
 
@@ -83,8 +88,8 @@
     for ($i=0, $n=sizeof($products); $i<$n; $i++) {
       $products_name .= '<tr>';
 
-      $products_name .= '  <td valign="top" class="hidden-xs"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . HTML::image(DIR_WS_IMAGES . $products[$i]['image'], $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
-                        '  <td valign="top"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . $products[$i]['name'] . '</a>';
+      $products_name .= '  <td valign="top" align="center"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '">' . HTML::image(OSCOM::linkImage($products[$i]['image']), $products[$i]['name'], SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></td>' .
+                        '  <td valign="top"><a href="' . OSCOM::link('product_info.php', 'products_id=' . $products[$i]['id']) . '"><strong>' . $products[$i]['name'] . '</strong></a>';
 
       if (STOCK_CHECK == 'true') {
         $stock_check = tep_check_stock($products[$i]['id'], $products[$i]['quantity']);
@@ -101,11 +106,11 @@
         }
       }
 
-      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px; display: inline;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(NULL, 'glyphicon glyphicon-refresh', NULL, NULL, NULL, 'btn-info btn-sm') . ' ' . HTML::button(NULL, 'glyphicon glyphicon-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), NULL, NULL, 'btn-danger btn-sm');
+      $products_name .= '<br>' . HTML::inputField('cart_quantity[]', $products[$i]['quantity'], 'style="width: 65px;" min="0"', 'number') . HTML::hiddenField('products_id[]', $products[$i]['id']) . ' ' . HTML::button(null, 'fa fa-refresh', null, null, 'btn-info btn-xs') . ' ' . HTML::button(null, 'fa fa-remove', OSCOM::link('shopping_cart.php', 'products_id=' . $products[$i]['id'] . '&action=remove_product'), null, 'btn-danger btn-xs');
 
       $products_name .= '</td>';
 
-      $products_name .= '  <td class="text-right" valign="top">' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</td>' .
+      $products_name .= '  <td align="right" valign="top"><strong>' . $currencies->display_price($products[$i]['final_price'], tep_get_tax_rate($products[$i]['tax_class_id']), $products[$i]['quantity']) . '</strong></td>' .
                         '</tr>';
     }
     echo $products_name;
@@ -136,12 +141,21 @@
 
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'glyphicon glyphicon-chevron-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'primary', null, 'btn-success btn-block'); ?>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), null, 'btn-success'); ?></div>
   </div>
 
 <?php
-    echo $OSCOM_Hooks->call('cart', 'displayAlternativeCheckoutButtons');
+    $checkout_buttons = Registry::get('Hooks')->call('Cart', 'AdditionalCheckoutButtons', null, 'display');
+
+    if (!empty($checkout_buttons)) {
+      echo '<div class="clearfix"></div>';
+      echo '<p class="text-right">' . TEXT_ALTERNATIVE_CHECKOUT_METHODS . '</p>';
+
+      foreach ($checkout_buttons as $button) {
+        echo '<p class="text-right">' . $button . '</p>';
+      }
+    }
 ?>
 
 </div>
@@ -156,12 +170,11 @@
   <?php echo TEXT_CART_EMPTY; ?>
 </div>
 
-<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', NULL, 'btn-danger'); ?></p>
-
+<p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php'), null, 'btn-danger'); ?></p>
 
 <?php
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

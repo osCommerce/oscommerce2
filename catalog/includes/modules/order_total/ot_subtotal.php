@@ -15,12 +15,12 @@
   class ot_subtotal {
     var $title, $output;
 
-    function ot_subtotal() {
+    function __construct() {
       $this->code = 'ot_subtotal';
       $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_TITLE;
       $this->description = MODULE_ORDER_TOTAL_SUBTOTAL_DESCRIPTION;
-      $this->enabled = ((MODULE_ORDER_TOTAL_SUBTOTAL_STATUS == 'true') ? true : false);
-      $this->sort_order = MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER;
+      $this->enabled = defined('MODULE_ORDER_TOTAL_SUBTOTAL_STATUS') && (MODULE_ORDER_TOTAL_SUBTOTAL_STATUS == 'true') ? true : false;
+      $this->sort_order = defined('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER : 0;
 
       $this->output = array();
     }
@@ -67,7 +67,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
   }
 ?>

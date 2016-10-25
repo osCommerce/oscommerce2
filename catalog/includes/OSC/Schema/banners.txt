@@ -1,0 +1,19 @@
+banners_id int not_null auto_increment
+banners_title varchar(64) not_null
+banners_url varchar(255) not_null
+banners_image varchar(64) not_null
+banners_group varchar(10) not_null
+banners_html_text text
+expires_impressions int(7) default(0)
+expires_date datetime
+date_scheduled datetime
+date_added datetime not_null
+date_status_change datetime
+status int(1) default(1) not_null
+--
+primary banners_id
+idx_banners_group banners_group
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

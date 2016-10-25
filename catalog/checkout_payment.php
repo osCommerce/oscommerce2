@@ -67,7 +67,7 @@
     }
   }
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
   if (isset($_POST['comments']) && tep_not_null($_POST['comments'])) {
@@ -78,15 +78,15 @@
   $total_count = $_SESSION['cart']->count_contents();
 
 // load all enabled payment modules
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment;
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_payment.php');
+  require('includes/languages/' . $_SESSION['language'] . '/checkout_payment.php');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment.php', '', 'SSL'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <?php echo $payment_modules->javascript_validation(); ?>
@@ -95,42 +95,44 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('checkout_payment', OSCOM::link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('checkout_payment', OSCOM::link('checkout_confirmation.php', '', 'SSL'), 'post', 'class="form-horizontal" onsubmit="return check_form();"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
 <?php
-  if (isset($_GET['payment_error']) && is_object(${$_GET['payment_error']}) && ($error = ${$_GET['payment_error']}->get_error())) {
+  if (isset($_GET['payment_error']) && !empty($_GET['payment_error'])) {
+    $pmsel = new payment($_GET['payment_error']);
+
+    if ($error = $pmsel->get_error()) {
 ?>
 
   <div class="contentText">
-    <?php echo '<strong>' . tep_output_string_protected($error['title']) . '</strong>'; ?>
+    <?php echo '<strong>' . HTML::outputProtected($error['title']) . '</strong>'; ?>
 
-    <p class="messageStackError"><?php echo tep_output_string_protected($error['error']); ?></p>
+    <p class="messageStackError"><?php echo HTML::outputProtected($error['error']); ?></p>
   </div>
 
 <?php
+    }
   }
 ?>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_BILLING_ADDRESS; ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
       <div class="alert alert-warning">
         <?php echo TEXT_SELECTED_BILLING_DESTINATION; ?>
+        <div class="clearfix"></div>
+        <div class="pull-right">
+          <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'fa fa-home', OSCOM::link('checkout_payment_address.php', '', 'SSL')); ?>
+        </div>
+        <div class="clearfix"></div>
       </div>
-      <div class="clearfix"></div>
-      <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'glyphicon glyphicon-home', OSCOM::link('checkout_payment_address.php', '', 'SSL'), null, null, 'btn-default btn-block'); ?>
-      <br>
-      <div class="clearfix"></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-primary">
         <div class="panel-heading"><?php echo TITLE_BILLING_ADDRESS; ?></div>
-
         <div class="panel-body">
           <?php echo tep_address_label($_SESSION['customer_id'], $_SESSION['billto'], true, ' ', '<br />'); ?>
         </div>
@@ -140,9 +142,7 @@
 
   <div class="clearfix"></div>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_PAYMENT_METHOD; ?></h2>
 
 <?php
   $selection = $payment_modules->selection();
@@ -152,13 +152,17 @@
 
   <div class="contentText">
     <div class="alert alert-warning">
-      <div class="pull-right">
-        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+      <div class="row">
+        <div class="col-xs-8">
+          <?php echo TEXT_SELECT_PAYMENT_METHOD; ?>
+        </div>
+        <div class="col-xs-4 text-right">
+          <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
+        </div>
       </div>
-
-      <?php echo TEXT_SELECT_PAYMENT_METHOD; ?>
     </div>
   </div>
+
 
 <?php
     } else {
@@ -180,7 +184,7 @@
   $radio_buttons = 0;
   for ($i=0, $n=sizeof($selection); $i<$n; $i++) {
 ?>
-      <tr>
+      <tr class="table-selection">
         <td><strong><?php echo $selection[$i]['module']; ?></strong></td>
         <td align="right">
 
@@ -245,17 +249,17 @@
 
   <div class="contentText">
     <div class="form-group">
-      <label for="inputComments" class="control-label col-xs-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
-      <div class="col-xs-8">
+      <label for="inputComments" class="control-label col-sm-4"><?php echo TABLE_HEADING_COMMENTS; ?></label>
+      <div class="col-sm-8">
         <?php
-        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . ENTRY_COMMENTS_TEXT . '"');
+        echo HTML::textareaField('comments', 60, 5, (isset($_SESSION['comments']) ? $_SESSION['comments'] : ''), 'id="inputComments" placeholder="' . TABLE_HEADING_COMMENTS . '"');
         ?>
       </div>
     </div>
   </div>
 
-  <div class="contentText">
-    <div><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 
   <div class="clearfix"></div>
@@ -284,6 +288,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

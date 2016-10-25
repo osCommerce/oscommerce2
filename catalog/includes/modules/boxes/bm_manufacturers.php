@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_manufacturers() {
+    function __construct() {
       $this->title = MODULE_BOXES_MANUFACTURERS_TITLE;
       $this->description = MODULE_BOXES_MANUFACTURERS_DESCRIPTION;
 
@@ -41,14 +41,16 @@
 
       $data = '';
 
-      $Qmanufacturers = $OSCOM_Db->query('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+      $Qmanufacturers = $OSCOM_Db->prepare('select manufacturers_id, manufacturers_name from :table_manufacturers order by manufacturers_name');
+      $Qmanufacturers->setCache('manufacturers');
+      $Qmanufacturers->execute();
 
       $manufacturers = $Qmanufacturers->fetchAll();
 
       if (!empty($manufacturers)) {
         if (count($manufacturers) <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
 // Display a list
-          $manufacturers_list = '<ul class="nav nav-pills nav-stacked">';
+          $manufacturers_list = '<ul class="nav nav-list">';
 
           foreach ($manufacturers as $m) {
             $manufacturers_name = ((strlen($m['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($m['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN) . '..' : $m['manufacturers_name']);
@@ -82,24 +84,21 @@
                   HTML::selectField('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
                   '</form>';
         }
-      }
+
+     }
 
       return $data;
     }
 
     function execute() {
-      global $SID, $oscTemplate;
+      global $oscTemplate;
 
-      if ((USE_CACHE == 'true') && empty($SID)) {
-        $output = tep_cache_manufacturers_box();
-      } else {
-        $output = $this->getData();
-      }
+      $output = $this->getData();
 
       ob_start();
       include('includes/modules/boxes/templates/manufacturers.php');
       $data = ob_get_clean();
-      
+
       $oscTemplate->addBlock($data, $this->group);
     }
 
@@ -148,7 +147,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

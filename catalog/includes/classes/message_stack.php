@@ -20,8 +20,7 @@
   class messageStack extends alertBlock {
 
 // class constructor
-    function messageStack() {
-      global $messageToStack;
+    function __construct() {
 
       $this->messages = array();
 
@@ -36,22 +35,19 @@
 // class methods
     function add($class, $message, $type = 'error') {
       if ($type == 'error') {
-        $this->messages[] = array('params' => 'class="alert alert-danger"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-danger alert-dismissible"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'warning') {
-        $this->messages[] = array('params' => 'class="alert alert-warning"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-warning alert-dismissible"', 'class' => $class, 'text' => $message);
       } elseif ($type == 'success') {
-        $this->messages[] = array('params' => 'class="alert alert-success"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-success alert-dismissible"', 'class' => $class, 'text' => $message);
       } else {
-        $this->messages[] = array('params' => 'class="alert alert-info"', 'class' => $class, 'text' => $message);
+        $this->messages[] = array('params' => 'class="alert alert-info alert-dismissible"', 'class' => $class, 'text' => $message);
       }
     }
 
     function add_session($class, $message, $type = 'error') {
-
-
       if (!isset($_SESSION['messageToStack'])) {
         $_SESSION['messageToStack'] = array();
-
       }
 
       $_SESSION['messageToStack'][] = array('class' => $class, 'text' => $message, 'type' => $type);
@@ -62,7 +58,6 @@
     }
 
     function output($class) {
-
       $output = array();
       for ($i=0, $n=sizeof($this->messages); $i<$n; $i++) {
         if ($this->messages[$i]['class'] == $class) {
@@ -70,7 +65,7 @@
         }
       }
 
-      return $this->alertBlock($output);
+      return parent::__construct($output);
     }
 
     function size($class) {

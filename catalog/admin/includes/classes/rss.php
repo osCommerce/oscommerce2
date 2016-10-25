@@ -1,5 +1,5 @@
 <?php
-/* 
+/*
  ======================================================================
  lastRSS 0.9.1
 
@@ -53,10 +53,10 @@ class lastRSS {
     // -------------------------------------------------------------------
     // Parse RSS file and returns associative array.
     // -------------------------------------------------------------------
-    function Get ($rss_url) {
+    function Get ($rss_url, $key = null) {
         // If CACHE ENABLED
         if ($this->cache_dir != '') {
-            $cache_file = $this->cache_dir . '/rss_' . md5($rss_url) . '.cache';
+            $cache_file = $this->cache_dir . '/' . (isset($key) && !empty($key) ? $key : 'rss_' . md5($rss_url)) . '.cache';
             $timedif = @(time() - filemtime($cache_file));
             if ($timedif < $this->cache_time) {
                 // cached file is fresh enough, return cached array

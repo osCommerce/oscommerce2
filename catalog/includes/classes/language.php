@@ -18,7 +18,7 @@
   class language {
     var $languages, $catalog_languages, $browser_languages, $language;
 
-    function language($lng = '') {
+    function __construct($lng = '') {
       $OSCOM_Db = Registry::get('Db');
 
       $this->languages = array('af' => 'af|afrikaans',
@@ -107,7 +107,7 @@
     function get_browser_language() {
       if ( isset($_SERVER['HTTP_ACCEPT_LANGUAGE']) && !empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ){
         $this->browser_languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
-      
+
         for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
           foreach($this->languages as $key => $value) {
             if (preg_match('/^(' . $value . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) {

@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_header_messagestack() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -35,15 +35,15 @@
 
     function execute() {
       global $oscTemplate, $messageStack;
-      
+
       if ($messageStack->size('header') > 0) {
 
         ob_start();
-        include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/messagestack.php');
+        include('includes/modules/content/' . $this->group . '/templates/messagestack.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);
-        
+
       }
     }
 
@@ -81,7 +81,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

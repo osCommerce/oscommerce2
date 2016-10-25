@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_information() {
+    function __construct() {
       $this->title = MODULE_BOXES_INFORMATION_TITLE;
       $this->description = MODULE_BOXES_INFORMATION_DESCRIPTION;
 
@@ -87,7 +87,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

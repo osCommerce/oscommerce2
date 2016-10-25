@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,7 @@
     var $icon;
     var $enabled = false;
 
-    function sb_google_plus_one() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_DESCRIPTION;
@@ -36,7 +37,6 @@
       global $lng;
 
       if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-        include(DIR_WS_CLASSES . 'language.php');
         $lng = new language;
       }
 
@@ -61,7 +61,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+    window.___gcfg.lang = "' . HTML::outputProtected($language_code) . '";
   }
 
   (function() {
@@ -159,7 +159,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

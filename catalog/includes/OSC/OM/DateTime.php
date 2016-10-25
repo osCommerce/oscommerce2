@@ -8,6 +8,8 @@
 
 namespace OSC\OM;
 
+use OSC\OM\OSCOM;
+
 class DateTime
 {
     public static function getTimeZones()
@@ -40,7 +42,7 @@ class DateTime
     public static function setTimeZone($time_zone = null)
     {
         if (!isset($time_zone)) {
-            $time_zone = defined('CFG_TIME_ZONE') ? CFG_TIME_ZONE : date_default_timezone_get();
+            $time_zone = OSCOM::configExists('time_zone') ? OSCOM::getConfig('time_zone') : date_default_timezone_get();
         }
 
         return date_default_timezone_set($time_zone);

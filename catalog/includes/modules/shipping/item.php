@@ -17,7 +17,7 @@
     var $code, $title, $description, $icon, $enabled;
 
 // class constructor
-    function item() {
+    function __construct() {
       global $order;
 
       $OSCOM_Db = Registry::get('Db');
@@ -144,7 +144,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

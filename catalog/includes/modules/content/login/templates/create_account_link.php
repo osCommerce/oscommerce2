@@ -2,15 +2,15 @@
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 ?>
-<div class="contentContainer <?php echo (MODULE_CONTENT_CREATE_ACCOUNT_LINK_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
-  <h2><?php echo MODULE_CONTENT_LOGIN_HEADING_NEW_CUSTOMER; ?></h2>
+<div class="create-account-link <?php echo (MODULE_CONTENT_CREATE_ACCOUNT_LINK_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
+  <div class="panel panel-info">
+    <div class="panel-body">
+      <h2><?php echo MODULE_CONTENT_LOGIN_HEADING_NEW_CUSTOMER; ?></h2>
 
-  <div class="contentText">
-    <div class="alert alert-info">
-      <p><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER; ?></p>
+      <p class="alert alert-info"><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER; ?></p>
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
-    </div>
 
-    <p align="right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('create_account.php', '', 'SSL'), null, null, 'btn-info btn-block'); ?></p>
+      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('create_account.php', '', 'SSL'), null, 'btn-primary btn-block'); ?></p>
+    </div>
   </div>
 </div>

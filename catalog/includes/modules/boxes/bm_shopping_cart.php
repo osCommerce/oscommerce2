@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_shopping_cart() {
+    function __construct() {
       $this->title = MODULE_BOXES_SHOPPING_CART_TITLE;
       $this->description = MODULE_BOXES_SHOPPING_CART_DESCRIPTION;
 
@@ -39,7 +39,7 @@
       $cart_contents_string = '';
 
       if ($_SESSION['cart']->count_contents() > 0) {
-        $cart_contents_string = '<ul class="list-unstyled">';
+        $cart_contents_string = NULL;
         $products = $_SESSION['cart']->get_products();
         for ($i=0, $n=sizeof($products); $i<$n; $i++) {
 
@@ -62,11 +62,10 @@
           }
         }
 
-        $cart_contents_string .= '</ul>';
-        $cart_footer_string = '<div class="panel-footer text-right">' . $currencies->format($_SESSION['cart']->show_total()) . '</div>';
+        $cart_contents_string .= '<li class="text-right"><hr>' . $currencies->format($_SESSION['cart']->show_total()) . '</li>';
+
       } else {
         $cart_contents_string .= '<p>' . MODULE_BOXES_SHOPPING_CART_BOX_CART_EMPTY . '</p>';
-        $cart_footer_string = NULL;
       }
 
       ob_start();
@@ -104,7 +103,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);
@@ -121,7 +120,7 @@
     }
 
     function remove() {
-      return Registry::get('Db')->query('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")')->rowCount();
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

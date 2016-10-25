@@ -1,0 +1,9 @@
+reviews_id int not_null
+languages_id int not_null
+reviews_text text not_null
+--
+primary reviews_id languages_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci
