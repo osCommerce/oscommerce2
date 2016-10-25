@@ -23,7 +23,7 @@ define('TEXT_ALL_CATEGORIES', 'All Categories');
 define('TEXT_ALL_MANUFACTURERS', 'All Manufacturers');
 
 // seo
-if ( ($category_depth == 'top') && (!isset($HTTP_GET_VARS['manufacturers_id'])) ) {
+if ( ($GLOBALS['category_depth'] == 'top') && (!isset($_GET['manufacturers_id'])) ) {
   define('META_SEO_TITLE', 'Index Page Title');
   define('META_SEO_DESCRIPTION', 'This is the description of your site to be used in the META Description Element');
   /*

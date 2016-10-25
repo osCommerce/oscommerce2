@@ -131,7 +131,7 @@
               </tr>
 <?php
   $Qstatus = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS * from :table_orders_status where language_id = :language_id order by orders_status_id limit :page_set_offset, :page_set_max_results');
-  $Qstatus->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qstatus->bindInt(':language_id', $OSCOM_Language->getId());
   $Qstatus->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
   $Qstatus->execute();
 

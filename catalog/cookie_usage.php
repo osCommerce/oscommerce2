@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/cookie_usage.php');
+  $OSCOM_Language->loadDefinitions('cookie_usage');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('cookie_usage.php'));
 

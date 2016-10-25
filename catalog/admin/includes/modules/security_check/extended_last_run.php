@@ -16,8 +16,12 @@
   class securityCheck_extended_last_run {
     var $type = 'warning';
 
-    function securityCheck_extended_last_run() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended_last_run.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/extended_last_run');
     }
 
     function pass() {

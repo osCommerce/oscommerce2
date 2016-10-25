@@ -16,13 +16,14 @@
     var $code = 'header_tags';
     var $directory;
     var $language_directory;
+    var $site = 'Shop';
     var $key = 'MODULE_HEADER_TAGS_INSTALLED';
     var $title;
     var $template_integration = true;
 
-    function cfgm_header_tags() {
-      $this->directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/header_tags/';
-      $this->language_directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/';
+    function __construct() {
+      $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/header_tags/';
+      $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
       $this->title = MODULE_CFG_MODULE_HEADER_TAGS_TITLE;
     }
   }

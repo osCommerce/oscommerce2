@@ -16,13 +16,14 @@
     var $code = 'boxes';
     var $directory;
     var $language_directory;
+    var $site = 'Shop';
     var $key = 'MODULE_BOXES_INSTALLED';
     var $title;
     var $template_integration = true;
 
-    function cfgm_boxes() {
-      $this->directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/boxes/';
-      $this->language_directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/';
+    function construct() {
+      $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/boxes/';
+      $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
       $this->title = MODULE_CFG_MODULE_BOXES_TITLE;
     }
   }

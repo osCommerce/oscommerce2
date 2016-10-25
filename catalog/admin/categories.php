@@ -520,7 +520,7 @@
       if (isset($_GET['pID']) && empty($_POST)) {
         $Qproduct = $OSCOM_Db->prepare('select pd.products_name, pd.products_description, pd.products_url, p.products_id, p.products_quantity, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_date_added, p.products_last_modified, date_format(p.products_date_available, "%Y-%m-%d") as products_date_available, p.products_status, p.products_tax_class_id, p.manufacturers_id from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
         $Qproduct->bindInt(':products_id', $_GET['pID']);
-        $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
         $Qproduct->execute();
 
         $pInfo->objectInfo($Qproduct->toArray());
@@ -1024,7 +1024,7 @@ $(function() {
             'val' => (int)$_GET['cID'],
             'rel' => 'cd.categories_id'
           ],
-          'cd.language_id' => (int)$_SESSION['languages_id']
+          'cd.language_id' => $OSCOM_Language->getId()
         ]);
 
         if ($Qcategory->fetch() !== false) {
@@ -1055,7 +1055,7 @@ $(function() {
               'pd.products_id'
             ]
           ],
-          'pd.language_id' => $_SESSION['languages_id']
+          'pd.language_id' => $OSCOM_Language->getId()
         ]);
 
         if ($Qproduct->fetch() !== false) {
@@ -1217,7 +1217,7 @@ $(function() {
         'c.last_modified'
       ], [
         'c.categories_id' => 'cd.categories_id',
-        'cd.language_id' => (int)$_SESSION['languages_id'],
+        'cd.language_id' => $OSCOM_Language->getId(),
         'cd.categories_name' => [
           'op' => 'like',
           'val' => '%' . $search . '%'
@@ -1243,7 +1243,7 @@ $(function() {
         'c.categories_id' => [
           'rel' => 'cd.categories_id'
         ],
-        'cd.language_id' => (int)$_SESSION['languages_id']
+        'cd.language_id' => $OSCOM_Language->getId()
       ], [
         'c.sort_order',
         'cd.categories_name'
@@ -1300,7 +1300,7 @@ $(function() {
             'p2c.products_id'
           ]
         ],
-        'pd.language_id' => $_SESSION['languages_id'],
+        'pd.language_id' => $OSCOM_Language->getId(),
         'pd.products_name' => [
           'op' => 'like',
           'val' => '%' . $search . '%'
@@ -1328,7 +1328,7 @@ $(function() {
             'p2c.products_id'
           ]
         ],
-        'pd.language_id' => $_SESSION['languages_id'],
+        'pd.language_id' => $OSCOM_Language->getId(),
         'p2c.categories_id' => (int)$current_category_id
       ], 'pd.products_name');
     }

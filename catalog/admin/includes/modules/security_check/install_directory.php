@@ -11,12 +11,17 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheck_install_directory {
     var $type = 'warning';
 
-    function securityCheck_install_directory() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/install_directory.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/install_directory');
     }
 
     function pass() {

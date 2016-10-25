@@ -27,6 +27,7 @@
 
     function query($order_id) {
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $Qorder = $OSCOM_Db->get([
         'orders o',
@@ -39,7 +40,7 @@
         'o.orders_status' => [
           'rel' => 's.orders_status_id'
         ],
-        's.language_id' => (int)$_SESSION['languages_id']
+        's.language_id' => $OSCOM_Language->getId()
       ]);
 
       $Qtotals = $OSCOM_Db->get('orders_total', [

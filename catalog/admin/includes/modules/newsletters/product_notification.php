@@ -25,6 +25,7 @@
 
     function choose_audience() {
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $products_array = [];
 
@@ -35,7 +36,7 @@
         'pd.products_id',
         'pd.products_name'
       ], [
-        'pd.language_id' => (int)$_SESSION['languages_id'],
+        'pd.language_id' => $OSCOM_Language->getId(),
         'pd.products_id' => [
           'rel' => 'p.products_id'
         ],

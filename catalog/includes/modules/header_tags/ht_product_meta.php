@@ -35,6 +35,7 @@
       global $PHP_SELF, $oscTemplate, $Qproduct, $product_exists;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (isset($_GET['products_id'])) {
         if (isset($Qproduct) && ($product_exists === true)) {
@@ -51,7 +52,7 @@
                                          and pd.language_id = :language_id');
           $Qmeta->bindInt(':products_status', 1);
           $Qmeta->bindInt(':products_id', $_GET['products_id']);
-          $Qmeta->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qmeta->bindInt(':language_id', $OSCOM_Language->getId());
           $Qmeta->execute();
 
           $meta = $Qmeta->fetch();

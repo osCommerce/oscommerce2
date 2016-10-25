@@ -21,7 +21,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -39,7 +43,7 @@
 
       if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
         if ( !class_exists('sage_pay_direct') ) {
-          include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
+          $this->lang->loadDefinitions('modules/payment/sage_pay_direct');
           include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/payment/sage_pay_direct.php');
         }
 

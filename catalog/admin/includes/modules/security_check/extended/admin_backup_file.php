@@ -11,13 +11,18 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheckExtended_admin_backup_file {
     var $type = 'error';
     var $has_doc = true;
 
-    function securityCheckExtended_admin_backup_file() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/admin_backup_file.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/extended/admin_backup_file');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_FILE_TITLE;
     }

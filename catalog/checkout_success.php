@@ -39,7 +39,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/checkout_success.php');
+  $OSCOM_Language->loadDefinitions('checkout_success');
 
   $breadcrumb->add(NAVBAR_TITLE_1);
   $breadcrumb->add(NAVBAR_TITLE_2);

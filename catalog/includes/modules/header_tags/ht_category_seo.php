@@ -35,6 +35,7 @@
       global $PHP_SELF, $oscTemplate, $categories, $current_category_id;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if ( (basename($PHP_SELF) == 'index.php') && ($current_category_id > 0) ){
         $Qmeta = $OSCOM_Db->prepare('select
@@ -45,7 +46,7 @@
                                        categories_id = :categories_id
                                        and language_id = :language_id');
         $Qmeta->bindInt(':categories_id', $current_category_id);
-        $Qmeta->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qmeta->bindInt(':language_id', $OSCOM_Language->getId());
         $Qmeta->execute();
 
         $meta = $Qmeta->fetch();

@@ -34,10 +34,11 @@
       global $PHP_SELF, $oscTemplate, $current_category_id;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (basename($PHP_SELF) == 'index.php') {
         if ($current_category_id > 0) {
-          $Qcategory = $OSCOM_Db->get('categories_description', ['categories_name', 'categories_seo_title'], ['categories_id' => $current_category_id, 'language_id' => $_SESSION['languages_id']]);
+          $Qcategory = $OSCOM_Db->get('categories_description', ['categories_name', 'categories_seo_title'], ['categories_id' => $current_category_id, 'language_id' => $OSCOM_Language->getId()]);
 
           if ($Qcategory->fetch() !== false) {
             if ( tep_not_null($Qcategory->value('categories_seo_title')) && (MODULE_HEADER_TAGS_CATEGORY_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
@@ -114,4 +115,3 @@
       return array('MODULE_HEADER_TAGS_CATEGORY_TITLE_STATUS', 'MODULE_HEADER_TAGS_CATEGORY_TITLE_SORT_ORDER', 'MODULE_HEADER_TAGS_CATEGORY_TITLE_SEO_TITLE_OVERRIDE', 'MODULE_HEADER_TAGS_CATEGORY_TITLE_SEO_BREADCRUMB_OVERRIDE');
     }
   }
-  

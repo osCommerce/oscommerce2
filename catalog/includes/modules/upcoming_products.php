@@ -13,7 +13,7 @@
   use OSC\OM\OSCOM;
 
   $Qupcoming = $OSCOM_Db->prepare('select p.products_id, pd.products_name, products_date_available as date_expected from :table_products p, :table_products_description pd where to_days(p.products_date_available) >= to_days(now()) and p.products_id = pd.products_id and pd.language_id = :language_id order by ' . EXPECTED_PRODUCTS_FIELD . ' ' . EXPECTED_PRODUCTS_SORT . ' limit :limit');
-  $Qupcoming->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qupcoming->bindInt(':language_id', $OSCOM_Language->getId());
   $Qupcoming->bindInt(':limit', MAX_DISPLAY_UPCOMING_PRODUCTS);
   $Qupcoming->execute();
 

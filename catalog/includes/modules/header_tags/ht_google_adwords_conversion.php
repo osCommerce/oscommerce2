@@ -21,7 +21,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_TITLE;
       $this->description = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_DESCRIPTION;
 
@@ -32,7 +36,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $oscTemplate, $lng;
+      global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
 
@@ -46,21 +50,8 @@
         if ($Qorder->fetch() !== false) {
           $Qsubtotal = $OSCOM_Db->get('orders_total', 'value', ['orders_id' => $Qorder->valueInt('orders_id'), 'class' => 'ot_subtotal']);
 
-          if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-            $lng = new language;
-          }
-
-          $language_code = 'en';
-
-          foreach ($lng->catalog_languages as $lkey => $lvalue) {
-            if ($lvalue['id'] == $_SESSION['languages_id']) {
-              $language_code = $lkey;
-              break;
-            }
-          }
-
           $conversion_id = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_ID;
-          $conversion_language = HTML::outputProtected($language_code);
+          $conversion_language = HTML::outputProtected($this->lang->get('code'));
           $conversion_format = (int)MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_FORMAT;
           $conversion_color = HTML::outputProtected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_COLOR);
           $conversion_label = HTML::outputProtected(MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_LABEL);

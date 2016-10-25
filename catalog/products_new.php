@@ -14,7 +14,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/products_new.php');
+  $OSCOM_Language->loadDefinitions('products_new');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('products_new.php'));
 
@@ -116,7 +116,7 @@
   $listing_sql .= ' limit :page_set_offset, :page_set_max_results';
 
   $Qlisting = $OSCOM_Db->prepare($listing_sql);
-  $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
   $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
   $Qlisting->execute();
 

@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/product_reviews_write.php');
+  $OSCOM_Language->loadDefinitions('product_reviews_write');
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
@@ -28,7 +28,7 @@
 
   $Qcheck = $OSCOM_Db->prepare('select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
   $Qcheck->bindInt(':products_id', $_GET['products_id']);
-  $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qcheck->bindInt(':language_id', $OSCOM_Language->getId());
   $Qcheck->execute();
 
   if ( $Qcheck->fetch() === false ) {
@@ -58,7 +58,7 @@
       $OSCOM_Db->save('reviews', ['products_id' => $Qcheck->valueInt('products_id'), 'customers_id' => $_SESSION['customer_id'], 'customers_name' => $Qcustomer->value('customers_firstname') . ' ' . $Qcustomer->value('customers_lastname'), 'reviews_rating' => $rating, 'date_added' => 'now()']);
       $insert_id = $OSCOM_Db->lastInsertId();
 
-      $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $_SESSION['languages_id'], 'reviews_text' => $review]);
+      $OSCOM_Db->save('reviews_description', ['reviews_id' => $insert_id, 'languages_id' => $OSCOM_Language->getId(), 'reviews_text' => $review]);
 
       $messageStack->add_session('product_reviews', TEXT_REVIEW_RECEIVED, 'success');
       OSCOM::redirect('product_reviews.php', tep_get_all_get_params(array('action')));

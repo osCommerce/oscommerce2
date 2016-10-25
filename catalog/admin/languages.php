@@ -42,7 +42,7 @@
 
 // create additional categories_description records
         $Qcategories = $OSCOM_Db->prepare('select c.categories_id as orig_category_id, cd.* from :table_categories c left join :table_categories_description cd on c.categories_id = cd.categories_id where cd.language_id = :language_id');
-        $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
         $Qcategories->execute();
 
         while ($Qcategories->fetch()) {
@@ -58,7 +58,7 @@
 
 // create additional products_description records
         $Qproducts = $OSCOM_Db->prepare('select p.products_id as orig_product_id, pd.* from :table_products p left join :table_products_description pd on p.products_id = pd.products_id where pd.language_id = :language_id');
-        $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
         $Qproducts->execute();
 
         while ($Qproducts->fetch()) {
@@ -75,7 +75,7 @@
 
 // create additional products_options records
         $Qoptions = $OSCOM_Db->get('products_options', '*', [
-          'language_id' => $_SESSION['languages_id']
+          'language_id' => $OSCOM_Language->getId()
         ]);
 
         while ($Qoptions->fetch()) {
@@ -88,7 +88,7 @@
 
 // create additional products_options_values records
         $Qvalues = $OSCOM_Db->get('products_options_values', '*', [
-          'language_id' => $_SESSION['languages_id']
+          'language_id' => $OSCOM_Language->getId()
         ]);
 
         while ($Qvalues->fetch()) {
@@ -101,7 +101,7 @@
 
 // create additional manufacturers_info records
         $Qmanufacturers = $OSCOM_Db->prepare('select m.manufacturers_id as orig_manufacturer_id, mi.* from :table_manufacturers m left join :table_manufacturers_info mi on m.manufacturers_id = mi.manufacturers_id where mi.languages_id = :languages_id');
-        $Qmanufacturers->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qmanufacturers->bindInt(':languages_id', $OSCOM_Language->getId());
         $Qmanufacturers->execute();
 
         while ($Qmanufacturers->fetch()) {
@@ -119,7 +119,7 @@
 
 // create additional orders_status records
         $Qstatus = $OSCOM_Db->get('orders_status', '*', [
-          'language_id' => $_SESSION['languages_id']
+          'language_id' => $OSCOM_Language->getId()
         ]);
 
         while ($Qstatus->fetch()) {

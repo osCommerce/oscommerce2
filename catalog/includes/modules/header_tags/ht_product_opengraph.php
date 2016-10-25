@@ -36,6 +36,7 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (basename($PHP_SELF) == 'product_info.php') {
         $Qproduct = $OSCOM_Db->prepare('select
@@ -56,7 +57,7 @@
                                           and p.products_id = pd.products_id
                                           and pd.language_id = :language_id');
         $Qproduct->bindInt(':products_id', $_GET['products_id']);
-        $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
         $Qproduct->execute();
 
         if ($Qproduct->fetch() !== false) {

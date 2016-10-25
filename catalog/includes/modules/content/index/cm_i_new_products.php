@@ -39,6 +39,7 @@
       global $oscTemplate, $new_products_category_id, $currencies, $PHP_SELF;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $content_width = MODULE_CONTENT_NEW_PRODUCTS_CONTENT_WIDTH;
       $product_width = MODULE_CONTENT_NEW_PRODUCTS_DISPLAY_EACH;
@@ -83,7 +84,7 @@
       }
 
       $Qproducts = $OSCOM_Db->prepare($sql);
-      $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
       $Qproducts->bindInt(':limit', MODULE_CONTENT_NEW_PRODUCTS_MAX_DISPLAY);
 
       if (isset($new_products_category_id) && ($new_products_category_id != '0')) {

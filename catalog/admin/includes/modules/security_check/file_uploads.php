@@ -11,12 +11,17 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheck_file_uploads {
     var $type = 'warning';
 
-    function securityCheck_file_uploads() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/file_uploads.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/file_uploads');
     }
 
     function pass() {

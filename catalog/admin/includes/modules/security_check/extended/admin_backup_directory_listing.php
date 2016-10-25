@@ -11,13 +11,18 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheckExtended_admin_backup_directory_listing {
     var $type = 'error';
     var $has_doc = true;
 
-    function securityCheckExtended_admin_backup_directory_listing() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/extended/admin_backup_directory_listing.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/extended/admin_backup_directory_listing');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_TITLE;
     }

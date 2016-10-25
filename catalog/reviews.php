@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/reviews.php');
+  $OSCOM_Language->loadDefinitions('reviews');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('reviews.php'));
 
@@ -30,7 +30,7 @@
 
 <?php
   $Qreviews = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS r.reviews_id, left(rd.reviews_text, 100) as reviews_text, r.reviews_rating, r.date_added, p.products_id, pd.products_name, p.products_image, r.customers_name from :table_reviews r, :table_reviews_description rd, :table_products p, :table_products_description pd where p.products_id = r.products_id and p.products_status = 1 and r.reviews_status = 1 and r.reviews_id = rd.reviews_id and p.products_id = pd.products_id and pd.language_id = :language_id and pd.language_id = rd.languages_id order by r.reviews_id desc limit :page_set_offset, :page_set_max_results');
-  $Qreviews->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qreviews->bindInt(':language_id', $OSCOM_Language->getId());
   $Qreviews->setPageSet(MAX_DISPLAY_NEW_REVIEWS);
   $Qreviews->execute();
 

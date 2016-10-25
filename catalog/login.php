@@ -61,7 +61,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/login.php');
+  $OSCOM_Language->loadDefinitions('login');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('login.php'));
 

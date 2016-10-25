@@ -21,12 +21,6 @@ abstract class PagesActionsAbstract implements \OSC\OM\PagesActionsInterface
         if (isset($this->file)) {
             $this->page->setFile($this->file);
         }
-
-        if (isset($this->page->app) && is_subclass_of($this->page->app, 'OSC\OM\AppAbstract')) {
-            if ($this->page->app->hasDefinitionFile('Sites/Admin/Pages/' . $this->page->getCode() . '/Actions/' . implode('/', $this->page->getActionsRun()) . '.txt')) {
-                $this->page->app->loadDefinitionFile('Sites/Admin/Pages/' . $this->page->getCode() . '/Actions/' . implode('/', $this->page->getActionsRun()) . '.txt');
-            }
-        }
     }
 
     public function isRPC()

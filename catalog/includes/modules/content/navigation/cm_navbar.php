@@ -20,7 +20,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -63,7 +67,7 @@
           $class = substr($nbm, 0, strrpos($nbm, '.'));
 
           if ( !class_exists($class) ) {
-            include('includes/languages/' . $_SESSION['language'] . '/modules/navbar_modules/' . $nbm);
+            $this->lang->loadDefinitions('modules/navbar_modules/' . pathinfo($nbm, PATHINFO_FILENAME));
             require('includes/modules/navbar_modules/' . $class . '.php');
           }
 

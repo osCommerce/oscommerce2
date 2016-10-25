@@ -18,8 +18,12 @@
     var $_user_id;
     var $_user_name;
 
+    protected $lang;
+
     function __construct($module, $user_id = null, $user_name = null) {
       global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       $module = HTML::sanitize(str_replace(' ', '', $module));
 
@@ -27,7 +31,7 @@
         if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
           if (!class_exists($module)) {
             if (is_file('includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
-              include('includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              $this->lang->loadDefinitions('modules/action_recorder/' . $module);
               include('includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
             } else {
               return false;

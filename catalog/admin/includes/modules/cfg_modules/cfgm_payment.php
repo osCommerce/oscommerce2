@@ -16,13 +16,14 @@
     var $code = 'payment';
     var $directory;
     var $language_directory;
+    var $site = 'Shop';
     var $key = 'MODULE_PAYMENT_INSTALLED';
     var $title;
     var $template_integration = false;
 
-    function cfgm_payment() {
-      $this->directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/payment/';
-      $this->language_directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/';
+    function __construct() {
+      $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/payment/';
+      $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
       $this->title = MODULE_CFG_MODULE_PAYMENT_TITLE;
     }
   }

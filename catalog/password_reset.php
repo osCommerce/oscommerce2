@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/password_reset.php');
+  $OSCOM_Language->loadDefinitions('password_reset');
 
   $error = false;
 

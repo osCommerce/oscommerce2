@@ -46,8 +46,8 @@
                 $class = substr($file, 0, strrpos($file, '.'));
 
                 if (!tep_class_exists($class)) {
-                  if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file) ) {
-                    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $file);
+                  if ($OSCOM_Language->definitionsExist('Shop/modules/content/' . $group . '/' . pathinfo($file, PATHINFO_FILENAME))) {
+                    $OSCOM_Language->loadDefinitions('Shop/modules/content/' . $group . '/' . pathinfo($file, PATHINFO_FILENAME));
                   }
 
                   include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/content/' . $group . '/' . $file);

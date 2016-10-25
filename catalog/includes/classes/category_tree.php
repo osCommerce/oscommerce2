@@ -36,13 +36,14 @@
       static $_category_tree_data;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if ( isset($_category_tree_data) ) {
         $this->_data = $_category_tree_data;
       } else {
         $Qcategories = $OSCOM_Db->prepare('select c.categories_id, c.parent_id, c.categories_image, cd.categories_name from :table_categories c, :table_categories_description cd where c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.parent_id, c.sort_order, cd.categories_name');
-        $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
-        $Qcategories->setCache('categories-lang' . (int)$_SESSION['languages_id']);
+        $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
+        $Qcategories->setCache('categories-lang' . $OSCOM_Language->getId());
         $Qcategories->execute();
 
         while ($Qcategories->fetch()) {

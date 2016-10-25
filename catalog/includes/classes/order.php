@@ -31,6 +31,7 @@
 
     function query($order_id) {
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $order_total = $shipping_title = '';
 
@@ -59,7 +60,7 @@
 
       $Qstatus = $OSCOM_Db->prepare('select orders_status_name from :table_orders_status where orders_status_id = :orders_status_id and language_id = :language_id');
       $Qstatus->bindInt(':orders_status_id', $Qorder->valueInt('orders_status'));
-      $Qstatus->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qstatus->bindInt(':language_id', $OSCOM_Language->getId());
       $Qstatus->execute();
 
       $this->info = array('currency' => $Qorder->value('currency'),
@@ -155,6 +156,7 @@
       global $currencies;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $this->content_type = $_SESSION['cart']->get_content_type();
 
@@ -387,7 +389,7 @@
             $Qattributes->bindInt(':products_id', $products[$i]['id']);
             $Qattributes->bindInt(':options_id', $option);
             $Qattributes->bindInt(':options_values_id', $value);
-            $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
+            $Qattributes->bindInt(':language_id', $OSCOM_Language->getId());
             $Qattributes->execute();
 
             $this->products[$index]['attributes'][$subindex] = array('option' => $Qattributes->value('products_options_name'),

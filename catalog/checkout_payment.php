@@ -81,7 +81,7 @@
   require('includes/classes/payment.php');
   $payment_modules = new payment;
 
-  require('includes/languages/' . $_SESSION['language'] . '/checkout_payment.php');
+  $OSCOM_Language->loadDefinitions('checkout_payment');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment.php'));

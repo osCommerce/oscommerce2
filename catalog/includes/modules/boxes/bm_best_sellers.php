@@ -37,6 +37,7 @@
       global $current_category_id, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (!isset($_GET['products_id'])) {
         if (isset($current_category_id) && ($current_category_id > 0)) {
@@ -46,7 +47,7 @@
         }
 
         $Qbest = $OSCOM_Db->prepare($sql);
-        $Qbest->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qbest->bindInt(':language_id', $OSCOM_Language->getId());
 
         if (isset($current_category_id) && ($current_category_id > 0)) {
           $Qbest->bindInt(':category_id', $current_category_id);

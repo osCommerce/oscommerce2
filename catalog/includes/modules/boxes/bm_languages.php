@@ -22,7 +22,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_BOXES_LANGUAGES_TITLE;
       $this->description = MODULE_BOXES_LANGUAGES_DESCRIPTION;
 
@@ -38,14 +42,13 @@
       global $PHP_SELF, $lng, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
-        if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-          $lng = new language;
-        }
+        $languages = $this->lang->getAll();
 
-        if (count($lng->catalog_languages) > 1) {
+        if (count($languages) > 1) {
           $languages_string = '';
-          foreach($lng->catalog_languages as $key => $value) {
-            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
+
+          foreach ($languages as $code => $value) {
+            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $code) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
           }
 
           ob_start();

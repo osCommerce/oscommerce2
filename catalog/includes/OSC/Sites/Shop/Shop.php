@@ -35,7 +35,9 @@ class Shop extends \OSC\OM\SitesAbstract
 
         Registry::set('Hooks', new Hooks());
 
-        Registry::set('Language', new Language());
+        $OSCOM_Language = new Language();
+        $OSCOM_Language->setUseCache(true);
+        Registry::set('Language', $OSCOM_Language);
 
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
@@ -69,21 +71,16 @@ class Shop extends \OSC\OM\SitesAbstract
 
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-            $lng = new \language();
-
-            if (isset($_GET['language']) && !empty($_GET['language'])) {
-                $lng->set_language($_GET['language']);
-            } else {
-                $lng->get_browser_language();
+            if (isset($_GET['language']) && !empty($_GET['language']) && $OSCOM_Language->exists($_GET['language'])) {
+                $OSCOM_Language->set($_GET['language']);
             }
 
-            $_SESSION['language'] = $lng->language['directory'];
-            $_SESSION['languages_id'] = $lng->language['id'];
+            $_SESSION['language'] = $OSCOM_Language->get('code');
         }
 
 // include the language translations
         $system_locale_numeric = setlocale(LC_NUMERIC, 0);
-        include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '.php');
+        $OSCOM_Language->loadDefinitions('main');
         setlocale(LC_NUMERIC, $system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
 // currency

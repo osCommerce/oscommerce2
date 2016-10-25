@@ -28,7 +28,7 @@
     'orders_status_id',
     'orders_status_name'
   ], [
-    'language_id' => (int)$_SESSION['languages_id']
+    'language_id' => $OSCOM_Language->getId()
   ]);
 
   while ($Qstatus->fetch()) {
@@ -476,7 +476,7 @@
       $Qorders = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS o.orders_id, o.customers_name, o.payment_method, o.date_purchased, o.last_modified, o.currency, o.currency_value, s.orders_status_name, ot.text as order_total from :table_orders o left join :table_orders_total ot on (o.orders_id = ot.orders_id), :table_orders_status s where o.orders_status = s.orders_status_id and s.language_id = :language_id and ot.class = "ot_total" order by o.orders_id desc limit :page_set_offset, :page_set_max_results');
     }
 
-    $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qorders->bindInt(':language_id', $OSCOM_Language->getId());
     $Qorders->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
     $Qorders->execute();
 

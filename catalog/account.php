@@ -19,15 +19,15 @@
     OSCOM::redirect('login.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/account.php');
+  $OSCOM_Language->loadDefinitions('account');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('account.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?= OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php

@@ -38,6 +38,7 @@
       global $currencies, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $reviews_box_contents = '';
 
@@ -50,7 +51,7 @@
       $sql_query .= ' order by r.reviews_id desc limit ' . (int)MAX_RANDOM_SELECT_REVIEWS;
 
       $Qcheck = $OSCOM_Db->prepare($sql_query);
-      $Qcheck->bindInt(':languages_id', $_SESSION['languages_id']);
+      $Qcheck->bindInt(':languages_id', $OSCOM_Language->getId());
 
       if (isset($_GET['products_id'])) {
         $Qcheck->bindInt(':products_id', $_GET['products_id']);
@@ -65,7 +66,7 @@
 
         $Qreview = $OSCOM_Db->prepare('select r.reviews_id, r.reviews_rating, substring(rd.reviews_text, 1, 60) as reviews_text, p.products_id, p.products_image, pd.products_name from :table_reviews r, :table_reviews_description rd, :table_products p, :table_products_description pd where r.reviews_id = :reviews_id and r.reviews_id = rd.reviews_id and rd.languages_id = :languages_id and r.products_id = p.products_id and p.products_id = pd.products_id and pd.language_id = rd.languages_id');
         $Qreview->bindInt(':reviews_id', $result['reviews_id']);
-        $Qreview->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qreview->bindInt(':languages_id', $OSCOM_Language->getId());
         $Qreview->execute();
 
         if ($Qreview->fetch() !== false) {

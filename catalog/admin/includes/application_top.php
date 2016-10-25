@@ -31,7 +31,6 @@
   require('includes/functions/general.php');
   require('includes/classes/logger.php');
   require('includes/classes/shopping_cart.php');
-  require('includes/classes/language.php');
   require('includes/functions/validations.php');
   require('includes/classes/table_block.php');
   require('includes/classes/box.php');
@@ -101,8 +100,8 @@
       natcasesort($files);
 
       foreach ( $files as $file ) {
-        if ( is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
-          include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
+        if ($OSCOM_Language->definitionsExist('modules/boxes/' . pathinfo($file, PATHINFO_FILENAME))) {
+          $OSCOM_Language->loadDefinitions('modules/boxes/'. pathinfo($file, PATHINFO_FILENAME));
         }
 
         include($dir->path . '/' . $file);

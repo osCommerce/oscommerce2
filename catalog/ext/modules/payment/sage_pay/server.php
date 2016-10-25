@@ -21,7 +21,7 @@
     exit;
   }
 
-  include('includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_server.php');
+  $OSCOM_Language->loadDefinitions('modules/payment/sage_pay_server');
   include('includes/modules/payment/sage_pay_server.php');
   $sage_pay_server = new sage_pay_server();
 

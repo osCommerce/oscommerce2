@@ -127,7 +127,7 @@
             's.products_id'
           ]
         ],
-        'pd.language_id' => (int)$_SESSION['languages_id'],
+        'pd.language_id' => $OSCOM_Language->getId(),
         's.specials_id' => (int)$_GET['sID']
       ]);
 
@@ -203,7 +203,7 @@ $('#expdate').datepicker({
               </tr>
 <?php
     $Qspecials = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS p.products_id, pd.products_name, p.products_price, s.specials_id, s.specials_new_products_price, s.specials_date_added, s.specials_last_modified, s.expires_date, s.date_status_change, s.status from :table_products p, :table_specials s, :table_products_description pd where p.products_id = pd.products_id and pd.language_id = :language_id and p.products_id = s.products_id order by pd.products_name limit :page_set_offset, :page_set_max_results');
-    $Qspecials->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qspecials->bindInt(':language_id', $OSCOM_Language->getId());
     $Qspecials->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
     $Qspecials->execute();
 

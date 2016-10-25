@@ -42,7 +42,7 @@
   $rows = 0;
 
   $Qproducts = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS p.products_id, p.products_ordered, pd.products_name from :table_products p, :table_products_description pd where pd.products_id = p.products_id and pd.language_id = :language_id and p.products_ordered > 0 group by pd.products_id order by p.products_ordered desc, pd.products_name limit :page_set_offset, :page_set_max_results');
-  $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
   $Qproducts->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
   $Qproducts->execute();
 

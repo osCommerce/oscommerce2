@@ -38,6 +38,7 @@
       global $oscTemplate, $category, $cPath_array, $cPath, $current_category_id;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $content_width  = MODULE_CONTENT_IN_CATEGORY_LISTING_CONTENT_WIDTH;
       $category_width = MODULE_CONTENT_IN_CATEGORY_LISTING_CONTENT_WIDTH_EACH;
@@ -48,7 +49,7 @@
         for($i=0, $n=sizeof($category_links); $i<$n; $i++) {
           $Qcategories = $OSCOM_Db->prepare('select categories_id from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id limit 1');
           $Qcategories->bindInt(':parent_id', $category_links[$i]);
-          $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
           $Qcategories->execute();
 
           if (count($Qcategories->fetchAll()) < 1) {
@@ -56,7 +57,7 @@
           } else {
             $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by sort_order, cd.categories_name');
             $Qcategories->bindInt(':parent_id', $category_links[$i]);
-            $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+            $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
             $Qcategories->execute();
 
             break; // we've found the deepest category the customer is in
@@ -65,7 +66,7 @@
       } else {
         $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name, c.categories_image, c.parent_id from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by sort_order, cd.categories_name');
         $Qcategories->bindInt(':parent_id', $current_category_id);
-        $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
         $Qcategories->execute();
       }
 

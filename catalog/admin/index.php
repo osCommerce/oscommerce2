@@ -52,7 +52,8 @@
         $class = substr($adm, 0, strrpos($adm, '.'));
 
         if ( !class_exists($class) ) {
-          include('includes/languages/' . $_SESSION['language'] . '/modules/dashboard/' . $adm);
+          $OSCOM_Language->loadDefinitions('modules/dashboard/' . pathinfo($adm, PATHINFO_FILENAME));
+
           include('includes/modules/dashboard/' . $class . '.php');
         }
       }
