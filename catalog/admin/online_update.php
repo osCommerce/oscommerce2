@@ -6,6 +6,7 @@
   * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
+  use OSC\OM\Cache;
   use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
@@ -15,8 +16,6 @@
 
   require('includes/application_top.php');
 
-  $OSCOM_Cache = Registry::get('Cache');
-
   $current_version = OSCOM::getVersion();
 
   preg_match('/^(\d+\.)?(\d+\.)?(\d+)$/', $current_version, $version);
@@ -25,8 +24,10 @@
   $minor_version = (int)$version[2];
   $inc_version = (int)$version[3];
 
-  if ($OSCOM_Cache->read('core_version_check', 360)) {
-    $releases = $OSCOM_Cache->getCache();
+  $VersionCache = new Cache('core_version_check');
+
+  if ($VersionCache->exists(360)) {
+    $releases = $VersionCache->get();
   } else {
     $releases = HTTP::getResponse([
       'url' => 'https://www.oscommerce.com/version/online_merchant/' . $major_version . $minor_version
@@ -43,7 +44,7 @@
           return version_compare($aa[0], $ba[0], '>');
         });
 
-        $OSCOM_Cache->write($releases);
+        $VersionCache->save($releases);
       } else {
         $releases = -1;
       }
@@ -126,8 +127,10 @@
 
         $version = str_replace('.', '_', $_POST['version']);
 
-        if ($OSCOM_Cache->read('online_update-rel_notes-' . $version)) {
-          $notes = $OSCOM_Cache->getCache();
+        $ReleaseNotesCache = new Cache('online_update-rel_notes-' . $version);
+
+        if ($ReleaseNotesCache->exists()) {
+          $notes = $ReleaseNotesCache->get();
         } else {
           $notes = HTTP::getResponse([
             'url' => 'https://www.oscommerce.com/version/online_merchant/notes/' . $_POST['version'] . '.txt'
@@ -136,7 +139,7 @@
           $notes = trim($notes);
 
           if (!empty($notes)) {
-            $OSCOM_Cache->write($notes, 'online_update-rel_notes-' . $version);
+            $ReleaseNotesCache->save($notes);
           }
         }
 

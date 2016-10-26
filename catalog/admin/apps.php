@@ -7,14 +7,13 @@
   */
 
   use OSC\OM\Apps;
+  use OSC\OM\Cache;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   require('includes/application_top.php');
-
-  $OSCOM_Cache = Registry::get('Cache');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -25,8 +24,10 @@
           'result' => -1
         ];
 
-        if ($OSCOM_Cache->read('apps-showcase', 360)) {
-          $showcase = $OSCOM_Cache->getCache();
+        $AppsShowcaseCache = new Cache('apps-showcase');
+
+        if ($AppsShowcaseCache->exists(360)) {
+          $showcase = $AppsShowcaseCache->get();
         } else {
           $showcase = [];
 
@@ -41,7 +42,7 @@
           }
 
           if (is_array($showcase) && !empty($showcase) && isset($showcase['rpcStatus']) && ($showcase['rpcStatus'] === 1)) {
-            $OSCOM_Cache->write($showcase, 'apps-showcase');
+            $AppsShowcaseCache->save($showcase);
           }
         }
 

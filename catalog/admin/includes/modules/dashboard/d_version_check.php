@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -32,15 +33,15 @@
     }
 
     function getOutput() {
-      $OSCOM_Cache = Registry::get('Cache');
-
       $current_version = OSCOM::getVersion();
       $new_version = false;
 
-      if ($OSCOM_Cache->read('core_version_check')) {
-        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $OSCOM_Cache->getTime('core_version_check')));
+      $VersionCache = new Cache('core_version_check');
 
-        $releases = $OSCOM_Cache->getCache();
+      if ($VersionCache->exists()) {
+        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $VersionCache->getTime()));
+
+        $releases = $VersionCache->get();
 
         foreach ($releases as $version) {
           $version_array = explode('|', $version);

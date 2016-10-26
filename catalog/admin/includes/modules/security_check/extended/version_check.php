@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -28,9 +29,9 @@
     }
 
     function pass() {
-      $OSCOM_Cache = Registry::get('Cache');
+      $VersionCache = new Cache('core_version_check');
 
-      return $OSCOM_Cache->exists('core_version_check') && ($OSCOM_Cache->getTime('core_version_check') > strtotime('-30 days'));
+      return $VersionCache->exists() && ($VersionCache->getTime() > strtotime('-30 days'));
     }
 
     function getMessage() {

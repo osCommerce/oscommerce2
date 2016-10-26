@@ -34,15 +34,15 @@
   }
 
 // check if the cache directory exists
-  if (is_dir(OSCOM::BASE_DIR . 'Work/Cache')) {
-    if (!FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
+  if (is_dir(Cache::getPath())) {
+    if (!FileSystem::isWritable(Cache::getPath())) $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_NOT_WRITEABLE, 'error');
   } else {
     $OSCOM_MessageStack->add(ERROR_CACHE_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
 
   $cache_files = [];
 
-  foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
+  foreach (glob(Cache::getPath() . '*.cache') as $c) {
     $key = basename($c, '.cache');
 
     if (($pos = strpos($key, '-')) !== false) {
@@ -89,7 +89,7 @@
 </table>
 
 <p>
-  <?= '<strong>' . TEXT_CACHE_DIRECTORY . '</strong> ' . FileSystem::displayPath(OSCOM::BASE_DIR . 'Work/Cache/'); ?>
+  <?= '<strong>' . TEXT_CACHE_DIRECTORY . '</strong> ' . FileSystem::displayPath(Cache::getPath()); ?>
 </p>
 
 <?php
