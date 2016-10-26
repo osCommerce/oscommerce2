@@ -21,7 +21,7 @@
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-    $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+    $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())));
     $_SESSION['navigation']->clear_snapshot();
   } else {
     $origin_href = OSCOM::link('index.php');

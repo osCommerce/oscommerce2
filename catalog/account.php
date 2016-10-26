@@ -16,12 +16,12 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
   require('includes/languages/' . $_SESSION['language'] . '/account.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('account.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>

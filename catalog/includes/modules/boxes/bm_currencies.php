@@ -52,7 +52,7 @@
             }
           }
 
-          $form_output = HTML::form('currencies', OSCOM::link($PHP_SELF, '', 'AUTO', false), 'get', null, ['session_id' => true]) . HTML::selectField('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . '</form>';
+          $form_output = HTML::form('currencies', OSCOM::link($PHP_SELF, '', false), 'get', null, ['session_id' => true]) . HTML::selectField('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . '</form>';
 
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');

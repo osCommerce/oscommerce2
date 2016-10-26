@@ -18,7 +18,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -37,7 +37,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
   $error = false;
@@ -169,7 +169,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+        OSCOM::redirect('checkout_shipping.php');
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -191,14 +191,14 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+        OSCOM::redirect('checkout_shipping.php');
       } else {
         unset($_SESSION['sendto']);
       }
     } else {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
@@ -207,8 +207,8 @@
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping_address.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping_address.php'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
@@ -225,7 +225,7 @@
   }
 ?>
 
-<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -335,7 +335,7 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('checkout_shipping_address.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('checkout_shipping_address.php')); ?>
   </div>
 
 <?php

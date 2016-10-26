@@ -254,7 +254,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
       }
 
       if ($Qfilter->getPageSetTotalRows() > 1) {
-        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', 'AUTO', false), 'get', null, ['session_id' => true]) . '<p align="right">' . TEXT_SHOW . '&nbsp;';
+        echo '<div>' . HTML::form('filter', OSCOM::link('index.php', '', false), 'get', null, ['session_id' => true]) . '<p align="right">' . TEXT_SHOW . '&nbsp;';
         if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
           echo HTML::hiddenField('manufacturers_id', $_GET['manufacturers_id']);
           $options = array(array('id' => '', 'text' => TEXT_ALL_CATEGORIES));

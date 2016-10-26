@@ -42,7 +42,7 @@
       $content_width = MODULE_CONTENT_HEADER_SEARCH_CONTENT_WIDTH;
 
       $search_box = '<div class="searchbox-margin">';
-      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', 'AUTO', false), 'get', 'class="form-horizontal"', ['session_id' => true]);
+      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', false), 'get', 'class="form-horizontal"', ['session_id' => true]);
       $search_box .= '  <div class="input-group">' .
                           HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button></span>' .
                      '  </div>';

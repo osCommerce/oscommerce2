@@ -174,7 +174,7 @@
       <?php
       $back = sizeof($_SESSION['navigation']->path)-2;
       if (isset($_SESSION['navigation']->path[$back])) {
-        echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link($_SESSION['navigation']->path[$back]['page'], tep_array_to_string($_SESSION['navigation']->path[$back]['get'], array('action')), $_SESSION['navigation']->path[$back]['mode']));
+        echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link($_SESSION['navigation']->path[$back]['page'], tep_array_to_string($_SESSION['navigation']->path[$back]['get'], array('action'))));
       }
       ?>&nbsp;
     </div>

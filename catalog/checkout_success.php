@@ -51,7 +51,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('order', OSCOM::link('checkout_success.php', 'action=update', 'SSL'), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo HTML::form('order', OSCOM::link('checkout_success.php', 'action=update'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div class="contentContainer">
   <?php echo $page_content; ?>

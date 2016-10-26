@@ -67,7 +67,7 @@
     if (!strstr($PHP_SELF, 'account_history_info.php')) {
 ?>
 
-    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
+    <p><?php printf(FOOTER_DOWNLOAD, '<a href="' . OSCOM::link('account.php') . '">' . HEADER_TITLE_MY_ACCOUNT . '</a>'); ?></p>
 
 <?php
     }

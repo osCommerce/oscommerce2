@@ -21,7 +21,7 @@
     if ( !isset($_GET['cookie_test']) ) {
       $all_get = tep_get_all_get_params();
 
-      OSCOM::redirect('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1', 'SSL');
+      OSCOM::redirect('login.php', $all_get . (empty($all_get) ? '' : '&') . 'cookie_test=1');
     }
 
     OSCOM::redirect('cookie_usage.php');
@@ -53,7 +53,7 @@
     $_SESSION['cart']->restore_contents();
 
     if (sizeof($_SESSION['navigation']->snapshot) > 0) {
-      $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())), $_SESSION['navigation']->snapshot['mode']);
+      $origin_href = OSCOM::link($_SESSION['navigation']->snapshot['page'], tep_array_to_string($_SESSION['navigation']->snapshot['get'], array(session_name())));
       $_SESSION['navigation']->clear_snapshot();
       HTTP::redirect($origin_href);
     }
@@ -63,7 +63,7 @@
 
   require('includes/languages/' . $_SESSION['language'] . '/login.php');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('login.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>

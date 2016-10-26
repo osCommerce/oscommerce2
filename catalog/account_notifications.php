@@ -17,7 +17,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -85,11 +85,11 @@
 
     $messageStack->add_session('account', SUCCESS_NOTIFICATIONS_UPDATED, 'success');
 
-    OSCOM::redirect('account.php', '', 'SSL');
+    OSCOM::redirect('account.php');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -98,7 +98,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
 
@@ -182,7 +182,7 @@
 ?>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
     <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>

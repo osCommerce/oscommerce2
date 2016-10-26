@@ -10,6 +10,18 @@ namespace OSC\OM;
 
 class HTTP
 {
+    protected static $request_type;
+
+    public static function setRequestType()
+    {
+        static::$request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) ? 'SSL' : 'NONSSL';
+    }
+
+    public static function getRequestType()
+    {
+        return static::$request_type;
+    }
+
     public static function redirect($url, $http_response_code = null)
     {
         if ((strstr($url, "\n") === false) && (strstr($url, "\r") === false)) {

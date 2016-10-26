@@ -23,7 +23,7 @@ class Shop extends \OSC\OM\SitesAbstract
 {
     protected function init()
     {
-        global $request_type, $PHP_SELF, $currencies, $messageStack, $oscTemplate, $breadcrumb;
+        global $PHP_SELF, $currencies, $messageStack, $oscTemplate, $breadcrumb;
 
         $OSCOM_Cookies = new Cookies();
         Registry::set('Cookies', $OSCOM_Cookies);
@@ -45,13 +45,6 @@ class Shop extends \OSC\OM\SitesAbstract
 
         while ($Qcfg->fetch()) {
             define($Qcfg->value('k'), $Qcfg->value('v'));
-        }
-
-// set the type of request (secure or not)
-        if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $request_type = 'SSL';
-        } else {
-            $request_type = 'NONSSL';
         }
 
 // set php_self in the global scope

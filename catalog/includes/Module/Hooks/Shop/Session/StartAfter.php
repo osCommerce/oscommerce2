@@ -8,14 +8,13 @@
 
 namespace OSC\OM\Module\Hooks\Shop\Session;
 
+use OSC\OM\HTTP;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
 
 class StartAfter
 {
     public function execute() {
-        global $request_type;
-
         $OSCOM_Session = Registry::get('Session');
 
 // initialize a session token
@@ -24,7 +23,7 @@ class StartAfter
         }
 
 // verify the ssl_session_id if the feature is enabled
-        if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && $OSCOM_Session->hasStarted()) {
+        if ((HTTP::getRequestType() === 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && $OSCOM_Session->hasStarted()) {
             if (!isset($_SESSION['SSL_SESSION_ID'])) {
                 $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
             }
@@ -45,7 +44,7 @@ class StartAfter
             if ($_SESSION['SESSION_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT']) {
                 $OSCOM_Session->kill();
 
-                OSCOM::redirect('login.php', null, 'SSL');
+                OSCOM::redirect('login.php');
             }
         }
 
@@ -58,7 +57,7 @@ class StartAfter
             if ($_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address()) {
                 $OSCOM_Session->kill();
 
-                OSCOM::redirect('login.php', null, 'SSL');
+                OSCOM::redirect('login.php');
             }
         }
     }

@@ -66,7 +66,7 @@
       }
 
 // url
-      $params['url'] = OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false);
+      $params['url'] = OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false);
 
       $output = '<a href="http://pinterest.com/pin/create/button/?';
 

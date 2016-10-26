@@ -81,11 +81,11 @@
 
       $messageStack->add_session('login', SUCCESS_PASSWORD_RESET, 'success');
 
-      OSCOM::redirect('login.php', '', 'SSL');
+      OSCOM::redirect('login.php');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require($oscTemplate->getFile('template_top.php'));
@@ -101,7 +101,7 @@
   }
 ?>
 
-<?php echo HTML::form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
+<?php echo HTML::form('password_reset', OSCOM::link('password_reset.php', 'account=' . $email_address . '&key=' . $password_key . '&action=process'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
   <div class="contentText">

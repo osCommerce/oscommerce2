@@ -34,7 +34,7 @@
 
         $OSCOM_Db->save('customers_info', ['password_reset_key' => $reset_key, 'password_reset_date' => 'now()'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 
-        $reset_key_url = OSCOM::link('password_reset.php', 'account=' . urlencode($email_address) . '&key=' . $reset_key, 'SSL', false);
+        $reset_key_url = OSCOM::link('password_reset.php', 'account=' . urlencode($email_address) . '&key=' . $reset_key, false);
 
         if ( strpos($reset_key_url, '&amp;') !== false ) {
           $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
@@ -53,8 +53,8 @@
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('password_forgotten.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('login.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('password_forgotten.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -81,7 +81,7 @@
   } else {
 ?>
 
-<?php echo HTML::form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
+<?php echo HTML::form('password_forgotten', OSCOM::link('password_forgotten.php', 'action=process'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
   <div class="contentText">
@@ -97,7 +97,7 @@
   </div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('login.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('login.php')); ?></div>
     <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>

@@ -19,7 +19,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -61,7 +61,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
   $total_weight = $_SESSION['cart']->show_weight();
@@ -127,7 +127,7 @@
                                             'title' => (($free_shipping == true) ?  $quote[0]['methods'][0]['title'] : $quote[0]['module'] . ' (' . $quote[0]['methods'][0]['title'] . ')'),
                                             'cost' => $quote[0]['methods'][0]['cost']);
 
-              OSCOM::redirect('checkout_payment.php', '', 'SSL');
+              OSCOM::redirect('checkout_payment.php');
             }
           }
         } else {
@@ -140,7 +140,7 @@
       } else {
         $_SESSION['shipping'] = false;
 
-        OSCOM::redirect('checkout_payment.php', '', 'SSL');
+        OSCOM::redirect('checkout_payment.php');
       }
     }
   }
@@ -159,11 +159,11 @@
   if ( defined('SHIPPING_ALLOW_UNDEFINED_ZONES') && (SHIPPING_ALLOW_UNDEFINED_ZONES == 'False') && (!isset($_SESSION['shipping']) || ($_SESSION['shipping'] === false)) ) {
     $messageStack->add_session('checkout_address', ERROR_NO_SHIPPING_AVAILABLE_TO_SHIPPING_ADDRESS);
 
-    OSCOM::redirect('checkout_shipping_address.php', '', 'SSL');
+    OSCOM::redirect('checkout_shipping_address.php');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -172,7 +172,7 @@
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
   <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
@@ -183,7 +183,7 @@
         <?php echo TEXT_CHOOSE_SHIPPING_DESTINATION; ?>
         <div class="clearfix"></div>
         <div class="pull-right">
-          <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'fa fa-home', OSCOM::link('checkout_shipping_address.php', '', 'SSL')); ?>
+          <?php echo HTML::button(IMAGE_BUTTON_CHANGE_ADDRESS, 'fa fa-home', OSCOM::link('checkout_shipping_address.php')); ?>
         </div>
         <div class="clearfix"></div>
       </div>

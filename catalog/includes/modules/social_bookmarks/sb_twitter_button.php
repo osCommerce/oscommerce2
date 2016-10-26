@@ -34,7 +34,7 @@
     }
 
     function getOutput() {
-      $params = array('url=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false)));
+      $params = array('url=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false)));
 
       if ( strlen(MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_ACCOUNT) > 0 ) {
         $params[] = 'via=' . urlencode(MODULE_SOCIAL_BOOKMARKS_TWITTER_BUTTON_ACCOUNT);

@@ -17,7 +17,7 @@
 
   if (!isset($_SESSION['customer_id']) && (ALLOW_GUEST_TO_TELL_A_FRIEND == 'false')) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
   $valid_product = false;
@@ -91,8 +91,8 @@
         $email_body .= $message . "\n\n";
       }
 
-      $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false)) . "\n\n" .
-                     sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . OSCOM::link('index.php', null, 'NONSSL', false) . "\n");
+      $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)) . "\n\n" .
+                     sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n");
 
       tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
 
@@ -124,7 +124,7 @@
   }
 ?>
 
-<?php echo HTML::form('email_friend', OSCOM::link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id'), 'AUTO'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
+<?php echo HTML::form('email_friend', OSCOM::link('tell_a_friend.php', 'action=process&products_id=' . $Qproduct->value('products_id')), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 

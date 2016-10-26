@@ -18,20 +18,20 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
   if ( isset($_GET['payment_error']) && tep_not_null($_GET['payment_error']) ) {
-    $redirect_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''), 'SSL');
+    $redirect_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $_GET['payment_error'] . (isset($_GET['error']) && tep_not_null($_GET['error']) ? '&error=' . $_GET['error'] : ''));
   } else {
     $hidden_params = '';
 
     if ($_SESSION['payment'] == 'sage_pay_direct') {
-      $redirect_url = OSCOM::link('checkout_process.php', 'check=3D', 'SSL');
+      $redirect_url = OSCOM::link('checkout_process.php', 'check=3D');
       $hidden_params = HTML::hiddenField('MD', $_POST['MD']) . HTML::hiddenField('PaRes', $_POST['PaRes']);
     } else {
-      $redirect_url = OSCOM::link('checkout_success.php', '', 'SSL');
+      $redirect_url = OSCOM::link('checkout_success.php');
     }
   }
 
