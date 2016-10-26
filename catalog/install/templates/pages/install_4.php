@@ -55,7 +55,6 @@ if ((substr($dir_fs_document_root, -1) != '\\') && (substr($dir_fs_document_root
 }
 
 $http_url = parse_url($_POST['HTTP_WWW_ADDRESS']);
-$https_enable = ($http_url['scheme'] == 'https') ? 'true' : 'false';
 $http_server = $http_url['scheme'] . '://' . $http_url['host'];
 $http_catalog = $http_url['path'];
 
@@ -116,12 +115,6 @@ http_path = "{$http_catalog}"
 http_images_path = "images/"
 http_cookie_domain = ""
 http_cookie_path = "{$http_catalog}"
-ssl = "{$https_enable}"
-https_server = "{$http_server}"
-https_path = "{$http_catalog}"
-https_images_path = "images/"
-https_cookie_domain = ""
-https_cookie_path = "{$http_catalog}"
 EOD;
 
 ENDCFG;
@@ -143,12 +136,6 @@ http_path = "{$admin_http_path}"
 http_images_path = "images/"
 http_cookie_domain = ""
 http_cookie_path = "{$admin_http_path}"
-ssl = "{$https_enable}"
-https_server = "{$http_server}"
-https_path = "{$admin_http_path}"
-https_images_path = "images/"
-https_cookie_domain = ""
-https_cookie_path = "{$admin_http_path}"
 EOD;
 
 ENDCFG;

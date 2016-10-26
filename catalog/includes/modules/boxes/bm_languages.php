@@ -35,7 +35,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $lng, $request_type, $oscTemplate;
+      global $PHP_SELF, $lng, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (!isset($lng) || (isset($lng) && !is_object($lng))) {
@@ -45,7 +45,7 @@
         if (count($lng->catalog_languages) > 1) {
           $languages_string = '';
           foreach($lng->catalog_languages as $key => $value) {
-            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
+            $languages_string .= ' <a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'language=' . $key) . '">' . HTML::image('includes/languages/' . $value['directory'] . '/images/' . $value['image'], $value['name'], NULL, NULL, NULL, false) . '</a> ';
           }
 
           ob_start();

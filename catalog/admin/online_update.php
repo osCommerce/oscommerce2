@@ -739,7 +739,7 @@ $(function() {
 });
 </script>
 
-<script src="<?= OSCOM::link('Shop/ext/anchorme/anchorme.min.js', '', 'AUTO', false); ?>"></script>
+<script src="<?= OSCOM::link('Shop/ext/anchorme/anchorme.min.js'); ?>"></script>
 
 <?php
   }

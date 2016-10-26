@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -44,6 +45,12 @@
   require(OSCOM::getConfig('dir_root', 'Shop') . 'includes/classes/osc_template.php');
 
   OSCOM::loadSite('Admin');
+
+  if ((HTTP::getRequestType() === 'NONSSL') && ($_SERVER['REQUEST_METHOD'] === 'GET') && (parse_url(OSCOM::getConfig('http_server'), PHP_URL_SCHEME) == 'https')) {
+    $url_req = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+    HTTP::redirect($url_req, 301);
+  }
 
   $OSCOM_Db = Registry::get('Db');
   $OSCOM_Hooks = Registry::get('Hooks');

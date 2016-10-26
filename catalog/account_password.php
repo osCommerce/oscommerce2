@@ -17,7 +17,7 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // needs to be included earlier to set the success message in the messageStack
@@ -51,7 +51,7 @@
 
         $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
 
-        OSCOM::redirect('account.php', '', 'SSL');
+        OSCOM::redirect('account.php');
       } else {
         $error = true;
 
@@ -60,8 +60,8 @@
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_password.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_password.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -76,7 +76,7 @@
   }
 ?>
 
-<?php echo HTML::form('account_password', OSCOM::link('account_password.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('account_password', OSCOM::link('account_password.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <?php
   $Qcustomer = $OSCOM_Db->get('customers', 'customers_email_address', ['customers_id' => (int)$_SESSION['customer_id']]);
@@ -111,7 +111,7 @@
   </div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
     <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 

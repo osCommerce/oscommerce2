@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Db;
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
 
   header('Cache-Control: no-cache, must-revalidate');
@@ -27,6 +28,40 @@
 
   if (isset($_GET['action']) && !empty($_GET['action'])) {
     switch ($_GET['action']) {
+      case 'httpsCheck':
+        if (isset($_GET['subaction']) && ($_GET['subaction'] == 'do')) {
+          if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
+            $result['status'] = '1';
+            $result['message'] = 'success';
+          }
+        } else {
+          $url = 'https://' . $_SERVER['HTTP_HOST'];
+
+          if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
+            $url .= $_SERVER['REQUEST_URI'];
+          } else {
+            $url .= $_SERVER['SCRIPT_FILENAME'];
+          }
+
+          $url .= '&subaction=do';
+
+          $response = HTTP::getResponse([
+            'url' => $url,
+            'verify_ssl' => false
+          ]);
+
+          if (!empty($response)) {
+            $response = json_decode($response, true);
+
+            if (is_array($response) && isset($response['status']) && ($response['status'] == '1')) {
+              $result['status'] = '1';
+              $result['message'] = 'success';
+            }
+          }
+        }
+
+        break;
+
       case 'dbCheck':
         try {
           $OSCOM_Db = Db::initialize(isset($_POST['server']) ? $_POST['server'] : '', isset($_POST['username']) ? $_POST['username'] : '', isset($_POST['password']) ? $_POST['password'] : '', isset($_POST['name']) ? $_POST['name'] : '');

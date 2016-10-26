@@ -18,7 +18,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     </ul>
   </li>
   <?php
-  echo '<li><a href="' . OSCOM::link('checkout_shipping.php', '', 'SSL') . '">' . MODULE_NAVBAR_SHOPPING_CART_CHECKOUT . '</a></li>';
+  echo '<li><a href="' . OSCOM::link('checkout_shipping.php') . '">' . MODULE_NAVBAR_SHOPPING_CART_CHECKOUT . '</a></li>';
 }
 else {
   echo '<li><p class="navbar-text">' . MODULE_NAVBAR_SHOPPING_CART_NO_CONTENTS . '</p></li>';

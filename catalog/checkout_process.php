@@ -18,8 +18,8 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -29,17 +29,17 @@
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping']) || !isset($_SESSION['sendto'])) {
-    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+    OSCOM::redirect('checkout_shipping.php');
   }
 
   if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset($_SESSION['payment'])) ) {
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
  }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
@@ -83,7 +83,7 @@
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
-    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED));
   }
 
   require('includes/classes/order_total.php');
@@ -296,7 +296,7 @@
   $email_order = STORE_NAME . "\n" .
                  EMAIL_SEPARATOR . "\n" .
                  EMAIL_TEXT_ORDER_NUMBER . ' ' . $insert_id . "\n" .
-                 EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, 'SSL', false) . "\n" .
+                 EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, false) . "\n" .
                  EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
   if ($order->info['comments']) {
     $email_order .= HTML::outputProtected($order->info['comments']) . "\n\n";
@@ -346,7 +346,7 @@
   unset($_SESSION['payment']);
   unset($_SESSION['comments']);
 
-  OSCOM::redirect('checkout_success.php', '', 'SSL');
+  OSCOM::redirect('checkout_success.php');
 
   require('includes/application_bottom.php');
 ?>

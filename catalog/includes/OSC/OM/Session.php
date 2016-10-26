@@ -34,14 +34,6 @@ class Session
 
         $obj->setName($name);
 
-        $force_cookies = false;
-
-        if ((OSCOM::getConfig('http_cookie_domain') == OSCOM::getConfig('https_cookie_domain')) && (OSCOM::getConfig('http_cookie_path') == OSCOM::getConfig('https_cookie_path'))) {
-            $force_cookies = true;
-        }
-
-        $obj->setForceCookies($force_cookies);
-
         return $obj;
     }
 }

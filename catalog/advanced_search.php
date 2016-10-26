@@ -116,7 +116,7 @@ function check_form() {
   }
 ?>
 
-<?php echo HTML::form('advanced_search', OSCOM::link('advanced_search_result.php', '', 'NONSSL', false), 'get', 'class="form-horizontal" onsubmit="return check_form(this);"', ['session_id' => true]); ?>
+<?php echo HTML::form('advanced_search', OSCOM::link('advanced_search_result.php', '', false), 'get', 'class="form-horizontal" onsubmit="return check_form(this);"', ['session_id' => true]); ?>
 
 <div class="contentContainer">
 

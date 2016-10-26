@@ -18,8 +18,8 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -30,13 +30,13 @@
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+    OSCOM::redirect('checkout_shipping.php');
   }
 
   if (isset($_POST['payment'])) $_SESSION['payment'] = $_POST['payment'];
@@ -65,7 +65,7 @@
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
-    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED));
   }
 
   if (is_array($payment_modules->modules)) {
@@ -96,7 +96,7 @@
 
   require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   require($oscTemplate->getFile('template_top.php'));
@@ -114,7 +114,7 @@
   if (isset($OSCOM_PM->form_action_url)) {
     $form_action_url = $OSCOM_PM->form_action_url;
   } else {
-    $form_action_url = OSCOM::link('checkout_process.php', '', 'SSL');
+    $form_action_url = OSCOM::link('checkout_process.php');
   }
 
   echo HTML::form('checkout_confirmation', $form_action_url, 'post');
@@ -182,7 +182,7 @@
       ?>
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
@@ -193,7 +193,7 @@
     ?>
     <div class="col-sm-4">
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment_address.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
         </div>
@@ -204,7 +204,7 @@
       if ($order->info['shipping_method']) {
         ?>
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_shipping.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
           <div class="panel-body">
             <?php echo $order->info['shipping_method']; ?>
           </div>
@@ -213,7 +213,7 @@
       }
       ?>
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></div>
         <div class="panel-body">
           <?php echo $order->info['payment_method']; ?>
         </div>
@@ -274,7 +274,7 @@
 ?>
   <hr>
 
-  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php', '', 'SSL'), null, 'pull-right btn-info btn-xs' ); ?></h2>
+  <h2><?php echo '<strong>' . HEADING_ORDER_COMMENTS . '</strong> ' . HTML::button(TEXT_EDIT, 'fa fa-edit', OSCOM::link('checkout_payment.php'), null, 'pull-right btn-info btn-xs' ); ?></h2>
 
   <blockquote>
     <?php echo nl2br(HTML::outputProtected($order->info['comments'])) . HTML::hiddenField('comments', $order->info['comments']); ?>
@@ -301,12 +301,12 @@
     <div class="stepwizard">
       <div class="stepwizard-row">
         <div class="stepwizard-step">
-          <a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_shipping.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
+          <a href="<?php echo OSCOM::link('checkout_shipping.php'); ?>"><button type="button" class="btn btn-default btn-circle">1</button></a>
+          <p><a href="<?php echo OSCOM::link('checkout_shipping.php'); ?>"><?php echo CHECKOUT_BAR_DELIVERY; ?></a></p>
         </div>
         <div class="stepwizard-step">
-          <a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
-          <p><a href="<?php echo OSCOM::link('checkout_payment.php', '', 'SSL'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
+          <a href="<?php echo OSCOM::link('checkout_payment.php'); ?>"><button type="button" class="btn btn-default btn-circle">2</button></a>
+          <p><a href="<?php echo OSCOM::link('checkout_payment.php'); ?>"><?php echo CHECKOUT_BAR_PAYMENT; ?></a></p>
         </div>
         <div class="stepwizard-step">
           <button type="button" class="btn btn-primary btn-circle">3</button>

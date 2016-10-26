@@ -85,7 +85,7 @@
           $data['product:price:amount'] = $products_price;
           $data['product:price:currency'] = $_SESSION['currency'];
 
-          $data['og:url'] = OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), 'NONSSL', false);
+          $data['og:url'] = OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false);
 
           $data['product:availability'] = ( $Qproduct->valueInt('products_quantity') > 0 ) ? MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_IN_STOCK : MODULE_HEADER_TAGS_PRODUCT_OPENGRAPH_TEXT_OUT_OF_STOCK;
 

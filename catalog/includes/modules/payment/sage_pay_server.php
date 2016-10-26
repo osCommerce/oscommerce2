@@ -151,7 +151,7 @@
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(OSCOM::link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $_SESSION['sagepay_server_skey_code'], 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(OSCOM::link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $_SESSION['sagepay_server_skey_code'], false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -259,7 +259,7 @@
           } else {
             $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
-            OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php', '', 'SSL');
+            OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php');
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -268,7 +268,7 @@
         }
       }
 
-      OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
+      OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''));
     }
 
     function after_process() {
@@ -296,7 +296,7 @@
 
         unset($_SESSION['sage_pay_server_nexturl']);
 
-        OSCOM::redirect('ext/modules/payment/sage_pay/redirect.php', '', 'SSL');
+        OSCOM::redirect('ext/modules/payment/sage_pay/redirect.php');
       }
     }
 

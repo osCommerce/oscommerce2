@@ -30,6 +30,8 @@ class OSCOM
         DateTime::setTimeZone();
 
         ErrorHandler::initialize();
+
+        HTTP::setRequestType();
     }
 
     public static function getVersion()
@@ -117,10 +119,8 @@ class OSCOM
         return $OSCOM_Site->hasPage() && $OSCOM_Site->getPage()->isRPC();
     }
 
-    public static function link($page, $parameters = null, $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true)
+    public static function link($page, $parameters = null, $add_session_id = true, $search_engine_safe = true)
     {
-        global $request_type;
-
         $OSCOM_Session = Registry::get('Session');
 
         $page = HTML::sanitize($page);
@@ -132,10 +132,6 @@ class OSCOM
             $page = $matches[2];
         }
 
-        if (!in_array($connection, ['NONSSL', 'SSL', 'AUTO'])) {
-            $connection = 'NONSSL';
-        }
-
         if (!is_bool($add_session_id)) {
             $add_session_id = true;
         }
@@ -144,25 +140,11 @@ class OSCOM
             $search_engine_safe = true;
         }
 
-        if ($connection == 'AUTO') {
-            $connection = ($request_type == 'SSL') ? 'SSL' : 'NONSSL';
-        }
-
-        if (($connection == 'SSL') && (static::getConfig('ssl', $req_site) != 'true')) {
-            $connection = 'NONSSL';
-        }
-
         if (($add_session_id === true) && ($site !== $req_site)) {
             $add_session_id = false;
         }
 
-        if ($connection == 'NONSSL') {
-            $link = static::getConfig('http_server', $req_site) . static::getConfig('http_path', $req_site);
-        } else {
-            $link = static::getConfig('https_server', $req_site) . static::getConfig('https_path', $req_site);
-        }
-
-        $link .= $page;
+        $link = static::getConfig('http_server', $req_site) . static::getConfig('http_path', $req_site) . $page;
 
         if (!empty($parameters)) {
             $link .= '?' . HTML::sanitize($parameters);
@@ -177,7 +159,7 @@ class OSCOM
 
 // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
         if (($add_session_id == true) && $OSCOM_Session->hasStarted() && ($OSCOM_Session->isForceCookies() === false)) {
-            if ((strlen(SID) > 0) || ((($request_type == 'NONSSL') && ($connection == 'SSL')) || (($request_type == 'SSL') && ($connection == 'NONSSL')))) {
+            if ((strlen(SID) > 0) || (((HTTP::getRequestType() == 'NONSSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'https')) || ((HTTP::getRequestType() == 'SSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) == 'http')))) {
                 $link .= $separator . HTML::sanitize(session_name() . '=' . session_id());
             }
         }
@@ -195,8 +177,6 @@ class OSCOM
 
     public static function linkImage()
     {
-        global $request_type;
-
         $args = func_get_args();
 
         if (!isset($args[0])) {
@@ -207,11 +187,7 @@ class OSCOM
             $args[1] = null;
         }
 
-        if (!isset($args[2])) {
-            $args[2] = 'AUTO';
-        }
-
-        $args[3] = false;
+        $args[2] = false;
 
         $page = $args[0];
         $req_site = static::$site;
@@ -221,7 +197,7 @@ class OSCOM
             $page = $matches[2];
         }
 
-        $args[0] = $req_site . '/' . ((($args[2] == 'SSL') || ($request_type == 'SSL')) ? static::getConfig('https_images_path', $req_site) : static::getConfig('http_images_path', $req_site)) . $page;
+        $args[0] = $req_site . '/' . static::getConfig('http_images_path', $req_site) . $page;
 
         $url = forward_static_call_array('static::link', $args);
 
@@ -230,8 +206,6 @@ class OSCOM
 
     public static function linkPublic()
     {
-        global $request_type;
-
         $args = func_get_args();
 
         if (!isset($args[0])) {
@@ -242,11 +216,7 @@ class OSCOM
             $args[1] = null;
         }
 
-        if (!isset($args[2])) {
-            $args[2] = 'AUTO';
-        }
-
-        $args[3] = false;
+        $args[2] = false;
 
         $page = $args[0];
         $req_site = static::$site;
@@ -265,27 +235,12 @@ class OSCOM
 
     public static function redirect()
     {
-        global $request_type;
-
         $args = func_get_args();
-
-        // change https->http redirects to https->https
-        if (($request_type == 'SSL') && (!isset($args[2]) || ($args[2] != 'SSL'))) {
-            if (!isset($args[0])) {
-                $args[0] = null;
-            }
-
-            if (!isset($args[1])) {
-                $args[1] = null;
-            }
-
-            $args[2] = 'SSL';
-        }
 
         $url = forward_static_call_array('static::link', $args);
 
         if ((strstr($url, "\n") !== false) || (strstr($url, "\r") !== false)) {
-            $url = static::link('index.php', '', 'NONSSL', false);
+            $url = static::link('index.php', '', false);
         }
 
         HTTP::redirect($url);

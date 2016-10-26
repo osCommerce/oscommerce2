@@ -33,6 +33,14 @@ if (!extension_loaded('pdo') || !extension_loaded('pdo_mysql')) {
 if (PHP_VERSION < 5.5) {
     $warning_array[] = 'The minimum required PHP version is v5.5 - please ask your host or server administrator to upgrade the PHP version to continue installation.';
 }
+
+$https_url = 'https://' . $_SERVER['HTTP_HOST'];
+
+if (isset($_SERVER['REQUEST_URI']) && !empty($_SERVER['REQUEST_URI'])) {
+    $https_url .= $_SERVER['REQUEST_URI'];
+} else {
+    $https_url .= $_SERVER['SCRIPT_FILENAME'];
+}
 ?>
 
 <div class="alert alert-info">
@@ -104,9 +112,23 @@ if (!empty($configfile_array) || !empty($warning_array)) {
 } else {
 ?>
 
-    <p>The webserver environment has been verified to proceed with a successful installation and configuration of your online store.</p>
+    <div id="detectHttps" class="alert alert-info">
+      <p><i class="fa fa-spinner fa-spin fa-fw"></i> Please wait, detecting web server environment..</p>
+    </div>
 
     <div id="jsOn" style="display: none;">
+      <p>The web server environment has been verified to proceed with a successful installation and configuration of your online store.</p>
+
+      <div id="httpsNotice" style="display: none;">
+        <div class="alert alert-warning">
+          <p><strong>HTTPS Server Detected</strong></p>
+
+          <p>A HTTPS configured web server has been detected. It is recommended to install your online store in a secure environment. Please click the following <span class="label label-warning">Reload in HTTPS</span> button to reload this installation procedure in HTTPS. If you receive an error, please use your browsers back button to return to this page and continue the installation using the <span class="label label-success">Start the Installation Procedure</span> button below.</p>
+
+          <p><a href="<?= $https_url; ?>" class="btn btn-warning btn-sm" role="button">Reload in HTTPS</a></p>
+        </div>
+      </div>
+
       <p><a href="install.php" class="btn btn-success" role="button">Start the Installation Procedure</a></p>
     </div>
 
@@ -118,7 +140,32 @@ if (!empty($configfile_array) || !empty($warning_array)) {
 <script>
 $(function() {
   $('#jsOff').hide();
-  $('#jsOn').show();
+
+  if (document.location.protocol == 'https:') {
+    $('#detectHttps').hide();
+    $('#jsOn').show();
+  } else {
+    var httpsCheckUrl = 'rpc.php?action=httpsCheck';
+
+    $.post(httpsCheckUrl, null, function (response) {
+      if (('status' in response) && ('message' in response)) {
+        if ((response.status == '1') && (response.message == 'success')) {
+          $('#detectHttps').hide();
+          $('#httpsNotice').show();
+          $('#jsOn').show();
+        } else {
+          $('#detectHttps').hide();
+          $('#jsOn').show();
+        }
+      } else {
+        $('#detectHttps').hide();
+        $('#jsOn').show();
+      }
+    }, 'json').fail(function() {
+      $('#detectHttps').hide();
+      $('#jsOn').show();
+    });
+  }
 });
 </script>
 

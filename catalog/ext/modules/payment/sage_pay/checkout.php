@@ -18,8 +18,8 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -30,17 +30,17 @@
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping'])) {
-    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+    OSCOM::redirect('checkout_shipping.php');
   }
 
   if (!isset($_SESSION['payment']) || (($_SESSION['payment'] != 'sage_pay_direct') && ($_SESSION['payment'] != 'sage_pay_server')) || (($_SESSION['payment'] == 'sage_pay_server') && !isset($_SESSION['sage_pay_server_nexturl']))) {
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
 // load the selected payment module
@@ -53,7 +53,7 @@
   $payment_modules->update_status();
 
   if ( ( is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && !is_object($GLOBALS[$_SESSION['payment']]) ) || (is_object($GLOBALS[$_SESSION['payment']]) && ($GLOBALS[$_SESSION['payment']]->enabled == false)) ) {
-    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED));
   }
 
   if (is_array($payment_modules->modules)) {
@@ -84,11 +84,11 @@
 
   require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
   $breadcrumb->add(NAVBAR_TITLE_2);
 
   if ($_SESSION['payment'] == 'sage_pay_direct') {
-    $iframe_url = OSCOM::link('ext/modules/payment/sage_pay/direct_3dauth.php', '', 'SSL');
+    $iframe_url = OSCOM::link('ext/modules/payment/sage_pay/direct_3dauth.php');
   } else {
     $iframe_url = $_SESSION['sage_pay_server_nexturl'];
   }

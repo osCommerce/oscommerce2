@@ -17,16 +17,16 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('login.php', '', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
   if (!isset($_SESSION['sage_pay_direct_acsurl'])) {
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
   if (!isset($_SESSION['payment']) || ($_SESSION['payment'] != 'sage_pay_direct')) {
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
   require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
@@ -37,12 +37,12 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
 <title><?php echo MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_TITLE; ?></title>
-<base href="<?= ($request_type == 'SSL') ? OSCOM::getConfig('https_server', 'Shop') . OSCOM::getConfig('https_path', 'Shop') : OSCOM::getConfig('http_server', 'Shop') . OSCOM::getConfig('http_path', 'Shop'); ?>">
+<base href="<?= OSCOM::getConfig('http_server', 'Shop') . OSCOM::getConfig('http_path', 'Shop'); ?>">
 </head>
 <body>
 <FORM name="form" action="<?php echo $_SESSION['sage_pay_direct_acsurl']; ?>" method="POST">
 <input type="hidden" name="PaReq" value="<?php echo $_SESSION['sage_pay_direct_pareq']; ?>" />
-<input type="hidden" name="TermUrl" value="<?php echo OSCOM::link('ext/modules/payment/sage_pay/redirect.php', '', 'SSL'); ?>" />
+<input type="hidden" name="TermUrl" value="<?php echo OSCOM::link('ext/modules/payment/sage_pay/redirect.php'); ?>" />
 <input type="hidden" name="MD" value="<?php echo $_SESSION['sage_pay_direct_md']; ?>" />
 <NOSCRIPT>
 <?php echo '<center><p>' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_INFO . '</p><p><input type="submit" value="' . MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_BUTTON . '"/></p></center>'; ?>

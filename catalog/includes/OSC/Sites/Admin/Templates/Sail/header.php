@@ -123,7 +123,7 @@
   foreach (tep_get_languages() as $l) {
     $lang[] = [
       'name' => $l['name'],
-      'link' => OSCOM::link($PHP_SELF, $all_get . (!empty($all_get) ? '&' : '') . 'language=' . $l['code'], 'AUTO')
+      'link' => OSCOM::link($PHP_SELF, $all_get . (!empty($all_get) ? '&' : '') . 'language=' . $l['code'])
     ];
   }
 
@@ -148,7 +148,7 @@
 
         <li><a><i class="fa fa-question-circle"></i></a>
           <ul class="dropdown-menu">
-            <li><a href="<?= OSCOM::link('Shop/', null, 'SSL'); ?>">View Shop</a></li>
+            <li><a href="<?= OSCOM::link('Shop/'); ?>">View Shop</a></li>
             <li class="divider"></li>
             <li><a href="https://www.oscommerce.com">osCommerce Website</a></li>
             <li><a href="https://www.oscommerce.com/Support">Help and Support</a></li>

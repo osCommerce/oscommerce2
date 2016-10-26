@@ -35,7 +35,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $currencies, $request_type, $oscTemplate;
+      global $PHP_SELF, $currencies, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {
@@ -52,7 +52,7 @@
             }
           }
 
-          $form_output = HTML::form('currencies', OSCOM::link($PHP_SELF, '', $request_type, false), 'get', null, ['session_id' => true]) . HTML::selectField('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . '</form>';
+          $form_output = HTML::form('currencies', OSCOM::link($PHP_SELF, '', false), 'get', null, ['session_id' => true]) . HTML::selectField('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"') . $hidden_get_variables . '</form>';
 
           ob_start();
           include('includes/modules/boxes/templates/currencies.php');

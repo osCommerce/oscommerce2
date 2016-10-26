@@ -44,7 +44,7 @@
       if (isset($_SESSION['customer_id'])) {
         $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_PERSONAL, HTML::outputProtected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
       } else {
-        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_GUEST, OSCOM::link('login.php', '', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
+        $customer_greeting = sprintf(MODULE_CONTENT_CUSTOMER_GREETING_GUEST, OSCOM::link('login.php'), OSCOM::link('create_account.php'));
       }
 
       ob_start();

@@ -10,7 +10,7 @@ use OSC\OM\OSCOM;
       <p class="alert alert-info"><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER; ?></p>
       <p><?php echo MODULE_CONTENT_LOGIN_TEXT_NEW_CUSTOMER_INTRODUCTION; ?></p>
 
-      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('create_account.php', '', 'SSL'), null, 'btn-primary btn-block'); ?></p>
+      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('create_account.php'), null, 'btn-primary btn-block'); ?></p>
     </div>
   </div>
 </div>

@@ -129,8 +129,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => OSCOM::link('checkout_process.php', '', 'SSL'),
-                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
+                     'SuccessURL' => OSCOM::link('checkout_process.php'),
+                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -237,10 +237,10 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
+          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''));
         }
       } else {
-        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code, 'SSL');
+        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code);
       }
     }
 

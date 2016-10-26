@@ -15,5 +15,5 @@ http_response_code(404);
 <h1>Error - Page Not Found (404)</h1>
 
 <div>
-  <?php echo HTML::button('Continue', 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php', null, 'AUTO')); ?>
+  <?php echo HTML::button('Continue', 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php')); ?>
 </div>

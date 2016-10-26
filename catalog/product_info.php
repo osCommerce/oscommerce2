@@ -83,7 +83,7 @@
     }
 ?>
 
-<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product', 'NONSSL'), 'post', 'class="form-horizontal" role="form"'); ?>
+<?php echo HTML::form('cart_quantity', OSCOM::link('product_info.php', tep_get_all_get_params(array('action')) . 'action=add_product'), 'post', 'class="form-horizontal" role="form"'); ?>
 
 <div itemscope itemtype="http://schema.org/Product">
 

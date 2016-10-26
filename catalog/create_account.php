@@ -251,11 +251,11 @@
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
       tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-      OSCOM::redirect('create_account_success.php', '', 'SSL');
+      OSCOM::redirect('create_account_success.php');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -271,10 +271,10 @@
 ?>
 
 <div class="alert alert-warning">
-  <?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params(), 'SSL')); ?><span class="text-danger pull-right text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+  <?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params())); ?><span class="text-danger pull-right text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
 </div>
 
-<?php echo HTML::form('create_account', OSCOM::link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('create_account', OSCOM::link('create_account.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
 

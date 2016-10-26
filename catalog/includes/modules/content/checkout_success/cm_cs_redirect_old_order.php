@@ -46,7 +46,7 @@
         $Qcheck->execute();
 
         if ($Qcheck->fetch() !== false) {
-          OSCOM::redirect('account.php', '', 'SSL');
+          OSCOM::redirect('account.php');
         }
       }
     }

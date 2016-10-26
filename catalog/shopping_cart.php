@@ -142,7 +142,7 @@
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php', '', 'SSL'), null, 'btn-success'); ?></div>
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CHECKOUT, 'fa fa-angle-right', OSCOM::link('checkout_shipping.php'), null, 'btn-success'); ?></div>
   </div>
 
 <?php

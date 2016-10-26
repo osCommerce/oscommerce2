@@ -43,7 +43,7 @@
     }
 
     function getOutput() {
-      global $oscTemplate, $currencies, $PHP_SELF, $request_type;
+      global $oscTemplate, $currencies, $PHP_SELF;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         ob_start();

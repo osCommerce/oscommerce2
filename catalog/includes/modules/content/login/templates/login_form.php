@@ -9,7 +9,7 @@ use OSC\OM\OSCOM;
 
       <p class="alert alert-success"><?php echo MODULE_CONTENT_LOGIN_TEXT_RETURNING_CUSTOMER; ?></p>
 
-      <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process', 'SSL'), 'post', '', ['tokenize' => true]); ?>
+      <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process'), 'post', '', ['tokenize' => true]); ?>
 
       <div class="form-group">
         <?php echo HTML::inputField('email_address', NULL, 'autofocus="autofocus" required id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
@@ -25,6 +25,6 @@ use OSC\OM\OSCOM;
     </div>
   </div>
 
-    <p><?php echo '<a class="btn btn-default" role="button" href="' . OSCOM::link('password_forgotten.php', '', 'SSL') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
+    <p><?php echo '<a class="btn btn-default" role="button" href="' . OSCOM::link('password_forgotten.php') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
 
 </div>

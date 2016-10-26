@@ -66,7 +66,7 @@
       global $oscTemplate;
 
       $oscTemplate->_data['account']['account']['links']['sage_pay_cards'] = array('title' => $this->public_title,
-                                                                                   'link' => OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
+                                                                                   'link' => OSCOM::link('ext/modules/content/account/sage_pay/cards.php'),
                                                                                    'icon' => 'newwin');
     }
 

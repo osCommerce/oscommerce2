@@ -17,11 +17,11 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
   if (!isset($_GET['order_id']) || !is_numeric($_GET['order_id'])) {
-    OSCOM::redirect('account_history.php', '', 'SSL');
+    OSCOM::redirect('account_history.php');
   }
 
   $Qcheck = $OSCOM_Db->prepare('select o.customers_id from :table_orders o, :table_orders_status s where o.orders_id = :orders_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1"');
@@ -30,14 +30,14 @@
   $Qcheck->execute();
 
   if (($Qcheck->fetch() === false) || ($Qcheck->valueInt('customers_id') != $_SESSION['customer_id'])) {
-    OSCOM::redirect('account_history.php', '', 'SSL');
+    OSCOM::redirect('account_history.php');
   }
 
   require('includes/languages/' . $_SESSION['language'] . '/account_history_info.php');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php', '', 'SSL'));
-  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id'], 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php'));
+  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id']));
 
   require('includes/classes/order.php');
   $order = new order($_GET['order_id']);
@@ -204,7 +204,7 @@
 
   <div class="clearfix"></div>
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')), 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')))); ?>
   </div>
 </div>
 

@@ -41,14 +41,14 @@
       $content_width = (int)MODULE_CONTENT_FOOTER_ACCOUNT_CONTENT_WIDTH;
 
       if ( isset($_SESSION['customer_id']) ) {
-        $account_content = '<li><a href="' . OSCOM::link('account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
-                           '<li><a href="' . OSCOM::link('address_book.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ADDRESS_BOOK . '</a></li>' .
-                           '<li><a href="' . OSCOM::link('account_history.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ORDER_HISTORY . '</a></li>' .
-                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php', '', 'SSL') . '"><i class="fa fa-sign-out"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGOFF . '</a></li>';
+        $account_content = '<li><a href="' . OSCOM::link('account.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
+                           '<li><a href="' . OSCOM::link('address_book.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ADDRESS_BOOK . '</a></li>' .
+                           '<li><a href="' . OSCOM::link('account_history.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ORDER_HISTORY . '</a></li>' .
+                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php') . '"><i class="fa fa-sign-out"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGOFF . '</a></li>';
       }
       else {
-        $account_content = '<li><a href="' . OSCOM::link('create_account.php', '', 'SSL') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_CREATE_ACCOUNT . '</a></li>' .
-                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('login.php', '', 'SSL') . '"><i class="fa fa-sign-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
+        $account_content = '<li><a href="' . OSCOM::link('create_account.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_CREATE_ACCOUNT . '</a></li>' .
+                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('login.php') . '"><i class="fa fa-sign-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
       }
 
       ob_start();

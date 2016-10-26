@@ -126,11 +126,11 @@
   }
 
   if ($error == true) {
-    OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false);
+    OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), true, false);
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), 'NONSSL', true, false));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), true, false));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
@@ -388,7 +388,7 @@
   <br />
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
   </div>
 </div>
 

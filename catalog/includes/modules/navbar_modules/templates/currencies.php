@@ -13,7 +13,7 @@ use OSC\OM\OSCOM;
       $currencies_array = array();
       foreach ($currencies->currencies as $key => $value) {
         $currencies_array[] = array('id' => $key, 'text' => $value['title']);
-        echo '<li><a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'currency=' . $key, $request_type) . '">' . $value['title'] . '</a></li>';
+        echo '<li><a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('language', 'currency')) . 'currency=' . $key) . '">' . $value['title'] . '</a></li>';
       }
       ?>
     </ul>

@@ -43,7 +43,7 @@
     }
 
     function getOutput() {
-      global $oscTemplate, $PHP_SELF, $request_type, $lng;
+      global $oscTemplate, $PHP_SELF, $lng;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         ob_start();

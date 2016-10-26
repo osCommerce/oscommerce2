@@ -52,7 +52,7 @@
   }
 ?>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="get" template="<?php echo OSCOM::link('advanced_search_result.php', 'keywords={searchTerms}', 'NONSSL', false); ?>" />
+  <Url type="text/html" method="get" template="<?php echo OSCOM::link('advanced_search_result.php', 'keywords={searchTerms}', false); ?>" />
 </OpenSearchDescription>
 <?php
   require('includes/application_bottom.php');

@@ -35,20 +35,20 @@
       global $PHP_SELF, $cPath, $oscTemplate, $category_depth;
 
       if (basename($PHP_SELF) == 'product_info.php') {
-        $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('product_info.php', 'products_id=' . (int)$_GET['products_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+        $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('product_info.php', 'products_id=' . (int)$_GET['products_id'], false) . '" />' . "\n", $this->group);
       } elseif (basename($PHP_SELF) == 'index.php') {
         if (isset($cPath) && tep_not_null($cPath) && ($category_depth == 'products')) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'view=all&cPath=' . $cPath, 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'view=all&cPath=' . $cPath, false) . '" />' . "\n", $this->group);
         } elseif (isset($_GET['manufacturers_id']) && tep_not_null($_GET['manufacturers_id'])) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'view=all&manufacturers_id=' . (int)$_GET['manufacturers_id'], 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link('index.php', 'view=all&manufacturers_id=' . (int)$_GET['manufacturers_id'], false) . '" />' . "\n", $this->group);
         }
       }
       else {
         $view_all_pages = array('products_new.php', 'specials.php');
         if (in_array(basename($PHP_SELF), $view_all_pages)) {
-          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link($PHP_SELF, 'view=all', 'NONSSL', false) . '" />' . "\n", $this->group);
+          $oscTemplate->addBlock('<link rel="canonical" href="' . OSCOM::link($PHP_SELF, 'view=all', false) . '" />' . "\n", $this->group);
         }
-      }  
+      }
     }
 
     function isEnabled() {

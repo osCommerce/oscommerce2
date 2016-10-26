@@ -18,7 +18,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('login.php', '', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -158,7 +158,7 @@
 
         if (isset($_SESSION['payment'])) unset($_SESSION['payment']);
 
-        OSCOM::redirect('checkout_payment.php', '', 'SSL');
+        OSCOM::redirect('checkout_payment.php');
       }
 // process the selected billing destination
     } elseif (isset($_POST['address'])) {
@@ -180,7 +180,7 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_payment == true) unset($_SESSION['payment']);
-        OSCOM::redirect('checkout_payment.php', '', 'SSL');
+        OSCOM::redirect('checkout_payment.php');
       } else {
         unset($_SESSION['billto']);
       }
@@ -188,7 +188,7 @@
     } else {
       $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
 
-      OSCOM::redirect('checkout_payment.php', '', 'SSL');
+      OSCOM::redirect('checkout_payment.php');
     }
   }
 
@@ -197,8 +197,8 @@
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_payment.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment_address.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_payment.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_payment_address.php'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
@@ -215,7 +215,7 @@
   }
 ?>
 
-<?php echo HTML::form('checkout_address', OSCOM::link('checkout_payment_address.php', '', 'SSL'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_payment_address.php'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -327,7 +327,7 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('checkout_payment_address.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('checkout_payment_address.php')); ?>
   </div>
 
 <?php
