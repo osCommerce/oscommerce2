@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Cache;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -38,7 +39,7 @@
 
       $rss = new lastRSS;
       $rss->items_limit = 5;
-      $rss->cache_dir = OSCOM::BASE_DIR . 'Work/Cache/';
+      $rss->cache_dir = Cache::getPath();
       $rss->cache_time = 86400;
       $feed = $rss->get('http://feeds.feedburner.com/osCommerce_Contributions', 'oscommerce_website-rss-addons');
 

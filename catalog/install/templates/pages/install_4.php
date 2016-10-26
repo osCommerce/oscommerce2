@@ -1,4 +1,5 @@
 <?php
+use OSC\OM\Cache;
 use OSC\OM\Db;
 use OSC\OM\FileSystem;
 use OSC\OM\Hash;
@@ -31,8 +32,8 @@ if (!empty($_POST['CFG_ADMINISTRATOR_USERNAME'])) {
 }
 
 if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work')) {
-    if (!is_dir(OSCOM::BASE_DIR . 'Work/Cache')) {
-        mkdir(OSCOM::BASE_DIR . 'Work/Cache', 0777);
+    if (!is_dir(Cache::getPath())) {
+        mkdir(Cache::getPath(), 0777);
     }
 
     if (!is_dir(OSCOM::BASE_DIR . 'Work/Session')) {
@@ -40,7 +41,7 @@ if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work')) {
     }
 }
 
-foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
+foreach (glob(Cache::getPath() . '*.cache') as $c) {
     unlink($c);
 }
 

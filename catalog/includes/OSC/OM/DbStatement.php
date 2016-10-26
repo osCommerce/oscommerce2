@@ -8,6 +8,7 @@
 
 namespace OSC\OM;
 
+use OSC\OM\Cache;
 use OSC\OM\Db;
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
@@ -20,7 +21,7 @@ class DbStatement extends \PDOStatement
     protected $page_set_keyword = 'page';
     protected $page_set;
     protected $page_set_results_per_page;
-    protected $cache_key;
+    protected $cache;
     protected $cache_expire;
     protected $cache_data;
     protected $cache_read = false;
@@ -70,13 +71,13 @@ class DbStatement extends \PDOStatement
 
     public function execute($input_parameters = null)
     {
-        if (isset($this->cache_key)) {
+        if (isset($this->cache)) {
             if (isset($this->page_set)) {
-                $this->cache_key = $this->cache_key . '-pageset' . $this->page_set;
+                $this->cache->setKey($this->cache->getKey() . '-pageset' . $this->page_set);
             }
 
-            if (Registry::get('Cache')->read($this->cache_key, $this->cache_expire)) {
-                $this->cache_data = Registry::get('Cache')->getCache();
+            if ($this->cache->exists($this->cache_expire)) {
+                $this->cache_data = $this->cache->get();
 
                 if (isset($this->cache_data['data']) && isset($this->cache_data['total'])) {
                     $this->page_set_total_rows = $this->cache_data['total'];
@@ -116,7 +117,7 @@ class DbStatement extends \PDOStatement
         } else {
             $this->result = parent::fetch($fetch_style, $cursor_orientation, $cursor_offset);
 
-            if (isset($this->cache_key) && ($this->result !== false)) {
+            if (isset($this->cache) && ($this->result !== false)) {
                 if (!isset($this->cache_data)) {
                     $this->cache_data = [];
                 }
@@ -141,7 +142,7 @@ class DbStatement extends \PDOStatement
                 $this->result = parent::fetchAll($fetch_style);
             }
 
-            if (isset($this->cache_key) && ($this->result !== false)) {
+            if (isset($this->cache) && ($this->result !== false)) {
                 $this->cache_data = $this->result;
             }
         }
@@ -177,12 +178,12 @@ class DbStatement extends \PDOStatement
             $cache_empty_results = false;
         }
 
-        $this->cache_key = basename($key);
+        $this->cache = new Cache($key);
         $this->cache_expire = $expire;
         $this->cache_empty_results = $cache_empty_results;
 
         if ($this->query_call != 'prepare') {
-            trigger_error('OSCOM_DbStatement::setCache(): Cannot set cache (\'' . $this->cache_key . '\') on a non-prepare query. Please change the query to a prepare() query.');
+            trigger_error('OSC\\OM\\DbStatement::setCache(): Cannot set cache (\'' . $key . '\') on a non-prepare query. Please change the query to a prepare() query.');
         }
     }
 
@@ -375,7 +376,7 @@ class DbStatement extends \PDOStatement
 
     public function __destruct()
     {
-        if (($this->cache_read === false) && isset($this->cache_key) && is_array($this->cache_data)) {
+        if (($this->cache_read === false) && isset($this->cache) && is_array($this->cache_data)) {
             if ($this->cache_empty_results || (isset($this->cache_data[0]) && ($this->cache_data[0] !== false))) {
                 $cache_data = $this->cache_data;
 
@@ -386,7 +387,7 @@ class DbStatement extends \PDOStatement
                     ];
                 }
 
-                Registry::get('Cache')->write($cache_data, $this->cache_key);
+                $this->cache->save($cache_data);
             }
         }
     }

@@ -9,7 +9,6 @@
 namespace OSC\Sites\Shop;
 
 use OSC\OM\Apps;
-use OSC\OM\Cache;
 use OSC\OM\Cookies;
 use OSC\OM\Db;
 use OSC\OM\Hooks;
@@ -27,8 +26,6 @@ class Shop extends \OSC\OM\SitesAbstract
 
         $OSCOM_Cookies = new Cookies();
         Registry::set('Cookies', $OSCOM_Cookies);
-
-        Registry::set('Cache', new Cache());
 
         $OSCOM_Db = Db::initialize();
         Registry::set('Db', $OSCOM_Db);

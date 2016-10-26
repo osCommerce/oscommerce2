@@ -256,10 +256,10 @@ class Language
             return $this->getDefinitionsFromFile($pathname);
         }
 
-        $OSCOM_Cache = new Cache();
+        $DefCache = new Cache('languages-defs-' . $group_key . '-lang' . $this->getId($language_code));
 
-        if ($OSCOM_Cache->read('languages-defs-' . $group_key . '-lang' . $this->getId($language_code))) {
-            $defs = $OSCOM_Cache->getCache();
+        if ($DefCache->exists()) {
+            $defs = $DefCache->get();
         } else {
             $Qdefs = $this->db->get('languages_definitions', [
                 'definition_key',
@@ -286,7 +286,7 @@ class Language
                 }
             }
 
-            $OSCOM_Cache->write($defs);
+            $DefCache->save($defs);
         }
 
         return $defs;

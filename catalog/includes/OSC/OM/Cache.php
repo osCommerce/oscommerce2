@@ -2,7 +2,7 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
+  * @copyright Copyright (c) 2016 osCommerce; http://www.oscommerce.com
   * @license GPL; http://www.oscommerce.com/gpllicense.txt
   */
 
@@ -13,50 +13,55 @@ use OSC\OM\OSCOM;
 
 class Cache
 {
-    private $data;
-    private $key;
+    protected static $path;
 
-    public function write($data, $key = null)
+    protected $key;
+    protected $data;
+
+    public function __construct($key)
     {
-        if (!isset($key)) {
-            $key = $this->key;
-        }
+        $this->setPath();
 
-        $key = basename($key);
-
-        if (!static::hasSafeName($key)) {
-            trigger_error('OSCOM_Cache::write(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
-
-            return false;
-        }
-
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
-            return file_put_contents(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache', serialize($data), LOCK_EX) !== false;
-        }
-
-        return false;
+        $this->setKey($key);
     }
 
-    public function read($key, $expire = null)
+    public function setKey($key)
     {
-        $key = basename($key);
-
-        if (!static::hasSafeName($key)) {
-            trigger_error('OSCOM_Cache::read(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+        if (!$this->hasSafeName($key)) {
+            trigger_error('OSC\\OM\\Cache: Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
 
             return false;
         }
 
         $this->key = $key;
+    }
 
-        $filename = OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache';
+    public function getKey()
+    {
+        return $this->key;
+    }
+
+    public function save($data)
+    {
+        if (FileSystem::isWritable(static::$path)) {
+            return file_put_contents(static::$path . $this->key . '.cache', serialize($data), LOCK_EX) !== false;
+        }
+
+        return false;
+    }
+
+    public function exists($expire = null)
+    {
+        $filename = static::$path . $this->key . '.cache';
 
         if (is_file($filename)) {
+            if (!isset($expire)) {
+                return true;
+            }
+
             $difference = floor((time() - filemtime($filename)) / 60);
 
-            if (empty($expire) || (is_numeric($expire) && ($difference < $expire))) {
-                $this->data = unserialize(file_get_contents($filename));
-
+            if (is_numeric($expire) && ($difference < $expire)) {
                 return true;
             }
         }
@@ -64,8 +69,14 @@ class Cache
         return false;
     }
 
-    public function getCache()
+    public function get()
     {
+        $filename = static::$path . $this->key . '.cache';
+
+        if (is_file($filename)) {
+            $this->data = unserialize(file_get_contents($filename));
+        }
+
         return $this->data;
     }
 
@@ -74,31 +85,9 @@ class Cache
         return preg_match('/^[a-zA-Z0-9-_]+$/', $key) === 1;
     }
 
-    public function startBuffer()
+    public function getTime()
     {
-        ob_start();
-    }
-
-    public function stopBuffer()
-    {
-        $this->data = ob_get_contents();
-
-        ob_end_clean();
-
-        $this->write($this->data);
-    }
-
-    public function getTime($key)
-    {
-        $key = basename($key);
-
-        if (!static::hasSafeName($key)) {
-            trigger_error('OSCOM_Cache::getTime(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
-
-            return false;
-        }
-
-        $filename = OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache';
+        $filename = static::$path . $this->key . '.cache';
 
         if (is_file($filename)) {
             return filemtime($filename);
@@ -107,24 +96,22 @@ class Cache
         return false;
     }
 
-    public static function exists($key, $strict = true)
+    public static function find($key, $strict = true)
     {
-        $key = basename($key);
-
         if (!static::hasSafeName($key)) {
-            trigger_error('OSCOM_Cache::exists(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+            trigger_error('OSC\\OM\\Cache::find(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
 
             return false;
         }
 
-        if (is_file(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '.cache')) {
+        if (is_file(static::$path . $key . '.cache')) {
             return true;
         }
 
         if ($strict === false) {
             $key_length = strlen($key);
 
-            $d = dir(OSCOM::BASE_DIR . 'Work/Cache/');
+            $d = dir(static::$path);
 
             while (($entry = $d->read()) !== false) {
                 if ((strlen($entry) >= $key_length) && (substr($entry, 0, $key_length) == $key)) {
@@ -138,18 +125,30 @@ class Cache
         return false;
     }
 
+    public static function setPath()
+    {
+        static::$path = OSCOM::BASE_DIR . 'Work/Cache/';
+    }
+
+    public static function getPath()
+    {
+        if (!isset(static::$path)) {
+            static::setPath();
+        }
+
+        return static::$path;
+    }
+
     public static function clear($key)
     {
-        $key = basename($key);
-
         if (!static::hasSafeName($key)) {
-            trigger_error('OSCOM_Cache::clear(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
+            trigger_error('OSC\\OM\\Cache::clear(): Invalid key name (\'' . $key . '\'). Valid characters are a-zA-Z0-9-_');
 
             return false;
         }
 
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
-            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/' . $key . '*.cache') as $c) {
+        if (FileSystem::isWritable(static::$path)) {
+            foreach (glob(static::$path . $key . '*.cache') as $c) {
                 unlink($c);
             }
         }
@@ -157,8 +156,8 @@ class Cache
 
     public static function clearAll()
     {
-        if (FileSystem::isWritable(OSCOM::BASE_DIR . 'Work/Cache')) {
-            foreach (glob(OSCOM::BASE_DIR . 'Work/Cache/*.cache') as $c) {
+        if (FileSystem::isWritable(static::$path)) {
+            foreach (glob(static::$path . '*.cache') as $c) {
                 unlink($c);
             }
         }
