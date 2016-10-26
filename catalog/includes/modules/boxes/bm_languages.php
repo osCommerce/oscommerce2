@@ -39,7 +39,7 @@
     }
 
     function execute() {
-      global $PHP_SELF, $lng, $oscTemplate;
+      global $PHP_SELF, $oscTemplate;
 
       if (substr(basename($PHP_SELF), 0, 8) != 'checkout') {
         $languages = $this->lang->getAll();
