@@ -56,7 +56,7 @@ class Shop extends \OSC\OM\SitesAbstract
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(OSCOM::getConfig('https_path', 'Shop')) : strlen(OSCOM::getConfig('http_path', 'Shop')));
+        $PHP_SELF = substr($req['path'], strlen(OSCOM::getConfig('http_path', 'Shop')));
 
         $OSCOM_Session = Session::load();
         Registry::set('Session', $OSCOM_Session);

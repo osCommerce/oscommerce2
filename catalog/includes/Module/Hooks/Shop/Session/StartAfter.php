@@ -24,7 +24,7 @@ class StartAfter
         }
 
 // verify the ssl_session_id if the feature is enabled
-        if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (OSCOM::getConfig('ssl', 'Shop') == 'true') && $OSCOM_Session->hasStarted()) {
+        if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && $OSCOM_Session->hasStarted()) {
             if (!isset($_SESSION['SSL_SESSION_ID'])) {
                 $_SESSION['SESSION_SSL_ID'] = $_SERVER['SSL_SESSION_ID'];
             }

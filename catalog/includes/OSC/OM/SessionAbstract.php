@@ -39,6 +39,12 @@ abstract class SessionAbstract
             ini_set('session.use_strict_mode', 0);
         }
 
+        if (parse_url(OSCOM::getConfig('http_server'), PHP_URL_SCHEME) == 'https') {
+            if ((int)ini_get('session.cookie_secure') === 0) {
+                ini_set('session.cookie_secure', 1);
+            }
+        }
+
         if ((int)ini_get('session.cookie_httponly') === 0) {
             ini_set('session.cookie_httponly', 1);
         }

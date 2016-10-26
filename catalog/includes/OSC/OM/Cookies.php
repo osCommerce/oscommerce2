@@ -17,21 +17,16 @@ class Cookies
 
     public function __construct()
     {
-        if ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) {
-            $this->domain = OSCOM::getConfig('https_cookie_domain');
-            $this->path = OSCOM::getConfig('https_cookie_path');
-        } else {
-            $this->domain = OSCOM::getConfig('http_cookie_domain');
-            $this->path = OSCOM::getConfig('http_cookie_path');
-        }
+        $this->domain = OSCOM::getConfig('http_cookie_domain');
+        $this->path = OSCOM::getConfig('http_cookie_path');
     }
 
-    public function set($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = false, $httponly = false)
+    public function set($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = true, $httponly = true)
     {
         return setcookie($name, $value, $expire, isset($path) ? $path : $this->path, isset($domain) ? $domain : $this->domain, $secure, $httponly);
     }
 
-    public function del($name, $path = null, $domain = null, $secure = false, $httponly = false)
+    public function del($name, $path = null, $domain = null, $secure = true, $httponly = true)
     {
         if ($this->set($name, '', time() - 3600, $path, $domain, $secure, $httponly)) {
             if (isset($_COOKIE[$name])) {

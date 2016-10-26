@@ -65,7 +65,7 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
-        $PHP_SELF = substr($req['path'], ($request_type == 'SSL') ? strlen(OSCOM::getConfig('https_path')) : strlen(OSCOM::getConfig('http_path')));
+        $PHP_SELF = substr($req['path'], strlen(OSCOM::getConfig('http_path')));
 
         $OSCOM_Session = Session::load();
         Registry::set('Session', $OSCOM_Session);

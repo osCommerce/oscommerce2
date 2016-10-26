@@ -35,7 +35,7 @@
     }
 
     function getData() {
-      global $request_type, $oscTemplate;
+      global $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
 
@@ -80,7 +80,7 @@
                                            'text' => $manufacturers_name);
           }
 
-          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', $request_type, false), 'get', null, ['session_id' => true]) .
+          $data = HTML::form('manufacturers', OSCOM::link('index.php', '', 'AUTO', false), 'get', null, ['session_id' => true]) .
                   HTML::selectField('manufacturers_id', $manufacturers_array, (isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : ''), 'onchange="this.form.submit();" size="' . MAX_MANUFACTURERS_LIST . '"') .
                   '</form>';
         }

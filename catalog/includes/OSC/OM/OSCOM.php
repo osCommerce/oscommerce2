@@ -148,7 +148,7 @@ class OSCOM
             $connection = ($request_type == 'SSL') ? 'SSL' : 'NONSSL';
         }
 
-        if (($connection == 'SSL') && (static::getConfig('ssl', $req_site) != 'true')) {
+        if (($connection == 'SSL') && (parse_url(static::getConfig('http_server', $req_site), PHP_URL_SCHEME) != 'https')) {
             $connection = 'NONSSL';
         }
 
@@ -156,13 +156,7 @@ class OSCOM
             $add_session_id = false;
         }
 
-        if ($connection == 'NONSSL') {
-            $link = static::getConfig('http_server', $req_site) . static::getConfig('http_path', $req_site);
-        } else {
-            $link = static::getConfig('https_server', $req_site) . static::getConfig('https_path', $req_site);
-        }
-
-        $link .= $page;
+        $link = static::getConfig('http_server', $req_site) . static::getConfig('http_path', $req_site) . $page;
 
         if (!empty($parameters)) {
             $link .= '?' . HTML::sanitize($parameters);
@@ -195,8 +189,6 @@ class OSCOM
 
     public static function linkImage()
     {
-        global $request_type;
-
         $args = func_get_args();
 
         if (!isset($args[0])) {
@@ -221,7 +213,7 @@ class OSCOM
             $page = $matches[2];
         }
 
-        $args[0] = $req_site . '/' . ((($args[2] == 'SSL') || ($request_type == 'SSL')) ? static::getConfig('https_images_path', $req_site) : static::getConfig('http_images_path', $req_site)) . $page;
+        $args[0] = $req_site . '/' . static::getConfig('http_images_path', $req_site) . $page;
 
         $url = forward_static_call_array('static::link', $args);
 
@@ -230,8 +222,6 @@ class OSCOM
 
     public static function linkPublic()
     {
-        global $request_type;
-
         $args = func_get_args();
 
         if (!isset($args[0])) {
