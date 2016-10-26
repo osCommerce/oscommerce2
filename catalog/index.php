@@ -55,14 +55,14 @@
     }
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/index.php');
+  $OSCOM_Language->loadDefinitions('index');
 
   require($oscTemplate->getFile('template_top.php'));
 
   if ($category_depth == 'nested') {
     $Qcategory = $OSCOM_Db->prepare('select cd.categories_name, c.categories_image, cd.categories_description from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
     $Qcategory->bindInt(':categories_id', $current_category_id);
-    $Qcategory->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qcategory->bindInt(':language_id', $OSCOM_Language->getId());
     $Qcategory->execute();
 ?>
 
@@ -190,19 +190,19 @@
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
       if (isset($_GET['filter_id']) && tep_not_null($_GET['filter_id'])) {
         $Qlisting->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
-        $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
         $Qlisting->bindInt(':categories_id', $_GET['filter_id']);
       } else {
-        $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
         $Qlisting->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
       }
     } else {
       if (isset($_GET['filter_id']) && tep_not_null($_GET['filter_id'])) {
         $Qlisting->bindInt(':manufacturers_id', $_GET['filter_id']);
-        $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
         $Qlisting->bindInt(':categories_id', $current_category_id);
       } else {
-        $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
         $Qlisting->bindInt(':categories_id', $current_category_id);
       }
     }
@@ -214,14 +214,14 @@
     if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
       $Qtitle = $OSCOM_Db->prepare('select m.manufacturers_image, m.manufacturers_name as catname, mi.manufacturers_description as catdesc from :table_manufacturers m, :table_manufacturers_info mi where m.manufacturers_id = :manufacturers_id and m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id');
       $Qtitle->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
-      $Qtitle->bindInt(':languages_id', $_SESSION['languages_id']);
+      $Qtitle->bindInt(':languages_id', $OSCOM_Language->getId());
       $Qtitle->execute();
 
       $catname = $Qtitle->value('catname');
     } elseif ($current_category_id) {
       $Qtitle = $OSCOM_Db->prepare('select c.categories_image, cd.categories_name as catname, cd.categories_description as catdesc from :table_categories c, :table_categories_description cd where c.categories_id = :categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id');
       $Qtitle->bindInt(':categories_id', $current_category_id);
-      $Qtitle->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qtitle->bindInt(':language_id', $OSCOM_Language->getId());
       $Qtitle->execute();
 
       $catname = $Qtitle->value('catname');
@@ -244,7 +244,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
     if (PRODUCT_LIST_FILTER > 0) {
       if (isset($_GET['manufacturers_id']) && !empty($_GET['manufacturers_id'])) {
         $Qfilter = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS distinct c.categories_id as id, cd.categories_name as name from :table_products p, :table_products_to_categories p2c, :table_categories c, :table_categories_description cd where p.manufacturers_id = :manufacturers_id and p.products_status = "1" and p.products_id = p2c.products_id and p2c.categories_id = c.categories_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by cd.categories_name');
-        $Qfilter->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qfilter->bindInt(':language_id', $OSCOM_Language->getId());
         $Qfilter->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
         $Qfilter->execute();
       } else {

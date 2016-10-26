@@ -24,7 +24,7 @@
   if (isset($_GET['products_id'])) {
     $Qproduct = $OSCOM_Db->prepare('select p.products_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
     $Qproduct->bindInt(':products_id', $_GET['products_id']);
-    $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
     $Qproduct->execute();
 
     if ($Qproduct->fetch() !== false) {
@@ -36,7 +36,7 @@
     OSCOM::redirect('index.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/tell_a_friend.php');
+  $OSCOM_Language->loadDefinitions('tell_a_friend');
 
   $from_name = null;
   $from_email_address = null;

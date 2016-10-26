@@ -26,8 +26,7 @@
     OSCOM::redirect('shopping_cart.php');
   }
 
-// needs to be included earlier to set the success message in the messageStack
-  require('includes/languages/' . $_SESSION['language'] . '/checkout_payment_address.php');
+  $OSCOM_Language->loadDefinitions('checkout_payment_address');
 
   $error = false;
   $process = false;

@@ -16,7 +16,7 @@ use OSC\OM\OSCOM;
 
 require('includes/application_top.php');
 
-$OSCOM_Language->loadDefinitionFile('server_info.txt');
+$OSCOM_Language->loadDefinitions('server_info');
 
 $info = tep_get_system_information();
 $server = parse_url(OSCOM::getConfig('http_server'));

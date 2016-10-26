@@ -26,7 +26,7 @@
   $Qdownload->bindInt(':orders_id', $_GET['order']);
   $Qdownload->bindInt(':customers_id', $_SESSION['customer_id']);
   $Qdownload->bindInt(':orders_products_download_id', $_GET['id']);
-  $Qdownload->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qdownload->bindInt(':language_id', $OSCOM_Language->getId());
   $Qdownload->execute();
 
   if ($Qdownload->fetch() === false) die;

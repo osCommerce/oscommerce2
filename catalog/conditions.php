@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/conditions.php');
+  $OSCOM_Language->loadDefinitions('conditions');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('conditions.php'));
 

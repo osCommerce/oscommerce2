@@ -39,7 +39,6 @@
   require('includes/classes/currencies.php');
   require('includes/classes/mime.php');
   require('includes/classes/email.php');
-  require('includes/classes/language.php');
   require('includes/classes/action_recorder.php');
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');
@@ -61,6 +60,7 @@
   }
 
   $OSCOM_Db = Registry::get('Db');
+  $OSCOM_Language = Registry::get('Language');
 
   Registry::get('Hooks')->watch('Session', 'Recreated', 'execute', function($parameters) {
     tep_whos_online_update_session_id($parameters['old_id'], session_id());
@@ -200,7 +200,7 @@
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
     for ( $i=0, $n=sizeof($cPath_array); $i<$n; $i++ ) {
-      $Qcategories = $OSCOM_Db->get('categories_description', 'categories_name', ['categories_id' => $cPath_array[$i], 'language_id' => $_SESSION['languages_id']]);
+      $Qcategories = $OSCOM_Db->get('categories_description', 'categories_name', ['categories_id' => $cPath_array[$i], 'language_id' => $OSCOM_Language->getId()]);
 
       if ($Qcategories->fetch() !== false) {
         $breadcrumb->add($Qcategories->value('categories_name'), OSCOM::link('index.php', 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));

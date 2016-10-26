@@ -37,14 +37,14 @@
 
     case 'manufacturer':
       if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
-        $Qmanufacturer = $OSCOM_Db->get('manufacturers_info', 'manufacturers_url', ['manufacturers_id' => $_GET['manufacturers_id'], 'languages_id' => $_SESSION['languages_id']]);
+        $Qmanufacturer = $OSCOM_Db->get('manufacturers_info', 'manufacturers_url', ['manufacturers_id' => $_GET['manufacturers_id'], 'languages_id' => $OSCOM_Language->getId()]);
 
         if ($Qmanufacturer->fetch() !== false) {
 // url exists in selected language
           if ( !empty($Qmanufacturer->value('manufacturers_url')) ) {
             $Qupdate = $OSCOM_Db->prepare('update :table_manufacturers_info set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = :manufacturers_id and languages_id = :languages_id');
             $Qupdate->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
-            $Qupdate->bindInt(':languages_id', $_SESSION['languages_id']);
+            $Qupdate->bindInt(':languages_id', $OSCOM_Language->getId());
             $Qupdate->execute();
 
             HTTP::redirect($Qmanufacturer->value('manufacturers_url'));

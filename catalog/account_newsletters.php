@@ -20,8 +20,7 @@
     OSCOM::redirect('login.php');
   }
 
-// needs to be included earlier to set the success message in the messageStack
-  require('includes/languages/' . $_SESSION['language'] . '/account_newsletters.php');
+  $OSCOM_Language->loadDefinitions('account_newsletters');
 
   $Qnewsletter = $OSCOM_Db->prepare('select customers_newsletter from :table_customers where customers_id = :customers_id');
   $Qnewsletter->bindInt(':customers_id', $_SESSION['customer_id']);

@@ -20,8 +20,7 @@
     OSCOM::redirect('login.php');
   }
 
-// needs to be included earlier to set the success message in the messageStack
-  require('includes/languages/' . $_SESSION['language'] . '/account_notifications.php');
+  $OSCOM_Language->loadDefinitions('account_notifications');
 
   $Qglobal = $OSCOM_Db->prepare('select global_product_notifications from :table_customers_info where customers_info_id = :customers_info_id');
   $Qglobal->bindInt(':customers_info_id', $_SESSION['customer_id']);
@@ -145,7 +144,7 @@
 <?php
       $Qproducts = $OSCOM_Db->prepare('select pd.products_id, pd.products_name from :table_products_description pd, :table_products_notifications pn where pn.customers_id = :customers_id and pn.products_id = pd.products_id and pd.language_id = :language_id order by pd.products_name');
       $Qproducts->bindInt(':customers_id', $_SESSION['customer_id']);
-      $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
       $Qproducts->execute();
 
       while ($Qproducts->fetch()) {

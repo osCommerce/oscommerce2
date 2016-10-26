@@ -28,6 +28,7 @@
   $module_type = $cfgModules->get($set, 'code');
   $module_directory = $cfgModules->get($set, 'directory');
   $module_language_directory = $cfgModules->get($set, 'language_directory');
+  $module_site = $cfgModules->get($set, 'site');
   $module_key = $cfgModules->get($set, 'key');
   define('HEADING_TITLE', $cfgModules->get($set, 'title'));
   $template_integration = $cfgModules->get($set, 'template_integration');
@@ -198,7 +199,8 @@
     } else {
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
 
-      include($module_language_directory . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+      $OSCOM_Language->loadDefinitions($module_site . '/modules/' . $module_type . '/' . pathinfo($file, PATHINFO_FILENAME));
+
       include($module_directory . $file);
 
       $class = substr($file, 0, strrpos($file, '.'));

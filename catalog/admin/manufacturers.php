@@ -76,7 +76,7 @@
           } elseif ($action == 'save') {
             $OSCOM_Db->save('manufacturers_info', $sql_data_array, [
               'manufacturers_id' => (int)$manufacturers_id,
-              'languages_id' => (int)$_SESSION['languages_id']
+              'languages_id' => $OSCOM_Language->getId()
             ]);
           }
         }

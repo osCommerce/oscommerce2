@@ -12,6 +12,7 @@
 
   use OSC\OM\Apps;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class oscTemplate {
     var $_title;
@@ -23,7 +24,11 @@
     var $_grid_column_width = 0; // deprecated
     var $_data = array();
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->_title = TITLE;
     }
 
@@ -95,8 +100,8 @@
               $class = basename($module, '.php');
 
               if ( !class_exists($class) ) {
-                if ( is_file('includes/languages/' . $_SESSION['language'] . '/modules/' . $group . '/' . $module) ) {
-                  include('includes/languages/' . $_SESSION['language'] . '/modules/' . $group . '/' . $module);
+                if ($this->lang->definitionsExist('modules/' . $group . '/' . pathinfo($module, PATHINFO_FILENAME))) {
+                  $this->lang->loadDefinitions('modules/' . $group . '/' . pathinfo($module, PATHINFO_FILENAME));
                 }
 
                 if ( is_file('includes/modules/' . $group . '/' . $class . '.php') ) {
@@ -148,8 +153,8 @@
         } else {
           if ( !class_exists($module) ) {
             if ( is_file('includes/modules/content/' . $group . '/' . $module . '.php') ) {
-              if ( is_file('includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php') ) {
-                include('includes/languages/' . $_SESSION['language'] . '/modules/content/' . $group . '/' . $module . '.php');
+              if ($this->lang->definitionsExist('modules/content/' . $group . '/' . $module)) {
+                $this->lang->loadDefinitions('modules/content/' . $group . '/' . $module);
               }
 
               include('includes/modules/content/' . $group . '/' . $module . '.php');

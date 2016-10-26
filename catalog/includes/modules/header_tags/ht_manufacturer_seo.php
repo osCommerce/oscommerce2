@@ -35,10 +35,11 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (basename($PHP_SELF) == 'index.php') {
         if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
-          $Qmeta = $OSCOM_Db->get('manufacturers_info', ['manufacturers_seo_description', 'manufacturers_seo_keywords'], ['manufacturers_id' => (int)$_GET['manufacturers_id'], 'languages_id' => (int)$_SESSION['languages_id']]);
+          $Qmeta = $OSCOM_Db->get('manufacturers_info', ['manufacturers_seo_description', 'manufacturers_seo_keywords'], ['manufacturers_id' => (int)$_GET['manufacturers_id'], 'languages_id' => $OSCOM_Language->getId()]);
 
           if ($Qmeta->fetch() !== false) {
             if (tep_not_null($Qmeta->value('manufacturers_seo_description'))) {

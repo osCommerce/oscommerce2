@@ -11,12 +11,17 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class cfg_modules {
     var $_modules = array();
 
+    protected $lang;
+
     function cfg_modules() {
       global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
       $directory = OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules';
@@ -27,7 +32,8 @@
             if (substr($file, strrpos($file, '.')) == $file_extension) {
               $class = substr($file, 0, strrpos($file, '.'));
 
-              include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/cfg_modules/' . $file);
+              $this->lang->loadDefinitions('modules/cfg_modules/' . pathinfo($file, PATHINFO_FILENAME));
+
               include(OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules/' . $class . '.php');
 
               $m = new $class();

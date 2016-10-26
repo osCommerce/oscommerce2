@@ -141,38 +141,38 @@ abstract class AppAbstract
         return call_user_func_array([$this->lang, 'getDef'], $args);
     }
 
-    final public function hasDefinitionFile($filename, $language = null)
+    final public function definitionsExist($group, $language_code = null)
     {
-        $language = isset($language) ? basename($language) : basename($_SESSION['language']);
+        $language_code = isset($language_code) && $this->lang->exists($language_code) ? $language_code : $this->lang->get('code');
 
-        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
+        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $this->lang->get('directory', $language_code) . '/' . $group . '.txt';
 
         if (is_file($pathname)) {
             return true;
         }
 
-        if ($language != 'english') {
-            return $this->hasDefinitionFile($filename, 'english');
+        if ($language_code != 'en') {
+            return call_user_func([$this, __FUNCTION__], $group, 'en');
         }
 
         return false;
     }
 
-    final public function loadDefinitionFile($filename, $language = null)
+    final public function loadDefinitions($group, $language_code = null)
     {
-        $language = isset($language) ? basename($language) : basename($_SESSION['language']);
+        $language_code = isset($language_code) && $this->lang->exists($language_code) ? $language_code : $this->lang->get('code');
 
-        if ($language != 'english') {
-            $this->loadDefinitionFile($filename, 'english');
+        if ($language_code != 'en') {
+            $this->loadDefinitions($group, 'en');
         }
 
-        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $language . '/' . $filename;
+        $pathname = OSCOM::BASE_DIR . 'Apps/' . $this->vendor . '/' . $this->code . '/languages/' . $this->lang->get('directory', $language_code) . '/' . $group . '.txt';
 
-        if (is_file($pathname)) {
-            $this->lang->loadDefinitionsFromFile($pathname, $this->vendor . '-' . $this->code);
-        } else {
-            trigger_error('OSC\OM\AppAbstract::loadDefinitionFile() - Filename does not exist: ' . $pathname);
-        }
+        $group = 'Apps/' . $this->vendor . '/' . $this->code . '/' . $group;
+
+        $defs = $this->lang->getDefinitions($group, $language_code, $pathname);
+
+        $this->lang->injectDefinitions($defs, $this->vendor . '-' . $this->code);
     }
 
     final public function saveCfgParam($key, $value, $title = null, $description = null, $set_func = null)

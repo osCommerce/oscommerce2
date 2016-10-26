@@ -12,12 +12,15 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require(OSCOM::getConfig('dir_root', 'Shop') . 'includes/classes/action_recorder.php');
 
   class actionRecorderAdmin extends actionRecorder {
-    function actionRecorderAdmin($module, $user_id = null, $user_name = null) {
+    function __construct($module, $user_id = null, $user_name = null) {
       global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       $module = HTML::sanitize(str_replace(' ', '', $module));
 
@@ -25,7 +28,7 @@
         if (tep_not_null($module) && in_array($module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)), explode(';', MODULE_ACTION_RECORDER_INSTALLED))) {
           if (!class_exists($module)) {
             if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)))) {
-              include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
+              $this->lang->loadDefinitions('Shop/modules/action_recorder/' . $module);
               include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/' . $module . '.' . substr($PHP_SELF, (strrpos($PHP_SELF, '.')+1)));
             } else {
               return false;

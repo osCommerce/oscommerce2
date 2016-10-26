@@ -94,7 +94,7 @@
     }
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
+  $OSCOM_Language->loadDefinitions('checkout_confirmation');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
   $breadcrumb->add(NAVBAR_TITLE_2);

@@ -16,13 +16,14 @@
     var $code = 'shipping';
     var $directory;
     var $language_directory;
+    var $site = 'Shop';
     var $key = 'MODULE_SHIPPING_INSTALLED';
     var $title;
     var $template_integration = false;
 
-    function cfgm_shipping() {
-      $this->directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/shipping/';
-      $this->language_directory = OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/';
+    function __construct() {
+      $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/shipping/';
+      $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
       $this->title = MODULE_CFG_MODULE_SHIPPING_TITLE;
     }
   }

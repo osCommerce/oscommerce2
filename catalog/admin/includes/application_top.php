@@ -31,7 +31,6 @@
   require('includes/functions/general.php');
   require('includes/classes/logger.php');
   require('includes/classes/shopping_cart.php');
-  require('includes/classes/language.php');
   require('includes/functions/validations.php');
   require('includes/classes/table_block.php');
   require('includes/classes/box.php');
@@ -73,13 +72,6 @@
     $current_category_id = 0;
   }
 
-// the following cache blocks are used in the Tools->Cache section
-// ('language' in the filename is automatically replaced by available languages)
-  $cache_blocks = array(array('title' => TEXT_CACHE_CATEGORIES, 'code' => 'categories', 'file' => 'categories_box-language.cache', 'multiple' => true),
-                        array('title' => TEXT_CACHE_MANUFACTURERS, 'code' => 'manufacturers', 'file' => 'manufacturers_box-language.cache', 'multiple' => true),
-                        array('title' => TEXT_CACHE_ALSO_PURCHASED, 'code' => 'also_purchased', 'file' => 'also_purchased-language.cache', 'multiple' => true)
-                       );
-
   $admin_menu = [];
   $cl_box_groups = array();
   $cl_apps_groups = array();
@@ -101,8 +93,8 @@
       natcasesort($files);
 
       foreach ( $files as $file ) {
-        if ( is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file) ) {
-          include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/boxes/' . $file);
+        if ($OSCOM_Language->definitionsExist('modules/boxes/' . pathinfo($file, PATHINFO_FILENAME))) {
+          $OSCOM_Language->loadDefinitions('modules/boxes/'. pathinfo($file, PATHINFO_FILENAME));
         }
 
         include($dir->path . '/' . $file);

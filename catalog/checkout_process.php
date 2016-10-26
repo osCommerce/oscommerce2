@@ -43,7 +43,7 @@
     }
   }
 
-  include('includes/languages/' . $_SESSION['language'] . '/checkout_process.php');
+  $OSCOM_Language->loadDefinitions('checkout_process');
 
 // load selected payment module
   require('includes/classes/payment.php');
@@ -263,7 +263,7 @@
         $Qattributes->bindInt(':products_id', $order->products[$i]['id']);
         $Qattributes->bindInt(':options_id', $order->products[$i]['attributes'][$j]['option_id']);
         $Qattributes->bindInt(':options_values_id', $order->products[$i]['attributes'][$j]['value_id']);
-        $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qattributes->bindInt(':language_id', $OSCOM_Language->getId());
         $Qattributes->execute();
 
         $sql_data_array = array('orders_id' => $insert_id,

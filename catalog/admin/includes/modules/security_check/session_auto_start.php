@@ -11,12 +11,17 @@
 */
 
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheck_session_auto_start {
     var $type = 'warning';
 
-    function securityCheck_session_auto_start() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/session_auto_start.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/session_auto_start');
     }
 
     function pass() {

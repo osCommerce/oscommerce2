@@ -36,7 +36,8 @@ class Admin extends \OSC\OM\SitesAbstract
 
         Registry::set('Hooks', new Hooks());
 
-        Registry::set('Language', new Language());
+        $OSCOM_Language = new Language();
+        Registry::set('Language', $OSCOM_Language);
 
         Registry::set('MessageStack', new MessageStack());
 
@@ -67,16 +68,11 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // set the language
         if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-            $lng = new \language();
-
-            if (isset($_GET['language']) && !empty($_GET['language'])) {
-                $lng->set_language($_GET['language']);
-            } else {
-                $lng->get_browser_language();
+            if (isset($_GET['language']) && !empty($_GET['language']) && $OSCOM_Language->exists($_GET['language'])) {
+                $OSCOM_Language->set($_GET['language']);
             }
 
-            $_SESSION['language'] = $lng->language['directory'];
-            $_SESSION['languages_id'] = $lng->language['id'];
+            $_SESSION['language'] = $OSCOM_Language->get('code');
         }
 
 // redirect to login page if administrator is not yet logged in
@@ -121,12 +117,13 @@ class Admin extends \OSC\OM\SitesAbstract
 
 // include the language translations
         $_system_locale_numeric = setlocale(LC_NUMERIC, 0);
-        require(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '.php');
+        $OSCOM_Language->loadDefinitions('main');
         setlocale(LC_NUMERIC, $_system_locale_numeric); // Prevent LC_ALL from setting LC_NUMERIC to a locale with 1,0 float/decimal values instead of 1.0 (see bug #634)
 
         $current_page = basename($PHP_SELF);
-        if (is_file(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page)) {
-            include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/' . $current_page);
+
+        if ($OSCOM_Language->definitionsExist(pathinfo($current_page, PATHINFO_FILENAME))) {
+            $OSCOM_Language->loadDefinitions(pathinfo($current_page, PATHINFO_FILENAME));
         }
 
         if (isset($_SESSION['admin'])) {

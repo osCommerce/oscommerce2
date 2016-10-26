@@ -20,7 +20,7 @@
     OSCOM::redirect('login.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/address_book.php');
+  $OSCOM_Language->loadDefinitions('address_book');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('address_book.php'));

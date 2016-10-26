@@ -19,8 +19,9 @@
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
-    if (!isset($language_id)) $language_id = $_SESSION['languages_id'];
+    if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
 
     $Qproduct = $OSCOM_Db->prepare('select products_name from :table_products_description where products_id = :products_id and language_id = :language_id');
     $Qproduct->bindInt(':products_id', $product_id);
@@ -529,12 +530,13 @@
 
   function tep_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (!is_array($categories_array)) $categories_array = array();
 
     $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.sort_order, cd.categories_name');
     $Qcategories->bindInt(':parent_id', $parent_id);
-    $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
     $Qcategories->execute();
 
     while ($Qcategories->fetch()) {
@@ -1310,6 +1312,7 @@
 
   function tep_count_customer_orders($id = '', $check_session = true) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (is_numeric($id) == false) {
       if (isset($_SESSION['customer_id'])) {
@@ -1327,7 +1330,7 @@
 
     $Qorders = $OSCOM_Db->prepare('select count(*) as total from :table_orders o, :table_orders_status s where o.customers_id = :customers_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = 1');
     $Qorders->bindInt(':customers_id', $id);
-    $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qorders->bindInt(':language_id', $OSCOM_Language->getId());
     $Qorders->execute();
 
     if ($Qorders->fetch() !== false) {

@@ -21,7 +21,7 @@
     $payment_modules = new payment;
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/shopping_cart.php');
+  $OSCOM_Language->loadDefinitions('shopping_cart');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('shopping_cart.php'));
 
@@ -68,7 +68,7 @@
           $Qattributes->bindInt(':products_id', $products[$i]['id']);
           $Qattributes->bindInt(':options_id', $option);
           $Qattributes->bindInt(':options_values_id', $value);
-          $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qattributes->bindInt(':language_id', $OSCOM_Language->getId());
           $Qattributes->execute();
 
           $products[$i][$option]['products_options_name'] = $Qattributes->value('products_options_name');

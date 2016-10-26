@@ -20,13 +20,13 @@
     OSCOM::redirect('index.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/product_info.php');
+  $OSCOM_Language->loadDefinitions('product_info');
 
   $product_exists = true;
 
   $Qproduct = $OSCOM_Db->prepare('select p.products_id, pd.products_name, pd.products_description, p.products_model, p.products_quantity, p.products_image, pd.products_url, p.products_price, p.products_tax_class_id, p.products_date_added, p.products_date_available, p.manufacturers_id from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
   $Qproduct->bindInt(':products_id', $_GET['products_id']);
-  $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
   $Qproduct->execute();
 
   $product_exists = ($Qproduct->fetch() !== false);
@@ -57,7 +57,7 @@
   } else {
     $Qupdate = $OSCOM_Db->prepare('update :table_products_description set products_viewed = products_viewed + 1 where products_id = :products_id and language_id = :language_id');
     $Qupdate->bindInt(':products_id', $Qproduct->valueInt('products_id'));
-    $Qupdate->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qupdate->bindInt(':language_id', $OSCOM_Language->getId());
     $Qupdate->execute();
 
     if ($new_price = tep_get_products_special_price($Qproduct->valueInt('products_id'))) {
@@ -160,7 +160,7 @@
 <?php
     $Qpa = $OSCOM_Db->prepare('select distinct popt.products_options_id, popt.products_options_name from :table_products_options popt, :table_products_attributes patrib where patrib.products_id = :products_id and patrib.options_id = popt.products_options_id and popt.language_id = :language_id order by popt.products_options_name');
     $Qpa->bindInt(':products_id', $Qproduct->valueInt('products_id'));
-    $Qpa->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qpa->bindInt(':language_id', $OSCOM_Language->getId());
     $Qpa->execute();
 
     if ($Qpa->fetch() !== false) {
@@ -176,7 +176,7 @@
         $Qpo = $OSCOM_Db->prepare('select pov.products_options_values_id, pov.products_options_values_name, pa.options_values_price, pa.price_prefix from :table_products_attributes pa, :table_products_options_values pov where pa.products_id = :products_id and pa.options_id = :options_id and pa.options_values_id = pov.products_options_values_id and pov.language_id = :language_id');
         $Qpo->bindInt(':products_id', $Qproduct->valueInt('products_id'));
         $Qpo->bindInt(':options_id', $Qpa->valueInt('products_options_id'));
-        $Qpo->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qpo->bindInt(':language_id', $OSCOM_Language->getId());
         $Qpo->execute();
 
         while ($Qpo->fetch()) {
@@ -222,7 +222,7 @@
 
     $Qr = $OSCOM_Db->prepare('select count(*) as count, avg(reviews_rating) as avgrating from :table_reviews r, :table_reviews_description rd where r.products_id = :products_id and r.reviews_id = rd.reviews_id and rd.languages_id = :languages_id and reviews_status = 1');
     $Qr->bindInt(':products_id', $Qproduct->valueInt('products_id'));
-    $Qr->bindInt(':languages_id', $_SESSION['languages_id']);
+    $Qr->bindInt(':languages_id', $OSCOM_Language->getId());
     $Qr->execute();
 
     if ($Qr->fetch() !== false) {

@@ -107,7 +107,7 @@
         'val' => $Qreviews->valueInt('products_id'),
         'ref' => 'pd.products_id'
       ],
-      'pd.language_id' => $_SESSION['languages_id']
+      'pd.language_id' => $OSCOM_Language->getId()
     ]);
 
     $rInfo_array = array_merge($Qreviews->toArray(), $Qproducts->toArray());
@@ -244,7 +244,7 @@
             'val' => $Qreviews->valueInt('products_id'),
             'ref' => 'pd.products_id'
           ],
-          'pd.language_id' => $_SESSION['languages_id']
+          'pd.language_id' => $OSCOM_Language->getId()
         ]);
 
         $Qaverage = $OSCOM_Db->get('reviews', [

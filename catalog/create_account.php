@@ -16,8 +16,7 @@
 
   require('includes/application_top.php');
 
-// needs to be included earlier to set the success message in the messageStack
-  require('includes/languages/' . $_SESSION['language'] . '/create_account.php');
+  $OSCOM_Language->loadDefinitions('create_account');
 
   $process = false;
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {

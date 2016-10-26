@@ -21,7 +21,7 @@
 
   $Qcheck = $OSCOM_Db->prepare('select p.products_id, p.products_model, p.products_image, p.products_price, p.products_tax_class_id, pd.products_name from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
   $Qcheck->bindInt(':products_id', $_GET['products_id']);
-  $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qcheck->bindInt(':language_id', $OSCOM_Language->getId());
   $Qcheck->execute();
 
   if ( $Qcheck->fetch() === false ) {
@@ -40,7 +40,7 @@
     $products_name .= '<br /><small>[' . $Qcheck->value('products_model') . ']</small>';
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/product_reviews.php');
+  $OSCOM_Language->loadDefinitions('product_reviews');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('product_reviews.php', tep_get_all_get_params()));
 
@@ -67,8 +67,8 @@
 <?php
   $Qa = $OSCOM_Db->prepare('select AVG(r.reviews_rating) as average, COUNT(r.reviews_rating) as count from :table_reviews r left join :table_reviews_description rd on r.reviews_id = rd.reviews_id where r.products_id = :products_id and r.reviews_status = 1 and rd.languages_id = :languages_id');
   $Qa->bindInt(':products_id', $Qcheck->valueInt('products_id'));
-  $Qa->bindInt(':languages_id', $_SESSION['languages_id']);
-//  $Qa->setCache('product_reviews_avg-' . $_SESSION['language'] . '-p' . $Qcheck->valueInt('products_id'));
+  $Qa->bindInt(':languages_id', $OSCOM_Language->getId());
+//  $Qa->setCache('product_reviews_avg-' . $OSCOM_Language->get('code') . '-p' . $Qcheck->valueInt('products_id'));
   $Qa->execute();
 
   echo '<div class="col-sm-8 text-center alert alert-success" itemprop="aggregateRating" itemscope itemtype="http://schema.org/AggregateRating">';
@@ -99,7 +99,7 @@
 
   $Qreviews = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS r.reviews_id, reviews_text, r.reviews_rating, r.date_added, r.customers_name from :table_reviews r, :table_reviews_description rd where r.products_id = :products_id and r.reviews_id = rd.reviews_id and rd.languages_id = :languages_id and r.reviews_status = 1 order by r.reviews_rating desc limit :page_set_offset, :page_set_max_results');
   $Qreviews->bindInt(':products_id', $Qcheck->valueInt('products_id'));
-  $Qreviews->bindInt(':languages_id', $_SESSION['languages_id']);
+  $Qreviews->bindInt(':languages_id', $OSCOM_Language->getId());
   $Qreviews->setPageSet(MAX_DISPLAY_NEW_REVIEWS);
   $Qreviews->execute();
 

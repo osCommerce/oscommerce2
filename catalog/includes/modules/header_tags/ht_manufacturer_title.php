@@ -34,6 +34,7 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (basename($PHP_SELF) == 'index.php') {
         if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
@@ -48,7 +49,7 @@
                                                  and m.manufacturers_id = :manufacturers_id
                                                  and mi.languages_id = :languages_id');
           $Qmanufacturer->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
-          $Qmanufacturer->bindInt(':languages_id', $_SESSION['languages_id']);
+          $Qmanufacturer->bindInt(':languages_id', $OSCOM_Language->getId());
           $Qmanufacturer->execute();
 
           if ($Qmanufacturer->fetch() !== false) {

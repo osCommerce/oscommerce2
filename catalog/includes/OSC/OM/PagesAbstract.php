@@ -10,6 +10,7 @@ namespace OSC\OM;
 
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
+use OSC\OM\Registry;
 
 abstract class PagesAbstract implements \OSC\OM\PagesInterface
 {
@@ -22,6 +23,8 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
     protected $actions_run = [];
     protected $ignored_actions = [];
     protected $is_rpc = false;
+
+    protected $app;
 
     final public function __construct(\OSC\OM\SitesInterface $site)
     {
@@ -94,6 +97,16 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
 
                 $class = $this->getActionClassName($run);
 
+                $ns = explode('\\', $class);
+
+                if ((count($ns) > 2) && ($ns[0] == 'OSC') && ($ns[1] == 'Apps')) {
+                    if (isset($this->app) && is_subclass_of($this->app, 'OSC\OM\AppAbstract')) {
+                        if ($this->app->definitionsExist(implode('/', array_slice($ns, 4)))) {
+                            $this->app->loadDefinitions(implode('/', array_slice($ns, 4)));
+                        }
+                    }
+                }
+
                 $action = new $class($this);
 
                 $action->execute();
@@ -109,7 +122,7 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
 
     public function runActions()
     {
-        $furious_pete = [];
+        $actions = $furious_pete = [];
 
         if (count($_GET) > $this->site->actions_index) {
             $furious_pete = array_keys(array_slice($_GET, $this->site->actions_index, null, true));
@@ -118,23 +131,17 @@ abstract class PagesAbstract implements \OSC\OM\PagesInterface
         foreach ($furious_pete as $action) {
             $action = HTML::sanitize(basename($action));
 
-            $this->actions_run[] = $action;
+            $actions[] = $action;
 
-            if (!in_array($action, $this->ignored_actions) && $this->actionExists($this->actions_run)) {
-                $class = $this->getActionClassName($this->actions_run);
-
-                $action = new $class($this);
-
-                $action->execute();
-
-                if ($action->isRPC()) {
-                    $this->is_rpc = true;
-                }
-            } else {
-                array_pop($this->actions_run);
+            if (in_array($action, $this->ignored_actions) || !$this->actionExists($actions)) {
+                array_pop($actions);
 
                 break;
             }
+        }
+
+        if (!empty($actions)) {
+            $this->runAction($actions);
         }
     }
 

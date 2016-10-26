@@ -26,14 +26,14 @@
 
   $Qcheck = $OSCOM_Db->prepare('select o.customers_id from :table_orders o, :table_orders_status s where o.orders_id = :orders_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1"');
   $Qcheck->bindInt(':orders_id', $_GET['order_id']);
-  $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qcheck->bindInt(':language_id', $OSCOM_Language->getId());
   $Qcheck->execute();
 
   if (($Qcheck->fetch() === false) || ($Qcheck->valueInt('customers_id') != $_SESSION['customer_id'])) {
     OSCOM::redirect('account_history.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/account_history_info.php');
+  $OSCOM_Language->loadDefinitions('account_history_info');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
   $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php'));
@@ -178,7 +178,7 @@
       <?php
       $Qstatuses = $OSCOM_Db->prepare('select os.orders_status_name, osh.date_added, osh.comments from :table_orders_status os, :table_orders_status_history osh where osh.orders_id = :orders_id and osh.orders_status_id = os.orders_status_id and os.language_id = :language_id and os.public_flag = "1" order by osh.date_added');
       $Qstatuses->bindInt(':orders_id', $_GET['order_id']);
-      $Qstatuses->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qstatuses->bindInt(':language_id', $OSCOM_Language->getId());
       $Qstatuses->execute();
 
       while ($Qstatuses->fetch()) {

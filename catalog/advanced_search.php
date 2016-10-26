@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/advanced_search.php');
+  $OSCOM_Language->loadDefinitions('advanced_search');
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
 

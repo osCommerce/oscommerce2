@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/privacy.php');
+  $OSCOM_Language->loadDefinitions('privacy');
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('privacy.php'));
 

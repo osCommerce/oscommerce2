@@ -34,12 +34,13 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if ( (basename($PHP_SELF) == 'product_info.php') || (basename($PHP_SELF) == 'product_reviews.php') ) {
         if (isset($_GET['products_id'])) {
           $Qproduct = $OSCOM_Db->prepare('select pd.products_name, pd.products_seo_title from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id');
           $Qproduct->bindInt(':products_id', $_GET['products_id']);
-          $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
           $Qproduct->execute();
 
           if ($Qproduct->fetch() !== false) {

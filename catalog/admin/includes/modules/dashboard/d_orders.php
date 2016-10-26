@@ -33,6 +33,7 @@
 
     function getOutput() {
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $output = '<table class="table table-hover">
                    <thead>
@@ -63,7 +64,7 @@
         'o.orders_status' => [
           'rel' => 's.orders_status_id'
         ],
-        's.language_id' => (int)$_SESSION['languages_id']
+        's.language_id' => $OSCOM_Language->getId()
       ], 'date_last_modified desc', 6);
 
       while ($Qorders->fetch()) {

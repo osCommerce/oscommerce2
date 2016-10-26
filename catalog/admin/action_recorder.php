@@ -32,8 +32,8 @@
   for ($i=0, $n=sizeof($directory_array); $i<$n; $i++) {
     $file = $directory_array[$i];
 
-    if (is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $file)) {
-      include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_SESSION['language'] . '/modules/action_recorder/' . $file);
+    if ($OSCOM_Language->definitionsExist('Shop/modules/action_recorder/' . pathinfo($file, PATHINFO_FILENAME))) {
+      $OSCOM_Language->loadDefinitions('Shop/modules/action_recorder/' . pathinfo($file, PATHINFO_FILENAME));
     }
 
     include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/action_recorder/' . $file);

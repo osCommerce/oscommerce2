@@ -29,8 +29,8 @@
     OSCOM::redirect('checkout_payment.php');
   }
 
-  require('includes/languages/' . $_SESSION['language'] . '/checkout_confirmation.php');
-  require('includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
+  $OSCOM_Language->loadDefinitions('checkout_confirmation');
+  $OSCOM_Language->loadDefinitions('modules/payment/sage_pay_direct');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html <?php echo HTML_PARAMS; ?>>

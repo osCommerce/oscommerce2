@@ -139,12 +139,13 @@
 
   function tep_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (!is_array($category_tree_array)) $category_tree_array = array();
     if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => TEXT_TOP);
 
     if ($include_itself) {
-      $Qcategory = $OSCOM_Db->get('categories_description', 'cd.categories_name', ['cd.language_id' => (int)$_SESSION['languages_id'], 'cd.categories_id' => (int)$parent_id]);
+      $Qcategory = $OSCOM_Db->get('categories_description', 'cd.categories_name', ['cd.language_id' => $OSCOM_Language->getId(), 'cd.categories_id' => (int)$parent_id]);
 
       $category_tree_array[] = [
         'id' => $parent_id,
@@ -163,7 +164,7 @@
       'c.categories_id' => [
         'rel' => 'cd.categories_id'
       ],
-      'cd.language_id' => (int)$_SESSION['languages_id'],
+      'cd.language_id' => $OSCOM_Language->getId(),
       'c.parent_id' => (int)$parent_id
     ], [
       'c.sort_order',
@@ -182,6 +183,7 @@
     global $currencies;
 
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if ($exclude == '') {
       $exclude = array();
@@ -206,7 +208,7 @@
       'p.products_id' => [
         'rel' => 'pd.products_id'
       ],
-      'pd.language_id' => (int)$_SESSION['languages_id']
+      'pd.language_id' => $OSCOM_Language->getId()
     ], 'products_name');
 
     while ($Qproducts->fetch()) {
@@ -240,13 +242,19 @@
   }
 
   function tep_options_name($options_id) {
-    $Qoptions = Registry::get('Db')->get('products_options', 'products_options_name', ['products_options_id' => (int)$options_id, 'language_id' => (int)$_SESSION['languages_id']]);
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
+    $Qoptions = $OSCOM_Db->get('products_options', 'products_options_name', ['products_options_id' => (int)$options_id, 'language_id' => $OSCOM_Language->getId()]);
 
     return $Qoptions->value('products_options_name');
   }
 
   function tep_values_name($values_id) {
-    $Qvalues = Registry::get('Db')->get('products_options_values', 'products_options_values_name', ['products_options_values_id' => (int)$values_id, 'language_id' => (int)$_SESSION['languages_id']]);
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
+    $Qvalues = $OSCOM_Db->get('products_options_values', 'products_options_values_name', ['products_options_values_id' => (int)$values_id, 'language_id' => $OSCOM_Language->getId()]);
 
     return $Qvalues->value('products_options_values_name');
   }
@@ -517,21 +525,27 @@
   }
 
   function tep_get_orders_status_name($orders_status_id, $language_id = '') {
-    if (!$language_id) $language_id = $_SESSION['languages_id'];
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
-    $Qstatus = Registry::get('Db')->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$orders_status_id, 'language_id' => (int)$language_id]);
+    if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
+
+    $Qstatus = $OSCOM_Db->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$orders_status_id, 'language_id' => (int)$language_id]);
 
     return $Qstatus->value('orders_status_name');
   }
 
   function tep_get_orders_status() {
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
     $orders_status_array = [];
 
-    $Qstatus = Registry::get('Db')->get('orders_status', [
+    $Qstatus = $OSCOM_Db->get('orders_status', [
       'orders_status_id',
       'orders_status_name'
     ], [
-      'language_id' => (int)$_SESSION['languages_id']
+      'language_id' => $OSCOM_Language->getId()
     ], 'orders_status_id');
 
     while ($Qstatus->fetch()) {
@@ -545,7 +559,10 @@
   }
 
   function tep_get_products_name($product_id, $language_id = 0) {
-    if ($language_id == 0) $language_id = $_SESSION['languages_id'];
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
+    if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
 
     $Qproduct = Registry::get('Db')->get('products_description', 'products_name', ['products_id' => (int)$product_id, 'language_id' => (int)$language_id]);
 
@@ -961,6 +978,7 @@
 
   function tep_generate_category_path($id, $from = 'category', $categories_array = '', $index = 0) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (!is_array($categories_array)) {
       $categories_array = [];
@@ -987,7 +1005,7 @@
               'val' => $Qcategories->valueInt('categories_id'),
               'rel' => 'cd.categories_id'
             ],
-            'cd.language_id' => (int)$_SESSION['languages_id']
+            'cd.language_id' => $OSCOM_Language->getId()
           ]);
 
           $categories_array[$index][] = [
@@ -1016,7 +1034,7 @@
           'val' => (int)$id,
           'rel' => 'cd.categories_id'
         ],
-        'cd.language_id' => (int)$_SESSION['languages_id']
+        'cd.language_id' => $OSCOM_Language->getId()
       ]);
 
       $categories_array[$index][] = [
@@ -1416,6 +1434,9 @@
   }
 
   function tep_cfg_pull_down_order_statuses($order_status_id, $key = '') {
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
     $name = !empty($key) ? 'configuration[' . $key . ']' : 'configuration_value';
 
     $statuses_array = [
@@ -1425,11 +1446,11 @@
       ]
     ];
 
-    $Qstatus = Registry::get('Db')->get('orders_status', [
+    $Qstatus = $OSCOM_Db->get('orders_status', [
       'orders_status_id',
       'orders_status_name'
     ], [
-      'language_id' => (int)$_SESSION['languages_id']
+      'language_id' => $OSCOM_Language->getId()
     ], 'orders_status_name');
 
     while ($Qstatus->fetch()) {
@@ -1443,11 +1464,14 @@
   }
 
   function tep_get_order_status_name($order_status_id, $language_id = '') {
+    $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
+
     if ($order_status_id < 1) return TEXT_DEFAULT;
 
-    if (!is_numeric($language_id)) $language_id = $_SESSION['languages_id'];
+    if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
 
-    $Qstatus = Registry::get('Db')->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$order_status_id, 'language_id' => (int)$language_id]);
+    $Qstatus = $OSCOM_Db->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$order_status_id, 'language_id' => (int)$language_id]);
 
     return $Qstatus->value('orders_status_name');
   }

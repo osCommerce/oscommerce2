@@ -16,7 +16,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/logoff.php');
+  $OSCOM_Language->loadDefinitions('logoff');
 
   $breadcrumb->add(NAVBAR_TITLE);
 

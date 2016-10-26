@@ -12,12 +12,17 @@
 
   use OSC\OM\FileSystem;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   class securityCheck_config_file_catalog {
     var $type = 'warning';
 
-    function securityCheck_config_file_catalog() {
-      include(OSCOM::getConfig('dir_root') . 'includes/languages/' . $_SESSION['language'] . '/modules/security_check/config_file_catalog.php');
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/config_file_catalog');
     }
 
     function pass() {

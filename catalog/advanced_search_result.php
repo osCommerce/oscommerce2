@@ -15,7 +15,7 @@
 
   require('includes/application_top.php');
 
-  require('includes/languages/' . $_SESSION['language'] . '/advanced_search.php');
+  $OSCOM_Language->loadDefinitions('advanced_search');
 
   $error = false;
 
@@ -325,7 +325,7 @@
     $Qlisting->bindInt(':zone_id', $_SESSION['customer_zone_id']);
   }
 
-  $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
 
   if (isset($_GET['categories_id']) && tep_not_null($_GET['categories_id'])) {
     $Qlisting->bindInt(':categories_id', $_GET['categories_id']);

@@ -46,7 +46,7 @@
     return $result;
   }
 
-  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $_SESSION['language'];
+  if (!isset($_GET['lngdir'])) $_GET['lngdir'] = $OSCOM_Language->get('directory');
 
   $languages_array = array();
   $languages = tep_get_languages();
@@ -58,7 +58,7 @@
                                'text' => $languages[$i]['name']);
   }
 
-  if (!$lng_exists) $_GET['lngdir'] = $_SESSION['language'];
+  if (!$lng_exists) $_GET['lngdir'] = $OSCOM_Language->get('directory');
 
   if (isset($_GET['filename'])) {
     $file_edit = realpath(OSCOM::getConfig('dir_root', 'Shop') . 'includes/languages/' . $_GET['filename']);

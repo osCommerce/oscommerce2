@@ -22,7 +22,11 @@
     var $icon;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_DESCRIPTION;
@@ -34,19 +38,6 @@
     }
 
     function getOutput() {
-      global $lng;
-
-      if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-        $lng = new language;
-      }
-
-      foreach ($lng->catalog_languages as $lkey => $lvalue) {
-        if ($lvalue['id'] == $_SESSION['languages_id']) {
-          $language_code = $lkey;
-          break;
-        }
-      }
-
       $button_height = (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_HEIGHT;
 
       if (MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION == 'Vertical-Bubble') {
@@ -67,7 +58,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . HTML::outputProtected($language_code) . '";
+    window.___gcfg.lang = "' . HTML::outputProtected($this->lang->get('code')) . '";
   }
 
   (function() {

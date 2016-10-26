@@ -32,7 +32,7 @@
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include('includes/languages/' . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
+          $OSCOM_Language->loadDefinitions('modules/shipping/' . pathinfo($include_modules[$i]['file'], PATHINFO_FILENAME));
           include('includes/modules/shipping/' . $include_modules[$i]['file']);
 
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];

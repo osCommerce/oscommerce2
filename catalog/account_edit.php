@@ -20,8 +20,7 @@
     OSCOM::redirect('login.php');
   }
 
-// needs to be included earlier to set the success message in the messageStack
-  require('includes/languages/' . $_SESSION['language'] . '/account_edit.php');
+  $OSCOM_Language->loadDefinitions('account_edit');
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     if (ACCOUNT_GENDER == 'true') $gender = HTML::sanitize($_POST['gender']);

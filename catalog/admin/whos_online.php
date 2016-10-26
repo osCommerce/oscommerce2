@@ -113,7 +113,7 @@
         'cb.products_id' => [
           'rel' => 'pd.products_id'
         ],
-        'pd.language_id' => $_SESSION['languages_id']
+        'pd.language_id' => $OSCOM_Language->getId()
       ]);
 
       if ($Qproducts->fetch() !== false) {

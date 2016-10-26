@@ -38,10 +38,11 @@
       global $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (isset($_GET['products_id'])) {
         $Qmanufacturer = $OSCOM_Db->prepare('select m.manufacturers_id, m.manufacturers_name, m.manufacturers_image, mi.manufacturers_url from :table_manufacturers m left join :table_manufacturers_info mi on (m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id), :table_products p where p.products_id = :products_id and p.manufacturers_id = m.manufacturers_id');
-        $Qmanufacturer->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qmanufacturer->bindInt(':languages_id', $OSCOM_Language->getId());
         $Qmanufacturer->bindInt(':products_id', $_GET['products_id']);
         $Qmanufacturer->execute();
 

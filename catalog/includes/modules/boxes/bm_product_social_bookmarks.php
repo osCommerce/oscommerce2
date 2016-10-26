@@ -20,7 +20,11 @@
     var $sort_order;
     var $enabled = false;
 
+    protected $lang;
+
     function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_TITLE;
       $this->description = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_DESCRIPTION;
 
@@ -44,7 +48,7 @@
           $class = basename($sbm, '.php');
 
           if ( !class_exists($class) ) {
-            include('includes/languages/' . $_SESSION['language'] . '/modules/social_bookmarks/' . $sbm);
+            $this->lang->loadDefinitions('modules/social_bookmarks/' . pathinfo($sbm, PATHINFO_FILENAME));
             include('includes/modules/social_bookmarks/' . $class . '.php');
           }
 

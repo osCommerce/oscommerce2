@@ -37,6 +37,7 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (isset($_SESSION['customer_id'])) {
 // retreive the last x products purchased
@@ -55,7 +56,7 @@
           $customer_orders_string = null;
 
           $Qproducts = $OSCOM_Db->prepare('select products_id, products_name from :table_products_description where products_id in (' . implode(', ', $product_ids) . ') and language_id = :language_id order by products_name');
-          $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
           $Qproducts->execute();
 
           while ($Qproducts->fetch()) {
