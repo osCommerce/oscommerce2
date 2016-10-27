@@ -172,7 +172,9 @@ class Language
             $def = $this->definitions[$scope][$key];
 
             if (is_array($values) && !empty($values)) {
-                $def = str_replace(array_keys($values), array_values($values), $def);
+                $def = preg_replace_callback('/\{\{([A-Za-z0-9-_]+)\}\}/', function($matches) use ($values) {
+                    return isset($values[$matches[1]]) ? $values[$matches[1]] : $matches[1];
+                }, $def);
             }
 
             return $def;
