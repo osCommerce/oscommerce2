@@ -81,8 +81,8 @@ if ($action == 'export') {
 <p>
   <?=
     OSCOM::getDef('text_export_intro', [
-        ':button_submit_to_oscommerce' => OSCOM::getDef('button_submit_to_oscommerce'),
-        ':button_save' => IMAGE_SAVE
+        'button_submit_to_oscommerce' => OSCOM::getDef('button_submit_to_oscommerce'),
+        'button_save' => IMAGE_SAVE
     ]);
   ?>
 </p>
