@@ -24,7 +24,7 @@
     OSCOM::redirect('account.php');
   }
 
-  $Qcustomer = $OSCOM_Db-get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
+  $Qcustomer = $OSCOM_Db->get('customers', 'customers_password', ['customers_id' => $_SESSION['customer_id']]);
 
   if (!empty($Qcustomer->value('customers_password'))) {
     OSCOM::redirect('account.php');
