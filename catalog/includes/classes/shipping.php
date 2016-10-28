@@ -15,6 +15,8 @@
   class shipping {
     var $modules;
 
+    protected $lang;
+
 // class constructor
     function __construct($module = '') {
       global $PHP_SELF;
