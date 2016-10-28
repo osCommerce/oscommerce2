@@ -281,10 +281,16 @@ EOD;
     }
 
     function pre_confirmation_check() {
+      global $order;
+
       if (!tep_session_is_registered('appBraintreeCcNonce') && (OSCOM_APP_PAYPAL_BRAINTREE_CC_ENTRY_FORM == '3')) {
         if ($this->templateClassExists()) {
           $GLOBALS['oscTemplate']->addBlock($this->getSubmitCardDetailsJavascript(), 'footer_scripts');
         }
+      }
+
+      if ($this->isPaymentTypeAccepted('paypal') && tep_session_is_registered('appBraintreeCcNonce')) {
+        $order->info['payment_method'] = '<img src="https://www.paypalobjects.com/webstatic/mktg/Logo/pp-logo-100px.png" border="0" alt="PayPal Logo" style="padding: 3px;" />';
       }
     }
 
@@ -531,7 +537,7 @@ EOD;
         );
       }
 
-      $data['channel'] = 'OSCOM_23-' . $this->_app->getVersion() . '-' . Braintree_Version::get();
+      $data['channel'] = $this->_app->getIdentifier();
 
       $error = false;
 

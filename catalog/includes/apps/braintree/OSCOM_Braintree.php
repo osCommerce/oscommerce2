@@ -15,6 +15,7 @@
     var $_title = 'Braintree App';
     var $_version;
     var $_api_version;
+    var $_identifier = 'osCommerce_BTapp_v1';
     var $_definitions = array();
 
     function OSCOM_Braintree() {
@@ -548,6 +549,10 @@ EOD;
 
     function getApiVersion() {
       return $this->_api_version;
+    }
+
+    function getIdentifier() {
+      return $this->_identifier;
     }
 
     function hasAlert() {

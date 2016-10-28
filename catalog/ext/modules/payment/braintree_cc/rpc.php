@@ -37,17 +37,18 @@ if (!class_exists('braintree_cc', false)) {
   include(DIR_FS_CATALOG . 'includes/modules/payment/braintree_cc.php');
 }
 
+$pm = new braintree_cc();
+
 switch ($HTTP_GET_VARS['action']) {
   case 'paypal':
     if (
+      $pm->isPaymentTypeAccepted('paypal') &&
       tep_session_is_registered('appBraintreeCcFormHash') &&
       isset($HTTP_POST_VARS['bt_paypal_form_hash']) &&
       $HTTP_POST_VARS['bt_paypal_form_hash'] == $appBraintreeCcFormHash &&
       isset($HTTP_POST_VARS['bt_paypal_nonce']) &&
       !empty($HTTP_POST_VARS['bt_paypal_nonce'])
     ) {
-      $pm = new braintree_cc();
-
       tep_session_unregister('appBraintreeCcFormHash');
 
       $pm->_app->setupCredentials();
@@ -133,8 +134,8 @@ switch ($HTTP_GET_VARS['action']) {
               $email_text = sprintf(EMAIL_GREET_NONE, $customers_firstname) .
                 EMAIL_WELCOME .
                 $pm->_app->getDef('module_cc_email_account_password', [
-                  ':email_address' => $email_address,
-                  ':password' => $customer_password
+                  'email_address' => $email_address,
+                  'password' => $customer_password
                 ]) . "\n\n" .
                 EMAIL_TEXT .
                 EMAIL_CONTACT .
@@ -371,6 +372,10 @@ switch ($HTTP_GET_VARS['action']) {
       exit;
     }
 
+    if ((OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS != '1') && (OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS != '2')) {
+      exit;
+    }
+
     if (!isset($HTTP_POST_VARS['card_id']) || !is_numeric($HTTP_POST_VARS['card_id']) || ($HTTP_POST_VARS['card_id'] < 1)) {
       exit;
     }
@@ -381,8 +386,6 @@ switch ($HTTP_GET_VARS['action']) {
 
     if (tep_db_num_rows($card_query)) {
       $card = tep_db_fetch_array($card_query);
-
-      $pm = new braintree_cc();
 
       $pm->_app->setupCredentials();
 
