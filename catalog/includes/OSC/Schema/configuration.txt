@@ -2,7 +2,7 @@ configuration_id int not_null auto_increment
 configuration_title varchar(255) not_null
 configuration_key varchar(255) not_null
 configuration_value text not_null
-configuration_description varchar(255) not_null
+configuration_description text not_null
 configuration_group_id int not_null
 sort_order int(5)
 last_modified datetime
