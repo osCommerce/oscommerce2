@@ -29,18 +29,21 @@
     }
 
     function installCheck() {
-      $installed = explode(';', MODULE_PAYMENT_INSTALLED);
-      $installed_pos = array_search('braintree_cc.php', $installed);
+      if (!defined('OSCOM_APP_PAYPAL_BRAINTREE_CC_SORT_ORDER')) {
+        $installed = explode(';', MODULE_PAYMENT_INSTALLED);
+        $installed_pos = array_search('braintree_cc.php', $installed);
 
-      if ( $installed_pos === false ) {
-        $installed[] = 'braintree_cc.php';
+        if ( $installed_pos === false ) {
+          $installed[] = 'braintree_cc.php';
 
-        $this->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
-      }
+          $this->saveParameter('MODULE_PAYMENT_INSTALLED', implode(';', $installed));
+        }
 
-      $check_query = tep_db_query('show tables like "customers_braintree_tokens"');
-      if (!tep_db_num_rows($check_query)) {
-        $sql = <<<EOD
+        $this->saveParameter('OSCOM_APP_PAYPAL_BRAINTREE_CC_SORT_ORDER', '0', 'Sort Order', 'Sort order of display. Lowest is displayed first.');
+
+        $check_query = tep_db_query('show tables like "customers_braintree_tokens"');
+        if (!tep_db_num_rows($check_query)) {
+          $sql = <<<EOD
 CREATE TABLE customers_braintree_tokens (
   id int NOT NULL auto_increment,
   customers_id int NOT NULL,
@@ -55,7 +58,8 @@ CREATE TABLE customers_braintree_tokens (
 ) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 EOD;
 
-        tep_db_query($sql);
+          tep_db_query($sql);
+        }
       }
 
       if ( !defined('OSCOM_APP_PAYPAL_BRAINTREE_TRANSACTIONS_ORDER_STATUS_ID') ) {
@@ -86,13 +90,17 @@ EOD;
         $this->saveParameter('OSCOM_APP_PAYPAL_BRAINTREE_TRANSACTIONS_ORDER_STATUS_ID', $status_id);
       }
 
-      $cm = explode(';', MODULE_CONTENT_INSTALLED);
-      $pos = array_search('account/cm_account_braintree_cards.php', $cm);
+      if (!defined('MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_SORT_ORDER')) {
+        $cm = explode(';', MODULE_CONTENT_INSTALLED);
+        $pos = array_search('account/cm_account_braintree_cards', $cm);
 
-      if ($pos === false) {
-        $cm[] = 'account/cm_account_braintree_cards.php';
+        if ($pos === false) {
+          $cm[] = 'account/cm_account_braintree_cards';
 
-        $this->saveParameter('MODULE_CONTENT_INSTALLED', implode(';', $cm));
+          $this->saveParameter('MODULE_CONTENT_INSTALLED', implode(';', $cm));
+        }
+
+        $this->saveParameter('MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_SORT_ORDER', '0', 'Sort Order', 'Sort order of display. Lowest is displayed first.');
       }
     }
 
@@ -122,6 +130,8 @@ EOD;
           }
         }
       }
+
+      $this->deleteParameter('MODULE_CONTENT_ACCOUNT_BRAINTREE_CARDS_STATUS');
 
       return $migrated;
     }
