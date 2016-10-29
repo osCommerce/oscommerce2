@@ -32,10 +32,6 @@ class Shop extends \OSC\OM\SitesAbstract
 
         Registry::set('Hooks', new Hooks());
 
-        $OSCOM_Language = new Language();
-        $OSCOM_Language->setUseCache(true);
-        Registry::set('Language', $OSCOM_Language);
-
 // set the application parameters
         $Qcfg = $OSCOM_Db->get('configuration', [
             'configuration_key as k',
@@ -45,6 +41,10 @@ class Shop extends \OSC\OM\SitesAbstract
         while ($Qcfg->fetch()) {
             define($Qcfg->value('k'), $Qcfg->value('v'));
         }
+
+        $OSCOM_Language = new Language();
+        $OSCOM_Language->setUseCache(true);
+        Registry::set('Language', $OSCOM_Language);
 
 // set php_self in the global scope
         $req = parse_url($_SERVER['SCRIPT_NAME']);
