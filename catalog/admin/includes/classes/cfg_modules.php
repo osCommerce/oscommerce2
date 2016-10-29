@@ -43,7 +43,8 @@
                                         'language_directory' => $m->language_directory,
                                         'key' => $m->key,
                                         'title' => $m->title,
-                                        'template_integration' => $m->template_integration);
+                                        'template_integration' => $m->template_integration,
+                                        'site' => $m->site);
             }
           }
         }
