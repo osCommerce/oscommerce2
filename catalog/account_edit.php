@@ -192,7 +192,7 @@
   <div class="form-group has-feedback">
     <label for="inputName" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
     <div class="col-sm-9">
-      <?php echo HTML::inputField('dob', tep_date_short($Qaccount->value('customers_dob')), 'required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
+      <?php echo HTML::inputField('dob', tep_date_short($Qaccount->value('customers_dob')), 'data-provide="datepicker" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"'); ?>
       <?php echo FORM_REQUIRED_INPUT; ?>
     </div>
   </div>

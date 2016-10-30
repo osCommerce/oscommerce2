@@ -327,7 +327,7 @@
       <label for="dob" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('dob', '', 'required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
+        echo HTML::inputField('dob', '', 'data-provide="datepicker" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
