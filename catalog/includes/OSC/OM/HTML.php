@@ -45,7 +45,7 @@ class HTML
         return preg_replace($patterns, $replace, trim($string));
     }
 
-    public static function image($src, $alt = '', $width = '', $height = '', $parameters = '', $responsive = false, $bootstrap_css = '')
+    public static function image($src, $alt = null, $width = null, $height = null, $parameters = '', $responsive = false, $bootstrap_css = '')
     {
         if ((empty($src) || ($src == OSCOM::linkImage(''))) && (IMAGE_REQUIRED == 'false')) {
             return false;
@@ -55,29 +55,16 @@ class HTML
 // the image filename as default
         $image = '<img src="' . static::output($src) . '" alt="' . static::output($alt) . '"';
 
-        if (!empty($alt)) {
+        if (isset($alt) && (strlen($alt) > 0)) {
             $image .= ' title="' . static::output($alt) . '"';
         }
 
-        if ((CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height))) {
-            if ($image_size = @getimagesize($src)) {
-                if (empty($width) && !empty($height)) {
-                    $ratio = $height / $image_size[1];
-                    $width = (int)($image_size[0] * $ratio);
-                } elseif (!empty($width) && empty($height)) {
-                    $ratio = $width / $image_size[0];
-                    $height = (int)($image_size[1] * $ratio);
-                } elseif (empty($width) && empty($height)) {
-                    $width = $image_size[0];
-                    $height = $image_size[1];
-                }
-            } elseif (IMAGE_REQUIRED == 'false') {
-                return false;
-            }
+        if (isset($width) && (strlen($width) > 0)) {
+            $image .= ' width="' . static::output($width) . '"';
         }
 
-        if (!empty($width) && !empty($height)) {
-            $image .= ' width="' . static::output($width) . '" height="' . static::output($height) . '"';
+        if (isset($height) && (strlen($height) > 0)) {
+            $image .= ' height="' . static::output($height) . '"';
         }
 
         $class = [];
