@@ -23,18 +23,6 @@ define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 define('JQUERY_DATEPICKER_I18N_CODE', ''); // leave empty for en_US; see http://jqueryui.com/demos/datepicker/#localization
 define('JQUERY_DATEPICKER_FORMAT', 'mm/dd/yy'); // see http://docs.jquery.com/UI/Datepicker/formatDate
 
-////
-// Return date in raw format
-// $date should be in format mm/dd/yyyy
-// raw date is in format YYYYMMDD, or DDMMYYYY
-function tep_date_raw($date, $reverse = false) {
-  if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
-  } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
-  }
-}
-
 // Global entries for the <html> tag
 define('HTML_PARAMS','dir="ltr" lang="en"');
 

@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
@@ -12,6 +12,48 @@ use OSC\OM\OSCOM;
 
 class DateTime
 {
+    protected $datetime;
+    protected $with_time = true;
+
+    public function __construct($datetime, $with_time = true)
+    {
+        $this->with_time = ($with_time === true);
+
+        // the exclamation point prevents the current time being used
+        $php_pattern = ($this->with_time === true) ? DATE_TIME_FORMAT : '!' . DATE_FORMAT;
+
+        $this->datetime = \DateTime::createFromFormat($php_pattern, $datetime);
+
+        if ($this->datetime !== false) {
+            $errors = \DateTime::getLastErrors();
+
+            if (($errors['warning_count'] > 0) || ($errors['error_count'] > 0)) {
+                $this->datetime = false;
+            }
+        }
+    }
+
+    public function isValid()
+    {
+        return $this->datetime instanceof \DateTime;
+    }
+
+    public function get()
+    {
+        return $this->datetime;
+    }
+
+    public function getRaw($with_time  = true)
+    {
+        $pattern = 'Y-m-d';
+
+        if (($with_time === true) && ($this->with_time === true)) {
+            $pattern .= ' H:i:s';
+        }
+
+        return $this->datetime->format($pattern);
+    }
+
     public static function getTimeZones()
     {
         $time_zones_array = [];

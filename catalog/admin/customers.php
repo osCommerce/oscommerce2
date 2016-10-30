@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -73,7 +74,9 @@
         }
 
         if (ACCOUNT_DOB == 'true') {
-          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && ((is_numeric(tep_date_raw($customers_dob)) && @checkdate(substr(tep_date_raw($customers_dob), 4, 2), substr(tep_date_raw($customers_dob), 6, 2), substr(tep_date_raw($customers_dob), 0, 4))) || empty($customers_dob))) {
+          $dobDateTime = new DateTime($customers_dob, false);
+
+          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && $dobDateTime->isValid()) {
             $entry_date_of_birth_error = false;
           } else {
             $error = true;
@@ -178,7 +181,7 @@
                                   'customers_newsletter' => $customers_newsletter);
 
           if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($customers_dob);
+          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw();
 
           $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$customers_id]);
 
