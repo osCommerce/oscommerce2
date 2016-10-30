@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
@@ -12,6 +12,117 @@ use OSC\OM\OSCOM;
 
 class DateTime
 {
+    protected $datetime = false;
+
+    protected $raw_pattern_date = 'Y-m-d';
+    protected $raw_pattern_time = 'H:i:s';
+
+    public function __construct($datetime, $use_raw_pattern = false, $strict = false)
+    {
+        if ($use_raw_pattern === false) {
+            $pattern = DATE_TIME_FORMAT;
+        } else {
+            $pattern = $this->raw_pattern_date . ' ' . $this->raw_pattern_time;
+        }
+
+        // format time as 00:00:00 if it is missing from the date
+        $new_datetime = strtotime($datetime);
+
+        if ($new_datetime !== false) {
+            $new_datetime = date($pattern, $new_datetime);
+
+            $this->datetime = \DateTime::createFromFormat($pattern, $new_datetime);
+
+            $strict_log = false;
+        }
+
+        if ($this->datetime === false) {
+            $strict_log = true;
+        } else {
+            $errors = \DateTime::getLastErrors();
+
+            if (($errors['warning_count'] > 0) || ($errors['error_count'] > 0)) {
+                $this->datetime = false;
+
+                $strict_log = true;
+            }
+        }
+
+        if (($strict === true) && ($strict_log === true)) {
+            trigger_error('DateTime: ' . $datetime . ' (' . $new_datetime . ') cannot be formatted to ' . $pattern);
+        }
+    }
+
+    public function isValid()
+    {
+        return $this->datetime instanceof \DateTime;
+    }
+
+    public function get($pattern = null)
+    {
+        if (isset($pattern)) {
+            return $this->datetime->format($pattern);
+        }
+
+        return $this->datetime;
+    }
+
+    public function getShort($with_time = false)
+    {
+        $pattern = ($with_time === false) ? DATE_FORMAT_SHORT : DATE_TIME_FORMAT;
+
+        return strftime($pattern, $this->getTimestamp());
+    }
+
+    public function getLong()
+    {
+        return strftime(DATE_FORMAT_LONG, $this->getTimestamp());
+    }
+
+    public static function toShort($raw_datetime, $with_time = false, $strict = true)
+    {
+        $result = '';
+
+        $date = new DateTime($raw_datetime, true, $strict);
+
+        if ($date->isValid()) {
+            $pattern = ($with_time === false) ? DATE_FORMAT_SHORT : DATE_TIME_FORMAT;
+
+            $result = strftime($pattern, $date->getTimestamp());
+        }
+
+        return $result;
+    }
+
+    public static function toLong($raw_datetime, $strict = true)
+    {
+        $result = '';
+
+        $date = new DateTime($raw_datetime, true, $strict);
+
+        if ($date->isValid()) {
+            $result = strftime(DATE_FORMAT_LONG, $date->getTimestamp());
+        }
+
+        return $result;
+    }
+
+    public function getRaw($with_time = true)
+    {
+        $pattern = $this->raw_pattern_date;
+
+        if ($with_time === true) {
+            $pattern .= ' ' . $this->raw_pattern_time;
+        }
+
+        return $this->datetime->format($pattern);
+    }
+
+    public function getTimestamp()
+    {
+        return $this->datetime->getTimestamp();
+    }
+
     public static function getTimeZones()
     {
         $time_zones_array = [];

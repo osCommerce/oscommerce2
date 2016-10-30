@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -39,7 +40,7 @@
       $VersionCache = new Cache('core_version_check');
 
       if ($VersionCache->exists()) {
-        $date_last_checked = tep_datetime_short(date('Y-m-d H:i:s', $VersionCache->getTime()));
+        $date_last_checked = DateTime::toShort(date('Y-m-d H:i:s', $VersionCache->getTime()), true);
 
         $releases = $VersionCache->get();
 

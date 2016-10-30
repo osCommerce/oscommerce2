@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\OSCOM;
 
   if (!strstr($PHP_SELF, 'account_history_info.php')) {
@@ -55,7 +56,7 @@
         echo '        <td>' . $Qdownloads->value('products_name') . '</td>' . "\n";
       }
 
-      echo '        <td>' . TABLE_HEADING_DOWNLOAD_DATE . tep_date_long($download_expiry) . '</td>' . "\n" .
+      echo '        <td>' . TABLE_HEADING_DOWNLOAD_DATE . DateTime::toLong($download_expiry) . '</td>' . "\n" .
            '        <td align="right">' . $Qdownloads->valueInt('download_count') . TABLE_HEADING_DOWNLOAD_COUNT . '</td>' . "\n" .
            '      </tr>' . "\n";
     } while ($Qdownloads->fetch());

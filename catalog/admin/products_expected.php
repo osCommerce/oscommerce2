@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -59,7 +60,7 @@
     }
 ?>
                 <td class="dataTableContent"><?php echo $Qproducts->value('products_name'); ?></td>
-                <td class="dataTableContent" align="center"><?php echo tep_date_short($Qproducts->value('products_date_available')); ?></td>
+                <td class="dataTableContent" align="center"><?php echo DateTime::toShort($Qproducts->value('products_date_available')); ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($pInfo) && is_object($pInfo) && ($Qproducts->valueInt('products_id') === (int)$pInfo->products_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif')); } else { echo '<a href="' . OSCOM::link(FILENAME_PRODUCTS_EXPECTED, 'page=' . $_GET['page'] . '&pID=' . $Qproducts->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -82,7 +83,7 @@
     $heading[] = array('text' => '<strong>' . $pInfo->products_name . '</strong>');
 
     $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CATEGORIES, 'pID=' . $pInfo->products_id . '&action=new_product')));
-    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_EXPECTED . ' ' . tep_date_short($pInfo->products_date_available));
+    $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_EXPECTED . ' ' . DateTime::toShort($pInfo->products_date_available));
   }
 
   if ( (tep_not_null($heading)) && (tep_not_null($contents)) ) {

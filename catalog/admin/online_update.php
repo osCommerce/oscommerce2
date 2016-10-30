@@ -7,6 +7,7 @@
   */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
@@ -60,7 +61,7 @@
       if (version_compare($current_version, $version_array[0], '<')) {
         $versions[] = [
           'version' => $version_array[0],
-          'date' => tep_date_long(substr($version_array[1], 0, 4) . '-' . substr($version_array[1], 4, 2) . '-' . substr($version_array[1], 6, 2))
+          'date' => DateTime::toLong(substr($version_array[1], 0, 4) . '-' . substr($version_array[1], 4, 2) . '-' . substr($version_array[1], 6, 2))
         ];
       }
     }

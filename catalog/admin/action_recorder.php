@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -163,7 +164,7 @@
       <td><i class="fa <?= (($Qactions->valueInt('success') === 1) ? 'fa-check text-success' : 'fa-times text-danger'); ?>"></i> <?= $module_title; ?></td>
       <td><?= $Qactions->valueProtected('user_name') . ' [' . $Qactions->valueInt('user_id') . ']'; ?></td>
       <td><?= (tep_not_null($Qactions->value('identifier')) ? '<a href="' . OSCOM::link('action_recorder.php', 'search=' . $Qactions->value('identifier')) . '"><u>' . $Qactions->valueProtected('identifier') . '</u></a>': '(empty)'); ?></td>
-      <td class="text-right"><?= tep_datetime_short($Qactions->value('date_added')); ?></td>
+      <td class="text-right"><?= DateTime::toShort($Qactions->value('date_added'), true); ?></td>
     </tr>
 
 <?php

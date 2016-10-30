@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Cache;
+  use OSC\OM\DateTime;
   use OSC\OM\FileSystem;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
@@ -967,13 +968,13 @@ $(function() {
         if ($pInfo->products_date_available > date('Y-m-d')) {
 ?>
       <tr>
-        <td align="center" class="smallText"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, tep_date_long($pInfo->products_date_available)); ?></td>
+        <td align="center" class="smallText"><?php echo sprintf(TEXT_PRODUCT_DATE_AVAILABLE, DateTime::toLong($pInfo->products_date_available)); ?></td>
       </tr>
 <?php
         } else {
 ?>
       <tr>
-        <td align="center" class="smallText"><?php echo sprintf(TEXT_PRODUCT_DATE_ADDED, tep_date_long($pInfo->products_date_added)); ?></td>
+        <td align="center" class="smallText"><?php echo sprintf(TEXT_PRODUCT_DATE_ADDED, DateTime::toLong($pInfo->products_date_added)); ?></td>
       </tr>
 <?php
         }

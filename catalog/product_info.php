@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -209,7 +210,7 @@
     if ($Qproduct->value('products_date_available') > date('Y-m-d H:i:s')) {
 ?>
 
-    <div class="alert alert-info"><?php echo sprintf(TEXT_DATE_AVAILABLE, tep_date_long($Qproduct->value('products_date_available'))); ?></div>
+    <div class="alert alert-info"><?php echo sprintf(TEXT_DATE_AVAILABLE, DateTime::toLong($Qproduct->value('products_date_available'))); ?></div>
 
 <?php
     }

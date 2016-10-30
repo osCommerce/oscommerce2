@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -60,7 +61,7 @@
       while ($Qcustomers->fetch()) {
         $output .= '    <tr>
                           <td><a href="' . OSCOM::link(FILENAME_CUSTOMERS, 'cID=' . $Qcustomers->valueInt('customers_id') . '&action=edit') . '">' . HTML::outputProtected($Qcustomers->value('customers_firstname') . ' ' . $Qcustomers->value('customers_lastname')) . '</a></td>
-                          <td class="text-right">' . tep_date_short($Qcustomers->value('customers_info_date_account_created')) . '</td>
+                          <td class="text-right">' . DateTime::toShort($Qcustomers->value('customers_info_date_account_created')) . '</td>
                         </tr>';
       }
 

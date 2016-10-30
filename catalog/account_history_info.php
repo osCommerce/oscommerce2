@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -113,7 +114,7 @@
 
 
       <div class="panel-footer">
-        <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . tep_date_long($order->info['date_purchased']); ?>
+        <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . DateTime::toLong($order->info['date_purchased']); ?>
       </div>
     </div>
   </div>
@@ -186,7 +187,7 @@
         echo '  <div class="timeline-badge"><i class="fa fa-check-square-o"></i></div>';
         echo '  <div class="timeline-panel">';
         echo '    <div class="timeline-heading">';
-        echo '      <p class="pull-right"><small class="text-muted"><i class="fa fa-clock-o"></i> ' . tep_date_short($Qstatuses->value('date_added')) . '</small></p><h2 class="timeline-title">' . $Qstatuses->value('orders_status_name') . '</h2>';
+        echo '      <p class="pull-right"><small class="text-muted"><i class="fa fa-clock-o"></i> ' . DateTime::toShort($Qstatuses->value('date_added')) . '</small></p><h2 class="timeline-title">' . $Qstatuses->value('orders_status_name') . '</h2>';
         echo '    </div>';
         echo '    <div class="timeline-body">';
         echo '      <p>' . (tep_not_null($Qstatuses->value('comments')) ? '<blockquote>' . nl2br($Qstatuses->valueProtected('comments')) . '</blockquote>' : '&nbsp;') . '</p>';

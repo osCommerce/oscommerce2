@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -55,7 +56,7 @@
       while ($Qlogins->fetch()) {
         $output .= '    <tr>
                           <td><i class="fa fa-' . (($Qlogins->valueInt('success') === 1) ? 'check text-success' : 'times text-danger') . '"></i>&nbsp;<a href="' . OSCOM::link(FILENAME_ACTION_RECORDER, 'module=ar_admin_login&aID=' . $Qlogins->valueInt('id')) . '">' . $Qlogins->valueProtected('user_name') . '</a></td>
-                          <td class="text-right">' . tep_date_short($Qlogins->value('date_added')) . '</td>
+                          <td class="text-right">' . DateTime::toShort($Qlogins->value('date_added')) . '</td>
                         </tr>';
       }
 

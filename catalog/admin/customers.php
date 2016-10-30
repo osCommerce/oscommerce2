@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -73,7 +74,9 @@
         }
 
         if (ACCOUNT_DOB == 'true') {
-          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && ((is_numeric(tep_date_raw($customers_dob)) && @checkdate(substr(tep_date_raw($customers_dob), 4, 2), substr(tep_date_raw($customers_dob), 6, 2), substr(tep_date_raw($customers_dob), 0, 4))) || empty($customers_dob))) {
+          $dobDateTime = new DateTime($customers_dob);
+
+          if ((strlen($customers_dob) >= ENTRY_DOB_MIN_LENGTH) && $dobDateTime->isValid()) {
             $entry_date_of_birth_error = false;
           } else {
             $error = true;
@@ -178,7 +181,7 @@
                                   'customers_newsletter' => $customers_newsletter);
 
           if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
-          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($customers_dob);
+          if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw(false);
 
           $OSCOM_Db->save('customers', $sql_data_array, ['customers_id' => (int)$customers_id]);
 
@@ -429,12 +432,12 @@ function check_form() {
 <?php
     if ($error == true) {
       if ($entry_date_of_birth_error == true) {
-        echo HTML::inputField('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
+        echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10"') . '&nbsp;' . ENTRY_DATE_OF_BIRTH_ERROR;
       } else {
         echo $cInfo->customers_dob . HTML::hiddenField('customers_dob');
       }
     } else {
-      echo HTML::inputField('customers_dob', tep_date_short($cInfo->customers_dob), 'maxlength="10" id="customers_dob"') . TEXT_FIELD_REQUIRED;
+      echo HTML::inputField('customers_dob', DateTime::toShort($cInfo->customers_dob), 'maxlength="10" id="customers_dob"') . TEXT_FIELD_REQUIRED;
     }
 ?>
               <script type="text/javascript">$('#customers_dob').datepicker({dateFormat: '<?php echo JQUERY_DATEPICKER_FORMAT; ?>', changeMonth: true, changeYear: true, yearRange: '-100:+0'});</script>
@@ -728,7 +731,7 @@ function check_form() {
 ?>
                 <td class="dataTableContent"><?php echo $Qcustomers->value('customers_lastname'); ?></td>
                 <td class="dataTableContent"><?php echo $Qcustomers->value('customers_firstname'); ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_date_short($Qinfo->value('date_account_created')); ?></td>
+                <td class="dataTableContent" align="right"><?php echo DateTime::toShort($Qinfo->value('date_account_created')); ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($Qcustomers->valueInt('customers_id') === (int)$cInfo->customers_id)) { echo HTML::image(OSCOM::linkImage('icon_arrow_right.gif'), ''); } else { echo '<a href="' . OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID')) . 'cID=' . $Qcustomers->valueInt('customers_id')) . '">' . HTML::image(OSCOM::linkImage('icon_info.gif'), IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
 <?php
@@ -770,9 +773,9 @@ function check_form() {
         $heading[] = array('text' => '<strong>' . $cInfo->customers_firstname . ' ' . $cInfo->customers_lastname . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_CUSTOMERS, tep_get_all_get_params(array('cID', 'action')) . 'cID=' . $cInfo->customers_id . '&action=confirm')) . HTML::button(IMAGE_ORDERS, 'fa fa-shopping-cart', OSCOM::link(FILENAME_ORDERS, 'cID=' . $cInfo->customers_id)) . HTML::button(IMAGE_EMAIL, 'fa fa-envelope', OSCOM::link(FILENAME_MAIL, 'customer=' . $cInfo->customers_email_address)));
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_CREATED . ' ' . tep_date_short($cInfo->date_account_created));
-        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . tep_date_short($cInfo->date_account_last_modified));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . tep_date_short($cInfo->date_last_logon));
+        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_CREATED . ' ' . DateTime::toShort($cInfo->date_account_created));
+        $contents[] = array('text' => '<br />' . TEXT_DATE_ACCOUNT_LAST_MODIFIED . ' ' . DateTime::toShort($cInfo->date_account_last_modified));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_LAST_LOGON . ' '  . DateTime::toShort($cInfo->date_last_logon));
         $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_LOGONS . ' ' . $cInfo->number_of_logons);
         $contents[] = array('text' => '<br />' . TEXT_INFO_COUNTRY . ' ' . $cInfo->countries_name);
         $contents[] = array('text' => '<br />' . TEXT_INFO_NUMBER_OF_REVIEWS . ' ' . $cInfo->number_of_reviews);
