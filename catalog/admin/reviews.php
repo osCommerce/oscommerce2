@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -124,7 +125,7 @@
       <tr><?php echo HTML::form('review', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=preview')); ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo tep_date_short($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo HTML::image(OSCOM::linkImage('Shop/' . $rInfo->products_image), $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
           <tr>
@@ -159,7 +160,7 @@
       <tr><?php if (tep_not_null($_POST)) { echo HTML::form('update', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=update')); } ?>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo tep_date_short($rInfo->date_added); ?></td>
+            <td class="main" valign="top"><strong><?php echo ENTRY_PRODUCT; ?></strong> <?php echo $rInfo->products_name; ?><br /><strong><?php echo ENTRY_FROM; ?></strong> <?php echo $rInfo->customers_name; ?><br /><br /><strong><?php echo ENTRY_DATE; ?></strong> <?php echo DateTime::toShort($rInfo->date_added); ?></td>
             <td class="main" align="right" valign="top"><?php echo HTML::image(OSCOM::linkImage('Shop/' . $rInfo->products_image), $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT, 'hspace="5" vspace="5"'); ?></td>
           </tr>
         </table>
@@ -265,7 +266,7 @@
 ?>
                 <td class="dataTableContent"><?php echo '<a href="' . OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $Qreviews->valueInt('reviews_id') . '&action=preview') . '">' . HTML::image(OSCOM::linkImage('icons/preview.gif'), ICON_PREVIEW) . '</a>&nbsp;' . tep_get_products_name($Qreviews->valueInt('products_id')); ?></td>
                 <td class="dataTableContent" align="right"><?php echo HTML::image(OSCOM::linkImage('Shop/stars_' . $Qreviews->valueInt('reviews_rating') . '.gif')); ?></td>
-                <td class="dataTableContent" align="right"><?php echo tep_date_short($Qreviews->value('date_added')); ?></td>
+                <td class="dataTableContent" align="right"><?php echo DateTime::toShort($Qreviews->value('date_added')); ?></td>
                 <td class="dataTableContent" align="center">
 <?php
       if ($Qreviews->valueInt('reviews_status') === 1) {
@@ -306,8 +307,8 @@
         $heading[] = array('text' => '<strong>' . $rInfo->products_name . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($rInfo->date_added));
-        if (tep_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . tep_date_short($rInfo->last_modified));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . DateTime::toShort($rInfo->date_added));
+        if (tep_not_null($rInfo->last_modified)) $contents[] = array('text' => TEXT_INFO_LAST_MODIFIED . ' ' . DateTime::toShort($rInfo->last_modified));
         $contents[] = array('text' => '<br />' . tep_info_image($rInfo->products_image, $rInfo->products_name, SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT));
         $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_AUTHOR . ' ' . $rInfo->customers_name);
         $contents[] = array('text' => TEXT_INFO_REVIEW_RATING . ' ' . HTML::image(OSCOM::linkImage('Shop/stars_' . $rInfo->reviews_rating . '.gif')));

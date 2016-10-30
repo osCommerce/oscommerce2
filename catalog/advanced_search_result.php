@@ -57,7 +57,7 @@
 
     $date_check_error = false;
     if (tep_not_null($dfrom)) {
-      $dfromDateTime = new DateTime($dfrom, false);
+      $dfromDateTime = new DateTime($dfrom);
 
       if ($dfromDateTime->isValid() === false) {
         $error = true;
@@ -68,7 +68,7 @@
     }
 
     if (tep_not_null($dto)) {
-      $dtoDateTime = new DateTime($dto, false);
+      $dtoDateTime = new DateTime($dto);
 
       if ($dtoDateTime->isValid() === false) {
         $error = true;
@@ -359,11 +359,11 @@
   }
 
   if (isset($dfromDateTime) && $dfromDateTime->isValid()) {
-    $Qlisting->bindValue(':products_date_added_from', $dfromDateTime->getRaw());
+    $Qlisting->bindValue(':products_date_added_from', $dfromDateTime->getRaw(false));
   }
 
   if (isset($dtoDateTime) && $dtoDateTime->isValid()) {
-    $Qlisting->bindValue(':products_date_added_to', $dtoDateTime->getRaw());
+    $Qlisting->bindValue(':products_date_added_to', $dtoDateTime->getRaw(false));
   }
 
   if (DISPLAY_PRICE_WITH_TAX == 'true') {

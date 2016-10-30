@@ -89,54 +89,6 @@
     return $get_url;
   }
 
-  function tep_date_long($raw_date) {
-    if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
-
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    return strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-  }
-
-////
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-// NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
-  function tep_date_short($raw_date) {
-    if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
-
-    $year = substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    if (@date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-      return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-      return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
-    }
-
-  }
-
-  function tep_datetime_short($raw_datetime) {
-    if ( ($raw_datetime == '0000-00-00 00:00:00') || ($raw_datetime == '') ) return false;
-
-    $year = (int)substr($raw_datetime, 0, 4);
-    $month = (int)substr($raw_datetime, 5, 2);
-    $day = (int)substr($raw_datetime, 8, 2);
-    $hour = (int)substr($raw_datetime, 11, 2);
-    $minute = (int)substr($raw_datetime, 14, 2);
-    $second = (int)substr($raw_datetime, 17, 2);
-
-    return strftime(DATE_TIME_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-  }
-
   function tep_get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $category_tree_array = '', $include_itself = false) {
     $OSCOM_Db = Registry::get('Db');
     $OSCOM_Language = Registry::get('Language');

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -155,8 +156,8 @@
         $heading[] = array('text' => '<strong>' . $tcInfo->tax_class_title . '</strong>');
 
         $contents[] = array('align' => 'center', 'text' => HTML::button(IMAGE_EDIT, 'fa fa-edit', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=edit')) . HTML::button(IMAGE_DELETE, 'fa fa-trash', OSCOM::link(FILENAME_TAX_CLASSES, 'page=' . $_GET['page'] . '&tID=' . $tcInfo->tax_class_id . '&action=delete')));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . tep_date_short($tcInfo->date_added));
-        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . tep_date_short($tcInfo->last_modified));
+        $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . DateTime::toShort($tcInfo->date_added));
+        $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . DateTime::toShort($tcInfo->last_modified));
         $contents[] = array('text' => '<br />' . TEXT_INFO_CLASS_DESCRIPTION . '<br />' . $tcInfo->tax_class_description);
       }
       break;

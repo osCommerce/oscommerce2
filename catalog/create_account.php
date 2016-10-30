@@ -81,7 +81,7 @@
     }
 
     if (ACCOUNT_DOB == 'true') {
-      $dobDateTime = new DateTime($dob, false);
+      $dobDateTime = new DateTime($dob);
 
       if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || ($dobDateTime->isValid() === false)) {
         $error = true;
@@ -192,7 +192,7 @@
                               'customers_password' => tep_encrypt_password($password));
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw();
+      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw(false);
 
       $OSCOM_Db->save('customers', $sql_data_array);
 

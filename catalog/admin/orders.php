@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -95,7 +96,7 @@
               $notify_comments = sprintf(EMAIL_TEXT_COMMENTS_UPDATE, $comments) . "\n\n";
             }
 
-            $email = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . tep_date_long($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(EMAIL_TEXT_STATUS_UPDATE, $orders_status_array[$status]);
+            $email = STORE_NAME . "\n" . EMAIL_SEPARATOR . "\n" . EMAIL_TEXT_ORDER_NUMBER . ' ' . $oID . "\n" . EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('Shop/' . FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID) . "\n" . EMAIL_TEXT_DATE_ORDERED . ' ' . DateTime::toLong($Qcheck->value('date_purchased')) . "\n\n" . $notify_comments . sprintf(EMAIL_TEXT_STATUS_UPDATE, $orders_status_array[$status]);
 
             tep_mail($Qcheck->value('customers_name'), $Qcheck->value('customers_email_address'), EMAIL_TEXT_SUBJECT, $email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
@@ -247,7 +248,7 @@
             </div>
 
             <div class="panel-body">
-              <p><?= $order->info['status'] . '<br />' . (empty($order->info['last_modified']) ? tep_datetime_short($order->info['date_purchased']) : tep_datetime_short($order->info['last_modified'])); ?></p>
+              <p><?= $order->info['status'] . '<br />' . (empty($order->info['last_modified']) ? DateTime::toShort($order->info['date_purchased'], true) : DateTime::toShort($order->info['last_modified'], true)); ?></p>
             </div>
           </div>
         </div>
@@ -385,7 +386,7 @@
       if ($Qhistory->fetch() !== false) {
         do {
           echo '          <tr>' . "\n" .
-               '            <td valign="top">' . tep_datetime_short($Qhistory->value('date_added')) . '</td>' . "\n" .
+               '            <td valign="top">' . DateTime::toShort($Qhistory->value('date_added'), true) . '</td>' . "\n" .
                '            <td valign="top">' . $orders_status_array[$Qhistory->valueInt('orders_status_id')] . '</td>' . "\n" .
                '            <td valign="top">' . nl2br(HTML::output($Qhistory->value('comments'))) . '&nbsp;</td>' . "\n" .
                '            <td class="text-right" valign="top">';
@@ -487,7 +488,7 @@
       <td><?= '<a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . $Qorders->value('customers_name') . '</a> <small class="text-muted">#' . $Qorders->valueInt('orders_id') . '</small>'; ?></td>
       <td class="text-right"><?= strip_tags($Qorders->value('order_total')) . ' <small class="text-muted">' . $Qorders->value('currency') . '</small>'; ?></td>
       <td><div class="oscom-truncate" style="width: 150px;"><small class="text-muted"><?= $Qorders->value('payment_method'); ?></small></div></td>
-      <td class="text-right"><?= tep_datetime_short($Qorders->value('date_purchased')); ?></td>
+      <td class="text-right"><?= DateTime::toShort($Qorders->value('date_purchased'), true); ?></td>
       <td class="text-right"><?= $Qorders->value('orders_status_name'); ?></td>
       <td class="action"><?=
         '<a href="' . OSCOM::link('orders.php', tep_get_all_get_params(array('oID', 'action')) . 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>

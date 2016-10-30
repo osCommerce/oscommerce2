@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -71,7 +72,7 @@
         $output .= '    <tr>
                           <td><a href="' . OSCOM::link(FILENAME_ORDERS, 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . $Qorders->valueProtected('customers_name') . '</a></td>
                           <td>' . strip_tags($Qorders->value('order_total')) . '</td>
-                          <td>' . tep_date_short($Qorders->value('date_last_modified')) . '</td>
+                          <td>' . DateTime::toShort($Qorders->value('date_last_modified')) . '</td>
                           <td>' . $Qorders->value('orders_status_name') . '</td>
                         </tr>';
       }

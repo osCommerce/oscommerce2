@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
@@ -67,7 +68,7 @@
       while ($Qreviews->fetch()) {
         $output .= '    <tr>
                           <td><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . $Qreviews->valueInt('reviews_id') . '&action=edit') . '">' . $Qreviews->value('products_name') . '</a></td>
-                          <td>' . tep_date_short($Qreviews->value('date_added')) . '</td>
+                          <td>' . DateTime::toShort($Qreviews->value('date_added')) . '</td>
                           <td>' . $Qreviews->valueProtected('customers_name') . '</td>
                           <td class="text-right">' . str_repeat('<i class="fa fa-star text-info"></i>', $Qreviews->valueInt('reviews_rating')) . str_repeat('<i class="fa fa-star-o"></i>', 5 - $Qreviews->valueInt('reviews_rating')) . '</td>
                           <td class="text-right"><i class="fa fa-circle ' . ($Qreviews->valueInt('reviews_status') === 1 ? 'text-success' : 'text-danger') . '"></i></td>
