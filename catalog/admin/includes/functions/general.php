@@ -543,17 +543,6 @@
   }
 
 ////
-// Wrapper for class_exists() function
-// This function is not available in all PHP versions so we test it before using it.
-  function tep_class_exists($class_name) {
-    if (function_exists('class_exists')) {
-      return class_exists($class_name);
-    } else {
-      return true;
-    }
-  }
-
-////
 // Count how many products exist in a category
 // TABLES: products, products_to_categories, categories
   function tep_products_in_category_count($categories_id, $include_deactivated = false) {
