@@ -1226,54 +1226,6 @@
     }
   }
 
-  function tep_validate_ip_address($ip_address) {
-    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-  }
-
-  function tep_get_ip_address() {
-    static $_ip_address;
-
-    if ( !isset($_ip_address) ) {
-      $_ip_address = '0.0.0.0';
-      $ip_addresses = array();
-
-      if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
-        foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
-          $x_ip = trim($x_ip);
-
-          if ( tep_validate_ip_address($x_ip) ) {
-            $ip_addresses[] = $x_ip;
-          }
-        }
-      }
-
-      if ( isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
-      }
-
-      if ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) {
-        $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
-      }
-
-      foreach ( $ip_addresses as $ip ) {
-        if ( !empty($ip) && tep_validate_ip_address($ip) ) {
-          $_ip_address = $ip;
-          break;
-        }
-      }
-    }
-
-    return $_ip_address;
-  }
-
   function tep_count_customer_orders($id = '', $check_session = true) {
     $OSCOM_Db = Registry::get('Db');
     $OSCOM_Language = Registry::get('Language');

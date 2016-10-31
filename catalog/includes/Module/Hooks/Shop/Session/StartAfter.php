@@ -51,10 +51,10 @@ class StartAfter
 // verify the IP address if the feature is enabled
         if (SESSION_CHECK_IP_ADDRESS == 'True') {
             if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
-                $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
+                $_SESSION['SESSION_IP_ADDRESS'] = HTTP::getIpAddress();
             }
 
-            if ($_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address()) {
+            if ($_SESSION['SESSION_IP_ADDRESS'] != HTTP::getIpAddress()) {
                 $OSCOM_Session->kill();
 
                 OSCOM::redirect('login.php');

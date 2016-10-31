@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\Registry;
 
   class ar_contact_us {
@@ -30,7 +31,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = HTTP::getIpAddress();
     }
 
     function canPerform($user_id, $user_name) {
