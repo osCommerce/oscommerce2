@@ -200,7 +200,7 @@
   </div>
 
 <?php
-  if (DOWNLOAD_ENABLED == 'true') include('includes/modules/downloads.php');
+  if (DOWNLOAD_ENABLED == 'true') include('includes/content/downloads.php');
 ?>
 
   <div class="clearfix"></div>

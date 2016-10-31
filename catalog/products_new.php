@@ -120,7 +120,7 @@
   $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
   $Qlisting->execute();
 
-  include('includes/modules/product_listing.php');
+  include('includes/content/product_listing.php');
 
   require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');

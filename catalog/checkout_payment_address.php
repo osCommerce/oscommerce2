@@ -289,7 +289,7 @@
 
   <div class="alert alert-info"><?php echo TEXT_CREATE_NEW_PAYMENT_ADDRESS; ?></div>
 
-  <?php require('includes/modules/checkout_new_address.php'); ?>
+  <?php require('includes/content/checkout_new_address.php'); ?>
 
 <?php
   }
