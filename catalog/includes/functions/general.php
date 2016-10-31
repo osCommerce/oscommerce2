@@ -1193,11 +1193,6 @@
     return 0;
   }
 
-// Convert linefeeds
-  function tep_convert_linefeeds($from, $to, $string) {
-      return str_replace($from, $to, $string);
-  }
-
 ////
 // Creates a pull-down list of countries
   function tep_get_country_list($name, $selected = '', $parameters = '') {

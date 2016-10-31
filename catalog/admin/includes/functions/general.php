@@ -1398,11 +1398,6 @@
     return $Qstatus->value('orders_status_name');
   }
 
-// nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
-  function tep_convert_linefeeds($from, $to, $string) {
-      return str_replace($from, $to, $string);
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
