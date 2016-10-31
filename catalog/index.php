@@ -271,7 +271,7 @@ if (tep_not_null($Qtitle->value('catdesc'))) {
       }
     }
 
-    include('includes/modules/product_listing.php');
+    include('includes/content/product_listing.php');
 ?>
 
 </div>

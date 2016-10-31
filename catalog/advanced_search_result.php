@@ -387,7 +387,7 @@
   $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
   $Qlisting->execute();
 
-  require('includes/modules/product_listing.php');
+  require('includes/content/product_listing.php');
 ?>
 
   <br />

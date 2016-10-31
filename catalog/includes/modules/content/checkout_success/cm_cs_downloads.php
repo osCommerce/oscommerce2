@@ -39,7 +39,7 @@
       if ( DOWNLOAD_ENABLED == 'true' ) {
         ob_start();
         extract($GLOBALS, EXTR_SKIP);
-        include('includes/modules/downloads.php');
+        include('includes/content/downloads.php');
         $template = ob_get_clean();
 
         $oscTemplate->addContent($template, $this->group);

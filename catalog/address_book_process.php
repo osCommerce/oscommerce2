@@ -317,7 +317,7 @@
 
 <div class="contentContainer">
 
-<?php include('includes/modules/address_book_details.php'); ?>
+<?php include('includes/content/address_book_details.php'); ?>
 
 <?php
     if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
