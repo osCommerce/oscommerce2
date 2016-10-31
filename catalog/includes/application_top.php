@@ -10,57 +10,61 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
 // start the timer for the page parse time log
   define('PAGE_PARSE_START_TIME', microtime());
-  define('OSCOM_BASE_DIR', __DIR__ . '/');
+  define('OSCOM_BASE_DIR', __DIR__ . '/OSC/');
 
 // set the level of error reporting
-  error_reporting(E_ALL | E_STRICT);
-  ini_set('display_errors', true); // TODO remove on release
+  error_reporting(E_ALL & ~E_DEPRECATED);
 
-// load server configuration parameters
-  if (file_exists('includes/local/configure.php')) { // for developers
-    include('includes/local/configure.php');
-  } else {
-    include('includes/configure.php');
-  }
+  require(OSCOM_BASE_DIR . 'OM/OSCOM.php');
+  spl_autoload_register('OSC\OM\OSCOM::autoload');
 
-  if (DB_SERVER == '') {
+  OSCOM::initialize();
+
+  if (!OSCOM::configExists('db_server') || (strlen(OSCOM::getConfig('db_server')) < 1)) {
     if (is_dir('install')) {
       header('Location: install/index.php');
       exit;
     }
   }
 
-  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
-  spl_autoload_register('OSC\OM\OSCOM::autoload');
+  if (PHP_VERSION_ID < 70000) {
+    include('includes/third_party/random_compat/random.php');
+  }
 
   require('includes/functions/general.php');
-  require('includes/functions/cache.php');
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
-  require('includes/functions/sessions.php');
   require('includes/classes/currencies.php');
-  require('includes/classes/mime.php');
-  require('includes/classes/email.php');
-  require('includes/classes/language.php');
   require('includes/classes/action_recorder.php');
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');
   require('includes/functions/whos_online.php');
-  require('includes/functions/password_funcs.php');
-  require('includes/functions/validations.php');
   require('includes/functions/banner.php');
   require('includes/functions/specials.php');
   require('includes/classes/osc_template.php');
   require('includes/classes/category_tree.php');
   require('includes/classes/breadcrumb.php');
 
-  OSCOM::initialize();
+  OSCOM::loadSite('Shop');
+
+  if ((HTTP::getRequestType() === 'NONSSL') && ($_SERVER['REQUEST_METHOD'] === 'GET') && (parse_url(OSCOM::getConfig('http_server'), PHP_URL_SCHEME) == 'https')) {
+    $url_req = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+    HTTP::redirect($url_req, 301);
+  }
+
   $OSCOM_Db = Registry::get('Db');
+  $OSCOM_Language = Registry::get('Language');
+
+  Registry::get('Hooks')->watch('Session', 'Recreated', 'execute', function($parameters) {
+    tep_whos_online_update_session_id($parameters['old_id'], session_id());
+  });
 
 // if gzip_compression is enabled, start to buffer the output
   if ((GZIP_COMPRESSION == 'true') && extension_loaded('zlib') && !headers_sent()) {
@@ -74,7 +78,7 @@
 // Shopping cart actions
   if ( isset($_GET['action']) ) {
 // redirect the customer to a friendly cookie-must-be-enabled page if cookies are disabled
-    if ( session_status() !== PHP_SESSION_ACTIVE ) {
+    if ( Registry::get('Session')->hasStarted() === false ) {
       OSCOM::redirect('cookie_usage.php');
     }
 
@@ -84,7 +88,7 @@
     } else {
       $goto = $PHP_SELF;
 
-      if ( $_GET['action'] == 'buy_now') {
+      if ( ($_GET['action'] == 'buy_now') || ($_GET['action'] == 'remove_product') ) {
         $parameters = array('action', 'pid', 'products_id');
       } else {
         $parameters = array('action', 'pid');
@@ -138,30 +142,30 @@
                                 }
                                 if (!is_array($notify)) $notify = array($notify);
                                 for ($i=0, $n=sizeof($notify); $i<$n; $i++) {
-                                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $notify[$i]]);
+                                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$notify[$i]]);
 
                                   if ($Qcheck->fetch() === false) {
-                                    $OSCOM_Db->save('products_notifications', ['products_id' => $notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
+                                    $OSCOM_Db->save('products_notifications', ['products_id' => (int)$notify[$i], 'customers_id' => $_SESSION['customer_id'], 'date_added' => 'now()']);
                                     $messageStack->add_session('product_action', sprintf(PRODUCT_SUBSCRIBED, tep_get_products_name((int)$notify[$i])), 'success');
                                   }
                                 }
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action', 'notify')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php');
                               }
                               break;
       case 'notify_remove' :  if ( isset($_SESSION['customer_id']) && isset($_GET['products_id'])) {
-                                $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+                                $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
 
                                 if ($Qcheck->fetch() !== false) {
-                                  $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => $_GET['products_id']]);
+                                  $OSCOM_Db->delete('products_notifications', ['customers_id' => $_SESSION['customer_id'], 'products_id' => (int)$_GET['products_id']]);
                                   $messageStack->add_session('product_action', sprintf(PRODUCT_UNSUBSCRIBED, tep_get_products_name((int)$_GET['products_id'])), 'warning');
                                 }
                                 OSCOM::redirect($PHP_SELF, tep_get_all_get_params(array('action')));
                               } else {
                                 $_SESSION['navigation']->set_snapshot();
-                                OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+                                OSCOM::redirect('login.php');
                               }
                               break;
       case 'cust_order' :     if ( isset($_SESSION['customer_id']) && isset($_GET['pid']) ) {
@@ -196,7 +200,7 @@
 // add category names or the manufacturer name to the breadcrumb trail
   if ( isset($cPath_array) ) {
     for ( $i=0, $n=sizeof($cPath_array); $i<$n; $i++ ) {
-      $Qcategories = $OSCOM_Db->get('categories_description', 'categories_name', ['categories_id' => $cPath_array[$i], 'language_id' => $_SESSION['languages_id']]);
+      $Qcategories = $OSCOM_Db->get('categories_description', 'categories_name', ['categories_id' => $cPath_array[$i], 'language_id' => $OSCOM_Language->getId()]);
 
       if ($Qcategories->fetch() !== false) {
         $breadcrumb->add($Qcategories->value('categories_name'), OSCOM::link('index.php', 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i+1)))));

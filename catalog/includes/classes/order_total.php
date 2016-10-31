@@ -10,17 +10,23 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class order_total {
     var $modules;
 
+    protected $lang;
+
 // class constructor
-    function order_total() {
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
       if (defined('MODULE_ORDER_TOTAL_INSTALLED') && tep_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
         $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
 
         foreach($this->modules as $value) {
-          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $value);
-          include(DIR_WS_MODULES . 'order_total/' . $value);
+          $this->lang->loadDefinitions('modules/order_total/' . pathinfo($value, PATHINFO_FILENAME));
+          include('includes/modules/order_total/' . $value);
 
           $class = substr($value, 0, strrpos($value, '.'));
           $GLOBALS[$class] = new $class;

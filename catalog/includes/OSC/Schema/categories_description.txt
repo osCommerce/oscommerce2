@@ -1,0 +1,14 @@
+categories_id int default(0) not_null
+language_id int default(1) not_null
+categories_name varchar(32) not_null
+categories_description text
+categories_seo_description text
+categories_seo_keywords varchar(128)
+categories_seo_title varchar(128)
+--
+primary categories_id language_id
+idx_categories_name categories_name
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

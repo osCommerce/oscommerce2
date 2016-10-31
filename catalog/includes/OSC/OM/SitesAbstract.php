@@ -2,18 +2,15 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
 
-use OSC\OM\HTML;
-
 abstract class SitesAbstract implements \OSC\OM\SitesInterface
 {
     protected $code;
-    protected $default_page = 'Home';
     protected $page;
     protected $app;
     protected $route;
@@ -32,6 +29,11 @@ abstract class SitesAbstract implements \OSC\OM\SitesInterface
     public function getCode()
     {
         return $this->code;
+    }
+
+    public function hasPage()
+    {
+        return isset($this->page);
     }
 
     public function getPage()

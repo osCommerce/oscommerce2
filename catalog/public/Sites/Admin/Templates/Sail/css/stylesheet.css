@@ -1,0 +1,113 @@
+/*
+  $Id$
+
+  osCommerce, Open Source E-Commerce Solutions
+  http://www.oscommerce.com
+
+  Copyright (c) 2014 osCommerce
+
+  Released under the GNU General Public License
+*/
+
+/* menu box */
+.menuBoxHeading { color: #616060; background-color: #ffffff; }
+.menuBoxContent { color: #616060; }
+
+/* data table */
+.dataTableHeadingRow { background-color: #C9C9C9; }
+.dataTableHeadingContent { color: #ffffff; font-weight: bold; }
+.dataTableRow { background-color: #F0F1F1; }
+.dataTableRowSelected { background-color: #DEE4E8; }
+.dataTableRowOver { background-color: #FFFFFF; cursor: pointer; cursor: hand; }
+.dataTableContent { color: #000000; }
+
+/* info box */
+.infoBoxHeading { color: #ffffff; background-color: #B3BAC5; }
+.infoBoxContent { color: #000000; background-color: #DEE4E8; }
+
+/* account */
+.formArea { background-color: #f1f9fe; border-color: #7b9ebd; border-style: solid; border-width: 1px; }
+.formAreaTitle { font-family: Tahoma, Helveticy, Verdana, Arial, sans-serif; font-weight: bold; }
+
+/* attributes */
+.attributes-odd { background-color: #f4f7fd; }
+.attributes-even { background-color: #ffffff; }
+
+/* miscellaneous */
+.specialPrice { color: #ff0000; }
+.oldPrice { text-decoration: line-through; }
+.fieldRequired { color: #ff0000; }
+.errorText { color: #ff0000; }
+
+#adminAppMenu {
+  float: left;
+  width: 150px;
+  padding: 5px;
+}
+
+#adminAppMenu ul {
+  list-style: none;
+  margin: -5px 0 -5px -10px;
+  padding: 0;
+}
+
+#contentText {
+  padding-top: 10px;
+}
+
+#contentText h2:first-of-type {
+  margin-top: 0;
+  padding-bottom: 10px;
+}
+
+#contentText .table:first-of-type {
+  margin-top: 15px;
+}
+
+/* Custom jQuery UI */
+.ui-dialog { min-width: 500px; }
+
+
+
+.oscom-truncate {
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.oscom-m-top-15 {
+  margin-top: 15px;
+}
+
+.oscom-panel .panel-body .row:not(:last-child) {
+  margin-bottom: 20px;
+}
+
+.oscom-table.oscom-table-borderless td, .oscom-table.oscom-table-borderless th {
+  border: none;
+}
+
+.oscom-table thead .action, .oscom-table tbody .action {
+  text-align: right;
+}
+
+.oscom-table tbody .action i {
+  font-size: 16px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.linkHandle {
+  cursor: pointer;
+}
+
+.sortHandle {
+  cursor: move;
+}
+
+/* Chartist */
+
+.ct-label {
+  font-size: 0.9em;
+}

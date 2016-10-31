@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -18,8 +19,8 @@
 
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
-    $_SESSION['navigation']->set_snapshot(array('mode' => 'SSL', 'page' => 'checkout_payment.php'));
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    $_SESSION['navigation']->set_snapshot(array('page' => 'checkout_payment.php'));
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -29,31 +30,31 @@
 
 // if no shipping method has been selected, redirect the customer to the shipping method selection page
   if (!isset($_SESSION['shipping']) || !isset($_SESSION['sendto'])) {
-    OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+    OSCOM::redirect('checkout_shipping.php');
   }
 
   if ( (tep_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset($_SESSION['payment'])) ) {
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
  }
 
 // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
-  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_process.php');
+  $OSCOM_Language->loadDefinitions('checkout_process');
 
 // load selected payment module
-  require(DIR_WS_CLASSES . 'payment.php');
+  require('includes/classes/payment.php');
   $payment_modules = new payment($_SESSION['payment']);
 
 // load the selected shipping module
-  require(DIR_WS_CLASSES . 'shipping.php');
+  require('includes/classes/shipping.php');
   $shipping_modules = new shipping($_SESSION['shipping']);
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // Stock Check
@@ -78,15 +79,15 @@
     if (Registry::exists($code)) {
       $OSCOM_PM = Registry::get($code);
     }
-  } elseif (isset($$_SESSION['payment']) && is_object($$_SESSION['payment'])) {
-    $OSCOM_PM = $$_SESSION['payment'];
+  } elseif (isset($GLOBALS[$_SESSION['payment']]) && is_object($GLOBALS[$_SESSION['payment']])) {
+    $OSCOM_PM = $GLOBALS[$_SESSION['payment']];
   }
 
   if ( !isset($OSCOM_PM) || ($payment_modules->selected_module != $_SESSION['payment']) || ($OSCOM_PM->enabled == false) ) {
-    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL');
+    OSCOM::redirect('checkout_payment.php', 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED));
   }
 
-  require(DIR_WS_CLASSES . 'order_total.php');
+  require('includes/classes/order_total.php');
   $order_total_modules = new order_total;
 
   $order_totals = $order_total_modules->process();
@@ -225,8 +226,7 @@
                             'products_price' => $order->products[$i]['price'],
                             'final_price' => $order->products[$i]['final_price'],
                             'products_tax' => $order->products[$i]['tax'],
-                            'products_quantity' => $order->products[$i]['qty'],
-                            'products_full_id' => $order->products[$i]['id']);
+                            'products_quantity' => $order->products[$i]['qty']);
 
     $OSCOM_Db->save('orders_products', $sql_data_array);
     $order_products_id = $OSCOM_Db->lastInsertId();
@@ -264,7 +264,7 @@
         $Qattributes->bindInt(':products_id', $order->products[$i]['id']);
         $Qattributes->bindInt(':options_id', $order->products[$i]['attributes'][$j]['option_id']);
         $Qattributes->bindInt(':options_values_id', $order->products[$i]['attributes'][$j]['value_id']);
-        $Qattributes->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qattributes->bindInt(':language_id', $OSCOM_Language->getId());
         $Qattributes->execute();
 
         $sql_data_array = array('orders_id' => $insert_id,
@@ -297,7 +297,7 @@
   $email_order = STORE_NAME . "\n" .
                  EMAIL_SEPARATOR . "\n" .
                  EMAIL_TEXT_ORDER_NUMBER . ' ' . $insert_id . "\n" .
-                 EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, 'SSL', false) . "\n" .
+                 EMAIL_TEXT_INVOICE_URL . ' ' . OSCOM::link('account_history_info.php', 'order_id=' . $insert_id, false) . "\n" .
                  EMAIL_TEXT_DATE_ORDERED . ' ' . strftime(DATE_FORMAT_LONG) . "\n\n";
   if ($order->info['comments']) {
     $email_order .= HTML::outputProtected($order->info['comments']) . "\n\n";
@@ -328,11 +328,16 @@
       $email_order .= $OSCOM_PM->email_footer . "\n\n";
     }
   }
-  tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+
+  $orderEmail = new Mail($order->customer['email_address'], $order->customer['firstname'] . ' ' . $order->customer['lastname'], STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_TEXT_SUBJECT);
+  $orderEmail->setBody($email_order);
+  $orderEmail->send();
 
 // send emails to other people
   if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-    tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+    $extraEmail = new Mail(SEND_EXTRA_ORDER_EMAILS_TO, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_TEXT_SUBJECT);
+    $extraEmail->setBody($email_order);
+    $extraEmail->send();
   }
 
 // load the after_process function from the payment modules
@@ -347,7 +352,7 @@
   unset($_SESSION['payment']);
   unset($_SESSION['comments']);
 
-  OSCOM::redirect('checkout_success.php', '', 'SSL');
+  OSCOM::redirect('checkout_success.php');
 
   require('includes/application_bottom.php');
 ?>

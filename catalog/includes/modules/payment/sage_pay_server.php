@@ -10,15 +10,17 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sage_pay_server {
     var $code, $title, $description, $enabled;
 
-    function sage_pay_server() {
+    function __construct() {
       global $PHP_SELF, $order;
 
       $this->signature = 'sage_pay|sage_pay_server|2.1|2.3';
@@ -141,7 +143,7 @@
         }
       } else {
         if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
-          $_SESSION['sagepay_server_skey_code'] = tep_create_random_value(16);
+          $_SESSION['sagepay_server_skey_code'] = Hash::getRandomString(16);
         }
 
         $params = array('VPSProtocol' => $this->api_version,
@@ -151,7 +153,7 @@
                         'Amount' => $this->format_raw($order->info['total']),
                         'Currency' => $_SESSION['currency'],
                         'Description' => substr(STORE_NAME, 0, 100),
-                        'NotificationURL' => $this->formatURL(OSCOM::link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $_SESSION['sagepay_server_skey_code'], 'SSL', false)),
+                        'NotificationURL' => $this->formatURL(OSCOM::link('ext/modules/payment/sage_pay/server.php', 'check=SERVER&skcode=' . $_SESSION['sagepay_server_skey_code'], false)),
                         'BillingSurname' => substr($order->billing['lastname'], 0, 20),
                         'BillingFirstnames' => substr($order->billing['firstname'], 0, 20),
                         'BillingAddress1' => substr($order->billing['street_address'], 0, 100),
@@ -169,7 +171,7 @@
                         'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                         'Apply3DSecure' => '0');
 
-        $ip_address = tep_get_ip_address();
+        $ip_address = HTTP::getIpAddress();
 
         if ( (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
           $params['ClientIPAddress']= $ip_address;
@@ -259,7 +261,7 @@
           } else {
             $_SESSION['sage_pay_server_nexturl'] = $return['NextURL'];
 
-            OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php', '', 'SSL');
+            OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php');
           }
         } else {
           $error = $this->getErrorMessageNumber($return['StatusDetail']);
@@ -268,7 +270,7 @@
         }
       }
 
-      OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
+      OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''));
     }
 
     function after_process() {
@@ -296,7 +298,7 @@
 
         unset($_SESSION['sage_pay_server_nexturl']);
 
-        OSCOM::redirect('ext/modules/payment/sage_pay/redirect.php', '', 'SSL');
+        OSCOM::redirect('ext/modules/payment/sage_pay/redirect.php');
       }
     }
 
@@ -501,10 +503,10 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
+        if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt');
+        } elseif ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem');
         }
       } else {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -540,7 +542,7 @@ EOD;
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
+      if (is_file(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 
@@ -672,7 +674,7 @@ EOD;
                       'Amount' => 0,
                       'Currency' => DEFAULT_CURRENCY);
 
-      $ip_address = tep_get_ip_address();
+      $ip_address = HTTP::getIpAddress();
 
       if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
         $params['ClientIPAddress']= $ip_address;
@@ -710,7 +712,9 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, 'Sage Pay Server Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          $debugEmail = new Mail(MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'Sage Pay Server Debug E-Mail');
+          $debugEmail->setBody($email_body);
+          $debugEmail->send();
         }
       }
     }

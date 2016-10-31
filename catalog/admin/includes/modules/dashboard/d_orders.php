@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class d_orders {
     var $code = 'd_orders';
     var $title;
@@ -28,27 +33,52 @@
     }
 
     function getOutput() {
-      global $languages_id;
+      $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_TOTAL . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_DATE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_ORDERS_ORDER_STATUS . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TITLE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_TOTAL . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_DATE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_ORDERS_ORDER_STATUS . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
-      $orders_query = tep_db_query("select o.orders_id, o.customers_name, greatest(o.date_purchased, ifnull(o.last_modified, 0)) as date_last_modified, s.orders_status_name, ot.text as order_total from " . TABLE_ORDERS . " o, " . TABLE_ORDERS_TOTAL . " ot, " . TABLE_ORDERS_STATUS . " s where o.orders_id = ot.orders_id and ot.class = 'ot_total' and o.orders_status = s.orders_status_id and s.language_id = '" . (int)$languages_id . "' order by date_last_modified desc limit 6");
-      while ($orders = tep_db_fetch_array($orders_query)) {
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_ORDERS, 'oID=' . (int)$orders['orders_id'] . '&action=edit') . '">' . tep_output_string_protected($orders['customers_name']) . '</a></td>' .
-                   '    <td class="dataTableContent">' . strip_tags($orders['order_total']) . '</td>' .
-                   '    <td class="dataTableContent">' . tep_date_short($orders['date_last_modified']) . '</td>' .
-                   '    <td class="dataTableContent">' . $orders['orders_status_name'] . '</td>' .
-                   '  </tr>';
+      $Qorders = $OSCOM_Db->get([
+        'orders o',
+        'orders_total ot',
+        'orders_status s'
+      ], [
+        'o.orders_id',
+        'o.customers_name',
+        'greatest(o.date_purchased, ifnull(o.last_modified, 0)) as date_last_modified',
+        's.orders_status_name',
+        'ot.text as order_total'
+      ], [
+        'o.orders_id' => [
+          'rel' => 'ot.orders_id'
+        ],
+        'ot.class' => 'ot_total',
+        'o.orders_status' => [
+          'rel' => 's.orders_status_id'
+        ],
+        's.language_id' => $OSCOM_Language->getId()
+      ], 'date_last_modified desc', 6);
+
+      while ($Qorders->fetch()) {
+        $output .= '    <tr>
+                          <td><a href="' . OSCOM::link(FILENAME_ORDERS, 'oID=' . $Qorders->valueInt('orders_id') . '&action=edit') . '">' . $Qorders->valueProtected('customers_name') . '</a></td>
+                          <td>' . strip_tags($Qorders->value('order_total')) . '</td>
+                          <td>' . DateTime::toShort($Qorders->value('date_last_modified')) . '</td>
+                          <td>' . $Qorders->value('orders_status_name') . '</td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }
@@ -62,12 +92,32 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Orders Module', 'MODULE_ADMIN_DASHBOARD_ORDERS_STATUS', 'True', 'Do you want to show the latest orders on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_ORDERS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Orders Module',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_ORDERS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to show the latest orders on the dashboard?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_ORDERS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {

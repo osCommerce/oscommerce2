@@ -1,0 +1,49 @@
+orders_id int not_null auto_increment
+customers_id int not_null
+customers_name varchar(255) not_null
+customers_company varchar(255)
+customers_street_address varchar(255) not_null
+customers_suburb varchar(255)
+customers_city varchar(255) not_null
+customers_postcode varchar(255) not_null
+customers_state varchar(255)
+customers_country varchar(255) not_null
+customers_telephone varchar(255) not_null
+customers_email_address varchar(255) not_null
+customers_address_format_id int(5) not_null
+delivery_name varchar(255)
+delivery_company varchar(255)
+delivery_street_address varchar(255)
+delivery_suburb varchar(255)
+delivery_city varchar(255)
+delivery_postcode varchar(255)
+delivery_state varchar(255)
+delivery_country varchar(255)
+delivery_address_format_id int(5)
+billing_name varchar(255) not_null
+billing_company varchar(255)
+billing_street_address varchar(255) not_null
+billing_suburb varchar(255)
+billing_city varchar(255) not_null
+billing_postcode varchar(255) not_null
+billing_state varchar(255)
+billing_country varchar(255) not_null
+billing_address_format_id int(5) not_null
+payment_method varchar(255) not_null
+cc_type varchar(20)
+cc_owner varchar(255)
+cc_number varchar(32)
+cc_expires varchar(4)
+last_modified datetime
+date_purchased datetime
+orders_status int(5) not_null
+orders_date_finished datetime
+currency char(3)
+currency_value decimal(14,6)
+--
+primary orders_id
+idx_orders_customers_id customers_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

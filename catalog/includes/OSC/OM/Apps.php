@@ -13,6 +13,31 @@ use OSC\OM\Registry;
 
 class Apps
 {
+    public static function getAll()
+    {
+        $result = [];
+
+        $apps_directory = OSCOM::BASE_DIR . 'Apps';
+
+        if ($vdir = new \DirectoryIterator($apps_directory)) {
+            foreach ($vdir as $vendor) {
+                if (!$vendor->isDot() && $vendor->isDir()) {
+                    if ($adir = new \DirectoryIterator($vendor->getPath() . '/' . $vendor->getFilename())) {
+                        foreach ($adir as $app) {
+                            if (!$app->isDot() && $app->isDir() && static::exists($vendor->getFilename() . '\\' . $app->getFilename())) {
+                                if (($json = static::getInfo($vendor->getFilename() . '\\' . $app->getFilename())) !== false) {
+                                    $result[] = $json;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public static function getModules($type, $filter_vendor_app = null, $filter = null)
     {
         $result = [];
@@ -41,9 +66,9 @@ class Apps
             }
         }
 
-        $vendor_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+        $vendor_directory = OSCOM::BASE_DIR . 'Apps';
 
-        if (file_exists($vendor_directory)) {
+        if (is_dir($vendor_directory)) {
             if ($vdir = new \DirectoryIterator($vendor_directory)) {
                 foreach ($vdir as $vendor) {
                     if (!$vendor->isDot() && $vendor->isDir() && (!isset($filter_vendor) || ($vendor->getFilename() == $filter_vendor))) {
@@ -83,8 +108,6 @@ class Apps
                 } else {
                     trigger_error('OSC\OM\Apps::exists(): ' . $vendor . '\\' . $app . ' - App is not a subclass of OSC\OM\AppAbstract and cannot be loaded.');
                 }
-            } else {
-                trigger_error('OSC\OM\Apps::exists(): ' . $vendor . '\\' . $app . ' - App class does not exist.');
             }
         } else {
             trigger_error('OSC\OM\Apps::exists(): ' . $app . ' - Invalid format, must be: Vendor\App.');
@@ -101,7 +124,7 @@ class Apps
             if (!class_exists($class)) {
                 trigger_error('OSC\OM\Apps::getModuleClass(): ' . $type . ' module class not found in OSC\OM\Modules\\');
 
-                return $result;
+                return false;
             }
 
             Registry::set('ModuleType' . $type, new $class());
@@ -117,9 +140,9 @@ class Apps
         if (strpos($app, '\\') !== false) {
             list($vendor, $app) = explode('\\', $app, 2);
 
-            $metafile = OSCOM::BASE_DIR . 'OSC/Apps/' . basename($vendor) . '/' . basename($app) . '/oscommerce.json';
+            $metafile = OSCOM::BASE_DIR . 'Apps/' . basename($vendor) . '/' . basename($app) . '/oscommerce.json';
 
-            if (file_exists($metafile) && (($json = @json_decode(file_get_contents($metafile), true)) !== null)) {
+            if (is_file($metafile) && (($json = json_decode(file_get_contents($metafile), true)) !== null)) {
                 return $json;
             }
 
@@ -153,9 +176,9 @@ class Apps
             }
         }
 
-        $vendor_directory = OSCOM::BASE_DIR . 'OSC/Apps';
+        $vendor_directory = OSCOM::BASE_DIR . 'Apps';
 
-        if (file_exists($vendor_directory)) {
+        if (is_dir($vendor_directory)) {
             if ($vdir = new \DirectoryIterator($vendor_directory)) {
                 foreach ($vdir as $vendor) {
                     if (!$vendor->isDot() && $vendor->isDir() && (!isset($filter_vendor) || ($vendor->getFilename() == $filter_vendor))) {

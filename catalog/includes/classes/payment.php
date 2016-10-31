@@ -16,9 +16,12 @@
   class payment {
     var $modules, $selected_module;
 
-// class constructor
-    function payment($module = '') {
+    protected $lang;
+
+    function __construct($module = '') {
       global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       if (defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED)) {
         $this->modules = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -56,8 +59,8 @@
           if (strpos($include_modules[$i]['class'], '\\') !== false) {
             Registry::set('Payment_' . str_replace('\\', '_', $include_modules[$i]['class']), new $include_modules[$i]['file']);
           } else {
-            include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $include_modules[$i]['file']);
-            include(DIR_WS_MODULES . 'payment/' . $include_modules[$i]['file']);
+            $this->lang->loadDefinitions('modules/payment/' . pathinfo($include_modules[$i]['file'], PATHINFO_FILENAME));
+            include('includes/modules/payment/' . $include_modules[$i]['file']);
 
             $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
           }

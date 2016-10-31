@@ -1,0 +1,14 @@
+orders_products_attributes_id int not_null auto_increment
+orders_id int not_null
+orders_products_id int not_null
+products_options varchar(32) not_null
+products_options_values varchar(32) not_null
+options_values_price decimal(15,4) not_null
+price_prefix char(1) not_null
+--
+primary orders_products_attributes_id
+idx_orders_products_att_orders_id orders_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

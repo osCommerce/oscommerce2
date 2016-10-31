@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\Registry;
 
   class ar_reset_password {
@@ -21,7 +22,7 @@
     var $attempts = 1;
     var $identifier;
 
-    function ar_reset_password() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_RESET_PASSWORD_TITLE;
       $this->description = MODULE_ACTION_RECORDER_RESET_PASSWORD_DESCRIPTION;
 
@@ -32,7 +33,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = HTTP::getIpAddress();
     }
 
     function canPerform($user_id, $user_name) {

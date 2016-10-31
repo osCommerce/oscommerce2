@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   chdir('../../../../');
   require('includes/application_top.php');
@@ -20,7 +21,7 @@
     exit;
   }
 
-  include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_server.php');
+  $OSCOM_Language->loadDefinitions('modules/payment/sage_pay_server');
   include('includes/modules/payment/sage_pay_server.php');
   $sage_pay_server = new sage_pay_server();
 
@@ -135,14 +136,14 @@
           $OSCOM_Db->save('sagepay_server_securitykeys', ['verified' => 1, 'transaction_details' => $transaction_details_string], ['code' => $skcode]);
 
           $result = 'Status=OK' . chr(13) . chr(10) .
-                    'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, 'SSL', false));
+                    'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('checkout_process.php', 'check=PROCESS&skcode=' . $skcode, false));
         } else {
           $error = isset($_POST['StatusDetail']) ? $sage_pay_server->getErrorMessageNumber($_POST['StatusDetail']) : null;
 
           if ( MODULE_PAYMENT_SAGE_PAY_SERVER_PROFILE_PAGE == 'Normal' ) {
-            $error_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('checkout_payment.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), false);
           } else {
-            $error_url = OSCOM::link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL', false);
+            $error_url = OSCOM::link('ext/modules/payment/sage_pay/redirect.php', 'payment_error=' . $sage_pay_server->code . (tep_not_null($error) ? '&error=' . $error : ''), false);
           }
 
           $result = 'Status=OK' . chr(13) . chr(10) .
@@ -154,7 +155,7 @@
         }
       } else {
         $result = 'Status=INVALID' . chr(13) . chr(10) .
-                  'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
+                  'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', false));
 
         $sage_pay_server->sendDebugEmail();
       }
@@ -163,12 +164,12 @@
 
   if ( !isset($result) ) {
     $result = 'Status=ERROR' . chr(13) . chr(10) .
-              'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', 'SSL', false));
+              'RedirectURL=' . $sage_pay_server->formatURL(OSCOM::link('shopping_cart.php', '', false));
   }
 
   echo $result;
 
-  tep_session_destroy();
+  Registry::get('Session')->kill();
 
   exit;
 

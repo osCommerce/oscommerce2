@@ -5,7 +5,7 @@
   osCommerce, Open Source E-Commerce Solutions
   http://www.oscommerce.com
 
-  Copyright (c) 2015 osCommerce
+  Copyright (c) 2016 osCommerce
 
   Released under the GNU General Public License
 */
@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_manufacturer_title() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_MANUFACTURER_TITLE_TITLE;
       $this->description = MODULE_HEADER_TAGS_MANUFACTURER_TITLE_DESCRIPTION;
 
@@ -34,13 +34,31 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (basename($PHP_SELF) == 'index.php') {
         if (isset($_GET['manufacturers_id']) && is_numeric($_GET['manufacturers_id'])) {
-          $Qmanufacturer = $OSCOM_Db->get('manufacturers', 'manufacturers_name', ['manufacturers_id' => $_GET['manufacturers_id']]);
+          $Qmanufacturer = $OSCOM_Db->prepare('select
+                                                 m.manufacturers_name,
+                                                 mi.manufacturers_seo_title
+                                               from
+                                                 :table_manufacturers m,
+                                                 :table_manufacturers_info mi
+                                               where
+                                                 m.manufacturers_id = mi.manufacturers_id
+                                                 and m.manufacturers_id = :manufacturers_id
+                                                 and mi.languages_id = :languages_id');
+          $Qmanufacturer->bindInt(':manufacturers_id', $_GET['manufacturers_id']);
+          $Qmanufacturer->bindInt(':languages_id', $OSCOM_Language->getId());
+          $Qmanufacturer->execute();
 
           if ($Qmanufacturer->fetch() !== false) {
-            $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_name') . ', ' . $oscTemplate->getTitle());
+            if ( tep_not_null($Qmanufacturer->value('manufacturers_seo_title')) && (MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
+              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_seo_title') . MODULE_HEADER_TAGS_MANUFACTURER_SEO_SEPARATOR . $oscTemplate->getTitle());
+            }
+            else {
+              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_name') . MODULE_HEADER_TAGS_MANUFACTURER_SEO_SEPARATOR . $oscTemplate->getTitle());
+            }
           }
         }
       }
@@ -77,6 +95,28 @@
         'sort_order' => '0',
         'date_added' => 'now()'
       ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'SEO Title Override?',
+        'configuration_key' => 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_TITLE_OVERRIDE',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to allow manufacturer names to be over-ridden by your SEO Titles (if set)?',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'SEO Breadcrumb Override?',
+        'configuration_key' => 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_BREADCRUMB_OVERRIDE',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to allow manufacturer names in the breadcrumb to be over-ridden by your SEO Titles (if set)?',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
@@ -84,7 +124,6 @@
     }
 
     function keys() {
-      return array('MODULE_HEADER_TAGS_MANUFACTURER_TITLE_STATUS', 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SORT_ORDER');
+      return array('MODULE_HEADER_TAGS_MANUFACTURER_TITLE_STATUS', 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SORT_ORDER', 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_TITLE_OVERRIDE', 'MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_BREADCRUMB_OVERRIDE');
     }
   }
-?>

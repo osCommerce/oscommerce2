@@ -1,0 +1,22 @@
+heading_title = Server Information
+
+button_php_info = PHP Info
+button_submit_to_oscommerce = Submit to osCommerce
+
+title_oscom_version = osCommerce Online Merchant Version:
+title_server_host = Server Host:
+title_server_os = Server OS:
+title_server_date = Server Date:
+title_server_up_time = Server Up Time:
+title_http_server = HTTP Server:
+title_php_version = PHP Version:
+title_zend_version = Zend:
+title_database_host = Database Host:
+title_database = Database:
+title_database_date = Database Date:
+title_database_name = Database Name:
+
+text_export_intro = The following information can be submitted to osCommerce by clicking on the <span class="label label-default">{{button_submit_to_oscommerce}}</span> button. You can also save the information to a file by clicking <span class="label label-default">{{button_save}}</span>. This information is completely anonymous, cannot be used to identify an individual system, and is used for support and development purposes only.
+
+success_info_submit = Your server information has been submitted sucessfully to the osCommerce website. Thanks!
+error_info_submit = Could not connect to the osCommerce website to submit your server information. Please try again later.

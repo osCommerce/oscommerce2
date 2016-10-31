@@ -12,13 +12,14 @@
 
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sage_pay_direct {
     var $code, $title, $description, $enabled;
 
-    function sage_pay_direct() {
+    function __construct() {
       global $PHP_SELF, $order;
 
       $this->signature = 'sage_pay|sage_pay_direct|3.1|2.3';
@@ -159,7 +160,7 @@
           do {
             $content .= '<tr class="moduleRow" id="sagepay_card_' . $Qtokens->valueInt('id') . '">' .
                         '  <td width="40" valign="top"><input type="radio" name="sagepay_card" value="' . $Qtokens->valueInt('id') . '" /></td>' .
-                        '  <td valign="top">' . $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2)) . '/' . strftime('%Y', mktime(0, 0, 0, 1, 1, (2000 + substr($Qtokens->value('expiry_date'), 2)))) . '&nbsp;&nbsp;' . $Qtokens->valueProtected('card_type') . '</td>' .
+                        '  <td valign="top">' . $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . HTML::outputProtected(substr($Qtokens->value('expiry_date'), 0, 2)) . '/' . strftime('%Y', mktime(0, 0, 0, 1, 1, (2000 + substr($Qtokens->value('expiry_date'), 2)))) . '&nbsp;&nbsp;' . $Qtokens->valueProtected('card_type') . '</td>' .
                         '</tr>';
 
             if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
@@ -281,7 +282,7 @@
 
             $transaction_response = $this->sendTransactionToGateway($gateway_url, $post_string);
           } elseif ( isset($_POST['StatusDetail']) && ($_POST['StatusDetail'] == 'Paypal transaction cancelled by client.') ) {
-            OSCOM::redirect('checkout_confirmation.php', '', 'SSL');
+            OSCOM::redirect('checkout_confirmation.php');
           }
         }
       } else {
@@ -306,7 +307,7 @@
           $cc_type = isset($_POST['cc_type']) ? substr($_POST['cc_type'], 0, 15) : null;
 
           if ( !isset($cc_type) || ($this->isCard($cc_type) == false) ) {
-            OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardtype', 'SSL');
+            OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardtype');
           }
 
           if ( $cc_type != 'PAYPAL' ) {
@@ -335,48 +336,48 @@
             }
 
             if ( !isset($cc_owner) || empty($cc_owner) ) {
-              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardowner', 'SSL');
+              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardowner');
             }
 
             if ( !isset($cc_number) || (is_numeric($cc_number) == false) ) {
-              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardnumber', 'SSL');
+              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardnumber');
             }
 
             if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) || (($cc_type == 'AMEX') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_AMEX == 'True')) ) {
               if ( !isset($_POST['cc_starts_month']) || !in_array($_POST['cc_starts_month'], $months_array) ) {
-                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardstart', 'SSL');
+                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardstart');
               }
 
               if ( !isset($_POST['cc_starts_year']) || !in_array($_POST['cc_starts_year'], $year_valid_from_array) ) {
-                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardstart', 'SSL');
+                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardstart');
               }
 
               $cc_start = substr($_POST['cc_starts_month'] . $_POST['cc_starts_year'], 0, 4);
             }
 
             if ( !isset($_POST['cc_expires_month']) || !in_array($_POST['cc_expires_month'], $months_array) ) {
-              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires', 'SSL');
+              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires');
             }
 
             if ( !isset($_POST['cc_expires_year']) || !in_array($_POST['cc_expires_year'], $year_valid_to_array) ) {
-              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires', 'SSL');
+              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires');
             }
 
             if ( ($_POST['cc_expires_year'] == date('y')) && ($_POST['cc_expires_month'] < date('m')) ) {
-              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires', 'SSL');
+              OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardexpires');
             }
 
             $cc_expires = substr($_POST['cc_expires_month'] . $_POST['cc_expires_year'], 0, 4);
 
             if ( (($cc_type == 'MAESTRO') && (MODULE_PAYMENT_SAGE_PAY_DIRECT_ALLOW_MAESTRO == 'True')) ) {
               if ( !isset($cc_issue) || empty($cc_issue) ) {
-                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardissue', 'SSL');
+                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardissue');
               }
             }
 
             if (MODULE_PAYMENT_SAGE_PAY_DIRECT_VERIFY_WITH_CVC == 'True') {
               if ( !isset($cc_cvc) || empty($cc_cvc) ) {
-                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardcvc', 'SSL');
+                OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . '&error=cardcvc');
               }
             }
           }
@@ -418,7 +419,7 @@
           $params['CardType'] = $cc_type;
 
           if ( $cc_type == 'PAYPAL' ) {
-            $params['PayPalCallbackURL'] = OSCOM::link('checkout_process.php', 'check=PAYPAL', 'SSL');
+            $params['PayPalCallbackURL'] = OSCOM::link('checkout_process.php', 'check=PAYPAL');
           } else {
             $params['CardHolder'] = $cc_owner;
             $params['CardNumber'] = $cc_number;
@@ -439,7 +440,7 @@
           }
         }
 
-        $ip_address = tep_get_ip_address();
+        $ip_address = HTTP::getIpAddress();
 
         if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
           $params['ClientIPAddress']= $ip_address;
@@ -517,7 +518,7 @@
         $_SESSION['sage_pay_direct_pareq'] = $sage_pay_response['PAReq'];
         $_SESSION['sage_pay_direct_md'] = $sage_pay_response['MD'];
 
-        OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php', '', 'SSL');
+        OSCOM::redirect('ext/modules/payment/sage_pay/checkout.php');
       }
 
       if ($sage_pay_response['Status'] == 'PPREDIRECT') {
@@ -529,7 +530,7 @@
 
         $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
+        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''));
       }
     }
 
@@ -891,10 +892,10 @@ EOD;
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
 
-        if ( file_exists(DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'ext/modules/payment/sage_pay/sagepay.com.crt');
-        } elseif ( file_exists(DIR_FS_CATALOG . 'includes/cacert.pem') ) {
-          curl_setopt($curl, CURLOPT_CAINFO, DIR_FS_CATALOG . 'includes/cacert.pem');
+        if ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'ext/modules/payment/sage_pay/sagepay.com.crt');
+        } elseif ( is_file(OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem') ) {
+          curl_setopt($curl, CURLOPT_CAINFO, OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem');
         }
       } else {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -1031,7 +1032,7 @@ EOD;
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
+      if (is_file(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 
@@ -1159,7 +1160,7 @@ EOD;
                       'Amount' => 0,
                       'Currency' => DEFAULT_CURRENCY);
 
-      $ip_address = tep_get_ip_address();
+      $ip_address = HTTP::getIpAddress();
 
       if ( !empty($ip_address) && (ip2long($ip_address) != -1) && (ip2long($ip_address) != false) ) {
         $params['ClientIPAddress']= $ip_address;
@@ -1368,7 +1369,9 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_DIRECT_DEBUG_EMAIL, 'Sage Pay Direct Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          $debugEmail = new Mail(MODULE_PAYMENT_SAGE_PAY_DIRECT_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'Sage Pay Direct Debug E-Mail');
+          $debugEmail->setBody($email_body);
+          $debugEmail->send();
         }
       }
     }

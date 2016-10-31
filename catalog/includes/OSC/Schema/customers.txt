@@ -1,0 +1,18 @@
+customers_id int not_null auto_increment
+customers_gender char(1)
+customers_firstname varchar(255) not_null
+customers_lastname varchar(255) not_null
+customers_dob datetime
+customers_email_address varchar(255) not_null
+customers_default_address_id int
+customers_telephone varchar(255)
+customers_fax varchar(255)
+customers_password varchar(255) not_null
+customers_newsletter char(1)
+--
+primary customers_id
+idx_customers_email_address customers_email_address
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

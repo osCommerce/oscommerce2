@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_account_set_password() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -60,8 +60,8 @@
 
           if ( MODULE_CONTENT_ACCOUNT_SET_PASSWORD_ALLOW_PASSWORD == 'True' ) {
             $oscTemplate->_data['account']['account']['links'] += array('set_password' => array('title' => MODULE_CONTENT_ACCOUNT_SET_PASSWORD_SET_PASSWORD_LINK_TITLE,
-                                                                        'link' => OSCOM::link('ext/modules/content/account/set_password.php', '', 'SSL'),
-                                                                        'icon' => 'key'));
+                                                                        'link' => OSCOM::link('ext/modules/content/account/set_password.php'),
+                                                                        'icon' => 'fa fa-lock'));
           }
 
           $oscTemplate->_data['account']['account']['links'] += $after_eight;

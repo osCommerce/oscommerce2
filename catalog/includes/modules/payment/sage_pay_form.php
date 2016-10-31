@@ -11,13 +11,14 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class sage_pay_form {
     var $code, $title, $description, $enabled;
 
-    function sage_pay_form() {
+    function __construct() {
       global $order;
 
       $this->signature = 'sage_pay|sage_pay_form|2.0|2.3';
@@ -58,10 +59,12 @@
         }
       }
 
-      if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Live' ) {
-        $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
-      } else {
-        $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
+      if ( $this->enabled === true ) {
+        if ( MODULE_PAYMENT_SAGE_PAY_FORM_TRANSACTION_SERVER == 'Live' ) {
+          $this->form_action_url = 'https://live.sagepay.com/gateway/service/vspform-register.vsp';
+        } else {
+          $this->form_action_url = 'https://test.sagepay.com/gateway/service/vspform-register.vsp';
+        }
       }
     }
 
@@ -127,8 +130,8 @@
                      'Amount' => $this->format_raw($order->info['total']),
                      'Currency' => $_SESSION['currency'],
                      'Description' => substr(STORE_NAME, 0, 100),
-                     'SuccessURL' => OSCOM::link('checkout_process.php', '', 'SSL'),
-                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code, 'SSL'),
+                     'SuccessURL' => OSCOM::link('checkout_process.php'),
+                     'FailureURL' => OSCOM::link('checkout_payment.php', 'payment_error=' . $this->code),
                      'CustomerName' => substr($order->billing['firstname'] . ' ' . $order->billing['lastname'], 0, 100),
                      'CustomerEMail' => substr($order->customer['email_address'], 0, 255),
                      'BillingSurname' => substr($order->billing['lastname'], 0, 20),
@@ -235,10 +238,10 @@
 
           $error = $this->getErrorMessageNumber($sage_pay_response['StatusDetail']);
 
-          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''), 'SSL');
+          OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code . (tep_not_null($error) ? '&error=' . $error : ''));
         }
       } else {
-        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code, 'SSL');
+        OSCOM::redirect('checkout_payment.php', 'payment_error=' . $this->code);
       }
     }
 
@@ -542,7 +545,7 @@
     function loadErrorMessages() {
       $errors = array();
 
-      if (file_exists(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
+      if (is_file(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php')) {
         include(dirname(__FILE__) . '/../../../ext/modules/payment/sage_pay/errors.php');
       }
 
@@ -600,7 +603,9 @@
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL, 'Sage Pay Form Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          $debugEmail = new Mail(MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'Sage Pay Form Debug E-Mail');
+          $debugEmail->setBody($email_body);
+          $debugEmail->send();
         }
       }
     }

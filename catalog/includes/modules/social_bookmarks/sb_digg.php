@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,7 @@
     var $icon = 'digg.png';
     var $enabled = false;
 
-    function sb_digg() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_DIGG_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_DIGG_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_DIGG_DESCRIPTION;
@@ -33,7 +34,7 @@
     }
 
     function getOutput() {
-      return '<a href="http://digg.com/submit?url=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '" target="_blank"><img src="' . DIR_WS_IMAGES . 'social_bookmarks/' . $this->icon . '" border="0" title="' . tep_output_string_protected($this->public_title) . '" alt="' . tep_output_string_protected($this->public_title) . '"/></a>';
+      return '<a href="http://digg.com/submit?url=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false)) . '" target="_blank"><img src="' . OSCOM::linkImage('social_bookmarks/' . $this->icon) . '" border="0" title="' . HTML::outputProtected($this->public_title) . '" alt="' . HTML::outputProtected($this->public_title) . '"/></a>';
     }
 
     function isEnabled() {

@@ -10,13 +10,18 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class securityCheck_session_auto_start {
     var $type = 'warning';
 
-    function securityCheck_session_auto_start() {
-      global $language;
+    protected $lang;
 
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/session_auto_start.php');
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/session_auto_start');
     }
 
     function pass() {

@@ -17,11 +17,10 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
-// needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_notifications.php');
+  $OSCOM_Language->loadDefinitions('account_notifications');
 
   $Qglobal = $OSCOM_Db->prepare('select global_product_notifications from :table_customers_info where customers_info_id = :customers_info_id');
   $Qglobal->bindInt(':customers_info_id', $_SESSION['customer_id']);
@@ -85,22 +84,23 @@
 
     $messageStack->add_session('account', SUCCESS_NOTIFICATIONS_UPDATED, 'success');
 
-    OSCOM::redirect('account.php', '', 'SSL');
+    OSCOM::redirect('account.php');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_notifications.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
   <h1><?php echo HEADING_TITLE; ?></h1>
 </div>
 
-<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('account_notifications', OSCOM::link('account_notifications.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
+
   <div class="alert alert-info">
     <?php echo MY_NOTIFICATIONS_DESCRIPTION; ?>
   </div>
@@ -142,22 +142,19 @@
         <div class="col-sm-8">
 
 <?php
-      $counter = 0;
-
       $Qproducts = $OSCOM_Db->prepare('select pd.products_id, pd.products_name from :table_products_description pd, :table_products_notifications pn where pn.customers_id = :customers_id and pn.products_id = pd.products_id and pd.language_id = :language_id order by pd.products_name');
       $Qproducts->bindInt(':customers_id', $_SESSION['customer_id']);
-      $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+      $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
       $Qproducts->execute();
 
       while ($Qproducts->fetch()) {
 ?>
       <div class="checkbox">
         <label>
-          <?php echo HTML::checkboxField('products[' . $counter . ']', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
+          <?php echo HTML::checkboxField('products[]', $Qproducts->valueInt('products_id'), true) . $Qproducts->value('products_name'); ?>
         </label>
       </div>
 <?php
-        $counter++;
       }
 ?>
 
@@ -183,15 +180,15 @@
   }
 ?>
 
-  <div class="row">
-    <div class="col-sm-6 text-right pull-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success'); ?></div>
-    <div class="col-sm-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?></div>
+  <div class="buttonSet row">
+    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

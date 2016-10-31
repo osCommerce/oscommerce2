@@ -10,13 +10,17 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
+  use OSC\OM\Is;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
 
   require('includes/application_top.php');
 
-// needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/create_account.php');
+  $OSCOM_Language->loadDefinitions('create_account');
 
   $process = false;
   if (isset($_POST['action']) && ($_POST['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
@@ -80,14 +84,19 @@
     }
 
     if (ACCOUNT_DOB == 'true') {
-      if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || (!empty($dob) && (!is_numeric(tep_date_raw($dob)) || !@checkdate(substr(tep_date_raw($dob), 4, 2), substr(tep_date_raw($dob), 6, 2), substr(tep_date_raw($dob), 0, 4))))) {
+      $dobDateTime = new DateTime($dob);
+
+      if ((strlen($dob) < ENTRY_DOB_MIN_LENGTH) || ($dobDateTime->isValid() === false)) {
         $error = true;
 
         $messageStack->add('create_account', ENTRY_DATE_OF_BIRTH_ERROR);
       }
     }
 
-    if (tep_validate_email($email_address) == false) {
+    if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
+      $error = true;
+      $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
+    } elseif (Is::email($email_address) == false) {
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
@@ -183,10 +192,10 @@
                               'customers_telephone' => $telephone,
                               'customers_fax' => $fax,
                               'customers_newsletter' => $newsletter,
-                              'customers_password' => tep_encrypt_password($password));
+                              'customers_password' => Hash::encrypt($password));
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
-      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = tep_date_raw($dob);
+      if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw(false);
 
       $OSCOM_Db->save('customers', $sql_data_array);
 
@@ -221,17 +230,12 @@
 
       $OSCOM_Db->save('customers_info', ['customers_info_id' => (int)$_SESSION['customer_id'], 'customers_info_number_of_logons' => '0', 'customers_info_date_account_created' => 'now()']);
 
-      if (SESSION_RECREATE == 'True') {
-        tep_session_recreate();
-      }
+      Registry::get('Session')->recreate();
 
       $_SESSION['customer_first_name'] = $firstname;
       $_SESSION['customer_default_address_id'] = $address_id;
       $_SESSION['customer_country_id'] = $country;
       $_SESSION['customer_zone_id'] = $zone_id;
-
-// reset session token
-      $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
 
 // restore cart contents
       $_SESSION['cart']->restore_contents();
@@ -250,15 +254,18 @@
       }
 
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-      tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
 
-      OSCOM::redirect('create_account_success.php', '', 'SSL');
+      $customerEmail = new Mail($email_address, $name, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_SUBJECT);
+      $customerEmail->setBody($email_text);
+      $customerEmail->send();
+
+      OSCOM::redirect('create_account_success.php');
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('create_account.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -271,90 +278,84 @@
   }
 ?>
 
-<div class="alert alert-info"><?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('index.php', 'Account&LogIn&' . tep_get_all_get_params(['Account', 'LogIn']), 'SSL')); ?></div>
+<div class="alert alert-warning">
+  <?php echo sprintf(TEXT_ORIGIN_LOGIN, OSCOM::link('login.php', tep_get_all_get_params())); ?><span class="text-danger pull-right text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></span>
+</div>
 
-<?php echo HTML::form('create_account', OSCOM::link('create_account.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true, 'action' => 'process']); ?>
+<?php echo HTML::form('create_account', OSCOM::link('create_account.php'), 'post', 'class="form-horizontal"', ['tokenize' => true, 'action' => 'process']); ?>
 
 <div class="contentContainer">
-  <div class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
 
+  <h2><?php echo CATEGORY_PERSONAL; ?></h2>
   <div class="contentText">
-
-    <div class="page-header">
-      <h4><?php echo CATEGORY_PERSONAL; ?></h4>
-    </div>
 
 <?php
   if (ACCOUNT_GENDER == 'true') {
 ?>
-
     <div class="form-group has-feedback">
       <label class="control-label col-sm-3"><?php echo ENTRY_GENDER; ?></label>
       <div class="col-sm-9">
         <label class="radio-inline">
-          <?php echo HTML::radioField('gender', 'm', NULL, 'required aria-required="true"') . ' ' . MALE; ?>
+          <?php echo HTML::radioField('gender', 'm', NULL, 'required aria-required="true" aria-describedby="atGender"') . ' ' . MALE; ?>
         </label>
         <label class="radio-inline">
           <?php echo HTML::radioField('gender', 'f') . ' ' . FEMALE; ?>
         </label>
         <?php echo FORM_REQUIRED_INPUT; ?>
-        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
+        <?php if (tep_not_null(ENTRY_GENDER_TEXT)) echo '<span id="atGender" class="help-block">' . ENTRY_GENDER_TEXT . '</span>'; ?>
       </div>
     </div>
-
 <?php
   }
 ?>
-
     <div class="form-group has-feedback">
       <label for="inputFirstName" class="control-label col-sm-3"><?php echo ENTRY_FIRST_NAME; ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::inputField('firstname', NULL, 'minlength="' . ENTRY_FIRST_NAME_MIN_LENGTH . '"  required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php
+        echo HTML::inputField('firstname', NULL, 'required aria-required="true" id="inputFirstName" placeholder="' . ENTRY_FIRST_NAME_TEXT . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
       </div>
     </div>
     <div class="form-group has-feedback">
       <label for="inputLastName" class="control-label col-sm-3"><?php echo ENTRY_LAST_NAME; ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::inputField('lastname', NULL, 'minlength="' . ENTRY_LAST_NAME_MIN_LENGTH . '" required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
-      </div>
-    </div>
-
-<?php
-  if (ACCOUNT_DOB == 'true') {
-?>
-
-    <div class="form-group has-feedback">
-      <label for="dob" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
-      <div class="col-sm-9">
         <?php
-        echo HTML::inputField('dob', '', 'minlength="' . ENTRY_DOB_MIN_LENGTH . '" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
+        echo HTML::inputField('lastname', NULL, 'required aria-required="true" id="inputLastName" placeholder="' . ENTRY_LAST_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
     </div>
-
+<?php
+  if (ACCOUNT_DOB == 'true') {
+?>
+    <div class="form-group has-feedback">
+      <label for="dob" class="control-label col-sm-3"><?php echo ENTRY_DATE_OF_BIRTH; ?></label>
+      <div class="col-sm-9">
+        <?php
+        echo HTML::inputField('dob', '', 'data-provide="datepicker" required aria-required="true" id="dob" placeholder="' . ENTRY_DATE_OF_BIRTH_TEXT . '"');
+        echo FORM_REQUIRED_INPUT;
+        ?>
+      </div>
+    </div>
 <?php
   }
 ?>
-
     <div class="form-group has-feedback">
       <label for="inputEmail" class="control-label col-sm-3"><?php echo ENTRY_EMAIL_ADDRESS; ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php
+        echo HTML::inputField('email_address', NULL, 'required aria-required="true" id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email');
+        echo FORM_REQUIRED_INPUT;
+        ?>
       </div>
     </div>
   </div>
-
 <?php
   if (ACCOUNT_COMPANY == 'true') {
 ?>
 
-  <div class="page-header">
-    <h4><?php echo CATEGORY_COMPANY; ?></h4>
-  </div>
+  <h2><?php echo CATEGORY_COMPANY; ?></h2>
 
   <div class="contentText">
     <div class="form-group">
@@ -371,9 +372,7 @@
   }
 ?>
 
-  <div class="page-header">
-    <h4><?php echo CATEGORY_ADDRESS; ?></h4>
-  </div>
+  <h2><?php echo CATEGORY_ADDRESS; ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
@@ -389,7 +388,6 @@
 <?php
   if (ACCOUNT_SUBURB == 'true') {
 ?>
-
     <div class="form-group">
       <label for="inputSuburb" class="control-label col-sm-3"><?php echo ENTRY_SUBURB; ?></label>
       <div class="col-sm-9">
@@ -398,16 +396,14 @@
         ?>
       </div>
     </div>
-
 <?php
   }
 ?>
-
     <div class="form-group has-feedback">
       <label for="inputCity" class="control-label col-sm-3"><?php echo ENTRY_CITY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('city', NULL, 'minlength="' . ENTRY_CITY_MIN_LENGTH . '" required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
+        echo HTML::inputField('city', NULL, 'required aria-required="true" id="inputCity" placeholder="' . ENTRY_CITY_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -416,17 +412,15 @@
       <label for="inputZip" class="control-label col-sm-3"><?php echo ENTRY_POST_CODE; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('postcode', NULL, 'minlength="' . ENTRY_POSTCODE_MIN_LENGTH . '" required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
+        echo HTML::inputField('postcode', NULL, 'required aria-required="true" id="inputZip" placeholder="' . ENTRY_POST_CODE_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
     </div>
-
 <?php
   if (ACCOUNT_STATE == 'true') {
 ?>
-
-    <div class="form-group">
+    <div class="form-group has-feedback">
       <label for="inputState" class="control-label col-sm-3"><?php echo ENTRY_STATE; ?></label>
       <div class="col-sm-9">
         <?php
@@ -441,43 +435,43 @@
             while ($Qzones->fetch()) {
               $zones_array[] = array('id' => $Qzones->value('zone_name'), 'text' => $Qzones->value('zone_name'));
             }
-            echo HTML::selectField('state', $zones_array, 0, 'id="inputState"');
+            echo HTML::selectField('state', $zones_array, 0, 'id="inputState" aria-describedby="atState"');
+            echo FORM_REQUIRED_INPUT;
+            if (tep_not_null(ENTRY_STATE_TEXT)) echo '<span id="atState" class="help-block">' . ENTRY_STATE_TEXT . '</span>';
           } else {
             echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+            echo FORM_REQUIRED_INPUT;
           }
         } else {
           echo HTML::inputField('state', NULL, 'id="inputState" placeholder="' . ENTRY_STATE_TEXT . '"');
+          echo FORM_REQUIRED_INPUT;
         }
         ?>
       </div>
     </div>
-
 <?php
   }
 ?>
-
     <div class="form-group has-feedback">
       <label for="inputCountry" class="control-label col-sm-3"><?php echo ENTRY_COUNTRY; ?></label>
       <div class="col-sm-9">
         <?php
-        echo tep_get_country_list('country', NULL, 'required aria-required="true" id="inputCountry"');
+        echo tep_get_country_list('country', NULL, 'required aria-required="true" aria-describedby="atCountry" id="inputCountry"');
         echo FORM_REQUIRED_INPUT;
-        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
+        if (tep_not_null(ENTRY_COUNTRY_TEXT)) echo '<span id="atCountry" class="help-block">' . ENTRY_COUNTRY_TEXT . '</span>';
         ?>
       </div>
     </div>
   </div>
 
-  <div class="page-header">
-    <h4><?php echo CATEGORY_CONTACT; ?></h4>
-  </div>
+  <h2><?php echo CATEGORY_CONTACT; ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputTelephone" class="control-label col-sm-3"><?php echo ENTRY_TELEPHONE_NUMBER; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('telephone', NULL, 'minlength="' . ENTRY_TELEPHONE_MIN_LENGTH . '" required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel');
+        echo HTML::inputField('telephone', NULL, 'required aria-required="true" id="inputTelephone" placeholder="' . ENTRY_TELEPHONE_NUMBER_TEXT . '"', 'tel');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -486,33 +480,32 @@
       <label for="inputFax" class="control-label col-sm-3"><?php echo ENTRY_FAX_NUMBER; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"');
+        echo HTML::inputField('fax', '', 'id="inputFax" placeholder="' . ENTRY_FAX_NUMBER_TEXT . '"', 'tel');
         ?>
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-3"><?php echo ENTRY_NEWSLETTER; ?></label>
+      <label for="inputNewsletter" class="control-label col-sm-3"><?php echo ENTRY_NEWSLETTER; ?></label>
       <div class="col-sm-9">
         <div class="checkbox">
           <label>
-            <?php echo HTML::checkboxField('newsletter', '1') . '&nbsp;'; ?>
+            <?php echo HTML::checkboxField('newsletter', '1', NULL, 'id="inputNewsletter"'); ?>
             <?php if (tep_not_null(ENTRY_NEWSLETTER_TEXT)) echo ENTRY_NEWSLETTER_TEXT; ?>
           </label>
         </div>
       </div>
     </div>
+
   </div>
 
-  <div class="page-header">
-    <h4><?php echo CATEGORY_PASSWORD; ?></h4>
-  </div>
+  <h2><?php echo CATEGORY_PASSWORD; ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
       <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::passwordField('password', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputPassword" placeholder="' . ENTRY_PASSWORD_TEXT . '"');
+        echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_TEXT . '"', 'password');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -521,21 +514,22 @@
       <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::passwordField('confirmation', NULL, 'minlength="' . ENTRY_PASSWORD_MIN_LENGTH . '" required aria-required="true" id="inputConfirmation" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"');
+        echo HTML::passwordField('confirmation', NULL, 'required aria-required="true" id="inputConfirmation" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"', 'password');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
     </div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-user', null, 'primary', null, 'btn-success btn-block'); ?>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-user', null, null, 'btn-success'); ?></div>
   </div>
+
 </div>
 
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

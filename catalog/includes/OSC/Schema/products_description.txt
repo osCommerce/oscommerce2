@@ -1,0 +1,16 @@
+products_id int not_null auto_increment
+language_id int default(1) not_null
+products_name varchar(64) default('') not_null
+products_description text
+products_url varchar(255)
+products_viewed int(5) default(0)
+products_seo_description text
+products_seo_keywords varchar(128)
+products_seo_title varchar(128)
+--
+primary products_id language_id
+products_name products_name
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

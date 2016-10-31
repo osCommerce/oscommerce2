@@ -1,0 +1,9 @@
+id int not_null auto_increment
+user_name varchar(255) binary not_null
+user_password varchar(255) not_null
+--
+primary id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

@@ -10,12 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\Registry;
 
   class shoppingCart {
     var $contents, $total, $weight, $cartID, $content_type;
 
-    function shoppingCart() {
+    function __construct() {
       $this->reset();
     }
 
@@ -368,6 +369,7 @@
 
     function get_products() {
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (!is_array($this->contents)) return false;
 
@@ -376,7 +378,7 @@
       foreach ( array_keys($this->contents) as $products_id ) {
         $Qproducts = $OSCOM_Db->prepare('select p.products_id, pd.products_name, p.products_model, p.products_image, p.products_price, p.products_weight, p.products_tax_class_id from :table_products p, :table_products_description pd where p.products_id = :products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
         $Qproducts->bindInt(':products_id', $products_id);
-        $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
         $Qproducts->execute();
 
         if ($Qproducts->fetch() !== false) {
@@ -419,7 +421,7 @@
     }
 
     function generate_cart_id($length = 5) {
-      return tep_create_random_value($length, 'digits');
+      return Hash::getRandomString($length, 'digits');
     }
 
     function get_content_type() {

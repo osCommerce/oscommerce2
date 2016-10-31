@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_cs_redirect_old_order() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -46,7 +46,7 @@
         $Qcheck->execute();
 
         if ($Qcheck->fetch() !== false) {
-          OSCOM::redirect('account.php', '', 'SSL');
+          OSCOM::redirect('account.php');
         }
       }
     }

@@ -18,30 +18,31 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
   if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
     if ( !class_exists('sage_pay_direct') ) {
-      include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
-      include(DIR_WS_MODULES . 'payment/sage_pay_direct.php');
+      $OSCOM_Language->loadDefinitions('modules/payment/sage_pay_direct');
+
+      include('includes/modules/payment/sage_pay_direct.php');
     }
 
     $sage_pay_direct = new sage_pay_direct();
 
     if ( !$sage_pay_direct->enabled ) {
-      OSCOM::redirect('account.php', '', 'SSL');
+      OSCOM::redirect('account.php');
     }
   } else {
-    OSCOM::redirect('account.php', '', 'SSL');
+    OSCOM::redirect('account.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/content/account/cm_account_sage_pay_cards.php');
+  $OSCOM_Language->loadDefinitions('modules/content/account/cm_account_sage_pay_cards');
   require('includes/modules/content/account/cm_account_sage_pay_cards.php');
   $sage_pay_cards = new cm_account_sage_pay_cards();
 
   if ( !$sage_pay_cards->isEnabled() ) {
-    OSCOM::redirect('account.php', '', 'SSL');
+    OSCOM::redirect('account.php');
   }
 
   if ( isset($_GET['action']) ) {
@@ -55,13 +56,13 @@
       }
     }
 
-    OSCOM::redirect('ext/modules/content/account/sage_pay/cards.php', '', 'SSL');
+    OSCOM::redirect('ext/modules/content/account/sage_pay/cards.php');
   }
 
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_NAVBAR_TITLE_2, OSCOM::link('ext/modules/content/account/sage_pay/cards.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <h1><?php echo MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_HEADING_TITLE; ?></h1>
@@ -87,8 +88,8 @@
 ?>
 
     <div>
-      <span style="float: right;"><?php echo HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']), 'SSL')); ?></span>
-      <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . tep_output_string_protected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
+      <span style="float: right;"><?php echo HTML::button(SMALL_IMAGE_BUTTON_DELETE, 'glyphicon glyphicon-trash', OSCOM::link('ext/modules/content/account/sage_pay/cards.php', 'action=delete&id=' . $Qtokens->valueInt('id') . '&formid=' . md5($_SESSION['sessiontoken']))); ?></span>
+      <p><strong><?php echo $Qtokens->valueProtected('card_type'); ?></strong>&nbsp;&nbsp;****<?php echo $Qtokens->valueProtected('number_filtered') . '&nbsp;&nbsp;' . HTML::outputProtected(substr($Qtokens->value('expiry_date'), 0, 2) . '/' . substr($Qtokens->value('expiry_date'), 2)); ?></p>
     </div>
 
 <?php
@@ -107,11 +108,11 @@
   </div>
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php')); ?>
   </div>
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

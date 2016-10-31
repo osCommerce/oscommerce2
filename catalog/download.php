@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\OSCOM;
 
   include('includes/application_top.php');
@@ -26,7 +27,7 @@
   $Qdownload->bindInt(':orders_id', $_GET['order']);
   $Qdownload->bindInt(':customers_id', $_SESSION['customer_id']);
   $Qdownload->bindInt(':orders_products_download_id', $_GET['id']);
-  $Qdownload->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qdownload->bindInt(':language_id', $OSCOM_Language->getId());
   $Qdownload->execute();
 
   if ($Qdownload->fetch() === false) die;
@@ -40,7 +41,7 @@
 // Die if remaining count is <=0
   if ($Qdownload->valueInt('download_count') <= 0) die;
 // Die if file is not there
-  if (!file_exists(DIR_FS_DOWNLOAD . $Qdownload->value('orders_products_filename'))) die;
+  if (!is_file(OSCOM::getConfig('dir_root') . 'download/' . $Qdownload->value('orders_products_filename'))) die;
 
 // Now decrement counter
   $Qupdate = $OSCOM_Db->prepare('update :table_orders_products_download set download_count = download_count-1 where orders_products_download_id = :orders_products_download_id');
@@ -54,9 +55,9 @@ function tep_random_name()
 {
   $letters = 'abcdefghijklmnopqrstuvwxyz';
   $dirname = '.';
-  $length = floor(tep_rand(16,20));
+  $length = floor(Hash::getRandomInt(16, 20));
   for ($i = 1; $i <= $length; $i++) {
-   $q = floor(tep_rand(1,26));
+   $q = floor(Hash::getRandomInt(1, 26));
    $dirname .= $letters[$q];
   }
   return $dirname;
@@ -95,16 +96,16 @@ function tep_unlink_temp_dir($dir)
 
   if (DOWNLOAD_BY_REDIRECT == 'true') {
 // This will work only on Unix/Linux hosts
-    tep_unlink_temp_dir(DIR_FS_DOWNLOAD_PUBLIC);
+    tep_unlink_temp_dir(OSCOM::getConfig('dir_root') . 'pub/');
     $tempdir = tep_random_name();
     umask(0000);
-    mkdir(DIR_FS_DOWNLOAD_PUBLIC . $tempdir, 0777);
-    symlink(DIR_FS_DOWNLOAD . $Qdownload->value('orders_products_filename'), DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
-    if (file_exists(DIR_FS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'))) {
-      OSCOM::redirect(DIR_WS_DOWNLOAD_PUBLIC . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
+    mkdir(OSCOM::getConfig('dir_root') . 'pub/' . $tempdir, 0777);
+    symlink(OSCOM::getConfig('dir_root') . 'download/' . $Qdownload->value('orders_products_filename'), OSCOM::getConfig('dir_root', 'Shop') . 'pub/' . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
+    if (is_file(OSCOM::getConfig('dir_root') . 'pub/' . $tempdir . '/' . $Qdownload->value('orders_products_filename'))) {
+      OSCOM::redirect('pub/' . $tempdir . '/' . $Qdownload->value('orders_products_filename'));
     }
   }
 
 // Fallback to readfile() delivery method. This will work on all systems, but will need considerable resources
-  readfile(DIR_FS_DOWNLOAD . $Qdownload->value('orders_products_filename'));
+  readfile(OSCOM::getConfig('dir_root') . 'download/' . $Qdownload->value('orders_products_filename'));
 ?>

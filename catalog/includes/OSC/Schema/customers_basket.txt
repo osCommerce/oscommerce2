@@ -1,0 +1,13 @@
+customers_basket_id int not_null auto_increment
+customers_id int not_null
+products_id tinytext not_null
+customers_basket_quantity int(2) not_null
+final_price decimal(15,4)
+customers_basket_date_added char(8)
+--
+primary customers_basket_id
+idx_customers_basket_customers_id customers_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

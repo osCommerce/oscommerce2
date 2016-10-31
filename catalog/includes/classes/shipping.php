@@ -10,12 +10,18 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
   class shipping {
     var $modules;
 
+    protected $lang;
+
 // class constructor
-    function shipping($module = '') {
+    function __construct($module = '') {
       global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       if (defined('MODULE_SHIPPING_INSTALLED') && tep_not_null(MODULE_SHIPPING_INSTALLED)) {
         $this->modules = explode(';', MODULE_SHIPPING_INSTALLED);
@@ -32,8 +38,8 @@
         }
 
         for ($i=0, $n=sizeof($include_modules); $i<$n; $i++) {
-          include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
-          include(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
+          $this->lang->loadDefinitions('modules/shipping/' . pathinfo($include_modules[$i]['file'], PATHINFO_FILENAME));
+          include('includes/modules/shipping/' . $include_modules[$i]['file']);
 
           $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
         }

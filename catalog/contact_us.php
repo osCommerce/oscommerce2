@@ -11,11 +11,13 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Is;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/contact_us.php');
+  $OSCOM_Language->loadDefinitions('contact_us');
 
   if (isset($_GET['action']) && ($_GET['action'] == 'send') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
     $error = false;
@@ -24,7 +26,7 @@
     $email_address = HTML::sanitize($_POST['email']);
     $enquiry = HTML::sanitize($_POST['enquiry']);
 
-    if (!tep_validate_email($email_address)) {
+    if (!Is::email($email_address)) {
       $error = true;
 
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);
@@ -40,7 +42,9 @@
     }
 
     if ($error == false) {
-      tep_mail(STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, EMAIL_SUBJECT, $enquiry, $name, $email_address);
+      $contactEmail = new Mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, $email_address, $name, EMAIL_SUBJECT);
+      $contactEmail->setBody($enquiry);
+      $contactEmail->send();
 
       $actionRecorder->record();
 
@@ -50,7 +54,7 @@
 
   $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('contact_us.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -66,12 +70,12 @@
 ?>
 
 <div class="contentContainer">
-  <div class="alert alert-success">
-    <?php echo TEXT_SUCCESS; ?>
+  <div class="contentText">
+    <div class="alert alert-info"><?php echo TEXT_SUCCESS; ?></div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php'), 'primary', null, 'btn-default btn-block'); ?>
+  <div class="pull-right">
+    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('index.php')); ?>
   </div>
 </div>
 
@@ -79,18 +83,19 @@
   } else {
 ?>
 
-<?php echo HTML::form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('contact_us', OSCOM::link('contact_us.php', 'action=send'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
-
-  <p class="inputRequirement text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
-
   <div class="contentText">
+
+    <p class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+    <div class="clearfix"></div>
+
     <div class="form-group has-feedback">
       <label for="inputFromName" class="control-label col-sm-3"><?php echo ENTRY_NAME; ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('name', NULL, 'required aria-required="true" autofocus="autofocus" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
+        echo HTML::inputField('name', NULL, 'required autofocus="autofocus" aria-required="true" id="inputFromName" placeholder="' . ENTRY_NAME_TEXT . '"');
         echo FORM_REQUIRED_INPUT;
         ?>
       </div>
@@ -115,8 +120,8 @@
     </div>
   </div>
 
-  <div class="text-right">
-    <?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-send', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 
@@ -125,6 +130,6 @@
 <?php
   }
 
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

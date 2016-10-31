@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -17,15 +18,15 @@
 
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/account_history.php');
+  $OSCOM_Language->loadDefinitions('account_history');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php'));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -37,7 +38,7 @@
 <?php
   $Qorders = $OSCOM_Db->prepare('select SQL_CALC_FOUND_ROWS o.orders_id, o.date_purchased, o.delivery_name, o.billing_name, ot.text as order_total, s.orders_status_name from :table_orders o, :table_orders_total ot, :table_orders_status s where o.customers_id = :customers_id and o.orders_id = ot.orders_id and ot.class = "ot_total" and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = "1" order by o.orders_id desc limit :page_set_offset, :page_set_max_results');
   $Qorders->bindInt(':customers_id', $_SESSION['customer_id']);
-  $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qorders->bindInt(':language_id', $OSCOM_Language->getId());
   $Qorders->setPageSet(MAX_DISPLAY_ORDER_HISTORY);
   $Qorders->execute();
 
@@ -58,29 +59,24 @@
 
   <div class="contentText">
     <div class="panel panel-info">
-      <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'glyphicon glyphicon-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . (int)$order['orders_id'], 'SSL'), 'primary', NULL, 'btn-primary btn-xs pull-right'); ?></div>
+      <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong></div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . tep_date_long($order['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . HTML::outputProtected($order_name); ?></div>
+          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . DateTime::toLong($order['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . HTML::outputProtected($order_name); ?></div>
           <br class="visible-xs" />
           <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_PRODUCTS . '</strong> ' . $Qproducts->valueInt('count') . '<br /><strong>' . TEXT_ORDER_COST . '</strong> ' . strip_tags($order['order_total']); ?></div>
         </div>
       </div>
+      <div class="panel-footer"><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'fa fa-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $order['orders_id']), null, 'btn-primary btn-xs'); ?></div>
     </div>
   </div>
 
 <?php
     }
 ?>
-
   <div class="row">
-    <div class="col-sm-6 pagenumber hidden-xs">
-      <?php echo $Qorders->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?>
-    </div>
-    <div class="col-sm-6">
-      <div class="pull-right pagenav"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></div>
-      <span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span>
-    </div>
+    <div class="col-md-6 pagenumber"><?php echo $Qorders->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></div>
+    <div class="col-md-6"><span class="pull-right pagenav"><ul class="pagination"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></span><span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span></div>
   </div>
 
 <?php
@@ -95,12 +91,12 @@
   }
 ?>
 
-  <div>
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('account.php', '', 'SSL')); ?>
+  <div class="buttonSet">
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?>
   </div>
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

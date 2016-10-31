@@ -13,14 +13,12 @@
   use OSC\OM\OSCOM;
 
 // set the level of error reporting
-  error_reporting(E_ALL | E_STRICT);
-  ini_set('display_errors', true); // TODO remove on release
+  error_reporting(E_ALL & ~E_DEPRECATED);
 
-  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/');
+  define('OSCOM_BASE_DIR', realpath(__DIR__ . '/../../includes/') . '/OSC/');
 
-  require(OSCOM_BASE_DIR . 'OSC/OM/OSCOM.php');
+  require(OSCOM_BASE_DIR . 'OM/OSCOM.php');
   spl_autoload_register('OSC\OM\OSCOM::autoload');
 
   OSCOM::initialize();
-  OSCOM::setSite('Setup');
 ?>

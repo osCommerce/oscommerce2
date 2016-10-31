@@ -10,16 +10,20 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+
   class cfgm_boxes {
     var $code = 'boxes';
     var $directory;
-    var $language_directory = DIR_FS_CATALOG_LANGUAGES;
+    var $language_directory;
+    var $site = 'Shop';
     var $key = 'MODULE_BOXES_INSTALLED';
     var $title;
     var $template_integration = true;
 
-    function cfgm_boxes() {
-      $this->directory = DIR_FS_CATALOG_MODULES . 'boxes/';
+    function __construct() {
+      $this->directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/modules/boxes/';
+      $this->language_directory = OSCOM::getConfig('dir_root', $this->site) . 'includes/languages/';
       $this->title = MODULE_CFG_MODULE_BOXES_TITLE;
     }
   }

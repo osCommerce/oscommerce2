@@ -10,16 +10,10 @@ use OSC\OM\HTML;
 use OSC\OM\OSCOM;
 
 http_response_code(404);
-
-require('includes/template_top.php');
 ?>
 
 <h1>Error - Page Not Found (404)</h1>
 
 <div>
-  <?php echo HTML::button('Continue', 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php', null, 'AUTO')); ?>
+  <?php echo HTML::button('Continue', 'glyphicon glyphicon-chevron-right', OSCOM::link('index.php')); ?>
 </div>
-
-<?php
-require('includes/template_bottom.php');
-?>

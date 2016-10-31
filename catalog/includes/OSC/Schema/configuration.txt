@@ -1,0 +1,17 @@
+configuration_id int not_null auto_increment
+configuration_title varchar(255) not_null
+configuration_key varchar(255) not_null
+configuration_value text not_null
+configuration_description text not_null
+configuration_group_id int not_null
+sort_order int(5)
+last_modified datetime
+date_added datetime not_null
+use_function varchar(255)
+set_function varchar(255)
+--
+primary configuration_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

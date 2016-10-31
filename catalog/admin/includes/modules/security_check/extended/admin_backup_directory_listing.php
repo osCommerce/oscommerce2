@@ -10,20 +10,25 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class securityCheckExtended_admin_backup_directory_listing {
     var $type = 'error';
     var $has_doc = true;
 
-    function securityCheckExtended_admin_backup_directory_listing() {
-      global $language;
+    protected $lang;
 
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/extended/admin_backup_directory_listing.php');
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/extended/admin_backup_directory_listing');
 
       $this->title = MODULE_SECURITY_CHECK_EXTENDED_ADMIN_BACKUP_DIRECTORY_LISTING_TITLE;
     }
 
     function pass() {
-      $request = $this->getHttpRequest(tep_href_link('backups/'));
+      $request = $this->getHttpRequest(OSCOM::link('includes/backups/'));
 
       return $request['http_code'] != 200;
     }

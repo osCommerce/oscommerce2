@@ -20,7 +20,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_specials() {
+    function __construct() {
       $this->title = MODULE_BOXES_SPECIALS_TITLE;
       $this->description = MODULE_BOXES_SPECIALS_DESCRIPTION;
 
@@ -36,10 +36,11 @@
       global $currencies, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (!isset($_GET['products_id'])) {
         $Qcheck = $OSCOM_Db->prepare('select p.products_id from :table_specials s, :table_products p, :table_products_description pd where s.status = 1 and s.products_id = p.products_id and p.products_status = 1 and p.products_id = pd.products_id and pd.language_id = :language_id order by s.specials_date_added desc limit ' . (int)MAX_RANDOM_SELECT_SPECIALS);
-        $Qcheck->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qcheck->bindInt(':language_id', $OSCOM_Language->getId());
         $Qcheck->execute();
 
         $result = $Qcheck->fetchAll();
@@ -49,7 +50,7 @@
 
           $Qproduct = $OSCOM_Db->prepare('select p.products_id, pd.products_name, p.products_price, p.products_tax_class_id, p.products_image, s.specials_new_products_price from :table_products p, :table_products_description pd, :table_specials s where p.products_id = :products_id and p.products_id = s.products_id and p.products_id = pd.products_id and pd.language_id = :language_id');
           $Qproduct->bindInt(':products_id', $result['products_id']);
-          $Qproduct->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproduct->bindInt(':language_id', $OSCOM_Language->getId());
           $Qproduct->execute();
 
           if (($random_product = $Qproduct->fetch()) !== false) {
@@ -91,7 +92,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

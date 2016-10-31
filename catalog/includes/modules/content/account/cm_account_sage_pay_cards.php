@@ -21,7 +21,11 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_account_sage_pay_cards() {
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -39,8 +43,8 @@
 
       if ( defined('MODULE_PAYMENT_INSTALLED') && tep_not_null(MODULE_PAYMENT_INSTALLED) && in_array('sage_pay_direct.php', explode(';', MODULE_PAYMENT_INSTALLED)) ) {
         if ( !class_exists('sage_pay_direct') ) {
-          include(DIR_FS_CATALOG . 'includes/languages/' . $_SESSION['language'] . '/modules/payment/sage_pay_direct.php');
-          include(DIR_FS_CATALOG . 'includes/modules/payment/sage_pay_direct.php');
+          $this->lang->loadDefinitions('modules/payment/sage_pay_direct');
+          include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/modules/payment/sage_pay_direct.php');
         }
 
         $sage_pay_direct = new sage_pay_direct();
@@ -66,7 +70,7 @@
       global $oscTemplate;
 
       $oscTemplate->_data['account']['account']['links']['sage_pay_cards'] = array('title' => $this->public_title,
-                                                                                   'link' => OSCOM::link('ext/modules/content/account/sage_pay/cards.php', '', 'SSL'),
+                                                                                   'link' => OSCOM::link('ext/modules/content/account/sage_pay/cards.php'),
                                                                                    'icon' => 'newwin');
     }
 

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\Registry;
 
   class ar_admin_login {
@@ -21,7 +22,7 @@
     var $attempts = 3;
     var $identifier;
 
-    function ar_admin_login() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_ADMIN_LOGIN_TITLE;
       $this->description = MODULE_ACTION_RECORDER_ADMIN_LOGIN_DESCRIPTION;
 
@@ -32,7 +33,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = HTTP::getIpAddress();
     }
 
     function canPerform($user_id, $user_name) {

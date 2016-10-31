@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_manufacturer_info() {
+    function __construct() {
       $this->title = MODULE_BOXES_MANUFACTURER_INFO_TITLE;
       $this->description = MODULE_BOXES_MANUFACTURER_INFO_DESCRIPTION;
 
@@ -38,10 +38,11 @@
       global $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (isset($_GET['products_id'])) {
         $Qmanufacturer = $OSCOM_Db->prepare('select m.manufacturers_id, m.manufacturers_name, m.manufacturers_image, mi.manufacturers_url from :table_manufacturers m left join :table_manufacturers_info mi on (m.manufacturers_id = mi.manufacturers_id and mi.languages_id = :languages_id), :table_products p where p.products_id = :products_id and p.manufacturers_id = m.manufacturers_id');
-        $Qmanufacturer->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qmanufacturer->bindInt(':languages_id', $OSCOM_Language->getId());
         $Qmanufacturer->bindInt(':products_id', $_GET['products_id']);
         $Qmanufacturer->execute();
 
@@ -49,7 +50,7 @@
           $manufacturer_info_string = null;
 
           if (!empty($Qmanufacturer->value('manufacturers_image'))) {
-            $manufacturer_info_string .= '<div class="center-block">' . HTML::image(DIR_WS_IMAGES . $Qmanufacturer->value('manufacturers_image'), $Qmanufacturer->value('manufacturers_name')) . '</div>';
+            $manufacturer_info_string .= '<div>' . HTML::image(OSCOM::linkImage($Qmanufacturer->value('manufacturers_image')), $Qmanufacturer->value('manufacturers_name')) . '</div>';
           }
 
           if (!empty($Qmanufacturer->value('manufacturers_url'))) {

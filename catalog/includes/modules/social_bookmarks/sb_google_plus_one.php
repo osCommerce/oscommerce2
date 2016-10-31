@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,11 @@
     var $icon;
     var $enabled = false;
 
-    function sb_google_plus_one() {
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_DESCRIPTION;
@@ -33,20 +38,7 @@
     }
 
     function getOutput() {
-      global $lng;
-
-      if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-        $lng = new language;
-      }
-
-      foreach ($lng->catalog_languages as $lkey => $lvalue) {
-        if ($lvalue['id'] == $_SESSION['languages_id']) {
-          $language_code = $lkey;
-          break;
-        }
-      }
-
-      $output = '<div class="g-plusone" data-href="' . OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-size="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_SIZE) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION) . '"';
+      $output = '<div class="g-plusone" data-href="' . OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false) . '" data-size="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_SIZE) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION) . '"';
 
       if (MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ANNOTATION == 'Inline') {
         $output.= ' data-width="' . (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_WIDTH . '" data-align="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_ONE_ALIGN) . '"';
@@ -60,7 +52,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+    window.___gcfg.lang = "' . HTML::outputProtected($this->lang->get('code')) . '";
   }
 
   (function() {

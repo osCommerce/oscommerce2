@@ -15,55 +15,13 @@
   use OSC\OM\Registry;
 
 ////
-// Get the installed version number
-  function tep_get_version() {
-    static $v;
-
-    if (!isset($v)) {
-      $v = trim(implode('', file(DIR_FS_CATALOG . 'includes/version.php')));
-    }
-
-    return $v;
-  }
-
-////
-// Stop from parsing any further PHP code
-// v2.3.3.1 now closes the session through a registered shutdown function
-  function tep_exit() {
-   exit;
-  }
-
-////
-// Parse the data used in the html tags to ensure the tags will not break
-    function tep_output_string($string, $translate = false, $protected = false) {
-    if ($protected == true) {
-      return htmlspecialchars($string);
-    } else {
-      if ($translate == false) {
-        return strtr(trim($string), array('"' => '&quot;'));
-      } else {
-        return strtr(trim($string), $translate);
-      }
-    }
-  }
-
-  function tep_output_string_protected($string) {
-    return tep_output_string($string, false, true);
-  }
-
-  function tep_sanitize_string($string) {
-    $patterns = array ('/ +/','/[<>]/');
-    $replace = array (' ', '_');
-    return preg_replace($patterns, $replace, trim($string));
-  }
-
-////
 // Return a product's name
 // TABLES: products
   function tep_get_products_name($product_id, $language_id = null) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
-    if (!isset($language_id)) $language_id = $_SESSION['languages_id'];
+    if (empty($language_id) || !is_numeric($language_id)) $language_id = $OSCOM_Language->getId();
 
     $Qproduct = $OSCOM_Db->prepare('select products_name from :table_products_description where products_id = :products_id and language_id = :language_id');
     $Qproduct->bindInt(':products_id', $product_id);
@@ -113,7 +71,7 @@
     $out_of_stock = '';
 
     if ($stock_left < 0) {
-      $out_of_stock = '<span class="markProductOutOfStock">' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</span>';
+      $out_of_stock = '<span class="text-danger"><b>' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . '</b></span>';
     }
 
     return $out_of_stock;
@@ -240,12 +198,6 @@
     }
 
     return 'cPath=' . $cPath_new;
-  }
-
-////
-// Returns the clients browser
-  function tep_browser_detect($component) {
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
   }
 
 ////
@@ -578,12 +530,13 @@
 
   function tep_get_categories($categories_array = '', $parent_id = '0', $indent = '') {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (!is_array($categories_array)) $categories_array = array();
 
     $Qcategories = $OSCOM_Db->prepare('select c.categories_id, cd.categories_name from :table_categories c, :table_categories_description cd where c.parent_id = :parent_id and c.categories_id = cd.categories_id and cd.language_id = :language_id order by c.sort_order, cd.categories_name');
     $Qcategories->bindInt(':parent_id', $parent_id);
-    $Qcategories->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qcategories->bindInt(':language_id', $OSCOM_Language->getId());
     $Qcategories->execute();
 
     while ($Qcategories->fetch()) {
@@ -628,42 +581,6 @@
       if ($Qsub->valueInt('categories_id') != $parent_id) {
         tep_get_subcategories($subcategories_array, $Qsub->valueInt('categories_id'));
       }
-    }
-  }
-
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-  function tep_date_long($raw_date) {
-    if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
-
-    $year = (int)substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    return strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
-  }
-
-////
-// Output a raw date string in the selected locale date format
-// $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
-// NOTE: Includes a workaround for dates before 01/01/1970 that fail on windows servers
-  function tep_date_short($raw_date) {
-    if ( ($raw_date == '0000-00-00 00:00:00') || empty($raw_date) ) return false;
-
-    $year = substr($raw_date, 0, 4);
-    $month = (int)substr($raw_date, 5, 2);
-    $day = (int)substr($raw_date, 8, 2);
-    $hour = (int)substr($raw_date, 11, 2);
-    $minute = (int)substr($raw_date, 14, 2);
-    $second = (int)substr($raw_date, 17, 2);
-
-    if (@date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-      return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-      return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037)));
     }
   }
 
@@ -944,7 +861,7 @@
     $sort_suffix = '';
 
     if ($sortby) {
-      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . tep_output_string(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
+      $sort_prefix = '<a href="' . OSCOM::link($PHP_SELF, tep_get_all_get_params(array('page', 'info', 'sort')) . 'page=1&sort=' . $colnum . ($sortby == $colnum . 'a' ? 'd' : 'a')) . '" title="' . HTML::output(TEXT_SORT_PRODUCTS . ($sortby == $colnum . 'd' || substr($sortby, 0, 1) != $colnum ? TEXT_ASCENDINGLY : TEXT_DESCENDINGLY) . TEXT_BY . $heading) . '" class="productListing-heading">' ;
       $sort_suffix = (substr($sortby, 0, 1) == $colnum ? (substr($sortby, 1, 1) == 'a' ? '+' : '-') : '') . '</a>';
     }
 
@@ -1069,51 +986,6 @@
   }
 
 ////
-// Return a customer greeting
-  function tep_customer_greeting() {
-    if (isset($_SESSION['customer_first_name']) && isset($_SESSION['customer_id'])) {
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, tep_output_string_protected($_SESSION['customer_first_name']), OSCOM::link('products_new.php'));
-    } else {
-      $greeting_string = sprintf(TEXT_GREETING_GUEST, OSCOM::link('index.php', 'Account&LogIn', 'SSL'), OSCOM::link('create_account.php', '', 'SSL'));
-    }
-
-    return $greeting_string;
-  }
-
-////
-//! Send email (text/html) using MIME
-// This is the central mail function. The SMTP Server should be configured
-// correct in php.ini
-// Parameters:
-// $to_name           The name of the recipient, e.g. "Jan Wildeboer"
-// $to_email_address  The eMail address of the recipient,
-//                    e.g. jan.wildeboer@gmx.de
-// $email_subject     The subject of the eMail
-// $email_text        The text of the eMail, may contain HTML entities
-// $from_email_name   The name of the sender, e.g. Shop Administration
-// $from_email_adress The eMail address of the sender,
-//                    e.g. info@mytepshop.com
-
-  function tep_mail($to_name, $to_email_address, $email_subject, $email_text, $from_email_name, $from_email_address) {
-    if (SEND_EMAILS != 'true') return false;
-
-    // Instantiate a new mail object
-    $message = new email(array('X-Mailer: osCommerce'));
-
-    // Build the text version
-    $text = strip_tags($email_text);
-    if (EMAIL_USE_HTML == 'true') {
-      $message->add_html($email_text, $text);
-    } else {
-      $message->add_text($text);
-    }
-
-    // Send message
-    $message->build_message();
-    $message->send($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject);
-  }
-
-////
 // Check if product has attributes
   function tep_has_product_attributes($products_id) {
     $OSCOM_Db = Registry::get('Db');
@@ -1151,49 +1023,6 @@
 
   function tep_count_shipping_modules() {
     return tep_count_modules(MODULE_SHIPPING_INSTALLED);
-  }
-
-  function tep_create_random_value($length, $type = 'mixed') {
-    if ( ($type != 'mixed') && ($type != 'chars') && ($type != 'digits')) $type = 'mixed';
-
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $digits = '0123456789';
-
-    $base = '';
-
-    if ( ($type == 'mixed') || ($type == 'chars') ) {
-      $base .= $chars;
-    }
-
-    if ( ($type == 'mixed') || ($type == 'digits') ) {
-      $base .= $digits;
-    }
-
-    $value = '';
-
-    if (!class_exists('PasswordHash')) {
-      include(DIR_WS_CLASSES . 'passwordhash.php');
-    }
-
-    $hasher = new PasswordHash(10, true);
-
-    do {
-      $random = base64_encode($hasher->get_random_bytes($length));
-
-      for ($i = 0, $n = strlen($random); $i < $n; $i++) {
-        $char = substr($random, $i, 1);
-
-        if ( strpos($base, $char) !== false ) {
-          $value .= $char;
-        }
-      }
-    } while ( strlen($value) < $length );
-
-    if ( strlen($value) > $length ) {
-      $value = substr($value, 0, $length);
-    }
-
-    return $value;
   }
 
   function tep_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
@@ -1306,77 +1135,9 @@
     return $tmp_array;
   }
 
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
-  function tep_setcookie($name, $value = '', $expire = 0, $path = null, $domain = null, $secure = 0) {
-    global $cookie_path, $cookie_domain;
-
-    setcookie($name, $value, $expire, (isset($path)) ? $path : $cookie_path, (isset($domain)) ? $domain : $cookie_domain, $secure);
-  }
-
-  function tep_validate_ip_address($ip_address) {
-    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-  }
-
-  function tep_get_ip_address() {
-    static $_ip_address;
-
-    if ( !isset($_ip_address) ) {
-      $_ip_address = '0.0.0.0';
-      $ip_addresses = array();
-
-      if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
-        foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
-          $x_ip = trim($x_ip);
-
-          if ( tep_validate_ip_address($x_ip) ) {
-            $ip_addresses[] = $x_ip;
-          }
-        }
-      }
-
-      if ( isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
-      }
-
-      if ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) {
-        $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
-      }
-
-      foreach ( $ip_addresses as $ip ) {
-        if ( !empty($ip) && tep_validate_ip_address($ip) ) {
-          $_ip_address = $ip;
-          break;
-        }
-      }
-    }
-
-    return $_ip_address;
-  }
-
   function tep_count_customer_orders($id = '', $check_session = true) {
     $OSCOM_Db = Registry::get('Db');
+    $OSCOM_Language = Registry::get('Language');
 
     if (is_numeric($id) == false) {
       if (isset($_SESSION['customer_id'])) {
@@ -1394,7 +1155,7 @@
 
     $Qorders = $OSCOM_Db->prepare('select count(*) as total from :table_orders o, :table_orders_status s where o.customers_id = :customers_id and o.orders_status = s.orders_status_id and s.language_id = :language_id and s.public_flag = 1');
     $Qorders->bindInt(':customers_id', $id);
-    $Qorders->bindInt(':language_id', $_SESSION['languages_id']);
+    $Qorders->bindInt(':language_id', $OSCOM_Language->getId());
     $Qorders->execute();
 
     if ($Qorders->fetch() !== false) {
@@ -1430,11 +1191,6 @@
     }
 
     return 0;
-  }
-
-// Convert linefeeds
-  function tep_convert_linefeeds($from, $to, $string) {
-      return str_replace($from, $to, $string);
   }
 
 ////

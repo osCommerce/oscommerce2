@@ -1,0 +1,15 @@
+specials_id int not_null auto_increment
+products_id int not_null
+specials_new_products_price decimal(15,4) not_null
+specials_date_added datetime
+specials_last_modified datetime
+expires_date datetime
+date_status_change datetime
+status int(1) default(1) not_null
+--
+primary specials_id
+idx_specials_products_id products_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

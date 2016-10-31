@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class ht_datepicker_jquery {
@@ -21,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function ht_datepicker_jquery() {
+    function __construct() {
       $this->title = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_TITLE;
       $this->description = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_DESCRIPTION;
 
@@ -48,12 +49,10 @@
         if (in_array(basename($PHP_SELF), $pages_array)) {
           $oscTemplate->addBlock('<script src="ext/datepicker/js/bootstrap-datepicker.js"></script>' . "\n", $this->group);
           $oscTemplate->addBlock('<link rel="stylesheet" href="ext/datepicker/css/datepicker.css" />' . "\n", 'header_tags');
-          // create_account
-          // account edit
-          $oscTemplate->addBlock('<script>$(\'#dob\').datepicker({dateFormat: \'' . JQUERY_DATEPICKER_FORMAT . '\',viewMode: 2});</script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'input[data-provide="datepicker"]\').datepicker({format: \'' . JS_DATE_FORMAT . '\',viewMode: 2});</script>', $this->group);
           // advanced search
-          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({dateFormat: \'' . JQUERY_DATEPICKER_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
-          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({dateFormat: \'' . JQUERY_DATEPICKER_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
+          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
         }
       }
     }
@@ -127,9 +126,9 @@
 
     $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
     $files_array = array();
-	  if ($dir = @dir(DIR_FS_CATALOG)) {
+	  if ($dir = @dir(OSCOM::getConfig('dir_root', 'Shop'))) {
 	    while ($file = $dir->read()) {
-	      if (!is_dir(DIR_FS_CATALOG . $file)) {
+	      if (!is_dir(OSCOM::getConfig('dir_root', 'Shop') . $file)) {
 	        if (substr($file, strrpos($file, '.')) == $file_extension) {
             $files_array[] = $file;
           }
@@ -143,7 +142,7 @@
 
     $output = '';
     foreach ($files_array as $file) {
-      $output .= HTML::checkboxField('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . tep_output_string($file) . '<br />';
+      $output .= HTML::checkboxField('ht_datepicker_jquery_file[]', $file, in_array($file, $values_array)) . '&nbsp;' . HTML::output($file) . '<br />';
     }
 
     if (!empty($output)) {

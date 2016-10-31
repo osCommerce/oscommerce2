@@ -1,0 +1,13 @@
+products_attributes_id int not_null auto_increment
+products_id int not_null
+options_id int not_null
+options_values_id int not_null
+options_values_price decimal(15,4) not_null
+price_prefix char(1) not_null
+--
+primary products_attributes_id
+idx_products_attributes_products_id products_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

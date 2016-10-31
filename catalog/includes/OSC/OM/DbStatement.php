@@ -8,6 +8,7 @@
 
 namespace OSC\OM;
 
+use OSC\OM\Cache;
 use OSC\OM\Db;
 use OSC\OM\HTML;
 use OSC\OM\OSCOM;
@@ -20,7 +21,7 @@ class DbStatement extends \PDOStatement
     protected $page_set_keyword = 'page';
     protected $page_set;
     protected $page_set_results_per_page;
-    protected $cache_key;
+    protected $cache;
     protected $cache_expire;
     protected $cache_data;
     protected $cache_read = false;
@@ -70,13 +71,13 @@ class DbStatement extends \PDOStatement
 
     public function execute($input_parameters = null)
     {
-        if (isset($this->cache_key)) {
+        if (isset($this->cache)) {
             if (isset($this->page_set)) {
-                $this->cache_key = $this->cache_key . '-pageset' . $this->page_set;
+                $this->cache->setKey($this->cache->getKey() . '-pageset' . $this->page_set);
             }
 
-            if (Registry::get('Cache')->read($this->cache_key, $this->cache_expire)) {
-                $this->cache_data = Registry::get('Cache')->getCache();
+            if ($this->cache->exists($this->cache_expire)) {
+                $this->cache_data = $this->cache->get();
 
                 if (isset($this->cache_data['data']) && isset($this->cache_data['total'])) {
                     $this->page_set_total_rows = $this->cache_data['total'];
@@ -116,7 +117,7 @@ class DbStatement extends \PDOStatement
         } else {
             $this->result = parent::fetch($fetch_style, $cursor_orientation, $cursor_offset);
 
-            if (isset($this->cache_key) && ($this->result !== false)) {
+            if (isset($this->cache) && ($this->result !== false)) {
                 if (!isset($this->cache_data)) {
                     $this->cache_data = [];
                 }
@@ -141,12 +142,21 @@ class DbStatement extends \PDOStatement
                 $this->result = parent::fetchAll($fetch_style);
             }
 
-            if (isset($this->cache_key) && ($this->result !== false)) {
+            if (isset($this->cache) && ($this->result !== false)) {
                 $this->cache_data = $this->result;
             }
         }
 
         return $this->result;
+    }
+
+    public function check()
+    {
+        if (!isset($this->result)) {
+            $this->fetch();
+        }
+
+        return $this->result !== false;
     }
 
     public function toArray()
@@ -168,12 +178,12 @@ class DbStatement extends \PDOStatement
             $cache_empty_results = false;
         }
 
-        $this->cache_key = basename($key);
+        $this->cache = new Cache($key);
         $this->cache_expire = $expire;
         $this->cache_empty_results = $cache_empty_results;
 
         if ($this->query_call != 'prepare') {
-            trigger_error('OSCOM_DbStatement::setCache(): Cannot set cache (\'' . $this->cache_key . '\') on a non-prepare query. Please change the query to a prepare() query.');
+            trigger_error('OSC\\OM\\DbStatement::setCache(): Cannot set cache (\'' . $key . '\') on a non-prepare query. Please change the query to a prepare() query.');
         }
     }
 
@@ -288,19 +298,29 @@ class DbStatement extends \PDOStatement
 
     public function getPageSetLinks($parameters = null)
     {
-        global $PHP_SELF, $request_type;
+        global $PHP_SELF;
 
         $number_of_pages = ceil($this->page_set_total_rows / $this->page_set_results_per_page);
 
-        if (!empty($parameters) && (substr($parameters, -1) != '&')) {
-            $parameters .= '&';
+        if (empty($parameters)) {
+            $parameters = '';
         }
 
-        $output = '<ul class="pagination">';
+        if (!empty($parameters)) {
+            parse_str($parameters, $p);
+
+            if (isset($p[$this->page_set_keyword])) {
+                unset($p[$this->page_set_keyword]);
+            }
+
+            $parameters = http_build_query($p) . '&';
+        }
+
+        $output = '<ul style="margin-top: 0;" class="pagination">';
 
 // previous button - not displayed on first page
         if ($this->page_set > 1) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">&laquo;</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set - 1)) . '" title=" ' . PREVNEXT_TITLE_PREVIOUS_PAGE . ' ">&laquo;</a></li>';
         } else {
             $output .= '<li class="disabled"><span>&laquo;</span></li>';
         }
@@ -325,26 +345,26 @@ class DbStatement extends \PDOStatement
 
 // previous window of pages
         if ($cur_window_num > 1) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows), $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num - 1) * $this->page_set_total_rows)) . '" title=" ' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a></li>';
         }
 
 // page nn button
         for ($jump_to_page = 1 + (($cur_window_num - 1) * $this->page_set_total_rows); ($jump_to_page <= ($cur_window_num * $this->page_set_total_rows)) && ($jump_to_page <= $number_of_pages); $jump_to_page++) {
             if ($jump_to_page == $this->page_set) {
-                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
+                $output .= '<li class="active"><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '<span class="sr-only">(current)</span></a></li>';
             } else {
-                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page, $request_type) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
+                $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . $jump_to_page) . '" title=" ' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . ' ">' . $jump_to_page . '</a></li>';
             }
         }
 
 // next window of pages
         if ($cur_window_num < $max_window_num) {
-            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1), $request_type) . '" class="pageResults" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a>&nbsp;';
+            $output .= '<a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . (($cur_window_num) * $this->page_set_total_rows + 1)) . '" class="pageResults" title=" ' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $this->page_set_total_rows) . ' ">...</a>&nbsp;';
         }
 
 // next button
         if (($this->page_set < $number_of_pages) && ($number_of_pages != 1)) {
-            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1), $request_type) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">&raquo;</a></li>';
+            $output .= '<li><a href="' . OSCOM::link($PHP_SELF, $parameters . $this->page_set_keyword . '=' . ($this->page_set + 1)) . '" title=" ' . PREVNEXT_TITLE_NEXT_PAGE . ' ">&raquo;</a></li>';
         } else {
             $output .= '<li class="disabled"><span>&raquo;</span></li>';
         }
@@ -356,8 +376,8 @@ class DbStatement extends \PDOStatement
 
     public function __destruct()
     {
-        if (($this->cache_read === false) && isset($this->cache_key) && is_array($this->cache_data)) {
-            if ($this->cache_empty_results || ($this->cache_data[0] !== false)) {
+        if (($this->cache_read === false) && isset($this->cache) && is_array($this->cache_data)) {
+            if ($this->cache_empty_results || (isset($this->cache_data[0]) && ($this->cache_data[0] !== false))) {
                 $cache_data = $this->cache_data;
 
                 if (isset($this->page_set_total_rows)) {
@@ -367,7 +387,7 @@ class DbStatement extends \PDOStatement
                     ];
                 }
 
-                Registry::get('Cache')->write($cache_data, $this->cache_key);
+                $this->cache->save($cache_data);
             }
         }
     }

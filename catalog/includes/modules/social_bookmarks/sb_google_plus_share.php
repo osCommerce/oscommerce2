@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -21,7 +22,11 @@
     var $icon;
     var $enabled = false;
 
-    function sb_google_plus_share() {
+    protected $lang;
+
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
       $this->title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_DESCRIPTION;
@@ -33,26 +38,13 @@
     }
 
     function getOutput() {
-      global $lng;
-
-      if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-        $lng = new language;
-      }
-
-      foreach ($lng->catalog_languages as $lkey => $lvalue) {
-        if ($lvalue['id'] == $_SESSION['languages_id']) {
-          $language_code = $lkey;
-          break;
-        }
-      }
-
       $button_height = (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_HEIGHT;
 
       if (MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION == 'Vertical-Bubble') {
         $button_height = 60;
       }
 
-      $output = '<div class="g-plus" data-action="share" data-href="' . OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
+      $output = '<div class="g-plus" data-action="share" data-href="' . OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false) . '" data-annotation="' . strtolower(MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_ANNOTATION) . '"';
 
       if ((int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH > 0) {
         $output .= ' data-width="' . (int)MODULE_SOCIAL_BOOKMARKS_GOOGLE_PLUS_SHARE_WIDTH . '"';
@@ -66,7 +58,7 @@
   }
 
   if ( typeof window.___gcfg.lang == "undefined" ) {
-    window.___gcfg.lang = "' . tep_output_string_protected($language_code) . '";
+    window.___gcfg.lang = "' . HTML::outputProtected($this->lang->get('code')) . '";
   }
 
   (function() {

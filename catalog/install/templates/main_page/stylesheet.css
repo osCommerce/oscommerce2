@@ -1,49 +1,11 @@
-/*
-  $Id$
-
-  osCommerce, Open Source E-Commerce Solutions
-  http://www.oscommerce.com
-
-  Copyright (c) 2015 osCommerce
-
-  Released under the GNU General Public License
-*/
-
-body {
-  margin: 0 20px 20px 20px;
-  line-height: 1.5;
-}
-
-h1 {
-  font-size: 20px;
-  margin-top: 0px;
-}
-
-h2 {
-  font-size: 16px;
-  margin-top: 0px;
-}
-
-h3 {
-  font-size: 12px;
-  margin-top: 0px;
-}
-
-.infoPane h3 {
-  background: #6da96d;
-  color: #ffffff;
-  padding: 5px 10px 5px 10px;
-}
-
-#mBox {
-  margin-bottom: 10px;
-  display: none;
-}
-
 #headerShortcuts {
   margin-top: 20px;
 }
 
-.inputRequirement {
-  color: red;
+.alert h2 {
+  margin-top: 0px;
+}
+
+h1 {
+  margin-top: 0px;
 }

@@ -10,6 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Registry;
+
 ////
 // Class to handle currencies
 // TABLES: currencies
@@ -18,16 +20,30 @@
 
 // class constructor
     function currencies() {
+      $OSCOM_Db = Registry::get('Db');
+
       $this->currencies = array();
-      $currencies_query = tep_db_query("select code, title, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, value from " . TABLE_CURRENCIES);
-      while ($currencies = tep_db_fetch_array($currencies_query)) {
-	    $this->currencies[$currencies['code']] = array('title' => $currencies['title'],
-                                                       'symbol_left' => $currencies['symbol_left'],
-                                                       'symbol_right' => $currencies['symbol_right'],
-                                                       'decimal_point' => $currencies['decimal_point'],
-                                                       'thousands_point' => $currencies['thousands_point'],
-                                                       'decimal_places' => $currencies['decimal_places'],
-                                                       'value' => $currencies['value']);
+      $Qcurrencies = $OSCOM_Db->get('currencies', [
+        'code',
+        'title',
+        'symbol_left',
+        'symbol_right',
+        'decimal_point',
+        'thousands_point',
+        'decimal_places',
+        'value'
+      ]);
+
+      while ($Qcurrencies->fetch()) {
+        $this->currencies[$Qcurrencies->value('code')] = [
+          'title' => $Qcurrencies->value('title'),
+          'symbol_left' => $Qcurrencies->value('symbol_left'),
+          'symbol_right' => $Qcurrencies->value('symbol_right'),
+          'decimal_point' => $Qcurrencies->value('decimal_point'),
+          'thousands_point' => $Qcurrencies->value('thousands_point'),
+          'decimal_places' => $Qcurrencies->value('decimal_places'),
+          'value' => $Qcurrencies->value('value')
+        ];
       }
     }
 

@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_reviews() {
+    function __construct() {
       $this->title = MODULE_BOXES_REVIEWS_TITLE;
       $this->description = MODULE_BOXES_REVIEWS_DESCRIPTION;
 
@@ -38,6 +38,7 @@
       global $currencies, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       $reviews_box_contents = '';
 
@@ -50,7 +51,7 @@
       $sql_query .= ' order by r.reviews_id desc limit ' . (int)MAX_RANDOM_SELECT_REVIEWS;
 
       $Qcheck = $OSCOM_Db->prepare($sql_query);
-      $Qcheck->bindInt(':languages_id', $_SESSION['languages_id']);
+      $Qcheck->bindInt(':languages_id', $OSCOM_Language->getId());
 
       if (isset($_GET['products_id'])) {
         $Qcheck->bindInt(':products_id', $_GET['products_id']);
@@ -65,18 +66,18 @@
 
         $Qreview = $OSCOM_Db->prepare('select r.reviews_id, r.reviews_rating, substring(rd.reviews_text, 1, 60) as reviews_text, p.products_id, p.products_image, pd.products_name from :table_reviews r, :table_reviews_description rd, :table_products p, :table_products_description pd where r.reviews_id = :reviews_id and r.reviews_id = rd.reviews_id and rd.languages_id = :languages_id and r.products_id = p.products_id and p.products_id = pd.products_id and pd.language_id = rd.languages_id');
         $Qreview->bindInt(':reviews_id', $result['reviews_id']);
-        $Qreview->bindInt(':languages_id', $_SESSION['languages_id']);
+        $Qreview->bindInt(':languages_id', $OSCOM_Language->getId());
         $Qreview->execute();
 
         if ($Qreview->fetch() !== false) {
 // display random review box
           $rand_review_text = tep_break_string($Qreview->valueProtected('reviews_text'), 15, '-<br />');
 
-          $reviews_box_contents = '<div class="text-center"><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . HTML::image(DIR_WS_IMAGES . $Qreview->value('products_image'), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $Qreview->valueInt('reviews_rating')) . '">' . HTML::stars($Qreview->valueInt('reviews_rating')) . '</div>';
+          $reviews_box_contents = '<div class="text-center"><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . HTML::image(OSCOM::linkImage($Qreview->value('products_image')), $Qreview->value('products_name'), SMALL_IMAGE_WIDTH, SMALL_IMAGE_HEIGHT) . '</a></div><div><a href="' . OSCOM::link('product_reviews.php', 'products_id=' . $Qreview->valueInt('products_id')) . '">' . $rand_review_text . '</a>...</div><div class="text-center" title="' .  sprintf(MODULE_BOXES_REVIEWS_BOX_TEXT_OF_5_STARS, $Qreview->valueInt('reviews_rating')) . '">' . HTML::stars($Qreview->valueInt('reviews_rating')) . '</div>';
         }
       } elseif (isset($_GET['products_id'])) {
 // display 'write a review' box
-        $reviews_box_contents = '<span class="glyphicon glyphicon-thumbs-up"></span> <a href="' . OSCOM::link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
+        $reviews_box_contents = '<span class="fa fa-thumbs-up"></span> <a href="' . OSCOM::link('product_reviews_write.php', 'products_id=' . (int)$_GET['products_id']) . '">' . MODULE_BOXES_REVIEWS_BOX_WRITE_REVIEW .'</a>';
       } else {
 // display 'no reviews' box
         $reviews_box_contents = '<p>' . MODULE_BOXES_REVIEWS_BOX_NO_REVIEWS . '</p>';
@@ -117,7 +118,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

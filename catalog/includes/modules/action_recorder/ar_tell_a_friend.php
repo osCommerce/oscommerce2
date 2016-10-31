@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\Registry;
 
   class ar_tell_a_friend {
@@ -20,7 +21,7 @@
     var $minutes = 15;
     var $identifier;
 
-    function ar_tell_a_friend() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_TELL_A_FRIEND_TITLE;
       $this->description = MODULE_ACTION_RECORDER_TELL_A_FRIEND_DESCRIPTION;
 
@@ -30,7 +31,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = HTTP::getIpAddress();
     }
 
     function canPerform($user_id, $user_name) {

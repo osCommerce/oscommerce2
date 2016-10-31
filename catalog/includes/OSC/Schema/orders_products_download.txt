@@ -1,0 +1,13 @@
+orders_products_download_id int not_null auto_increment
+orders_id int default(0) not_null
+orders_products_id int default(0) not_null
+orders_products_filename varchar(255) default('') not_null
+download_maxdays int(2) default(0) not_null
+download_count int(2) default(0) not_null
+--
+primary orders_products_download_id
+idx_orders_products_download_orders_id orders_id
+##
+engine innodb
+character_set utf8
+collate utf8_unicode_ci

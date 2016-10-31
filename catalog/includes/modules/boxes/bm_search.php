@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_search() {
+    function __construct() {
       $this->title = MODULE_BOXES_SEARCH_TITLE;
       $this->description = MODULE_BOXES_SEARCH_DESCRIPTION;
 
@@ -35,10 +35,10 @@
     }
 
     function execute() {
-      global $request_type, $oscTemplate;
+      global $oscTemplate;
 
-      $form_output = HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get', null, ['session_id' => true]) .
-                     '<div class="input-group">' . HTML::inputField('keywords', '', 'required aria-required="true" placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="glyphicon glyphicon-search"></i></button></span></div>' .
+      $form_output = HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', false), 'get', null, ['session_id' => true]) .
+                     '<div class="input-group">' . HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button></span></div>' .
                      HTML::hiddenField('search_in_description', '0') .
                      '</form>';
 
@@ -77,7 +77,7 @@
         'configuration_value' => 'Left Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

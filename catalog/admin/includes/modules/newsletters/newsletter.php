@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTML;
+  use OSC\OM\Mail;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class newsletter {
     var $show_choose_audience, $title, $content;
 
@@ -24,31 +29,31 @@
     }
 
     function confirm() {
+      $OSCOM_Db = Registry::get('Db');
 
-      $mail_query = tep_db_query("select count(*) as count from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
-      $mail = tep_db_fetch_array($mail_query);
+      $Qmail = $OSCOM_Db->get('customers', 'count(*) as count', ['customers_newsletter' => '1']);
 
       $confirm_string = '<table border="0" cellspacing="0" cellpadding="2">' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, $mail['count']) . '</strong></font></td>' . "\n" .
+                        '    <td class="main"><font color="#ff0000"><strong>' . sprintf(TEXT_COUNT_CUSTOMERS, $Qmail->valueInt('count')) . '</strong></font></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td class="main"><strong>' . $this->title . '</strong></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
                         '    <td class="main"><tt>' . nl2br($this->content) . '</tt></td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td>' . tep_draw_separator('pixel_trans.gif', '1', '10') . '</td>' . "\n" .
+                        '    <td>&nbsp;</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '  <tr>' . "\n" .
-                        '    <td class="smallText" align="right">' . tep_draw_button(IMAGE_SEND, 'mail-closed', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send'), 'primary') . tep_draw_button(IMAGE_CANCEL, 'close', tep_href_link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])) . '</td>' . "\n" .
+                        '    <td class="smallText" align="right">' . HTML::button(IMAGE_SEND, 'fa fa-envelope', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'] . '&action=confirm_send')) . HTML::button(IMAGE_CANCEL, 'fa fa-close', OSCOM::link(FILENAME_NEWSLETTERS, 'page=' . $_GET['page'] . '&nID=' . $_GET['nID'])) . '</td>' . "\n" .
                         '  </tr>' . "\n" .
                         '</table>';
 
@@ -56,25 +61,35 @@
     }
 
     function send($newsletter_id) {
-      $mail_query = tep_db_query("select customers_firstname, customers_lastname, customers_email_address from " . TABLE_CUSTOMERS . " where customers_newsletter = '1'");
+      $OSCOM_Db = Registry::get('Db');
 
-      $mimemessage = new email(array('X-Mailer: osCommerce'));
+      $newsletterEmail = new Mail();
+      $newsletterEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
+      $newsletterEmail->setSubject($this->title);
+      $newsletterEmail->setBody($this->content);
 
-      // Build the text version
-      $text = strip_tags($this->content);
-      if (EMAIL_USE_HTML == 'true') {
-        $mimemessage->add_html($this->content, $text);
-      } else {
-        $mimemessage->add_text($text);
+      $Qmail = $OSCOM_Db->get('customers', [
+        'customers_firstname',
+        'customers_lastname',
+        'customers_email_address'
+      ], [
+        'customers_newsletter' => '1'
+      ]);
+
+      while ($Qmail->fetch()) {
+        $newsletterEmail->clearTo();
+
+        $newsletterEmail->addTo($Qmail->value('customers_email_address'), $Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'));
+
+        $newsletterEmail->send();
       }
 
-      $mimemessage->build_message();
-      while ($mail = tep_db_fetch_array($mail_query)) {
-        $mimemessage->send($mail['customers_firstname'] . ' ' . $mail['customers_lastname'], $mail['customers_email_address'], '', EMAIL_FROM, $this->title);
-      }
-
-      $newsletter_id = tep_db_prepare_input($newsletter_id);
-      tep_db_query("update " . TABLE_NEWSLETTERS . " set date_sent = now(), status = '1' where newsletters_id = '" . tep_db_input($newsletter_id) . "'");
+      $OSCOM_Db->save('newsletters', [
+        'date_sent' => 'now()',
+        'status' => '1'
+      ], [
+        'newsletters_id' => (int)$newsletter_id
+      ]);
     }
   }
 ?>

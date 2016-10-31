@@ -10,17 +10,22 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class securityCheck_install_directory {
     var $type = 'warning';
 
-    function securityCheck_install_directory() {
-      global $language;
+    protected $lang;
 
-      include(DIR_FS_ADMIN . 'includes/languages/' . $language . '/modules/security_check/install_directory.php');
+    function __construct() {
+      $this->lang = Registry::get('Language');
+
+      $this->lang->loadDefinitions('modules/security_check/install_directory');
     }
 
     function pass() {
-      return !file_exists(DIR_FS_CATALOG . 'install');
+      return !is_dir(OSCOM::getConfig('dir_root', 'Shop') . 'install');
     }
 
     function getMessage() {

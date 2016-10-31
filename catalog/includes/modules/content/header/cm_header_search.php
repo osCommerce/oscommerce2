@@ -22,13 +22,13 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_header_search() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
       $this->title = MODULE_CONTENT_HEADER_SEARCH_TITLE;
       $this->description = MODULE_CONTENT_HEADER_SEARCH_DESCRIPTION;
-      if (defined('MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION')) $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
 
       if ( defined('MODULE_CONTENT_HEADER_SEARCH_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_HEADER_SEARCH_SORT_ORDER;
@@ -37,20 +37,20 @@
     }
 
     function execute() {
-      global $oscTemplate, $request_type;
-      
+      global $oscTemplate;
+
       $content_width = MODULE_CONTENT_HEADER_SEARCH_CONTENT_WIDTH;
-      
+
       $search_box = '<div class="searchbox-margin">';
-      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', $request_type, false), 'get', 'class="form-horizontal"', ['session_id' => true]);
+      $search_box .= HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', false), 'get', 'class="form-horizontal"', ['session_id' => true]);
       $search_box .= '  <div class="input-group">' .
-                          HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-search"></i></button></span>' .
+                          HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-info"><i class="fa fa-search"></i></button></span>' .
                      '  </div>';
       $search_box .= '</form>';
       $search_box .= '</div>';
-      
+
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/search.php');
+      include('includes/modules/content/' . $this->group . '/templates/search.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

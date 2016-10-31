@@ -10,14 +10,21 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class cfg_modules {
     var $_modules = array();
 
+    protected $lang;
+
     function cfg_modules() {
-      global $PHP_SELF, $language;
+      global $PHP_SELF;
+
+      $this->lang = Registry::get('Language');
 
       $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-      $directory = DIR_WS_MODULES . 'cfg_modules';
+      $directory = OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules';
 
       if ($dir = @dir($directory)) {
         while ($file = $dir->read()) {
@@ -25,8 +32,9 @@
             if (substr($file, strrpos($file, '.')) == $file_extension) {
               $class = substr($file, 0, strrpos($file, '.'));
 
-              include(DIR_WS_LANGUAGES . $language . '/modules/cfg_modules/' . $file);
-              include(DIR_WS_MODULES . 'cfg_modules/' . $class . '.php');
+              $this->lang->loadDefinitions('modules/cfg_modules/' . pathinfo($file, PATHINFO_FILENAME));
+
+              include(OSCOM::getConfig('dir_root') . 'includes/modules/cfg_modules/' . $class . '.php');
 
               $m = new $class();
 
@@ -35,7 +43,8 @@
                                         'language_directory' => $m->language_directory,
                                         'key' => $m->key,
                                         'title' => $m->title,
-                                        'template_integration' => $m->template_integration);
+                                        'template_integration' => $m->template_integration,
+                                        'site' => $m->site);
             }
           }
         }

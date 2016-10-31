@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_cs_product_notifications() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -49,11 +49,11 @@
 
               foreach ( $notify as $n ) {
                 if ( is_numeric($n) && ($n > 0) ) {
-                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['products_id' => $n, 'customers_id' => $_SESSION['customer_id']], null, 1);
+                  $Qcheck = $OSCOM_Db->get('products_notifications', 'products_id', ['products_id' => (int)$n, 'customers_id' => $_SESSION['customer_id']], null, 1);
 
                   if ( $Qcheck->fetch() === false ) {
                     $OSCOM_Db->save('products_notifications', [
-                      'products_id' => $n,
+                      'products_id' => (int)$n,
                       'customers_id' => $_SESSION['customer_id'],
                       'date_added' => 'now()'
                     ]);
@@ -69,21 +69,14 @@
 
           while ($Qproducts->fetch()) {
             if ( !isset($products_displayed[$Qproducts->valueInt('products_id')]) ) {
-              $products_displayed[$Qproducts->valueInt('products_id')]  = '<div class="form-group">' .
-                                                                          '  <label class="control-label col-xs-3">' . $Qproducts->value('products_name') . '</label>' .
-                                                                          '  <div class="col-xs-9">' .
-                                                                          '    <div class="checkbox">' .
-                                                                          '      <label>' . HTML::checkboxField('notify[]', $Qproducts->valueInt('products_id')) . '&nbsp;</label>' .
-                                                                          '    </div>' .
-                                                                          '  </div>' .
-                                                                          '</div>';
+              $products_displayed[$Qproducts->valueInt('products_id')]  = '<div class="checkbox"><label>' . HTML::checkboxField('notify[]', $Qproducts->valueInt('products_id')) . ' ' . $Qproducts->value('products_name') . '</label></div>';
             }
           }
 
-          $products_notifications = implode('<br />', $products_displayed);
+          $products_notifications = implode('', $products_displayed);
 
           ob_start();
-          include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/product_notifications.php');
+          include('includes/modules/content/' . $this->group . '/templates/product_notifications.php');
           $template = ob_get_clean();
 
           $oscTemplate->addContent($template, $this->group);

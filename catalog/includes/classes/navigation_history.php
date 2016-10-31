@@ -13,7 +13,7 @@
   class navigationHistory {
     var $path, $snapshot;
 
-    function navigationHistory() {
+    function __construct() {
       $this->reset();
     }
 
@@ -23,7 +23,7 @@
     }
 
     function add_current_page() {
-      global $PHP_SELF, $request_type, $cPath;
+      global $PHP_SELF, $cPath;
 
       $set = 'true';
       for ($i=0, $n=sizeof($this->path); $i<$n; $i++) {
@@ -59,7 +59,6 @@
 
       if ($set == 'true') {
         $this->path[] = array('page' => $PHP_SELF,
-                              'mode' => $request_type,
                               'get' => $this->filter_parameters($_GET),
                               'post' => $this->filter_parameters($_POST));
       }
@@ -75,16 +74,14 @@
     }
 
     function set_snapshot($page = '') {
-      global $PHP_SELF, $request_type;
+      global $PHP_SELF;
 
       if (is_array($page)) {
-        $this->snapshot = array('page' => $page['page'],
-                                'mode' => $page['mode'],
-                                'get' => $this->filter_parameters($page['get']),
-                                'post' => $this->filter_parameters($page['post']));
+        $this->snapshot = array('page' => isset($page['page']) ? $page['page'] : $PHP_SELF,
+                                'get' => isset($page['get']) ? $this->filter_parameters($page['get']) : array(),
+                                'post' => isset($page['post']) ? $this->filter_parameters($page['post']) : array());
       } else {
         $this->snapshot = array('page' => $PHP_SELF,
-                                'mode' => $request_type,
                                 'get' => $this->filter_parameters($_GET),
                                 'post' => $this->filter_parameters($_POST));
       }
@@ -97,7 +94,6 @@
     function set_path_as_snapshot($history = 0) {
       $pos = (sizeof($this->path)-1-$history);
       $this->snapshot = array('page' => $this->path[$pos]['page'],
-                              'mode' => $this->path[$pos]['mode'],
                               'get' => $this->path[$pos]['get'],
                               'post' => $this->path[$pos]['post']);
     }
@@ -120,7 +116,7 @@
       if (sizeof($this->snapshot) > 0) {
         echo '<br /><br />';
 
-        echo $this->snapshot['mode'] . ' ' . $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
+        echo $this->snapshot['page'] . '?' . tep_array_to_string($this->snapshot['get'], array(session_name())) . '<br />';
       }
     }
 

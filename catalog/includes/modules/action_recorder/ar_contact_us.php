@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\HTTP;
   use OSC\OM\Registry;
 
   class ar_contact_us {
@@ -20,7 +21,7 @@
     var $minutes = 15;
     var $identifier;
 
-    function ar_contact_us() {
+    function __construct() {
       $this->title = MODULE_ACTION_RECORDER_CONTACT_US_TITLE;
       $this->description = MODULE_ACTION_RECORDER_CONTACT_US_DESCRIPTION;
 
@@ -30,7 +31,7 @@
     }
 
     function setIdentifier() {
-      $this->identifier = tep_get_ip_address();
+      $this->identifier = HTTP::getIpAddress();
     }
 
     function canPerform($user_id, $user_name) {

@@ -15,7 +15,7 @@
   class cod {
     var $code, $title, $description, $enabled;
 
-    function cod() {
+    function __construct() {
       global $order;
 
       $this->code = 'cod';

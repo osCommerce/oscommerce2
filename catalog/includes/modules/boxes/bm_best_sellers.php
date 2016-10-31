@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_best_sellers() {
+    function __construct() {
       $this->title = MODULE_BOXES_BEST_SELLERS_TITLE;
       $this->description = MODULE_BOXES_BEST_SELLERS_DESCRIPTION;
 
@@ -37,6 +37,7 @@
       global $current_category_id, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (!isset($_GET['products_id'])) {
         if (isset($current_category_id) && ($current_category_id > 0)) {
@@ -46,7 +47,7 @@
         }
 
         $Qbest = $OSCOM_Db->prepare($sql);
-        $Qbest->bindInt(':language_id', $_SESSION['languages_id']);
+        $Qbest->bindInt(':language_id', $OSCOM_Language->getId());
 
         if (isset($current_category_id) && ($current_category_id > 0)) {
           $Qbest->bindInt(':category_id', $current_category_id);
@@ -61,8 +62,10 @@
           $bestsellers_list = '';
 
           foreach ($best as $b) {
-            $bestsellers_list .= '<li><a href="' . OSCOM::link('product_info.php', 'products_id=' . $b['products_id']) . '">' . $b['products_name'] . '</a></li>';
+            $bestsellers_list .= '<li><a href="' . OSCOM::link('product_info.php', 'products_id=' . $b['products_id']) . '"><span itemprop="itemListElement">' . $b['products_name'] . '</span></a></li>';
           }
+
+          $num_best_sellers = count($best);
 
           ob_start();
           include('includes/modules/boxes/templates/best_sellers.php');

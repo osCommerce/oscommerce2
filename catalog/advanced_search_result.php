@@ -10,12 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
 
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/advanced_search.php');
+  $OSCOM_Language->loadDefinitions('advanced_search');
 
   $error = false;
 
@@ -56,7 +57,9 @@
 
     $date_check_error = false;
     if (tep_not_null($dfrom)) {
-      if (!tep_checkdate($dfrom, DOB_FORMAT_STRING, $dfrom_array)) {
+      $dfromDateTime = new DateTime($dfrom);
+
+      if ($dfromDateTime->isValid() === false) {
         $error = true;
         $date_check_error = true;
 
@@ -65,7 +68,9 @@
     }
 
     if (tep_not_null($dto)) {
-      if (!tep_checkdate($dto, DOB_FORMAT_STRING, $dto_array)) {
+      $dtoDateTime = new DateTime($dto);
+
+      if ($dtoDateTime->isValid() === false) {
         $error = true;
         $date_check_error = true;
 
@@ -73,8 +78,8 @@
       }
     }
 
-    if (($date_check_error == false) && tep_not_null($dfrom) && tep_not_null($dto)) {
-      if (mktime(0, 0, 0, $dfrom_array[1], $dfrom_array[2], $dfrom_array[0]) > mktime(0, 0, 0, $dto_array[1], $dto_array[2], $dto_array[0])) {
+    if (($date_check_error == false) && isset($dfromDateTime) && $dfromDateTime->isValid() && isset($dtoDateTime) && $dtoDateTime->isValid()) {
+      if ($dfromDateTime->get() > $dtoDateTime->get()) {
         $error = true;
 
         $messageStack->add_session('search', ERROR_TO_DATE_LESS_THAN_FROM_DATE);
@@ -119,20 +124,20 @@
     }
   }
 
-  if (empty($dfrom) && empty($dto) && empty($pfrom) && empty($pto) && empty($keywords)) {
+  if ((!isset($dfromDateTime) || !$dfromDateTime->isValid()) && (!isset($dtoDateTime) || !$dtoDateTime->isValid()) && empty($pfrom) && empty($pto) && empty($keywords)) {
     $error = true;
 
     $messageStack->add_session('search', ERROR_AT_LEAST_ONE_INPUT);
   }
 
   if ($error == true) {
-    OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), 'NONSSL', true, false);
+    OSCOM::redirect('advanced_search.php', tep_get_all_get_params(), true, false);
   }
 
   $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('advanced_search.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), 'NONSSL', true, false));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('advanced_search_result.php', tep_get_all_get_params(), true, false));
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -237,11 +242,11 @@
     $search_query = substr($search_query, 0, -5) . ')';
   }
 
-  if (tep_not_null($dfrom)) {
+  if (isset($dfromDateTime) && $dfromDateTime->isValid()) {
     $search_query .= ' and p.products_date_added >= :products_date_added_from';
   }
 
-  if (tep_not_null($dto)) {
+  if (isset($dtoDateTime) && $dtoDateTime->isValid()) {
     $search_query .= ' and p.products_date_added <= :products_date_added_to';
   }
 
@@ -325,7 +330,7 @@
     $Qlisting->bindInt(':zone_id', $_SESSION['customer_zone_id']);
   }
 
-  $Qlisting->bindInt(':language_id', $_SESSION['languages_id']);
+  $Qlisting->bindInt(':language_id', $OSCOM_Language->getId());
 
   if (isset($_GET['categories_id']) && tep_not_null($_GET['categories_id'])) {
     $Qlisting->bindInt(':categories_id', $_GET['categories_id']);
@@ -353,12 +358,12 @@
     }
   }
 
-  if (tep_not_null($dfrom)) {
-    $Qlisting->bindValue(':products_date_added_from', tep_date_raw($dfrom));
+  if (isset($dfromDateTime) && $dfromDateTime->isValid()) {
+    $Qlisting->bindValue(':products_date_added_from', $dfromDateTime->getRaw(false));
   }
 
-  if (tep_not_null($dto)) {
-    $Qlisting->bindValue(':products_date_added_to', tep_date_raw($dto));
+  if (isset($dtoDateTime) && $dtoDateTime->isValid()) {
+    $Qlisting->bindValue(':products_date_added_to', $dtoDateTime->getRaw(false));
   }
 
   if (DISPLAY_PRICE_WITH_TAX == 'true') {
@@ -379,20 +384,20 @@
     }
   }
 
-  $Qlisting->setPageSet(MAX_DISPLAY_SEARCH_RESULTS);
+  $Qlisting->setPageSet(isset($_GET['view']) && ($_GET['view'] == 'all') ? 999999 : MAX_DISPLAY_SEARCH_RESULTS);
   $Qlisting->execute();
 
-  require('includes/modules/product_listing.php');
+  require('includes/content/product_listing.php');
 ?>
 
   <br />
 
-  <div>
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), 'NONSSL', true, false)); ?>
+  <div class="buttonSet">
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
   </div>
 </div>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

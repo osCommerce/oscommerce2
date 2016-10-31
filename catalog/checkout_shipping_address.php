@@ -18,7 +18,7 @@
 // if the customer is not logged on, redirect them to the login page
   if (!isset($_SESSION['customer_id'])) {
     $_SESSION['navigation']->set_snapshot();
-    OSCOM::redirect('index.php', 'Account&LogIn', 'SSL');
+    OSCOM::redirect('login.php');
   }
 
 // if there is nothing in the customers cart, redirect them to the shopping cart page
@@ -26,10 +26,9 @@
     OSCOM::redirect('shopping_cart.php');
   }
 
-  // needs to be included earlier to set the success message in the messageStack
-  require(DIR_WS_LANGUAGES . $_SESSION['language'] . '/checkout_shipping_address.php');
+  $OSCOM_Language->loadDefinitions('checkout_shipping_address');
 
-  require(DIR_WS_CLASSES . 'order.php');
+  require('includes/classes/order.php');
   $order = new order;
 
 // if the order contains only virtual products, forward the customer to the billing page as
@@ -37,7 +36,7 @@
   if ($order->content_type == 'virtual') {
     $_SESSION['shipping'] = false;
     $_SESSION['sendto'] = false;
-    OSCOM::redirect('checkout_payment.php', '', 'SSL');
+    OSCOM::redirect('checkout_payment.php');
   }
 
   $error = false;
@@ -169,7 +168,7 @@
 
         if (isset($_SESSION['shipping'])) unset($_SESSION['shipping']);
 
-        OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+        OSCOM::redirect('checkout_shipping.php');
       }
 // process the selected shipping destination
     } elseif (isset($_POST['address'])) {
@@ -191,14 +190,14 @@
 
       if ($Qcheck->fetch() !== false) {
         if ($reset_shipping == true) unset($_SESSION['shipping']);
-        OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+        OSCOM::redirect('checkout_shipping.php');
       } else {
         unset($_SESSION['sendto']);
       }
     } else {
       $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 
-      OSCOM::redirect('checkout_shipping.php', '', 'SSL');
+      OSCOM::redirect('checkout_shipping.php');
     }
   }
 
@@ -207,12 +206,12 @@
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php', '', 'SSL'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping_address.php', '', 'SSL'));
+  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('checkout_shipping.php'));
+  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('checkout_shipping_address.php'));
 
   $addresses_count = tep_count_customer_address_book_entries();
 
-  require('includes/template_top.php');
+  require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
@@ -225,7 +224,7 @@
   }
 ?>
 
-<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php', '', 'SSL'), 'post', 'class="form-horizontal" role="form"', ['tokenize' => true]); ?>
+<?php echo HTML::form('checkout_address', OSCOM::link('checkout_shipping_address.php'), 'post', 'class="form-horizontal"', ['tokenize' => true]); ?>
 
 <div class="contentContainer">
 
@@ -233,15 +232,11 @@
   if ($process == false) {
 ?>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_SHIPPING_ADDRESS; ?></h2>
 
   <div class="contentText row">
     <div class="col-sm-8">
-      <div class="alert alert-warning">
-        <?php echo TEXT_SELECTED_SHIPPING_DESTINATION; ?>
-      </div>
+      <div class="alert alert-warning"><?php echo TEXT_SELECTED_SHIPPING_DESTINATION; ?></div>
     </div>
     <div class="col-sm-4">
       <div class="panel panel-primary">
@@ -260,23 +255,11 @@
     if ($addresses_count > 1) {
 ?>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_ADDRESS_BOOK_ENTRIES; ?></h2>
 
-  <div class="contentText">
-    <div class="alert alert-warning">
-      <div class="pull-right">
-        <?php echo '<strong>' . TITLE_PLEASE_SELECT . '</strong>'; ?>
-      </div>
+  <div class="alert alert-info"><?php echo TEXT_SELECT_OTHER_SHIPPING_DESTINATION; ?></div>
 
-      <?php echo TEXT_SELECT_OTHER_SHIPPING_DESTINATION; ?>
-    </div>
-  </div>
-
-  <div class="contentText">
-    <table class="table table-striped table-condensed table-hover">
-      <tbody>
+  <div class="contentText row">
 
 <?php
       $Qab = $OSCOM_Db->prepare('select address_book_id, entry_firstname as firstname, entry_lastname as lastname, entry_company as company, entry_street_address as street_address, entry_suburb as suburb, entry_city as city, entry_postcode as postcode, entry_state as state, entry_zone_id as zone_id, entry_country_id as country_id from :table_address_book where customers_id = :customers_id order by firstname, lastname');
@@ -285,27 +268,22 @@
 
       while ($Qab->fetch()) {
         $format_id = tep_get_address_format_id($Qab->valueInt('country_id'));
-
-        if ($Qab->valueInt('address_book_id') == $_SESSION['sendto']) {
-          echo '      <tr id="defaultSelected" class="moduleRowSelected">' . "\n";
-        } else {
-          echo '      <tr class="moduleRow">' . "\n";
-        }
 ?>
 
-        <td>
-          <strong><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong>
-          <div class="help-block"><?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', ', '); ?></div>
-        </td>
-        <td align="right"><?php echo HTML::radioField('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $_SESSION['sendto'])); ?></td>
-      </tr>
+      <div class="col-sm-4">
+        <div class="panel panel-<?php echo ($Qab->valueInt('address_book_id') == $_SESSION['sendto']) ? 'primary' : 'default'; ?>">
+          <div class="panel-heading"><?php echo HTML::outputProtected($Qab->value('firstname') . ' ' . $Qab->value('lastname')); ?></strong></div>
+          <div class="panel-body">
+            <?php echo tep_address_format($format_id, $Qab->toArray(), true, ' ', '<br />'); ?>
+          </div>
+          <div class="panel-footer text-center"><?php echo HTML::radioField('address', $Qab->valueInt('address_book_id'), ($Qab->valueInt('address_book_id') == $_SESSION['sendto'])); ?></div>
+        </div>
+      </div>
 
 <?php
       }
 ?>
 
-      </tbody>
-    </table>
   </div>
 
 <?php
@@ -315,32 +293,48 @@
   if ($addresses_count < MAX_ADDRESS_BOOK_ENTRIES) {
 ?>
 
-  <div class="page-header">
-    <h4><?php echo TABLE_HEADING_NEW_SHIPPING_ADDRESS; ?></h4>
-  </div>
+  <h2><?php echo TABLE_HEADING_NEW_SHIPPING_ADDRESS; ?></h2>
 
-  <div class="contentText">
-    <div class="alert alert-info">
-      <?php echo TEXT_CREATE_NEW_SHIPPING_ADDRESS; ?>
-    </div>
-  </div>
+  <div class="alert alert-info"><?php echo TEXT_CREATE_NEW_SHIPPING_ADDRESS; ?></div>
 
-  <?php require('includes/modules/checkout_new_address.php'); ?>
+  <?php require('includes/content/checkout_new_address.php'); ?>
 
 <?php
   }
 ?>
 
-  <div class="contentText">
-    <div><?php echo HTML::hiddenField('action', 'submit') . HTML::button(IMAGE_BUTTON_CONTINUE, 'glyphicon glyphicon-chevron-right', null, 'primary', null, 'btn-success btn-block'); ?></div>
+  <div class="buttonSet">
+    <div class="text-right"><?php echo HTML::hiddenField('action', 'submit') . HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
+
+  <div class="clearfix"></div>
+
+  <div class="contentText">
+    <div class="stepwizard">
+      <div class="stepwizard-row">
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-primary btn-circle">1</button>
+          <p><?php echo CHECKOUT_BAR_DELIVERY; ?></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-default btn-circle" disabled="disabled">2</button>
+          <p><?php echo CHECKOUT_BAR_PAYMENT; ?></p>
+        </div>
+        <div class="stepwizard-step">
+          <button type="button" class="btn btn-default btn-circle" disabled="disabled">3</button>
+          <p><?php echo CHECKOUT_BAR_CONFIRMATION; ?></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 <?php
   if ($process == true) {
 ?>
 
-  <div>
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'glyphicon glyphicon-chevron-left', OSCOM::link('checkout_shipping_address.php', '', 'SSL')); ?>
+  <div class="buttonSet">
+    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('checkout_shipping_address.php')); ?>
   </div>
 
 <?php
@@ -352,6 +346,6 @@
 </form>
 
 <?php
-  require('includes/template_bottom.php');
+  require($oscTemplate->getFile('template_bottom.php'));
   require('includes/application_bottom.php');
 ?>

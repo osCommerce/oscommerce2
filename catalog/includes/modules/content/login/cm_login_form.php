@@ -10,8 +10,8 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
-  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_login_form {
@@ -22,7 +22,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function cm_login_form() {
+    function __construct() {
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
@@ -42,7 +42,7 @@
 
       $error = false;
 
-      if (OSCOM::hasRoute(['Account', 'LogIn', 'Process']) && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
+      if (isset($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['formid']) && ($_POST['formid'] == $_SESSION['sessiontoken'])) {
         $email_address = HTML::sanitize($_POST['email_address']);
         $password = HTML::sanitize($_POST['password']);
 
@@ -53,15 +53,15 @@
           $error = true;
         } else {
 // Check that password is good
-          if (!tep_validate_password($password, $Qcustomer->value('customers_password'))) {
+          if (!Hash::verify($password, $Qcustomer->value('customers_password'))) {
             $error = true;
           } else {
-// set $login_customer_id globally and perform post login code in Shop/Account/Actions/LogIn
+// set $login_customer_id globally and perform post login code in catalog/login.php
             $login_customer_id = $Qcustomer->valueInt('customers_id');
 
-// migrate old hashed password to new phpass password
-            if (tep_password_type($Qcustomer->value('customers_password')) != 'phpass') {
-              $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password)], ['customers_id' => $login_customer_id]);
+// migrate old hashed password to new php password_hash
+            if (Hash::needsRehash($Qcustomer->value('customers_password'))) {
+              $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password)], ['customers_id' => $login_customer_id]);
             }
           }
         }
@@ -72,7 +72,7 @@
       }
 
       ob_start();
-      include(DIR_WS_MODULES . 'content/' . $this->group . '/templates/login_form.php');
+      include('includes/modules/content/' . $this->group . '/templates/login_form.php');
       $template = ob_get_clean();
 
       $oscTemplate->addContent($template, $this->group);

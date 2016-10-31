@@ -21,7 +21,7 @@
     var $sort_order;
     var $enabled = false;
 
-    function bm_order_history() {
+    function __construct() {
       $this->title = MODULE_BOXES_ORDER_HISTORY_TITLE;
       $this->description = MODULE_BOXES_ORDER_HISTORY_DESCRIPTION;
 
@@ -37,6 +37,7 @@
       global $PHP_SELF, $oscTemplate;
 
       $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
       if (isset($_SESSION['customer_id'])) {
 // retreive the last x products purchased
@@ -55,11 +56,11 @@
           $customer_orders_string = null;
 
           $Qproducts = $OSCOM_Db->prepare('select products_id, products_name from :table_products_description where products_id in (' . implode(', ', $product_ids) . ') and language_id = :language_id order by products_name');
-          $Qproducts->bindInt(':language_id', $_SESSION['languages_id']);
+          $Qproducts->bindInt(':language_id', $OSCOM_Language->getId());
           $Qproducts->execute();
 
           while ($Qproducts->fetch()) {
-            $customer_orders_string .= '<li><span class="pull-right"><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $Qproducts->valueInt('products_id')) . '"><span class="glyphicon glyphicon-shopping-cart"></span></a></span><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproducts->valueInt('products_id')) . '">' . $Qproducts->value('products_name') . '</a></li>';
+            $customer_orders_string .= '<li><span class="pull-right"><a href="' . OSCOM::link(basename($PHP_SELF), tep_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $Qproducts->valueInt('products_id')) . '"><span class="fa fa-shopping-cart"></span></a></span><a href="' . OSCOM::link('product_info.php', 'products_id=' . $Qproducts->valueInt('products_id')) . '">' . $Qproducts->value('products_name') . '</a></li>';
           }
 
           ob_start();
@@ -99,7 +100,7 @@
         'configuration_value' => 'Right Column',
         'configuration_description' => 'Should the module be loaded in the left or right column?',
         'configuration_group_id' => '6',
-        'sort_order' => '1', 
+        'sort_order' => '1',
         'set_function' => 'tep_cfg_select_option(array(\'Left Column\', \'Right Column\'), ',
         'date_added' => 'now()'
       ]);

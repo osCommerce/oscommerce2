@@ -21,7 +21,7 @@
     var $icon = 'facebook.png';
     var $enabled = false;
 
-    function sb_facebook_like() {
+    function __construct() {
       $this->title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_TITLE;
       $this->public_title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_PUBLIC_TITLE;
       $this->description = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_DESCRIPTION;
@@ -39,7 +39,7 @@
       $action = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_VERB == 'Like') ? 'like' : 'recommend';
       $scheme = (MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_SCHEME == 'Light') ? 'light' : 'dark';
 
-      return '<iframe src="http://www.facebook.com/plugins/like.php?href=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], 'NONSSL', false)) . '&amp;layout=' . $style . '&amp;show_faces=' . $faces . '&amp;width=' . $width . '&amp;action=' . $action . '&amp;colorscheme=' . $scheme . '&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px; height:35px;" allowTransparency="true"></iframe>';
+      return '<iframe src="http://www.facebook.com/plugins/like.php?href=' . urlencode(OSCOM::link('product_info.php', 'products_id=' . $_GET['products_id'], false)) . '&amp;layout=' . $style . '&amp;show_faces=' . $faces . '&amp;width=' . $width . '&amp;action=' . $action . '&amp;colorscheme=' . $scheme . '&amp;height=35" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:' . $width . 'px; height:35px;" allowTransparency="true"></iframe>';
     }
 
     function isEnabled() {

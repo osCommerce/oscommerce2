@@ -2,22 +2,36 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
 
+use OSC\OM\Is;
+
 class HTTP
 {
-    public static function redirect($url)
+    protected static $request_type;
+
+    public static function setRequestType()
+    {
+        static::$request_type = ((isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on')) || (isset($_SERVER['SERVER_PORT']) && ($_SERVER['SERVER_PORT'] == 443))) ? 'SSL' : 'NONSSL';
+    }
+
+    public static function getRequestType()
+    {
+        return static::$request_type;
+    }
+
+    public static function redirect($url, $http_response_code = null)
     {
         if ((strstr($url, "\n") === false) && (strstr($url, "\r") === false)) {
             if ( strpos($url, '&amp;') !== false ) {
                 $url = str_replace('&amp;', '&', $url);
             }
 
-            header('Location: ' . $url);
+            header('Location: ' . $url, true, $http_response_code);
         }
 
         exit;
@@ -83,10 +97,10 @@ class HTTP
             }
 
             if (!isset($parameters['cafile'])) {
-                $parameters['cafile'] = OSCOM::BASE_DIR . 'includes/cacert.pem';
+                $parameters['cafile'] = OSCOM::getConfig('dir_root', 'Shop') . 'includes/cacert.pem';
             }
 
-            if (file_exists($parameters['cafile'])) {
+            if (is_file($parameters['cafile'])) {
                 $curl_options[CURLOPT_CAINFO] = $parameters['cafile'];
             }
 
@@ -152,5 +166,48 @@ class HTTP
         }
 
         return $body;
+    }
+
+    public static function getIpAddress($to_int = false)
+    {
+        $ips = [];
+
+        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            foreach (array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip) {
+                $ips[] = trim($x_ip);
+            }
+        }
+
+        if (isset($_SERVER['HTTP_CLIENT_IP'])) {
+            $ips[] = trim($_SERVER['HTTP_CLIENT_IP']);
+        }
+
+        if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
+            $ips[] = trim($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']);
+        }
+
+        if (isset($_SERVER['HTTP_PROXY_USER'])) {
+            $ips[] = trim($_SERVER['HTTP_PROXY_USER']);
+        }
+
+        if (isset($_SERVER['REMOTE_ADDR'])) {
+            $ips[] = trim($_SERVER['REMOTE_ADDR']);
+        }
+
+        $ip = '0.0.0.0';
+
+        foreach ($ips as $req_ip) {
+            if (Is::ip_address($req_ip)) {
+                $ip = $req_ip;
+
+                break;
+            }
+        }
+
+        if ($to_int === true) {
+            $ip = sprintf('%u', ip2long($ip));
+        }
+
+        return $ip;
     }
 }

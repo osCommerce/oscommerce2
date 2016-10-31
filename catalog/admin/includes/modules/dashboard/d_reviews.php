@@ -10,6 +10,11 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\DateTime;
+  use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
+  use OSC\OM\Registry;
+
   class d_reviews {
     var $code = 'd_reviews';
     var $title;
@@ -28,30 +33,50 @@
     }
 
     function getOutput() {
-      global $languages_id;
+      $OSCOM_Db = Registry::get('Db');
+      $OSCOM_Language = Registry::get('Language');
 
-      $output = '<table border="0" width="100%" cellspacing="0" cellpadding="4">' .
-                '  <tr class="dataTableHeadingRow">' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_DATE . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEWER . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_RATING . '</td>' .
-                '    <td class="dataTableHeadingContent">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEW_STATUS . '</td>' .
-                '  </tr>';
+      $output = '<table class="table table-hover">
+                   <thead>
+                     <tr class="info">
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_TITLE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_DATE . '</th>
+                       <th>' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEWER . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_RATING . '</th>
+                       <th class="text-right">' . MODULE_ADMIN_DASHBOARD_REVIEWS_REVIEW_STATUS . '</th>
+                     </tr>
+                   </thead>
+                   <tbody>';
 
-      $reviews_query = tep_db_query("select r.reviews_id, r.date_added, pd.products_name, r.customers_name, r.reviews_rating, r.reviews_status from " . TABLE_REVIEWS . " r, " . TABLE_PRODUCTS_DESCRIPTION . " pd where pd.products_id = r.products_id and pd.language_id = '" . (int)$languages_id . "' order by r.date_added desc limit 6");
-      while ($reviews = tep_db_fetch_array($reviews_query)) {
-        $status_icon = ($reviews['reviews_status'] == '1') ? tep_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) : tep_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
-        $output .= '  <tr class="dataTableRow" onmouseover="rowOverEffect(this);" onmouseout="rowOutEffect(this);">' .
-                   '    <td class="dataTableContent"><a href="' . tep_href_link(FILENAME_REVIEWS, 'rID=' . (int)$reviews['reviews_id'] . '&action=edit') . '">' . $reviews['products_name'] . '</a></td>' .
-                   '    <td class="dataTableContent">' . tep_date_short($reviews['date_added']) . '</td>' .
-                   '    <td class="dataTableContent">' . tep_output_string_protected($reviews['customers_name']) . '</td>' .
-                   '    <td class="dataTableContent">' . tep_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG_IMAGES . 'stars_' . $reviews['reviews_rating'] . '.gif') . '</td>' .
-                   '    <td class="dataTableContent">' . $status_icon . '</td>' .
-                   '  </tr>';
+      $Qreviews = $OSCOM_Db->get([
+        'reviews r',
+        'products_description pd'
+      ], [
+        'r.reviews_id',
+        'r.date_added',
+        'pd.products_name',
+        'r.customers_name',
+        'r.reviews_rating',
+        'r.reviews_status'
+      ], [
+        'pd.products_id' => [
+          'rel' => 'r.products_id'
+        ],
+        'pd.language_id' => $OSCOM_Language->getId()
+      ], 'r.date_added desc', 6);
+
+      while ($Qreviews->fetch()) {
+        $output .= '    <tr>
+                          <td><a href="' . OSCOM::link(FILENAME_REVIEWS, 'rID=' . $Qreviews->valueInt('reviews_id') . '&action=edit') . '">' . $Qreviews->value('products_name') . '</a></td>
+                          <td>' . DateTime::toShort($Qreviews->value('date_added')) . '</td>
+                          <td>' . $Qreviews->valueProtected('customers_name') . '</td>
+                          <td class="text-right">' . str_repeat('<i class="fa fa-star text-info"></i>', $Qreviews->valueInt('reviews_rating')) . str_repeat('<i class="fa fa-star-o"></i>', 5 - $Qreviews->valueInt('reviews_rating')) . '</td>
+                          <td class="text-right"><i class="fa fa-circle ' . ($Qreviews->valueInt('reviews_status') === 1 ? 'text-success' : 'text-danger') . '"></i></td>
+                        </tr>';
       }
 
-      $output .= '</table>';
+      $output .= '  </tbody>
+                  </table>';
 
       return $output;
     }
@@ -65,12 +90,32 @@
     }
 
     function install() {
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Enable Reviews Module', 'MODULE_ADMIN_DASHBOARD_REVIEWS_STATUS', 'True', 'Do you want to show the latest reviews on the dashboard?', '6', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      tep_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) values ('Sort Order', 'MODULE_ADMIN_DASHBOARD_REVIEWS_SORT_ORDER', '0', 'Sort order of display. Lowest is displayed first.', '6', '0', now())");
+      $OSCOM_Db = Registry::get('Db');
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Enable Reviews Module',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_REVIEWS_STATUS',
+        'configuration_value' => 'True',
+        'configuration_description' => 'Do you want to show the latest reviews on the dashboard?',
+        'configuration_group_id' => '6',
+        'sort_order' => '1',
+        'set_function' => 'tep_cfg_select_option(array(\'True\', \'False\'), ',
+        'date_added' => 'now()'
+      ]);
+
+      $OSCOM_Db->save('configuration', [
+        'configuration_title' => 'Sort Order',
+        'configuration_key' => 'MODULE_ADMIN_DASHBOARD_REVIEWS_SORT_ORDER',
+        'configuration_value' => '0',
+        'configuration_description' => 'Sort order of display. Lowest is displayed first.',
+        'configuration_group_id' => '6',
+        'sort_order' => '0',
+        'date_added' => 'now()'
+      ]);
     }
 
     function remove() {
-      tep_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      return Registry::get('Db')->exec('delete from :table_configuration where configuration_key in ("' . implode('", "', $this->keys()) . '")');
     }
 
     function keys() {
