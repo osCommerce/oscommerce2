@@ -8,10 +8,12 @@
 
 namespace OSC\OM\Module\Hooks\Shop\Session;
 
+use OSC\OM\Hash;
+
 class Recreated
 {
     public function execute($parameters) {
 // reset session token
-        $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+        $_SESSION['sessiontoken'] = md5(Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt());
     }
 }

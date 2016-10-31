@@ -1058,49 +1058,6 @@
     return tep_count_modules(MODULE_SHIPPING_INSTALLED);
   }
 
-  function tep_create_random_value($length, $type = 'mixed') {
-    if ( ($type != 'mixed') && ($type != 'chars') && ($type != 'digits')) $type = 'mixed';
-
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $digits = '0123456789';
-
-    $base = '';
-
-    if ( ($type == 'mixed') || ($type == 'chars') ) {
-      $base .= $chars;
-    }
-
-    if ( ($type == 'mixed') || ($type == 'digits') ) {
-      $base .= $digits;
-    }
-
-    $value = '';
-
-    if (!class_exists('PasswordHash')) {
-      include('includes/classes/passwordhash.php');
-    }
-
-    $hasher = new PasswordHash(10, true);
-
-    do {
-      $random = base64_encode($hasher->get_random_bytes($length));
-
-      for ($i = 0, $n = strlen($random); $i < $n; $i++) {
-        $char = substr($random, $i, 1);
-
-        if ( strpos($base, $char) !== false ) {
-          $value .= $char;
-        }
-      }
-    } while ( strlen($value) < $length );
-
-    if ( strlen($value) > $length ) {
-      $value = substr($value, 0, $length);
-    }
-
-    return $value;
-  }
-
   function tep_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
     if (!is_array($exclude)) $exclude = array();
 
@@ -1209,21 +1166,6 @@
     }
 
     return $tmp_array;
-  }
-
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {

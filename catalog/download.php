@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\OSCOM;
 
   include('includes/application_top.php');
@@ -54,9 +55,9 @@ function tep_random_name()
 {
   $letters = 'abcdefghijklmnopqrstuvwxyz';
   $dirname = '.';
-  $length = floor(tep_rand(16,20));
+  $length = floor(Hash::getRandomInt(16, 20));
   for ($i = 1; $i <= $length; $i++) {
-   $q = floor(tep_rand(1,26));
+   $q = floor(Hash::getRandomInt(1, 26));
    $dirname .= $letters[$q];
   }
   return $dirname;

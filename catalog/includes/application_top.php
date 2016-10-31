@@ -33,6 +33,10 @@
     }
   }
 
+  if (PHP_VERSION_ID < 70000) {
+    include('includes/third_party/random_compat/random.php');
+  }
+
   require('includes/functions/general.php');
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
@@ -43,7 +47,6 @@
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');
   require('includes/functions/whos_online.php');
-  require('includes/functions/password_funcs.php');
   require('includes/functions/banner.php');
   require('includes/functions/specials.php');
   require('includes/classes/osc_template.php');

@@ -1417,22 +1417,6 @@
     return $Qstatus->value('orders_status_name');
   }
 
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
 // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   function tep_convert_linefeeds($from, $to, $string) {
       return str_replace($from, $to, $string);

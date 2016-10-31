@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
   use OSC\OM\OSCOM;
@@ -141,7 +142,7 @@
         }
       } else {
         if ( !isset($_SESSION['sagepay_server_skey_code']) ) {
-          $_SESSION['sagepay_server_skey_code'] = tep_create_random_value(16);
+          $_SESSION['sagepay_server_skey_code'] = Hash::getRandomString(16);
         }
 
         $params = array('VPSProtocol' => $this->api_version,

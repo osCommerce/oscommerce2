@@ -8,6 +8,7 @@
 
 namespace OSC\OM\Module\Hooks\Shop\Session;
 
+use OSC\OM\Hash;
 use OSC\OM\HTTP;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
@@ -19,7 +20,7 @@ class StartAfter
 
 // initialize a session token
         if (!isset($_SESSION['sessiontoken'])) {
-            $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+            $_SESSION['sessiontoken'] = md5(Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt());
         }
 
 // verify the ssl_session_id if the feature is enabled

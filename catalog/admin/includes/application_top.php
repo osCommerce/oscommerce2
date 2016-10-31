@@ -27,6 +27,10 @@
 
   OSCOM::initialize();
 
+  if (PHP_VERSION_ID < 70000) {
+    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/third_party/random_compat/random.php');
+  }
+
   require('includes/filenames.php');
   require('includes/functions/general.php');
   require('includes/classes/logger.php');

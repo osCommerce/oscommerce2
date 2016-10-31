@@ -7,7 +7,7 @@ customers_email_address varchar(255) not_null
 customers_default_address_id int
 customers_telephone varchar(255)
 customers_fax varchar(255)
-customers_password varchar(60) not_null
+customers_password varchar(255) not_null
 customers_newsletter char(1)
 --
 primary customers_id

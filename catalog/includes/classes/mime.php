@@ -15,6 +15,8 @@
   Renamed and Modified by Jan Wildeboer for osCommerce
 */
 
+  use OSC\OM\Hash;
+
   class mime {
     var $_encoding;
     var $_subparts;
@@ -110,7 +112,7 @@
       $encoded = $this->_encoded;
 
       if (tep_not_null($this->_subparts)) {
-        $boundary = '=_' . md5(uniqid(tep_rand()) . microtime());
+        $boundary = '=_' . md5(uniqid(Hash::getRandomInt()) . microtime());
         $this->_headers['Content-Type'] .= ';' . $this->lf . chr(9) . 'boundary="' . $boundary . '"';
 
 // Add body parts to $subparts

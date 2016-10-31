@@ -10,13 +10,13 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
   $login_request = true;
 
   require('includes/application_top.php');
-  require('includes/functions/password_funcs.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -48,11 +48,11 @@
           ]);
 
           if ($Qadmin->fetch() !== false) {
-            if (tep_validate_password($password, $Qadmin->value('user_password'))) {
-// migrate old hashed password to new phpass password
-              if (tep_password_type($Qadmin->value('user_password')) != 'phpass') {
+            if (Hash::verify($password, $Qadmin->value('user_password'))) {
+// migrate old hashed password to new php password_hash
+              if (Hash::needsRehash($Qadmin->value('user_password'))) {
                 $OSCOM_Db->save('administrators', [
-                  'user_password' => tep_encrypt_password($password)
+                  'user_password' => Hash::encrypt($password)
                 ], [
                   'id' => $Qadmin->valueInt('id')
                 ]);
@@ -117,7 +117,7 @@
           if ( !empty($username) ) {
             $OSCOM_Db->save('administrators', [
               'user_name' => $username,
-              'user_password' => tep_encrypt_password($password)
+              'user_password' => Hash::encrypt($password)
             ]);
           }
         }

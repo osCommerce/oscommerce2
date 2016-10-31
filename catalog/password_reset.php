@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\Is;
   use OSC\OM\OSCOM;
@@ -76,7 +77,7 @@
     }
 
     if ($error == false) {
-      $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
+      $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
 
       $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => 'null', 'password_reset_date' => 'null'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 

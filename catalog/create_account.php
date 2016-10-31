@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\DateTime;
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\Is;
   use OSC\OM\OSCOM;
@@ -190,7 +191,7 @@
                               'customers_telephone' => $telephone,
                               'customers_fax' => $fax,
                               'customers_newsletter' => $newsletter,
-                              'customers_password' => tep_encrypt_password($password));
+                              'customers_password' => Hash::encrypt($password));
 
       if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $gender;
       if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = $dobDateTime->getRaw(false);

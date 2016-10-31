@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\Registry;
 
   class shoppingCart {
@@ -420,7 +421,7 @@
     }
 
     function generate_cart_id($length = 5) {
-      return tep_create_random_value($length, 'digits');
+      return Hash::getRandomString($length, 'digits');
     }
 
     function get_content_type() {

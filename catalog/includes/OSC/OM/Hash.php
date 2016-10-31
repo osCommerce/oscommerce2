@@ -2,8 +2,8 @@
 /**
   * osCommerce Online Merchant
   *
-  * @copyright Copyright (c) 2015 osCommerce; http://www.oscommerce.com
-  * @license GPL; http://www.oscommerce.com/gpllicense.txt
+  * @copyright (c) 2016 osCommerce; https://www.oscommerce.com
+  * @license GPL; https://www.oscommerce.com/gpllicense.txt
   */
 
 namespace OSC\OM;
@@ -12,15 +12,143 @@ use OSC\OM\OSCOM;
 
 class Hash
 {
-    public static function encrypt($plain)
+    public static function encrypt($plain, $algo = null)
     {
-        if (!class_exists('PasswordHash', false)) {
-            include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/classes/passwordhash.php');
+        if (!isset($algo) || ($algo == 'default') || ($algo == 'bcrypt')) {
+            if (!isset($algo) || ($algo == 'default')) {
+                $algo = PASSWORD_DEFAULT;
+            } else {
+                $algo = PASSWORD_BCRYPT;
+            }
+
+            return password_hash($plain, $algo);
         }
 
-        $hasher = new \PasswordHash(10, true);
+        if ($algo == 'phpass') {
+            if (!class_exists('PasswordHash', false)) {
+                include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/third_party/PasswordHash.php');
+            }
 
-        return $hasher->HashPassword($plain);
+            $hasher = new \PasswordHash(10, true);
+
+            return $hasher->HashPassword($plain);
+        }
+
+        if ($algo == 'salt') {
+            $password = '';
+
+            for ($i=0; $i<10; $i++) {
+                $password .= static::getRandomInt();
+            }
+
+            $salt = substr(md5($password), 0, 2);
+
+            $password = md5($salt . $plain) . ':' . $salt;
+
+            return $password;
+        }
+
+        trigger_error('OSC\\OM\\Hash::encrypt() Algorithm "' . $algo . '" unknown.');
+
+        return false;
+    }
+
+    public static function verify($plain, $hash)
+    {
+        $result = false;
+
+        if ((strlen($plain) > 0) && (strlen($hash) > 0)) {
+            switch (static::getType($hash)) {
+                case 'phpass':
+                    if (!class_exists('PasswordHash', false)) {
+                        include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/third_party/PasswordHash.php');
+                    }
+
+                    $hasher = new \PasswordHash(10, true);
+
+                    $result = $hasher->CheckPassword($plain, $hash);
+
+                    break;
+
+                case 'salt':
+                    // split apart the hash / salt
+                    $stack = explode(':', $hash, 2);
+
+                    if (count($stack) === 2) {
+                        $result = (md5($stack[1] . $plain) == $stack[0]);
+                    } else {
+                        $result = false;
+                    }
+
+                    break;
+
+                default:
+                    $result = password_verify($plain, $hash);
+
+                    break;
+            }
+        }
+
+        return $result;
+    }
+
+    public static function needsRehash($hash, $algo = null)
+    {
+        if (!isset($algo) || ($algo == 'default')) {
+            $algo = PASSWORD_DEFAULT;
+        } elseif ($algo == 'bcrypt') {
+            $algo = PASSWORD_BCRYPT;
+        }
+
+        if (!is_int($algo)) {
+            trigger_error('OSC\OM\Hash::needsRehash() Algorithm "' . $algo . '" not supported.');
+        }
+
+        return password_needs_rehash($hash, $algo);
+    }
+
+    public static function getType($hash)
+    {
+        $info = password_get_info($hash);
+
+        if ($info['algo'] > 0) {
+            return $info['algoName'];
+        }
+
+        if (substr($hash, 0, 3) == '$P$') {
+            return 'phpass';
+        }
+
+        if (preg_match('/^[A-Z0-9]{32}\:[A-Z0-9]{2}$/i', $hash) === 1) {
+            return 'salt';
+        }
+
+        trigger_error('OSC\OM\Hash::getType() hash type not found for "' . substr($hash, 0, 5) . '"');
+
+        return '';
+    }
+
+    public static function getRandomInt($min = null, $max = null, $secure = true)
+    {
+        if (!isset($min)) {
+            $min = 0;
+        }
+
+        if (!isset($max)) {
+            $max = PHP_INT_MAX;
+        }
+
+        try {
+            $result = random_int($min, $max);
+        } catch (\Exception $e) {
+            if ($secure === true) {
+                throw $e;
+            }
+
+            $result = mt_rand($min, $max);
+        }
+
+        return $result;
     }
 
     public static function getRandomString($length, $type = 'mixed')
@@ -69,39 +197,15 @@ class Hash
         return $rand_value;
     }
 
-    public static function getRandomBytes($length)
+    public static function getRandomBytes($length, $secure = true)
     {
-        static $random_state;
-
-        if (!isset($random_state)) {
-            $random_state = microtime();
-
-            if (function_exists('getmypid')) {
-                $random_state .= getmypid();
-            }
-        }
-
-        $result = '';
-
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $result = openssl_random_pseudo_bytes($length, $orpb_secure);
-
-            if ($orpb_secure != true) {
-                $result = '';
-            }
-        } elseif (defined('MCRYPT_DEV_URANDOM')) {
-            $result = mcrypt_create_iv($length, MCRYPT_DEV_URANDOM);
-        } elseif (@is_readable('/dev/urandom') && ($fh = @fopen('/dev/urandom', 'rb'))) {
-            if (function_exists('stream_set_read_buffer')) {
-                stream_set_read_buffer($fh, 0);
+        try {
+            $result = random_bytes($length);
+        } catch (\Exception $e) {
+            if ($secure === true) {
+                throw $e;
             }
 
-            $result = fread($fh, $length);
-
-            fclose($fh);
-        }
-
-        if (strlen($result) < $length) {
             $result = '';
 
             for ($i=0; $i<$length; $i+=16) {
