@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -29,7 +30,7 @@
     $email_address = HTML::sanitize($_GET['account']);
     $password_key = HTML::sanitize($_GET['key']);
 
-    if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
+    if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (Is::email($email_address) == false) ) {
       $error = true;
 
       $messageStack->add_session('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);

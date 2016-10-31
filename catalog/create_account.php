@@ -12,6 +12,7 @@
 
   use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -93,7 +94,7 @@
     if (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
       $error = true;
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_ERROR);
-    } elseif (tep_validate_email($email_address) == false) {
+    } elseif (Is::email($email_address) == false) {
       $error = true;
 
       $messageStack->add('create_account', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);

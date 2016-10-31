@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -56,7 +57,7 @@
       $messageStack->add('friend', ERROR_FROM_NAME);
     }
 
-    if (!tep_validate_email($from_email_address)) {
+    if (!Is::email($from_email_address)) {
       $error = true;
 
       $messageStack->add('friend', ERROR_FROM_ADDRESS);
@@ -68,7 +69,7 @@
       $messageStack->add('friend', ERROR_TO_NAME);
     }
 
-    if (!tep_validate_email($to_email_address)) {
+    if (!Is::email($to_email_address)) {
       $error = true;
 
       $messageStack->add('friend', ERROR_TO_ADDRESS);

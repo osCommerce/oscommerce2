@@ -12,6 +12,7 @@
 
   use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -86,7 +87,7 @@
 
         $entry_email_address_error = false;
 
-        if (!tep_validate_email($customers_email_address)) {
+        if (!Is::email($customers_email_address)) {
           $error = true;
           $entry_email_address_check_error = true;
         } else {

@@ -44,7 +44,6 @@
   require('includes/classes/message_stack.php');
   require('includes/functions/whos_online.php');
   require('includes/functions/password_funcs.php');
-  require('includes/functions/validations.php');
   require('includes/functions/banner.php');
   require('includes/functions/specials.php');
   require('includes/classes/osc_template.php');

@@ -31,7 +31,6 @@
   require('includes/functions/general.php');
   require('includes/classes/logger.php');
   require('includes/classes/shopping_cart.php');
-  require('includes/functions/validations.php');
   require('includes/classes/table_block.php');
   require('includes/classes/box.php');
   require('includes/classes/object_info.php');
