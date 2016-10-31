@@ -1438,15 +1438,13 @@
       return str_replace($from, $to, $string);
   }
 
-  function tep_string_to_int($string) {
-    return (int)$string;
-  }
-
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
