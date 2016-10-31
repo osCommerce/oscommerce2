@@ -68,11 +68,7 @@
 
               if (isset($_SESSION['redirect_origin'])) {
                 $page = $_SESSION['redirect_origin']['page'];
-                $get_string = '';
-
-                if (function_exists('http_build_query')) {
-                  $get_string = http_build_query($_SESSION['redirect_origin']['get']);
-                }
+                $get_string = http_build_query($_SESSION['redirect_origin']['get']);
 
                 unset($_SESSION['redirect_origin']);
 
