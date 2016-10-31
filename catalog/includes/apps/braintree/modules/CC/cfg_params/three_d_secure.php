@@ -30,12 +30,20 @@
                '<input type="radio" id="threeDSecureSelectionNew" name="three_d_secure" value="2"' . (OSCOM_APP_PAYPAL_BRAINTREE_CC_THREE_D_SECURE == '2' ? ' checked="checked"' : '') . '><label for="threeDSecureSelectionNew">' . $OSCOM_Braintree->getDef('cfg_cc_three_d_secure_new_cards') . '</label>' .
                '<input type="radio" id="threeDSecureSelectionDisabled" name="three_d_secure" value="0"' . (OSCOM_APP_PAYPAL_BRAINTREE_CC_THREE_D_SECURE == '0' ? ' checked="checked"' : '') . '><label for="threeDSecureSelectionDisabled">' . $OSCOM_Braintree->getDef('cfg_cc_three_d_secure_disabled') . '</label>';
 
+      $ssl_check = '';
+
+      if ((defined('ENABLE_SSL_CATALOG') && (ENABLE_SSL_CATALOG == 'false')) || (ENABLE_SSL == false)) {
+        $ssl_check = '<div class="bt-alerts"><div class="bt-alerts-error" style="padding: 10px;">' . $OSCOM_Braintree->getDef('cfg_cc_three_d_secure_ssl_check') . '</div></div>';
+      }
+
       $result = <<<EOT
 <div>
   <p>
     <label>{$this->title}</label>
 
     {$this->description}
+
+    {$ssl_check}
   </p>
 
   <div id="threeDSecureSelection">

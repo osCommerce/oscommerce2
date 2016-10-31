@@ -281,9 +281,25 @@ EOD;
     }
 
     function pre_confirmation_check() {
-      global $order;
+      global $order, $request_type;
 
       if (!tep_session_is_registered('appBraintreeCcNonce') && (OSCOM_APP_PAYPAL_BRAINTREE_CC_ENTRY_FORM == '3')) {
+        if (($request_type == 'NONSSL') && ((OSCOM_APP_PAYPAL_BRAINTREE_CC_THREE_D_SECURE === '1') || (OSCOM_APP_PAYPAL_BRAINTREE_CC_THREE_D_SECURE === '2'))) {
+          if (ENABLE_SSL == true) {
+// prevent redirect loop for incorrectly configured servers
+            if (!tep_session_is_registered('bt_3ds_ssl_check')) {
+              $bt_3ds_ssl_check = true;
+              tep_session_register('bt_3ds_ssl_check');
+
+              tep_redirect(tep_href_link(FILENAME_CHECKOUT_CONFIRMATION, '', 'SSL'));
+            }
+          }
+        }
+
+        if (tep_session_is_registered('bt_3ds_ssl_check')) {
+          tep_session_unregister('bt_3ds_ssl_check');
+        }
+
         if ($this->templateClassExists()) {
           $GLOBALS['oscTemplate']->addBlock($this->getSubmitCardDetailsJavascript(), 'footer_scripts');
         }
