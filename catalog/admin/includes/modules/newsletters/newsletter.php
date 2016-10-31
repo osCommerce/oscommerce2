@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -62,17 +63,10 @@
     function send($newsletter_id) {
       $OSCOM_Db = Registry::get('Db');
 
-      $mimemessage = new email(array('X-Mailer: osCommerce'));
-
-      // Build the text version
-      $text = strip_tags($this->content);
-      if (EMAIL_USE_HTML == 'true') {
-        $mimemessage->add_html($this->content, $text);
-      } else {
-        $mimemessage->add_text($text);
-      }
-
-      $mimemessage->build_message();
+      $newsletterEmail = new Mail();
+      $newsletterEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
+      $newsletterEmail->setSubject($this->title);
+      $newsletterEmail->setBody($this->content);
 
       $Qmail = $OSCOM_Db->get('customers', [
         'customers_firstname',
@@ -83,7 +77,11 @@
       ]);
 
       while ($Qmail->fetch()) {
-        $mimemessage->send($Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'), $Qmail->value('customers_email_address'), '', EMAIL_FROM, $this->title);
+        $newsletterEmail->clearTo();
+
+        $newsletterEmail->addTo($Qmail->value('customers_email_address'), $Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'));
+
+        $newsletterEmail->send();
       }
 
       $OSCOM_Db->save('newsletters', [

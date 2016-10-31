@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -299,20 +300,17 @@ function selectAll(FormName, SelectBox) {
         }
       }
 
-      $mimemessage = new email(array('X-Mailer: osCommerce'));
-
-      // Build the text version
-      $text = strip_tags($this->content);
-      if (EMAIL_USE_HTML == 'true') {
-        $mimemessage->add_html($this->content, $text);
-      } else {
-        $mimemessage->add_text($text);
-      }
-
-      $mimemessage->build_message();
+      $notificationEmail = new Mail();
+      $notificationEmail->setFrom(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER);
+      $notificationEmail->setSubject($this->title);
+      $notificationEmail->setBody($this->content);
 
       foreach ( $audience as $key => $value ) {
-        $mimemessage->send($value['firstname'] . ' ' . $value['lastname'], $value['email_address'], '', EMAIL_FROM, $this->title);
+        $notificationEmail->clearTo();
+
+        $notificationEmail->addTo($value['email_address'], $value['firstname'] . ' ' . $value['lastname']);
+
+        $notificationEmail->send();
       }
 
       $OSCOM_Db->save('newsletters', [

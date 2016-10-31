@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\Is;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -41,7 +42,9 @@
     }
 
     if ($error == false) {
-      tep_mail(STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, EMAIL_SUBJECT, $enquiry, $name, $email_address);
+      $contactEmail = new Mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, $email_address, $name, EMAIL_SUBJECT);
+      $contactEmail->setBody($enquiry);
+      $contactEmail->send();
 
       $actionRecorder->record();
 

@@ -38,8 +38,6 @@
   require('includes/classes/table_block.php');
   require('includes/classes/box.php');
   require('includes/classes/object_info.php');
-  require('includes/classes/mime.php');
-  require('includes/classes/email.php');
   require('includes/classes/upload.php');
   require('includes/classes/action_recorder.php');
   require('includes/classes/cfg_modules.php');

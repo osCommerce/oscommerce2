@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -58,21 +59,17 @@
     $subject = HTML::sanitize($_POST['subject']);
     $message = HTML::sanitize($_POST['message']);
 
-    //Let's build a message object using the email class
-    $mimemessage = new email(array('X-Mailer: osCommerce'));
-
-    // Build the text version
-    $text = strip_tags($message);
-    if (EMAIL_USE_HTML == 'true') {
-      $mimemessage->add_html($message, $text);
-    } else {
-      $mimemessage->add_text($text);
-    }
-
-    $mimemessage->build_message();
+    $customerEmail = new Mail();
+    $customerEmail->setFrom($from);
+    $customerEmail->setSubject($subject);
+    $customerEmail->setBody($message);
 
     while ($Qmail->fetch()) {
-      $mimemessage->send($Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'), $Qmail->value('customers_email_address'), '', $from, $subject);
+      $customerEmail->clearTo();
+
+      $customerEmail->addTo($Qmail->value('customers_email_address'), $Qmail->value('customers_firstname') . ' ' . $Qmail->value('customers_lastname'));
+
+      $customerEmail->send();
     }
 
     OSCOM::redirect(FILENAME_MAIL, 'mail_sent_to=' . urlencode($mail_sent_to));

@@ -12,6 +12,7 @@
 
   use OSC\OM\Hash;
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -41,7 +42,9 @@
           $reset_key_url = str_replace('&amp;', '&', $reset_key_url);
         }
 
-        tep_mail($Qcheck->value('customers_firstname') . ' ' . $Qcheck->value('customers_lastname'), $email_address, EMAIL_PASSWORD_RESET_SUBJECT, sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+        $passwordEmail = new Mail($email_address, $Qcheck->value('customers_firstname') . ' ' . $Qcheck->value('customers_lastname'), STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_PASSWORD_RESET_SUBJECT);
+        $passwordEmail->setBody(sprintf(EMAIL_PASSWORD_RESET_BODY, $reset_key_url));
+        $passwordEmail->send();
 
         $password_reset_initiated = true;
       } else {

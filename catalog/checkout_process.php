@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -327,11 +328,16 @@
       $email_order .= $OSCOM_PM->email_footer . "\n\n";
     }
   }
-  tep_mail($order->customer['firstname'] . ' ' . $order->customer['lastname'], $order->customer['email_address'], EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+
+  $orderEmail = new Mail($order->customer['email_address'], $order->customer['firstname'] . ' ' . $order->customer['lastname'], STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_TEXT_SUBJECT);
+  $orderEmail->setBody($email_order);
+  $orderEmail->send();
 
 // send emails to other people
   if (SEND_EXTRA_ORDER_EMAILS_TO != '') {
-    tep_mail('', SEND_EXTRA_ORDER_EMAILS_TO, EMAIL_TEXT_SUBJECT, $email_order, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+    $extraEmail = new Mail(SEND_EXTRA_ORDER_EMAILS_TO, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_TEXT_SUBJECT);
+    $extraEmail->setBody($email_order);
+    $extraEmail->send();
   }
 
 // load the after_process function from the payment modules

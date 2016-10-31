@@ -13,6 +13,7 @@
   use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\HTTP;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -711,7 +712,9 @@ EOD;
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, 'Sage Pay Server Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          $debugEmail = new Mail(MODULE_PAYMENT_SAGE_PAY_SERVER_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'Sage Pay Server Debug E-Mail');
+          $debugEmail->setBody($email_body);
+          $debugEmail->send();
         }
       }
     }

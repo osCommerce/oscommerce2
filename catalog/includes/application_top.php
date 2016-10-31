@@ -41,8 +41,6 @@
   require('includes/classes/shopping_cart.php');
   require('includes/classes/navigation_history.php');
   require('includes/classes/currencies.php');
-  require('includes/classes/mime.php');
-  require('includes/classes/email.php');
   require('includes/classes/action_recorder.php');
   require('includes/classes/alertbox.php');
   require('includes/classes/message_stack.php');

@@ -14,6 +14,7 @@
   use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\Is;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -253,7 +254,10 @@
       }
 
       $email_text .= EMAIL_WELCOME . EMAIL_TEXT . EMAIL_CONTACT . EMAIL_WARNING;
-      tep_mail($name, $email_address, EMAIL_SUBJECT, $email_text, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+
+      $customerEmail = new Mail($email_address, $name, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, EMAIL_SUBJECT);
+      $customerEmail->setBody($email_text);
+      $customerEmail->send();
 
       OSCOM::redirect('create_account_success.php');
     }

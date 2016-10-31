@@ -1220,25 +1220,6 @@
     return $value;
   }
 
-  function tep_mail($to_name, $to_email_address, $email_subject, $email_text, $from_email_name, $from_email_address) {
-    if (SEND_EMAILS != 'true') return false;
-
-    // Instantiate a new mail object
-    $message = new email(array('X-Mailer: osCommerce'));
-
-    // Build the text version
-    $text = strip_tags($email_text);
-    if (EMAIL_USE_HTML == 'true') {
-      $message->add_html($email_text, $text);
-    } else {
-      $message->add_text($text);
-    }
-
-    // Send message
-    $message->build_message();
-    $message->send($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject);
-  }
-
   function tep_get_tax_class_title($tax_class_id) {
     if ($tax_class_id == '0') {
       return TEXT_NONE;
@@ -1415,11 +1396,6 @@
     $Qstatus = $OSCOM_Db->get('orders_status', 'orders_status_name', ['orders_status_id' => (int)$order_status_id, 'language_id' => (int)$language_id]);
 
     return $Qstatus->value('orders_status_name');
-  }
-
-// nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
-  function tep_convert_linefeeds($from, $to, $string) {
-      return str_replace($from, $to, $string);
   }
 
 ////

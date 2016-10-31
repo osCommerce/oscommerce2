@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
@@ -602,7 +603,9 @@
         }
 
         if (!empty($email_body)) {
-          tep_mail('', MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL, 'Sage Pay Form Debug E-Mail', trim($email_body), STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+          $debugEmail = new Mail(MODULE_PAYMENT_SAGE_PAY_FORM_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'Sage Pay Form Debug E-Mail');
+          $debugEmail->setBody($email_body);
+          $debugEmail->send();
         }
       }
     }
