@@ -55,7 +55,7 @@
         include(OSCOM::getConfig('dir_root') . 'includes/modules/security_check/' . $secmodule);
 
         $secclass = 'securityCheck_' . substr($secmodule, 0, strrpos($secmodule, '.'));
-        if (tep_class_exists($secclass)) {
+        if (class_exists($secclass)) {
           $secCheck = new $secclass;
 
           if ( !$secCheck->pass() ) {

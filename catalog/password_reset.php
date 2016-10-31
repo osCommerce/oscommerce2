@@ -10,7 +10,9 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -29,7 +31,7 @@
     $email_address = HTML::sanitize($_GET['account']);
     $password_key = HTML::sanitize($_GET['key']);
 
-    if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (tep_validate_email($email_address) == false) ) {
+    if ( (strlen($email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) || (Is::email($email_address) == false) ) {
       $error = true;
 
       $messageStack->add_session('password_forgotten', TEXT_NO_EMAIL_ADDRESS_FOUND);
@@ -75,7 +77,7 @@
     }
 
     if ($error == false) {
-      $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
+      $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password_new)], ['customers_id' => $Qcheck->valueInt('customers_id')]);
 
       $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()', 'password_reset_key' => 'null', 'password_reset_date' => 'null'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\Registry;
 
@@ -52,15 +53,15 @@
           $error = true;
         } else {
 // Check that password is good
-          if (!tep_validate_password($password, $Qcustomer->value('customers_password'))) {
+          if (!Hash::verify($password, $Qcustomer->value('customers_password'))) {
             $error = true;
           } else {
 // set $login_customer_id globally and perform post login code in catalog/login.php
             $login_customer_id = $Qcustomer->valueInt('customers_id');
 
-// migrate old hashed password to new phpass password
-            if (tep_password_type($Qcustomer->value('customers_password')) != 'phpass') {
-              $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password)], ['customers_id' => $login_customer_id]);
+// migrate old hashed password to new php password_hash
+            if (Hash::needsRehash($Qcustomer->value('customers_password'))) {
+              $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password)], ['customers_id' => $login_customer_id]);
             }
           }
         }

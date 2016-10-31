@@ -27,11 +27,14 @@
 
   OSCOM::initialize();
 
+  if (PHP_VERSION_ID < 70000) {
+    include(OSCOM::getConfig('dir_root', 'Shop') . 'includes/third_party/random_compat/random.php');
+  }
+
   require('includes/filenames.php');
   require('includes/functions/general.php');
   require('includes/classes/logger.php');
   require('includes/classes/shopping_cart.php');
-  require('includes/functions/validations.php');
   require('includes/classes/table_block.php');
   require('includes/classes/box.php');
   require('includes/classes/object_info.php');

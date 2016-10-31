@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -44,8 +45,8 @@
       $Qcheck->bindInt(':customers_id', $_SESSION['customer_id']);
       $Qcheck->execute();
 
-      if (tep_validate_password($password_current, $Qcheck->value('customers_password'))) {
-        $OSCOM_Db->save('customers', ['customers_password' => tep_encrypt_password($password_new)], ['customers_id' => (int)$_SESSION['customer_id']]);
+      if (Hash::verify($password_current, $Qcheck->value('customers_password'))) {
+        $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password_new)], ['customers_id' => (int)$_SESSION['customer_id']]);
         $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$_SESSION['customer_id']]);
 
         $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');

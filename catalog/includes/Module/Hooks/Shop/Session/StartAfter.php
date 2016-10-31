@@ -8,6 +8,7 @@
 
 namespace OSC\OM\Module\Hooks\Shop\Session;
 
+use OSC\OM\Hash;
 use OSC\OM\HTTP;
 use OSC\OM\OSCOM;
 use OSC\OM\Registry;
@@ -19,7 +20,7 @@ class StartAfter
 
 // initialize a session token
         if (!isset($_SESSION['sessiontoken'])) {
-            $_SESSION['sessiontoken'] = md5(tep_rand() . tep_rand() . tep_rand() . tep_rand());
+            $_SESSION['sessiontoken'] = md5(Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt() . Hash::getRandomInt());
         }
 
 // verify the ssl_session_id if the feature is enabled
@@ -51,10 +52,10 @@ class StartAfter
 // verify the IP address if the feature is enabled
         if (SESSION_CHECK_IP_ADDRESS == 'True') {
             if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
-                $_SESSION['SESSION_IP_ADDRESS'] = tep_get_ip_address();
+                $_SESSION['SESSION_IP_ADDRESS'] = HTTP::getIpAddress();
             }
 
-            if ($_SESSION['SESSION_IP_ADDRESS'] != tep_get_ip_address()) {
+            if ($_SESSION['SESSION_IP_ADDRESS'] != HTTP::getIpAddress()) {
                 $OSCOM_Session->kill();
 
                 OSCOM::redirect('login.php');

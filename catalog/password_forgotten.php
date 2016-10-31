@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -30,7 +31,7 @@
       if ($actionRecorder->canPerform()) {
         $actionRecorder->record();
 
-        $reset_key = tep_create_random_value(40);
+        $reset_key = Hash::getRandomString(40);
 
         $OSCOM_Db->save('customers_info', ['password_reset_key' => $reset_key, 'password_reset_date' => 'now()'], ['customers_info_id' => $Qcheck->valueInt('customers_id')]);
 

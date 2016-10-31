@@ -15,6 +15,8 @@
   Renamed and Modified by Jan Wildeboer for osCommerce
 */
 
+  use OSC\OM\Hash;
+
   class mime {
     var $_encoding;
     var $_subparts;
@@ -24,7 +26,7 @@
 
 /**
  * Constructor.
- * 
+ *
  * Sets up the object.
  *
  * @param $body   - The body of the mime part if any.
@@ -96,7 +98,7 @@
 
 /**
  * encode()
- * 
+ *
  * Encodes and returns the email. Also stores
  * it in the encoded member variable
  *
@@ -110,7 +112,7 @@
       $encoded = $this->_encoded;
 
       if (tep_not_null($this->_subparts)) {
-        $boundary = '=_' . md5(uniqid(tep_rand()) . microtime());
+        $boundary = '=_' . md5(uniqid(Hash::getRandomInt()) . microtime());
         $this->_headers['Content-Type'] .= ';' . $this->lf . chr(9) . 'boundary="' . $boundary . '"';
 
 // Add body parts to $subparts
@@ -139,7 +141,7 @@
 
 /**
  * addSubPart()
- * 
+ *
  * Adds a subpart to current mime part and returns
  * a reference to it
  *
@@ -161,7 +163,7 @@
 
 /**
  * _getEncodedData()
- * 
+ *
  * Returns encoded data based upon encoding passed to it
  *
  * @param $data     The data to encode.
@@ -186,11 +188,11 @@
 
 /**
  * quoteadPrintableEncode()
- * 
+ *
  * Encodes data to quoted-printable standard.
  *
  * @param $input    The data to encode
- * @param $line_max Optional max line length. Should 
+ * @param $line_max Optional max line length. Should
  *                  not be more than 76 chars
  *
  * @access private

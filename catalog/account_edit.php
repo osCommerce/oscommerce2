@@ -12,6 +12,7 @@
 
   use OSC\OM\DateTime;
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -70,7 +71,7 @@
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_ERROR);
     }
 
-    if (!tep_validate_email($email_address)) {
+    if (!Is::email($email_address)) {
       $error = true;
 
       $messageStack->add('account_edit', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);

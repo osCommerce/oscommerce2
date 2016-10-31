@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\Is;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -24,7 +25,7 @@
     $email_address = HTML::sanitize($_POST['email']);
     $enquiry = HTML::sanitize($_POST['enquiry']);
 
-    if (!tep_validate_email($email_address)) {
+    if (!Is::email($email_address)) {
       $error = true;
 
       $messageStack->add('contact', ENTRY_EMAIL_ADDRESS_CHECK_ERROR);

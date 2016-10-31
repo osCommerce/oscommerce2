@@ -543,17 +543,6 @@
   }
 
 ////
-// Wrapper for class_exists() function
-// This function is not available in all PHP versions so we test it before using it.
-  function tep_class_exists($class_name) {
-    if (function_exists('class_exists')) {
-      return class_exists($class_name);
-    } else {
-      return true;
-    }
-  }
-
-////
 // Count how many products exist in a category
 // TABLES: products, products_to_categories, categories
   function tep_products_in_category_count($categories_id, $include_deactivated = false) {
@@ -1428,36 +1417,18 @@
     return $Qstatus->value('orders_status_name');
   }
 
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-    static $seeded;
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
 // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   function tep_convert_linefeeds($from, $to, $string) {
       return str_replace($from, $to, $string);
-  }
-
-  function tep_string_to_int($string) {
-    return (int)$string;
   }
 
 ////
 // Parse and secure the cPath parameter values
   function tep_parse_category_path($cPath) {
 // make sure the category IDs are integers
-    $cPath_array = array_map('tep_string_to_int', explode('_', $cPath));
+    $cPath_array = array_map(function ($string) {
+      return (int)$string;
+    }, explode('_', $cPath));
 
 // make sure no duplicate category IDs exist which could lock the server in a loop
     $tmp_array = array();
@@ -1469,65 +1440,6 @@
     }
 
     return $tmp_array;
-  }
-
-  function tep_validate_ip_address($ip_address) {
-    if (function_exists('filter_var') && defined('FILTER_VALIDATE_IP')) {
-      return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-    }
-
-    if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip_address)) {
-      $parts = explode('.', $ip_address);
-
-      foreach ($parts as $ip_parts) {
-        if ( (intval($ip_parts) > 255) || (intval($ip_parts) < 0) ) {
-          return false; // number is not within 0-255
-        }
-      }
-
-      return true;
-    }
-
-    return false;
-  }
-
-  function tep_get_ip_address() {
-
-    $ip_address = '0.0.0.0';
-    $ip_addresses = array();
-
-    if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-      foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
-        $x_ip = trim($x_ip);
-
-        if (tep_validate_ip_address($x_ip)) {
-          $ip_addresses[] = $x_ip;
-        }
-      }
-    }
-
-    if (isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP'])) {
-      $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
-    }
-
-    if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP'])) {
-      $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-    }
-
-    if (isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER'])) {
-      $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
-    }
-
-    $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
-
-    foreach ( $ip_addresses as $ip ) {
-      if (!empty($ip) && tep_validate_ip_address($ip)) {
-        $ip_address = $ip;
-        break;
-      }
-    }
-
-    return $ip_address;
   }
 
 ////

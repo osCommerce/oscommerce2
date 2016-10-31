@@ -1058,49 +1058,6 @@
     return tep_count_modules(MODULE_SHIPPING_INSTALLED);
   }
 
-  function tep_create_random_value($length, $type = 'mixed') {
-    if ( ($type != 'mixed') && ($type != 'chars') && ($type != 'digits')) $type = 'mixed';
-
-    $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $digits = '0123456789';
-
-    $base = '';
-
-    if ( ($type == 'mixed') || ($type == 'chars') ) {
-      $base .= $chars;
-    }
-
-    if ( ($type == 'mixed') || ($type == 'digits') ) {
-      $base .= $digits;
-    }
-
-    $value = '';
-
-    if (!class_exists('PasswordHash')) {
-      include('includes/classes/passwordhash.php');
-    }
-
-    $hasher = new PasswordHash(10, true);
-
-    do {
-      $random = base64_encode($hasher->get_random_bytes($length));
-
-      for ($i = 0, $n = strlen($random); $i < $n; $i++) {
-        $char = substr($random, $i, 1);
-
-        if ( strpos($base, $char) !== false ) {
-          $value .= $char;
-        }
-      }
-    } while ( strlen($value) < $length );
-
-    if ( strlen($value) > $length ) {
-      $value = substr($value, 0, $length);
-    }
-
-    return $value;
-  }
-
   function tep_array_to_string($array, $exclude = '', $equals = '=', $separator = '&') {
     if (!is_array($exclude)) $exclude = array();
 
@@ -1209,69 +1166,6 @@
     }
 
     return $tmp_array;
-  }
-
-////
-// Return a random value
-  function tep_rand($min = null, $max = null) {
-
-    if (isset($min) && isset($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-
-  function tep_validate_ip_address($ip_address) {
-    return filter_var($ip_address, FILTER_VALIDATE_IP, array('flags' => FILTER_FLAG_IPV4));
-  }
-
-  function tep_get_ip_address() {
-    static $_ip_address;
-
-    if ( !isset($_ip_address) ) {
-      $_ip_address = '0.0.0.0';
-      $ip_addresses = array();
-
-      if ( isset($_SERVER['HTTP_X_FORWARDED_FOR']) && !empty($_SERVER['HTTP_X_FORWARDED_FOR']) ) {
-        foreach ( array_reverse(explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])) as $x_ip ) {
-          $x_ip = trim($x_ip);
-
-          if ( tep_validate_ip_address($x_ip) ) {
-            $ip_addresses[] = $x_ip;
-          }
-        }
-      }
-
-      if ( isset($_SERVER['HTTP_CLIENT_IP']) && !empty($_SERVER['HTTP_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && !empty($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-      }
-
-      if ( isset($_SERVER['HTTP_PROXY_USER']) && !empty($_SERVER['HTTP_PROXY_USER']) ) {
-        $ip_addresses[] = $_SERVER['HTTP_PROXY_USER'];
-      }
-
-      if ( isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR']) ) {
-        $ip_addresses[] = $_SERVER['REMOTE_ADDR'];
-      }
-
-      foreach ( $ip_addresses as $ip ) {
-        if ( !empty($ip) && tep_validate_ip_address($ip) ) {
-          $_ip_address = $ip;
-          break;
-        }
-      }
-    }
-
-    return $_ip_address;
   }
 
   function tep_count_customer_orders($id = '', $check_session = true) {

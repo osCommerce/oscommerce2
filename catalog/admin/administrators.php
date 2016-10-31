@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\Hash;
   use OSC\OM\HTML;
   use OSC\OM\OSCOM;
 
@@ -20,8 +21,6 @@
   if (tep_not_null($action)) {
     switch ($action) {
       case 'insert':
-        require('includes/functions/password_funcs.php');
-
         $username = HTML::sanitize($_POST['username']);
         $password = HTML::sanitize($_POST['password']);
 
@@ -30,7 +29,7 @@
         if (!$Qcheck->check()) {
           $OSCOM_Db->save('administrators', [
             'user_name' => $username,
-            'user_password' => tep_encrypt_password($password)
+            'user_password' => Hash::encrypt($password)
           ]);
         } else {
           $OSCOM_MessageStack->add(ERROR_ADMINISTRATOR_EXISTS, 'error');
@@ -39,8 +38,6 @@
         OSCOM::redirect(FILENAME_ADMINISTRATORS);
         break;
       case 'save':
-        require('includes/functions/password_funcs.php');
-
         $username = HTML::sanitize($_POST['username']);
         $password = HTML::sanitize($_POST['password']);
 
@@ -64,7 +61,7 @@
 
         if (tep_not_null($password)) {
           $OSCOM_Db->save('administrators', [
-            'user_password' => tep_encrypt_password($password)
+            'user_password' => Hash::encrypt($password)
           ], [
             'id' => (int)$_GET['aID']
           ]);
