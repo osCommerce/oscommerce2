@@ -19,7 +19,6 @@ class Mail
               $body_html,
               $attachments = [],
               $images = [],
-              $boundary,
               $headers = ['X-Mailer' => 'osCommerce'],
               $body,
               $content_transfer_encoding = '7bit',
@@ -171,12 +170,12 @@ class Mail
     {
         if (empty($this->body)) {
             if (!empty($this->body_plain) && !empty($this->body_html)) {
-                $this->boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
-                $this->related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
-                $this->alternative_boundary = '=_____MULTIPART_ALTERNATIVE_BOUNDARY____';
+                $boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
+                $related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
+                $alternative_boundary = '=_____MULTIPART_ALTERNATIVE_BOUNDARY____';
 
                 $this->headers['MIME-Version'] = '1.0';
-                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $this->boundary . '"';
+                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $boundary . '"';
                 $this->headers['Content-Transfer-Encoding'] = $this->content_transfer_encoding;
 
                 if (!empty($this->images)) {
@@ -188,46 +187,45 @@ class Mail
                 }
 
                 $this->body = 'This is a multi-part message in MIME format.' . "\n\n" .
-                              '--' . $this->boundary . "\n";
-
-                $this->body .= 'Content-Type: multipart/alternative; boundary="' . $this->alternative_boundary . '";' . "\n\n" .
-                               '--' . $this->alternative_boundary . "\n" .
-                               'Content-Type: text/plain; charset="' . $this->charset . '"' . "\n" .
-                               'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
-                               $this->body_plain . "\n\n" .
-                               '--' . $this->alternative_boundary . "\n" .
-                               'Content-Type: multipart/related; boundary="' . $this->related_boundary . '"' . "\n\n" .
-                               '--' . $this->related_boundary . "\n" .
-                               'Content-Type: text/html; charset="' . $this->charset . '"' . "\n" .
-                               'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
-                               $this->body_html . "\n\n";
+                              '--' . $boundary . "\n" .
+                              'Content-Type: multipart/alternative; boundary="' . $alternative_boundary . '";' . "\n\n" .
+                              '--' . $alternative_boundary . "\n" .
+                              'Content-Type: text/plain; charset="' . $this->charset . '"' . "\n" .
+                              'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
+                              $this->body_plain . "\n\n" .
+                              '--' . $alternative_boundary . "\n" .
+                              'Content-Type: multipart/related; boundary="' . $related_boundary . '"' . "\n\n" .
+                              '--' . $related_boundary . "\n" .
+                              'Content-Type: text/html; charset="' . $this->charset . '"' . "\n" .
+                              'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
+                              $this->body_html . "\n\n";
 
                 if (!empty($this->images)) {
                     foreach ($this->images as $image) {
-                        $this->body .= $this->build_image($image, $this->related_boundary);
+                        $this->body .= $this->build_image($image, $related_boundary);
                     }
 
                     unset($image);
                 }
 
-                $this->body .= '--' . $this->related_boundary . '--' . "\n\n" .
-                               '--' . $this->alternative_boundary . '--' . "\n\n";
+                $this->body .= '--' . $related_boundary . '--' . "\n\n" .
+                               '--' . $alternative_boundary . '--' . "\n\n";
 
                 if (!empty($this->attachments)) {
                     foreach ($this->attachments as $attachment) {
-                        $this->body .= $this->build_attachment($attachment, $this->boundary);
+                        $this->body .= $this->build_attachment($attachment, $boundary);
                     }
 
                     unset($attachment);
                 }
 
-                $this->body .= '--' . $this->boundary . '--' . "\n\n";
+                $this->body .= '--' . $boundary . '--' . "\n\n";
             } elseif (!empty($this->body_html) && !empty($this->images)) {
-                $this->boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
-                $this->related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
+                $boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
+                $related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
 
                 $this->headers['MIME-Version'] = '1.0';
-                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $this->boundary . '"';
+                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $boundary . '"';
 
                 foreach ($this->images as $image) {
                     $this->body_html = str_replace('src="' . $image['filename'] . '"', 'src="cid:' . $image['id'] . '"', $this->body_html);
@@ -236,51 +234,51 @@ class Mail
                 unset($image);
 
                 $this->body = 'This is a multi-part message in MIME format.' . "\n\n" .
-                              '--' . $this->boundary . "\n" .
-                              'Content-Type: multipart/related; boundary="' . $this->related_boundary . '";' . "\n\n" .
-                              '--' . $this->related_boundary . "\n" .
+                              '--' . $boundary . "\n" .
+                              'Content-Type: multipart/related; boundary="' . $related_boundary . '";' . "\n\n" .
+                              '--' . $related_boundary . "\n" .
                               'Content-Type: text/html; charset="' . $this->charset . '"' . "\n" .
                               'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
                               $this->body_html . "\n\n";
 
                 foreach ($this->images as $image) {
-                    $this->body .= $this->build_image($image, $this->related_boundary);
+                    $this->body .= $this->build_image($image, $related_boundary);
                 }
 
                 unset($image);
 
-                $this->body .= '--' . $this->related_boundary . '--' . "\n\n";
+                $this->body .= '--' . $related_boundary . '--' . "\n\n";
 
                 foreach ($this->attachments as $attachment) {
-                    $this->body .= $this->build_attachment($attachment, $this->boundary);
+                    $this->body .= $this->build_attachment($attachment, $boundary);
                 }
 
                 unset($attachment);
 
-                $this->body .= '--' . $this->boundary . '--' . "\n";
+                $this->body .= '--' . $boundary . '--' . "\n";
             } elseif (!empty($this->attachments)) {
-                $this->boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
-                $this->related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
+                $boundary = '=_____MULTIPART_MIXED_BOUNDARY____';
+                $related_boundary = '=_____MULTIPART_RELATED_BOUNDARY____';
 
                 $this->headers['MIME-Version'] = '1.0';
-                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $this->boundary . '"';
+                $this->headers['Content-Type'] = 'multipart/mixed; boundary="' . $boundary . '"';
 
                 $this->body = 'This is a multi-part message in MIME format.' . "\n\n" .
-                              '--' . $this->boundary . "\n" .
-                              'Content-Type: multipart/related; boundary="' . $this->related_boundary . '";' . "\n\n" .
-                              '--' . $this->related_boundary . "\n" .
+                              '--' . $boundary . "\n" .
+                              'Content-Type: multipart/related; boundary="' . $related_boundary . '";' . "\n\n" .
+                              '--' . $related_boundary . "\n" .
                               'Content-Type: text/' . (empty($this->body_plain) ? 'html' : 'plain') . '; charset="' . $this->charset . '"' . "\n" .
                               'Content-Transfer-Encoding: ' . $this->content_transfer_encoding . "\n\n" .
                               (empty($this->body_plain) ? $this->body_html : $this->body_plain) . "\n\n" .
-                              '--' . $this->related_boundary . '--' . "\n\n";
+                              '--' . $related_boundary . '--' . "\n\n";
 
                 foreach ($this->attachments as $attachment) {
-                    $this->body .= $this->build_attachment($attachment, $this->boundary);
+                    $this->body .= $this->build_attachment($attachment, $boundary);
                 }
 
                 unset($attachment);
 
-                $this->body .= '--' . $this->boundary . '--' . "\n";
+                $this->body .= '--' . $boundary . '--' . "\n";
             } elseif (!empty($this->body_html)) {
                 $this->headers['MIME-Version'] = '1.0';
                 $this->headers['Content-Type'] = 'text/html; charset="' . $this->charset . '"';
