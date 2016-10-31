@@ -986,39 +986,6 @@
   }
 
 ////
-//! Send email (text/html) using MIME
-// This is the central mail function. The SMTP Server should be configured
-// correct in php.ini
-// Parameters:
-// $to_name           The name of the recipient, e.g. "Jan Wildeboer"
-// $to_email_address  The eMail address of the recipient,
-//                    e.g. jan.wildeboer@gmx.de
-// $email_subject     The subject of the eMail
-// $email_text        The text of the eMail, may contain HTML entities
-// $from_email_name   The name of the sender, e.g. Shop Administration
-// $from_email_adress The eMail address of the sender,
-//                    e.g. info@mytepshop.com
-
-  function tep_mail($to_name, $to_email_address, $email_subject, $email_text, $from_email_name, $from_email_address) {
-    if (SEND_EMAILS != 'true') return false;
-
-    // Instantiate a new mail object
-    $message = new email(array('X-Mailer: osCommerce'));
-
-    // Build the text version
-    $text = strip_tags($email_text);
-    if (EMAIL_USE_HTML == 'true') {
-      $message->add_html($email_text, $text);
-    } else {
-      $message->add_text($text);
-    }
-
-    // Send message
-    $message->build_message();
-    $message->send($to_name, $to_email_address, $from_email_name, $from_email_address, $email_subject);
-  }
-
-////
 // Check if product has attributes
   function tep_has_product_attributes($products_id) {
     $OSCOM_Db = Registry::get('Db');

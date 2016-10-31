@@ -12,6 +12,7 @@
 
   use OSC\OM\HTML;
   use OSC\OM\Is;
+  use OSC\OM\Mail;
   use OSC\OM\OSCOM;
 
   require('includes/application_top.php');
@@ -95,7 +96,9 @@
       $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)) . "\n\n" .
                      sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n");
 
-      tep_mail($to_name, $to_email_address, $email_subject, $email_body, $from_name, $from_email_address);
+      $tellfriendEmail = new Mail($to_email_address, $to_name, $from_email_address, $from_name, $email_subject);
+      $tellfriendEmail->setBody($email_body);
+      $tellfriendEmail->send();
 
       $actionRecorder->record();
 

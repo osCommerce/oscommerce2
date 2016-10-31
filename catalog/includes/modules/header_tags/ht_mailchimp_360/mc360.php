@@ -1,4 +1,5 @@
 <?php
+use OSC\OM\Mail;
 use OSC\OM\Registry;
 
 class mc360 {
@@ -190,7 +191,9 @@ class mc360 {
         // send!()
 
         if ($this->debug && !empty($debug_email)) {
-            tep_mail('', MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL, 'MailChimp Debug E-Mail', $debug_email, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS);
+            $debugEmail = new Mail(MODULE_HEADER_TAGS_MAILCHIMP_360_DEBUG_EMAIL, null, STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, 'MailChimp Debug E-Mail');
+            $debugEmail->setBody($debug_email);
+            $debugEmail->send();
         }
   }//update
 }//mc360 class
