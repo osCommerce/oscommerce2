@@ -428,7 +428,6 @@
 
       </td>
       <td class="action">
-        <?= '<a href="' . OSCOM::link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id')) . '"><i class="fa fa-line-chart" title="' . ICON_STATISTICS . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=new') . '"><i class="fa fa-pencil" title="' . IMAGE_EDIT . '"></i></a>'; ?>
         <?= '<a href="' . OSCOM::link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $Qbanners->valueInt('banners_id') . '&action=delete') . '"><i class="fa fa-trash" title="' . IMAGE_DELETE . '"></i></a>'; ?>
       </td>
