@@ -24,7 +24,7 @@ if (!class_exists('braintree_cc', false)) {
 
 $pm = new braintree_cc();
 
-if ($pm->enabled !== true) {
+if (($pm->enabled !== true) || (OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS == '0')) {
   tep_redirect(tep_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
 

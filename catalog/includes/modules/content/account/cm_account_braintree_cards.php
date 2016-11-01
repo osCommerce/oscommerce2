@@ -53,12 +53,16 @@
         $braintree_cc = new braintree_cc();
 
         if ( $braintree_cc->enabled ) {
-          $braintree_enabled = true;
-
           if ( defined('OSCOM_APP_PAYPAL_BRAINTREE_CC_STATUS') ) {
+            $braintree_enabled = true;
+
             if ( OSCOM_APP_PAYPAL_BRAINTREE_CC_STATUS == '0' ) {
               $this->title .= ' [Sandbox]';
               $this->public_title .= ' (' . $braintree_cc->code . '; Sandbox)';
+            }
+
+            if (OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS == '0') {
+              $braintree_enabled = false;
             }
           }
         }

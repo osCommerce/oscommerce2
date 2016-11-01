@@ -101,7 +101,7 @@
           if (isset($response->threeDSecureInfo) && is_object($response->threeDSecureInfo)) {
             $result .= '3D Secure: ' . tep_db_prepare_input($response->threeDSecureInfo->status . ' (Liability Shifted: ' . ($response->threeDSecureInfo->liabilityShifted === true ? 'true' : 'false') . ')') . "\n";
           } else {
-            $result .= '3D Secure: ** MISSING **';
+            $result .= '3D Secure: ** MISSING **' . "\n";
           }
         }
 
