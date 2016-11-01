@@ -134,8 +134,7 @@
         $review_name = $Qreviews->valueProtected('customers_name');
         echo OSCOM::getDef('reviews_text_rated', [
 		'keyword1' => HTML::stars($Qreviews->value('reviews_rating')),
-		'keyword2' => $review_name,
-		'keyword3' => $review_name
+		'keyword2' => $review_name
 		]);        
         ?>
         </footer>
