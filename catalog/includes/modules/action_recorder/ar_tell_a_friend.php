@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTTP;
+  use OSC\OM\OSCOM;	
   use OSC\OM\Registry;
 
   class ar_tell_a_friend {
