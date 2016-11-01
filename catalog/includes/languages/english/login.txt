@@ -1,0 +1,2 @@
+navbar_title = Login
+heading_title = Welcome, Please Sign In

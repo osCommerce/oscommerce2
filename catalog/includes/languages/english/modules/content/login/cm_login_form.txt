@@ -1,0 +1,6 @@
+module_content_login_form_title = Login Form
+module_content_login_form_description = Show a login form on the login page
+module_content_login_heading_returning_customer = Returning Customer
+module_content_login_text_returning_customer = I am a returning customer.
+module_content_login_text_password_forgotten = Password forgotten? Click here.
+module_content_login_text_login_error = Error: No match for E-Mail Address and/or Password.

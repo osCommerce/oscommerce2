@@ -1,0 +1,2 @@
+module_header_tags_div_equal_heights_title = Equal Height Divs (jQuery)
+module_header_tags_div_equal_heights_description = Add Equal Heights javascript to specified pages, which solves a potential problem in grid layouts

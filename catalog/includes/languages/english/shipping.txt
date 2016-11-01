@@ -1,0 +1,3 @@
+navbar_title = Shipping &amp; Returns
+heading_title = Shipping &amp; Returns
+text_information = Put here your Shipping &amp; Returns information.

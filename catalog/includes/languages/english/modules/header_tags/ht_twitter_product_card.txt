@@ -1,0 +1,2 @@
+module_header_tags_twitter_product_card_title = Twitter Card
+module_header_tags_twitter_product_card_description = Add Twitter Card tags to your product information pages.

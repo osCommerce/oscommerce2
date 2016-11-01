@@ -1,0 +1,3 @@
+module_navbar_special_offers_title = Special Offers
+module_navbar_special_offers_description = Show Special Offers Link in Navbar.
+module_navbar_special_offers_public_text = <li><a href="

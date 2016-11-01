@@ -1,0 +1,3 @@
+navbar_title = Conditions of Use
+heading_title = Conditions of Use
+text_information = Put here your Conditions of Use information.

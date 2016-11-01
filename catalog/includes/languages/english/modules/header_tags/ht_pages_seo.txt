@@ -1,0 +1,4 @@
+module_header_tags_pages_seo_title = SEO - Pages
+module_header_tags_pages_seo_description = Add the SEO element defined when editing the pages (eg: specials.php), to the header of the page
+module_header_tags_pages_seo_helper = You need to add these SEO elements to your language files for each page.
+module_header_tags_pages_seo_separator =  | 

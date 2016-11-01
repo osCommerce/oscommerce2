@@ -1,0 +1,9 @@
+module_content_footer_account_title = Account Block
+module_content_footer_account_description = Adds an Account Block to the Footer Area of your site
+module_content_footer_account_heading_title = Customer Services
+module_content_footer_account_box_account = My Account
+module_content_footer_account_box_address_book = My Address Book
+module_content_footer_account_box_order_history = My Order History
+module_content_footer_account_box_logoff = Secure Log Off
+module_content_footer_account_box_create_account = Create Account
+module_content_footer_account_box_login = Existing Customer? Log In

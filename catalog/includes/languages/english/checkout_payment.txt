@@ -1,0 +1,13 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Payment Method
+heading_title = Payment Information
+table_heading_billing_address = Billing Address
+text_selected_billing_destination = Please choose from your address book where you would like the invoice to be sent to.
+title_billing_address = Billing Address:
+table_heading_payment_method = Payment Method
+text_select_payment_method = Please select the preferred payment method to use on this order.
+title_please_select = Please Select
+text_enter_payment_information = This is currently the only payment method available to use on this order.
+table_heading_comments = Add Comments About Your Order
+title_continue_checkout_procedure = Continue Checkout Procedure
+text_continue_checkout_procedure = to confirm this order.

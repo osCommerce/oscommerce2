@@ -1,0 +1,3 @@
+module_boxes_currencies_title = Currencies
+module_boxes_currencies_description = Show available currencies
+module_boxes_currencies_box_title = Currencies

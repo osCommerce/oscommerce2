@@ -1,0 +1,2 @@
+module_header_tags_datepicker_jquery_title = Datepicker jQuery
+module_header_tags_datepicker_jquery_description = Add Datepicker jQuery to specified pages

@@ -1,0 +1,2 @@
+module_action_recorder_tell_a_friend_title = Tell A Friend
+module_action_recorder_tell_a_friend_description = Record usage of the Tell A Friend feature.

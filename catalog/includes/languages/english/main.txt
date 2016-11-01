@@ -1,0 +1,2 @@
+oscom::getdef( = 
+js_date_format = mm/dd/yyyy

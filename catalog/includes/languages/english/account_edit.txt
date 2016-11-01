@@ -1,0 +1,4 @@
+navbar_title_1 = My Account
+navbar_title_2 = Edit Account
+heading_title = My Account Information
+success_account_updated = Your account has been successfully updated.

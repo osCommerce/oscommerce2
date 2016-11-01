@@ -1,0 +1,4 @@
+module_content_footer_contact_us_title = Contact Us Details
+module_content_footer_contact_us_description = Adds a Contact Us Block to the Footer Area of your site
+module_content_footer_contact_us_heading_title = How To Contact Us
+module_content_footer_contact_us_email_link = Contact Us

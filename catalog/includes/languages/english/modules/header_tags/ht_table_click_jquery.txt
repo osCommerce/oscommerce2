@@ -1,0 +1,2 @@
+module_header_tags_table_click_jquery_title = Table Row Click jQuery
+module_header_tags_table_click_jquery_description = Add Table Row Click jQuery to specified pages

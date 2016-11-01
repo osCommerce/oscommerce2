@@ -1,0 +1,13 @@
+navbar_title_1 = Checkout
+navbar_title_2 = Change Shipping Address
+heading_title = Delivery Information
+table_heading_shipping_address = Shipping Address
+text_selected_shipping_destination = This is the currently selected shipping address where the items in this order will be delivered to.
+title_shipping_address = Shipping Address:
+table_heading_address_book_entries = Address Book Entries
+text_select_other_shipping_destination = Please select the preferred shipping address if the items in this order are to be delivered elsewhere.
+title_please_select = Please Select
+table_heading_new_shipping_address = New Shipping Address
+text_create_new_shipping_address = Please use the following form to create a new shipping address to use for this order.
+title_continue_checkout_procedure = Continue Checkout Procedure
+text_continue_checkout_procedure = to select the preferred shipping method.

@@ -1,0 +1,3 @@
+module_social_bookmarks_google_plus_one_title = Google+ +1 Button
+module_social_bookmarks_google_plus_one_description = Recommend products through Google+ +1 Button.
+module_social_bookmarks_google_plus_one_public_title = Recommend on Google+
