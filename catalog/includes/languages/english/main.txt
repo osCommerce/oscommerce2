@@ -132,7 +132,7 @@ text_view_grid =  Grid
 text_search_placeholder = Search
 form_required_information = <span class="fa fa-asterisk text-danger"></span> Required information
 form_required_input = <span><span class="fa fa-asterisk form-control-feedback text-danger"></span></span>
-reviews_text_rated = Rated %s by <cite title="%s" itemprop="author">%s</cite>
+reviews_text_rated = Rated {{keyword1}} by <cite title="{{keyword2}}" itemprop="author">{{keyword3}}</cite>
 reviews_text_average = Average rating based on <span itemprop="ratingCount">%s</span> review(s) %s
 reviews_text_title = What our customers say...
 text_sort_by = Sort By 
