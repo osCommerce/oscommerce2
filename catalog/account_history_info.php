@@ -36,9 +36,9 @@
 
   $OSCOM_Language->loadDefinitions('account_history_info');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php'));
-  $breadcrumb->add(sprintf(NAVBAR_TITLE_3, $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id']));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('account_history.php'));
+  $breadcrumb->add(sprintf(OSCOM::getDef('navbar_title_3'), $_GET['order_id']), OSCOM::link('account_history_info.php', 'order_id=' . $_GET['order_id']));
 
   require('includes/classes/order.php');
   $order = new order($_GET['order_id']);
@@ -47,7 +47,7 @@
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
@@ -55,7 +55,7 @@
   <div class="contentText">
 
     <div class="panel panel-default">
-      <div class="panel-heading"><strong><?php echo sprintf(HEADING_ORDER_NUMBER, $_GET['order_id']) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
+      <div class="panel-heading"><strong><?php echo sprintf(OSCOM::getDef('heading_order_number'), $_GET['order_id']) . ' <span class="badge pull-right">' . $order->info['orders_status'] . '</span>'; ?></strong></div>
       <div class="panel-body">
 
         <table border="0" width="100%" cellspacing="0" cellpadding="2" class="table-hover order_confirmation">
@@ -63,16 +63,16 @@
   if (sizeof($order->info['tax_groups']) > 1) {
 ?>
           <tr>
-            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TAX; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
+            <td colspan="2"><strong><?php echo OSCOM::getDef('heading_products'); ?></strong></td>
+            <td align="right"><strong><?php echo OSCOM::getDef('heading_tax'); ?></strong></td>
+            <td align="right"><strong><?php echo OSCOM::getDef('heading_total'); ?></strong></td>
           </tr>
 <?php
   } else {
 ?>
           <tr>
-            <td colspan="2"><strong><?php echo HEADING_PRODUCTS; ?></strong></td>
-            <td align="right"><strong><?php echo HEADING_TOTAL; ?></strong></td>
+            <td colspan="2"><strong><?php echo OSCOM::getDef('heading_products'); ?></strong></td>
+            <td align="right"><strong><?php echo OSCOM::getDef('heading_total'); ?></strong></td>
           </tr>
 <?php
   }
@@ -114,7 +114,7 @@
 
 
       <div class="panel-footer">
-        <span class="pull-right hidden-xs"><?php echo HEADING_ORDER_TOTAL . ' ' . $order->info['total']; ?></span><?php echo HEADING_ORDER_DATE . ' ' . DateTime::toLong($order->info['date_purchased']); ?>
+        <span class="pull-right hidden-xs"><?php echo OSCOM::getDef('heading_order_total') . ' ' . $order->info['total']; ?></span><?php echo OSCOM::getDef('heading_order_date') . ' ' . DateTime::toLong($order->info['date_purchased']); ?>
       </div>
     </div>
   </div>
@@ -127,7 +127,7 @@
       ?>
       <div class="col-sm-4">
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_DELIVERY_ADDRESS . '</strong>'; ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_delivery_address') . '</strong>'; ?></div>
           <div class="panel-body">
             <?php echo tep_address_format($order->delivery['format_id'], $order->delivery, 1, ' ', '<br />'); ?>
           </div>
@@ -138,7 +138,7 @@
     ?>
     <div class="col-sm-4">
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_BILLING_ADDRESS . '</strong>'; ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_billing_address') . '</strong>'; ?></div>
         <div class="panel-body">
           <?php echo tep_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'); ?>
         </div>
@@ -149,7 +149,7 @@
       if ($order->info['shipping_method']) {
         ?>
         <div class="panel panel-info">
-          <div class="panel-heading"><?php echo '<strong>' . HEADING_SHIPPING_METHOD . '</strong>'; ?></div>
+          <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_shipping_method') . '</strong>'; ?></div>
           <div class="panel-body">
             <?php echo $order->info['shipping_method']; ?>
           </div>
@@ -158,7 +158,7 @@
       }
       ?>
       <div class="panel panel-warning">
-        <div class="panel-heading"><?php echo '<strong>' . HEADING_PAYMENT_METHOD . '</strong>'; ?></div>
+        <div class="panel-heading"><?php echo '<strong>' . OSCOM::getDef('heading_payment_method') . '</strong>'; ?></div>
         <div class="panel-body">
           <?php echo $order->info['payment_method']; ?>
         </div>
@@ -170,7 +170,7 @@
 
   <hr>
 
-  <h2><?php echo HEADING_ORDER_HISTORY; ?></h2>
+  <h2><?php echo OSCOM::getDef('heading_order_history'); ?></h2>
 
   <div class="clearfix"></div>
 
@@ -205,7 +205,7 @@
 
   <div class="clearfix"></div>
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')))); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('account_history.php', tep_get_all_get_params(array('order_id')))); ?>
   </div>
 </div>
 

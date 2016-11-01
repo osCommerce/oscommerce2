@@ -12,14 +12,14 @@ use OSC\OM\OSCOM;
       <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process'), 'post', '', ['tokenize' => true]); ?>
 
       <div class="form-group">
-        <?php echo HTML::inputField('email_address', NULL, 'autofocus="autofocus" required id="inputEmail" placeholder="' . ENTRY_EMAIL_ADDRESS_TEXT . '"', 'email'); ?>
+        <?php echo HTML::inputField('email_address', NULL, 'autofocus="autofocus" required id="inputEmail" placeholder="' . OSCOM::getDef('entry_email_address_text') . '"', 'email'); ?>
       </div>
 
       <div class="form-group">
-        <?php echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_TEXT . '"', 'password'); ?>
+        <?php echo HTML::passwordField('password', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . OSCOM::getDef('entry_password_text') . '"', 'password'); ?>
       </div>
 
-      <p class="text-right"><?php echo HTML::button(IMAGE_BUTTON_LOGIN, 'fa fa-sign-in', null, null, 'btn-success btn-block'); ?></p>
+      <p class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_login'), 'fa fa-sign-in', null, null, 'btn-success btn-block'); ?></p>
 
       </form>
     </div>

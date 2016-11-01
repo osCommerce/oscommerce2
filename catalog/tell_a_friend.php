@@ -55,25 +55,25 @@
     if (empty($from_name)) {
       $error = true;
 
-      $messageStack->add('friend', ERROR_FROM_NAME);
+      $messageStack->add('friend', OSCOM::getDef('error_from_name'));
     }
 
     if (!Is::email($from_email_address)) {
       $error = true;
 
-      $messageStack->add('friend', ERROR_FROM_ADDRESS);
+      $messageStack->add('friend', OSCOM::getDef('error_from_address'));
     }
 
     if (empty($to_name)) {
       $error = true;
 
-      $messageStack->add('friend', ERROR_TO_NAME);
+      $messageStack->add('friend', OSCOM::getDef('error_to_name'));
     }
 
     if (!Is::email($to_email_address)) {
       $error = true;
 
-      $messageStack->add('friend', ERROR_TO_ADDRESS);
+      $messageStack->add('friend', OSCOM::getDef('error_to_address'));
     }
 
     $actionRecorder = new actionRecorder('ar_tell_a_friend', (isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : null), $from_name);
@@ -82,19 +82,19 @@
 
       $actionRecorder->record(false);
 
-      $messageStack->add('friend', sprintf(ERROR_ACTION_RECORDER, (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
+      $messageStack->add('friend', sprintf(OSCOM::getDef('error_action_recorder'), (defined('MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES') ? (int)MODULE_ACTION_RECORDER_TELL_A_FRIEND_EMAIL_MINUTES : 15)));
     }
 
     if ($error == false) {
-      $email_subject = sprintf(TEXT_EMAIL_SUBJECT, $from_name, STORE_NAME);
-      $email_body = sprintf(TEXT_EMAIL_INTRO, $to_name, $from_name, $Qproduct->value('products_name'), STORE_NAME) . "\n\n";
+      $email_subject = sprintf(OSCOM::getDef('text_email_subject'), $from_name, STORE_NAME);
+      $email_body = sprintf(OSCOM::getDef('text_email_intro'), $to_name, $from_name, $Qproduct->value('products_name'), STORE_NAME) . "\n\n";
 
       if (tep_not_null($message)) {
         $email_body .= $message . "\n\n";
       }
 
-      $email_body .= sprintf(TEXT_EMAIL_LINK, OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)) . "\n\n" .
-                     sprintf(TEXT_EMAIL_SIGNATURE, STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n");
+      $email_body .= sprintf(OSCOM::getDef('text_email_link'), OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'), false)) . "\n\n" .
+                     sprintf(OSCOM::getDef('text_email_signature'), STORE_NAME . "\n" . OSCOM::link('index.php', null, false) . "\n");
 
       $tellfriendEmail = new Mail($to_email_address, $to_name, $from_email_address, $from_name, $email_subject);
       $tellfriendEmail->setBody($email_body);
@@ -102,7 +102,7 @@
 
       $actionRecorder->record();
 
-      $messageStack->add_session('header', sprintf(TEXT_EMAIL_SUCCESSFUL_SENT, $Qproduct->value('products_name'), HTML::outputProtected($to_name)), 'success');
+      $messageStack->add_session('header', sprintf(OSCOM::getDef('text_email_successful_sent'), $Qproduct->value('products_name'), HTML::outputProtected($to_name)), 'success');
 
       OSCOM::redirect('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'));
     }
@@ -113,13 +113,13 @@
     $from_email_address = $Qcustomer->value('customers_email_address');
   }
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('tell_a_friend.php', 'products_id=' . $Qproduct->valueInt('products_id')));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo sprintf(HEADING_TITLE, $Qproduct->value('products_name')); ?></h1>
+  <h1><?php echo sprintf(OSCOM::getDef('heading_title'), $Qproduct->value('products_name')); ?></h1>
 </div>
 
 <?php
@@ -132,49 +132,49 @@
 
 <div class="contentContainer">
 
-  <div class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></div>
+  <div class="text-danger text-right"><?php echo OSCOM::getDef('form_required_information'); ?></div>
 
-  <h2><?php echo FORM_TITLE_CUSTOMER_DETAILS; ?></h2>
+  <h2><?php echo OSCOM::getDef('form_title_customer_details'); ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputFromName" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_NAME; ?></label>
+      <label for="inputFromName" class="control-label col-sm-3"><?php echo OSCOM::getDef('form_field_customer_name'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('from_name', $from_name, 'required aria-required="true" id="inputFromName" placeholder="' . FORM_FIELD_CUSTOMER_NAME . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('from_name', $from_name, 'required aria-required="true" id="inputFromName" placeholder="' . OSCOM::getDef('form_field_customer_name') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputFromEmail" class="control-label col-sm-3"><?php echo FORM_FIELD_CUSTOMER_EMAIL; ?></label>
+      <label for="inputFromEmail" class="control-label col-sm-3"><?php echo OSCOM::getDef('form_field_customer_email'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('from_email_address', $from_email_address, 'required aria-required="true" id="inputFromEmail" placeholder="' . FORM_FIELD_CUSTOMER_EMAIL . '"', 'email');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('from_email_address', $from_email_address, 'required aria-required="true" id="inputFromEmail" placeholder="' . OSCOM::getDef('form_field_customer_email') . '"', 'email');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
   </div>
 
-  <h2><?php echo FORM_TITLE_FRIEND_DETAILS; ?></h2>
+  <h2><?php echo OSCOM::getDef('form_title_friend_details'); ?></h2>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputToName" class="control-label col-sm-3"><?php echo FORM_FIELD_FRIEND_NAME; ?></label>
+      <label for="inputToName" class="control-label col-sm-3"><?php echo OSCOM::getDef('form_field_friend_name'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('to_name', NULL, 'required aria-required="true" id="inputToName" placeholder="' . FORM_FIELD_FRIEND_NAME . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('to_name', NULL, 'required aria-required="true" id="inputToName" placeholder="' . OSCOM::getDef('form_field_friend_name') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputToEmail" class="control-label col-sm-3"><?php echo FORM_FIELD_FRIEND_EMAIL; ?></label>
+      <label for="inputToEmail" class="control-label col-sm-3"><?php echo OSCOM::getDef('form_field_friend_email'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::inputField('to_email_address', NULL, 'required aria-required="true" id="inputToEmail" placeholder="' . FORM_FIELD_FRIEND_EMAIL . '"', 'email');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::inputField('to_email_address', NULL, 'required aria-required="true" id="inputToEmail" placeholder="' . OSCOM::getDef('form_field_friend_email') . '"', 'email');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
@@ -184,19 +184,19 @@
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputMessage" class="control-label col-sm-3"><?php echo FORM_TITLE_FRIEND_MESSAGE; ?></label>
+      <label for="inputMessage" class="control-label col-sm-3"><?php echo OSCOM::getDef('form_title_friend_message'); ?></label>
       <div class="col-sm-9">
         <?php
-        echo HTML::textareaField('message', 40, 8, NULL, 'required aria-required="true" id="inputMessage" placeholder="' . FORM_TITLE_FRIEND_MESSAGE . '"');
-        echo FORM_REQUIRED_INPUT;
+        echo HTML::textareaField('message', 40, 8, NULL, 'required aria-required="true" id="inputMessage" placeholder="' . OSCOM::getDef('form_title_friend_message') . '"');
+        echo OSCOM::getDef('form_required_input');
         ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSetrow">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'))); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('product_info.php', 'products_id=' . $Qproduct->valueInt('products_id'))); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 </div>
 

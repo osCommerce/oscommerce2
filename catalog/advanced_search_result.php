@@ -393,7 +393,7 @@
   <br />
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('advanced_search.php', tep_get_all_get_params(array('sort', 'page')), true, false)); ?>
   </div>
 </div>
 

@@ -33,11 +33,11 @@
     if (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
       $error = true;
 
-      $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);
+      $messageStack->add('account_password', OSCOM::getDef('entry_password_new_error'));
     } elseif ($password_new != $password_confirmation) {
       $error = true;
 
-      $messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
+      $messageStack->add('account_password', OSCOM::getDef('entry_password_new_error_not_matching'));
     }
 
     if ($error == false) {
@@ -49,25 +49,25 @@
         $OSCOM_Db->save('customers', ['customers_password' => Hash::encrypt($password_new)], ['customers_id' => (int)$_SESSION['customer_id']]);
         $OSCOM_Db->save('customers_info', ['customers_info_date_account_last_modified' => 'now()'], ['customers_info_id' => (int)$_SESSION['customer_id']]);
 
-        $messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
+        $messageStack->add_session('account', OSCOM::getDef('success_password_updated'), 'success');
 
         OSCOM::redirect('account.php');
       } else {
         $error = true;
 
-        $messageStack->add('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);
+        $messageStack->add('account_password', OSCOM::getDef('error_current_password_not_matching'));
       }
     }
   }
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_password.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('account_password.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php
@@ -84,35 +84,35 @@
 ?>
 
 <div class="contentContainer">
-  <p class="text-danger text-right"><?php echo FORM_REQUIRED_INFORMATION; ?></p>
+  <p class="text-danger text-right"><?php echo OSCOM::getDef('form_required_information'); ?></p>
 
   <div class="contentText">
     <div class="form-group has-feedback">
-      <label for="inputCurrent" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CURRENT; ?></label>
+      <label for="inputCurrent" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_password_current'); ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::passwordField('password_current', NULL, 'required aria-required="true" autofocus="autofocus" id="inputCurrent" autocomplete="current-password" placeholder="' . ENTRY_PASSWORD_CURRENT_TEXT . '"', 'password'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php echo HTML::passwordField('password_current', NULL, 'required aria-required="true" autofocus="autofocus" id="inputCurrent" autocomplete="current-password" placeholder="' . OSCOM::getDef('entry_password_current_text') . '"', 'password'); ?>
+        <?php echo OSCOM::getDef('form_required_input'); ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputPassword" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_NEW; ?></label>
+      <label for="inputPassword" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_password_new'); ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::passwordField('password_new', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_NEW_TEXT . '"', 'password'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php echo HTML::passwordField('password_new', NULL, 'required aria-required="true" id="inputPassword" autocomplete="new-password" placeholder="' . OSCOM::getDef('entry_password_new_text') . '"', 'password'); ?>
+        <?php echo OSCOM::getDef('form_required_input'); ?>
       </div>
     </div>
     <div class="form-group has-feedback">
-      <label for="inputConfirmation" class="control-label col-sm-3"><?php echo ENTRY_PASSWORD_CONFIRMATION; ?></label>
+      <label for="inputConfirmation" class="control-label col-sm-3"><?php echo OSCOM::getDef('entry_password_confirmation'); ?></label>
       <div class="col-sm-9">
-        <?php echo HTML::passwordField('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" autocomplete="new-password" placeholder="' . ENTRY_PASSWORD_CONFIRMATION_TEXT . '"', 'password'); ?>
-        <?php echo FORM_REQUIRED_INPUT; ?>
+        <?php echo HTML::passwordField('password_confirmation', NULL, 'required aria-required="true" id="inputConfirmation" autocomplete="new-password" placeholder="' . OSCOM::getDef('entry_password_confirmation_text') . '"', 'password'); ?>
+        <?php echo OSCOM::getDef('form_required_input'); ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSet row">
-    <div class="col-xs-6"><?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
-    <div class="col-xs-6 text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
+    <div class="col-xs-6"><?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('account.php')); ?></div>
+    <div class="col-xs-6 text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', null, null, 'btn-success'); ?></div>
   </div>
 
 </div>

@@ -23,14 +23,14 @@
 
   $OSCOM_Language->loadDefinitions('account_history');
 
-  $breadcrumb->add(NAVBAR_TITLE_1, OSCOM::link('account.php'));
-  $breadcrumb->add(NAVBAR_TITLE_2, OSCOM::link('account_history.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_1'), OSCOM::link('account.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title_2'), OSCOM::link('account_history.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
@@ -49,25 +49,25 @@
       $Qproducts->execute();
 
       if (tep_not_null($order['delivery_name'])) {
-        $order_type = TEXT_ORDER_SHIPPED_TO;
+        $order_type = OSCOM::getDef('text_order_shipped_to');
         $order_name = $order['delivery_name'];
       } else {
-        $order_type = TEXT_ORDER_BILLED_TO;
+        $order_type = OSCOM::getDef('text_order_billed_to');
         $order_name = $order['billing_name'];
       }
 ?>
 
   <div class="contentText">
     <div class="panel panel-info">
-      <div class="panel-heading"><strong><?php echo TEXT_ORDER_NUMBER . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong></div>
+      <div class="panel-heading"><strong><?php echo OSCOM::getDef('text_order_number') . ' ' . (int)$order['orders_id'] . ' <span class="contentText">(' . HTML::outputProtected($order['orders_status_name']) . ')</span>'; ?></strong></div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_DATE . '</strong> ' . DateTime::toLong($order['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . HTML::outputProtected($order_name); ?></div>
+          <div class="col-sm-6"><?php echo '<strong>' . OSCOM::getDef('text_order_date') . '</strong> ' . DateTime::toLong($order['date_purchased']) . '<br /><strong>' . $order_type . '</strong> ' . HTML::outputProtected($order_name); ?></div>
           <br class="visible-xs" />
-          <div class="col-sm-6"><?php echo '<strong>' . TEXT_ORDER_PRODUCTS . '</strong> ' . $Qproducts->valueInt('count') . '<br /><strong>' . TEXT_ORDER_COST . '</strong> ' . strip_tags($order['order_total']); ?></div>
+          <div class="col-sm-6"><?php echo '<strong>' . OSCOM::getDef('text_order_products') . '</strong> ' . $Qproducts->valueInt('count') . '<br /><strong>' . OSCOM::getDef('text_order_cost') . '</strong> ' . strip_tags($order['order_total']); ?></div>
         </div>
       </div>
-      <div class="panel-footer"><?php echo HTML::button(SMALL_IMAGE_BUTTON_VIEW, 'fa fa-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $order['orders_id']), null, 'btn-primary btn-xs'); ?></div>
+      <div class="panel-footer"><?php echo HTML::button(OSCOM::getDef('small_image_button_view'), 'fa fa-file', OSCOM::link('account_history_info.php', (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'order_id=' . $order['orders_id']), null, 'btn-primary btn-xs'); ?></div>
     </div>
   </div>
 
@@ -75,8 +75,8 @@
     }
 ?>
   <div class="row">
-    <div class="col-md-6 pagenumber"><?php echo $Qorders->getPageSetLabel(TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></div>
-    <div class="col-md-6"><span class="pull-right pagenav"><ul class="pagination"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></span><span class="pull-right"><?php echo TEXT_RESULT_PAGE; ?></span></div>
+    <div class="col-md-6 pagenumber"><?php echo $Qorders->getPageSetLabel(OSCOM::getDef('text_display_number_of_orders')); ?></div>
+    <div class="col-md-6"><span class="pull-right pagenav"><ul class="pagination"><?php echo $Qorders->getPageSetLinks(tep_get_all_get_params(array('page', 'info', 'x', 'y'))); ?></ul></span><span class="pull-right"><?php echo OSCOM::getDef('text_result_page'); ?></span></div>
   </div>
 
 <?php
@@ -84,7 +84,7 @@
 ?>
 
   <div class="alert alert-info">
-    <p><?php echo TEXT_NO_PURCHASES; ?></p>
+    <p><?php echo OSCOM::getDef('text_no_purchases'); ?></p>
   </div>
 
 <?php
@@ -92,7 +92,7 @@
 ?>
 
   <div class="buttonSet">
-    <?php echo HTML::button(IMAGE_BUTTON_BACK, 'fa fa-angle-left', OSCOM::link('account.php')); ?>
+    <?php echo HTML::button(OSCOM::getDef('image_button_back'), 'fa fa-angle-left', OSCOM::link('account.php')); ?>
   </div>
 </div>
 

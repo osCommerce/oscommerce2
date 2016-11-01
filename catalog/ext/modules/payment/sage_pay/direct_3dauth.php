@@ -33,9 +33,9 @@
   $OSCOM_Language->loadDefinitions('modules/payment/sage_pay_direct');
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html <?php echo HTML_PARAMS; ?>>
+<html <?php echo OSCOM::getDef('html_params'); ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo CHARSET; ?>">
+<meta http-equiv="Content-Type" content="text/html; charset=<?php echo OSCOM::getDef('charset'); ?>">
 <title><?php echo MODULE_PAYMENT_SAGE_PAY_DIRECT_3DAUTH_TITLE; ?></title>
 <base href="<?= OSCOM::getConfig('http_server', 'Shop') . OSCOM::getConfig('http_path', 'Shop'); ?>">
 </head>

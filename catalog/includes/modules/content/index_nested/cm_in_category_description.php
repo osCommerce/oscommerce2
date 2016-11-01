@@ -26,7 +26,7 @@
 
       $this->title = MODULE_CONTENT_IN_CATEGORY_DESCRIPTION_TITLE;
       $this->description = MODULE_CONTENT_IN_CATEGORY_DESCRIPTION_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_CONTENT_BOOTSTRAP_ROW_DESCRIPTION . '</div>';
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_IN_CATEGORY_DESCRIPTION_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_IN_CATEGORY_DESCRIPTION_SORT_ORDER;

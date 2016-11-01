@@ -70,7 +70,7 @@
           $manufacturers_array = array();
 
           if (MAX_MANUFACTURERS_LIST < 2) {
-            $manufacturers_array[] = array('id' => '', 'text' => PULL_DOWN_DEFAULT);
+            $manufacturers_array[] = array('id' => '', 'text' => OSCOM::getDef('pull_down_default'));
           }
 
           foreach ($manufacturers as $m) {

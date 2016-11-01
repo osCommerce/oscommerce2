@@ -16,13 +16,13 @@
 
   $OSCOM_Language->loadDefinitions('products_new');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('products_new.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('products_new.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <?php

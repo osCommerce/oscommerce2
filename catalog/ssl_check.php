@@ -17,34 +17,34 @@
 
   $OSCOM_Language->loadDefinitions('ssl_check');
 
-  $breadcrumb->add(NAVBAR_TITLE, OSCOM::link('ssl_check.php'));
+  $breadcrumb->add(OSCOM::getDef('navbar_title'), OSCOM::link('ssl_check.php'));
 
   require($oscTemplate->getFile('template_top.php'));
 ?>
 
 <div class="page-header">
-  <h1><?php echo HEADING_TITLE; ?></h1>
+  <h1><?php echo OSCOM::getDef('heading_title'); ?></h1>
 </div>
 
 <div class="contentContainer">
   <div class="contentText">
 
     <div class="panel panel-danger">
-      <div class="panel-heading"><?php echo BOX_INFORMATION_HEADING; ?></div>
+      <div class="panel-heading"><?php echo OSCOM::getDef('box_information_heading'); ?></div>
       <div class="panel-body">
-        <?php echo BOX_INFORMATION; ?>
+        <?php echo OSCOM::getDef('box_information'); ?>
       </div>
     </div>
 
     <div class="panel panel-danger">
       <div class="panel-body">
-        <?php echo TEXT_INFORMATION; ?>
+        <?php echo OSCOM::getDef('text_information'); ?>
       </div>
     </div>
   </div>
 
   <div class="buttonSet">
-    <div class="text-right"><?php echo HTML::button(IMAGE_BUTTON_CONTINUE, 'fa fa-angle-right', OSCOM::link('login.php')); ?></div>
+    <div class="text-right"><?php echo HTML::button(OSCOM::getDef('image_button_continue'), 'fa fa-angle-right', OSCOM::link('login.php')); ?></div>
   </div>
 </div>
 

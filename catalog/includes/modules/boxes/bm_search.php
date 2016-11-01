@@ -38,7 +38,7 @@
       global $oscTemplate;
 
       $form_output = HTML::form('quick_find', OSCOM::link('advanced_search_result.php', '', false), 'get', null, ['session_id' => true]) .
-                     '<div class="input-group">' . HTML::inputField('keywords', '', 'required placeholder="' . TEXT_SEARCH_PLACEHOLDER . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button></span></div>' .
+                     '<div class="input-group">' . HTML::inputField('keywords', '', 'required placeholder="' . OSCOM::getDef('text_search_placeholder') . '"', 'search') . '<span class="input-group-btn"><button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button></span></div>' .
                      HTML::hiddenField('search_in_description', '0') .
                      '</form>';
 
