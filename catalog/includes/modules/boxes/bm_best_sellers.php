@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_BEST_SELLERS_TITLE;
-      $this->description = MODULE_BOXES_BEST_SELLERS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_best_sellers_title');
+      $this->description = OSCOM::getDef('module_boxes_best_sellers_description');
 
       if ( defined('MODULE_BOXES_BEST_SELLERS_STATUS') ) {
         $this->sort_order = MODULE_BOXES_BEST_SELLERS_SORT_ORDER;

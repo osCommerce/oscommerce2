@@ -24,8 +24,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_IN_CATEGORY_LISTING_TITLE;
-      $this->description = MODULE_CONTENT_IN_CATEGORY_LISTING_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_in_category_listing_title');
+      $this->description = OSCOM::getDef('module_content_in_category_listing_description');
       $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_IN_CATEGORY_LISTING_STATUS') ) {

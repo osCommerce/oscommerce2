@@ -29,15 +29,15 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_TITLE;
-      $this->description = MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_account_sage_pay_cards_title');
+      $this->description = OSCOM::getDef('module_content_account_sage_pay_cards_description');
 
       if ( defined('MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_SORT_ORDER;
         $this->enabled = (MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_STATUS == 'True');
       }
 
-      $this->public_title = MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_LINK_TITLE;
+      $this->public_title = OSCOM::getDef('module_content_account_sage_pay_cards_link_title');
 
       $sage_pay_enabled = false;
 
@@ -62,7 +62,7 @@
       if ( $sage_pay_enabled !== true ) {
         $this->enabled = false;
 
-        $this->description = '<div class="secWarning">' . MODULE_CONTENT_ACCOUNT_SAGE_PAY_CARDS_ERROR_MAIN_MODULE . '</div>' . $this->description;
+        $this->description = '<div class="secWarning">' . OSCOM::getDef('module_content_account_sage_pay_cards_error_main_module') . '</div>' . $this->description;
       }
     }
 

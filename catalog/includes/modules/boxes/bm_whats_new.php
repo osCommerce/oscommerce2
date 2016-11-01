@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_WHATS_NEW_TITLE;
-      $this->description = MODULE_BOXES_WHATS_NEW_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_whats_new_title');
+      $this->description = OSCOM::getDef('module_boxes_whats_new_description');
 
       if ( defined('MODULE_BOXES_WHATS_NEW_STATUS') ) {
         $this->sort_order = MODULE_BOXES_WHATS_NEW_SORT_ORDER;

@@ -26,8 +26,8 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->title = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_TITLE;
-      $this->description = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_google_adwords_conversion_title');
+      $this->description = OSCOM::getDef('module_header_tags_google_adwords_conversion_description');
 
       if ( defined('MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_GOOGLE_ADWORDS_CONVERSION_SORT_ORDER;

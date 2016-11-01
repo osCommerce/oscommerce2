@@ -22,9 +22,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PAGES_SEO_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PAGES_SEO_DESCRIPTION;
-      $this->description .= '<div class="secWarning">' . MODULE_HEADER_TAGS_PAGES_SEO_HELPER . '</div>';
+      $this->title = OSCOM::getDef('module_header_tags_pages_seo_title');
+      $this->description = OSCOM::getDef('module_header_tags_pages_seo_description');
+      $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_header_tags_pages_seo_helper') . '</div>';
 
       if ( defined('MODULE_HEADER_TAGS_PAGES_SEO_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PAGES_SEO_SORT_ORDER;
@@ -36,7 +36,7 @@
       global $oscTemplate;
 
       if ( (defined('META_SEO_TITLE')) && (strlen(META_SEO_TITLE) > 0) ) {
-        $oscTemplate->setTitle(HTML::output(META_SEO_TITLE)  . MODULE_HEADER_TAGS_PAGES_SEO_SEPARATOR . $oscTemplate->getTitle());
+        $oscTemplate->setTitle(HTML::output(META_SEO_TITLE)  . OSCOM::getDef('module_header_tags_pages_seo_separator') . $oscTemplate->getTitle());
       }
       if ( (defined('META_SEO_DESCRIPTION')) && (strlen(META_SEO_DESCRIPTION) > 0) ) {
         $oscTemplate->addBlock('<meta name="description" content="' . HTML::output(META_SEO_DESCRIPTION) . '" />' . "\n", $this->group);

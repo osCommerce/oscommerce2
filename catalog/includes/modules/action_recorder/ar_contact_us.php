@@ -22,8 +22,8 @@
     var $identifier;
 
     function __construct() {
-      $this->title = MODULE_ACTION_RECORDER_CONTACT_US_TITLE;
-      $this->description = MODULE_ACTION_RECORDER_CONTACT_US_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_action_recorder_contact_us_title');
+      $this->description = OSCOM::getDef('module_action_recorder_contact_us_description');
 
       if ($this->check()) {
         $this->minutes = (int)MODULE_ACTION_RECORDER_CONTACT_US_EMAIL_MINUTES;

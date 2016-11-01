@@ -25,8 +25,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_FOOTER_ACCOUNT_TITLE;
-      $this->description = MODULE_CONTENT_FOOTER_ACCOUNT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_footer_account_title');
+      $this->description = OSCOM::getDef('module_content_footer_account_description');
       $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_FOOTER_ACCOUNT_STATUS') ) {
@@ -41,14 +41,14 @@
       $content_width = (int)MODULE_CONTENT_FOOTER_ACCOUNT_CONTENT_WIDTH;
 
       if ( isset($_SESSION['customer_id']) ) {
-        $account_content = '<li><a href="' . OSCOM::link('account.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ACCOUNT . '</a></li>' .
-                           '<li><a href="' . OSCOM::link('address_book.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ADDRESS_BOOK . '</a></li>' .
-                           '<li><a href="' . OSCOM::link('account_history.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_ORDER_HISTORY . '</a></li>' .
-                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php') . '"><i class="fa fa-sign-out"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGOFF . '</a></li>';
+        $account_content = '<li><a href="' . OSCOM::link('account.php') . '">' . OSCOM::getDef('module_content_footer_account_box_account') . '</a></li>' .
+                           '<li><a href="' . OSCOM::link('address_book.php') . '">' . OSCOM::getDef('module_content_footer_account_box_address_book') . '</a></li>' .
+                           '<li><a href="' . OSCOM::link('account_history.php') . '">' . OSCOM::getDef('module_content_footer_account_box_order_history') . '</a></li>' .
+                           '<li><br><a class="btn btn-danger btn-sm btn-block" role="button" href="' . OSCOM::link('logoff.php') . '"><i class="fa fa-sign-out"></i> ' . OSCOM::getDef('module_content_footer_account_box_logoff') . '</a></li>';
       }
       else {
-        $account_content = '<li><a href="' . OSCOM::link('create_account.php') . '">' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_CREATE_ACCOUNT . '</a></li>' .
-                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('login.php') . '"><i class="fa fa-sign-in"></i> ' . MODULE_CONTENT_FOOTER_ACCOUNT_BOX_LOGIN . '</a></li>';
+        $account_content = '<li><a href="' . OSCOM::link('create_account.php') . '">' . OSCOM::getDef('module_content_footer_account_box_create_account') . '</a></li>' .
+                           '<li><br><a class="btn btn-success btn-sm btn-block" role="button" href="' . OSCOM::link('login.php') . '"><i class="fa fa-sign-in"></i> ' . OSCOM::getDef('module_content_footer_account_box_login') . '</a></li>';
       }
 
       ob_start();

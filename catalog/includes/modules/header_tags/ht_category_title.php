@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_CATEGORY_TITLE_TITLE;
-      $this->description = MODULE_HEADER_TAGS_CATEGORY_TITLE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_category_title_title');
+      $this->description = OSCOM::getDef('module_header_tags_category_title_description');
 
       if ( defined('MODULE_HEADER_TAGS_CATEGORY_TITLE_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_CATEGORY_TITLE_SORT_ORDER;
@@ -42,10 +42,10 @@
 
           if ($Qcategory->fetch() !== false) {
             if ( tep_not_null($Qcategory->value('categories_seo_title')) && (MODULE_HEADER_TAGS_CATEGORY_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
-              $oscTemplate->setTitle($Qcategory->value('categories_seo_title') . MODULE_HEADER_TAGS_CATEGORY_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qcategory->value('categories_seo_title') . OSCOM::getDef('module_header_tags_category_seo_separator') . $oscTemplate->getTitle());
             }
             else {
-              $oscTemplate->setTitle($Qcategory->value('categories_name') . MODULE_HEADER_TAGS_CATEGORY_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qcategory->value('categories_name') . OSCOM::getDef('module_header_tags_category_seo_separator') . $oscTemplate->getTitle());
             }
           }
         }

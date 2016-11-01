@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_NOSCRIPT_TITLE;
-      $this->description = MODULE_HEADER_TAGS_NOSCRIPT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_noscript_title');
+      $this->description = OSCOM::getDef('module_header_tags_noscript_description');
 
       if ( defined('MODULE_HEADER_TAGS_NOSCRIPT_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_NOSCRIPT_SORT_ORDER;
@@ -34,7 +34,7 @@
     function execute() {
       global $oscTemplate;
 
-      $oscTemplate->addBlock('<noscript><div class="no-script"><div class="no-script-inner">' . HTML::output(MODULE_HEADER_TAGS_NOSCRIPT_TEXT) . '</div></div></noscript>', $this->group);
+      $oscTemplate->addBlock('<noscript><div class="no-script"><div class="no-script-inner">' . HTML::output(OSCOM::getDef('module_header_tags_noscript_text')) . '</div></div></noscript>', $this->group);
       $oscTemplate->addBlock('<style>.no-script { border: 1px solid #ddd; border-width: 0 0 1px; background: #ffff90; font: 14px verdana; line-height: 2; text-align: center; color: #2f2f2f; } .no-script .no-script-inner { margin: 0 auto; padding: 5px; } .no-script p { margin: 0; }</style>', $this->group);
     }
 

@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_NAVBAR_HAMBURGER_BUTTON_TITLE;
-      $this->description = MODULE_NAVBAR_HAMBURGER_BUTTON_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_navbar_hamburger_button_title');
+      $this->description = OSCOM::getDef('module_navbar_hamburger_button_description');
 
       if ( defined('MODULE_NAVBAR_HAMBURGER_BUTTON_STATUS') ) {
         $this->sort_order = MODULE_NAVBAR_HAMBURGER_BUTTON_SORT_ORDER;

@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_TITLE;
-      $this->description = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_datepicker_jquery_title');
+      $this->description = OSCOM::getDef('module_header_tags_datepicker_jquery_description');
 
       if ( defined('MODULE_HEADER_TAGS_DATEPICKER_JQUERY_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_DATEPICKER_JQUERY_SORT_ORDER;

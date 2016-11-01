@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_ROBOT_NOINDEX_TITLE;
-      $this->description = MODULE_HEADER_TAGS_ROBOT_NOINDEX_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_robot_noindex_title');
+      $this->description = OSCOM::getDef('module_header_tags_robot_noindex_description');
 
       if ( defined('MODULE_HEADER_TAGS_ROBOT_NOINDEX_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_ROBOT_NOINDEX_SORT_ORDER;

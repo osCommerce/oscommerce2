@@ -17,8 +17,8 @@
 
     function __construct() {
       $this->code = 'ot_total';
-      $this->title = MODULE_ORDER_TOTAL_TOTAL_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_TOTAL_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_total_title');
+      $this->description = OSCOM::getDef('module_order_total_total_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_TOTAL_STATUS') && (MODULE_ORDER_TOTAL_TOTAL_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER : 0;
 

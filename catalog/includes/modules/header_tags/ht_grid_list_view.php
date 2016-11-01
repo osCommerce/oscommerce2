@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_GRID_LIST_VIEW_TITLE;
-      $this->description = MODULE_HEADER_TAGS_GRID_LIST_VIEW_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_grid_list_view_title');
+      $this->description = OSCOM::getDef('module_header_tags_grid_list_view_description');
 
       if ( defined('MODULE_HEADER_TAGS_GRID_LIST_VIEW_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_GRID_LIST_VIEW_SORT_ORDER;

@@ -17,8 +17,8 @@
 
     function __construct() {
       $this->code = 'ot_shipping';
-      $this->title = MODULE_ORDER_TOTAL_SHIPPING_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_SHIPPING_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_shipping_title');
+      $this->description = OSCOM::getDef('module_order_total_shipping_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_SHIPPING_STATUS') && (MODULE_ORDER_TOTAL_SHIPPING_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER : 0;
 
@@ -42,7 +42,7 @@
         }
 
         if ( ($pass == true) && ( ($order->info['total'] - $order->info['shipping_cost']) >= MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER) ) {
-          $order->info['shipping_method'] = FREE_SHIPPING_TITLE;
+          $order->info['shipping_method'] = OSCOM::getDef('free_shipping_title');
           $order->info['total'] -= $order->info['shipping_cost'];
           $order->info['shipping_cost'] = 0;
         }

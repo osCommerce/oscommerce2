@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_MANUFACTURER_TITLE_TITLE;
-      $this->description = MODULE_HEADER_TAGS_MANUFACTURER_TITLE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_manufacturer_title_title');
+      $this->description = OSCOM::getDef('module_header_tags_manufacturer_title_description');
 
       if ( defined('MODULE_HEADER_TAGS_MANUFACTURER_TITLE_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SORT_ORDER;
@@ -54,10 +54,10 @@
 
           if ($Qmanufacturer->fetch() !== false) {
             if ( tep_not_null($Qmanufacturer->value('manufacturers_seo_title')) && (MODULE_HEADER_TAGS_MANUFACTURER_TITLE_SEO_TITLE_OVERRIDE == 'True') ) {
-              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_seo_title') . MODULE_HEADER_TAGS_MANUFACTURER_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_seo_title') . OSCOM::getDef('module_header_tags_manufacturer_seo_separator') . $oscTemplate->getTitle());
             }
             else {
-              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_name') . MODULE_HEADER_TAGS_MANUFACTURER_SEO_SEPARATOR . $oscTemplate->getTitle());
+              $oscTemplate->setTitle($Qmanufacturer->value('manufacturers_name') . OSCOM::getDef('module_header_tags_manufacturer_seo_separator') . $oscTemplate->getTitle());
             }
           }
         }

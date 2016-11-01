@@ -17,8 +17,8 @@
 
     function __construct() {
       $this->code = 'ot_subtotal';
-      $this->title = MODULE_ORDER_TOTAL_SUBTOTAL_TITLE;
-      $this->description = MODULE_ORDER_TOTAL_SUBTOTAL_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_order_total_subtotal_title');
+      $this->description = OSCOM::getDef('module_order_total_subtotal_description');
       $this->enabled = defined('MODULE_ORDER_TOTAL_SUBTOTAL_STATUS') && (MODULE_ORDER_TOTAL_SUBTOTAL_STATUS == 'true') ? true : false;
       $this->sort_order = defined('MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER') && ((int)MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER > 0) ? (int)MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER : 0;
 

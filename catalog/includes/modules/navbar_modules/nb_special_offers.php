@@ -21,8 +21,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_NAVBAR_SPECIAL_OFFERS_TITLE;
-      $this->description = MODULE_NAVBAR_SPECIAL_OFFERS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_navbar_special_offers_title');
+      $this->description = OSCOM::getDef('module_navbar_special_offers_description');
 
       if ( defined('MODULE_NAVBAR_SPECIAL_OFFERS_STATUS') ) {
         $this->sort_order = MODULE_NAVBAR_SPECIAL_OFFERS_SORT_ORDER;

@@ -22,8 +22,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_META_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_META_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_product_meta_title');
+      $this->description = OSCOM::getDef('module_header_tags_product_meta_description');
 
       if ( defined('MODULE_HEADER_TAGS_PRODUCT_META_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_META_SORT_ORDER;

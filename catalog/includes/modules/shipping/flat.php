@@ -23,8 +23,8 @@
       $OSCOM_Db = Registry::get('Db');
 
       $this->code = 'flat';
-      $this->title = MODULE_SHIPPING_FLAT_TEXT_TITLE;
-      $this->description = MODULE_SHIPPING_FLAT_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_shipping_flat_text_title');
+      $this->description = OSCOM::getDef('module_shipping_flat_text_description');
       $this->sort_order = MODULE_SHIPPING_FLAT_SORT_ORDER;
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_FLAT_TAX_CLASS;
@@ -54,9 +54,9 @@
       global $order;
 
       $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
+                            'module' => OSCOM::getDef('module_shipping_flat_text_title'),
                             'methods' => array(array('id' => $this->code,
-                                                     'title' => MODULE_SHIPPING_FLAT_TEXT_WAY,
+                                                     'title' => OSCOM::getDef('module_shipping_flat_text_way'),
                                                      'cost' => MODULE_SHIPPING_FLAT_COST)));
 
       if ($this->tax_class > 0) {

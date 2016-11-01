@@ -103,8 +103,8 @@
 // class constructor
     function __construct() {
       $this->code = 'zones';
-      $this->title = MODULE_SHIPPING_ZONES_TEXT_TITLE;
-      $this->description = MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_shipping_zones_text_title');
+      $this->description = OSCOM::getDef('module_shipping_zones_text_description');
       $this->sort_order = MODULE_SHIPPING_ZONES_SORT_ORDER;
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
@@ -142,21 +142,21 @@
         for ($i=0; $i<$size; $i+=2) {
           if ($shipping_weight <= $zones_table[$i]) {
             $shipping = $zones_table[$i+1];
-            $shipping_method = MODULE_SHIPPING_ZONES_TEXT_WAY . ' ' . $dest_country . ' : ' . $shipping_weight . ' ' . MODULE_SHIPPING_ZONES_TEXT_UNITS;
+            $shipping_method = OSCOM::getDef('module_shipping_zones_text_way') . ' ' . $dest_country . ' : ' . $shipping_weight . ' ' . OSCOM::getDef('module_shipping_zones_text_units');
             break;
           }
         }
 
         if ($shipping == -1) {
           $shipping_cost = 0;
-          $shipping_method = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
+          $shipping_method = OSCOM::getDef('module_shipping_zones_undefined_rate');
         } else {
           $shipping_cost = ($shipping * $shipping_num_boxes) + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone);
         }
       }
 
       $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE,
+                            'module' => OSCOM::getDef('module_shipping_zones_text_title'),
                             'methods' => array(array('id' => $this->code,
                                                      'title' => $shipping_method,
                                                      'cost' => $shipping_cost)));
@@ -167,7 +167,7 @@
 
       if (tep_not_null($this->icon)) $this->quotes['icon'] = HTML::image($this->icon, $this->title);
 
-      if ($error == true) $this->quotes['error'] = MODULE_SHIPPING_ZONES_INVALID_ZONE;
+      if ($error == true) $this->quotes['error'] = OSCOM::getDef('module_shipping_zones_invalid_zone');
 
       return $this->quotes;
     }

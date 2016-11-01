@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_BOXES_SEARCH_TITLE;
-      $this->description = MODULE_BOXES_SEARCH_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_search_title');
+      $this->description = OSCOM::getDef('module_boxes_search_description');
 
       if ( defined('MODULE_BOXES_SEARCH_STATUS') ) {
         $this->sort_order = MODULE_BOXES_SEARCH_SORT_ORDER;

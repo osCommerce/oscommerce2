@@ -24,8 +24,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_FOOTER_CONTACT_US_TITLE;
-      $this->description = MODULE_CONTENT_FOOTER_CONTACT_US_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_footer_contact_us_title');
+      $this->description = OSCOM::getDef('module_content_footer_contact_us_description');
 
       if ( defined('MODULE_CONTENT_FOOTER_CONTACT_US_STATUS') ) {
         $this->sort_order = MODULE_CONTENT_FOOTER_CONTACT_US_SORT_ORDER;

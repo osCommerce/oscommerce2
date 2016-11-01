@@ -25,8 +25,8 @@
     function __construct() {
       $this->lang = Registry::get('Language');
 
-      $this->title = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_TITLE;
-      $this->description = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_boxes_product_social_bookmarks_title');
+      $this->description = OSCOM::getDef('module_boxes_product_social_bookmarks_description');
 
       if ( defined('MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_STATUS') ) {
         $this->sort_order = MODULE_BOXES_PRODUCT_SOCIAL_BOOKMARKS_SORT_ORDER;

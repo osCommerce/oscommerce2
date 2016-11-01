@@ -23,8 +23,8 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_TITLE;
-      $this->description = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_header_tags_product_colorbox_title');
+      $this->description = OSCOM::getDef('module_header_tags_product_colorbox_description');
 
       if ( defined('MODULE_HEADER_TAGS_PRODUCT_COLORBOX_STATUS') ) {
         $this->sort_order = MODULE_HEADER_TAGS_PRODUCT_COLORBOX_SORT_ORDER;
@@ -129,7 +129,7 @@
   }
 
   function ht_product_colorbox_thumbnail_number() {
-    return sprintf(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_THUMBNAIL_LAYOUT, MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT)));
+    return sprintf(OSCOM::getDef('module_header_tags_product_colorbox_thumbnail_layout'), MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT, array_sum(str_split(MODULE_HEADER_TAGS_PRODUCT_COLORBOX_LAYOUT)));
   }
 
   function ht_product_colorbox_edit_pages($values, $key) {

@@ -22,9 +22,9 @@
     var $enabled = false;
 
     function __construct() {
-      $this->title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_TITLE;
-      $this->public_title = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_PUBLIC_TITLE;
-      $this->description = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_social_bookmarks_facebook_like_title');
+      $this->public_title = OSCOM::getDef('module_social_bookmarks_facebook_like_public_title');
+      $this->description = OSCOM::getDef('module_social_bookmarks_facebook_like_description');
 
       if ( defined('MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_STATUS') ) {
         $this->sort_order = MODULE_SOCIAL_BOOKMARKS_FACEBOOK_LIKE_SORT_ORDER;
