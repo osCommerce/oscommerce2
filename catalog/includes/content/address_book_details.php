@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;	
 
   if (!isset($process)) $process = false;
 ?>
