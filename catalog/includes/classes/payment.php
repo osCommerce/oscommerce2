@@ -11,6 +11,7 @@
 */
 
   use OSC\OM\Apps;
+  use OSC\OM\OSCOM;	
   use OSC\OM\Registry;
 
   class payment {

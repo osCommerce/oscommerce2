@@ -174,7 +174,7 @@
 } else {
 ?>
 
-  <div class="alert alert-info"><?php echo TEXT_NO_PRODUCTS; ?></div>
+  <div class="alert alert-info"><?php echo OSCOM::getDef('text_no_products'); ?></div>
 
 <?php
 }

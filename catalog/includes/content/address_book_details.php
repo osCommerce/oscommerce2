@@ -22,14 +22,14 @@
   if (isset($_GET['edit']) && is_numeric($_GET['edit'])) {
     ?>
     <div class="page-header">
-      <h4><?php echo EDIT_ADDRESS_TITLE; ?></h4>
+      <h4><?php echo OSCOM::getDef('edit_address_title'); ?></h4>
     </div>
     <?php
   }
   else {
     ?>
     <div class="page-header">
-      <h4><?php echo NEW_ADDRESS_TITLE; ?></h4>
+      <h4><?php echo OSCOM::getDef('new_address_title'); ?></h4>
     </div>
     <?php
   }
@@ -198,7 +198,7 @@
 ?>
 
       <div class="form-group">
-        <label for="primary" class="control-label col-sm-3"><?php echo SET_AS_PRIMARY; ?></label>
+        <label for="primary" class="control-label col-sm-3"><?php echo OSCOM::getDef('set_as_primary'); ?></label>
         <div class="col-sm-9">
           <div class="checkbox">
             <label>
