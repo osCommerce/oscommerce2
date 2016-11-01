@@ -2,4 +2,6 @@
 // in a template so that shopowners 
 // don't have to change the main file!  
 
-echo MODULE_NAVBAR_NEW_PRODUCTS_PUBLIC_TEXT;
+use OSC\OM\OSCOM;
+
+echo OSCOM::getDef('module_navbar_new_products_public_text');

@@ -10,6 +10,7 @@
   Released under the GNU General Public License
 */
 
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_i_text_main {
@@ -24,8 +25,8 @@
       $this->code = get_class($this);
       $this->group = basename(dirname(__FILE__));
 
-      $this->title = MODULE_CONTENT_TEXT_MAIN_TITLE;
-      $this->description = MODULE_CONTENT_TEXT_MAIN_DESCRIPTION;
+      $this->title = OSCOM::getDef('module_content_text_main_title');
+      $this->description = OSCOM::getDef('module_content_text_main_description');
       $this->description .= '<div class="secWarning">' . OSCOM::getDef('module_content_bootstrap_row_description') . '</div>';
 
       if ( defined('MODULE_CONTENT_TEXT_MAIN_STATUS') ) {
@@ -39,7 +40,7 @@
 
       $content_width = MODULE_CONTENT_TEXT_MAIN_CONTENT_WIDTH;
 
-      if (tep_not_null(MODULE_CONTENT_TEXT_MAIN_TEXT)) {
+      if (tep_not_null(OSCOM::getDef('module_content_text_main_text'))) {
         ob_start();
         include('includes/modules/content/' . $this->group . '/templates/text_main.php');
         $template = ob_get_clean();

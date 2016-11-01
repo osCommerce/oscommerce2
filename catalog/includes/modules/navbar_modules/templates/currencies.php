@@ -3,7 +3,7 @@ use OSC\OM\OSCOM;
 ?>
 <li class="dropdown">
   <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-  <?php echo sprintf(MODULE_NAVBAR_CURRENCIES_SELECTED_CURRENCY, $_SESSION['currency']); ?>
+  <?php echo sprintf(OSCOM::getDef('module_navbar_currencies_selected_currency'), $_SESSION['currency']); ?>
   </a>
   <?php
   if (isset($currencies) && is_object($currencies) && (count($currencies->currencies) > 1)) {

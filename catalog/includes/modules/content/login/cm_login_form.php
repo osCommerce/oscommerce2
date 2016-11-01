@@ -12,6 +12,7 @@
 
   use OSC\OM\Hash;
   use OSC\OM\HTML;
+  use OSC\OM\OSCOM;
   use OSC\OM\Registry;
 
   class cm_login_form {

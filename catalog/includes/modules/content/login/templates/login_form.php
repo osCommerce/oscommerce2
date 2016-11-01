@@ -5,9 +5,9 @@ use OSC\OM\OSCOM;
 <div class="login-form <?php echo (MODULE_CONTENT_LOGIN_FORM_CONTENT_WIDTH == 'Half') ? 'col-sm-6' : 'col-sm-12'; ?>">
   <div class="panel panel-success">
     <div class="panel-body">
-      <h2><?php echo MODULE_CONTENT_LOGIN_HEADING_RETURNING_CUSTOMER; ?></h2>
+      <h2><?php echo OSCOM::getDef('module_content_login_heading_returning_customer'); ?></h2>
 
-      <p class="alert alert-success"><?php echo MODULE_CONTENT_LOGIN_TEXT_RETURNING_CUSTOMER; ?></p>
+      <p class="alert alert-success"><?php echo OSCOM::getDef('module_content_login_text_returning_customer'); ?></p>
 
       <?php echo HTML::form('login', OSCOM::link('login.php', 'action=process'), 'post', '', ['tokenize' => true]); ?>
 
@@ -25,6 +25,6 @@ use OSC\OM\OSCOM;
     </div>
   </div>
 
-    <p><?php echo '<a class="btn btn-default" role="button" href="' . OSCOM::link('password_forgotten.php') . '">' . MODULE_CONTENT_LOGIN_TEXT_PASSWORD_FORGOTTEN . '</a>'; ?></p>
+    <p><?php echo '<a class="btn btn-default" role="button" href="' . OSCOM::link('password_forgotten.php') . '">' . OSCOM::getDef('module_content_login_text_password_forgotten') . '</a>'; ?></p>
 
 </div>
