@@ -137,9 +137,6 @@
 		'keyword2' => $review_name,
 		'keyword3' => $review_name
 		]);        
-		
-		
-		echo sprintf(OSCOM::getDef('reviews_text_rated'), HTML::stars($Qreviews->value('reviews_rating')), $review_name, $review_name);
         ?>
         </footer>
       </blockquote>
