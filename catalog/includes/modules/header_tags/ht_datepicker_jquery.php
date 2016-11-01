@@ -49,10 +49,10 @@
         if (in_array(basename($PHP_SELF), $pages_array)) {
           $oscTemplate->addBlock('<script src="ext/datepicker/js/bootstrap-datepicker.js"></script>' . "\n", $this->group);
           $oscTemplate->addBlock('<link rel="stylesheet" href="ext/datepicker/css/datepicker.css" />' . "\n", 'header_tags');
-          $oscTemplate->addBlock('<script>$(\'input[data-provide="datepicker"]\').datepicker({format: \'' . JS_DATE_FORMAT . '\',viewMode: 2});</script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'input[data-provide="datepicker"]\').datepicker({format: \'' . OSCOM::getDef('jquery_date_format') . '\',viewMode: 2});</script>', $this->group);
           // advanced search
-          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
-          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({format: \'' . JS_DATE_FORMAT . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
+          $oscTemplate->addBlock('<script>var nowTemp = new Date(); var now = new Date(nowTemp.getFullYear(), nowTemp.getMonth(), nowTemp.getDate(), 0, 0, 0, 0); $(\'#dfrom\').datepicker({format: \'' . OSCOM::getDef('jquery_date_format') . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}}); </script>', $this->group);
+          $oscTemplate->addBlock('<script>$(\'#dto\').datepicker({format: \'' . OSCOM::getDef('jquery_date_format') . '\',onRender: function(date) {return date.valueOf() > now.valueOf() ? \'disabled\' : \'\';}});</script>', $this->group);
         }
       }
     }
