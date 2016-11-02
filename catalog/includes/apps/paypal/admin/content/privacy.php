@@ -13,4 +13,4 @@
 
 <h2><?php echo $OSCOM_PayPal->getDef('privacy_title'); ?></h2>
 
-<?php echo $OSCOM_PayPal->getDef('privacy_body', array('api_req_countries' => implode(', ', $OSCOM_PayPal->getReqApiCountries()))); ?>
+<?php echo $OSCOM_PayPal->getDef('privacy_body'); ?>

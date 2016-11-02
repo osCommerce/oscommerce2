@@ -20,7 +20,7 @@
     $params = array('VERSION' => $OSCOM_PayPal->getApiVersion(),
                     'METHOD' => 'DoExpressCheckoutPayment',
                     'PAYMENTREQUEST_0_PAYMENTACTION' => ((OSCOM_APP_PAYPAL_EC_TRANSACTION_METHOD == '1') || !$OSCOM_PayPal->hasCredentials('EC') ? 'Sale' : 'Authorization'),
-                    'BUTTONSOURCE' => 'OSCOM23_EC');
+                    'BUTTONSOURCE' => $OSCOM_PayPal->getIdentifier());
 
     if ( $OSCOM_PayPal->hasCredentials('EC') ) {
       $params['USER'] = $OSCOM_PayPal->getCredentials('EC', 'username');

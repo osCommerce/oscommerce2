@@ -260,8 +260,7 @@
                                     'products_price' => $order->products[$i]['price'],
                                     'final_price' => $order->products[$i]['final_price'],
                                     'products_tax' => $order->products[$i]['tax'],
-                                    'products_quantity' => $order->products[$i]['qty'],
-                                    'products_full_id' => $order->products[$i]['id']);
+                                    'products_quantity' => $order->products[$i]['qty']);
 
             tep_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
 
@@ -361,7 +360,7 @@
                           'rm' => '2',
                           'return' => tep_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'),
                           'cancel_return' => tep_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'),
-                          'bn' => 'OSCOM23_PS',
+                          'bn' => $OSCOM_PayPal->getIdentifier(),
                           'paymentaction' => (OSCOM_APP_PAYPAL_PS_TRANSACTION_METHOD == '1') ? 'sale' : 'authorization');
 
       $return_link_title = $this->_app->getDef('module_ps_button_return_to_store', array('storename' => STORE_NAME));

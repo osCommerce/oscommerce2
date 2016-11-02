@@ -16,7 +16,7 @@
   <?php echo $OSCOM_PayPal->drawButton($OSCOM_PayPal->getDef('section_payflow'), tep_href_link('paypal.php', 'action=credentials&module=PF'), 'info', 'data-module="PF"'); ?>
 
 <?php
-  if ( ($current_module == 'PP') && $OSCOM_PayPal->isReqApiCountrySupported(STORE_COUNTRY) ) {
+  if ($current_module == 'PP') {
 ?>
 
   <span style="float: right;">
