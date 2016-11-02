@@ -88,7 +88,13 @@ class HTTP
         }
 
         if ($parameters['server']['scheme'] == 'https') {
-            if (!isset($parameters['verify_ssl']) || ($parameters['verify_ssl'] === true)) {
+            $verify_ssl = (defined('OSCOM_HTTP_VERIFY_SSL') && (OSCOM_HTTP_VERIFY_SSL === 'True')) ? true : false;
+
+            if (isset($parameters['verify_ssl']) && is_bool($parameters['verify_ssl'])) {
+                $verify_ssl = $parameters['verify_ssl'];
+            }
+
+            if ($verify_ssl === true) {
                 $curl_options[CURLOPT_SSL_VERIFYPEER] = true;
                 $curl_options[CURLOPT_SSL_VERIFYHOST] = 2;
             } else {
@@ -118,9 +124,15 @@ class HTTP
             $curl_options[CURLOPT_POSTFIELDS] = $parameters['parameters'];
         }
 
-        if (isset($parameters['proxy']) && !empty($parameters['proxy'])) {
+        $proxy = defined('OSCOM_HTTP_PROXY') ? OSCOM_HTTP_PROXY : '';
+
+        if (isset($parameters['proxy'])) {
+            $proxy = $parameters['proxy'];
+        }
+
+        if (!empty($proxy)) {
             $curl_options[CURLOPT_HTTPPROXYTUNNEL] = true;
-            $curl_options[CURLOPT_PROXY] = $parameters['proxy'];
+            $curl_options[CURLOPT_PROXY] = $proxy;
         }
 
         curl_setopt_array($curl, $curl_options);
