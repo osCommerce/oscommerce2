@@ -610,8 +610,8 @@ EOD;
       $status_comment[] = 'Payment Status: ' . tep_db_prepare_input($braintree_result->transaction->status);
       $status_comment[] = 'Payment Type: ' . tep_db_prepare_input($braintree_result->transaction->paymentInstrumentType);
 
-      if (Braintree_Configuration::$global->getEnvironment() !== 'production') {
-        $status_comment[] = 'Server: ' . tep_db_prepare_input(Braintree_Configuration::$global->getEnvironment());
+      if (Braintree_Configuration::environment() !== 'production') {
+        $status_comment[] = 'Server: ' . tep_db_prepare_input(Braintree_Configuration::environment());
       }
 
       if (!tep_session_is_registered('appBraintreeCcNonce') && (((OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS == '1') && isset($HTTP_POST_VARS['cc_save']) && ($HTTP_POST_VARS['cc_save'] == 'true')) || (OSCOM_APP_PAYPAL_BRAINTREE_CC_CC_TOKENS === '2')) && !isset($braintree_token) && isset($braintree_result->transaction->creditCard['token'])) {
