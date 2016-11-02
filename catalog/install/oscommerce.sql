@@ -237,6 +237,9 @@ INSERT INTO configuration (configuration_title, configuration_key, configuration
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Bootstrap Container', 'BOOTSTRAP_CONTAINER', 'container-fluid', 'What type of container should the page content be shown in? See http://getbootstrap.com/css/#overview-container', '16', '1', 'tep_cfg_select_option(array(\'container-fluid\', \'container\'), ', now());
 INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) values ('Bootstrap Content', 'BOOTSTRAP_CONTENT', '8', 'What width should the page content default to?  (8 = two thirds width, 6 = half width, 4 = one third width) Note that the Side Column(s) will adjust automatically.', '16', '2', 'tep_cfg_select_option(array(\'8\', \'6\', \'4\'), ', now());
 
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, set_function, date_added) VALUES ('Verify SSL Certificates', 'OSCOM_HTTP_VERIFY_SSL', 'True', 'Verify SSL Certificates when making HTTPS API calls.', '17', '1', 'tep_cfg_select_option(array(\'True\', \'False\'), ', now());
+INSERT INTO configuration (configuration_title, configuration_key, configuration_value, configuration_description, configuration_group_id, sort_order, date_added) VALUES ('Proxy', 'OSCOM_HTTP_PROXY', '', 'Send API requests through this proxy server (host:port, eg: proxy-server:8080)', '17', '2', now());
+
 INSERT INTO configuration_group VALUES ('1', 'My Store', 'General information about my store', '1', '1');
 INSERT INTO configuration_group VALUES ('2', 'Minimum Values', 'The minimum values for functions / data', '2', '1');
 INSERT INTO configuration_group VALUES ('3', 'Maximum Values', 'The maximum values for functions / data', '3', '1');
@@ -252,6 +255,7 @@ INSERT INTO configuration_group VALUES ('13', 'Download', 'Downloadable products
 INSERT INTO configuration_group VALUES ('14', 'GZip Compression', 'GZip compression options', '14', '1');
 INSERT INTO configuration_group VALUES ('15', 'Sessions', 'Session options', '15', '1');
 INSERT INTO configuration_group VALUES ('16', 'Bootstrap Setup', 'Basic Bootstrap Options', '16', '1');
+INSERT INTO configuration_group VALUES ('17', 'HTTP/API Settings', 'HTTP/API Settings', '17', '1');
 
 INSERT INTO countries VALUES (1,'Afghanistan','AF','AFG','1');
 INSERT INTO countries VALUES (2,'Albania','AL','ALB','1');
